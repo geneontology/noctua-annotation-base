@@ -881,7 +881,9 @@ export class NoctuaFormConfigService {
     });
   }
 
-
+  get closures() {
+    return noctuaFormConfig.closures;
+  }
   get annotonType() {
     let options = [
       noctuaFormConfig.annotonType.options.simple,

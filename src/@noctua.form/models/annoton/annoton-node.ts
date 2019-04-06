@@ -34,6 +34,8 @@ export class AnnotonNode {
   warnings
   status
 
+  isCatalyticActivity = false
+
   //UI
   _location = {
     x: 0,

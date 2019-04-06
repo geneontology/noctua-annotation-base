@@ -156,7 +156,9 @@ export class NoctuaGraphService {
       self.graphPreParse(cam.graph).subscribe((data) => {
         cam.annotons = self.graphToAnnotons(cam);
         self.saveMFLocation(cam)
-        cam.onGraphChanged.next(cam.annotons);
+        self.graphPostParse(cam, cam.graph).subscribe((data) => {
+          cam.onGraphChanged.next(cam.annotons);
+        });
       });
     }
 
@@ -309,10 +311,43 @@ export class NoctuaGraphService {
     return Observable.forkJoin(promises);
   }
 
+  graphPostParse(cam: Cam, graph) {
+    const self = this;
+    var promises = [];
+
+    each(cam.annotons, function (annoton: Annoton) {
+      let mfNode = annoton.getMFNode();
+
+      if (mfNode && mfNode.hasValue()) {
+        promises.push(self.isaClosurePostParse(mfNode.getTerm().id, self.noctuaFormConfigService.closures.catalyticActivity.id, mfNode));
+      }
+
+    })
+
+    return Observable.forkJoin(promises)
+  }
+
   isaClosurePreParse(a, b, node) {
     const self = this;
 
     return self.noctuaLookupService.isaClosure(a, b);
+    /*
+    .subscribe(function (data) {
+      self.noctuaLookupService.addLocalClosure(a, b, data);
+    });
+    */
+  }
+
+  isaClosurePostParse(a, b, node: AnnotonNode) {
+    const self = this;
+
+    return self.noctuaLookupService.isaClosure(a, b).pipe(
+      map(result => {
+        node.isCatalyticActivity = result;
+        console.log(result, "ooo")
+        return result;
+      }))
+
     /*
     .subscribe(function (data) {
       self.noctuaLookupService.addLocalClosure(a, b, data);

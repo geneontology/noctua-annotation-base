@@ -133,10 +133,15 @@ export class Annoton extends SaeGraph {
     }
   }
 
-  getBPHasInputNode() {
+  get bpHasInput() {
     const self = this;
+    let node = self.getNode('bp-2');
 
-    return self.getNode('bp-2');
+    if (node && node.hasValue()) {
+      return node.getTerm();
+    }
+
+    return null;
   }
 
   insertTermNode(annotonModel, id, value) {

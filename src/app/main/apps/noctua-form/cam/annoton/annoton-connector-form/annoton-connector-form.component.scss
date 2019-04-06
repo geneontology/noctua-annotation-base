@@ -13,17 +13,21 @@
 
   .noc-connector-form-notes {
     width: 400px;
-    background-color: $noc-primary-color-lighter;
+    background-color: rgba($noc-primary-color-lighter, 0.6);
 
-    .noc-section-header {
-      height: 50px;
+    .noc-form-section {
       background-color: transparent;
 
-      .noc-section-heading {
-        padding-left: 12px;
-        font-size: 16px;
-        line-height: 30px;
-        color: #555;
+      .noc-section-header {
+        height: 50px;
+        background-color: transparent;
+
+        .noc-section-heading {
+          padding-left: 12px;
+          font-size: 16px;
+          line-height: 30px;
+          color: #555;
+        }
       }
 
       .noc-action-button {

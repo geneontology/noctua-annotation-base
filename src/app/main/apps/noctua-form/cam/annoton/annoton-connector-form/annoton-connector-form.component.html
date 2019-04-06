@@ -135,14 +135,19 @@
     </div>
     <div class="noc-connector-form-notes h-100-p" noctuaPerfectScrollbar>
       <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section w-100-p">
-        <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
-          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-section-heading">
-              Notes
-            </div>
+        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-section-heading">
+            Notes
           </div>
-          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-
+        </div>
+        <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+          <div class="color" *ngFor="let note of (noctuaAnnotonConnectorService.rules.note | keys)" fxLayout="row"
+            fxLayoutAlign="start center">
+            <mat-icon *ngIf="note.value.applied" class="green-500-bg">check_circle</mat-icon>
+            <mat-icon *ngIf="!note.value.applied">check_circle_outline</mat-icon>
+            <span class="noc-description">
+              {{note.value.description}}
+            </span>
           </div>
         </div>
       </div>

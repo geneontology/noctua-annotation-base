@@ -37,9 +37,20 @@ export class NoctuaAnnotonConnectorService {
     note: {
       hasInput: {
         applied: false,
-        description: 'Has Input was found'
+        description: 'Has Input on Biological Process was found'
+      },
+      annotonsConsecutive: {
+        applied: false,
+        description: 'Activities are consecutive?'
+      },
+      subjectMFCatalyticActivity: {
+        applied: false,
+        description: 'Subject MF is a catalytic Activity'
+      },
+      objectMFCatalyticActivity: {
+        applied: false,
+        description: 'Object MF is a catalytic Activity'
       }
-
     }
 
 
@@ -99,11 +110,14 @@ export class NoctuaAnnotonConnectorService {
     this.subjectMFNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getMFNode());
     this.objectMFNode = <AnnotonNode>_.cloneDeep(this.objectAnnoton.getMFNode());
 
-    this.rules.bpHasInputNode = this.subjectAnnoton.getBPHasInputNode;
+    this.rules.bpHasInput = this.subjectAnnoton.bpHasInput;
 
-    if (this.rules.bpHasInputNode) {
+    if (this.rules.bpHasInput) {
+      this.rules.hasInputFound = this.rules.note.hasInput.applied = true;
       this.subjectBPNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getBPNode());
-      this.rules.hasInputFound = true;
+    } else {
+      this.rules.hasInputFound = this.rules.note.hasInput.applied = false;
+      this.subjectBPNode = null;
     }
 
     let edge = this.subjectAnnoton.getConnection(this.objectMFNode.individualId);
@@ -147,12 +161,13 @@ export class NoctuaAnnotonConnectorService {
     })
   }
 
-  checkConnection(value) {
+  checkConnection(value: any) {
     // if (value.)
-    this.rules.note.hasInput.applied = value.annotonsConsecutive;
-    if (value.annotonsConsecutive) {
+    this.rules.note.annotonsConsecutive.applied = value.annotonsConsecutive;
+
+    if (!value.annotonsConsecutive) {
       if (this.subjectBPNode) {
-        this.rules.note.hasInput.applied = true;
+        // this.rules.note.hasInput.applied = true;
       }
     }
 
