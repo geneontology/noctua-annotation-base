@@ -26,9 +26,28 @@ import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
   providedIn: 'root'
 })
 export class NoctuaAnnotonConnectorService {
+  rules: any = {
+    triple: {
+      subject: 'mf',
+      predicate: {},
+      object: 'mf',
+    },
+    bpHasInputNode: null,
+    hasInputFound: false,
+    note: {
+      hasInput: {
+        applied: false,
+        description: 'Has Input was found'
+      }
+
+    }
+
+
+  }
   cam: Cam;
   public annoton: Annoton;
   public subjectMFNode: AnnotonNode;
+  public subjectBPNode: AnnotonNode;
   public objectMFNode: AnnotonNode;
   public subjectAnnoton: Annoton;
   public objectAnnoton: Annoton;
@@ -80,6 +99,13 @@ export class NoctuaAnnotonConnectorService {
     this.subjectMFNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getMFNode());
     this.objectMFNode = <AnnotonNode>_.cloneDeep(this.objectAnnoton.getMFNode());
 
+    this.rules.bpHasInputNode = this.subjectAnnoton.getBPHasInputNode;
+
+    if (this.rules.bpHasInputNode) {
+      this.subjectBPNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getBPNode());
+      this.rules.hasInputFound = true;
+    }
+
     let edge = this.subjectAnnoton.getConnection(this.objectMFNode.individualId);
     let annoton = this.noctuaFormConfigService.createAnnotonConnectorModel(this.subjectMFNode, this.objectMFNode, edge);
 
@@ -117,7 +143,20 @@ export class NoctuaAnnotonConnectorService {
       // this.errors = this.getAnnotonFormErrors();
       this.connectorFormToAnnoton();
       this.annoton.enableSubmit();
+      this.checkConnection(value);
     })
+  }
+
+  checkConnection(value) {
+    // if (value.)
+    this.rules.note.hasInput.applied = value.annotonsConsecutive;
+    if (value.annotonsConsecutive) {
+      if (this.subjectBPNode) {
+        this.rules.note.hasInput.applied = true;
+      }
+    }
+
+    console.log(this.rules);
   }
 
   clearForm() {

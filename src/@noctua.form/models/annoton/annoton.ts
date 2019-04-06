@@ -123,6 +123,22 @@ export class Annoton extends SaeGraph {
     }
   }
 
+  getBPNode() {
+    const self = this;
+
+    if (self.annotonModelType === 'ccOnly') {
+      return null;
+    } else {
+      return self.getNode('bp');
+    }
+  }
+
+  getBPHasInputNode() {
+    const self = this;
+
+    return self.getNode('bp-2');
+  }
+
   insertTermNode(annotonModel, id, value) {
     let node = null;
 
@@ -161,15 +177,17 @@ export class Annoton extends SaeGraph {
 
     if (self.annotonType === 'simple') {
       let gp = self.getNode('gp');
-      gp.term.control.required = false;
-      if (!gp.term.control.value.id) {
-        gp.term.control.required = true;
-        let meta = {
-          aspect: self.label
+      if (gp) {
+        gp.term.control.required = false;
+        if (!gp.getTerm().id) {
+          gp.term.control.required = true;
+          let meta = {
+            aspect: self.label
+          }
+          let error = new AnnotonError('error', 1, "A '" + gp.label + "' is required", meta)
+          self.submitErrors.push(error);
+          result = false;
         }
-        let error = new AnnotonError('error', 1, "A '" + gp.label + "' is required", meta)
-        self.submitErrors.push(error);
-        result = false;
       }
     }
 

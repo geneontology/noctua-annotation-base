@@ -6,6 +6,33 @@
   background-color: white;
   @include mat-elevation(4);
 
+  .noc-connector-form {
+    width: 600px;
+    background-color: #FFF;
+  }
+
+  .noc-connector-form-notes {
+    width: 400px;
+    background-color: $noc-primary-color-lighter;
+
+    .noc-section-header {
+      height: 50px;
+      background-color: transparent;
+
+      .noc-section-heading {
+        padding-left: 12px;
+        font-size: 16px;
+        line-height: 30px;
+        color: #555;
+      }
+
+      .noc-action-button {
+        margin: 0px;
+        height: 30px; // line-height: 36px;
+      }
+    }
+  }
+
   .noc-annoton-box {
     width: 250px;
     height: 100px;
@@ -49,10 +76,5 @@
     @include mat-elevation(2);
   }
 
-  .noc-connector-form {
-    width: 100%;
-    background-color: #FFF;
 
-
-  }
 }
