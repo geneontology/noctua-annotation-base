@@ -130,6 +130,18 @@ export const noctuaFormConfig = {
       }
     }
   },
+  "causalReactionProduct": {
+    "options": {
+      "regulate": {
+        "id": 'regulate',
+        "label": 'Regulate',
+      },
+      "substrate": {
+        "id": 'substrate',
+        "label": 'Substrate',
+      }
+    }
+  },
   "displaySection": {
     "gp": {
       id: "gp",
@@ -237,6 +249,7 @@ export const noctuaFormConfig = {
       'id': 'GO:0003824'
     }
   },
+
   causalEdges: [
     edge.causallyUpstreamOf,
     edge.causallyUpstreamOfNegativeEffect,

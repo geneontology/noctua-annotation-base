@@ -923,6 +923,18 @@ export class NoctuaFormConfigService {
     }
   }
 
+  get causalReactionProduct() {
+    let options = [
+      noctuaFormConfig.causalReactionProduct.options.regulate,
+      noctuaFormConfig.causalReactionProduct.options.substrate,
+    ]
+
+    return {
+      options: options,
+      selected: options[0]
+    }
+  }
+
   getCausalEffectByEdge(edge) {
     let causalEffect = noctuaFormConfig.causalEffect.options.positive;
     let annotonsConsecutive = false;

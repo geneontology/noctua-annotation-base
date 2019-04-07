@@ -53,7 +53,10 @@ export class NoctuaAnnotonConnectorService {
       }
     }
 
-
+  }
+  public displaySection = {
+    causalEffect: true,
+    causalReactionProduct: false
   }
   cam: Cam;
   public annoton: Annoton;
@@ -119,6 +122,9 @@ export class NoctuaAnnotonConnectorService {
       this.rules.hasInputFound = this.rules.note.hasInput.applied = false;
       this.subjectBPNode = null;
     }
+
+    this.rules.note.subjectMFCatalyticActivity.applied = this.subjectMFNode.isCatalyticActivity;
+    this.rules.note.objectMFCatalyticActivity.applied = this.objectMFNode.isCatalyticActivity;
 
     let edge = this.subjectAnnoton.getConnection(this.objectMFNode.individualId);
     let annoton = this.noctuaFormConfigService.createAnnotonConnectorModel(this.subjectMFNode, this.objectMFNode, edge);

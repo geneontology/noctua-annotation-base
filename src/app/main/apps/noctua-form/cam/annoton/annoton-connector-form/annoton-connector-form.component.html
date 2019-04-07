@@ -49,12 +49,30 @@
             Causal Relation
           </div>
         </div>
-        <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+        <div [ngClass]="{'noc-disabled':noctuaAnnotonConnectorService.displaySection.causalEffect}"
+          class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
           <div class="px-12 noc-annoton-group-row" fxLayout="column">
             <mat-radio-group formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start stretch">
               <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
                 class="mt-8 mb-4" [value]="causalEffect" fxFlex="30">
                 {{causalEffect.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-section-heading">
+            Does the product of reaction 1 REGULATE or become the SUBSTRATE for activity 2?
+          </div>
+        </div>
+        <div [ngClass]="{'noc-disabled': noctuaAnnotonConnectorService.displaySection.causalReactionProduct}"
+          class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+          <div class="px-12 noc-annoton-group-row" fxLayout="column">
+            <mat-radio-group formControlName="causalReactionProduct" fxLayout="column" fxLayoutAlign="start stretch">
+              <mat-radio-button
+                *ngFor="let causalReactionProduct of noctuaFormConfigService.causalReactionProduct.options"
+                class="mt-8 mb-4" [value]="causalReactionProduct" fxFlex="30">
+                {{causalReactionProduct.label}}
               </mat-radio-button>
             </mat-radio-group>
           </div>
@@ -143,7 +161,7 @@
         <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
           <div class="color" *ngFor="let note of (noctuaAnnotonConnectorService.rules.note | keys)" fxLayout="row"
             fxLayoutAlign="start center">
-            <mat-icon *ngIf="note.value.applied" class="green-500-bg">check_circle</mat-icon>
+            <mat-icon *ngIf="note.value.applied" class="green-500-fg">check_circle</mat-icon>
             <mat-icon *ngIf="!note.value.applied">check_circle_outline</mat-icon>
             <span class="noc-description">
               {{note.value.description}}

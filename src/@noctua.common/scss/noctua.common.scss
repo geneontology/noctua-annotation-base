@@ -6,10 +6,9 @@ $noc-primary-color-light: rgba(#798fb8, 0.4);
 $noc-primary-color-text: #4a8bfc;
 
 
-.input-headline {
-  font-size: 28px;
-  line-height: 32px;
-  font-weight: 400;
+.noc-disabled {
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 .mat-row {
