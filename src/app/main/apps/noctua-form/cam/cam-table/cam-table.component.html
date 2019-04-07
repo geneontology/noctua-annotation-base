@@ -20,18 +20,10 @@
         <button mat-icon-button (click)="openAnnotonForm(annoton)" color="primary" class="noc-bl">
           <mat-icon class=""> edit </mat-icon>
         </button>
-        <button mat-icon-button [matMenuTriggerFor]="connectorMenu" color="primary" class="noc-bl" matTooltip="connect"
-          [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
+        <button mat-icon-button (click)="openAnnotonConnector(annoton)" color="primary" class="noc-bl"
+          matTooltip="connect" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
           <mat-icon>arrow_right_alt</mat-icon>
         </button>
-        <mat-menu #connectorMenu="matMenu">
-          <ng-container *ngFor="let connector of cam?.annotons">
-            <button mat-menu-item *ngIf="connector.id !== annoton.id"
-              (click)="openAnnotonConnector(annoton, connector)">
-              {{connector.presentation.gpText}}
-            </button>
-          </ng-container>
-        </mat-menu>
         <button mat-icon-button (click)="toggleExpand(annoton)" color="primary" class="noc-bl">
           <mat-icon *ngIf="!annoton.expanded" class="">
             keyboard_arrow_down

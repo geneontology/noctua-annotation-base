@@ -46,6 +46,14 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
+  panel = {
+    selectConnector: {
+      id: 1
+    }, annotonConnectorForm: {
+      id: 2
+    },
+  };
+  selectedPanel: any;
   annoton: Annoton;
   mfNode: AnnotonNode;
 
@@ -63,6 +71,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
   private unsubscribeAll: Subject<any>;
 
+
   constructor(private route: ActivatedRoute,
     private camService: CamService,
     private formBuilder: FormBuilder,
@@ -79,7 +88,6 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
     private sparqlService: SparqlService
   ) {
     this.unsubscribeAll = new Subject();
-    // this.annoton = self.noctuaAnnotonFormService.annoton;
   }
 
   ngOnInit(): void {
@@ -103,6 +111,17 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
         //  this.dataSource = new CamsDataSource(this.sparqlService, this.paginator, this.sort);
       });
     });
+
+    this.selectPanel(this.panel.selectConnector);
+  }
+
+  selectPanel(panel) {
+    this.selectedPanel = panel;
+  }
+
+  openAnnotonConnector(connector: Annoton) {
+    this.noctuaAnnotonConnectorService.createConnection(this.noctuaAnnotonConnectorService.annoton.connectionId, connector.connectionId);
+    this.selectPanel(this.panel.annotonConnectorForm);
   }
 
   evidenceDisplayFn(evidence): string | undefined {

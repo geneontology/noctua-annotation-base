@@ -1,8 +1,8 @@
-<form *ngIf="connectorFormGroup" name="connectorFormGroup" [formGroup]="connectorFormGroup" fxLayout="column"
-  fxLayoutAlign="start stretch" class="noc-drawer w-100-p h-100-p">
+<div *ngIf="selectedPanel.id === panel.selectConnector.id" fxLayout="column" fxLayoutAlign="start stretch"
+  class="noc-drawer w-100-p h-100-p">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-drawer-header-title">
-      Causal Relation Form</span>
+      Select Activity</span>
     <span fxFlex></span>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
       aria-label="Close dialog">
@@ -13,11 +13,46 @@
     <div class="noc-connector-form h-100-p" noctuaPerfectScrollbar>
       <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section w-100-p">
         <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
+          <div *ngFor="let connector of cam?.annotons">
+            <button mat-menu-item (click)="openAnnotonConnector(connector)">
+              {{connector.presentation.gpText}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
+    <span fxFlex></span>
+    <button (click)='close()' type="button" mat-raised-button color="" class="mr-8">Close</button>
+  </div>
+</div>
+
+<form *ngIf="selectedPanel.id === panel.annotonConnectorForm.id" name="connectorFormGroup"
+  [formGroup]="connectorFormGroup" fxLayout="column" fxLayoutAlign="start stretch" class="noc-drawer w-100-p h-100-p">
+  <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
+    <button mat-icon-button (click)="selectPanel(panel.selectConnector)" class="noc-rounded-button noc-sm"
+      color="primary">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="noc-drawer-header-title">
+      Causal Relation Form</span>
+    <span fxFlex></span>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close dialog">
+      <mat-icon>close</mat-icon> Close
+    </button>
+  </div>
+  <div class="noc-drawer-body" fxLayout="row" fxLayoutAlign="start start">
+    <div *ngIf="connectorFormGroup" class="noc-connector-form h-100-p" noctuaPerfectScrollbar>
+      <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section w-100-p">
+        <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
           <div fxLayout="row" fxLayoutAlign="center center" class="noc-summary-row w-100-p">
             <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
               <span>
                 <small>{{ noctuaAnnotonConnectorService.subjectAnnoton?.presentation.mfText}}</small>
-                enabled by: <strong>{{ noctuaAnnotonConnectorService.subjectAnnoton?.presentation.gpText}}</strong>
+                enabled by:
+                <strong>{{ noctuaAnnotonConnectorService.subjectAnnoton?.presentation.gpText}}</strong>
               </span>
             </div>
             <div>
@@ -26,7 +61,8 @@
             <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
               <span>
                 <small>{{ noctuaAnnotonConnectorService.objectAnnoton?.presentation.mfText}}</small>
-                enabled by: <strong>{{ noctuaAnnotonConnectorService.objectAnnoton?.presentation.gpText}}</strong>
+                enabled by:
+                <strong>{{ noctuaAnnotonConnectorService.objectAnnoton?.presentation.gpText}}</strong>
               </span>
             </div>
           </div>
@@ -213,7 +249,7 @@
       Why is the "Save" button disabled?
     </button>
     <span fxFlex></span>
-    <button (ngSubmit)='clear()' type="button" mat-raised-button color="" class="mr-8">Clear</button>
+    <button (click)='clear()' type="button" mat-raised-button color="" class="mr-8">Clear</button>
     <button [disabled]="!connectorFormGroup.valid" (click)="save()" type="submit" class="noc-rounded-button"
       mat-raised-button color="primary">Save</button>
   </div>
