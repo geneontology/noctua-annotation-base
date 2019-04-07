@@ -159,12 +159,12 @@
           </div>
         </div>
         <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-          <div class="color" *ngFor="let note of (noctuaAnnotonConnectorService.rules.note | keys)" fxLayout="row"
+          <div class="" *ngFor="let note of (noctuaAnnotonConnectorService.notes)" fxLayout="row"
             fxLayoutAlign="start center">
-            <mat-icon *ngIf="note.value.applied" class="green-500-fg">check_circle</mat-icon>
-            <mat-icon *ngIf="!note.value.applied">check_circle_outline</mat-icon>
+            <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
+            <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
             <span class="noc-description">
-              {{note.value.description}}
+              {{note.description}}
             </span>
           </div>
         </div>
@@ -181,5 +181,4 @@
     <button [disabled]="!connectorFormGroup.valid" (click)="save()" type="submit" class="noc-rounded-button"
       mat-raised-button color="primary">Save</button>
   </div>
-
 </form>

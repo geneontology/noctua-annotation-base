@@ -59,6 +59,10 @@ const edge = {
     label: 'causally upstream of or within, negative effect',
     actsLabel: 'acts upstream of or within, negative effect'
   },
+  directlyProvidesInput: {
+    id: 'RO:0002413',
+    label: 'directly provides input'
+  },
   directlyRegulates: {
     id: 'RO:0002578',
     label: 'directly regulates'
@@ -133,11 +137,11 @@ export const noctuaFormConfig = {
   "causalReactionProduct": {
     "options": {
       "regulate": {
-        "id": 'regulate',
+        "name": 'regulate',
         "label": 'Regulate',
       },
       "substrate": {
-        "id": 'substrate',
+        "name": 'substrate',
         "label": 'Substrate',
       }
     }
@@ -257,5 +261,6 @@ export const noctuaFormConfig = {
     edge.directlyRegulates,
     edge.directlyPositivelyRegulates,
     edge.directlyNegativelyRegulates,
+    edge.directlyProvidesInput
   ]
 };

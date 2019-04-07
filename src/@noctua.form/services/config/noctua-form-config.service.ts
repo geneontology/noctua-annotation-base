@@ -999,6 +999,38 @@ export class NoctuaFormConfigService {
     return result;
   }
 
+  getCausalAnnotonConnectorEdge2(causalEffect, annotonsConsecutive) {
+    let result;
+
+    if (annotonsConsecutive) {
+      switch (causalEffect.name) {
+        case noctuaFormConfig.causalEffect.options.positive.name:
+          result = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
+          break;
+        case noctuaFormConfig.causalEffect.options.negative.name:
+          result = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
+          break;
+        case noctuaFormConfig.causalEffect.options.neutral.name:
+          result = noctuaFormConfig.edge.causallyUpstreamOf;
+          break;
+      }
+    } else {
+      switch (causalEffect.name) {
+        case noctuaFormConfig.causalEffect.options.positive.name:
+          result = noctuaFormConfig.edge.directlyPositivelyRegulates;
+          break;
+        case noctuaFormConfig.causalEffect.options.negative.name:
+          result = noctuaFormConfig.edge.directlyNegativelyRegulates;
+          break;
+        case noctuaFormConfig.causalEffect.options.neutral.name:
+          result = noctuaFormConfig.edge.directlyRegulates;
+          break;
+      }
+    }
+
+    return result;
+  }
+
   getRequestParams(id) {
     const self = this;
 
