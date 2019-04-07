@@ -49,7 +49,7 @@
             Causal Relation
           </div>
         </div>
-        <div [ngClass]="{'noc-disabled':noctuaAnnotonConnectorService.displaySection.causalEffect}"
+        <div [ngClass]="{'noc-disabled':!noctuaAnnotonConnectorService.displaySection.causalEffect}"
           class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
           <div class="px-12 noc-annoton-group-row" fxLayout="column">
             <mat-radio-group formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start stretch">
@@ -65,9 +65,10 @@
             Does the product of reaction 1 REGULATE or become the SUBSTRATE for activity 2?
           </div>
         </div>
-        <div [ngClass]="{'noc-disabled': noctuaAnnotonConnectorService.displaySection.causalReactionProduct}"
+        <div [ngClass]="{'noc-disabled': !noctuaAnnotonConnectorService.displaySection.causalReactionProduct}"
           class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
           <div class="px-12 noc-annoton-group-row" fxLayout="column">
+            {{noctuaAnnotonConnectorService.displaySection.causalReactionProduct}}
             <mat-radio-group formControlName="causalReactionProduct" fxLayout="column" fxLayoutAlign="start stretch">
               <mat-radio-button
                 *ngFor="let causalReactionProduct of noctuaFormConfigService.causalReactionProduct.options"
@@ -164,8 +165,43 @@
             <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
             <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
             <span class="noc-description">
-              {{note.description}}
+              {{note.description}} <strong>
+                {{note.descriptionSuffix}}
+              </strong>
             </span>
+          </div>
+        </div>
+        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-section-heading">
+            Chosen Edge
+          </div>
+        </div>
+        <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+          {{ noctuaAnnotonConnectorService.rules.triple.edge?.label}}
+        </div>
+        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-section-heading">
+            Connection
+          </div>
+        </div>
+        <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
+          <div fxLayout="column" fxLayoutAlign="start center" class="w-100-p">
+            <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+              <span>
+                {{ noctuaAnnotonConnectorService.rules.triple.subject?.getTerm().label}}
+              </span>
+            </div>
+            <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+              {{ noctuaAnnotonConnectorService.rules.triple.edge?.label}}
+            </div>
+            <div>
+              <mat-icon class="s-32">arrow_downward</mat-icon>
+            </div>
+            <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+              <span>
+                {{ noctuaAnnotonConnectorService.rules.triple.object?.getTerm().label}}
+              </span>
+            </div>
           </div>
         </div>
       </div>
