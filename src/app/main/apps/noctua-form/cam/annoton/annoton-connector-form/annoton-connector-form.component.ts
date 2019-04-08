@@ -105,11 +105,11 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
     this.camService.onCamChanged.subscribe((cam) => {
       this.cam = cam
-      this.cam.onGraphChanged.subscribe((annotons) => {
-        //  let data = this.summaryGridService.getGrid(annotons);
-        //  this.sparqlService.addCamChildren(cam, data);
-        //  this.dataSource = new CamsDataSource(this.sparqlService, this.paginator, this.sort);
-      });
+    });
+
+    this.noctuaAnnotonConnectorService.onAnnotonChanged.subscribe((annoton) => {
+      this.annoton = annoton;
+      this.selectPanel(this.panel.selectConnector);
     });
 
     this.selectPanel(this.panel.selectConnector);
@@ -129,16 +129,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    const self = this;
-
-    self.noctuaAnnotonConnectorService.connectorFormToAnnoton();
-    self.noctuaGraphService.saveConnection(self.cam,
-      this.noctuaAnnotonConnectorService.annoton,
-      this.noctuaAnnotonConnectorService.subjectMFNode,
-      this.noctuaAnnotonConnectorService.objectMFNode).then(function (data) {
-        // self.noctuaAnnotonFormService.clearForm();
-        // self.dialogService.openSuccessfulSaveToast();
-      });
+    this.noctuaAnnotonConnectorService.save();
   }
 
   addEvidence() {

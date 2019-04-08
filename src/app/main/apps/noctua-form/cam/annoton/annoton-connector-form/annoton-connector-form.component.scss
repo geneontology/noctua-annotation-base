@@ -28,6 +28,11 @@ $accent: map-get($theme, accent);
       background-color: white;
       font-size: 14px;
 
+      .noc-annoton-header {
+        padding: 12px 0;
+        font-size: 14px;
+      }
+
       &.noc-sm {
         width: 200px;
         height: 100px;

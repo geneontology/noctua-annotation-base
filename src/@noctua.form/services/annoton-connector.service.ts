@@ -7,7 +7,8 @@ import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@ang
 import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
-import { CamService } from './../services/cam.service';
+import { CamService } from './cam.service';
+import { NoctuaGraphService } from './graph.service';
 
 import * as _ from 'lodash';
 declare const require: any;
@@ -21,6 +22,7 @@ import { AnnotonConnectorForm } from './../models/forms/annoton-connector-form';
 
 import { EntityForm } from './../models/forms/entity-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
+
 
 @Injectable({
   providedIn: 'root'
@@ -79,15 +81,21 @@ export class NoctuaAnnotonConnectorService {
   public subjectMFNode: AnnotonNode;
   public subjectBPNode: AnnotonNode;
   public objectMFNode: AnnotonNode;
+  private connectorAnnoton: Annoton;
   public subjectAnnoton: Annoton;
   public objectAnnoton: Annoton;
   private connectorForm: AnnotonConnectorForm;
   private connectorFormGroup: BehaviorSubject<FormGroup | undefined>;
   public connectorFormGroup$: Observable<FormGroup>;
 
+  public onAnnotonChanged: BehaviorSubject<any>;
+
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
-    private noctuaLookupService: NoctuaLookupService) {
+    private noctuaLookupService: NoctuaLookupService,
+    private noctuaGraphService: NoctuaGraphService) {
+
+    this.onAnnotonChanged = new BehaviorSubject(null);
 
     // this.annoton = this.noctuaFormConfigService.createAnnotonConnectorModel();
     this.connectorFormGroup = new BehaviorSubject(null);
@@ -100,18 +108,19 @@ export class NoctuaAnnotonConnectorService {
     // this.initializeForm();
   }
 
-  initializeForm(annoton?: Annoton, edge?) {
-    if (annoton) {
-      this.annoton = annoton;
-    }
+  initializeForm(edge?) {
     let effect = this.getCausalEffect(edge);
 
     this.connectorForm = this.createConnectorForm();
+
+    this.connectorFormGroup.next(this._fb.group(this.connectorForm));
     this.connectorForm.causalEffect.setValue(effect.causalEffect);
     this.connectorForm.causalReactionProduct.setValue(effect.causalReactionProduct);
     this.connectorForm.annotonsConsecutive.setValue(effect.annotonsConsecutive);
-    this.connectorFormGroup.next(this._fb.group(this.connectorForm));
     this._onAnnotonFormChanges();
+    //just to trigger the on Changes event
+    this.connectorForm.causalEffect.setValue(effect.causalEffect);
+    //  this.checkConnection(this.connectorFormGroup.getValue().value, this.rules, this.displaySection, this.subjectBPNode);
   }
 
   createConnectorForm() {
@@ -119,7 +128,7 @@ export class NoctuaAnnotonConnectorService {
     let connectorFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
     let connectorForm = new AnnotonConnectorForm(connectorFormMetadata);
 
-    connectorForm.createEntityForms(self.annoton.getNode('mf'));
+    connectorForm.createEntityForms(self.connectorAnnoton.getNode('subject'));
 
     return connectorForm;
   }
@@ -146,7 +155,6 @@ export class NoctuaAnnotonConnectorService {
     let rules = _.cloneDeep(this._rules);
     let notes = [
       rules.hasInput,
-      rules.annotonsConsecutive,
       rules.subjectMFCatalyticActivity,
       rules.objectMFCatalyticActivity
     ];
@@ -177,6 +185,7 @@ export class NoctuaAnnotonConnectorService {
 
     if (edge) {
       rules.triple.edge = edge.edge;
+      notes.push(rules.annotonsConsecutive)
     }
 
     return {
@@ -191,7 +200,6 @@ export class NoctuaAnnotonConnectorService {
     this.objectAnnoton = this.cam.getAnnotonByConnectionId(objectId);
     this.subjectMFNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getMFNode());
     this.objectMFNode = <AnnotonNode>_.cloneDeep(this.objectAnnoton.getMFNode());
-
     this.rules.triple.subject = this.subjectMFNode;
     this.rules.triple.object = this.objectMFNode;
     this.rules.bpHasInput = this.subjectAnnoton.bpHasInput;
@@ -210,11 +218,10 @@ export class NoctuaAnnotonConnectorService {
     this.rules.subjectMFCatalyticActivity.descriptionSuffix = this.subjectMFNode.getTerm().label;
     this.rules.objectMFCatalyticActivity.descriptionSuffix = this.objectMFNode.getTerm().label;
 
-
     let edge = this.subjectAnnoton.getConnection(this.objectMFNode.individualId);
-    let annoton = this.noctuaFormConfigService.createAnnotonConnectorModel(this.subjectMFNode, this.objectMFNode, edge);
+    this.connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(this.subjectMFNode, this.objectMFNode, edge);
 
-    this.initializeForm(annoton, edge);
+    this.initializeForm(edge);
   }
 
   getCausalEffect(edge) {
@@ -240,17 +247,32 @@ export class NoctuaAnnotonConnectorService {
     let annotonsConsecutive = self.connectorForm.annotonsConsecutive.value;
     let causalEffect = self.connectorForm.causalEffect.value;
     let edge = self.noctuaFormConfigService.getCausalAnnotonConnectorEdge(causalEffect, annotonsConsecutive);
+  }
 
-    self.annoton.editEdge('mf', 'mf-1', edge);
-    self.connectorForm.populateConnectorForm(self.annoton, self.subjectMFNode);
+  save() {
+    const self = this;
+
+    let subjectNode = self.connectorAnnoton.getNode('subject');
+    let objectNode = self.connectorAnnoton.getNode('object');
+
+    subjectNode.setTerm(this.rules.triple.subject.getTerm());
+    subjectNode.individualId = this.rules.triple.subject.individualId;
+
+    self.connectorAnnoton.editEdge('subject', 'object', this.rules.triple.edge);
+    self.connectorForm.populateConnectorForm(self.connectorAnnoton, subjectNode);
+
+    //console.log(self.connectorAnnoton.getEdges('subject'), subjectNode.getTerm())
+
+    self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton, subjectNode, objectNode);
   }
 
   private _onAnnotonFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
       // this.errors = this.getAnnotonFormErrors();
-      this.connectorFormToAnnoton();
-      this.annoton.enableSubmit();
+      // this.connectorFormToAnnoton();
+      this.connectorAnnoton.enableSubmit();
       this.checkConnection(value, this.rules, this.displaySection, this.subjectBPNode);
+
 
       this.rules.triple.edge = this.getCausalConnectorEdge(
         value.causalEffect,

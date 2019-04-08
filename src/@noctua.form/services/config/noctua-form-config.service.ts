@@ -1108,8 +1108,8 @@ export class NoctuaFormConfigService {
     const self = this;
     let annoton = new Annoton();
 
-    subjectMFNode.id = 'mf';
-    objectMFNode.id = 'mf-1';
+    subjectMFNode.id = 'subject';
+    objectMFNode.id = 'object';
 
     annoton.addNode(subjectMFNode);
     annoton.addNode(objectMFNode);
@@ -1117,7 +1117,7 @@ export class NoctuaFormConfigService {
     if (edge) {
       annoton.addEdge(subjectMFNode, objectMFNode, edge.edge);
     } else {
-      annoton.addEdge(subjectMFNode, objectMFNode, noctuaFormConfig.edge.causallyUpstreamOf);
+      annoton.addEdge(subjectMFNode, objectMFNode, noctuaFormConfig.edge.placeholder);
     }
 
     return annoton;

@@ -14,10 +14,23 @@
       <div fxLayout="column" fxLayoutAlign="start stretch" class="w-100-p">
         <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
           <div class="noc-annoton-connector-box" *ngFor="let connector of noctuaAnnotonConnectorService.connectors">
-            <div>
-              <small>{{ connector.annoton.presentation.mfText}}</small><br>
-              enabled by:
-              <strong>{{ connector.annoton.presentation.gpText}}</strong>
+            <div class="noc-annoton-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+              <div>
+                {{ connector.annoton.presentation.mfText}}<br>
+                <small> enabled by:</small>
+                <strong>{{ connector.annoton.presentation.gpText}}</strong>
+              </div>
+              <span fxFlex></span>
+              <button *ngIf="!connector.rules.triple.edge?.id" mat-raised-button color="primary"
+                class="noc-rounded-button noc-sm" (click)="openAnnotonConnector(connector.annoton)">
+                Connect
+              </button>
+              <button *ngIf="connector.rules.triple.edge?.id" mat-stroked-button color="primary"
+                class="noc-rounded-button noc-sm" (click)="openAnnotonConnector(connector.annoton)">
+                <small>
+                  Edit Connection
+                </small>
+              </button>
             </div>
             <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section noc-bt w-100-p">
               <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
@@ -68,10 +81,6 @@
                 </div>
               </div>
             </div>
-            <button mat-stroked-button color="primary" class="noc-rounded-button noc-sm"
-              (click)="openAnnotonConnector(connector.annoton)">
-              Select
-            </button>
           </div>
         </div>
       </div>
