@@ -35,16 +35,18 @@
            <mat-form-field appearance="outline" class="noc-sm">
              <mat-label>Gene Product</mat-label>
              <textarea type="text" matInput formControlName="gp" [matAutocomplete]="gpAuto" rows="2"></textarea>
-             <mat-autocomplete #gpAuto="matAutocomplete" [displayWith]="termDisplayFn">
-               <mat-option
+             <mat-autocomplete #gpAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
+               <mat-option class="noc-term-autocomplete"
                  *ngFor="let item of noctuaAnnotonFormService.annoton.presentation?.geneProduct.term.lookup.results"
                  [value]="item">
                  <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                   <div>
-                     {{ item.id }}
+                   <div class="noc-term-label">
+                     {{ item.label }}
                    </div>
                    <span fxFlex></span>
-                   {{ item.label }}
+                   <div class="noc-term-id">
+                     {{ item.id }}
+                   </div>
                  </div>
                </mat-option>
              </mat-autocomplete>

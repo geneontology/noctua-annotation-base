@@ -26,14 +26,16 @@
 
         <mat-form-field class="">
           <input type="text" matInput formControlName="term" placeholder="Go Term" [matAutocomplete]="termAuto" />
-          <mat-autocomplete #termAuto="matAutocomplete">
+          <mat-autocomplete #termAuto="matAutocomplete" class="noc-term-autocomplete">
             <mat-option *ngFor="let item of searchFormData['goTerm']?.searchResults" [value]="item.id">
               <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                <div>
-                  {{ item.id }}
+                <div class="noc-term-label">
+                  {{ item.label }}
                 </div>
                 <span fxFlex></span>
-                {{ item.label }}
+                <div class="noc-term-id">
+                  {{ item.id }}
+                </div>
               </div>
             </mat-option>
           </mat-autocomplete>

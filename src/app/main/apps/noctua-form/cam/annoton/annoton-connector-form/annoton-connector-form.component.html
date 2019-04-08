@@ -193,16 +193,19 @@
                     <mat-label>Evidence</mat-label>
                     <textarea type="text" matInput formControlName="evidence" [matAutocomplete]="evidenceAuto"
                       rows="2"></textarea>
-                    <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn">
+                    <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
+                      class="noc-term-autocomplete">
                       <mat-option
                         *ngFor="let item of noctuaAnnotonConnectorService.subjectMFNode?.evidence[i]?.evidence.lookup.results"
                         [value]="item">
                         <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                          <div>
-                            {{ item.id }}
+                          <div class="noc-term-label">
+                            {{ item.label }}
                           </div>
                           <span fxFlex></span>
-                          {{ item.label }}
+                          <div class="noc-term-id">
+                            {{ item.id }}
+                          </div>
                         </div>
                       </mat-option>
                     </mat-autocomplete>
