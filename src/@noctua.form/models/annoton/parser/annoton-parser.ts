@@ -4,7 +4,7 @@ const each = require('lodash/forEach');
 //
 import { noctuaFormConfig } from './../../../noctua-form-config';
 
-import { AnnotonError } from './annoton-error.js';
+import { AnnotonError } from './annoton-error';
 
 export class AnnotonParser {
   rules;

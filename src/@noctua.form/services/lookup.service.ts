@@ -6,9 +6,9 @@ import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
 import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
 
 import * as _ from 'lodash';
-import { AnnotonNode } from './../models/annoton/annoton-node.js';
+import { AnnotonNode } from './../models/annoton/annoton-node';
 import { AnnotonNodeClosure } from './../models/annoton/annoton-node-closure';
-import { Evidence } from './../models/annoton/evidence.js';
+import { Evidence } from './../models/annoton/evidence';
 
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 

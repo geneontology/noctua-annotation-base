@@ -2,8 +2,6 @@ import * as _ from 'lodash';
 declare const require: any;
 const each = require('lodash/forEach');
 const uuid = require('uuid/v1');
-import { SaeGraph } from './sae-graph.js';
-import { AnnotonError } from "./parser/annoton-error.js";
 
 import { Annoton } from './annoton'
 import { AnnotonNode } from './annoton-node'

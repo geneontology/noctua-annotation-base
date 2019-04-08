@@ -39,7 +39,8 @@
                 </div>
               </div>
               <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-                <div class="" *ngFor="let note of connector.notes" fxLayout="row" fxLayoutAlign="start center">
+                <div class="noc-note" [ngClass]="{'noc-note-disabled':!note.condition}"
+                  *ngFor="let note of connector.notes" fxLayout="row" fxLayoutAlign="start center">
                   <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
                   <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
                   <span class="noc-description">
@@ -139,7 +140,7 @@
         <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
           <div class="px-12 noc-annoton-group-row" fxLayout="column">
             <mat-radio-group formControlName="annotonsConsecutive" fxLayout="column" fxLayoutAlign="start stretch">
-              <mat-radio-button class="mt-8 mb-4" [value]="false" fxFlex="30"> No</mat-radio-button>
+              <mat-radio-button class="mt-8 mb-4" [value]="false" fxFlex="30"> No/unknown</mat-radio-button>
               <mat-radio-button class="mt-8 mb-4" [value]="true" fxFlex="30"> Yes</mat-radio-button>
             </mat-radio-group>
           </div>
@@ -263,8 +264,8 @@
           </div>
         </div>
         <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-          <div class="" *ngFor="let note of noctuaAnnotonConnectorService.notes" fxLayout="row"
-            fxLayoutAlign="start center">
+          <div class="noc-note" [ngClass]="{'noc-note-disabled':!note.condition}"
+            *ngFor="let note of noctuaAnnotonConnectorService.notes" fxLayout="row" fxLayoutAlign="start center">
             <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
             <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
             <span class="noc-description">

@@ -29,7 +29,7 @@ $accent: map-get($theme, accent);
       font-size: 14px;
 
       .noc-annoton-header {
-        padding: 12px 0;
+        padding-bottom: 12px;
         font-size: 14px;
       }
 
@@ -47,12 +47,10 @@ $accent: map-get($theme, accent);
           background-color: transparent;
 
           .noc-section-heading {
-            padding-left: 12px;
-            font-size: 16px;
+            font-size: 12px;
             text-transform: uppercase;
             // line-height: 30px;
             color: map-get($primary, default);
-            ;
           }
         }
       }
@@ -82,6 +80,21 @@ $accent: map-get($theme, accent);
         margin: 0px;
         height: 30px; // line-height: 36px;
       }
+    }
+  }
+
+  .noc-note {
+    .noc-description {
+      padding-left: 10px;
+      font-size: 12px;
+    }
+
+    &.noc-note-disabled {
+      mat-icon {
+        color: #CCC;
+      }
+
+      color: #BBB;
     }
   }
 

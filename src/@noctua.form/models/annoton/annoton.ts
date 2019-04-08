@@ -5,8 +5,8 @@ const map = require('lodash/map');
 const uuid = require('uuid/v1');
 import { noctuaFormConfig } from './../../noctua-form-config';
 
-import { SaeGraph } from './sae-graph.js';
-import { AnnotonError } from "./parser/annoton-error.js";
+import { SaeGraph } from './sae-graph';
+import { AnnotonError } from "./parser/annoton-error";
 
 import { AnnotonNode } from './annoton-node';
 import { Evidence } from './evidence';
@@ -15,7 +15,6 @@ export class Annoton extends SaeGraph {
   gp;
   _presentation;
   annotonRows;
-  nodes;
   annotonType;
   annotonModelType;
   complexAnnotonData;
@@ -84,8 +83,8 @@ export class Annoton extends SaeGraph {
   getConnection(individualId) {
     const self = this;
 
-    let mfEdges: any = self.getEdges('mf');
-    let bpEdges: any = self.getEdges('bp');
+    let mfEdges: any = super.getEdges('mf');
+    let bpEdges: any = super.getEdges('bp');
     let edge: any;
     let edges = [];
 

@@ -29,11 +29,17 @@ import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 })
 export class NoctuaAnnotonConnectorService {
   _rules: any = {
-    triple: {
-      subject: 'mf',
+    originalTriple: {
+      subject: null,
       edge: null,
-      object: 'mf',
+      object: null,
     },
+    triple: {
+      subject: null,
+      edge: null,
+      object: null,
+    },
+
     bpHasInputNode: null,
     hasInput: {
       id: 1,
@@ -133,19 +139,18 @@ export class NoctuaAnnotonConnectorService {
     return connectorForm;
   }
 
-
-  foo() {
+  getConnections() {
     const self = this;
     self.connectors = [];
 
     each(this.cam.annotons, (annoton: Annoton) => {
       if (self.annoton.connectionId !== annoton.connectionId) {
-        let f = self.getCreateConnectionSummary(this.annoton.connectionId, annoton.connectionId)
+        let connectionSummary = self.getCreateConnectionSummary(this.annoton.connectionId, annoton.connectionId)
 
         self.connectors.push(
           Object.assign({
             annoton: annoton,
-          }, f)
+          }, connectionSummary)
         );
       }
     });
@@ -181,10 +186,11 @@ export class NoctuaAnnotonConnectorService {
     rules.subjectMFCatalyticActivity.descriptionSuffix = subjectMFNode.getTerm().label;
     rules.objectMFCatalyticActivity.descriptionSuffix = objectMFNode.getTerm().label;
 
-    this.checkConnection(effect, rules, this.displaySection, subjectBPNode);
+    this.checkConnection(effect, rules, this.displaySection, subjectMFNode, subjectBPNode);
+
 
     if (edge) {
-      rules.triple.edge = edge.edge;
+      rules.originalTriple = rules.triple = edge;
       notes.push(rules.annotonsConsecutive)
     }
 
@@ -200,17 +206,19 @@ export class NoctuaAnnotonConnectorService {
     this.objectAnnoton = this.cam.getAnnotonByConnectionId(objectId);
     this.subjectMFNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getMFNode());
     this.objectMFNode = <AnnotonNode>_.cloneDeep(this.objectAnnoton.getMFNode());
-    this.rules.triple.subject = this.subjectMFNode;
     this.rules.triple.object = this.objectMFNode;
     this.rules.bpHasInput = this.subjectAnnoton.bpHasInput;
     this.rules.subjectMFCatalyticActivity.condition = this.subjectMFNode.isCatalyticActivity;
     this.rules.objectMFCatalyticActivity.condition = this.objectMFNode.isCatalyticActivity;
 
     if (this.rules.bpHasInput) {
-      this.rules.hasInput.condition = true;
       this.subjectBPNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getBPNode());
+      this.rules.hasInput.condition = true;
+      this.rules.triple.subject = this.subjectBPNode;
+
       this.rules.hasInput.descriptionSuffix = this.rules.bpHasInput.label;
     } else {
+      this.rules.triple.subject = this.subjectMFNode;
       this.rules.hasInput.condition = false;
       this.subjectBPNode = null;
     }
@@ -219,6 +227,10 @@ export class NoctuaAnnotonConnectorService {
     this.rules.objectMFCatalyticActivity.descriptionSuffix = this.objectMFNode.getTerm().label;
 
     let edge = this.subjectAnnoton.getConnection(this.objectMFNode.individualId);
+
+    if (edge) {
+      this.rules.originalTriple = this.rules.triple = edge;
+    }
     this.connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(this.subjectMFNode, this.objectMFNode, edge);
 
     this.initializeForm(edge);
@@ -263,7 +275,7 @@ export class NoctuaAnnotonConnectorService {
 
     //console.log(self.connectorAnnoton.getEdges('subject'), subjectNode.getTerm())
 
-    self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton, subjectNode, objectNode);
+    return self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton, subjectNode, objectNode);
   }
 
   private _onAnnotonFormChanges(): void {
@@ -271,7 +283,7 @@ export class NoctuaAnnotonConnectorService {
       // this.errors = this.getAnnotonFormErrors();
       // this.connectorFormToAnnoton();
       this.connectorAnnoton.enableSubmit();
-      this.checkConnection(value, this.rules, this.displaySection, this.subjectBPNode);
+      this.checkConnection(value, this.rules, this.displaySection, this.subjectMFNode, this.subjectBPNode);
 
 
       this.rules.triple.edge = this.getCausalConnectorEdge(
@@ -282,16 +294,16 @@ export class NoctuaAnnotonConnectorService {
     })
   }
 
-  checkConnection(value: any, rules, displaySection, subjectBPNode) {
+  checkConnection(value: any, rules, displaySection, subjectMFNode, subjectBPNode) {
     rules.annotonsConsecutive.condition = value.annotonsConsecutive;
     displaySection.causalEffect = true;
     displaySection.causalReactionProduct = false;
-    rules.triple.subject = this.subjectMFNode
+    // rules.triple.subject = subjectMFNode
     rules.triple.edge = null
 
     if (!value.annotonsConsecutive) {
       if (rules.hasInput.condition) {
-        rules.triple.subject = subjectBPNode
+        //       rules.triple.subject = subjectBPNode
       }
     } else {
       if (rules.subjectMFCatalyticActivity.condition && rules.objectMFCatalyticActivity.condition) {
@@ -303,33 +315,33 @@ export class NoctuaAnnotonConnectorService {
   getCausalConnectorEdge(causalEffect, annotonsConsecutive, hasInput, causalReactionProduct) {
     let result;
 
-    if (annotonsConsecutive || (hasInput && !annotonsConsecutive)) {
+    if (hasInput || !annotonsConsecutive) {
+      switch (causalEffect.name) {
+        case noctuaFormConfig.causalEffect.options.positive.name:
+          result = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
+          break;
+        case noctuaFormConfig.causalEffect.options.negative.name:
+          result = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
+          break;
+        case noctuaFormConfig.causalEffect.options.neutral.name:
+          result = noctuaFormConfig.edge.causallyUpstreamOf;
+          break;
+      }
+    } else if (annotonsConsecutive) {
       if (causalReactionProduct.name === noctuaFormConfig.causalReactionProduct.options.substrate.name) {
         result = noctuaFormConfig.edge.directlyProvidesInput;
       } else {
         switch (causalEffect.name) {
           case noctuaFormConfig.causalEffect.options.positive.name:
-            result = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
+            result = noctuaFormConfig.edge.directlyPositivelyRegulates;
             break;
           case noctuaFormConfig.causalEffect.options.negative.name:
-            result = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
+            result = noctuaFormConfig.edge.directlyNegativelyRegulates;
             break;
           case noctuaFormConfig.causalEffect.options.neutral.name:
-            result = noctuaFormConfig.edge.causallyUpstreamOf;
+            result = noctuaFormConfig.edge.directlyRegulates;
             break;
         }
-      }
-    } else if (!annotonsConsecutive) {
-      switch (causalEffect.name) {
-        case noctuaFormConfig.causalEffect.options.positive.name:
-          result = noctuaFormConfig.edge.directlyPositivelyRegulates;
-          break;
-        case noctuaFormConfig.causalEffect.options.negative.name:
-          result = noctuaFormConfig.edge.directlyNegativelyRegulates;
-          break;
-        case noctuaFormConfig.causalEffect.options.neutral.name:
-          result = noctuaFormConfig.edge.directlyRegulates;
-          break;
       }
     }
 
