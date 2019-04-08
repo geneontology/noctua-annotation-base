@@ -84,14 +84,22 @@ export class Annoton extends SaeGraph {
   getConnection(individualId) {
     const self = this;
 
-    let edges: any = self.getEdges('mf');
+    let mfEdges: any = self.getEdges('mf');
+    let bpEdges: any = self.getEdges('bp');
     let edge: any;
+    let edges = [];
 
-    if (edges) {
-      edge = _.find(edges.nodes, (srcEdge) => {
-        return srcEdge.object.individualId === individualId;
-      });
+    if (mfEdges) {
+      edges.push(...mfEdges.nodes);
     }
+
+    if (bpEdges) {
+      edges.push(...bpEdges.nodes);
+    }
+
+    edge = _.find(edges, (srcEdge) => {
+      return srcEdge.object.individualId === individualId;
+    });
 
     return edge;
   }

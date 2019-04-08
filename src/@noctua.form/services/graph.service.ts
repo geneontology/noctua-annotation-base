@@ -452,9 +452,9 @@ export class NoctuaGraphService {
           annoton.parser.setCardinalityError(annotonNode, gpObjectNode.term, noctuaFormConfig.edge.enabledBy.id);
         }
 
-        self.connectAnnatons(cam.graph, annoton, mfEdgesIn, annotonNode, isDoomed);
+        self.connectAnnatons(cam, annoton, mfEdgesIn, annotonNode, isDoomed);
 
-        self.graphToAnnatonDFS(cam.graph, annoton, mfEdgesIn, annotonNode, isDoomed);
+        self.graphToAnnatonDFS(cam, annoton, mfEdgesIn, annotonNode, isDoomed);
 
         // annoton.print();
         let srcAnnoton = cam.findAnnotonById(annoton.id);
@@ -536,14 +536,14 @@ export class NoctuaGraphService {
     return annotons;
   }
 
-  graphToAnnatonDFS(graph, annoton, mfEdgesIn, annotonNode, isDoomed) {
+  graphToAnnatonDFS(cam: Cam, annoton, mfEdgesIn, annotonNode, isDoomed) {
     const self = this;
     let edge = annoton.getEdges(annotonNode.id);
 
-    if (annoton.parser.parseCardinality(graph, annotonNode, mfEdgesIn, edge.nodes)) {
+    if (annoton.parser.parseCardinality(cam.graph, annotonNode, mfEdgesIn, edge.nodes)) {
       each(mfEdgesIn, function (toMFEdge) {
         let predicateId = toMFEdge.predicate_id();
-        let evidence = self.edgeToEvidence(graph, toMFEdge);
+        let evidence = self.edgeToEvidence(cam.graph, toMFEdge);
         let toMFObject = toMFEdge.object_id();
 
         if (annotonNode.id === "mc" && predicateId === noctuaFormConfig.edge.hasPart.id) {
@@ -565,7 +565,7 @@ export class NoctuaGraphService {
             if (predicateId === noctuaFormConfig.edge.hasPart.id && toMFObject !== node.object.id) {
               //do nothing
             } else {
-              let subjectNode = self.subjectToTerm(graph, toMFObject);
+              let subjectNode = self.subjectToTerm(cam.graph, toMFObject);
 
               node.object.individualId = toMFObject;
               node.object.setEvidence(evidence);
@@ -587,38 +587,47 @@ export class NoctuaGraphService {
                 annoton.parser.setNodeWarning(node.object)
               }
 
-              self.graphToAnnatonDFS(graph, annoton, graph.get_edges_by_subject(toMFObject), node.object, isDoomed);
+              self.graphToAnnatonDFS(cam, annoton, cam.graph.get_edges_by_subject(toMFObject), node.object, isDoomed);
             }
           }
         });
       });
-
     }
+
+
+    self.connectAnnatons(cam, annoton, mfEdgesIn, annotonNode, isDoomed);
 
     return annoton;
 
   }
 
-  connectAnnatons(graph, annoton, mfEdgesIn, annotonNode, isDoomed) {
+  connectAnnatons(cam, annoton, mfEdgesIn, annotonNode, isDoomed) {
     const self = this;
-    let edge = annoton.getEdges(annotonNode.id);
 
-    each(mfEdgesIn, function (toMFEdge) {
-      let predicateId = toMFEdge.predicate_id();
-      let evidence = self.edgeToEvidence(graph, toMFEdge);
-      let toMFObject = toMFEdge.object_id();
+    if (annotonNode.id === "mf" || annotonNode.id === "bp") {
+      let edge = annoton.getEdges(annotonNode.id);
 
-      let causalEdge = _.find(noctuaFormConfig.causalEdges, {
-        id: predicateId
-      })
+      each(mfEdgesIn, function (toMFEdge) {
+        let predicateId = toMFEdge.predicate_id();
+        let evidence = self.edgeToEvidence(cam.graph, toMFEdge);
+        let toMFObject = toMFEdge.object_id();
 
-      if (annotonNode.id === "mf" && causalEdge && predicateId === causalEdge['id']) {
-        let destNode = self.noctuaFormConfigService.generateNode('mf', { id: toMFObject });
-        annoton.addNode(destNode);
-        console.log(0)
-        annoton.addEdgeById('mf', 'mf' + toMFObject, causalEdge);
-      }
-    });
+        let causalEdge = _.find(noctuaFormConfig.causalEdges, {
+          id: predicateId
+        })
+
+        if (causalEdge && predicateId === causalEdge['id']) {
+          let destNode = self.noctuaFormConfigService.generateNode('mf', { id: toMFObject });
+          let mfNode = self.subjectToTerm(cam.graph, toMFObject);
+
+          destNode.setTerm(mfNode.term);
+          destNode.setEvidence(evidence);
+          destNode.individualId = toMFObject;
+          annoton.addNode(destNode);
+          annoton.addEdgeById(annotonNode.id, 'mf' + toMFObject, causalEdge);
+        }
+      });
+    }
   }
 
   /*
