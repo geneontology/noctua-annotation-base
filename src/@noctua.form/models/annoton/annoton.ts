@@ -26,6 +26,8 @@ export class Annoton extends SaeGraph {
   edgeOption;
   parser;
   expanded = false;
+  _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-2', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
+
   private _connectionId;
   private _connections;
   private _location = {
@@ -239,18 +241,20 @@ export class Annoton extends SaeGraph {
     }
 
     each(self.nodes, function (node: AnnotonNode) {
-      if (node.displaySection && node.displayGroup) {
-        if (!result[node.displaySection.id][node.displayGroup.id]) {
-          result[node.displaySection.id][node.displayGroup.id] = {
-            shorthand: node.displayGroup.shorthand,
-            label: node.displayGroup.label,
-            nodes: []
-          };
-        }
-        result[node.displaySection.id][node.displayGroup.id].nodes.push(node);
-        node.nodeGroup = result[node.displaySection.id][node.displayGroup.id];
-        if (node.isComplement) {
-          node.nodeGroup.isComplement = true;
+      if (_.includes(self._displayableNodes, node.id)) {
+        if (node.displaySection && node.displayGroup) {
+          if (!result[node.displaySection.id][node.displayGroup.id]) {
+            result[node.displaySection.id][node.displayGroup.id] = {
+              shorthand: node.displayGroup.shorthand,
+              label: node.displayGroup.label,
+              nodes: []
+            };
+          }
+          result[node.displaySection.id][node.displayGroup.id].nodes.push(node);
+          node.nodeGroup = result[node.displaySection.id][node.displayGroup.id];
+          if (node.isComplement) {
+            node.nodeGroup.isComplement = true;
+          }
         }
       }
     });
@@ -296,7 +300,7 @@ export class Annoton extends SaeGraph {
       each(nodeGroup.nodes, function (node: AnnotonNode) {
         let term = node.getTerm();
 
-        if (node.id !== 'mc' && node.id !== 'gp' && term.id) {
+        if (node.id !== 'mc' && node.id !== 'gp' && term.id && _.includes(self._displayableNodes, node.id)) {
           self.generateGridRow(node);
         }
       });
