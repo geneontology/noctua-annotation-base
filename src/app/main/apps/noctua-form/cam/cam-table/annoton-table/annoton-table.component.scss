@@ -67,7 +67,7 @@ $accent: map-get($theme, accent);
     .mat-header-cell {
       padding: 0 10px;
       font-size: 10px !important;
-      color: #0F0; // map-get($primary, default);
+      //color: #0F0; // map-get($primary, default);
       font-weight: bold;
     }
 

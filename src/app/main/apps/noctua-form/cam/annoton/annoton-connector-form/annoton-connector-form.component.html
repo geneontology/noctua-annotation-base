@@ -10,12 +10,67 @@
     </button>
   </div>
   <div class="noc-drawer-body" fxLayout="row" fxLayoutAlign="start start">
-    <div class="noc-connector-form h-100-p" noctuaPerfectScrollbar>
-      <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section w-100-p">
+    <div class="noc-annoton-list h-100-p p-12" noctuaPerfectScrollbar>
+      <div fxLayout="column" fxLayoutAlign="start stretch" class="w-100-p">
         <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
-          <div *ngFor="let connector of cam?.annotons">
-            <button mat-menu-item (click)="openAnnotonConnector(connector)">
-              {{connector.presentation.gpText}}
+          <div class="noc-annoton-connector-box" *ngFor="let connector of noctuaAnnotonConnectorService.connectors">
+            <div>
+              <small>{{ connector.annoton.presentation.mfText}}</small><br>
+              enabled by:
+              <strong>{{ connector.annoton.presentation.gpText}}</strong>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section noc-bt w-100-p">
+              <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+                <div class="noc-section-heading">
+                  Notes
+                </div>
+              </div>
+              <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+                <div class="" *ngFor="let note of connector.notes" fxLayout="row" fxLayoutAlign="start center">
+                  <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
+                  <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
+                  <span class="noc-description">
+                    {{note.description}} <strong>
+                      {{note.descriptionSuffix}}
+                    </strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="connector.rules.triple.edge?.id" fxLayout="column" fxLayoutAlign="start stretch"
+              class="noc-form-section w-100-p">
+              <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+                <div class="noc-section-heading">
+                  <strong>Connected:</strong> Connection Summary
+                </div>
+              </div>
+              <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+                {{ connector.rules.triple.edge?.label }}<small>({{ connector.rules.triple.edge?.id }})</small>
+              </div>
+              <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
+                <div fxLayout="column" fxLayoutAlign="start center" class="w-100-p">
+                  <div class="noc-annoton-box noc-sm" fxLayout="column" fxLayoutAlign="center center">
+                    <span>
+                      {{ connector.rules.triple.subject?.getTerm().label}}
+                    </span>
+                  </div>
+                  <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+                    {{ connector.rules.triple.edge?.label}}
+                  </div>
+                  <div>
+                    <mat-icon class="s-32">arrow_downward</mat-icon>
+                  </div>
+                  <div class="noc-annoton-box noc-sm" fxLayout="column" fxLayoutAlign="center center">
+                    <span>
+                      {{ connector.rules.triple.object?.getTerm().label}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button mat-stroked-button color="primary" class="noc-rounded-button noc-sm"
+              (click)="openAnnotonConnector(connector.annoton)">
+              Select
             </button>
           </div>
         </div>
@@ -196,7 +251,7 @@
           </div>
         </div>
         <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-          <div class="" *ngFor="let note of (noctuaAnnotonConnectorService.notes)" fxLayout="row"
+          <div class="" *ngFor="let note of noctuaAnnotonConnectorService.notes" fxLayout="row"
             fxLayoutAlign="start center">
             <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
             <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
@@ -222,7 +277,7 @@
         </div>
         <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
           <div fxLayout="column" fxLayoutAlign="start center" class="w-100-p">
-            <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+            <div class="noc-annoton-box noc-sm" fxLayout="column" fxLayoutAlign="center center">
               <span>
                 {{ noctuaAnnotonConnectorService.rules.triple.subject?.getTerm().label}}
               </span>
@@ -233,7 +288,7 @@
             <div>
               <mat-icon class="s-32">arrow_downward</mat-icon>
             </div>
-            <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+            <div class="noc-annoton-box noc-sm" fxLayout="column" fxLayoutAlign="center center">
               <span>
                 {{ noctuaAnnotonConnectorService.rules.triple.object?.getTerm().label}}
               </span>

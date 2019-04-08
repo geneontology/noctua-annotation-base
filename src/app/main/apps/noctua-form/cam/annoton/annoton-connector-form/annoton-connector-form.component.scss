@@ -1,6 +1,9 @@
 @import "src/@noctua/scss/noctua";
 @import "src/@noctua.common/scss/noctua.common";
 
+$primary: map-get($theme, primary);
+$accent: map-get($theme, accent);
+
 :host {
   width: 100%; // display: block;
   background-color: white;
@@ -9,6 +12,46 @@
   .noc-connector-form {
     width: 600px;
     background-color: #FFF;
+  }
+
+  .noc-annoton-list {
+    width: 600px;
+
+    .noc-annoton-connector-box {
+      margin-bottom: 12px;
+      width: 100%;
+      padding: 12px;
+      //box-shadow: 0 1px 40px 0 #B0C1D9;
+      @include mat-elevation(2);
+      z-index: 4;
+      border: 1px solid #2e6f9a;
+      background-color: white;
+      font-size: 14px;
+
+      &.noc-sm {
+        width: 200px;
+        height: 100px;
+        font-size: 12px;
+      }
+
+      .noc-form-section {
+        background-color: transparent;
+
+        .noc-section-header {
+          height: 40px;
+          background-color: transparent;
+
+          .noc-section-heading {
+            padding-left: 12px;
+            font-size: 16px;
+            text-transform: uppercase;
+            // line-height: 30px;
+            color: map-get($primary, default);
+            ;
+          }
+        }
+      }
+    }
   }
 
   .noc-connector-form-notes {
@@ -47,10 +90,16 @@
     z-index: 4;
     border: 1px solid #2e6f9a;
     border-radius: 8px;
-    opacity: 0.8;
+    opacity: 1;
     cursor: move;
     background-color: white;
-    font-size: 11px;
+    font-size: 12px;
+
+    &.noc-sm {
+      width: 200px;
+      height: 100px;
+      font-size: 12px;
+    }
   }
 
   .noc-header {
@@ -79,6 +128,4 @@
     background-color: #F5F5F5;
     @include mat-elevation(2);
   }
-
-
 }

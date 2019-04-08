@@ -1,4 +1,8 @@
 const edge = {
+  placeholder: {
+    id: null,
+    label: null
+  },
   enabledBy: {
     id: 'RO:0002333',
     label: 'enabled by'
