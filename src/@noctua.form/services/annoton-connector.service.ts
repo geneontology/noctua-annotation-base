@@ -78,6 +78,7 @@ export class NoctuaAnnotonConnectorService {
   ];
 
   public displaySection = {
+    annotonsConsecutive: true,
     causalEffect: true,
     causalReactionProduct: false
   }
@@ -215,12 +216,14 @@ export class NoctuaAnnotonConnectorService {
       this.subjectBPNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getBPNode());
       this.rules.hasInput.condition = true;
       this.rules.triple.subject = this.subjectBPNode;
+      this.displaySection.annotonsConsecutive = false;
 
       this.rules.hasInput.descriptionSuffix = this.rules.bpHasInput.label;
     } else {
       this.rules.triple.subject = this.subjectMFNode;
       this.rules.hasInput.condition = false;
       this.subjectBPNode = null;
+      this.displaySection.annotonsConsecutive = true;
     }
 
     this.rules.subjectMFCatalyticActivity.descriptionSuffix = this.subjectMFNode.getTerm().label;

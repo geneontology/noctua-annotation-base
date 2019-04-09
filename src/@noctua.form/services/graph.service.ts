@@ -805,7 +805,8 @@ export class NoctuaGraphService {
     }, 10);
 
     cam.manager.user_token(this.noctuaUserService.baristaToken);
-    cam.manager.request_with(reqs);
+
+    return cam.manager.request_with(reqs);
   }
 
   editIndividual(reqs, modelId, individualId, classExpression, classId) {

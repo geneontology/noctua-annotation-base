@@ -132,50 +132,56 @@
             </div>
           </div>
         </div>
-        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-section-heading">
-            Are the activities consecutive?
+        <div *ngIf="noctuaAnnotonConnectorService.displaySection.annotonsConsecutive"
+          class="noc-form-section p-0 w-100-p">
+          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+            <div class="noc-section-heading">
+              Are the activities consecutive?
+            </div>
+          </div>
+          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+            <div class="px-12 noc-annoton-group-row" fxLayout="column">
+              <mat-radio-group formControlName="annotonsConsecutive" fxLayout="column" fxLayoutAlign="start stretch">
+                <mat-radio-button class="mt-8 mb-4" [value]="false" fxFlex="30"> No/unknown</mat-radio-button>
+                <mat-radio-button class="mt-8 mb-4" [value]="true" fxFlex="30"> Yes</mat-radio-button>
+              </mat-radio-group>
+            </div>
           </div>
         </div>
-        <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-          <div class="px-12 noc-annoton-group-row" fxLayout="column">
-            <mat-radio-group formControlName="annotonsConsecutive" fxLayout="column" fxLayoutAlign="start stretch">
-              <mat-radio-button class="mt-8 mb-4" [value]="false" fxFlex="30"> No/unknown</mat-radio-button>
-              <mat-radio-button class="mt-8 mb-4" [value]="true" fxFlex="30"> Yes</mat-radio-button>
-            </mat-radio-group>
+        <div *ngIf="noctuaAnnotonConnectorService.displaySection.causalEffect" class="noc-form-section p-0 w-100-p">
+          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+            <div class="noc-section-heading">
+              Causal Relation
+            </div>
+          </div>
+          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+            <div class="px-12 noc-annoton-group-row" fxLayout="column">
+              <mat-radio-group formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start stretch">
+                <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
+                  class="mt-8 mb-4" [value]="causalEffect" fxFlex="30">
+                  {{causalEffect.label}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
           </div>
         </div>
-        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-section-heading">
-            Causal Relation
+        <div *ngIf="noctuaAnnotonConnectorService.displaySection.causalReactionProduct"
+          class="noc-form-section p-0 w-100-p">
+          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+            <div class="noc-section-heading">
+              Does the product of reaction 1 REGULATE or become the SUBSTRATE for activity 2?
+            </div>
           </div>
-        </div>
-        <div [ngClass]="{'noc-disabled':!noctuaAnnotonConnectorService.displaySection.causalEffect}"
-          class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-          <div class="px-12 noc-annoton-group-row" fxLayout="column">
-            <mat-radio-group formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start stretch">
-              <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
-                class="mt-8 mb-4" [value]="causalEffect" fxFlex="30">
-                {{causalEffect.label}}
-              </mat-radio-button>
-            </mat-radio-group>
-          </div>
-        </div>
-        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-section-heading">
-            Does the product of reaction 1 REGULATE or become the SUBSTRATE for activity 2?
-          </div>
-        </div>
-        <div [ngClass]="{'noc-disabled': !noctuaAnnotonConnectorService.displaySection.causalReactionProduct}"
-          class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-          <div class="px-12 noc-annoton-group-row" fxLayout="column">
-            <mat-radio-group formControlName="causalReactionProduct" fxLayout="column" fxLayoutAlign="start stretch">
-              <mat-radio-button
-                *ngFor="let causalReactionProduct of noctuaFormConfigService.causalReactionProduct.options"
-                class="mt-8 mb-4" [value]="causalReactionProduct" fxFlex="30">
-                {{causalReactionProduct.label}}
-              </mat-radio-button>
-            </mat-radio-group>
+          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+            <div class="px-12 noc-annoton-group-row" fxLayout="column">
+              <mat-radio-group formControlName="causalReactionProduct" fxLayout="column" fxLayoutAlign="start stretch">
+                <mat-radio-button
+                  *ngFor="let causalReactionProduct of noctuaFormConfigService.causalReactionProduct.options"
+                  class="mt-8 mb-4" [value]="causalReactionProduct" fxFlex="30">
+                  {{causalReactionProduct.label}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
           </div>
         </div>
         <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
