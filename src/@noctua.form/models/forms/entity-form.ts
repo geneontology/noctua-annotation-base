@@ -44,6 +44,7 @@ export class EntityForm {
 
         let evidences: Evidence[] = []
         annotonNode.setTerm(this.term.value);
+        //  this.term.
 
         self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
             let evidence = new Evidence()

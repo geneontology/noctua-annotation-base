@@ -98,11 +98,13 @@ export class NoctuaLookupService {
   _foo(response) {
     let data = response.response.docs;
     let result = data.map((item) => {
+
       return {
         id: item.annotation_class,
         label: item.annotation_class_label
       };
     });
+    console.log(result, response);
     return result;
   }
 
@@ -199,7 +201,6 @@ export class NoctuaLookupService {
       map(response => {
         let docs = response["response"].docs;
         let result = [];
-        // console.log('poo', data);
 
         each(docs, function (doc) {
           let annotonNode = new AnnotonNode();
@@ -237,7 +238,7 @@ export class NoctuaLookupService {
     const self = this;
 
     let requestParams = {
-      q: self.buildQ(b),
+      q: self.buildQ(a),
       defType: 'edismax',
       indent: 'on',
       qt: 'standard',
@@ -260,7 +261,7 @@ export class NoctuaLookupService {
       ],
       fq: [
         'document_category:"ontology_class"',
-        'isa_closure:' + '"' + a + '"'
+        'isa_closure:' + '"' + b + '"'
       ],
       qf: [
         'annotation_class^3',
@@ -286,8 +287,14 @@ export class NoctuaLookupService {
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
       map(response => {
-        let data = response["response"].docs;
-        let result = data.length > 0;
+        let docs = response["response"].docs;
+        let result = false;
+
+        if (docs.length > 0) {
+          result = docs[0].annotation_class === a
+        }
+        //let result = data.length > 0;
+        console.log(a, b, result, docs);
         return result;
       }))
   }

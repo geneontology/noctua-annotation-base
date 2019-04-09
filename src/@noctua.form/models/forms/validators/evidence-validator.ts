@@ -6,9 +6,11 @@ export function evidenceValidator(termNode: AnnotonNode): ValidatorFn {
         if (termNode.hasValue()) {
             if (control.value) {
                 if (!control.value.id) {
+                    console.log('-', termNode.getTerm(), termNode.label, control);
                     return { [`Selevt correct evidence for "${termNode.label}" correct value`]: { value: control.value } };
                 }
             } else {
+                console.log('+', termNode.getTerm(), termNode.label, control);
                 return { [`Evidence for "${termNode.label}" is required`]: { value: control.value } };
             }
         }

@@ -97,9 +97,7 @@ export class AnnotonNode {
   }
 
   setTerm(value, classExpression?) {
-    if (value) {
-      this.term.control.value = value;
-    }
+    this.term.control.value = value;
 
     if (classExpression) {
       this.classExpression = classExpression;

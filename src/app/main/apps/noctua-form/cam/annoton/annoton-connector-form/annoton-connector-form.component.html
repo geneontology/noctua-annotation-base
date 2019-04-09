@@ -169,7 +169,6 @@
         <div [ngClass]="{'noc-disabled': !noctuaAnnotonConnectorService.displaySection.causalReactionProduct}"
           class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
           <div class="px-12 noc-annoton-group-row" fxLayout="column">
-            {{noctuaAnnotonConnectorService.displaySection.causalReactionProduct}}
             <mat-radio-group formControlName="causalReactionProduct" fxLayout="column" fxLayoutAlign="start stretch">
               <mat-radio-button
                 *ngFor="let causalReactionProduct of noctuaFormConfigService.causalReactionProduct.options"

@@ -88,8 +88,13 @@ export class NoctuaAnnotonFormService {
   private _onAnnotonFormChanges(): void {
     this.annotonFormGroup.getValue().valueChanges.subscribe(value => {
       // this.errors = this.getAnnotonFormErrors();
+      // let s = <FormGroup>this.annotonFormGroup.getValue();
+      //console.log(this.getAnnotonFormErrors(), s.invalid, s.valid, s)
+      //  s.updateValueAndValidity();
       this.annotonFormToAnnoton();
       this.annoton.enableSubmit();
+      //  console.log(this.annoton.submitErrors.length > 0, this.annoton.getNode('cc').getTerm())
+
     })
   }
 

@@ -1279,6 +1279,7 @@ export class NoctuaFormConfigService {
       annotonNode.setEvidence(destEvidences);
     });
 
+    annoton.enableSubmit();
     return annoton;
   }
 
