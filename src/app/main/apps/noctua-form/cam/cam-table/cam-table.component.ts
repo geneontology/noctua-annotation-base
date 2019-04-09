@@ -64,7 +64,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   private unsubscribeAll: Subject<any>;
 
   constructor(private route: ActivatedRoute,
-    private camService: CamService,
+    public camService: CamService,
     public noctuaFormService: NoctuaFormService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaSearchService: NoctuaSearchService,
@@ -117,6 +117,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   }
 
   openAnnotonConnector(annoton: Annoton) {
+    this.camService.annoton = annoton;
     this.noctuaAnnotonConnectorService.annoton = annoton;
     this.noctuaAnnotonConnectorService.onAnnotonChanged.next(annoton);
     this.noctuaAnnotonConnectorService.getConnections();
@@ -124,6 +125,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   }
 
   openAnnotonForm(annoton: Annoton) {
+    this.camService.annoton = annoton;
     this.noctuaAnnotonFormService.initializeForm(annoton);
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm)
   }

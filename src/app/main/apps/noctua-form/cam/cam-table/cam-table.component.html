@@ -1,6 +1,7 @@
-<div class="w-100-p p-8 cams-table" noctuaPerfectScrollbar>
-  <div *ngFor="let annoton of cam.annotons" class="mb-16 w-100-p">
-    <div class="noc-cam-table-heading" fxLayout="row" fxLayoutAlign="start center">
+<div class="w-100-p p-8 cam-table" noctuaPerfectScrollbar>
+  <div *ngFor="let annoton of cam.annotons" class="mb-16 w-100-p"
+    [ngClass]="{'noc-annoton-selected': annoton.id=== camService.annoton?.id}">
+    <div class="noc-annoton-table-heading" fxLayout="row" fxLayoutAlign="start center">
       <div fxFlex="50px" (click)="$event.stopPropagation()">
         <button mat-icon-button (click)="toggleExpand(annoton)" class="noc-br">
           <mat-icon *ngIf="!annoton.expanded" class="s-16 fa fa-caret-right">
