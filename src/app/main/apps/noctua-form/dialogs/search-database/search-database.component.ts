@@ -68,7 +68,7 @@ export class SearchDatabaseDialogComponent implements OnInit, OnDestroy {
   }
 
   selectAnnotonNode(annotonNode) {
-    this.selectAnnotonNode = annotonNode;
+    this.selectedAnnotonNode = annotonNode;
     this.dataSource = new MatTableDataSource<Evidence>(annotonNode.evidence);
   }
 

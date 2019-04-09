@@ -203,13 +203,8 @@ export class NoctuaLookupService {
         let result = [];
 
         each(docs, function (doc) {
-          let annotonNode = new AnnotonNode();
+          let annotonNode
           let evidence = new Evidence();
-
-          annotonNode.setTerm({
-            id: doc.annotation_class,
-            label: doc.annotation_class_label
-          })
 
           evidence.setEvidence({
             id: doc.evidence,
@@ -226,8 +221,21 @@ export class NoctuaLookupService {
 
           evidence.setAssignedBy(doc.assigned_by);
 
-          annotonNode.addEvidence(evidence);
-          result.push(annotonNode);
+          annotonNode = _.find(result, (srcAnnotonNode: AnnotonNode) => {
+            return srcAnnotonNode.getTerm().id === doc.annotation_class;
+          });
+
+          if (annotonNode) {
+            annotonNode.addEvidence(evidence);
+          } else {
+            annotonNode = new AnnotonNode();
+            annotonNode.setTerm({
+              id: doc.annotation_class,
+              label: doc.annotation_class_label
+            });
+            annotonNode.addEvidence(evidence);
+            result.push(annotonNode);
+          }
         });
 
         return result;

@@ -142,18 +142,26 @@ export class NoctuaAnnotonConnectorService {
 
   getConnections() {
     const self = this;
-    self.connectors = [];
+    let connectors = [];
 
     each(this.cam.annotons, (annoton: Annoton) => {
       if (self.annoton.connectionId !== annoton.connectionId) {
         let connectionSummary = self.getCreateConnectionSummary(this.annoton.connectionId, annoton.connectionId)
 
-        self.connectors.push(
+        connectors.push(
           Object.assign({
             annoton: annoton,
           }, connectionSummary)
         );
       }
+    });
+
+    self.connectors = connectors.sort((n1, n2) => {
+      if (n1.rules.originalTriple.edge) {
+        return -1;
+      }
+
+      return 1;
     });
   }
 

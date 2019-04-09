@@ -1,5 +1,7 @@
 @import "src/@noctua/scss/noctua";
 @import "src/@noctua.common/scss/noctua.common";
+$primary: map-get($theme, primary);
+$accent: map-get($theme, accent);
 
 :host {
 
@@ -12,14 +14,27 @@
     width: 600px;
   }
 
-  .noc-annoton-node-card {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+  .noc-left-panel {
+    // min-height: 800px;
+    // padding: 12px 8px;
+    background-color: #EEE;
+    border-right: rgba(map-get($primary, default), 0.6) solid 1px;
+
+
+    .noc-term-box {
+      font-size: 12px;
+      padding: 10px 0;
+      border-bottom: rgba(map-get($primary, default), 0.2) solid 1px;
+    }
+  }
+
+  .noc-right-panel {
+    // padding: 12px 8px 16px 12px;
   }
 
   .noc-dialog-body {
     margin: 0;
-    padding: 15px 10px;
+    padding: 0;
     @include deep-width(100%);
   }
 
@@ -30,8 +45,8 @@
   .mat-dialog-content {}
 
   .dialog-content-wrapper {
-    width: 900px;
-    min-height: 80%;
+    width: 1100px;
+    min-height: 90%;
     display: flex;
     flex-direction: column;
   }
