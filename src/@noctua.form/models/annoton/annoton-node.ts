@@ -148,7 +148,7 @@ export class AnnotonNode {
     });
   }
 
-  addEvidence(srcEvidence?) {
+  addEvidence(srcEvidence?: Evidence) {
     const self = this;
     let evidence = srcEvidence ? srcEvidence : new Evidence();
 

@@ -42,15 +42,13 @@ export class EntityForm {
     populateTerm(annotonNode: AnnotonNode) {
         const self = this;
 
-        let evidences: Evidence[] = []
         annotonNode.setTerm(this.term.value);
-        //  this.term.
 
-        self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
-            let evidence = new Evidence()
-
-            evidenceForm.populateEvidence(evidence);
-            evidences.push(evidence)
+        self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
+            let evidence: Evidence = annotonNode.evidence[index];
+            if (evidence) {
+                evidenceForm.populateEvidence(evidence);
+            }
         });
     }
 
