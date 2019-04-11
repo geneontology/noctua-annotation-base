@@ -123,7 +123,6 @@ export class NoctuaFormDialogService {
             data: {
                 searchCriteria: searchCriteria
             },
-            height: '90%',
             width: '600px',
         });
         this.dialogRef.afterClosed()

@@ -27,7 +27,7 @@ $noc-secondary-color: #995014;
 }
 
 .noc-search-database-dialog {
-  // @include deep-height(90%);
+  @include deep-height(90%);
   @include deep-width(1100px);
 }
 
