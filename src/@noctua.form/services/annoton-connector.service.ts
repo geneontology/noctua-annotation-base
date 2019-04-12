@@ -210,7 +210,7 @@ export class NoctuaAnnotonConnectorService {
     }
   }
 
-  createConnection(subjectId, objectId) {
+  createConnection(subjectId, objectId, edit?) {
     this.subjectAnnoton = this.cam.getAnnotonByConnectionId(subjectId);
     this.objectAnnoton = this.cam.getAnnotonByConnectionId(objectId);
     this.subjectMFNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getMFNode());
@@ -219,6 +219,12 @@ export class NoctuaAnnotonConnectorService {
     this.rules.bpHasInput = this.subjectAnnoton.bpHasInput;
     this.rules.subjectMFCatalyticActivity.condition = this.subjectMFNode.isCatalyticActivity;
     this.rules.objectMFCatalyticActivity.condition = this.objectMFNode.isCatalyticActivity;
+
+    this.rules.originalTriple = {
+      subject: null,
+      edge: null,
+      object: null,
+    }
 
     if (this.rules.bpHasInput) {
       this.subjectBPNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getBPNode());
@@ -240,8 +246,14 @@ export class NoctuaAnnotonConnectorService {
     let edge = this.subjectAnnoton.getConnection(this.objectMFNode.individualId);
 
     if (edge) {
-      this.rules.originalTriple = this.rules.triple = edge;
+      this.rules.triple = edge;
+      if (edit) {
+        this.rules.originalTriple = _.cloneDeep(edge);
+      }
     }
+
+
+
     this.connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(this.subjectMFNode, this.objectMFNode, edge);
 
     this.initializeForm(edge);
