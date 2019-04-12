@@ -95,7 +95,9 @@
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
-                <h6 class="noc-menu-heading"> Search </h6>
+                <!--
+                    <h6 class="noc-menu-heading"> Search </h6>
+              
                 <button mat-menu-item *ngIf="termNode.aspect" class="" (click)="openSearchDatabaseDialog(termNode)">
                   Search Database
                 </button>
@@ -119,6 +121,7 @@
                 <button mat-menu-item class="" (click)="termNode.clearValues()">
                   Clear
                 </button>
+              -->
               </mat-menu>
             </div>
           </div>
