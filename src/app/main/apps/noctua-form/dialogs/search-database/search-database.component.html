@@ -21,7 +21,7 @@
         <div class="noc-term-box" *ngFor="let annotonNode of annotonNodes" (click)="selectAnnotonNode(annotonNode)"
           [ngClass]="{'noc-term-selected': annotonNode.getTerm().id===selectedAnnotonNode?.getTerm().id}" fxLayout="row"
           fxLayoutAlign="start center">
-          <mat-icon fkFlex="20px" class="green-300-fg">check_circle</mat-icon>
+          <mat-icon fkFlex="25px" class="green-300-fg mr-4">check_circle</mat-icon>
           {{annotonNode.getTerm().label}}
         </div>
       </div>
@@ -38,14 +38,14 @@
       <div class="noc-section-body w-100-p" noctuaPerfectScrollbar>
         <mat-table class="noc-evidence-table w-100-p" #table [dataSource]="dataSource" matSort
           [@animateStagger]="{value:'50'}" noctuaPerfectScrollbar>
-          <ng-container matColumnDef="select" class="mr-12">
-            <mat-header-cell *matHeaderCellDef fxFlex="50px">
+          <ng-container matColumnDef="select" class="">
+            <mat-header-cell *matHeaderCellDef fxFlex="30px">
               <mat-checkbox (change)="$event ? masterToggle() : null"
                 [checked]="selection.hasValue() && isAllSelected()"
                 [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
             </mat-header-cell>
-            <mat-cell *matCellDef="let row" fxFlex="50px">
+            <mat-cell *matCellDef="let row" fxFlex="30px">
               <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
                 [checked]="selection.isSelected(row)">
               </mat-checkbox>
@@ -60,7 +60,7 @@
           <ng-container cdkColumnDef="reference">
             <mat-header-cell *cdkHeaderCellDef fxFlex="20%">Reference</mat-header-cell>
             <mat-cell *cdkCellDef="let evidence" fxFlex="20%">
-              <a href="{{evidence.getReference()?.url}}" class="" target="_blank">{{evidence.getReference()}}</a>
+              <p class="">{{evidence.getReference()}}</p>
             </mat-cell>
           </ng-container>
           <ng-container cdkColumnDef="with">
@@ -72,8 +72,7 @@
           <ng-container cdkColumnDef="assignedBy">
             <mat-header-cell *cdkHeaderCellDef fxFlex="">Assigned By</mat-header-cell>
             <mat-cell *cdkCellDef="let evidence" fxFlex="">
-              <a href="{{evidence.getAssignedBy()?.link()?.url}}" class=""
-                target="_blank">{{evidence.getAssignedBy()?.link()?.value}}</a>
+              <p class="">{{evidence.getAssignedBy()}}</p>
             </mat-cell>
           </ng-container>
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

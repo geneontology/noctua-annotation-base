@@ -76,12 +76,12 @@ $accent: map-get($theme, accent);
 
     .noc-section-header {
       @include deep-height(40px);
+      padding-left: 8px;
 
       .noc-section-heading {
+        padding: 0;
         font-size: 12px;
         line-height: 15px;
-        //text-transform: uppercase;
-        // line-height: 30px;
       }
     }
   }
@@ -101,7 +101,6 @@ $accent: map-get($theme, accent);
 
       mat-icon {
         @include noc-icon-size(12px);
-        margin-right: 8px;
         display: none;
       }
 
