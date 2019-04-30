@@ -109,6 +109,8 @@ export class NoctuaAnnotonConnectorService {
     this.connectorFormGroup$ = this.connectorFormGroup.asObservable()
 
     this.camService.onCamChanged.subscribe((cam) => {
+      if (!cam) return;
+
       this.cam = cam;
     });
 

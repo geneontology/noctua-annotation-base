@@ -117,6 +117,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   }
 
   openAnnotonConnector(annoton: Annoton) {
+    this.camService.onCamChanged.next(this.cam);
     this.camService.annoton = annoton;
     this.noctuaAnnotonConnectorService.annoton = annoton;
     this.noctuaAnnotonConnectorService.onAnnotonChanged.next(annoton);
@@ -125,6 +126,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   }
 
   openAnnotonForm(annoton: Annoton) {
+    this.camService.onCamChanged.next(this.cam);
     this.camService.annoton = annoton;
     this.noctuaAnnotonFormService.initializeForm(annoton);
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm)

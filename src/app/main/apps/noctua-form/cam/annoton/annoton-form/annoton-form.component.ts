@@ -82,8 +82,9 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
       });
 
     this.camService.onCamChanged.subscribe((cam) => {
-      this.cam = cam
+      if (!cam) return;
 
+      this.cam = cam
       this.cam.onGraphChanged.subscribe((annotons) => {
       });
     });
