@@ -1,11 +1,10 @@
-import { environment } from 'environments/environment';
+import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
 import { map, finalize, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
 
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
-import { CurieService } from '@noctua.curie/services/curie.service';
+import { CurieService } from './../../../@noctua.curie/services/curie.service';
 import {
   NoctuaGraphService,
   AnnotonNode,
@@ -196,25 +195,22 @@ export class SparqlService {
   }
 
   addCam(res) {
+    const self = this;
     let result: Array<Cam> = [];
 
     res.forEach((response) => {
-      let modelId = this.noctuaFormConfigService.getModelId(response.model.value);
+      let modelId = self.curieUtil.getCurie(response.model.value)//this.noctuaFormConfigService.getModelId(response.model.value);
       let cam = new Cam();
 
       cam.id = uuid();
       cam.graph = null;
+      cam.id = modelId;
+      cam.title = response.modelTitle.value;
+      cam.filterBy.individualIds.push(self.curieUtil.getCurie(response.entity.value));
       cam.model = Object.assign({}, {
-        id: modelId,
-        title: response.modelTitle.value,
         modelInfo: this.noctuaFormConfigService.getModelUrls(modelId)
-      }),
-        cam.annotatedEntity = {};
-      // aspect: this.noctuaFormConfigService.getAspect(this.curieUtil.getCurie(cam.aspect.value)),
-      // term: Object.assign({}, {
-      //    id: this.curieUtil.getCurie(cam.term.value),
-      //  label: cam.termLabel.value
-      //   }),;
+      });
+
       result.push(cam);
     });
 
@@ -267,6 +263,22 @@ export class SparqlService {
     })
   }
 
+  addBasicCamChildren(srcCam, annotons) {
+    const self = this;
+
+    srcCam.camRow = [];
+
+    _.each(annotons, function (annoton) {
+      let cam = self.annotonToCam(srcCam, annoton);
+
+      cam.model = srcCam.model;
+      cam.graph = srcCam.graph;
+      srcCam.camRow.push(cam);
+    });
+
+    this.onCamsChanged.next(srcCam.camRow);
+  }
+
   addCamChildren(srcCam, annotons) {
     const self = this;
 
@@ -312,18 +324,19 @@ export class SparqlService {
     return result;
   }
 
+  //GO:0003723
   buildCamsByGoTermQuery(goTerm) {
-    goTerm = goTerm.replace(":", "_");
     var query = `
-    	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       PREFIX dc: <http://purl.org/dc/elements/1.1/> 
       PREFIX metago: <http://model.geneontology.org/>
       PREFIX owl: <http://www.w3.org/2002/07/owl#>
+	    PREFIX GO: <http://purl.obolibrary.org/obo/GO_>
       PREFIX BP: <http://purl.obolibrary.org/obo/GO_0008150>
       PREFIX MF: <http://purl.obolibrary.org/obo/GO_0003674>
       PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
-      SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel 
+      SELECT distinct ?model ?modelTitle ?entity ?aspect ?term ?termLabel 
       WHERE 
       {
         GRAPH ?model {
@@ -331,7 +344,7 @@ export class SparqlService {
                   dc:title ?modelTitle .   
             ?entity rdf:type owl:NamedIndividual .
             ?entity rdf:type ?term .
-            FILTER(?term = <http://purl.obolibrary.org/obo/` + goTerm + `>)
+            FILTER(?term = ${goTerm.id})
           }
           VALUES ?aspect { BP: MF: CC: } .
           ?entity rdf:type ?aspect .

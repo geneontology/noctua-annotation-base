@@ -1342,4 +1342,8 @@ export class NoctuaFormConfigService {
   getModelId(url: string) {
     return 'gomodel:' + url.substr(url.lastIndexOf('/') + 1)
   }
+
+  getIndividalId(url: string) {
+    return 'gomodel:' + url.substr(url.lastIndexOf('/') + 2)
+  }
 }

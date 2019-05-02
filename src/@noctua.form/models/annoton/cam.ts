@@ -29,6 +29,9 @@ export class Cam {
   graph;
   modelId;
   summaryExpanded = false;
+  filterBy: any = {
+    individualIds: []
+  };
 
   constructor() {
   }
@@ -59,6 +62,27 @@ export class Cam {
     });
 
     return result;
+  }
+
+  applyFilter() {
+    const self = this;
+
+    each(self.annotons, (annoton: Annoton) => {
+      if (self.filterBy.individualIds.length > 0) {
+        annoton.visible = false;
+      }
+      each(annoton.nodes, (node: AnnotonNode) => {
+        if (self.filterBy.individualIds.length > 0) {
+          node.visible = false;
+        }
+        each(self.filterBy.individualIds, (individualId) => {
+          if (node.individualId === individualId) {
+            annoton.visible = annoton.visible || true;
+            node.visible = node.visible || true;
+          }
+        });
+      });
+    });
   }
 
   getAnnotonByConnectionId(connectionId) {

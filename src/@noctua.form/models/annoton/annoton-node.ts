@@ -34,6 +34,8 @@ export class AnnotonNode {
   warnings
   status
 
+  visible = true;
+
   isCatalyticActivity = false
 
   //UI

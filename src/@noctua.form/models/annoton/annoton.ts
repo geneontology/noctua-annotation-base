@@ -25,6 +25,7 @@ export class Annoton extends SaeGraph {
   edgeOption;
   parser;
   expanded = false;
+  visible = true;
   _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-2', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
 
   private _connectionId;
