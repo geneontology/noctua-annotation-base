@@ -910,6 +910,18 @@ export class NoctuaFormConfigService {
     }
   }
 
+  get camDisplayType() {
+    let options = [
+      noctuaFormConfig.camDisplayType.options.annoton,
+      noctuaFormConfig.camDisplayType.options.entity
+    ]
+
+    return {
+      options: options,
+      selected: options[0]
+    }
+  }
+
   get causalEffect() {
     let options = [
       noctuaFormConfig.causalEffect.options.positive,

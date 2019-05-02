@@ -110,6 +110,18 @@ export const noctuaFormConfig = {
       }
     }
   },
+  "camDisplayType": {
+    "options": {
+      'annoton': {
+        "name": 'annoton',
+        "label": 'Annoton'
+      },
+      'entity': {
+        "name": 'entity',
+        "label": 'Entity'
+      }
+    }
+  },
   "modelState": {
     "options": {
       'development': {

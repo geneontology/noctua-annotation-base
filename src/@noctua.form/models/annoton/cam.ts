@@ -3,6 +3,7 @@ declare const require: any;
 const each = require('lodash/forEach');
 const uuid = require('uuid/v1');
 
+import { noctuaFormConfig } from './../../noctua-form-config';
 import { Annoton } from './annoton'
 import { AnnotonNode } from './annoton-node'
 
@@ -33,6 +34,10 @@ export class Cam {
     individualIds: []
   };
 
+  private _displayType = noctuaFormConfig.camDisplayType.options.annoton;
+
+  grid: any = [];
+
   constructor() {
   }
 
@@ -42,6 +47,14 @@ export class Cam {
 
   set annotons(annoton) {
     this._annotons = annoton;
+  }
+
+  set displayType(type) {
+    this._displayType = type;
+  }
+
+  get displayType() {
+    return this._displayType;
   }
 
   findAnnotonById(id) {
@@ -67,22 +80,20 @@ export class Cam {
   applyFilter() {
     const self = this;
 
-    each(self.annotons, (annoton: Annoton) => {
-      if (self.filterBy.individualIds.length > 0) {
-        annoton.visible = false;
-      }
-      each(annoton.nodes, (node: AnnotonNode) => {
-        if (self.filterBy.individualIds.length > 0) {
-          node.visible = false;
-        }
-        each(self.filterBy.individualIds, (individualId) => {
-          if (node.individualId === individualId) {
-            annoton.visible = annoton.visible || true;
-            node.visible = node.visible || true;
-          }
+    if (self.filterBy.individualIds) {
+      self.grid = [];
+      self.displayType = noctuaFormConfig.camDisplayType.options.entity;
+
+      each(self.annotons, (annoton: Annoton) => {
+        each(annoton.nodes, (node: AnnotonNode) => {
+          each(self.filterBy.individualIds, (individualId) => {
+            if (node.individualId === individualId) {
+              self.generateGridRow(annoton, node);
+            }
+          });
         });
       });
-    });
+    }
   }
 
   getAnnotonByConnectionId(connectionId) {
@@ -176,5 +187,64 @@ export class Cam {
     });
 
     return result;
+  }
+
+
+
+
+
+
+
+
+
+  generateGridRow(annoton: Annoton, node: AnnotonNode) {
+    const self = this;
+
+    let term = node.getTerm();
+
+    self.grid.push({
+      displayEnabledBy: self.tableCanDisplayEnabledBy(node),
+      treeLevel: node.treeLevel,
+      relationship: node.isExtension ? '' : self.tableDisplayExtension(node),
+      relationshipExt: node.isExtension ? node.relationship.label : '',
+      term: node.isExtension ? {} : term,
+      extension: node.isExtension ? term : {},
+      aspect: node.aspect,
+      evidence: node.evidence.length > 0 ? node.evidence[0].evidence.control.value : {},
+      reference: node.evidence.length > 0 ? node.evidence[0].reference.control.link : '',
+      with: node.evidence.length > 0 ? node.evidence[0].with.control.value : '',
+      assignedBy: node.evidence.length > 0 ? node.evidence[0].assignedBy.control : '',
+      annoton: annoton,
+      node: node
+    })
+
+    for (let i = 1; i < node.evidence.length; i++) {
+      self.grid.push({
+        treeLevel: node.treeLevel,
+        evidence: node.evidence[i].evidence.control.value,
+        reference: node.evidence[i].reference.control.link,
+        with: node.evidence[i].with.control.value,
+        assignedBy: node.evidence[i].assignedBy.control,
+        node: node,
+      })
+    }
+  }
+
+  tableCanDisplayEnabledBy(node: AnnotonNode) {
+    const self = this;
+
+    return node.relationship.id === noctuaFormConfig.edge.enabledBy.id
+  }
+
+  tableDisplayExtension(node: AnnotonNode) {
+    const self = this;
+
+    if (node.id === 'mf') {
+      return '';
+    } else if (node.isComplement) {
+      return 'NOT ' + node.relationship.label;
+    } else {
+      return node.relationship.label;
+    }
   }
 }
