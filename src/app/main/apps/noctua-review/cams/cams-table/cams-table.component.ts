@@ -50,11 +50,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     mode: 'indeterminate'
   }
 
-  summary: any = {
-    expanded: false,
-    detail: {}
-  }
-
   cams: any[] = [];
   searchResults = [];
 
@@ -80,7 +75,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe(cams => {
         this.cams = cams;
-        this.summary.detail = this.sparqlService.searchSummary;
         this.loadCams();
       });
   }
@@ -97,10 +91,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   loadCams() {
     this.cams = this.sparqlService.cams;
-  }
-
-  toggleSummaryExpand() {
-    this.summary.expanded = !this.summary.expanded;
   }
 
   toggleExpand(cam) {
