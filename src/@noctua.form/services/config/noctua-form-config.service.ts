@@ -912,7 +912,7 @@ export class NoctuaFormConfigService {
 
   get camDisplayType() {
     let options = [
-      noctuaFormConfig.camDisplayType.options.annoton,
+      noctuaFormConfig.camDisplayType.options.model,
       noctuaFormConfig.camDisplayType.options.entity
     ]
 

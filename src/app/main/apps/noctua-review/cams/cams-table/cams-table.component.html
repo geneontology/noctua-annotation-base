@@ -75,22 +75,30 @@
         </div>
         <span fxFlex=""></span>
         <div class="" fxFlex="150px" fxLayout="row" fxLayoutAlign="end center">
-          <button mat-icon-button [matMenuTriggerFor]="changeView" class="noc-bl">
+          <button mat-stroked-button [matMenuTriggerFor]="displayTypeMenu" class="noc-rounded-button noc-sm">
+            View As
+          </button>
+          <mat-menu #displayTypeMenu="matMenu">
+            <button *ngFor="let displayType of noctuaFormConfigService.camDisplayType.options" mat-menu-item
+              (click)="changeCamDisplayView(cam, displayType)">
+              {{displayType.label}}
+            </button>
+          </mat-menu>
+          <button mat-icon-button [matMenuTriggerFor]="appsMenu" class="">
             <mat-icon>apps</mat-icon>
           </button>
-          <mat-menu #changeView="matMenu">
+          <mat-menu #appsMenu="matMenu">
             <a *ngFor="let workbench of cam.model?.modelInfo.workbenches" href="{{workbench.url}}" target="_blank"
               mat-menu-item>
               {{workbench.label}}
             </a>
           </mat-menu>
-          <button mat-icon-button (click)="refresh(cam)" class="noc-bl">
+          <button mat-icon-button (click)="refresh(cam)" class="">
             <mat-icon class="">
               refresh
             </mat-icon>
           </button>
-
-          <button mat-icon-button (click)="toggleExpand(cam)" class="noc-bl">
+          <button mat-icon-button (click)="toggleExpand(cam)" class="">
             <mat-icon *ngIf="!cam.expanded" class="">
               keyboard_arrow_down
             </mat-icon>

@@ -34,11 +34,12 @@ export class Cam {
     individualIds: []
   };
 
-  private _displayType = noctuaFormConfig.camDisplayType.options.annoton;
+  private _displayType;
 
   grid: any = [];
 
   constructor() {
+    this.displayType = noctuaFormConfig.camDisplayType.options.model;
   }
 
   get annotons() {
@@ -80,7 +81,7 @@ export class Cam {
   applyFilter() {
     const self = this;
 
-    if (self.filterBy.individualIds) {
+    if (self.filterBy.individualIds.length > 0) {
       self.grid = [];
       self.displayType = noctuaFormConfig.camDisplayType.options.entity;
 

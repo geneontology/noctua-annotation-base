@@ -20,8 +20,6 @@ import { CamTableService } from './services/cam-table.service';
 import { NoctuaFormDialogService } from './../../services/dialog.service';
 import { NoctuaSearchService } from './../../../../../../@noctua.search/services/noctua-search.service';
 
-
-
 import {
   noctuaFormConfig,
   NoctuaAnnotonConnectorService,
