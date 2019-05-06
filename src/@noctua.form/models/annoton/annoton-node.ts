@@ -27,6 +27,7 @@ export class AnnotonNode {
   _evidenceMeta;
   evidence;
   assignedBy;
+  contributor;
   termRequiredList;
   evidenceRequiredList
   evidenceNotRequiredList
@@ -76,6 +77,7 @@ export class AnnotonNode {
     };
     this.evidence = [];
     this.assignedBy = null;
+    this.contributor = null;
     this.termRequiredList = ['mf'];
     this.evidenceRequiredList = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
     this.evidenceNotRequiredList = []; // ['GO:0003674', 'GO:0008150', 'GO:0005575'];

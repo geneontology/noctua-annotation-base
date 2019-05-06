@@ -24,6 +24,7 @@ const each = require('lodash/forEach');
   providedIn: 'root'
 })
 export class SparqlService {
+  separator = '@@';
   baseUrl = environment.spaqrlApiUrl;
   curieUtil: any;
   cams: any[] = [];
@@ -206,10 +207,27 @@ export class SparqlService {
       cam.graph = null;
       cam.id = modelId;
       cam.title = response.modelTitle.value;
-      cam.filterBy.individualIds.push(self.curieUtil.getCurie(response.entity.value));
       cam.model = Object.assign({}, {
         modelInfo: this.noctuaFormConfigService.getModelUrls(modelId)
       });
+
+      if (response.groups) {
+        cam.groups = <Group[]>response.groups.value.split(self.separator).map(function (url) {
+          return { url: url };
+        });
+      }
+
+      if (response.contributors) {
+        cam.contributors = <Curator[]>response.contributors.value.split(self.separator).map(function (orcid) {
+          return { orcid: orcid };
+        });
+      }
+
+      if (response.entity) {
+        cam.filterBy.individualIds.push(self.curieUtil.getCurie(response.entity.value));
+      } else {
+        cam.resetFilter();
+      }
 
       result.push(cam);
     });
@@ -243,8 +261,8 @@ export class SparqlService {
         name: erg.name.value,
         cams: erg.cams.value,
         curatorsCount: erg.curators.value,
-        curators: erg.orcids.value.split('@@').map(function (ordcid) {
-          return { orcid: ordcid };
+        curators: erg.orcids.value.split('@@').map(function (orcid) {
+          return { orcid: orcid };
         }),
       });
     });
@@ -328,33 +346,44 @@ export class SparqlService {
   buildCamsByGoTermQuery(goTerm) {
     var query = `
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      PREFIX dc: <http://purl.org/dc/elements/1.1/> 
-      PREFIX metago: <http://model.geneontology.org/>
-      PREFIX owl: <http://www.w3.org/2002/07/owl#>
-	    PREFIX GO: <http://purl.obolibrary.org/obo/GO_>
-      PREFIX BP: <http://purl.obolibrary.org/obo/GO_0008150>
-      PREFIX MF: <http://purl.obolibrary.org/obo/GO_0003674>
-      PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
-      SELECT distinct ?model ?modelTitle ?entity ?aspect ?term ?termLabel 
-      WHERE 
-      {
-        GRAPH ?model {
-            ?model metago:graphType metago:noctuaCam;
-                  dc:title ?modelTitle .   
-            ?entity rdf:type owl:NamedIndividual .
-            ?entity rdf:type ?term .
-            FILTER(?term = ${goTerm.id})
-          }
-          VALUES ?aspect { BP: MF: CC: } .
-          ?entity rdf:type ?aspect .
-          ?term rdfs:label ?termLabel  .
-      } `;
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+    PREFIX metago: <http://model.geneontology.org/>
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX GO: <http://purl.obolibrary.org/obo/GO_>
+    PREFIX BP: <http://purl.obolibrary.org/obo/GO_0008150>
+    PREFIX MF: <http://purl.obolibrary.org/obo/GO_0003674>
+    PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
+    PREFIX providedBy: <http://purl.org/pav/providedBy>
+
+    SELECT distinct ?model ?modelTitle ?entity ?aspect ?term ?termLabel ?date
+                    (GROUP_CONCAT( ?contributor;separator="@@") as ?contributors)
+                    (GROUP_CONCAT( ?providedBy;separator="@@") as ?groups)
+    WHERE 
+    {
+      GRAPH ?model {
+          ?model metago:graphType metago:noctuaCam;
+                dc:date ?date;
+                dc:title ?modelTitle; 
+                dc:contributor ?contributor .
+
+          optional {?model providedBy: ?providedBy } .
+          ?entity rdf:type owl:NamedIndividual .
+          ?entity rdf:type ?term .
+          FILTER(?term = ${goTerm.id})
+        }
+        VALUES ?aspect { BP: MF: CC: } .
+        ?entity rdf:type ?aspect .
+        ?term rdfs:label ?termLabel  .
+    }
+
+    GROUP BY ?model ?modelTitle ?entity ?aspect ?term ?termLabel ?date
+    `;
 
     return '?query=' + encodeURIComponent(query);
   }
 
-  buildCamsByGoTermsQuery() {
+  buildCamsByGOTermsQuery() {
     const query = `
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -364,19 +393,20 @@ export class SparqlService {
         PREFIX BP: <http://purl.obolibrary.org/obo/GO_0008150>
         PREFIX MF: <http://purl.obolibrary.org/obo/GO_0003674>
         PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
-		    SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel 
+		    SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel ?contributor
         WHERE
         {
   		    GRAPH ?model {
     			    ?model metago:graphType metago:noctuaCam  .
               ?entity rdf:type owl:NamedIndividual .
-    			    ?entity rdf:type ?term
+              ?entity rdf:type ?term .
+              dc:title ?modelTitle .
+              dc:contributor ?contributor
           }
           VALUES ?aspect { BP: MF: CC:  } .
           # rdf:type faster then subClassOf+ but require filter
           # ?term rdfs:subClassOf+ ?aspect .
           ?entity rdf:type ?aspect .
-          ?model dc:title ?modelTitle .
   			  # Filtering out the root BP, MF & CC terms
 			    filter(?term != MF: )
   			  filter(?term != BP: )
@@ -398,8 +428,8 @@ export class SparqlService {
     PREFIX metago: <http://model.geneontology.org/>
     PREFIX enabled_by: <http://purl.obolibrary.org/obo/RO_0002333>
     PREFIX in_taxon: <http://purl.obolibrary.org/obo/RO_0002162>
-    SELECT ?models (GROUP_CONCAT(distinct ?identifier;separator=";") as ?identifiers)
-            (GROUP_CONCAT(distinct ?name;separator=";") as ?names)
+    SELECT ?models (GROUP_CONCAT(distinct ?identifier;separator="@@") as ?identifiers)
+            (GROUP_CONCAT(distinct ?name;separator="@@") as ?names)
     WHERE
     {
       GRAPH ?models {
@@ -462,18 +492,13 @@ export class SparqlService {
       PREFIX MF: <http://purl.obolibrary.org/obo/GO_0003674>
       PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
           
-      SELECT  ?model ?modelTitle	(GROUP_CONCAT(distinct ?spec;separator="&&") as ?species)
-                (GROUP_CONCAT(distinct ?goid;separator="&&") as ?bpids)
-                (GROUP_CONCAT(distinct ?goname;separator="&&") as ?bpnames)
-                (GROUP_CONCAT(distinct ?gpid;separator="&&") as ?gpids)
-                (GROUP_CONCAT(distinct ?gpname;separator="&&") as ?gpnames)
+      SELECT  ?model ?modelTitle	(GROUP_CONCAT(distinct ?spec;separator="@@") as ?species)
+                (GROUP_CONCAT(distinct ?goid;separator="@@") as ?bpids)
+                (GROUP_CONCAT(distinct ?goname;separator="@@") as ?bpnames)
+                (GROUP_CONCAT(distinct ?gpid;separator="@@") as ?gpids)
+                (GROUP_CONCAT(distinct ?gpname;separator="@@") as ?gpnames)
       WHERE 
-      {
-          #BIND("SynGO:SynGO-pim"^^xsd:string as ?orcid) .
-          #BIND("http://orcid.org/0000-0001-7476-6306"^^xsd:string as ?orcid)
-          #BIND("http://orcid.org/0000-0003-1074-8103"^^xsd:string as ?orcid) .
-          #BIND("http://orcid.org/0000-0001-5259-4945"^^xsd:string as ?orcid) .
-            
+      {            
           BIND(` + modOrcid + ` as ?orcid) .
           BIND(IRI(?orcid) as ?orcidIRI) .
                     

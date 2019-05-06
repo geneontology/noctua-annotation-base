@@ -6,12 +6,17 @@ const uuid = require('uuid/v1');
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { Annoton } from './annoton'
 import { AnnotonNode } from './annoton-node'
+import { Group } from '../group';
+import { Curator } from '../curator';
 
 export class Cam {
+
   //Details
   title: string;
   state: any;
   //User Info
+  groups: Group[] = [];
+  contributors: Curator[] = [];
   group: any;
 
   id: string;
@@ -31,7 +36,8 @@ export class Cam {
   modelId;
   summaryExpanded = false;
   filterBy: any = {
-    individualIds: []
+    contributor: null,
+    individualIds: [],
   };
 
   private _displayType;
@@ -40,6 +46,10 @@ export class Cam {
 
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;
+  }
+
+  resetFilter() {
+    this.filterBy.individualIds = []
   }
 
   get annotons() {

@@ -3,13 +3,15 @@
     <span class="noc-drawer-header-title">
       Curators</span>
     <span fxFlex></span>
-    <button mat-icon-button (click)="close()" aria-label="Close dialog">
-      <mat-icon>close</mat-icon>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close dialog">
+      <mat-icon>close</mat-icon> Close
     </button>
   </div>
   <form fxLayout="column" fxLayoutAlign="start stretch" class="mt-8 noc-search-form" noctuaPerfectScrollbar>
     <mat-accordion>
-      <mat-expansion-panel *ngFor="let group of groups" fxLayout="column" fxLayoutAlign="start stretch" class="noc-group-expansion">
+      <mat-expansion-panel *ngFor="let group of groups" fxLayout="column" fxLayoutAlign="start stretch"
+        class="noc-group-expansion">
         <mat-expansion-panel-header>
           <mat-panel-title fxLayout="row" fxLayoutAlign="start center">
             <!--

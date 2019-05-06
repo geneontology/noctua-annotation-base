@@ -3,12 +3,14 @@
     <span class="noc-drawer-header-title">
       Species</span>
     <span fxFlex></span>
-    <button mat-icon-button (click)="close()" aria-label="Close dialog">
-      <mat-icon>close</mat-icon>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close dialog">
+      <mat-icon>close</mat-icon> Close
     </button>
   </div>
   <div class="noc-expansion-panel-body">
-    <div *ngFor="let organism of organisms" (click)="selectOrganism(organism)" class="" fxLayout="column" fxLayoutAlign="start stretch">
+    <div *ngFor="let organism of organisms" (click)="selectOrganism(organism)" class="" fxLayout="column"
+      fxLayoutAlign="start stretch">
       <div class="noc-organism-row" fxLayout="row" fxLayoutAlign="start center">
         <div>
           {{ organism.name }}
@@ -20,5 +22,4 @@
       </div>
     </div>
   </div>
-
 </div>
