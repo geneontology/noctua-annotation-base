@@ -34,6 +34,7 @@ export class Cam {
   individualManager;
   groupManager;
   graph;
+  date;
   modelId;
   summaryExpanded = false;
 

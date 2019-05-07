@@ -36,7 +36,6 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
   selectedOrganism = {};
   searchFormData: any = []
   cams: any[] = [];
-  step = 0;
 
   filteredOrganisms: Observable<any[]>;
 
@@ -71,17 +70,6 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
 
   }
 
-  setStep(index: number) {
-    this.step = index;
-  }
-
-  nextStep() {
-    this.step++;
-  }
-
-  prevStep() {
-    this.step--;
-  }
 
   search() {
     let searchCriteria = this.searchForm.value;
@@ -153,6 +141,10 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
 
   evidenceDisplayFn(evidence): string | undefined {
     return evidence ? evidence.label : undefined;
+  }
+
+  curatorDisplayFn(curator): string | undefined {
+    return curator ? curator.name : undefined;
   }
 
   organismDisplayFn(organism): string | undefined {

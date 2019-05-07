@@ -7,7 +7,7 @@
     <div *ngFor="let cam of cams" class="mat-elevation-z2 mb-16">
       <div class="noc-cam-table-heading" fxLayout="row" fxLayoutAlign="start center">
         <div fxFlex="50px" (click)="$event.stopPropagation()">
-          <button mat-icon-button (click)="toggleExpand(cam)" class="noc-br">
+          <button mat-icon-button (click)="toggleExpand(cam)" class="">
             <mat-icon *ngIf="!cam.expanded" class="s-16 fa fa-caret-right">
             </mat-icon>
             <mat-icon *ngIf="cam.expanded" class="s-12 mat-icon-rtl-mirror">
@@ -20,10 +20,15 @@
             {{cam.title }}
           </div>
         </div>
-        <div class="" fxFlex="200px">
+        <div class="" fxFlex="100px">
+          <div class="text-truncate">
+            {{cam.date }}
+          </div>
+        </div>
+        <div class="" fxFlex="300px">
           <div class="text-truncate">
             <span *ngFor="let contributor of cam.contributors">
-              {{contributor.orcid }}</span>
+              <small>{{contributor.name}}</small></span>
           </div>
         </div>
         <span fxFlex=""></span>

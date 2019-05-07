@@ -119,10 +119,7 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
     //  this.reviewService.setRightDrawer(this.rightDrawer);
     this.noctuaFormService.setRightDrawer(this.rightDrawer);
 
-    this.sparqlService.getCamsByGoTerm({ id: 'GO:0017127' }).subscribe((response: any) => {
-      this.cams = this.sparqlService.cams = response;
-      this.sparqlService.onCamsChanged.next(this.cams);
-    });
+
 
     /*
     this.sparqlService.getCamsByCurator('http://orcid.org/0000-0002-1706-4196').subscribe((response: any) => {
@@ -142,6 +139,10 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
         //    this.searchFormData['providedBy'].searchResults = response;
 
         this.sparqlService.addGroupCurators(this.reviewService.groups, this.reviewService.curators)
+        this.sparqlService.getCamsByGoTerm({ id: 'GO:0017127' }).subscribe((response: any) => {
+          this.cams = this.sparqlService.cams = response;
+          this.sparqlService.onCamsChanged.next(this.cams);
+        });
       });
     });
 

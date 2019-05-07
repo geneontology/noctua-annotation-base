@@ -214,6 +214,10 @@ export class SparqlService {
         modelInfo: this.noctuaFormConfigService.getModelUrls(modelId)
       });
 
+      if (response.date) {
+        cam.date = response.date.value
+      }
+
       if (response.groups) {
         cam.groups = <Group[]>response.groups.value.split(self.separator).map(function (url) {
           return { url: url };
@@ -222,7 +226,11 @@ export class SparqlService {
 
       if (response.contributors) {
         cam.contributors = <Curator[]>response.contributors.value.split(self.separator).map((orcid) => {
-          return { orcid: orcid };
+          let contributor = _.find(self.noctuaUserService.curators, (curator) => {
+            return curator.orcid === orcid
+          })
+
+          return contributor ? contributor : { orcid: orcid };
         });
       }
 
@@ -363,9 +371,9 @@ export class SparqlService {
     PREFIX providedBy: <http://purl.org/pav/providedBy>
 
     SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel ?date
-                    (GROUP_CONCAT( ?entity;separator="@@") as ?entities)
-                    (GROUP_CONCAT( ?contributor;separator="@@") as ?contributors)
-                    (GROUP_CONCAT( ?providedBy;separator="@@") as ?groups)
+                    (GROUP_CONCAT(distinct  ?entity;separator="@@") as ?entities)
+                    (GROUP_CONCAT(distinct ?contributor;separator="@@") as ?contributors)
+                    (GROUP_CONCAT(distinct ?providedBy;separator="@@") as ?groups)
     WHERE 
     {
       GRAPH ?model {
@@ -536,7 +544,7 @@ export class SparqlService {
             
     SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel ?date
                         (GROUP_CONCAT( ?entity;separator="@@") as ?entities)
-                        (GROUP_CONCAT( ?contributor;separator="@@") as ?contributors)
+                        (GROUP_CONCAT(distinct ?contributor;separator="@@") as ?contributors)
                         (GROUP_CONCAT( ?providedBy;separator="@@") as ?providedBys)
     WHERE 
     {
@@ -571,9 +579,9 @@ export class SparqlService {
     PREFIX providedBy: <http://purl.org/pav/providedBy>
             
     SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel ?date
-                        (GROUP_CONCAT( ?entity;separator="@@") as ?entities)
-                        (GROUP_CONCAT( ?contributor;separator="@@") as ?contributors)
-                        (GROUP_CONCAT( ?providedBy;separator="@@") as ?providedBys)
+                        (GROUP_CONCAT(distinct  ?entity;separator="@@") as ?entities)
+                        (GROUP_CONCAT(distinct  ?contributor;separator="@@") as ?contributors)
+                        (GROUP_CONCAT(distinct  ?providedBy;separator="@@") as ?providedBys)
     
     WHERE 
     {

@@ -84,10 +84,10 @@ export class NoctuaSearchService {
         }
     }
 
-    filterByCurator(cams, orcid) {
+    filterByCurator(cams, curator) {
         return _.filter(cams, (cam: Cam) => {
             let found = _.find(cam.contributors, (contributor: Curator) => {
-                return contributor.orcid === orcid;
+                return contributor.orcid === curator.orcid;
             });
 
             return found ? true : false
