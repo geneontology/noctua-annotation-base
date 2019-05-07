@@ -1,13 +1,16 @@
 import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
+import * as _ from 'lodash';
 import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
 import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
 
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
+import { Cam, Curator } from 'noctua-form-base';
 
-export interface Cam {
+export interface Cam202 {
     model?: {};
     annotatedEntity?: {};
     relationship?: string;
@@ -36,9 +39,22 @@ export class NoctuaSearchService {
     }
 
     search(searchCriteria) {
+
         if (searchCriteria.goTerm) {
             this.sparqlService.getCamsByGoTerm(searchCriteria.goTerm).subscribe((response: any) => {
-                this.cams = this.sparqlService.cams = response;
+                if (searchCriteria.curator) {
+                    this.cams = _.filter(response, (cam: Cam) => {
+                        let found = _.find(cam.contributors, (contributor: Curator) => {
+                            return contributor.orcid === searchCriteria.curator;
+                        });
+
+                        return found ? true : false
+                    });
+                } else {
+                    this.cams = response;
+                }
+                console.log(this.cams)
+                this.sparqlService.cams = this.cams
                 this.sparqlService.onCamsChanged.next(this.cams);
             });
         }

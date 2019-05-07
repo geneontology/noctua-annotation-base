@@ -1,13 +1,11 @@
 export class Curator {
     orcid: string;
-    name: string;
-    group: any = {};
-    cams: number;
+    name?: string;
+    group?: any = {};
+    cams?: number;
     _groups?: any = []
 
-    constructor() {
 
-    }
 
     set groups(groups) {
         this._groups = groups;

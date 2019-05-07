@@ -119,7 +119,7 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
     //  this.reviewService.setRightDrawer(this.rightDrawer);
     this.noctuaFormService.setRightDrawer(this.rightDrawer);
 
-    this.sparqlService.getCamsByGoTerm({ id: 'GO:0003723' }).subscribe((response: any) => {
+    this.sparqlService.getCamsByGoTerm({ id: 'GO:0017127' }).subscribe((response: any) => {
       this.cams = this.sparqlService.cams = response;
       this.sparqlService.onCamsChanged.next(this.cams);
     });
