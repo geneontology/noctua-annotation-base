@@ -214,17 +214,20 @@ export class SparqlService {
       if (response.groups) {
         cam.groups = <Group[]>response.groups.value.split(self.separator).map(function (url) {
           return { url: url };
-        });
+        }); ``
       }
 
       if (response.contributors) {
-        cam.contributors = <Curator[]>response.contributors.value.split(self.separator).map(function (orcid) {
+        cam.contributors = <Curator[]>response.contributors.value.split(self.separator).map((orcid) => {
           return { orcid: orcid };
         });
       }
 
-      if (response.entity) {
-        cam.filterBy.individualIds.push(self.curieUtil.getCurie(response.entity.value));
+      if (response.entities) {
+        cam.filter.individualIds.push(...response.entities.value.split(self.separator).map((iri) => {
+          return self.curieUtil.getCurie(iri);
+        }));
+
       } else {
         cam.resetFilter();
       }
@@ -356,7 +359,8 @@ export class SparqlService {
     PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
     PREFIX providedBy: <http://purl.org/pav/providedBy>
 
-    SELECT distinct ?model ?modelTitle ?entity ?aspect ?term ?termLabel ?date
+    SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel ?date
+                    (GROUP_CONCAT( ?entity;separator="@@") as ?entities)
                     (GROUP_CONCAT( ?contributor;separator="@@") as ?contributors)
                     (GROUP_CONCAT( ?providedBy;separator="@@") as ?groups)
     WHERE 
@@ -377,75 +381,13 @@ export class SparqlService {
         ?term rdfs:label ?termLabel  .
     }
 
-    GROUP BY ?model ?modelTitle ?entity ?aspect ?term ?termLabel ?date
+    GROUP BY ?model ?modelTitle ?aspect ?term ?termLabel ?date
+    ORDER BY DESC(?date)
     `;
 
     return '?query=' + encodeURIComponent(query);
   }
 
-  buildCamsByGOTermsQuery() {
-    const query = `
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX dc: <http://purl.org/dc/elements/1.1/> 
-        PREFIX metago: <http://model.geneontology.org/>
-    	  PREFIX owl: <http://www.w3.org/2002/07/owl#>
-        PREFIX BP: <http://purl.obolibrary.org/obo/GO_0008150>
-        PREFIX MF: <http://purl.obolibrary.org/obo/GO_0003674>
-        PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
-		    SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel ?contributor
-        WHERE
-        {
-  		    GRAPH ?model {
-    			    ?model metago:graphType metago:noctuaCam  .
-              ?entity rdf:type owl:NamedIndividual .
-              ?entity rdf:type ?term .
-              dc:title ?modelTitle .
-              dc:contributor ?contributor
-          }
-          VALUES ?aspect { BP: MF: CC:  } .
-          # rdf:type faster then subClassOf+ but require filter
-          # ?term rdfs:subClassOf+ ?aspect .
-          ?entity rdf:type ?aspect .
-  			  # Filtering out the root BP, MF & CC terms
-			    filter(?term != MF: )
-  			  filter(?term != BP: )
-          filter(?term != CC: )
-    		  ?term rdfs:label ?termLabel  .
-        }
-     
-        ORDER BY DESC(?model)
-        LIMIT 100`;
-
-    return '?query=' + encodeURIComponent(query);
-  }
-
-  buildCamsGpsQuery() {
-    const query = `
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX owl: <http://www.w3.org/2002/07/owl#>
-    PREFIX metago: <http://model.geneontology.org/>
-    PREFIX enabled_by: <http://purl.obolibrary.org/obo/RO_0002333>
-    PREFIX in_taxon: <http://purl.obolibrary.org/obo/RO_0002162>
-    SELECT ?models (GROUP_CONCAT(distinct ?identifier;separator="@@") as ?identifiers)
-            (GROUP_CONCAT(distinct ?name;separator="@@") as ?names)
-    WHERE
-    {
-      GRAPH ?models {
-        ?models metago:graphType metago:noctuaCam .
-        ?s enabled_by: ?gpnode .
-        ?gpnode rdf:type ?identifier .
-        FILTER(?identifier != owl:NamedIndividual) .
-      }
-      optional {
-        ?identifier rdfs:label ?name
-      }
-    }
-    GROUP BY ?models`;
-
-    return '?query=' + encodeURIComponent(query);
-  }
 
   buildAllCuratorsQuery() {
     let query = `
@@ -583,54 +525,71 @@ export class SparqlService {
 
   buildCamsPMIDQuery(pmid) {
     let query = `
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX dc: <http://purl.org/dc/elements/1.1/> 
-        PREFIX metago: <http://model.geneontology.org/>
-		    SELECT distinct ?model ?modelTitle
-        WHERE 
-        {
-	        GRAPH ?model {
-              ?model metago:graphType metago:noctuaCam ;    
-                      dc:title ?modelTitle .
-        	    ?s dc:source ?source .
-            	BIND(REPLACE(?source, " ", "") AS ?source) .
-	            FILTER((CONTAINS(?source, "` + pmid + `")))
-    	    }           
-        }
-        LIMIT 100`
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+    PREFIX metago: <http://model.geneontology.org/>
+    PREFIX providedBy: <http://purl.org/pav/providedBy>
+            
+    SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel ?date
+                        (GROUP_CONCAT( ?entity;separator="@@") as ?entities)
+                        (GROUP_CONCAT( ?contributor;separator="@@") as ?contributors)
+                        (GROUP_CONCAT( ?providedBy;separator="@@") as ?providedBys)
+    WHERE 
+    {
+        GRAPH ?model {
+            ?model metago:graphType metago:noctuaCam ;    
+                dc:date ?date;
+                dc:title ?modelTitle; 
+                dc:contributor ?contributor .
+            optional {?model providedBy: ?providedBy } .
+            ?entity dc:source ?source .
+            BIND(REPLACE(?source, " ", "") AS ?source) .
+            FILTER((CONTAINS(?source, "${pmid}")))
+        }           
+    }
+    GROUP BY ?model ?modelTitle ?aspect ?term ?termLabel ?date
+    ORDER BY DESC(?date)`
 
     return '?query=' + encodeURIComponent(query);
   }
 
   buildCamsByGP(gp) {
 
-    const id = this.curieUtil.getIri(gp)
+    const id = this.curieUtil.getIri(gp.id)
 
     console.log(id, "===")
     let query = `
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> 
     PREFIX dc: <http://purl.org/dc/elements/1.1/> 
-    PREFIX metago: <http://model.geneontology.org/>
-    
-    PREFIX enabled_by: <http://purl.obolibrary.org/obo/RO_0002333>
-    
-    SELECT distinct ?model ?modelTitle
+    PREFIX metago: <http://model.geneontology.org/>    
+    PREFIX enabled_by: <http://purl.obolibrary.org/obo/RO_0002333>    
+    PREFIX providedBy: <http://purl.org/pav/providedBy>
+            
+    SELECT distinct ?model ?modelTitle ?aspect ?term ?termLabel ?date
+                        (GROUP_CONCAT( ?entity;separator="@@") as ?entities)
+                        (GROUP_CONCAT( ?contributor;separator="@@") as ?contributors)
+                        (GROUP_CONCAT( ?providedBy;separator="@@") as ?providedBys)
     
     WHERE 
     {
     
       GRAPH ?model {
         ?model metago:graphType metago:noctuaCam;
-             dc:title ?modelTitle .
-        ?s enabled_by: ?gpnode .    
-        ?gpnode rdf:type ?identifier .
+            dc:date ?date;
+            dc:title ?modelTitle; 
+            dc:contributor ?contributor .
+
+        optional {?model providedBy: ?providedBy } .
+        ?s enabled_by: ?entity .    
+        ?entity rdf:type ?identifier .
         FILTER(?identifier = <` + id + `>) .         
       }
       
     }
-    LIMIT 100`
+    GROUP BY ?model ?modelTitle ?aspect ?term ?termLabel ?date
+    ORDER BY DESC(?date)`
 
     return '?query=' + encodeURIComponent(query);
   }
@@ -656,8 +615,8 @@ export class SparqlService {
               GRAPH ?model {
                   ?model metago:graphType metago:noctuaCam;
                       dc:title ?modelTitle .
-                  ?s enabled_by: ?gpnode .    
-                  ?gpnode rdf:type ?identifier .
+                  ?s enabled_by: ?entity .    
+                  ?entity rdf:type ?identifier .
                   FILTER(?identifier != owl:NamedIndividual) .         
               }
   

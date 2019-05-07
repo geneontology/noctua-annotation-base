@@ -431,7 +431,7 @@ export class NoctuaFormConfigService {
             "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
               fq: [
                 'document_category:"ontology_class"',
-                'isa_closure:"GO:0003674"'
+                'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
               ],
             }),
           }

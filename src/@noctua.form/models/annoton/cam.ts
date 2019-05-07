@@ -8,6 +8,7 @@ import { Annoton } from './annoton'
 import { AnnotonNode } from './annoton-node'
 import { Group } from '../group';
 import { Curator } from '../curator';
+import { Evidence } from './evidence';
 
 export class Cam {
 
@@ -35,7 +36,9 @@ export class Cam {
   graph;
   modelId;
   summaryExpanded = false;
-  filterBy: any = {
+
+  ///
+  filter = {
     contributor: null,
     individualIds: [],
   };
@@ -49,7 +52,7 @@ export class Cam {
   }
 
   resetFilter() {
-    this.filterBy.individualIds = []
+    this.filter.individualIds = []
   }
 
   get annotons() {
@@ -91,14 +94,19 @@ export class Cam {
   applyFilter() {
     const self = this;
 
-    if (self.filterBy.individualIds.length > 0) {
+    if (self.filter.individualIds.length > 0) {
       self.grid = [];
       self.displayType = noctuaFormConfig.camDisplayType.options.entity;
 
       each(self.annotons, (annoton: Annoton) => {
         each(annoton.nodes, (node: AnnotonNode) => {
-          each(self.filterBy.individualIds, (individualId) => {
-            if (node.individualId === individualId) {
+          each(self.filter.individualIds, (individualId) => {
+            let match = false
+            each(node.getEvidence(), (evidence: Evidence) => {
+              match = match || (evidence.individualId === individualId);
+            })
+            match = match || (node.individualId === individualId);
+            if (match) {
               self.generateGridRow(annoton, node);
             }
           });
