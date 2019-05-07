@@ -39,6 +39,9 @@ export class NoctuaUserService {
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
 
+  curators: Curator[] = [];
+  groups: Group[] = [];
+
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
     private httpClient: HttpClient,
     private noctuaLookupService: NoctuaLookupService) {

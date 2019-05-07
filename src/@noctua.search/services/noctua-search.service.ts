@@ -43,17 +43,10 @@ export class NoctuaSearchService {
         if (searchCriteria.goTerm) {
             this.sparqlService.getCamsByGoTerm(searchCriteria.goTerm).subscribe((response: any) => {
                 if (searchCriteria.curator) {
-                    this.cams = _.filter(response, (cam: Cam) => {
-                        let found = _.find(cam.contributors, (contributor: Curator) => {
-                            return contributor.orcid === searchCriteria.curator;
-                        });
-
-                        return found ? true : false
-                    });
+                    this.cams = this.filterByCurator(response, searchCriteria.curator)
                 } else {
                     this.cams = response;
                 }
-                console.log(this.cams)
                 this.sparqlService.cams = this.cams
                 this.sparqlService.onCamsChanged.next(this.cams);
             });
@@ -61,6 +54,11 @@ export class NoctuaSearchService {
 
         if (searchCriteria.gp) {
             this.sparqlService.getCamsByGP(searchCriteria.gp).subscribe((response: any) => {
+                if (searchCriteria.curator) {
+                    this.cams = this.filterByCurator(response, searchCriteria.curator)
+                } else {
+                    this.cams = response;
+                }
                 this.cams = this.sparqlService.cams = response;
                 this.sparqlService.onCamsChanged.next(this.cams);
             });
@@ -68,6 +66,11 @@ export class NoctuaSearchService {
 
         if (searchCriteria.pmid) {
             this.sparqlService.getCamsByPMID(searchCriteria.pmid).subscribe((response: any) => {
+                if (searchCriteria.curator) {
+                    this.cams = this.filterByCurator(response, searchCriteria.curator)
+                } else {
+                    this.cams = response;
+                }
                 this.cams = this.sparqlService.cams = response;
                 this.sparqlService.onCamsChanged.next(this.cams);
             });
@@ -79,6 +82,16 @@ export class NoctuaSearchService {
                 this.sparqlService.onCamsChanged.next(this.cams);
             });
         }
+    }
+
+    filterByCurator(cams, orcid) {
+        return _.filter(cams, (cam: Cam) => {
+            let found = _.find(cam.contributors, (contributor: Curator) => {
+                return contributor.orcid === orcid;
+            });
+
+            return found ? true : false
+        });
     }
 
     searchByCurator(searchCriteria) {

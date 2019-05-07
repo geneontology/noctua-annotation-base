@@ -15,14 +15,15 @@
             </mat-icon>
           </button>
         </div>
-        <div class="" fxFlex="200px">
+        <div class="" fxFlex="300px">
           <div class="text-truncate">
-            <small>Id: </small> {{cam.id }}
+            {{cam.title }}
           </div>
         </div>
-        <div class="" fxFlex="50%">
+        <div class="" fxFlex="200px">
           <div class="text-truncate">
-            <small>Title: </small> {{cam.title }}
+            <span *ngFor="let contributor of cam.contributors">
+              {{contributor.orcid }}</span>
           </div>
         </div>
         <span fxFlex=""></span>

@@ -52,7 +52,8 @@ export class Cam {
   }
 
   resetFilter() {
-    this.filter.individualIds = []
+    this.filter.contributor = null;
+    this.filter.individualIds = [];
   }
 
   get annotons() {

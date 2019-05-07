@@ -12,7 +12,8 @@ import {
   Cam,
   CamRow,
   Curator,
-  Group
+  Group,
+  NoctuaUserService
 } from 'noctua-form-base'
 
 import * as _ from 'lodash';
@@ -31,10 +32,12 @@ export class SparqlService {
   loading: boolean = false;
   onCamsChanged: BehaviorSubject<any>;
   onCamChanged: BehaviorSubject<any>;
+  onCuratorFilterChanged: BehaviorSubject<any>;
 
   searchSummary: any = {}
 
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
+    public noctuaUserService: NoctuaUserService,
     private httpClient: HttpClient,
     private noctuaGraphService: NoctuaGraphService,
     private curieService: CurieService) {

@@ -153,6 +153,19 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
         this.loadCams();
       });
 
+    this.reviewService.onCuratorsChanged
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe(curators => {
+        this.noctuaUserService.curators = curators;
+        let grouped = this.reviewService.groupCurators();
+      });
+
+    this.reviewService.onGroupsChanged
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe(groups => {
+        this.noctuaUserService.groups = groups;
+      });
+
   }
 
   toggleLeftDrawer(panel) {
