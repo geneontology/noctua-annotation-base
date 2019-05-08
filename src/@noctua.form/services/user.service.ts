@@ -64,4 +64,16 @@ export class NoctuaUserService {
       );
   }
 
+  filterCurators(value: string): any[] {
+    const filterValue = value.toLowerCase();
+
+    return this.curators.filter((curator: Curator) => curator.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  filterGroups(value: string): any[] {
+    const filterValue = value.toLowerCase();
+
+    return this.groups.filter((group: Group) => group.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+
 }

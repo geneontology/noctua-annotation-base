@@ -59,7 +59,7 @@ export class NoctuaSearchService {
                 } else {
                     this.cams = response;
                 }
-                this.cams = this.sparqlService.cams = response;
+                this.sparqlService.cams = this.cams
                 this.sparqlService.onCamsChanged.next(this.cams);
             });
         }
@@ -71,7 +71,7 @@ export class NoctuaSearchService {
                 } else {
                     this.cams = response;
                 }
-                this.cams = this.sparqlService.cams = response;
+                this.sparqlService.cams = this.cams
                 this.sparqlService.onCamsChanged.next(this.cams);
             });
         }
@@ -82,6 +82,10 @@ export class NoctuaSearchService {
                 this.sparqlService.onCamsChanged.next(this.cams);
             });
         }
+    }
+
+    searchFilter() {
+
     }
 
     filterByCurator(cams, curator) {

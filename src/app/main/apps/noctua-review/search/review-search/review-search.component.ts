@@ -15,7 +15,7 @@ import { forEach } from '@angular/router/src/utils/collection';
 import { ReviewService } from '../../services/review.service';
 
 import { NoctuaTranslationLoaderService } from '@noctua/services/translation-loader.service';
-import { NoctuaFormConfigService } from 'noctua-form-base';
+import { NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
 import { NoctuaLookupService } from 'noctua-form-base';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 
@@ -38,10 +38,14 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
   cams: any[] = [];
 
   filteredOrganisms: Observable<any[]>;
+  filteredGroups: Observable<any[]>;
+  filteredCurators: Observable<any[]>;
+
 
   private unsubscribeAll: Subject<any>;
 
   constructor(private route: ActivatedRoute,
+    public noctuaUserService: NoctuaUserService,
     private noctuaSearchService: NoctuaSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaLookupService: NoctuaLookupService,
@@ -118,20 +122,26 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
         })
       })
 
-    self.searchFormData['curator'].filteredResult = this.searchForm.get('curator').valueChanges
-      .distinctUntilChanged()
-      .debounceTime(400)
-      .pipe(
-        //    startWith(''),
-        //  map(value => this._filter(value))
-      )
 
     this.filteredOrganisms = this.searchForm.controls.organism.valueChanges
       .pipe(
         startWith(''),
-
         map(value => typeof value === 'string' ? value : value['short_name']),
         map(organism => organism ? this._filterOrganisms(organism) : this.organisms.slice())
+      )
+
+    this.filteredCurators = this.searchForm.controls.curator.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value['name']),
+        map(curator => curator ? this.noctuaUserService.filterCurators(curator) : this.noctuaUserService.curators.slice())
+      )
+
+    this.filteredGroups = this.searchForm.controls.providedBy.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value['name']),
+        map(group => group ? this.noctuaUserService.filterGroups(group) : this.noctuaUserService.groups.slice())
       )
   }
 
@@ -145,6 +155,10 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
 
   curatorDisplayFn(curator): string | undefined {
     return curator ? curator.name : undefined;
+  }
+
+  groupDisplayFn(group): string | undefined {
+    return group ? group.name : undefined;
   }
 
   organismDisplayFn(organism): string | undefined {
