@@ -1,17 +1,8 @@
-export class SparqlBuilder {
+import { Query } from "./query";
+import { Prefix } from "./clause";
+import { PrefixItem } from "./clause/prefix-item";
 
-    static PREFIX = {
-        rdf: '<http://www.w3.org/1999/02/22-rdf-syntax-ns#>',
-        rdfs: '<http://www.w3.org/2000/01/rdf-schema#>',
-        dc: '<http://purl.org/dc/elements/1.1/>',
-        metago: '<http://model.geneontology.org/>',
-        owl: '<http://www.w3.org/2002/07/owl#>',
-        GO: '<http://purl.obolibrary.org/obo/GO_>',
-        BP: '<http://purl.obolibrary.org/obo/GO_0008150>',
-        MF: '<http://purl.obolibrary.org/obo/GO_0003674>',
-        CC: '<http://purl.obolibrary.org/obo/GO_0005575>',
-        providedBy: '<http://purl.org/pav/providedBy>'
-    }
+export class SparqlBuilder {
 
     _prefix = '';
     _select = "";
@@ -20,7 +11,6 @@ export class SparqlBuilder {
 
 
     prefix(prefix) {
-        this._prefix += `PREFIX ${prefix}:${SparqlBuilder.PREFIX[prefix]}`
     }
 
     select(select) {
@@ -37,6 +27,26 @@ export class SparqlBuilder {
 
     orderBy(orderBy) {
         this._orderBy += ` ${orderBy}`
+    }
+
+    query1() {
+        let query = new Query();
+        let prefix = new Prefix();
+        prefix.addPrefixItem(new PrefixItem('rdf'));
+        prefix.addPrefixItem(new PrefixItem('rdfs'));
+        prefix.addPrefixItem(new PrefixItem('dc'));
+        prefix.addPrefixItem(new PrefixItem('metago'));
+        prefix.addPrefixItem(new PrefixItem('owl'));
+        prefix.addPrefixItem(new PrefixItem('GO'));
+        prefix.addPrefixItem(new PrefixItem('BP'));
+        prefix.addPrefixItem(new PrefixItem('MF'));
+        prefix.addPrefixItem(new PrefixItem('CC'));
+        prefix.addPrefixItem(new PrefixItem('providedB'));
+
+        query.addClause(prefix);
+
+        console.log(query.build())
+
     }
 
 

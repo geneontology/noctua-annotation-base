@@ -1,7 +1,7 @@
 {
   "name": "noctua-form-base",
   "version": "0.2.2",
-  "license": "",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4202  --extra-webpack-config webpack.extra.js",
@@ -87,6 +87,7 @@
     "request": "^2.88.0",
     "rxjs": "6.5.1",
     "rxjs-compat": "6.5.1",
+    "sparql-query-builder": "file:../sparql-query-builder/sparql-query-builder-0.0.2.tgz",
     "uuid": "^3.3.2",
     "web-animations-js": "2.3.1",
     "zone.js": "0.9.0"
