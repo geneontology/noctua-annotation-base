@@ -6,9 +6,14 @@
       <mat-icon> search </mat-icon>
     </button>
     <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
+      toggleLeftDrawer(reviewService.leftPanel.group)" matTooltip="Search by group" [matTooltipPosition]="'after'"
+      [matTooltipShowDelay]="1000">
+      <mat-icon> people_outline </mat-icon>
+    </button>
+    <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
       toggleLeftDrawer(reviewService.leftPanel.curator)" matTooltip="Search by curator" [matTooltipPosition]="'after'"
       [matTooltipShowDelay]="1000">
-      <mat-icon> group </mat-icon>
+      <mat-icon>person_outline</mat-icon>
     </button>
     <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
       toggleLeftDrawer(reviewService.leftPanel.species)" matTooltip="Search by species" [matTooltipPosition]="'after'"
@@ -20,6 +25,7 @@
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start">
       <div [ngSwitch]="reviewService.selectedLeftPanel.id" class="h-100-p">
         <noc-review-search *ngSwitchCase="reviewService.leftPanel.search.id"></noc-review-search>
+        <noc-review-groups *ngSwitchCase="reviewService.leftPanel.group.id"></noc-review-groups>
         <noc-review-curators *ngSwitchCase="reviewService.leftPanel.curator.id"></noc-review-curators>
         <noc-review-species *ngSwitchCase="reviewService.leftPanel.species.id"></noc-review-species>
       </div>

@@ -39,7 +39,13 @@ export class NoctuaSearchService {
     }
 
     search(searchCriteria) {
+        this.sparqlService.getCams(searchCriteria).subscribe((response: any) => {
+            this.sparqlService.cams = this.cams = response;
+            this.sparqlService.onCamsChanged.next(this.cams);
+        });
+    }
 
+    searcLlegacy(searchCriteria) {
         if (searchCriteria.goTerm) {
             this.sparqlService.getCamsByGoTerm(searchCriteria.goTerm).subscribe((response: any) => {
                 if (searchCriteria.curator) {
@@ -96,6 +102,15 @@ export class NoctuaSearchService {
 
             return found ? true : false
         });
+    }
+
+    searchByGroup(searchCriteria) {
+        if (searchCriteria.group) {
+            this.sparqlService.getCamsByGroup(searchCriteria.group).subscribe((response: any) => {
+                this.cams = this.sparqlService.cams = response;
+                this.sparqlService.onCamsChanged.next(this.cams);
+            });
+        }
     }
 
     searchByCurator(searchCriteria) {

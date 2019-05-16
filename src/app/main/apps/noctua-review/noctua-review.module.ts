@@ -9,9 +9,10 @@ import { NoctuaFormModule } from './../noctua-form/noctua-form.module'
 import { CamService } from 'noctua-form-base';
 import { CamsTableComponent } from './cams/cams-table/cams-table.component';
 
-
+//Search and Browse
 import { ReviewSearchComponent } from './search/review-search/review-search.component';
 import { ReviewCuratorsComponent } from './search/review-curators/review-curators.component';
+import { ReviewGroupsComponent } from './search/review-groups/review-groups.component';
 import { ReviewSpeciesComponent } from './search/review-species/review-species.component';
 
 const routes = [
@@ -42,6 +43,7 @@ const routes = [
     CamsTableComponent,
     ReviewSearchComponent,
     ReviewCuratorsComponent,
+    ReviewGroupsComponent,
     ReviewSpeciesComponent
   ]
   /*

@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-drawer w-100-p h-100-p">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-drawer-header-title">
-      Contributors</span>
+      Groups</span>
     <span fxFlex></span>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
       aria-label="Close dialog">
@@ -9,14 +9,14 @@
     </button>
   </div>
   <form fxLayout="column" fxLayoutAlign="start stretch" class="mt-8 noc-search-form" noctuaPerfectScrollbar>
-    <div *ngFor="let curator of noctuaUserService.curators" (click)="selectCurator(curator)" class="noc-curator-row"
+    <div *ngFor="let group of noctuaUserService.groups" (click)="selectGroup(group)" class="noc-group-row"
       fxLayout="row" fxLayoutAlign="start center">
       <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="center start">
         <div class="noc-name">
-          {{ curator.name }}
+          {{ group.name }}
         </div>
         <div class="">
-          <strong>{{ curator.cams }}</strong> Models
+          <strong>{{ group.cams }}</strong> Models
         </div>
       </div>
       <span fxFlex></span>

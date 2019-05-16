@@ -31,11 +31,12 @@ export class ReviewService {
   leftPanel = {
     search: {
       id: 1
-    },
-    curator: {
+    }, group: {
       id: 2
-    }, species: {
+    }, curator: {
       id: 3
+    }, species: {
+      id: 4
     }
   }
 
