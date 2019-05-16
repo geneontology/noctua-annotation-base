@@ -13,7 +13,7 @@ import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './user.service';
 //import { Cam } from '../models/cam';
 import { CamRow } from '../models/cam-row';
-import { Curator } from '../models/curator';
+import { Contributor } from '../models/contributor';
 import { Group } from '../models/group';
 
 import { Annoton } from './../models/annoton/annoton';

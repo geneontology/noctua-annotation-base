@@ -8,7 +8,7 @@ import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
 
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
-import { Cam, Curator } from 'noctua-form-base';
+import { Cam, Contributor } from 'noctua-form-base';
 
 export interface Cam202 {
     model?: {};
@@ -48,8 +48,8 @@ export class NoctuaSearchService {
     searcLlegacy(searchCriteria) {
         if (searchCriteria.goTerm) {
             this.sparqlService.getCamsByGoTerm(searchCriteria.goTerm).subscribe((response: any) => {
-                if (searchCriteria.curator) {
-                    this.cams = this.filterByCurator(response, searchCriteria.curator)
+                if (searchCriteria.contributor) {
+                    this.cams = this.filterByContributor(response, searchCriteria.contributor)
                 } else {
                     this.cams = response;
                 }
@@ -60,8 +60,8 @@ export class NoctuaSearchService {
 
         if (searchCriteria.gp) {
             this.sparqlService.getCamsByGP(searchCriteria.gp).subscribe((response: any) => {
-                if (searchCriteria.curator) {
-                    this.cams = this.filterByCurator(response, searchCriteria.curator)
+                if (searchCriteria.contributor) {
+                    this.cams = this.filterByContributor(response, searchCriteria.contributor)
                 } else {
                     this.cams = response;
                 }
@@ -72,8 +72,8 @@ export class NoctuaSearchService {
 
         if (searchCriteria.pmid) {
             this.sparqlService.getCamsByPMID(searchCriteria.pmid).subscribe((response: any) => {
-                if (searchCriteria.curator) {
-                    this.cams = this.filterByCurator(response, searchCriteria.curator)
+                if (searchCriteria.contributor) {
+                    this.cams = this.filterByContributor(response, searchCriteria.contributor)
                 } else {
                     this.cams = response;
                 }
@@ -94,10 +94,10 @@ export class NoctuaSearchService {
 
     }
 
-    filterByCurator(cams, curator) {
+    filterByContributor(cams, contributor) {
         return _.filter(cams, (cam: Cam) => {
-            let found = _.find(cam.contributors, (contributor: Curator) => {
-                return contributor.orcid === curator.orcid;
+            let found = _.find(cam.contributors, (contributor: Contributor) => {
+                return contributor.orcid === contributor.orcid;
             });
 
             return found ? true : false
@@ -113,9 +113,9 @@ export class NoctuaSearchService {
         }
     }
 
-    searchByCurator(searchCriteria) {
-        if (searchCriteria.curator) {
-            this.sparqlService.getCamsByCurator(searchCriteria.curator).subscribe((response: any) => {
+    searchByContributor(searchCriteria) {
+        if (searchCriteria.contributor) {
+            this.sparqlService.getCamsByContributor(searchCriteria.contributor).subscribe((response: any) => {
                 this.cams = this.sparqlService.cams = response;
                 this.sparqlService.onCamsChanged.next(this.cams);
             });

@@ -9,7 +9,7 @@ import { NoctuaFormConfigService } from './../services/config/noctua-form-config
 import { NoctuaLookupService } from './lookup.service';
 //import { Cam } from '../models/cam';
 import { CamRow } from '../models/cam-row';
-import { Curator } from '../models/curator';
+import { Contributor } from '../models/contributor';
 import { Group } from '../models/group';
 
 import { Annoton } from './../models/annoton/annoton';
@@ -31,7 +31,7 @@ export class NoctuaUserService {
   baristaToken;
   baristaUrl = environment.globalBaristaLocation;
   onUserChanged: BehaviorSubject<any>;
-  user: Curator;
+  user: Contributor;
 
   public annoton: Annoton;
   // public annotonPresentation;
@@ -39,7 +39,7 @@ export class NoctuaUserService {
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
 
-  curators: Curator[] = [];
+  contributors: Contributor[] = [];
   groups: Group[] = [];
 
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
@@ -64,10 +64,10 @@ export class NoctuaUserService {
       );
   }
 
-  filterCurators(value: string): any[] {
+  filterContributors(value: string): any[] {
     const filterValue = value.toLowerCase();
 
-    return this.curators.filter((curator: Curator) => curator.name.toLowerCase().indexOf(filterValue) === 0);
+    return this.contributors.filter((contributor: Contributor) => contributor.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   filterGroups(value: string): any[] {

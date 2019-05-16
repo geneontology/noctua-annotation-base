@@ -1,4 +1,4 @@
-export class Curator {
+export class Contributor {
     orcid: string;
     name?: string;
     group?: any = {};

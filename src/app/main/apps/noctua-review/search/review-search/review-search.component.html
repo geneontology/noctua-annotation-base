@@ -65,18 +65,19 @@
     <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
-          Curator (optional)
+          Contributor (optional)
         </div>
         <span fxFlex></span>
       </div>
       <div class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="ph-15 noc-annoton-group-row" fxLayout="column">
           <mat-form-field appearance="outline" class="noc-sm">
-            <input type="text" matInput formControlName="curator" placeholder="Curator"
-              [matAutocomplete]="curatorAuto" />
-            <mat-autocomplete #curatorAuto="matAutocomplete" [displayWith]="curatorDisplayFn"
+            <input type="text" matInput formControlName="contributor" placeholder="Contributor"
+              [matAutocomplete]="contributorAuto" />
+            <mat-autocomplete #contributorAuto="matAutocomplete" [displayWith]="contributorDisplayFn"
               class="noc-term-autocomplete">
-              <mat-option class="noc-term-autocomplete" *ngFor="let item of filteredCurators | async" [value]="item">
+              <mat-option class="noc-term-autocomplete" *ngFor="let item of filteredContributors | async"
+                [value]="item">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.name }}

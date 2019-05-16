@@ -7,7 +7,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { Annoton } from './annoton'
 import { AnnotonNode } from './annoton-node'
 import { Group } from '../group';
-import { Curator } from '../curator';
+import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
 
 export class Cam {
@@ -17,7 +17,7 @@ export class Cam {
   state: any;
   //User Info
   groups: Group[] = [];
-  contributors: Curator[] = [];
+  contributors: Contributor[] = [];
   group: any;
 
   id: string;

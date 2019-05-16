@@ -25,18 +25,18 @@ import { NoctuaSearchService } from '@noctua.search/services/noctua-search.servi
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
 @Component({
-  selector: 'noc-review-curators',
-  templateUrl: './review-curators.component.html',
-  styleUrls: ['./review-curators.component.scss'],
+  selector: 'noc-review-contributors',
+  templateUrl: './review-contributors.component.html',
+  styleUrls: ['./review-contributors.component.scss'],
 })
 
-export class ReviewCuratorsComponent implements OnInit, OnDestroy {
+export class ReviewContributorsComponent implements OnInit, OnDestroy {
   searchCriteria: any = {};
   searchForm: FormGroup;
   groupsForm: FormGroup;
   searchFormData: any = []
   // groups: any[] = [];
-  // curators: any[] = [];
+  // contributors: any[] = [];
 
   private unsubscribeAll: Subject<any>;
 
@@ -49,7 +49,7 @@ export class ReviewCuratorsComponent implements OnInit, OnDestroy {
     private reviewService: ReviewService,
     private sparqlService: SparqlService,
     private noctuaTranslationLoader: NoctuaTranslationLoaderService) {
-    // this.curators = this.reviewService.curators;
+    // this.contributors = this.reviewService.contributors;
     this.searchFormData = this.noctuaFormConfigService.createReviewSearchFormData();
     this.unsubscribeAll = new Subject();
 
@@ -64,9 +64,9 @@ export class ReviewCuratorsComponent implements OnInit, OnDestroy {
     //this.searchForm = this.createSearchForm();
   }
 
-  selectCurator(curator) {
-    this.searchCriteria.curator = curator.orcid;
-    this.noctuaSearchService.searchByCurator(this.searchCriteria)
+  selectContributor(contributor) {
+    this.searchCriteria.contributor = contributor.orcid;
+    this.noctuaSearchService.searchByContributor(this.searchCriteria)
   }
 
 

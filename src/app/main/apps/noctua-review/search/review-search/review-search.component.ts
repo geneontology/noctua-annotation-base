@@ -39,7 +39,7 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
 
   filteredOrganisms: Observable<any[]>;
   filteredGroups: Observable<any[]>;
-  filteredCurators: Observable<any[]>;
+  filteredContributors: Observable<any[]>;
 
 
   private unsubscribeAll: Subject<any>;
@@ -64,8 +64,8 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.sparqlService.getAllCurators().subscribe((response: any) => {
-      this.searchFormData['curator'].searchResults = response;
+    this.sparqlService.getAllContributors().subscribe((response: any) => {
+      this.searchFormData['contributor'].searchResults = response;
     });
 
     this.sparqlService.getAllGroups().subscribe((response: any) => {
@@ -87,7 +87,7 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
       gp: new FormControl(this.searchCriteria.gp),
       goTerm: new FormControl(this.searchCriteria.goTerm),
       pmid: new FormControl(this.searchCriteria.pmid),
-      curator: new FormControl(this.searchCriteria.curator),
+      contributor: new FormControl(this.searchCriteria.contributor),
       providedBy: new FormControl(this.searchCriteria.providedBy),
       organism: new FormControl(this.searchCriteria.organism),
     });
@@ -130,11 +130,11 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
         map(organism => organism ? this._filterOrganisms(organism) : this.organisms.slice())
       )
 
-    this.filteredCurators = this.searchForm.controls.curator.valueChanges
+    this.filteredContributors = this.searchForm.controls.contributor.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value['name']),
-        map(curator => curator ? this.noctuaUserService.filterCurators(curator) : this.noctuaUserService.curators.slice())
+        map(contributor => contributor ? this.noctuaUserService.filterContributors(contributor) : this.noctuaUserService.contributors.slice())
       )
 
     this.filteredGroups = this.searchForm.controls.providedBy.valueChanges
@@ -153,8 +153,8 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
     return evidence ? evidence.label : undefined;
   }
 
-  curatorDisplayFn(curator): string | undefined {
-    return curator ? curator.name : undefined;
+  contributorDisplayFn(contributor): string | undefined {
+    return contributor ? contributor.name : undefined;
   }
 
   groupDisplayFn(group): string | undefined {

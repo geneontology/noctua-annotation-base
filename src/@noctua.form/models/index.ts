@@ -1,5 +1,5 @@
 export { Group } from './group';
-export { Curator } from './curator';
+export { Contributor } from './contributor';
 export { CamRow } from './cam-row';
 
 export * from './annoton';

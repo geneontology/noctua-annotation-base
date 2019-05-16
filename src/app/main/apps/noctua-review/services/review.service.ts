@@ -15,7 +15,7 @@ import { NoctuaGraphService } from 'noctua-form-base';
 import { NoctuaFormConfigService } from 'noctua-form-base';
 
 
-import { Curator } from 'noctua-form-base';
+import { Contributor } from 'noctua-form-base';
 import { Group } from 'noctua-form-base';
 
 import * as _ from 'lodash';
@@ -33,7 +33,7 @@ export class ReviewService {
       id: 1
     }, group: {
       id: 2
-    }, curator: {
+    }, contributor: {
       id: 3
     }, species: {
       id: 4
@@ -42,17 +42,17 @@ export class ReviewService {
 
   selectedLeftPanel;
 
-  onCuratorsChanged: BehaviorSubject<any>;
+  onContributorsChanged: BehaviorSubject<any>;
   onGroupsChanged: BehaviorSubject<any>;
 
-  curators: Curator[] = [];
+  contributors: Contributor[] = [];
   groups: Group[] = [];
 
   private leftDrawer: MatDrawer;
   private rightDrawer: MatDrawer;
 
   constructor() {
-    this.onCuratorsChanged = new BehaviorSubject([]);
+    this.onContributorsChanged = new BehaviorSubject([]);
     this.onGroupsChanged = new BehaviorSubject([]);
 
     this.selectedLeftPanel = this.leftPanel.search;
@@ -97,9 +97,9 @@ export class ReviewService {
     return this.rightDrawer.close();
   }
 
-  public groupCurators() {
-    return _.groupBy(this.curators, function (curator) {
-      return curator.group;
+  public groupContributors() {
+    return _.groupBy(this.contributors, function (contributor) {
+      return contributor.group;
     });
 
   }

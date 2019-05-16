@@ -7,7 +7,7 @@ import { noctuaAnimations } from './../../../../@noctua/animations';
 
 import {
   Cam,
-  Curator,
+  Contributor,
   Annoton,
   NoctuaUserService,
   NoctuaFormConfigService,
@@ -46,7 +46,7 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
 
 
   public cam: Cam;
-  public user: Curator;
+  public user: Contributor;
   searchResults = [];
   modelId: string = '';
   baristaToken: string = '';
@@ -104,7 +104,7 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
 
     this.noctuaUserService.getUser().subscribe((response) => {
       if (response) {
-        this.user = new Curator()
+        this.user = new Contributor()
         this.user.name = response.nickname;
         this.user.groups = response.groups;
         // user.manager.use_groups([self.userInfo.selectedGroup.id]);
@@ -122,23 +122,23 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
 
 
     /*
-    this.sparqlService.getCamsByCurator('http://orcid.org/0000-0002-1706-4196').subscribe((response: any) => {
+    this.sparqlService.getCamsByContributor('http://orcid.org/0000-0002-1706-4196').subscribe((response: any) => {
       this.cams = this.sparqlService.cams = response;
       this.sparqlService.onCamsChanged.next(this.cams);
     });
     */
 
-    this.sparqlService.getAllCurators().subscribe((response: any) => {
-      this.reviewService.curators = response;
-      this.reviewService.onCuratorsChanged.next(response);
-      //  this.searchFormData['curator'].searchResults = response;
+    this.sparqlService.getAllContributors().subscribe((response: any) => {
+      this.reviewService.contributors = response;
+      this.reviewService.onContributorsChanged.next(response);
+      //  this.searchFormData['contributor'].searchResults = response;
 
       this.sparqlService.getAllGroups().subscribe((response: any) => {
         this.reviewService.groups = response;
         this.reviewService.onGroupsChanged.next(response);
         //    this.searchFormData['providedBy'].searchResults = response;
 
-        this.sparqlService.addGroupCurators(this.reviewService.groups, this.reviewService.curators)
+        this.sparqlService.addGroupContributors(this.reviewService.groups, this.reviewService.contributors)
         this.sparqlService.getCamsByGoTerm({ id: 'GO:0017127' }).subscribe((response: any) => {
           this.cams = this.sparqlService.cams = response;
           this.sparqlService.onCamsChanged.next(this.cams);
@@ -154,11 +154,11 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
         this.loadCams();
       });
 
-    this.reviewService.onCuratorsChanged
+    this.reviewService.onContributorsChanged
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe(curators => {
-        this.noctuaUserService.curators = curators;
-        let grouped = this.reviewService.groupCurators();
+      .subscribe(contributors => {
+        this.noctuaUserService.contributors = contributors;
+        let grouped = this.reviewService.groupContributors();
       });
 
     this.reviewService.onGroupsChanged

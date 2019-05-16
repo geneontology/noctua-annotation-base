@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import {
     Cam,
-    Curator,
+    Contributor,
     CamService,
     NoctuaUserService,
     NoctuaFormConfigService,
@@ -22,7 +22,7 @@ import { NoctuaFormService } from 'app/main/apps/noctua-form/services/noctua-for
 })
 
 export class NoctuaToolbarComponent implements OnInit {
-    public user: Curator;
+    public user: Contributor;
     public cam: Cam;
     userStatusOptions: any[];
     languages: any;
@@ -92,7 +92,7 @@ export class NoctuaToolbarComponent implements OnInit {
 
         this.noctuaUserService.onUserChanged.subscribe((response) => {
             if (response) {
-                this.user = new Curator()
+                this.user = new Contributor()
                 this.user.name = response.nickname;
                 this.user.groups = response.groups;
             }

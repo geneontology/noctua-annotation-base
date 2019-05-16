@@ -25,7 +25,7 @@ import {
   NoctuaFormConfigService,
   Cam,
   CamRow,
-  Curator,
+  Contributor,
   Group,
   NoctuaUserService
 } from 'noctua-form-base'
@@ -46,7 +46,7 @@ export class SparqlService {
   loading: boolean = false;
   onCamsChanged: BehaviorSubject<any>;
   onCamChanged: BehaviorSubject<any>;
-  onCuratorFilterChanged: BehaviorSubject<any>;
+  onContributorFilterChanged: BehaviorSubject<any>;
 
   searchSummary: any = {}
 
@@ -179,20 +179,20 @@ export class SparqlService {
       );
   }
 
-  getCamsByCurator(orcid): Observable<any> {
+  getCamsByContributor(orcid): Observable<any> {
     const self = this;
 
     self.loading = true;
     self.searchSummary = {}
     return this.httpClient
-      .get(this.baseUrl + this.buildCamsByCuratorQuery(orcid))
+      .get(this.baseUrl + this.buildCamsByContributorQuery(orcid))
       .pipe(
         map(res => res['results']),
         map(res => res['bindings']),
         tap(res => {
           self.searchSummary =
             {
-              curator: orcid
+              contributor: orcid
             }
         }),
         tap(val => console.dir(val)),
@@ -229,14 +229,14 @@ export class SparqlService {
       );
   }
 
-  getAllCurators(): Observable<any> {
+  getAllContributors(): Observable<any> {
     return this.httpClient
-      .get(this.baseUrl + this.buildAllCuratorsQuery())
+      .get(this.baseUrl + this.buildAllContributorsQuery())
       .pipe(
         map(res => res['results']),
         map(res => res['bindings']),
         tap(val => console.dir(val)),
-        map(res => this.addCurator(res)),
+        map(res => this.addContributor(res)),
         tap(val => console.dir(val))
       );
   }
@@ -280,9 +280,9 @@ export class SparqlService {
       }
 
       if (response.contributors) {
-        cam.contributors = <Curator[]>response.contributors.value.split(self.separator).map((orcid) => {
-          let contributor = _.find(self.noctuaUserService.curators, (curator) => {
-            return curator.orcid === orcid
+        cam.contributors = <Contributor[]>response.contributors.value.split(self.separator).map((orcid) => {
+          let contributor = _.find(self.noctuaUserService.contributors, (contributor) => {
+            return contributor.orcid === orcid
           })
 
           return contributor ? contributor : { orcid: orcid };
@@ -304,19 +304,19 @@ export class SparqlService {
     return result;
   }
 
-  addCurator(res) {
-    let result: Array<Curator> = [];
+  addContributor(res) {
+    let result: Array<Contributor> = [];
 
     res.forEach((erg) => {
-      let curator = new Curator()
+      let contributor = new Contributor()
 
-      curator.orcid = erg.orcid.value;
-      curator.name = erg.name.value;
-      curator.cams = erg.cams.value;
-      curator.group = {
+      contributor.orcid = erg.orcid.value;
+      contributor.name = erg.name.value;
+      contributor.cams = erg.cams.value;
+      contributor.group = {
         url: erg.affiliations.value
       }
-      result.push(curator);
+      result.push(contributor);
     });
     return result;
   }
@@ -329,8 +329,8 @@ export class SparqlService {
         url: erg.url.value,
         name: erg.name.value,
         cams: erg.cams.value,
-        curatorsCount: erg.curators.value,
-        curators: erg.orcids.value.split('@@').map(function (orcid) {
+        contributorsCount: erg.contributors.value,
+        contributors: erg.orcids.value.split('@@').map(function (orcid) {
           return { orcid: orcid };
         }),
       });
@@ -338,14 +338,14 @@ export class SparqlService {
     return result;
   }
 
-  addGroupCurators(groups, curators) {
+  addGroupContributors(groups, contributors) {
     const self = this;
 
     _.each(groups, (group) => {
-      _.each(group.curators, (curator) => {
-        let srcCurator = _.find(curators, { orcid: curator.orcid })
-        curator.name = srcCurator['name'];
-        curator.cams = srcCurator['cams'];
+      _.each(group.contributors, (contributor) => {
+        let srcContributor = _.find(contributors, { orcid: contributor.orcid })
+        contributor.name = srcContributor['name'];
+        contributor.cams = srcContributor['cams'];
       });
     })
   }
@@ -427,8 +427,8 @@ export class SparqlService {
       query.goterm(searchCriteria.goTerm.id)
     }
 
-    if (searchCriteria.curator) {
-      let orcid = this.getOrcid(searchCriteria.curator.orcid);
+    if (searchCriteria.contributor) {
+      let orcid = this.getOrcid(searchCriteria.contributor.orcid);
       query.contributor(orcid)
     }
 
@@ -446,7 +446,7 @@ export class SparqlService {
     return '?query=' + encodeURIComponent(query.build());
   }
 
-  buildAllCuratorsQuery() {
+  buildAllContributorsQuery() {
     let query = new Query();
 
     query.prefix(
@@ -520,7 +520,7 @@ export class SparqlService {
   }
 
 
-  buildCamsByCuratorQuery(orcid) {
+  buildCamsByContributorQuery(orcid) {
     let modOrcid = this.getOrcid(orcid);
 
     let query = new NoctuaQuery();
@@ -538,7 +538,7 @@ export class SparqlService {
 		    PREFIX hint: <http://www.bigdata.com/queryHints#>
     
         SELECT  distinct ?name ?url         (GROUP_CONCAT(distinct ?orcidIRI;separator="@@") AS ?orcids) 
-                                            (COUNT(distinct ?orcidIRI) AS ?curators)
+                                            (COUNT(distinct ?orcidIRI) AS ?contributors)
                                             (COUNT(distinct ?cam) AS ?cams)
         WHERE    
         {

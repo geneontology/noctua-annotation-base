@@ -11,8 +11,8 @@
       <mat-icon> people_outline </mat-icon>
     </button>
     <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
-      toggleLeftDrawer(reviewService.leftPanel.curator)" matTooltip="Search by curator" [matTooltipPosition]="'after'"
-      [matTooltipShowDelay]="1000">
+      toggleLeftDrawer(reviewService.leftPanel.contributor)" matTooltip="Search by contributor"
+      [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
       <mat-icon>person_outline</mat-icon>
     </button>
     <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
@@ -26,7 +26,7 @@
       <div [ngSwitch]="reviewService.selectedLeftPanel.id" class="h-100-p">
         <noc-review-search *ngSwitchCase="reviewService.leftPanel.search.id"></noc-review-search>
         <noc-review-groups *ngSwitchCase="reviewService.leftPanel.group.id"></noc-review-groups>
-        <noc-review-curators *ngSwitchCase="reviewService.leftPanel.curator.id"></noc-review-curators>
+        <noc-review-contributors *ngSwitchCase="reviewService.leftPanel.contributor.id"></noc-review-contributors>
         <noc-review-species *ngSwitchCase="reviewService.leftPanel.species.id"></noc-review-species>
       </div>
     </mat-drawer>

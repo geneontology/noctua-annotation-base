@@ -457,8 +457,8 @@ export class NoctuaFormConfigService {
         },
         'searchResults': []
       },
-      'curator': {
-        "label": 'Curator',
+      'contributor': {
+        "label": 'Contributor',
         'aspect': 'F',
         "lookupGroup": 'GO:0003674',
         'treeLevel': 1,
@@ -476,7 +476,7 @@ export class NoctuaFormConfigService {
         'searchResults': []
       },
       'catalyticActivity': {
-        "label": 'Curator',
+        "label": 'Contributor',
         'aspect': 'F',
         "lookupGroup": 'GO:0140096',
         'treeLevel': 1,

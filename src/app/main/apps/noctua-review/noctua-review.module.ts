@@ -11,7 +11,7 @@ import { CamsTableComponent } from './cams/cams-table/cams-table.component';
 
 //Search and Browse
 import { ReviewSearchComponent } from './search/review-search/review-search.component';
-import { ReviewCuratorsComponent } from './search/review-curators/review-curators.component';
+import { ReviewContributorsComponent } from './search/review-contributors/review-contributors.component';
 import { ReviewGroupsComponent } from './search/review-groups/review-groups.component';
 import { ReviewSpeciesComponent } from './search/review-species/review-species.component';
 
@@ -42,7 +42,7 @@ const routes = [
     NoctuaReviewComponent,
     CamsTableComponent,
     ReviewSearchComponent,
-    ReviewCuratorsComponent,
+    ReviewContributorsComponent,
     ReviewGroupsComponent,
     ReviewSpeciesComponent
   ]
