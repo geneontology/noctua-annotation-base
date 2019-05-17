@@ -121,4 +121,13 @@ export class NoctuaSearchService {
             });
         }
     }
+
+    searchBySpecies(searchCriteria) {
+        if (searchCriteria.organism) {
+            this.sparqlService.getCamsBySpecies(searchCriteria.organism).subscribe((response: any) => {
+                this.cams = this.sparqlService.cams = response;
+                this.sparqlService.onCamsChanged.next(this.cams);
+            });
+        }
+    }
 }

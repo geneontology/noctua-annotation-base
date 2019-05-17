@@ -441,6 +441,11 @@ export class SparqlService {
       query.pmid(searchCriteria.pmid);
     }
 
+    if (searchCriteria.organism) {
+      let taxonUrl = `http://purl.obolibrary.org/obo/NCBITaxon_${searchCriteria.organism.taxon_id}`;
+      query.taxon(taxonUrl);
+    }
+
     query.limit(100);
 
     return '?query=' + encodeURIComponent(query.build());

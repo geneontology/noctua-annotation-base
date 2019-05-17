@@ -69,7 +69,7 @@ export class ReviewSpeciesComponent implements OnInit, OnDestroy {
   search(searchCriteria) {
 
     console.dir(searchCriteria)
-    this.noctuaSearchService.search(searchCriteria);
+    this.noctuaSearchService.searchBySpecies(searchCriteria);
   }
 
   close() {
