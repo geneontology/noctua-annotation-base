@@ -146,6 +146,12 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
       });
     });
 
+    this.sparqlService.getAllOrganisms().subscribe((response: any) => {
+      this.reviewService.organisms = response;
+      this.reviewService.onOrganismsChanged.next(response);
+
+    });
+
     this.sparqlService.onCamsChanged
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe(cams => {

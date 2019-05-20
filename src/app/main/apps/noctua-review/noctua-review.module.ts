@@ -13,7 +13,7 @@ import { CamsTableComponent } from './cams/cams-table/cams-table.component';
 import { ReviewSearchComponent } from './search/review-search/review-search.component';
 import { ReviewContributorsComponent } from './search/review-contributors/review-contributors.component';
 import { ReviewGroupsComponent } from './search/review-groups/review-groups.component';
-import { ReviewSpeciesComponent } from './search/review-species/review-species.component';
+import { ReviewOrganismsComponent } from './search/review-organisms/review-organisms.component';
 
 const routes = [
   {
@@ -44,7 +44,7 @@ const routes = [
     ReviewSearchComponent,
     ReviewContributorsComponent,
     ReviewGroupsComponent,
-    ReviewSpeciesComponent
+    ReviewOrganismsComponent
   ]
   /*
   entryComponents: [

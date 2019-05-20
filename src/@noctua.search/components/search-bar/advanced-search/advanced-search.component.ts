@@ -59,13 +59,6 @@ export class NoctuaAdvancedSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.sparqlService.getAllContributors().subscribe((response: any) => {
-      this.searchFormData['contributor'].searchResults = response;
-    });
-
-    this.sparqlService.getAllGroups().subscribe((response: any) => {
-      this.searchFormData['providedBy'].searchResults = response;
-    });
 
   }
 

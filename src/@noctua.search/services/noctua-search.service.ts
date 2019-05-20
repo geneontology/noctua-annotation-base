@@ -45,55 +45,6 @@ export class NoctuaSearchService {
         });
     }
 
-    searcLlegacy(searchCriteria) {
-        if (searchCriteria.goTerm) {
-            this.sparqlService.getCamsByGoTerm(searchCriteria.goTerm).subscribe((response: any) => {
-                if (searchCriteria.contributor) {
-                    this.cams = this.filterByContributor(response, searchCriteria.contributor)
-                } else {
-                    this.cams = response;
-                }
-                this.sparqlService.cams = this.cams
-                this.sparqlService.onCamsChanged.next(this.cams);
-            });
-        }
-
-        if (searchCriteria.gp) {
-            this.sparqlService.getCamsByGP(searchCriteria.gp).subscribe((response: any) => {
-                if (searchCriteria.contributor) {
-                    this.cams = this.filterByContributor(response, searchCriteria.contributor)
-                } else {
-                    this.cams = response;
-                }
-                this.sparqlService.cams = this.cams
-                this.sparqlService.onCamsChanged.next(this.cams);
-            });
-        }
-
-        if (searchCriteria.pmid) {
-            this.sparqlService.getCamsByPMID(searchCriteria.pmid).subscribe((response: any) => {
-                if (searchCriteria.contributor) {
-                    this.cams = this.filterByContributor(response, searchCriteria.contributor)
-                } else {
-                    this.cams = response;
-                }
-                this.sparqlService.cams = this.cams
-                this.sparqlService.onCamsChanged.next(this.cams);
-            });
-        }
-
-        if (searchCriteria.organism) {
-            this.sparqlService.getCamsBySpecies(searchCriteria.organism).subscribe((response: any) => {
-                this.cams = this.sparqlService.cams = response;
-                this.sparqlService.onCamsChanged.next(this.cams);
-            });
-        }
-    }
-
-    searchFilter() {
-
-    }
-
     filterByContributor(cams, contributor) {
         return _.filter(cams, (cam: Cam) => {
             let found = _.find(cam.contributors, (contributor: Contributor) => {

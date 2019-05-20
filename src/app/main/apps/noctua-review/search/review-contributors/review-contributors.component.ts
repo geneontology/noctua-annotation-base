@@ -21,7 +21,6 @@ import {
 } from 'noctua-form-base';
 import { NoctuaLookupService } from 'noctua-form-base';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
-
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
 @Component({

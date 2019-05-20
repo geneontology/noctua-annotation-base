@@ -10,7 +10,7 @@ import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
 
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { CurieService } from '@noctua.curie/services/curie.service';
-import { NoctuaGraphService } from 'noctua-form-base';
+import { NoctuaGraphService, Organism } from 'noctua-form-base';
 
 import { NoctuaFormConfigService } from 'noctua-form-base';
 
@@ -44,9 +44,11 @@ export class ReviewService {
 
   onContributorsChanged: BehaviorSubject<any>;
   onGroupsChanged: BehaviorSubject<any>;
+  onOrganismsChanged: BehaviorSubject<any>;
 
   contributors: Contributor[] = [];
   groups: Group[] = [];
+  organisms: Organism[] = [];
 
   private leftDrawer: MatDrawer;
   private rightDrawer: MatDrawer;
@@ -54,6 +56,7 @@ export class ReviewService {
   constructor() {
     this.onContributorsChanged = new BehaviorSubject([]);
     this.onGroupsChanged = new BehaviorSubject([]);
+    this.onOrganismsChanged = new BehaviorSubject([]);
 
     this.selectedLeftPanel = this.leftPanel.search;
     console.log(this.selectedLeftPanel)

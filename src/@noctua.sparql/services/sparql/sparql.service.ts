@@ -27,7 +27,8 @@ import {
   CamRow,
   Contributor,
   Group,
-  NoctuaUserService
+  NoctuaUserService,
+  Organism
 } from 'noctua-form-base'
 
 import * as _ from 'lodash';
@@ -241,6 +242,18 @@ export class SparqlService {
       );
   }
 
+  getAllOrganisms(): Observable<any> {
+    return this.httpClient
+      .get(this.baseUrl + this.buildOrganismsQuery())
+      .pipe(
+        map(res => res['results']),
+        map(res => res['bindings']),
+        tap(val => console.dir(val)),
+        map(res => this.addOrganism(res)),
+        tap(val => console.dir(val))
+      );
+  }
+
   getAllGroups(): Observable<any> {
     return this.httpClient
       .get(this.baseUrl + this.buildAllGroupsQuery())
@@ -308,7 +321,7 @@ export class SparqlService {
     let result: Array<Contributor> = [];
 
     res.forEach((erg) => {
-      let contributor = new Contributor()
+      let contributor = new Contributor();
 
       contributor.orcid = erg.orcid.value;
       contributor.name = erg.name.value;
@@ -334,6 +347,20 @@ export class SparqlService {
           return { orcid: orcid };
         }),
       });
+    });
+    return result;
+  }
+
+  addOrganism(res) {
+    let result: Array<Organism> = [];
+
+    res.forEach((erg) => {
+      let organism = new Organism()
+
+      organism.taxonIri = erg.taxonIri.value;
+      organism.taxonName = erg.taxonName.value;
+      organism.cams = erg.cams.value;
+      result.push(organism);
     });
     return result;
   }
@@ -442,11 +469,12 @@ export class SparqlService {
     }
 
     if (searchCriteria.organism) {
-      let taxonUrl = `http://purl.obolibrary.org/obo/NCBITaxon_${searchCriteria.organism.taxon_id}`;
-      query.taxon(taxonUrl);
+      //   let taxonUrl = `http://purl.obolibrary.org/obo/NCBITaxon_${searchCriteria.organism.taxon_id}`;
+
+      query.taxon(searchCriteria.organism.taxonIri);
     }
 
-    query.limit(100);
+    query.limit(50);
 
     return '?query=' + encodeURIComponent(query.build());
   }
@@ -520,6 +548,41 @@ export class SparqlService {
       .groupBy('?model ?modelTitle ?aspect ?date')
       .orderBy('?date', 'DESC')
       .limit(100)
+
+    return '?query=' + encodeURIComponent(query.build());
+  }
+
+  buildOrganismsQuery() {
+
+    let query = new Query();
+    let graphQuery = new Query();
+    graphQuery.graph('?model',
+      '?model metago:graphType metago:noctuaCam',
+      triple('?s', 'enabled_by:', '?entity'),
+      triple('?entity', 'rdf:type', '?identifier'),
+      'FILTER(?identifier != owl:NamedIndividual)'
+    );
+
+    query.prefix(
+      prefix('rdf', '<http://www.w3.org/1999/02/22-rdf-syntax-ns#>'),
+      prefix('rdfs', '<http://www.w3.org/2000/01/rdf-schema#>'),
+      prefix('dc', '<http://purl.org/dc/elements/1.1/>'),
+      prefix('metago', '<http://model.geneontology.org/>'),
+      prefix('owl', '<http://www.w3.org/2002/07/owl#>'),
+      prefix('enabled_by', '<http://purl.obolibrary.org/obo/RO_0002333>'),
+      prefix('in_taxon', '<http://purl.obolibrary.org/obo/RO_0002162>'))
+      .select(
+        'distinct ?taxonIri ?taxonName',
+        '(COUNT(distinct ?model) AS ?cams)'
+      ).where(
+        graphQuery,
+        triple('?identifier', 'rdfs:subClassOf', '?v0'),
+        triple('?v0', 'owl:onProperty', 'in_taxon:'),
+        triple('?v0', 'owl:someValuesFrom', '?taxonIri'),
+        triple('?taxonIri', 'rdfs:label', '?taxonName'),
+      )
+      .groupBy('?taxonIri ?taxonName')
+      .orderBy('?taxonName', 'ASC')
 
     return '?query=' + encodeURIComponent(query.build());
   }
