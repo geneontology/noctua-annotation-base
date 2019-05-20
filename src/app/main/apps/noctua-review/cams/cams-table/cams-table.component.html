@@ -1,10 +1,10 @@
+<div *ngIf="sparqlService.loading" class="noc-loading-container" fxLayout="column" fxLayoutAlign="center center">
+  <mat-progress-spinner class="example-margin" [color]="loadingSpinner.color" [mode]="loadingSpinner.mode">
+  </mat-progress-spinner>
+</div>
 <div class="cams-table" noctuaPerfectScrollbar>
-  <div *ngIf="sparqlService.loading" class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="center center">
-    <mat-progress-spinner class="example-margin" [color]="loadingSpinner.color" [mode]="loadingSpinner.mode">
-    </mat-progress-spinner>
-  </div>
-  <div *ngIf="!sparqlService.loading" class="w-100-p p-8">
-    <div *ngFor="let cam of cams" class="mat-elevation-z2 mb-16">
+  <div class="w-100-p">
+    <div *ngFor="let cam of cams" class="mat-elevation-z1">
       <div class="noc-cam-table-heading" fxLayout="row" fxLayoutAlign="start center">
         <div fxFlex="50px" (click)="$event.stopPropagation()">
           <button mat-icon-button (click)="toggleExpand(cam)" class="">
@@ -16,22 +16,21 @@
           </button>
         </div>
         <div class="" fxFlex="300px">
-          <div class="text-truncate">
+          <div class="noc-title">
             {{cam.title }}
           </div>
         </div>
-        <div class="" fxFlex="100px">
-          <div class="text-truncate">
-            {{cam.date }}
-          </div>
+        <div class="" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">
+          <mat-icon>date_range</mat-icon> <span>{{cam.date }}</span>
         </div>
-        <div class="" fxFlex="300px">
-          <div class="text-truncate">
-            <span *ngFor="let contributor of cam.contributors">
-              <small>{{contributor.name}}</small></span>
-          </div>
+        <div class="" fxFlex="">
+          <mat-chip-list>
+            <mat-chip *ngFor="let contributor of cam.contributors">
+              <mat-icon class="s-12">person</mat-icon>
+              <span>{{contributor.name}}</span>
+            </mat-chip>
+          </mat-chip-list>
         </div>
-        <span fxFlex=""></span>
         <div class="" fxFlex="200px" fxLayout="row" fxLayoutAlign="end center">
           <button mat-stroked-button [matMenuTriggerFor]="displayTypeMenu" class="noc-rounded-button noc-sm">
             View As
