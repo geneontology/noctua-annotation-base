@@ -40,7 +40,7 @@ import { AnnotonTableComponent } from './cam/cam-table/annoton-table/annoton-tab
 
 const routes = [
   {
-    path: '',
+    path: 'f',
     component: NoctuaFormComponent
   }
 ];

@@ -25,7 +25,8 @@
         </div>
         <div class="" fxFlex="">
           <mat-chip-list>
-            <mat-chip *ngFor="let contributor of cam.contributors">
+            <mat-chip *ngFor="let contributor of cam.contributors"
+              (click)="noctuaSearchService.filter(noctuaSearchService.filterType.contributor, contributor)">
               <mat-icon class="s-12">person</mat-icon>
               <span>{{contributor.name}}</span>
             </mat-chip>

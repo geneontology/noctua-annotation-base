@@ -107,4 +107,10 @@ export class ReviewService {
 
   }
 
+  public filterOrganisms(value: string): any[] {
+    const filterValue = value.toLowerCase();
+
+    return this.organisms.filter(organism => organism.taxonName.toLowerCase().indexOf(filterValue) === 0);
+  }
+
 }

@@ -44,7 +44,6 @@ export class NoctuaToolbarComponent implements OnInit {
         public noctuaFormService: NoctuaFormService,
         private translate: TranslateService
     ) {
-        console.log(window.location)
         this.loginUrl = 'http://barista-dev.berkeleybop.org/login?return=' + window.location.origin;
         this.languages = [{
             'id': 'en',

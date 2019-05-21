@@ -6,7 +6,6 @@ export class Contributor {
     _groups?: any = []
 
 
-
     set groups(groups) {
         this._groups = groups;
 

@@ -32,6 +32,11 @@ export class NoctuaSearchService {
     curieUtil: any;
     cams: any[] = [];
     onCamsChanged: BehaviorSubject<any>;
+    searchCriteria: any = {};
+
+    filterType = {
+        contributor: 'contributor'
+    }
 
     constructor(private httpClient: HttpClient, private sparqlService: SparqlService) {
         this.onCamsChanged = new BehaviorSubject({});
@@ -39,10 +44,16 @@ export class NoctuaSearchService {
     }
 
     search(searchCriteria) {
+        this.searchCriteria = searchCriteria;
         this.sparqlService.getCams(searchCriteria).subscribe((response: any) => {
             this.sparqlService.cams = this.cams = response;
             this.sparqlService.onCamsChanged.next(this.cams);
         });
+    }
+
+    filter(filterType, filter) {
+        this.searchCriteria[filterType] = filter;
+        this.search(this.searchCriteria);
     }
 
     filterByContributor(cams, contributor) {

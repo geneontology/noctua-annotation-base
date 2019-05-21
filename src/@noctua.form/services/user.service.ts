@@ -46,7 +46,6 @@ export class NoctuaUserService {
     private httpClient: HttpClient,
     private noctuaLookupService: NoctuaLookupService) {
     this.onUserChanged = new BehaviorSubject(null);
-
   }
 
   getUser(): Observable<any> {
@@ -55,9 +54,6 @@ export class NoctuaUserService {
     return this.httpClient
       .get(`${self.baristaUrl}/user_info_by_token/${self.baristaToken}`)
       .pipe(
-        tap(res => {
-          console.log(res)
-        }),
         finalize(() => {
           //self.loading = false;
         })

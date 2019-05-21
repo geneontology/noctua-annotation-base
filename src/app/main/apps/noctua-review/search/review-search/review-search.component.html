@@ -128,11 +128,11 @@
               <mat-option *ngFor="let organism of filteredOrganisms | async" [value]="organism">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
-                    {{organism.long_name}}
+                    {{organism.taxonName}}
                   </div>
                   <span fxFlex></span>
                   <div class="noc-term-id">
-                    {{organism.taxon_id}}
+                    {{organism.taxonIri}}
                   </div>
                 </div>
               </mat-option>

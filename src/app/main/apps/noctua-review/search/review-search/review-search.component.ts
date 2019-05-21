@@ -32,7 +32,6 @@ import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 export class ReviewSearchComponent implements OnInit, OnDestroy {
   searchCriteria: any = {};
   searchForm: FormGroup;
-  organisms: any;
   selectedOrganism = {};
   searchFormData: any = []
   cams: any[] = [];
@@ -58,19 +57,11 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
     this.unsubscribeAll = new Subject();
 
     this.searchFormData = this.noctuaFormConfigService.createReviewSearchFormData();
-    this.organisms = this.noctuaDataService.organisms;
     this.onValueChanges();
   }
 
   ngOnInit(): void {
 
-    this.sparqlService.getAllContributors().subscribe((response: any) => {
-      this.searchFormData['contributor'].searchResults = response;
-    });
-
-    this.sparqlService.getAllGroups().subscribe((response: any) => {
-      // this.searchFormData['providedBy'].searchResults = response;
-    });
 
   }
 
@@ -93,11 +84,7 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _filterOrganisms(value: string): any[] {
-    const filterValue = value.toLowerCase();
 
-    return this.organisms.filter(organism => organism.short_name.toLowerCase().indexOf(filterValue) === 0);
-  }
 
   onValueChanges() {
     const self = this;
@@ -127,7 +114,7 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value['short_name']),
-        map(organism => organism ? this._filterOrganisms(organism) : this.organisms.slice())
+        map(organism => organism ? this.reviewService.filterOrganisms(organism) : this.reviewService.organisms.slice())
       )
 
     this.filteredContributors = this.searchForm.controls.contributor.valueChanges
@@ -162,7 +149,7 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
   }
 
   organismDisplayFn(organism): string | undefined {
-    return organism ? organism.short_name : undefined;
+    return organism ? organism.taxonName : undefined;
   }
 
   close() {

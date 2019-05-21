@@ -5,8 +5,7 @@ import {
   CamService
 } from './services';
 
-export * from './services'
-export * from './models'
+export * from './'
 
 @NgModule({
   imports: [
