@@ -35,7 +35,12 @@ export class NoctuaSearchService {
     searchCriteria: any = {};
 
     filterType = {
-        contributor: 'contributor'
+        gp: 'gp',
+        goTerm: 'goTerm',
+        pmid: 'pmid',
+        contributor: 'contributor',
+        providedBy: 'providedBy',
+        organism: 'organism'
     }
 
     constructor(private httpClient: HttpClient, private sparqlService: SparqlService) {
@@ -53,6 +58,11 @@ export class NoctuaSearchService {
 
     filter(filterType, filter) {
         this.searchCriteria[filterType] = filter;
+        this.search(this.searchCriteria);
+    }
+
+    removeFilter(filterType, filter) {
+        this.searchCriteria[filterType] = null;
         this.search(this.searchCriteria);
     }
 

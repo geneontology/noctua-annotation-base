@@ -454,14 +454,16 @@ export class SparqlService {
       query.goterm(searchCriteria.goTerm.id)
     }
 
+    if (searchCriteria.providedBy) {
+      query.group(this.getXSD(searchCriteria.providedBy.url));
+    }
+
     if (searchCriteria.contributor) {
-      let orcid = this.getOrcid(searchCriteria.contributor.orcid);
-      query.contributor(orcid)
+      query.contributor(this.getXSD(searchCriteria.contributor.orcid));
     }
 
     if (searchCriteria.gp) {
-      const gpIri = this.curieUtil.getIri(searchCriteria.gp.id)
-      query.gp(gpIri);
+      query.gp(this.curieUtil.getIri(searchCriteria.gp.id));
     }
 
     if (searchCriteria.pmid) {
@@ -469,8 +471,6 @@ export class SparqlService {
     }
 
     if (searchCriteria.organism) {
-      //   let taxonUrl = `http://purl.obolibrary.org/obo/NCBITaxon_${searchCriteria.organism.taxon_id}`;
-
       query.taxon(searchCriteria.organism.taxonIri);
     }
 
@@ -589,7 +589,7 @@ export class SparqlService {
 
 
   buildCamsByContributorQuery(orcid) {
-    let modOrcid = this.getOrcid(orcid);
+    let modOrcid = this.getXSD(orcid);
 
     let query = new NoctuaQuery();
     query.contributor(modOrcid);
@@ -729,8 +729,8 @@ export class SparqlService {
     return '?query=' + encodeURIComponent(query);
   }
 
-  getOrcid(orcid) {
-    return "\"" + orcid + "\"^^xsd:string";
+  getXSD(s) {
+    return "\"" + s + "\"^^xsd:string";
   }
 
 }

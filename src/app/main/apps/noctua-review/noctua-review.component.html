@@ -36,7 +36,8 @@
         <div class="noc-cams-table-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
           <div fxFlex="50px" (click)="$event.stopPropagation()">
             <button mat-icon-button (click)="toggleSummaryExpand()" class="">
-              <mat-icon *ngIf="!summary.expanded" class="s-16 fa fa-caret-right">
+              <mat-icon *ngIf="!summary.expanded" class="s-32">
+                arrow_right
               </mat-icon>
               <mat-icon *ngIf="summary.expanded" class="s-12 mat-icon-rtl-mirror">
                 signal_cellular_4_bar
@@ -68,12 +69,36 @@
         <div class="noc-cam-table-body p-8 w-100-p" fxLayout="column" fxLayoutAlign="start">
           <div class="pt-16 pb-16" *ngFor="let summaryDetail of summary.detail | keyvalue" fxLayout="row"
             fxLayoutAlign="start center">
-            <div fxFlex="200px">
-              <strong> {{summaryDetail.key}}</strong>
-            </div>
-            <div>
-              :{{summaryDetail.value}}
-            </div>
+            <mat-chip *ngIf="noctuaSearchService.searchCriteria.gp" [removable]="true"
+              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.gp)">
+              <strong>GP</strong>: {{ noctuaSearchService.searchCriteria.gp.label}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <mat-chip *ngIf="noctuaSearchService.searchCriteria.goTerm" [removable]="true"
+              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.goTerm)">
+              <strong>GO</strong>: {{ noctuaSearchService.searchCriteria.goTerm.label}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <mat-chip *ngIf="noctuaSearchService.searchCriteria.pmid" [removable]="true"
+              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.pmid)">
+              <strong>PMID</strong>: {{ noctuaSearchService.searchCriteria.pmid}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <mat-chip *ngIf="noctuaSearchService.searchCriteria.contributor" [removable]="true"
+              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.contributor)">
+              <mat-icon>person_outline</mat-icon> {{ noctuaSearchService.searchCriteria.contributor.name}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <mat-chip *ngIf="noctuaSearchService.searchCriteria.group" [removable]="true"
+              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.group)">
+              <mat-icon>people_outline</mat-icon> {{ noctuaSearchService.searchCriteria.group.name}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <mat-chip *ngIf="noctuaSearchService.searchCriteria.organism" [removable]="true"
+              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.organism)">
+              <mat-icon> pets </mat-icon> {{ noctuaSearchService.searchCriteria.organism.taxonName}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
           </div>
         </div>
       </div>

@@ -71,7 +71,7 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-    private noctuaSearchService: NoctuaSearchService,
+    public noctuaSearchService: NoctuaSearchService,
     public noctuaFormService: NoctuaFormService,
     // private noctuaLookupService: NoctuaLookupService,
     private noctuaGraphService: NoctuaGraphService,

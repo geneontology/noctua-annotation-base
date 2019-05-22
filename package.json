@@ -1,6 +1,6 @@
 {
   "name": "noctua-form-base",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -88,7 +88,7 @@
     "rxjs": "6.5.1",
     "rxjs-compat": "6.5.1",
     "sparql-query-builder": "file:../sparql-query-builder/sparql-query-builder-0.0.31.tgz",
-    "noctua-sparql-query-builder": "file:../noctua-sparql-query-builder/noctua-sparql-query-builder-0.0.36.tgz",
+    "noctua-sparql-query-builder": "file:../noctua-sparql-query-builder/noctua-sparql-query-builder-0.0.37.tgz",
     "uuid": "^3.3.2",
     "web-animations-js": "2.3.1",
     "zone.js": "0.9.0"
