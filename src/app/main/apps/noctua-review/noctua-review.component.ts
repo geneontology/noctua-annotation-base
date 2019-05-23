@@ -8,7 +8,6 @@ import { noctuaAnimations } from './../../../../@noctua/animations';
 import {
   Cam,
   Contributor,
-  Annoton,
   NoctuaUserService,
   NoctuaFormConfigService,
   NoctuaGraphService,
@@ -67,7 +66,6 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(private route: ActivatedRoute,
-    private camService: CamService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
@@ -77,7 +75,6 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
     private noctuaGraphService: NoctuaGraphService,
     private sparqlService: SparqlService,
     public reviewService: ReviewService,
-    private reviewDialogService: ReviewDialogService,
 
 
   ) {
@@ -92,11 +89,9 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
         this.getUserInfo();
         this.loadCams();
       });
-
   }
 
   getUserInfo() {
-    const self = this;
 
     this.noctuaUserService.getUser()
       .pipe(takeUntil(this._unsubscribeAll))
@@ -214,5 +209,10 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
+
+
+
+
+
 }
 

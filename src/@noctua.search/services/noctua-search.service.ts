@@ -45,7 +45,6 @@ export class NoctuaSearchService {
 
     constructor(private httpClient: HttpClient, private sparqlService: SparqlService) {
         this.onCamsChanged = new BehaviorSubject({});
-
     }
 
     search(searchCriteria) {

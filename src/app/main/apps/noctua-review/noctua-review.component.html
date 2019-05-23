@@ -44,11 +44,7 @@
               </mat-icon>
             </button>
           </div>
-          <div class="" fxFlex="200px">
-            <div class="">
-              <small>Models: </small> {{cams?.length }}
-            </div>
-          </div>
+          <noc-review-filter></noc-review-filter>
           <span fxFlex=""></span>
           <div class="" fxFlex="150px" fxLayout="row" fxLayoutAlign="end center">
             <button mat-icon-button (click)="refresh()" class="noc-bl">
@@ -89,9 +85,9 @@
               <mat-icon>person_outline</mat-icon> {{ noctuaSearchService.searchCriteria.contributor.name}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
-            <mat-chip *ngIf="noctuaSearchService.searchCriteria.group" [removable]="true"
-              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.group)">
-              <mat-icon>people_outline</mat-icon> {{ noctuaSearchService.searchCriteria.group.name}}
+            <mat-chip *ngIf="noctuaSearchService.searchCriteria.providedBy" [removable]="true"
+              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.providedBy)">
+              <mat-icon>people_outline</mat-icon> {{ noctuaSearchService.searchCriteria.providedBy.name}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <mat-chip *ngIf="noctuaSearchService.searchCriteria.organism" [removable]="true"
