@@ -33,6 +33,7 @@ import {
 
 import * as _ from 'lodash';
 import { v4 as uuid } from 'uuid';
+import { SearchCriteria } from '@noctua.search/models/search-criteria';
 declare const require: any;
 const each = require('lodash/forEach');
 
@@ -368,8 +369,8 @@ export class SparqlService {
   addGroupContributors(groups, contributors) {
     const self = this;
 
-    _.each(groups, (group) => {
-      _.each(group.contributors, (contributor) => {
+    each(groups, (group) => {
+      each(group.contributors, (contributor) => {
         let srcContributor = _.find(contributors, { orcid: contributor.orcid })
         contributor.name = srcContributor['name'];
         contributor.cams = srcContributor['cams'];
@@ -447,32 +448,32 @@ export class SparqlService {
     return '?query=' + encodeURIComponent(query.build());
   }
 
-  buildCamsQuery(searchCriteria) {
+  buildCamsQuery(searchCriteria: SearchCriteria) {
     let query = new NoctuaQuery();
 
-    if (searchCriteria.goTerm) {
-      query.goterm(searchCriteria.goTerm.id)
-    }
+    each(searchCriteria.goTerms, (goTerm) => {
+      query.goterm(goTerm.id)
+    });
 
-    if (searchCriteria.providedBy) {
-      query.group(this.getXSD(searchCriteria.providedBy.url));
-    }
+    each(searchCriteria.providedBys, (providedBy: Group) => {
+      query.group(this.getXSD(providedBy.url));
+    });
 
-    if (searchCriteria.contributor) {
-      query.contributor(this.getXSD(searchCriteria.contributor.orcid));
-    }
+    each(searchCriteria.contributors, (contributor: Contributor) => {
+      query.contributor(this.getXSD(contributor.orcid));
+    });
 
-    if (searchCriteria.gp) {
-      query.gp(this.curieUtil.getIri(searchCriteria.gp.id));
-    }
+    each(searchCriteria.gps, (gp) => {
+      query.gp(this.curieUtil.getIri(gp.id));
+    });
 
-    if (searchCriteria.pmid) {
-      query.pmid(searchCriteria.pmid);
-    }
+    each(searchCriteria.pmids, (pmid) => {
+      query.pmid(pmid);
+    });
 
-    if (searchCriteria.organism) {
-      query.taxon(searchCriteria.organism.taxonIri);
-    }
+    each(searchCriteria.organisms, (organism: Organism) => {
+      query.taxon(organism.taxonIri);
+    });
 
     query.limit(50);
 

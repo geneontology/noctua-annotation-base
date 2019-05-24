@@ -1,9 +1,9 @@
-<form fxLayout="row" fxLayoutAlign="start center" name="filterForm" [formGroup]="filterForm" class="w-100-p ">
+<form fxLayout="row" fxLayoutAlign="start center" name="filterForm" [formGroup]="filterForm" class="w-100-p h-100-p">
   <div class="pr-16">
     <span class="">
       Filter By</span>
   </div>
-  <mat-form-field appearance="outline" fxFlex="300px" class="noc-sm">
+  <mat-form-field appearance="fill" fxFlex="300px" class="noc-sm">
     <mat-label>Contributors</mat-label>
     <mat-chip-list #chipList>
       <mat-chip *ngFor="let contributor of selectedContributors" [selectable]="true" [removable]="true"

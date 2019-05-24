@@ -38,6 +38,12 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
   searchFormData: any = []
   cams: any[] = [];
 
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  selectedContributors: Contributor[] = [];
+
+  @ViewChild('contributorInput') contributorInput: ElementRef<HTMLInputElement>;
+  @ViewChild('contributorAuto') matAutocomplete: MatAutocomplete;
+
   filteredOrganisms: Observable<any[]>;
   filteredGroups: Observable<any[]>;
   filteredContributors: Observable<any[]>;
@@ -167,11 +173,7 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
 
 
 
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  selectedContributors: Contributor[] = [];
 
-  @ViewChild('contributorInput') contributorInput: ElementRef<HTMLInputElement>;
-  @ViewChild('contributorAuto') matAutocomplete: MatAutocomplete;
 
 
 
@@ -207,6 +209,5 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
     this.contributorInput.nativeElement.value = '';
     this.filterForm.controls.contributor.setValue('');
   }
-
 
 }

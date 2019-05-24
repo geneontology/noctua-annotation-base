@@ -84,8 +84,6 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
     });
   }
 
-
-
   onValueChanges() {
     const self = this;
 

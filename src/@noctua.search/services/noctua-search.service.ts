@@ -8,31 +8,20 @@ import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
 
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
-import { Cam, Contributor } from 'noctua-form-base';
+import { Cam, Contributor, Group, Organism } from 'noctua-form-base';
+import { SearchCriteria } from './../models/search-criteria';
 
-export interface Cam202 {
-    model?: {};
-    annotatedEntity?: {};
-    relationship?: string;
-    aspect?: string;
-    term?: {};
-    relationshipExt?: string;
-    extension?: string;
-    evidence?: string;
-    reference?: string;
-    with?: string;
-    assignedBy?: string;
-}
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class NoctuaSearchService {
+    onSearcCriteriaChanged: BehaviorSubject<any>;
     baseUrl = environment.spaqrlApiUrl;
     curieUtil: any;
     cams: any[] = [];
-    onCamsChanged: BehaviorSubject<any>;
-    searchCriteria: any = {};
+    searchCriteria: SearchCriteria;
 
     filterType = {
         gp: 'gp',
@@ -44,25 +33,40 @@ export class NoctuaSearchService {
     }
 
     constructor(private httpClient: HttpClient, private sparqlService: SparqlService) {
-        this.onCamsChanged = new BehaviorSubject({});
+        this.searchCriteria = new SearchCriteria();
+        this.onSearcCriteriaChanged = new BehaviorSubject(null);
+
+        this.onSearcCriteriaChanged.subscribe((searchCriteria: SearchCriteria) => {
+            if (!searchCriteria) return;
+
+            this.sparqlService.getCams(searchCriteria).subscribe((response: any) => {
+                this.sparqlService.cams = this.cams = response;
+                this.sparqlService.onCamsChanged.next(this.cams);
+            });
+        });
     }
 
     search(searchCriteria) {
-        this.searchCriteria = searchCriteria;
-        this.sparqlService.getCams(searchCriteria).subscribe((response: any) => {
-            this.sparqlService.cams = this.cams = response;
-            this.sparqlService.onCamsChanged.next(this.cams);
-        });
+        this.searchCriteria = new SearchCriteria();
+
+        searchCriteria.contributor ? this.searchCriteria.contributors.push(searchCriteria.contributor) : null;
+        searchCriteria.providedBy ? this.searchCriteria.providedBys.push(searchCriteria.providedBy) : null;
+        searchCriteria.pmid ? this.searchCriteria.pmids.push(searchCriteria.pmid) : null;
+        searchCriteria.goTerm ? this.searchCriteria.goTerms.push(searchCriteria.goTerm) : null;
+        searchCriteria.gp ? this.searchCriteria.gps.push(searchCriteria.gp) : null;
+        searchCriteria.organism ? this.searchCriteria.organisms.push(searchCriteria.organism) : null;
+
+        this.onSearcCriteriaChanged.next(this.searchCriteria);
     }
 
     filter(filterType, filter) {
         this.searchCriteria[filterType] = filter;
-        this.search(this.searchCriteria);
+        this.onSearcCriteriaChanged.next(this.searchCriteria);
     }
 
     removeFilter(filterType, filter) {
         this.searchCriteria[filterType] = null;
-        this.search(this.searchCriteria);
+        this.onSearcCriteriaChanged.next(this.searchCriteria);
     }
 
     filterByContributor(cams, contributor) {
