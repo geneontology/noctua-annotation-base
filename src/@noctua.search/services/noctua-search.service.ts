@@ -24,12 +24,12 @@ export class NoctuaSearchService {
     searchCriteria: SearchCriteria;
 
     filterType = {
-        gp: 'gp',
-        goTerm: 'goTerm',
-        pmid: 'pmid',
-        contributor: 'contributor',
-        providedBy: 'providedBy',
-        organism: 'organism'
+        gp: 'gps',
+        goTerm: 'goTerms',
+        pmid: 'pmids',
+        contributor: 'contributors',
+        providedBy: 'providedBys',
+        organism: 'organisms'
     }
 
     constructor(private httpClient: HttpClient, private sparqlService: SparqlService) {
@@ -56,17 +56,21 @@ export class NoctuaSearchService {
         searchCriteria.gp ? this.searchCriteria.gps.push(searchCriteria.gp) : null;
         searchCriteria.organism ? this.searchCriteria.organisms.push(searchCriteria.organism) : null;
 
+        this.updateSearch();
+    }
+
+    updateSearch() {
         this.onSearcCriteriaChanged.next(this.searchCriteria);
     }
 
     filter(filterType, filter) {
-        this.searchCriteria[filterType] = filter;
-        this.onSearcCriteriaChanged.next(this.searchCriteria);
+        this.searchCriteria[filterType].push(filter);
+        this.updateSearch();
     }
 
     removeFilter(filterType, filter) {
         this.searchCriteria[filterType] = null;
-        this.onSearcCriteriaChanged.next(this.searchCriteria);
+        this.updateSearch();
     }
 
     filterByContributor(cams, contributor) {

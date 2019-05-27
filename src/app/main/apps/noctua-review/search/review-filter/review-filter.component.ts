@@ -53,7 +53,7 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
     public noctuaUserService: NoctuaUserService,
-    private noctuaSearchService: NoctuaSearchService,
+    public noctuaSearchService: NoctuaSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaLookupService: NoctuaLookupService,
     private reviewService: ReviewService,
@@ -174,9 +174,6 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
 
 
 
-
-
-
   add(event: MatChipInputEvent): void {
     if (!this.matAutocomplete.isOpen) {
       const input = event.input;
@@ -197,15 +194,17 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
   }
 
   remove(contributor: Contributor): void {
-    const index = this.selectedContributors.indexOf(contributor);
+    const index = this.noctuaSearchService.searchCriteria.contributors.indexOf(contributor);
 
     if (index >= 0) {
-      this.selectedContributors.splice(index, 1);
+      this.noctuaSearchService.searchCriteria.contributors.splice(index, 1);
+      this.noctuaSearchService.updateSearch();
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.selectedContributors.push(event.option.value);
+    this.noctuaSearchService.searchCriteria.contributors.push(event.option.value);
+    this.noctuaSearchService.updateSearch();
     this.contributorInput.nativeElement.value = '';
     this.filterForm.controls.contributor.setValue('');
   }

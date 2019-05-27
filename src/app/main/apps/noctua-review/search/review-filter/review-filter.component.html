@@ -6,8 +6,8 @@
   <mat-form-field appearance="fill" fxFlex="300px" class="noc-sm">
     <mat-label>Contributors</mat-label>
     <mat-chip-list #chipList>
-      <mat-chip *ngFor="let contributor of selectedContributors" [selectable]="true" [removable]="true"
-        (removed)="remove(fruit)">
+      <mat-chip *ngFor="let contributor of noctuaSearchService.searchCriteria.contributors" [selectable]="true"
+        [removable]="true" (removed)="remove(contributor)">
         {{contributor.name}}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
