@@ -24,12 +24,12 @@ export class NoctuaSearchService {
     searchCriteria: SearchCriteria;
 
     filterType = {
-        gp: 'gps',
-        goTerm: 'goTerms',
-        pmid: 'pmids',
-        contributor: 'contributors',
-        providedBy: 'providedBys',
-        organism: 'organisms'
+        gps: 'gps',
+        goTerms: 'goTerms',
+        pmids: 'pmids',
+        contributors: 'contributors',
+        groups: 'groups',
+        organisms: 'organisms'
     }
 
     constructor(private httpClient: HttpClient, private sparqlService: SparqlService) {

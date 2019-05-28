@@ -16,13 +16,12 @@ import { forEach } from '@angular/router/src/utils/collection';
 import { ReviewService } from '../../services/review.service';
 
 import { NoctuaTranslationLoaderService } from '@noctua/services/translation-loader.service';
-import { NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
+import { NoctuaFormConfigService, NoctuaUserService, Group, Contributor } from 'noctua-form-base';
 import { NoctuaLookupService } from 'noctua-form-base';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Contributor } from '../../../../../../../dist/public-api';
 
 
 @Component({
@@ -83,12 +82,12 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
 
   createAnswerForm() {
     return new FormGroup({
-      gp: new FormControl(this.searchCriteria.gp),
-      goTerm: new FormControl(this.searchCriteria.goTerm),
-      pmid: new FormControl(this.searchCriteria.pmid),
-      contributor: new FormControl(this.searchCriteria.contributor),
-      group: new FormControl(this.searchCriteria.group),
-      organism: new FormControl(this.searchCriteria.organism),
+      gps: new FormControl(),
+      goTerms: new FormControl(),
+      pmids: new FormControl(),
+      contributors: new FormControl(),
+      groups: new FormControl(),
+      organisms: new FormControl()
     });
   }
 
@@ -96,35 +95,14 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
   onValueChanges() {
     const self = this;
 
-    this.filterForm.get('goTerm').valueChanges
-      .distinctUntilChanged()
-      .debounceTime(400)
-      .subscribe(data => {
-        let searchData = self.searchFormData['goTerm'];
-        this.noctuaLookupService.golrTermLookup(data, searchData.id).subscribe(response => {
-          self.searchFormData['goTerm'].searchResults = response
-        });
-      });
-
-    this.filterForm.get('gp').valueChanges
-      .distinctUntilChanged()
-      .debounceTime(400)
-      .subscribe(data => {
-        let searchData = self.searchFormData['gp'];
-        this.noctuaLookupService.golrTermLookup(data, searchData.id).subscribe(response => {
-          self.searchFormData['gp'].searchResults = response
-        })
-      })
-
-
-    this.filteredOrganisms = this.filterForm.controls.organism.valueChanges
+    this.filteredOrganisms = this.filterForm.controls.organisms.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value['short_name']),
         map(organism => organism ? this.reviewService.filterOrganisms(organism) : this.reviewService.organisms.slice())
       )
 
-    this.filteredContributors = this.filterForm.controls.contributor.valueChanges
+    this.filteredContributors = this.filterForm.controls.contributors.valueChanges
       .pipe(
         startWith(''),
         map(
@@ -132,7 +110,7 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
         map(contributor => contributor ? this.noctuaUserService.filterContributors(contributor) : this.noctuaUserService.contributors.slice())
       )
 
-    this.filteredGroups = this.filterForm.controls.group.valueChanges
+    this.filteredGroups = this.filterForm.controls.groups.valueChanges
       .pipe(
         startWith(''),
         map(
@@ -193,20 +171,20 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
     }
   }
 
-  remove(contributor: Contributor): void {
-    const index = this.noctuaSearchService.searchCriteria.contributors.indexOf(contributor);
+  remove(item: Contributor | Group, filterType): void {
+    const index = this.noctuaSearchService.searchCriteria[filterType].indexOf(item);
 
     if (index >= 0) {
-      this.noctuaSearchService.searchCriteria.contributors.splice(index, 1);
+      this.noctuaSearchService.searchCriteria[filterType].splice(index, 1);
       this.noctuaSearchService.updateSearch();
     }
   }
 
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.noctuaSearchService.searchCriteria.contributors.push(event.option.value);
+  selected(event: MatAutocompleteSelectedEvent, filterType): void {
+    this.noctuaSearchService.searchCriteria[filterType].push(event.option.value);
     this.noctuaSearchService.updateSearch();
-    this.contributorInput.nativeElement.value = '';
-    this.filterForm.controls.contributor.setValue('');
+    // this.contributorInput.nativeElement.value = '';
+    this.filterForm.controls[filterType].setValue('');
   }
 
 }

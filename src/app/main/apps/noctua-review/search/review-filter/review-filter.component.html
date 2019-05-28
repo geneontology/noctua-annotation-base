@@ -17,15 +17,16 @@
             <mat-label>Contributors</mat-label>
             <mat-chip-list #chipList>
               <mat-chip *ngFor="let contributor of noctuaSearchService.searchCriteria.contributors" [selectable]="true"
-                [removable]="true" (removed)="remove(contributor)">
+                [removable]="true" (removed)="remove(contributor, noctuaSearchService.filterType.contributors)">
                 {{contributor.name}}
                 <mat-icon matChipRemove>cancel</mat-icon>
               </mat-chip>
-              <input formControlName="contributor" placeholder="Add Contributor Filter"
+              <input formControlName="contributors" placeholder="Add Contributor Filter"
                 [matAutocomplete]="contributorAuto" #contributorInput [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="false">
             </mat-chip-list>
-            <mat-autocomplete #contributorAuto="matAutocomplete" (optionSelected)="selected($event)"
+            <mat-autocomplete #contributorAuto="matAutocomplete"
+              (optionSelected)="selected($event, noctuaSearchService.filterType.contributors)"
               [displayWith]="contributorDisplayFn" class="noc-term-autocomplete">
               <mat-option class="noc-term-autocomplete" *ngFor="let item of filteredContributors | async"
                 [value]="item">
@@ -45,16 +46,17 @@
             <mat-label>Groups</mat-label>
             <mat-chip-list #chipList>
               <mat-chip *ngFor="let group of noctuaSearchService.searchCriteria.groups" [selectable]="true"
-                [removable]="true" (removed)="remove(group)">
+                [removable]="true" (removed)="remove(group, noctuaSearchService.filterType.groups)">
                 {{group.name}}
                 <mat-icon matChipRemove>cancel</mat-icon>
               </mat-chip>
-              <input formControlName="group" placeholder="Add Group Filter" [matAutocomplete]="groupAuto" #groupInput
+              <input formControlName="groups" placeholder="Add Group Filter" [matAutocomplete]="groupAuto" #groupInput
                 [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 [matChipInputAddOnBlur]="false">
             </mat-chip-list>
-            <mat-autocomplete #groupAuto="matAutocomplete" (optionSelected)="selected($event)"
-              [displayWith]="groupDisplayFn" class="noc-term-autocomplete">
+            <mat-autocomplete #groupAuto="matAutocomplete"
+              (optionSelected)="selected($event, noctuaSearchService.filterType.groups)" [displayWith]="groupDisplayFn"
+              class="noc-term-autocomplete">
               <mat-option class="noc-term-autocomplete" *ngFor="let item of filteredGroups | async" [value]="item">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
