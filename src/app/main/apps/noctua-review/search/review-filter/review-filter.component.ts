@@ -163,6 +163,10 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
     this.reviewService.closeLeftDrawer();
   }
 
+  clear() {
+    this.noctuaSearchService.clearSearchCriteria();
+  }
+
   ngOnDestroy(): void {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();

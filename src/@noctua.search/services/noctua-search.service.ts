@@ -16,6 +16,7 @@ import { SearchCriteria } from './../models/search-criteria';
     providedIn: 'root'
 })
 export class NoctuaSearchService {
+
     onSearcCriteriaChanged: BehaviorSubject<any>;
     baseUrl = environment.spaqrlApiUrl;
     curieUtil: any;
@@ -67,8 +68,18 @@ export class NoctuaSearchService {
         this.updateSearch();
     }
 
+    removeFilterType(filterType: string) {
+        this.searchCriteria[filterType] = [];
+        this.updateSearch();
+    }
+
     removeFilter(filterType, filter) {
         this.searchCriteria[filterType] = null;
+
+    }
+
+    clearSearchCriteria() {
+        this.searchCriteria = new SearchCriteria();
         this.updateSearch();
     }
 

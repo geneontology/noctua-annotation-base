@@ -43,6 +43,12 @@
       @include deep-height(150px);
     }
 
+    mat-chip {
+      font-size: 14px;
+      font-weight: normal;
+      @include deep-height(30px);
+    }
+
     .noc-summary-bar-section {
       .noc-section-label {
         font-size: 12px;
