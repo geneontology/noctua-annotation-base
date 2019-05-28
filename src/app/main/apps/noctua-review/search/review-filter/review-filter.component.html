@@ -1,67 +1,79 @@
-<form fxLayout="row" fxLayoutAlign="start center" name="filterForm" [formGroup]="filterForm" class="w-100-p h-100-p">
-  <div class="pr-16">
-    <span class="">
+<form fxLayout="column" fxLayoutAlign="start stretch" name="filterForm" [formGroup]="filterForm"
+  class="noc-drawer w-100-p h-100-p">
+  <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
+    <span class="noc-drawer-header-title">
       Filter By</span>
+    <span fxFlex></span>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close dialog">
+      <mat-icon>close</mat-icon> Close
+    </button>
   </div>
-  <mat-form-field appearance="fill" fxFlex="300px" class="noc-sm">
-    <mat-label>Contributors</mat-label>
-    <mat-chip-list #chipList>
-      <mat-chip *ngFor="let contributor of noctuaSearchService.searchCriteria.contributors" [selectable]="true"
-        [removable]="true" (removed)="remove(contributor)">
-        {{contributor.name}}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <input formControlName="contributor" placeholder="Contributor" [matAutocomplete]="contributorAuto"
-        #contributorInput [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        [matChipInputAddOnBlur]="false">
-    </mat-chip-list>
-    <mat-autocomplete #contributorAuto="matAutocomplete" (optionSelected)="selected($event)"
-      [displayWith]="contributorDisplayFn" class="noc-term-autocomplete">
-      <mat-option class="noc-term-autocomplete" *ngFor="let item of filteredContributors | async" [value]="item">
-        <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-term-label">
-            {{ item.name }}
-          </div>
-          <span fxFlex></span>
-          <div class="noc-term-id">
-            {{ item.orcid }}
-          </div>
+  <div class="noc-drawer-body noc-annoton-form" noctuaPerfectScrollbar>
+    <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="noc-annoton-group-row" fxLayout="column">
+          <mat-form-field appearance="fill" class="noc-sm w-100-p">
+            <mat-label>Contributors</mat-label>
+            <mat-chip-list #chipList>
+              <mat-chip *ngFor="let contributor of noctuaSearchService.searchCriteria.contributors" [selectable]="true"
+                [removable]="true" (removed)="remove(contributor)">
+                {{contributor.name}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input formControlName="contributor" placeholder="Add Contributor Filter"
+                [matAutocomplete]="contributorAuto" #contributorInput [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="false">
+            </mat-chip-list>
+            <mat-autocomplete #contributorAuto="matAutocomplete" (optionSelected)="selected($event)"
+              [displayWith]="contributorDisplayFn" class="noc-term-autocomplete">
+              <mat-option class="noc-term-autocomplete" *ngFor="let item of filteredContributors | async"
+                [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.name }}
+                  </div>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    {{ item.orcid }}
+                  </div>
+                </div>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="noc-sm w-100-p">
+            <mat-label>Groups</mat-label>
+            <mat-chip-list #chipList>
+              <mat-chip *ngFor="let group of noctuaSearchService.searchCriteria.groups" [selectable]="true"
+                [removable]="true" (removed)="remove(group)">
+                {{group.name}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input formControlName="group" placeholder="Add Group Filter" [matAutocomplete]="groupAuto" #groupInput
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="false">
+            </mat-chip-list>
+            <mat-autocomplete #groupAuto="matAutocomplete" (optionSelected)="selected($event)"
+              [displayWith]="groupDisplayFn" class="noc-term-autocomplete">
+              <mat-option class="noc-term-autocomplete" *ngFor="let item of filteredGroups | async" [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.name }}
+                  </div>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    {{ item.orcid }}
+                  </div>
+                </div>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <mat-form-field appearance="outline" class="noc-sm">
-    <mat-label>Groups</mat-label>
-    <input type="text" matInput formControlName="providedBy" placeholder="Group" [matAutocomplete]="providedByAuto" />
-    <mat-autocomplete #providedByAuto="matAutocomplete" class="noc-term-autocomplete" [displayWith]="groupDisplayFn">
-      <mat-option *ngFor="let item of filteredGroups | async" [value]="item">
-        <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-term-label">
-            {{ item.name }}
-          </div>
-          <span fxFlex></span>
-          <div class="noc-term-id">
-            {{ item.url }}
-          </div>
-        </div>
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <mat-form-field appearance="outline" class="noc-sm">
-    <mat-label>Organisms</mat-label>
-    <input matInput formControlName="organism" placeholder="Species" [matAutocomplete]="speciesAuto" />
-    <mat-autocomplete #speciesAuto="matAutocomplete" [displayWith]="organismDisplayFn" class="noc-term-autocomplete">
-      <mat-option *ngFor="let organism of filteredOrganisms | async" [value]="organism">
-        <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-term-label">
-            {{organism.taxonName}}
-          </div>
-          <span fxFlex></span>
-          <div class="noc-term-id">
-            {{organism.taxonIri}}
-          </div>
-        </div>
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
+    <span fxFlex></span>
+    <button (click)="clear()" type="button" mat-raised-button>Clear</button>
+  </div>
 </form>

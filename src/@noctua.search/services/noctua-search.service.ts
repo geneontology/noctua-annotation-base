@@ -50,7 +50,7 @@ export class NoctuaSearchService {
         this.searchCriteria = new SearchCriteria();
 
         searchCriteria.contributor ? this.searchCriteria.contributors.push(searchCriteria.contributor) : null;
-        searchCriteria.providedBy ? this.searchCriteria.providedBys.push(searchCriteria.providedBy) : null;
+        searchCriteria.group ? this.searchCriteria.groups.push(searchCriteria.group) : null;
         searchCriteria.pmid ? this.searchCriteria.pmids.push(searchCriteria.pmid) : null;
         searchCriteria.goTerm ? this.searchCriteria.goTerms.push(searchCriteria.goTerm) : null;
         searchCriteria.gp ? this.searchCriteria.gps.push(searchCriteria.gp) : null;

@@ -5,6 +5,11 @@
       [matTooltipShowDelay]="1500">
       <mat-icon> search </mat-icon>
     </button>
+    <button mat-icon-button color="primary" class="noc-rounded-button"
+      (click)="toggleLeftDrawer(reviewService.leftPanel.filter)" matTooltip="Filter" [matTooltipPosition]="'after'"
+      [matTooltipShowDelay]="1500">
+      <mat-icon> filter_list </mat-icon>
+    </button>
     <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
       toggleLeftDrawer(reviewService.leftPanel.group)" matTooltip="Search by group" [matTooltipPosition]="'after'"
       [matTooltipShowDelay]="1000">
@@ -25,6 +30,7 @@
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start">
       <div [ngSwitch]="reviewService.selectedLeftPanel.id" class="h-100-p">
         <noc-review-search *ngSwitchCase="reviewService.leftPanel.search.id"></noc-review-search>
+        <noc-review-filter *ngSwitchCase="reviewService.leftPanel.filter.id"></noc-review-filter>
         <noc-review-groups *ngSwitchCase="reviewService.leftPanel.group.id"></noc-review-groups>
         <noc-review-contributors *ngSwitchCase="reviewService.leftPanel.contributor.id"></noc-review-contributors>
         <noc-review-organisms *ngSwitchCase="reviewService.leftPanel.species.id"></noc-review-organisms>
@@ -44,7 +50,6 @@
               </mat-icon>
             </button>
           </div>
-          <noc-review-filter></noc-review-filter>
           <span fxFlex=""></span>
           <div class="" fxFlex="150px" fxLayout="row" fxLayoutAlign="end center">
             <button mat-icon-button (click)="refresh()" class="noc-bl">
@@ -85,9 +90,9 @@
               <mat-icon>person_outline</mat-icon> {{ noctuaSearchService.searchCriteria.contributor.name}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
-            <mat-chip *ngIf="noctuaSearchService.searchCriteria.providedBy" [removable]="true"
-              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.providedBy)">
-              <mat-icon>people_outline</mat-icon> {{ noctuaSearchService.searchCriteria.providedBy.name}}
+            <mat-chip *ngIf="noctuaSearchService.searchCriteria.group" [removable]="true"
+              (removed)="noctuaSearchService.removeFilter(noctuaSearchService.filterType.group)">
+              <mat-icon>people_outline</mat-icon> {{ noctuaSearchService.searchCriteria.group.name}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <mat-chip *ngIf="noctuaSearchService.searchCriteria.organism" [removable]="true"

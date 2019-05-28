@@ -5,7 +5,7 @@ export class SearchCriteria {
     goTerms: any[] = [];
     pmids: any[] = [];
     contributors: Contributor[] = [];
-    providedBys: Group[] = [];
+    groups: Group[] = [];
     organisms: Organism[] = [];
 
     constructor() {

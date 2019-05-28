@@ -85,10 +85,8 @@
             </mat-autocomplete>
           </mat-form-field>
           <mat-form-field appearance="outline" class="noc-sm">
-            <input type="text" matInput formControlName="providedBy" placeholder="Group"
-              [matAutocomplete]="providedByAuto" />
-            <mat-autocomplete #providedByAuto="matAutocomplete" class="noc-term-autocomplete"
-              [displayWith]="groupDisplayFn">
+            <input type="text" matInput formControlName="group" placeholder="Group" [matAutocomplete]="groupAuto" />
+            <mat-autocomplete #groupAuto="matAutocomplete" class="noc-term-autocomplete" [displayWith]="groupDisplayFn">
               <mat-option *ngFor="let item of filteredGroups | async" [value]="item">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">

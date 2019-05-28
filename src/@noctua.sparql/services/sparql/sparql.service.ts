@@ -455,8 +455,8 @@ export class SparqlService {
       query.goterm(goTerm.id)
     });
 
-    each(searchCriteria.providedBys, (providedBy: Group) => {
-      query.group(this.getXSD(providedBy.url));
+    each(searchCriteria.groups, (group: Group) => {
+      query.group(this.getXSD(group.url));
     });
 
     each(searchCriteria.contributors, (contributor: Contributor) => {

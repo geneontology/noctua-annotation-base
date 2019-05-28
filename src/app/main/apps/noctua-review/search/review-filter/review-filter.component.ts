@@ -87,7 +87,7 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
       goTerm: new FormControl(this.searchCriteria.goTerm),
       pmid: new FormControl(this.searchCriteria.pmid),
       contributor: new FormControl(this.searchCriteria.contributor),
-      providedBy: new FormControl(this.searchCriteria.providedBy),
+      group: new FormControl(this.searchCriteria.group),
       organism: new FormControl(this.searchCriteria.organism),
     });
   }
@@ -132,7 +132,7 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
         map(contributor => contributor ? this.noctuaUserService.filterContributors(contributor) : this.noctuaUserService.contributors.slice())
       )
 
-    this.filteredGroups = this.filterForm.controls.providedBy.valueChanges
+    this.filteredGroups = this.filterForm.controls.group.valueChanges
       .pipe(
         startWith(''),
         map(
