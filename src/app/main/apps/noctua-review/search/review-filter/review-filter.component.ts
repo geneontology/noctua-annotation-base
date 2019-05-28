@@ -83,7 +83,7 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
   createAnswerForm() {
     return new FormGroup({
       gps: new FormControl(),
-      goTerms: new FormControl(),
+      goterms: new FormControl(),
       pmids: new FormControl(),
       contributors: new FormControl(),
       groups: new FormControl(),
@@ -94,6 +94,26 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
 
   onValueChanges() {
     const self = this;
+
+    this.filterForm.get('goterms').valueChanges
+      .distinctUntilChanged()
+      .debounceTime(400)
+      .subscribe(data => {
+        let searchData = self.searchFormData['goterm'];
+        this.noctuaLookupService.golrTermLookup(data, searchData.id).subscribe(response => {
+          self.searchFormData['goterm'].searchResults = response
+        });
+      });
+
+    this.filterForm.get('gps').valueChanges
+      .distinctUntilChanged()
+      .debounceTime(400)
+      .subscribe(data => {
+        let searchData = self.searchFormData['gp'];
+        this.noctuaLookupService.golrTermLookup(data, searchData.id).subscribe(response => {
+          self.searchFormData['gp'].searchResults = response
+        })
+      })
 
     this.filteredOrganisms = this.filterForm.controls.organisms.valueChanges
       .pipe(
@@ -151,25 +171,22 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
 
 
 
-  /*
-    add(event: MatChipInputEvent): void {
-      if (!this.matAutocomplete.isOpen) {
-        const input = event.input;
-        const value = event.value;
-  
-        // Add our fruit
-        if (value) {
-          //  this.selectedContributors.push(value);
-        }
-  
-        // Reset the input value
-        if (input) {
-          input.value = '';
-        }
-  
-        this.filterForm.controls.contributor.setValue(null);
-      }
-    }*/
+  add(event: MatChipInputEvent, filterType): void {
+    const input = event.input;
+    const value = event.value;
+
+    if ((value || '').trim()) {
+      this.noctuaSearchService.searchCriteria[filterType].push(value.trim());
+      this.noctuaSearchService.updateSearch();
+      this.filterForm.controls[filterType].setValue('');
+    }
+
+    if (input) {
+      input.value = '';
+    }
+
+    this.filterForm.controls.contributor.setValue(null);
+  }
 
   remove(item: Contributor | Group, filterType): void {
     const index = this.noctuaSearchService.searchCriteria[filterType].indexOf(item);
