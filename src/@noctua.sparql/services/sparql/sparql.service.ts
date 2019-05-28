@@ -440,10 +440,10 @@ export class SparqlService {
   }
 
   //GO:0003723
-  buildCamsByGoTermQuery(goTerm) {
+  buildCamsByGoTermQuery(goterm) {
     let query = new NoctuaQuery();
 
-    query.goterm(goTerm.id);
+    query.goterm(goterm.id);
     query.limit(100);
     return '?query=' + encodeURIComponent(query.build());
   }
@@ -451,8 +451,8 @@ export class SparqlService {
   buildCamsQuery(searchCriteria: SearchCriteria) {
     let query = new NoctuaQuery();
 
-    each(searchCriteria.goTerms, (goTerm) => {
-      query.goterm(goTerm.id)
+    each(searchCriteria.goterms, (goterm) => {
+      query.goterm(goterm.id)
     });
 
     each(searchCriteria.groups, (group: Group) => {

@@ -12,7 +12,6 @@ import { Cam, Contributor, Group, Organism } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -25,7 +24,7 @@ export class NoctuaSearchService {
 
     filterType = {
         gps: 'gps',
-        goTerms: 'goTerms',
+        goterms: 'goterms',
         pmids: 'pmids',
         contributors: 'contributors',
         groups: 'groups',
@@ -52,7 +51,7 @@ export class NoctuaSearchService {
         searchCriteria.contributor ? this.searchCriteria.contributors.push(searchCriteria.contributor) : null;
         searchCriteria.group ? this.searchCriteria.groups.push(searchCriteria.group) : null;
         searchCriteria.pmid ? this.searchCriteria.pmids.push(searchCriteria.pmid) : null;
-        searchCriteria.goTerm ? this.searchCriteria.goTerms.push(searchCriteria.goTerm) : null;
+        searchCriteria.goterm ? this.searchCriteria.goterms.push(searchCriteria.goterm) : null;
         searchCriteria.gp ? this.searchCriteria.gps.push(searchCriteria.gp) : null;
         searchCriteria.organism ? this.searchCriteria.organisms.push(searchCriteria.organism) : null;
 

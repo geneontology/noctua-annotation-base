@@ -15,9 +15,9 @@
         <div class="noc-annoton-group-row" fxLayout="column">
           <mat-form-field appearance="outline" class="noc-sm">
             <mat-label>Go Term</mat-label>
-            <textarea type="text" matInput formControlName="goTerm" [matAutocomplete]="goTermAuto" rows="2"></textarea>
-            <mat-autocomplete #goTermAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
-              <mat-option class="noc-term-autocomplete" *ngFor="let item of searchFormData['goTerm']?.searchResults"
+            <textarea type="text" matInput formControlName="goterm" [matAutocomplete]="gotermAuto" rows="2"></textarea>
+            <mat-autocomplete #gotermAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
+              <mat-option class="noc-term-autocomplete" *ngFor="let item of searchFormData['goterm']?.searchResults"
                 [value]="item">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">

@@ -419,8 +419,8 @@ export class NoctuaFormConfigService {
         },
         'searchResults': []
       },
-      'goTerm': {
-        'id': 'goTerm',
+      'goterm': {
+        'id': 'goterm',
         "label": 'Molecular Function',
         'aspect': 'F',
         "lookupGroup": 'GO:0003674',

@@ -198,7 +198,7 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
   }
 
   refresh() {
-
+    this.noctuaSearchService.updateSearch();
   }
 
   selectCam(cam) {

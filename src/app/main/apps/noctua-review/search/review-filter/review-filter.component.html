@@ -11,18 +11,23 @@
   </div>
   <div class="noc-drawer-body noc-annoton-form" noctuaPerfectScrollbar>
     <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
-      <div class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Filter By Contributor
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="noc-annoton-group-row" fxLayout="column">
-          <mat-form-field appearance="fill" class="noc-sm w-100-p">
-            <mat-label>Contributors</mat-label>
-            <mat-chip-list #chipList>
+          <mat-form-field appearance="outline" class="noc-sm w-100-p">
+            <mat-chip-list #contributorChipList>
               <mat-chip *ngFor="let contributor of noctuaSearchService.searchCriteria.contributors" [selectable]="true"
                 [removable]="true" (removed)="remove(contributor, noctuaSearchService.filterType.contributors)">
                 {{contributor.name}}
                 <mat-icon matChipRemove>cancel</mat-icon>
               </mat-chip>
               <input formControlName="contributors" placeholder="Add Contributor Filter"
-                [matAutocomplete]="contributorAuto" #contributorInput [matChipInputFor]="chipList"
+                [matAutocomplete]="contributorAuto" #contributorInput [matChipInputFor]="contributorChipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="false">
             </mat-chip-list>
             <mat-autocomplete #contributorAuto="matAutocomplete"
@@ -42,16 +47,27 @@
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field appearance="fill" class="noc-sm w-100-p">
-            <mat-label>Groups</mat-label>
-            <mat-chip-list #chipList>
+        </div>
+      </div>
+    </div>
+    <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Filter By Group
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="noc-annoton-group-row" fxLayout="column">
+          <mat-form-field appearance="outline" class="noc-sm w-100-p">
+            <mat-chip-list #groupChipList>
               <mat-chip *ngFor="let group of noctuaSearchService.searchCriteria.groups" [selectable]="true"
                 [removable]="true" (removed)="remove(group, noctuaSearchService.filterType.groups)">
                 {{group.name}}
                 <mat-icon matChipRemove>cancel</mat-icon>
               </mat-chip>
               <input formControlName="groups" placeholder="Add Group Filter" [matAutocomplete]="groupAuto" #groupInput
-                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputFor]="groupChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 [matChipInputAddOnBlur]="false">
             </mat-chip-list>
             <mat-autocomplete #groupAuto="matAutocomplete"
@@ -64,7 +80,46 @@
                   </div>
                   <span fxFlex></span>
                   <div class="noc-term-id">
-                    {{ item.orcid }}
+                    {{ item.url }}
+                  </div>
+                </div>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Filter By Species
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="noc-annoton-organism-row" fxLayout="column">
+          <mat-form-field appearance="outline" class="noc-sm w-100-p">
+            <mat-chip-list #organismChipList>
+              <mat-chip *ngFor="let organism of noctuaSearchService.searchCriteria.organisms" [selectable]="true"
+                [removable]="true" (removed)="remove(organism, noctuaSearchService.filterType.organisms)">
+                {{organism.taxonName}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input formControlName="organisms" placeholder="Add Organism Filter" [matAutocomplete]="organismAuto"
+                #organismInput [matChipInputFor]="organismChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="false">
+            </mat-chip-list>
+            <mat-autocomplete #organismAuto="matAutocomplete"
+              (optionSelected)="selected($event, noctuaSearchService.filterType.organisms)"
+              [displayWith]="organismDisplayFn" class="noc-term-autocomplete">
+              <mat-option class="noc-term-autocomplete" *ngFor="let item of filteredOrganisms | async" [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.taxonName }}
+                  </div>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    {{ item.taxonId }}
                   </div>
                 </div>
               </mat-option>

@@ -40,8 +40,8 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   selectedContributors: Contributor[] = [];
 
-  @ViewChild('contributorInput') contributorInput: ElementRef<HTMLInputElement>;
-  @ViewChild('contributorAuto') matAutocomplete: MatAutocomplete;
+  //@ViewChild('contributorInput') contributorInput: ElementRef<HTMLInputElement>;
+  // @ViewChild('contributorAuto') matAutocomplete: MatAutocomplete;
 
   filteredOrganisms: Observable<any[]>;
   filteredGroups: Observable<any[]>;
@@ -151,25 +151,25 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
 
 
 
-
-  add(event: MatChipInputEvent): void {
-    if (!this.matAutocomplete.isOpen) {
-      const input = event.input;
-      const value = event.value;
-
-      // Add our fruit
-      if (value) {
-        //  this.selectedContributors.push(value);
+  /*
+    add(event: MatChipInputEvent): void {
+      if (!this.matAutocomplete.isOpen) {
+        const input = event.input;
+        const value = event.value;
+  
+        // Add our fruit
+        if (value) {
+          //  this.selectedContributors.push(value);
+        }
+  
+        // Reset the input value
+        if (input) {
+          input.value = '';
+        }
+  
+        this.filterForm.controls.contributor.setValue(null);
       }
-
-      // Reset the input value
-      if (input) {
-        input.value = '';
-      }
-
-      this.filterForm.controls.contributor.setValue(null);
-    }
-  }
+    }*/
 
   remove(item: Contributor | Group, filterType): void {
     const index = this.noctuaSearchService.searchCriteria[filterType].indexOf(item);
