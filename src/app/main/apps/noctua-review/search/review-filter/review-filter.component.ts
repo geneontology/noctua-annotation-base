@@ -172,9 +172,6 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
     this.unsubscribeAll.complete();
   }
 
-
-
-
   add(event: MatChipInputEvent, filterType): void {
     const input = event.input;
     const value = event.value;
@@ -188,8 +185,6 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
     if (input) {
       input.value = '';
     }
-
-    this.filterForm.controls.contributor.setValue(null);
   }
 
   remove(item: Contributor | Group, filterType): void {
@@ -204,7 +199,6 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
   selected(event: MatAutocompleteSelectedEvent, filterType): void {
     this.noctuaSearchService.searchCriteria[filterType].push(event.option.value);
     this.noctuaSearchService.updateSearch();
-    // this.contributorInput.nativeElement.value = '';
     this.filterForm.controls[filterType].setValue('');
   }
 
