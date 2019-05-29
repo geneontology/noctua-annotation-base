@@ -124,12 +124,7 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
       .subscribe((response: any) => {
         this.reviewService.contributors = response;
         this.reviewService.onContributorsChanged.next(response);
-        this.sparqlService.getCamsByGoTerm({ id: 'GO:0017127' })
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe((response: any) => {
-            this.cams = this.sparqlService.cams = response;
-            this.sparqlService.onCamsChanged.next(this.cams);
-          });
+        this.noctuaSearchService.updateSearch();
       });
 
     this.sparqlService.getAllGroups()

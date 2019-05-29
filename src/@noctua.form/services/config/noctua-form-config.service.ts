@@ -865,6 +865,9 @@ export class NoctuaFormConfigService {
     let options = [
       noctuaFormConfig.modelState.options.development,
       noctuaFormConfig.modelState.options.production,
+      noctuaFormConfig.modelState.options.review,
+      noctuaFormConfig.modelState.options.closed,
+      noctuaFormConfig.modelState.options.delete
     ]
 
     return {

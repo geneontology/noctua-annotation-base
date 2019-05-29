@@ -135,6 +135,18 @@ export const noctuaFormConfig = {
       'production': {
         "name": 'production',
         "label": 'Production'
+      },
+      'review': {
+        "name": 'review',
+        "label": 'Review'
+      },
+      'closed': {
+        "name": 'closed',
+        "label": 'Closed'
+      },
+      'delete': {
+        "name": 'delete',
+        "label": 'Delete'
       }
     }
   },
