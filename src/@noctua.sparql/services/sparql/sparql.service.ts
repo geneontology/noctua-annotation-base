@@ -318,6 +318,10 @@ export class SparqlService {
       query.taxon(organism.taxonIri);
     });
 
+    each(searchCriteria.states, (state: any) => {
+      query.state(this.getXSD(state.name));
+    });
+
     query.limit(50);
 
     return '?query=' + encodeURIComponent(query.build());
