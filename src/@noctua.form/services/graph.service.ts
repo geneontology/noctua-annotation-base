@@ -7,12 +7,16 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
 import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
 
-import { Cam } from './../models/annoton/cam';
-import { Annoton } from './../models/annoton/annoton';
-import { AnnotonNode } from './../models/annoton/annoton-node';
-import { AnnotonParser } from './../models/annoton/parser/annoton-parser';
-import { AnnotonError } from "./../models/annoton/parser/annoton-error";
-import { Evidence } from './../models/annoton/evidence';
+import { } from './../models/annoton/cam';
+import {
+  Cam,
+  Annoton,
+  Triple,
+  AnnotonNode,
+  AnnotonParser,
+  AnnotonError,
+  Evidence
+} from './../models/annoton/';
 
 //Config
 import { noctuaFormConfig } from './../noctua-form-config';
@@ -170,6 +174,45 @@ export class NoctuaGraphService {
   }
 
 
+
+
+
+  getGraphInfo2(cam: Cam, modelId) {
+    const self = this;
+
+    cam.onGraphChanged = new BehaviorSubject(null);
+    cam.modelId = modelId;
+    cam.manager = this.registerManager();
+    cam.individualManager = this.registerManager();
+    cam.groupManager = this.registerManager();
+
+    let rebuild = (resp) => {
+      let noctua_graph = model.graph;
+
+      cam.graph = new noctua_graph();
+      cam.modelId = resp.data().id;
+      cam.graph.load_data_basic(resp.data());
+      let titleAnnotations = cam.graph.get_annotations_by_key('title');
+      let stateAnnotations = cam.graph.get_annotations_by_key('state');
+
+      if (titleAnnotations.length > 0) {
+        cam.title = titleAnnotations[0].value();
+      }
+
+      if (stateAnnotations.length > 0) {
+        cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
+      }
+
+      cam.triples = self.graphToAnnotons2(cam, cam.filter.individualIds);
+      cam.onGraphChanged.next(cam.annotons);
+    }
+
+    cam.manager.register('rebuild', function (resp) {
+      rebuild(resp);
+    }, 10);
+
+    cam.manager.get_model(modelId);
+  }
 
 
   addModel(manager) {
@@ -408,6 +451,7 @@ export class NoctuaGraphService {
     return result;
   }
 
+
   graphToAnnotons(cam: Cam) {
     const self = this;
     let annotons: Annoton[] = [];
@@ -468,6 +512,41 @@ export class NoctuaGraphService {
     // self.parseNodeClosure(annotons);
 
     return annotons;
+  }
+
+  graphToAnnotons2(cam: Cam, individualIds: any) {
+    const self = this;
+    let triples: Triple[] = [];
+
+    each(individualIds, (individualId) => {
+      let edgesIn = cam.graph.get_edges_by_object(individualId);
+
+      each(edgesIn, (e) => {
+        let subjectId = e.subject_id();
+        let objectId = e.object_id();
+        let evidences: Evidence[] = self.edgeToEvidence(cam.graph, e);
+        let subjectNode = self.subjectToTerm(cam.graph, subjectId);
+        let objectNode = self.subjectToTerm(cam.graph, objectId);
+        let subjectAnnotonNode = self.noctuaFormConfigService.generateNode('subject');
+        let objectAnnotonNode = self.noctuaFormConfigService.generateNode('object');
+
+        subjectAnnotonNode.setTerm(subjectNode.term, subjectNode.classExpression);
+        subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
+        subjectAnnotonNode.individualId = subjectId;
+
+        objectAnnotonNode.setTerm(objectNode.term, objectNode.classExpression);
+        objectAnnotonNode.setIsComplement(objectNode.isComplement);
+        objectAnnotonNode.individualId = objectId;
+
+        let triple = new Triple(subjectAnnotonNode, evidences, objectAnnotonNode);
+
+        triples.push(triple);
+
+        console.log(triple)
+      });
+    });
+
+    return triples;
   }
 
   graphToCCOnly(graph) {
@@ -973,10 +1052,10 @@ export class NoctuaGraphService {
   checkIfNodeExist(srcAnnoton) {
     const self = this;
     let infos = [];
-  
+   
     each(srcAnnoton.nodes, function (srcNode) {
       let srcTerm = srcNode.getTerm();
-  
+   
       if (srcTerm.id && !srcNode.individualId) {
         let meta = {
           aspect: srcNode.label,
@@ -986,10 +1065,10 @@ export class NoctuaGraphService {
           },
           linkedNodes: []
         }
-  
+   
         each(self.gridData.annotons, function (annotonData) {
           each(annotonData.annoton.nodes, function (node) {
-  
+   
             if (srcTerm.id === node.getTerm().id) {
               if (!_.find(meta.linkedNodes, {
                 modelId: node.individualId
@@ -999,16 +1078,16 @@ export class NoctuaGraphService {
             }
           });
         });
-  
+   
         if (meta.linkedNodes.length > 0) {
           let info = new AnnotonError('error', 5, "Instance exists " + srcNode.term.control.value.label, meta);
-  
+   
           infos.push(info);
         }
       }
-  
+   
     });
-  
+   
     return infos;
   }
   */

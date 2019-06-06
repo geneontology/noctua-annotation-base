@@ -46,11 +46,11 @@ import { SparqlService } from './../../../../../../../@noctua.sparql/services/sp
 })
 export class AnnotonEntityTableComponent implements OnInit, OnDestroy {
   displayedColumns = [
+    'subject',
+    'aspectS',
     'relationship',
-    'aspect',
-    'term',
-    'relationshipExt',
-    'extension',
+    'object',
+    'aspectO',
     'evidence',
     'reference',
     'with',
@@ -96,7 +96,8 @@ export class AnnotonEntityTableComponent implements OnInit, OnDestroy {
   }
 
   loadCam() {
-    this.grid = this.cam.grid;
+    this.grid = this.cam.generateTripleGrid();
+    console.log(this.grid);
   }
 
   selectEntity(annoton: Annoton, entity: AnnotonNode) {

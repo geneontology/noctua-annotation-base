@@ -98,7 +98,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       cam.expanded = false;
     } else {
       cam.expanded = true;
-      this.noctuaGraphService.getGraphInfo(cam, cam.id);
+      this.noctuaGraphService.getGraphInfo2(cam, cam.id);
     }
   }
 

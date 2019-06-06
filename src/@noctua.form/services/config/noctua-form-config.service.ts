@@ -108,6 +108,25 @@ export class NoctuaFormConfigService {
     };
 
     this._annotonData = {
+      'term': {
+        'id': 'goterm',
+        "label": 'Molecular Function',
+        'aspect': 'F',
+        "lookupGroup": 'GO:0003674',
+        'treeLevel': 1,
+        "term": {
+          "ontologyClass": ['go'],
+          "lookup": {
+            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+              fq: [
+                'document_category:"ontology_class"',
+                'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
+              ],
+            }),
+          }
+        },
+        'searchResults': []
+      },
       "mc": {
         'id': 'mc',
         "label": 'Macromolecular Complex',
@@ -1215,8 +1234,15 @@ export class NoctuaFormConfigService {
   generateNode(id, overrides?) {
     const self = this;
 
-    let nodeData = JSON.parse(JSON.stringify(self._annotonData[id]));
+    let nodeDataObject = self._annotonData[id];
+    let nodeData;
     let annotonNode = new AnnotonNode()
+
+    if (nodeDataObject) {
+      nodeData = JSON.parse(JSON.stringify(nodeDataObject));
+    } else {
+      nodeData = JSON.parse(JSON.stringify(self._annotonData['term']));
+    }
 
     annotonNode.id = (overrides && overrides.id) ? id + overrides.id : id;
     annotonNode.aspect = nodeData.aspect;

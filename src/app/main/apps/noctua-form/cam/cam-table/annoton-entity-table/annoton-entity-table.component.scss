@@ -27,6 +27,57 @@ $accent: map-get($theme, accent);
     }
   }
 
+  .noc-triple {
+    @include deep-height(180px);
+
+    .noc-annoton-box {
+      padding: 8px;
+      @include deep-width(180px);
+      @include deep-height(110px);
+      font-size: 12px;
+      @include mat-elevation(1);
+      text-align: center;
+      z-index: 4;
+      border: 1px solid #2e6f9a;
+      opacity: 1;
+      cursor: initial;
+      background-color: white;
+    }
+
+    .noc-line {
+      padding: 4px;
+      @include deep-height(55px);
+      font-size: 10px;
+      text-align: center;
+      border-bottom: 2px solid #2e6f9a;
+    }
+
+    .noc-arrow {
+      color: #2e6f9a;
+      margin-top: 40px;
+    }
+
+    &.noc-sm {
+      @include deep-height(120px);
+
+      .noc-annoton-box {
+        padding: 4px;
+        @include deep-width(150px);
+        @include deep-height(100px);
+        font-size: 10px;
+      }
+
+      .noc-line {
+        @include deep-height(50px);
+        border-bottom: 1px solid #2e6f9a;
+      }
+
+      .noc-arrow {
+        margin-top: 35px;
+      }
+    }
+  }
+
 
 
   .mat-tab-group,

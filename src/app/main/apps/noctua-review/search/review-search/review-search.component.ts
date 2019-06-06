@@ -40,7 +40,6 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
   filteredGroups: Observable<any[]>;
   filteredContributors: Observable<any[]>;
 
-
   private unsubscribeAll: Subject<any>;
 
   constructor(private route: ActivatedRoute,

@@ -9,6 +9,7 @@ import { AnnotonNode } from './annoton-node'
 import { Group } from '../group';
 import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
+import { Triple } from './triple';
 
 export class Cam {
 
@@ -26,6 +27,7 @@ export class Cam {
   annotatedEntity?: {};
   camRow?: any;
   _annotons: Annoton[] = [];
+  _triples: Triple[] = [];
 
   error = false;
   engine;
@@ -61,8 +63,16 @@ export class Cam {
     return this._annotons;
   }
 
-  set annotons(annoton) {
-    this._annotons = annoton;
+  set annotons(annotons) {
+    this._annotons = annotons;
+  }
+
+  get triples() {
+    return this._triples;
+  }
+
+  set triples(triples) {
+    this._triples = triples;
   }
 
   set displayType(type) {
@@ -211,10 +221,14 @@ export class Cam {
   }
 
 
+  generateTripleGrid() {
+    let grid = [...this.triples.map((triple) => {
+      return triple.grid;
+    })]
 
-
-
-
+    console.log(grid)
+    return _.flattenDeep(grid);
+  }
 
 
 

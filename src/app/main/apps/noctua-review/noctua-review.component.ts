@@ -109,7 +109,6 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.reviewService.setLeftDrawer(this.leftDrawer);
-    //  this.reviewService.setRightDrawer(this.rightDrawer);
     this.noctuaFormService.setRightDrawer(this.rightDrawer);
 
     /*
@@ -171,7 +170,6 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
 
   search() {
     let searchCriteria = this.searchForm.value;
-    console.dir(searchCriteria)
     this.noctuaSearchService.search(searchCriteria);
   }
 
@@ -188,7 +186,7 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
       cam.expanded = false;
     } else {
       cam.expanded = true;
-      this.noctuaGraphService.getGraphInfo(cam, cam.model.id);
+      this.noctuaGraphService.getGraphInfo2(cam, cam.model.id);
     }
   }
 
