@@ -1,21 +1,23 @@
 <div class="w-100-p">
-  <div *ngFor="let entity of grid" class="noc-triple noc-sm w-100-p p-0" fxLayout="row" fxLayoutAlign="start start">
+  <div *ngFor="let triple of cam.triples" class="noc-triple noc-sm w-100-p" fxLayout="row" fxLayoutAlign="start center">
     <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
       <span>
-        {{ entity.subject?.label}}
+        {{ triple.subject.getTerm().label}}
       </span>
     </div>
-    <div class="noc-line" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
-      part_of
+    <div class="" fxFlex fxLayout="row" fxLayoutAlign="start center">
+      <div class="noc-line" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch"></div>
+      <noc-evidence-table fxFlex="700px" [cam]="cam" [evidence]="triple.predicate"></noc-evidence-table>
+      <div class="noc-line" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch"></div>
+      <mat-icon class="s-32 noc-arrow">chevron_right</mat-icon>
     </div>
-    <mat-icon class="s-32 noc-arrow">chevron_right</mat-icon>
     <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
       <span>
-        {{ entity.object?.label}}
+        {{ triple.object.getTerm().label}}
       </span>
     </div>
   </div>
-  <div class="noc-annoton-table-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+  <!--   <div class="noc-annoton-table-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
     <div fxFlex="150px" class="noc-header-cell"> Subject </div>
     <div fxFlex="50px" class="noc-header-cell"> Asp </div>
     <div fxFlex="120px" class="noc-header-cell"> Relationship </div>
@@ -94,5 +96,5 @@
         no results yet.
       </div>
     </div>
-  </div>
+  </div> -->
 </div>

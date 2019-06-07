@@ -21,6 +21,18 @@ export class Triple {
     this._predicate = predicate;
   }
 
+  get subject() {
+    return this._subject;
+  }
+
+  get object() {
+    return this._object;
+  }
+
+  get predicate() {
+    return this._predicate;
+  }
+
   get grid() {
     const self = this;
 

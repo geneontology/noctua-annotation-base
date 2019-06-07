@@ -5,8 +5,12 @@ $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
 
 :host {
-  padding: 10px;
+  padding: 0px;
   width: 100%;
+
+  @include mat-elevation(1);
+  border: 1px solid #2e6f9a;
+  background-color: white;
 
 
   .noc-form-container {
@@ -28,10 +32,7 @@ $accent: map-get($theme, accent);
   }
 
   .noc-triple {
-    // @include deep-height(180px);
-
-    padding: 20px 0;
-    border-bottom: #CCC solid 1px;
+    @include deep-height(180px);
 
     .noc-annoton-box {
       padding: 8px;
@@ -48,9 +49,8 @@ $accent: map-get($theme, accent);
     }
 
     .noc-line {
-
       padding: 4px;
-      // @include deep-height(55px);
+      @include deep-height(55px);
       font-size: 10px;
       text-align: center;
       border-bottom: 2px solid #2e6f9a;
@@ -58,11 +58,11 @@ $accent: map-get($theme, accent);
 
     .noc-arrow {
       color: #2e6f9a;
-      //margin-top: 40px;
+      margin-top: 40px;
     }
 
     &.noc-sm {
-      //  @include deep-height(120px);
+      @include deep-height(120px);
 
       .noc-annoton-box {
         padding: 4px;
@@ -72,12 +72,12 @@ $accent: map-get($theme, accent);
       }
 
       .noc-line {
-        //  @include deep-height(50px);
+        @include deep-height(50px);
         border-bottom: 1px solid #2e6f9a;
       }
 
       .noc-arrow {
-        //margin-top: 35px;
+        margin-top: 35px;
       }
     }
   }

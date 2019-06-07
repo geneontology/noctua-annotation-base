@@ -226,8 +226,12 @@ export class Cam {
       return triple.grid;
     })]
 
+
+
     console.log(grid)
-    return _.flattenDeep(grid);
+
+    return grid;
+    //return _.flattenDeep(grid);
   }
 
 

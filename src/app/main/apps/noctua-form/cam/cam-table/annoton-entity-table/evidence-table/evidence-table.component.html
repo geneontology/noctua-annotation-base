@@ -1,0 +1,47 @@
+<div class="w-100-p">
+  <div class="noc-annoton-table-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+    <div fxFlex="150px" class="noc-header-cell"> Evidence </div>
+    <div fxFlex="120px" class="noc-header-cell"> Reference </div>
+    <div fxFlex="120px" class="noc-header-cell"> Evidence </div>
+    <div fxFlex="120px" class="noc-header-cell"> With </div>
+    <div fxFlex="120px" class="noc-header-cell"> Assigned By </div>
+  </div>
+  <div class="noc-annoton-table-body w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start">
+    <div class="annoton-table" fxFlex="">
+      <mat-table class="w-100-p" #table [dataSource]="evidence" matSort [@animateStagger]="{value:'50'}"
+        noctuaPerfectScrollbar>
+        <ng-container cdkColumnDef="evidence">
+          <mat-header-cell *cdkHeaderCellDef fxFlex="150px">Evidence</mat-header-cell>
+          <mat-cell *cdkCellDef="let entity" fxFlex="150px">
+            <p class="">{{entity.getEvidence()?.label}}</p>
+          </mat-cell>
+        </ng-container>
+        <ng-container cdkColumnDef="reference">
+          <mat-header-cell *cdkHeaderCellDef fxFlex="120px">Reference</mat-header-cell>
+          <mat-cell *cdkCellDef="let entity" fxFlex="120px">
+            <p>{{entity.getReference()}}</p>
+          </mat-cell>
+        </ng-container>
+        <ng-container cdkColumnDef="with">
+          <mat-header-cell *cdkHeaderCellDef fxFlex="120px">With</mat-header-cell>
+          <mat-cell *cdkCellDef="let entity" fxFlex="120px">
+            <p class="">{{entity.getWith()}}</p>
+          </mat-cell>
+        </ng-container>
+        <ng-container cdkColumnDef="assignedBy">
+          <mat-header-cell *cdkHeaderCellDef fxFlex="120px">Assigned By</mat-header-cell>
+          <mat-cell *cdkCellDef="let entity" fxFlex="120px">
+            <p>{{entity.getAssignedBy()}}</p>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *cdkRowDef="let entity; columns: displayedColumns;" class="" matRipple
+          [ngClass]="{'noc-row-selected': entity.node?.individualId === noctuaAnnotonEntityService.termNode?.individualId}"
+          (click)="selectEntity(entity.annoton, entity.node)"></mat-row>
+      </mat-table>
+      <div *ngIf="evidence?.length===0" class="noc-no-info">
+        no evidence present.
+      </div>
+    </div>
+  </div>
+</div>
