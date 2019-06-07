@@ -216,4 +216,32 @@ export class ReviewFilterComponent implements OnInit, OnDestroy {
     this.filterForm.controls[filterType].setValue('');
   }
 
+  downloadFilter() {
+    this.noctuaSearchService.downloadSearchConfig();
+  }
+
+  onFileChange(event) {
+    const self = this;
+    let reader = new FileReader();
+
+
+    //console.log(event, control)
+
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsText(file);
+
+      reader.onload = () => {
+        try {
+          let searchCriteria = JSON.parse(reader.result as string);
+          self.noctuaSearchService.uploadSearchConfig(searchCriteria);
+          //document.getElementById('elementid').value = "";
+
+        } catch (exception) {
+          alert("invalid file")
+        }
+      };
+    }
+  }
+
 }

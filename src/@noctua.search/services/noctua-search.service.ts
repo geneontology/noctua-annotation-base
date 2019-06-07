@@ -11,6 +11,8 @@ import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 import { Cam, Contributor, Group, Organism } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 
+import { saveAs } from 'file-saver';
+
 
 @Injectable({
     providedIn: 'root'
@@ -83,4 +85,38 @@ export class NoctuaSearchService {
         this.searchCriteria = new SearchCriteria();
         this.updateSearch();
     }
+
+    downloadSearchConfig() {
+        let blob = new Blob([JSON.stringify(this.searchCriteria, undefined, 2)], { type: "application/json" });
+        saveAs(blob, "search-filter.json");
+    }
+
+    uploadSearchConfig(searchCriteria) {
+        this.searchCriteria = new SearchCriteria();
+
+        if (searchCriteria.contributors) {
+            this.searchCriteria.contributors = searchCriteria.contributors;
+        }
+        if (searchCriteria.groups) {
+            this.searchCriteria.groups = searchCriteria.groups;
+        }
+        if (searchCriteria.pmids) {
+            this.searchCriteria.pmids = searchCriteria.pmids
+        }
+        if (searchCriteria.goterms) {
+            this.searchCriteria.goterms = searchCriteria.goterms
+        }
+        if (searchCriteria.gps) {
+            this.searchCriteria.gps = searchCriteria.gps
+        }
+        if (searchCriteria.organisms) {
+            this.searchCriteria.organisms = searchCriteria.organisms
+        }
+        if (searchCriteria.states) {
+            this.searchCriteria.states = searchCriteria.states
+        }
+
+        this.updateSearch();
+    }
+
 }
