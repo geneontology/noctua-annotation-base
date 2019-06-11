@@ -112,17 +112,17 @@ export const noctuaFormConfig = {
   },
   "camDisplayType": {
     "options": {
-      'model': {
-        "name": 'model',
-        "label": 'Model View'
-      },
-      'annoton': {
-        "name": 'annoton',
-        "label": 'Activity View'
+      'triple': {
+        "name": 'triple',
+        "label": 'Simple Triple View'
       },
       'entity': {
         "name": 'entity',
-        "label": 'Matching Entity View'
+        "label": 'Annotated Entity View'
+      },
+      'model': {
+        "name": 'model',
+        "label": 'Activity View'
       }
     }
   },

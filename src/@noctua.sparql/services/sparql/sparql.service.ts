@@ -159,11 +159,11 @@ export class SparqlService {
         cam.filter.individualIds.push(...response.entities.value.split(self.separator).map((iri) => {
           return self.curieUtil.getCurie(iri);
         }));
-
       } else {
         cam.resetFilter();
       }
 
+      cam.configureDisplayType();
       result.push(cam);
     });
 

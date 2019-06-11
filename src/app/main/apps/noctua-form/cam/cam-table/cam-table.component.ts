@@ -89,9 +89,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.cam.onGraphChanged.subscribe((annotons: Annoton[]) => {
       if (annotons) {
         this.cam.applyFilter();
-        //  let data = this.summaryGridService.getGrid(annotons);
-        // this.sparqlService.addCamChildren(cam, data);
-        //  this.dataSource = new CamsDataSource(this.sparqlService, this.paginator, this.sort);
       }
     });
   }

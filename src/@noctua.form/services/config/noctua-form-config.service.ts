@@ -935,6 +935,7 @@ export class NoctuaFormConfigService {
   get camDisplayType() {
     let options = [
       noctuaFormConfig.camDisplayType.options.model,
+      noctuaFormConfig.camDisplayType.options.triple,
       noctuaFormConfig.camDisplayType.options.entity
     ]
 

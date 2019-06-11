@@ -81,7 +81,7 @@
     "ngx-color-picker": "7.5.0",
     "ngx-contextmenu": "^5.1.1",
     "ngx-cookie-service": "2.1.0",
-    "noctua-sparql-query-builder": "file:../noctua-sparql-query-builder/noctua-sparql-query-builder-0.0.39.tgz",
+    "noctua-sparql-query-builder": "file:../noctua-sparql-query-builder/noctua-sparql-query-builder-0.0.40.tgz",
     "node-bourbon": "^4.2.8",
     "perfect-scrollbar": "1.4.0",
     "primeng": "^7.1.2",

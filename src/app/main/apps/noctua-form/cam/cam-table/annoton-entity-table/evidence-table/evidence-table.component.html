@@ -1,11 +1,11 @@
 <div class="w-100-p">
-  <div class="noc-annoton-table-body w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start">
-    <div class="annoton-table" fxFlex="">
+  <div class="noc-evidence-table-body w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start">
+    <div class="evidence-table" fxFlex="">
       <mat-table class="w-100-p" #table [dataSource]="evidence" matSort [@animateStagger]="{value:'50'}"
         noctuaPerfectScrollbar>
         <ng-container cdkColumnDef="evidence">
-          <mat-header-cell *cdkHeaderCellDef fxFlex="150px">Evidence</mat-header-cell>
-          <mat-cell *cdkCellDef="let entity" fxFlex="150px">
+          <mat-header-cell *cdkHeaderCellDef fxFlex="180px">Evidence</mat-header-cell>
+          <mat-cell *cdkCellDef="let entity" fxFlex="180px">
             <p class="">{{entity.getEvidence()?.label}}</p>
           </mat-cell>
         </ng-container>
@@ -16,8 +16,8 @@
           </mat-cell>
         </ng-container>
         <ng-container cdkColumnDef="with">
-          <mat-header-cell *cdkHeaderCellDef fxFlex="120px">With</mat-header-cell>
-          <mat-cell *cdkCellDef="let entity" fxFlex="120px">
+          <mat-header-cell *cdkHeaderCellDef fxFlex="130px">With</mat-header-cell>
+          <mat-cell *cdkCellDef="let entity" fxFlex="130px">
             <p class="">{{entity.getWith()}}</p>
           </mat-cell>
         </ng-container>

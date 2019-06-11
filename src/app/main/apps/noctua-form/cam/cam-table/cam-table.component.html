@@ -1,5 +1,5 @@
 <div class="w-100-p p-8 cam-table" noctuaPerfectScrollbar>
-  <noc-annoton-entity-table *ngIf="cam?.displayType.name===camDisplayType.entity.name" [cam]="cam"
+  <noc-annoton-entity-table *ngIf="cam?.displayType.name===camDisplayType.triple.name" [cam]="cam"
     class="noc-cam-table-body" fxLayout="row" fxLayoutAlign="start center">
   </noc-annoton-entity-table>
   <ng-container *ngIf="cam?.displayType.name===camDisplayType.model.name">

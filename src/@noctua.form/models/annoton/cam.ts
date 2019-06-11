@@ -13,6 +13,7 @@ import { Triple } from './triple';
 
 export class Cam {
 
+
   //Details
   title: string;
   state: any;
@@ -52,6 +53,12 @@ export class Cam {
 
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;
+  }
+
+  configureDisplayType() {
+    if (this.filter.individualIds.length > 0) {
+      this.displayType = noctuaFormConfig.camDisplayType.options.triple;
+    }
   }
 
   resetFilter() {
@@ -108,7 +115,6 @@ export class Cam {
 
     if (self.filter.individualIds.length > 0) {
       self.grid = [];
-      self.displayType = noctuaFormConfig.camDisplayType.options.entity;
 
       each(self.annotons, (annoton: Annoton) => {
         each(annoton.nodes, (node: AnnotonNode) => {

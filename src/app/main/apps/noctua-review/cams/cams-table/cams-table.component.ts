@@ -23,7 +23,8 @@ import {
   NoctuaGraphService,
   NoctuaFormConfigService,
   NoctuaLookupService,
-  CamService
+  CamService,
+  noctuaFormConfig
 } from 'noctua-form-base';
 
 import {
@@ -93,12 +94,12 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     this.cams = this.sparqlService.cams;
   }
 
-  toggleExpand(cam) {
+  toggleExpand(cam: Cam) {
     if (cam.expanded) {
       cam.expanded = false;
     } else {
       cam.expanded = true;
-      this.noctuaGraphService.getGraphInfo2(cam, cam.id);
+      this.changeCamDisplayView(cam, cam.displayType);
     }
   }
 
@@ -108,6 +109,15 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   changeCamDisplayView(cam: Cam, displayType) {
     cam.displayType = displayType;
+
+    switch (cam.displayType) {
+      case noctuaFormConfig.camDisplayType.options.triple:
+        this.noctuaGraphService.getGraphInfo2(cam, cam.id);
+        break;
+      default:
+        this.noctuaGraphService.getGraphInfo(cam, cam.id);
+        break;
+    }
   }
 
   selectCam(cam: Cam) {
