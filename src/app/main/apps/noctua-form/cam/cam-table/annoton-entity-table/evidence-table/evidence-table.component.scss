@@ -12,6 +12,13 @@ $accent: map-get($theme, accent);
   border: 1px solid #2e6f9a;
   background-color: white;
 
+  .noc-qualifier {
+    padding: 5px;
+    width: 100%;
+    font-size: 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(#2e6f9a, 0.3);
+  }
 
   .noc-form-container {
     background-color: #EEE;

@@ -5,6 +5,7 @@ const each = require('lodash/forEach');
 import { AnnotonError } from "./parser/annoton-error";
 
 export class Evidence {
+  qualifier;
   evidence;
   reference;
   with;

@@ -293,6 +293,7 @@ export class NoctuaGraphService {
       let annotationNode = graph.get_node(annotationId);
       let evidence = new Evidence();
 
+      evidence.qualifier = { id: edge.predicate_id() }
       evidence.individualId = annotationNode.id()
       if (annotationNode) {
 

@@ -1,5 +1,6 @@
 <div class="w-100-p">
-  <div class="noc-evidence-table-body w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start">
+  <div class="noc-evidence-table-body w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start center">
+    <div class="noc-qualifier" *ngIf="qualifier"><small>{{qualifier.id}}</small></div>
     <div class="evidence-table" fxFlex="">
       <mat-table class="w-100-p" #table [dataSource]="evidence" matSort [@animateStagger]="{value:'50'}"
         noctuaPerfectScrollbar>

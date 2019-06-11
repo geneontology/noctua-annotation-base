@@ -24,6 +24,7 @@ import {
   Annoton,
   AnnotonNode
 } from 'noctua-form-base';
+import { evidenceValidator } from '@noctua.form/models/forms/validators/evidence-validator';
 
 
 @Component({
@@ -40,6 +41,8 @@ export class EvidenceTableComponent implements OnInit, OnDestroy {
     'assignedBy'];
 
   grid: any[] = [];
+
+  qualifier;
 
   @Input('cam')
   public cam: Cam;
@@ -61,6 +64,10 @@ export class EvidenceTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log(this.evidence)
+
+    if (this.evidence.length > 0) {
+      this.qualifier = this.evidence[0].qualifier
+    }
   }
 
   selectEntity(annoton: Annoton, entity: AnnotonNode) {
