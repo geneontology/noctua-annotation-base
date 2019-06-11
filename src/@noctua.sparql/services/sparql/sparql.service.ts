@@ -139,13 +139,13 @@ export class SparqlService {
         cam.date = response.date.value
       }
 
-      if (response.groups) {
+      if (response.groups && response.groups.value !== null) {
         cam.groups = <Group[]>response.groups.value.split(self.separator).map(function (url) {
           return { url: url };
         });
       }
 
-      if (response.contributors) {
+      if (response.contributors && response.contributors.value !== "") {
         cam.contributors = <Contributor[]>response.contributors.value.split(self.separator).map((orcid) => {
           let contributor = _.find(self.noctuaUserService.contributors, (contributor) => {
             return contributor.orcid === orcid
@@ -155,12 +155,10 @@ export class SparqlService {
         });
       }
 
-      if (response.entities) {
+      if (response.entities && response.entities.value !== "") {
         cam.filter.individualIds.push(...response.entities.value.split(self.separator).map((iri) => {
           return self.curieUtil.getCurie(iri);
         }));
-      } else {
-        cam.resetFilter();
       }
 
       cam.configureDisplayType();
