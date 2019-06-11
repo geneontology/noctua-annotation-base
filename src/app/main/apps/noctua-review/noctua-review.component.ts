@@ -118,11 +118,19 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
     });
     */
 
+    this.rightDrawer.open();
+
     this.sparqlService.getAllContributors()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response: any) => {
         this.reviewService.contributors = response;
         this.reviewService.onContributorsChanged.next(response);
+        this.noctuaSearchService.searchCriteria.goterms.push(
+          {
+            "id": "GO:0042632",
+            "label": "cholesterol homeostasis"
+          }
+        )
         this.noctuaSearchService.updateSearch();
       });
 

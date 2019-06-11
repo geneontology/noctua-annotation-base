@@ -107,6 +107,8 @@
         </noc-annoton-form>
         <noc-annoton-entity-form [panelDrawer]="rightDrawer"
           *ngSwitchCase="noctuaFormService.panel.annotonEntityForm.id"></noc-annoton-entity-form>
+        <noc-triple-form [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormService.panel.tripleForm.id">
+        </noc-triple-form>
         <noc-annoton-connector [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormService.panel.connectorForm.id">
         </noc-annoton-connector>
       </div>

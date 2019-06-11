@@ -1,5 +1,6 @@
 <div class="w-100-p">
-  <div *ngFor="let triple of cam.triples" class="noc-triple noc-sm w-100-p" fxLayout="row" fxLayoutAlign="start center">
+  <div *ngFor="let triple of cam.triples" (click)="selectTriple(triple)" class="noc-triple noc-sm w-100-p"
+    fxLayout="row" fxLayoutAlign="start center">
     <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
       <span>
         {{ triple.subject.getTerm().label}}

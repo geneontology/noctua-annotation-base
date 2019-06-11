@@ -26,7 +26,7 @@ import {
   NoctuaFormConfigService,
   NoctuaAnnotonFormService,
   NoctuaLookupService,
-  NoctuaAnnotonEntityService,
+  NoctuaTripleFormService,
   CamService
 } from 'noctua-form-base';
 
@@ -85,7 +85,7 @@ export class AnnotonEntityTableComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     private noctuaLookupService: NoctuaLookupService,
     private noctuaGraphService: NoctuaGraphService,
-    public noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
+    public noctuaTripleFormService: NoctuaTripleFormService,
     private sparqlService: SparqlService) {
 
     this.unsubscribeAll = new Subject();
@@ -100,11 +100,12 @@ export class AnnotonEntityTableComponent implements OnInit, OnDestroy {
     console.log(this.grid);
   }
 
-  selectEntity(annoton: Annoton, entity: AnnotonNode) {
+  selectTriple(triple) {
+    console.log(this.grid);
     this.camService.onCamChanged.next(this.cam);
 
-    this.noctuaAnnotonEntityService.initializeForm(annoton, entity);
-    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonEntityForm);
+    this.noctuaTripleFormService.initializeForm(triple);
+    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.tripleForm);
   }
 
   ngOnDestroy(): void {

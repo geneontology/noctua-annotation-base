@@ -60,26 +60,6 @@ $accent: map-get($theme, accent);
       color: #2e6f9a;
       margin-top: 40px;
     }
-
-    &.noc-sm {
-      @include deep-height(120px);
-
-      .noc-annoton-box {
-        padding: 4px;
-        @include deep-width(150px);
-        @include deep-height(100px);
-        font-size: 10px;
-      }
-
-      .noc-line {
-        @include deep-height(50px);
-        border-bottom: 1px solid #2e6f9a;
-      }
-
-      .noc-arrow {
-        margin-top: 35px;
-      }
-    }
   }
 
 

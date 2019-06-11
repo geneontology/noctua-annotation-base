@@ -38,6 +38,7 @@ import { AnnotonConnectorFormComponent } from './cam/annoton/annoton-connector-f
 import { AnnotonEntityTableComponent } from './cam/cam-table/annoton-entity-table/annoton-entity-table.component';
 import { AnnotonTableComponent } from './cam/cam-table/annoton-table/annoton-table.component';
 import { EvidenceTableComponent } from './cam/cam-table/annoton-entity-table/evidence-table/evidence-table.component';
+import { TripleFormComponent } from './cam/annoton/triple-form/triple-form.component';
 
 const routes = [
   {
@@ -74,6 +75,7 @@ const routes = [
     AnnotonConnectorFormComponent,
     AnnotonEntityTableComponent,
     AnnotonTableComponent,
+    TripleFormComponent
   ],
   providers: [
     NoctuaFormDialogService,
@@ -103,6 +105,7 @@ const routes = [
     AnnotonEntityTableComponent,
     AnnotonTableComponent,
     EvidenceTableComponent,
+    TripleFormComponent
   ],
   entryComponents: [
     CamRowEditDialogComponent,

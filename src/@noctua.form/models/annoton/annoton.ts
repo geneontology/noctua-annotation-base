@@ -186,7 +186,7 @@ export class Annoton extends SaeGraph {
     let result = true;
     self.submitErrors = [];
 
-    each(self.nodes, function (node) {
+    each(self.nodes, function (node: AnnotonNode) {
       result = node.enableSubmit(self.submitErrors, self) && result;
     })
 
