@@ -16,7 +16,7 @@ import {
   AnnotonParser,
   AnnotonError,
   Evidence,
-  SimpleAnnotation
+  SimpleAnnoton
 } from './../models/annoton/';
 
 //Config
@@ -553,7 +553,7 @@ export class NoctuaGraphService {
 
   graphToAnnotons3(cam: Cam, individualIds: any[]) {
     const self = this;
-    let simpleAnnotation: SimpleAnnotation[] = [];
+    let simpleAnnotation: SimpleAnnoton[] = [];
 
     each(individualIds, (individualId) => {
       let edgesIn = cam.graph.get_edges_by_object(individualId);

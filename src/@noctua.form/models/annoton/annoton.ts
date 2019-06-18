@@ -26,7 +26,7 @@ export class Annoton extends SaeGraph {
   parser;
   expanded = false;
   visible = true;
-  _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-2', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
+  _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
 
   private _connectionId;
   private _connections;
@@ -141,17 +141,6 @@ export class Annoton extends SaeGraph {
     } else {
       return self.getNode('bp');
     }
-  }
-
-  get bpHasInput() {
-    const self = this;
-    let node = self.getNode('bp-2');
-
-    if (node && node.hasValue()) {
-      return node.getTerm();
-    }
-
-    return null;
   }
 
   insertTermNode(annotonModel, id, value) {

@@ -1,3 +1,4 @@
+
 import { Injector, Injectable } from '@angular/core';
 
 import { Observable, BehaviorSubject } from 'rxjs'
@@ -14,20 +15,24 @@ import * as _ from 'lodash';
 declare const require: any;
 const each = require('lodash/forEach');
 
-import { Cam } from './../models/annoton/cam';
-import { Annoton } from './../models/annoton/annoton';
-import { AnnotonNode } from './../models/annoton/annoton-node';
+import {
+  Cam,
+  Annoton,
+  AnnotonNode,
+  ConnectorAnnoton
+} from './../models/annoton';
 
 import { AnnotonConnectorForm } from './../models/forms/annoton-connector-form';
 
 import { EntityForm } from './../models/forms/entity-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 
-
 @Injectable({
   providedIn: 'root'
 })
-export class NoctuaAnnotonConnectorService {
+export class NoctuaAnnotonConnectorService2 {
+
+  // connectorAnnoton: ConnectorAnnoton;
   _rules: any = {
     originalTriple: {
       subject: null,
@@ -197,7 +202,6 @@ export class NoctuaAnnotonConnectorService {
     this.objectAnnoton = this.cam.getAnnotonByConnectionId(objectId);
     this.subjectMFNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getMFNode());
     this.objectMFNode = <AnnotonNode>_.cloneDeep(this.objectAnnoton.getMFNode());
-
     this.rules.triple.object = this.objectMFNode;
     this.rules.subjectMFCatalyticActivity.condition = this.subjectMFNode.isCatalyticActivity;
     this.rules.objectMFCatalyticActivity.condition = this.objectMFNode.isCatalyticActivity;
