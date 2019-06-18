@@ -128,6 +128,23 @@
             </div>
           </div>
         </div>
+        <div *ngIf="noctuaAnnotonConnectorService.displaySection.causalEffect" class="noc-form-section p-0 w-100-p">
+          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+            <div class="noc-section-heading">
+              Causal Relation
+            </div>
+          </div>
+          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+            <div class="px-12 noc-annoton-group-row" fxLayout="column">
+              <mat-radio-group formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start stretch">
+                <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
+                  class="mt-8 mb-4" [value]="causalEffect" fxFlex="30">
+                  {{causalEffect.label}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
         <div *ngIf="noctuaAnnotonConnectorService.displaySection.annotonsConsecutive"
           class="noc-form-section p-0 w-100-p">
           <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
@@ -144,20 +161,34 @@
             </div>
           </div>
         </div>
-        <div *ngIf="noctuaAnnotonConnectorService.displaySection.causalEffect" class="noc-form-section p-0 w-100-p">
+
+        <div *ngIf="noctuaAnnotonConnectorService.displaySection.effectDependency" class="noc-form-section p-0 w-100-p">
           <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
             <div class="noc-section-heading">
-              Causal Relation
+              Causal effect dependency
             </div>
           </div>
           <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
             <div class="px-12 noc-annoton-group-row" fxLayout="column">
-              <mat-radio-group formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start stretch">
-                <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
-                  class="mt-8 mb-4" [value]="causalEffect" fxFlex="30">
-                  {{causalEffect.label}}
-                </mat-radio-button>
+              <p>
+                Does the causal effect depend on another process? (for example, transcription factor activity depends on
+                transcription occurring).
+              </p>
+              <mat-radio-group formControlName="effectDependency" fxLayout="column" fxLayoutAlign="start stretch">
+                <mat-radio-button class="mt-8 mb-4" [value]="false" fxFlex="30"> No</mat-radio-button>
+                <mat-radio-button class="mt-8 mb-4" [value]="true" fxFlex="30"> Yes</mat-radio-button>
               </mat-radio-group>
+            </div>
+            <div class="px-12 noc-annoton-group-row" fxLayout="column">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Choose Process</mat-label>
+                <mat-select placeholder="" formControlName="process">
+                  <mat-option *ngFor="let connectorProcess of noctuaFormConfigService.connectorProcess.options"
+                    [value]="connectorProcess">
+                    {{connectorProcess.label}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
         </div>

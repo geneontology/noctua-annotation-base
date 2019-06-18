@@ -18,7 +18,7 @@ import { ReviewOrganismsComponent } from './search/review-organisms/review-organ
 
 const routes = [
   {
-    path: '',
+    path: 'r',
     component: NoctuaReviewComponent
   }
 ];

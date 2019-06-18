@@ -958,6 +958,15 @@ export class NoctuaFormConfigService {
     }
   }
 
+  get connectorProcess() {
+    let options = noctuaFormConfig.connectorProcesses;
+
+    return {
+      options: options,
+      selected: options[0]
+    }
+  }
+
   get causalReactionProduct() {
     let options = [
       noctuaFormConfig.causalReactionProduct.options.regulate,
@@ -1323,6 +1332,12 @@ export class NoctuaFormConfigService {
 
     annoton.enableSubmit();
     return annoton;
+  }
+
+  findEdge(predicateId) {
+    _.find(noctuaFormConfig.edge, {
+      id: predicateId
+    })
   }
 
   createJoyrideSteps() {

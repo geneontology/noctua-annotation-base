@@ -80,6 +80,7 @@ export class NoctuaAnnotonConnectorService {
   public displaySection = {
     annotonsConsecutive: true,
     causalEffect: true,
+    effectDependency: false,
     causalReactionProduct: false
   }
   cam: Cam;
@@ -127,7 +128,7 @@ export class NoctuaAnnotonConnectorService {
     this.connectorForm.causalReactionProduct.setValue(effect.causalReactionProduct);
     this.connectorForm.annotonsConsecutive.setValue(effect.annotonsConsecutive);
     this._onAnnotonFormChanges();
-    //just to trigger the on Changes event
+    //just to trigger the on Changes event 
     this.connectorForm.causalEffect.setValue(effect.causalEffect);
     //  this.checkConnection(this.connectorFormGroup.getValue().value, this.rules, this.displaySection, this.subjectBPNode);
   }
@@ -254,8 +255,6 @@ export class NoctuaAnnotonConnectorService {
       }
     }
 
-
-
     this.connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(this.subjectMFNode, this.objectMFNode, edge);
 
     this.initializeForm(edge);
@@ -327,13 +326,17 @@ export class NoctuaAnnotonConnectorService {
     rules.triple.edge = null
 
     if (!value.annotonsConsecutive) {
-      if (rules.hasInput.condition) {
-        //       rules.triple.subject = subjectBPNode
-      }
+      displaySection.effectDependency = false;
     } else {
+      displaySection.effectDependency = true;
+    }
+
+    if (value.effectDependency) {
       if (rules.subjectMFCatalyticActivity.condition && rules.objectMFCatalyticActivity.condition) {
         displaySection.causalReactionProduct = true;
       }
+    } else {
+      displaySection.causalReactionProduct = false;
     }
   }
 

@@ -15,7 +15,8 @@ import {
   AnnotonNode,
   AnnotonParser,
   AnnotonError,
-  Evidence
+  Evidence,
+  SimpleAnnotation
 } from './../models/annoton/';
 
 //Config
@@ -265,7 +266,7 @@ export class NoctuaGraphService {
     return result;
   }
 
-  subjectToTerm(graph, object) {
+  nodeToTerm(graph, object) {
     const self = this;
 
     let node = graph.get_node(object);
@@ -463,8 +464,8 @@ export class NoctuaGraphService {
         let gpId = e.object_id();
         let evidence = self.edgeToEvidence(cam.graph, e);
         let mfEdgesIn = cam.graph.get_edges_by_subject(mfId);
-        let mfSubjectNode = self.subjectToTerm(cam.graph, mfId);
-        let gpObjectNode = self.subjectToTerm(cam.graph, gpId);
+        let mfSubjectNode = self.nodeToTerm(cam.graph, mfId);
+        let gpObjectNode = self.nodeToTerm(cam.graph, gpId);
         let gpVerified = false;
         let isDoomed = false
         let annotonType = '';// self.determineAnnotonType(gpObjectNode);
@@ -526,8 +527,8 @@ export class NoctuaGraphService {
         let subjectId = e.subject_id();
         let objectId = e.object_id();
         let evidences: Evidence[] = self.edgeToEvidence(cam.graph, e);
-        let subjectNode = self.subjectToTerm(cam.graph, subjectId);
-        let objectNode = self.subjectToTerm(cam.graph, objectId);
+        let subjectNode = self.nodeToTerm(cam.graph, subjectId);
+        let objectNode = self.nodeToTerm(cam.graph, objectId);
         let subjectAnnotonNode = self.noctuaFormConfigService.generateNode('subject');
         let objectAnnotonNode = self.noctuaFormConfigService.generateNode('object');
 
@@ -550,6 +551,32 @@ export class NoctuaGraphService {
     return triples;
   }
 
+  graphToAnnotons3(cam: Cam, individualIds: any[]) {
+    const self = this;
+    let simpleAnnotation: SimpleAnnotation[] = [];
+
+    each(individualIds, (individualId) => {
+      let edgesIn = cam.graph.get_edges_by_object(individualId);
+
+
+
+      each(edgesIn, (e) => {
+        let subjectId = e.subject_id();
+        let evidences: Evidence[] = self.edgeToEvidence(cam.graph, e);
+        let subjectNode = self.nodeToTerm(cam.graph, subjectId);
+        let subjectAnnotonNode = self.noctuaFormConfigService.generateNode('subject');
+
+        subjectAnnotonNode.setTerm(subjectNode.term, subjectNode.classExpression);
+        subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
+        subjectAnnotonNode.individualId = subjectId;
+
+
+      });
+    });
+
+    return simpleAnnotation;
+  }
+
   graphToCCOnly(graph) {
     const self = this;
     let annotons: Annoton[] = [];
@@ -561,8 +588,8 @@ export class NoctuaGraphService {
         let ccId = e.object_id();
         let evidence = self.edgeToEvidence(graph, e);
         let gpEdgesIn = graph.get_edges_by_subject(gpId);
-        let ccObjectNode = self.subjectToTerm(graph, ccId);
-        let gpSubjectNode = self.subjectToTerm(graph, gpId);
+        let ccObjectNode = self.nodeToTerm(graph, ccId);
+        let gpSubjectNode = self.nodeToTerm(graph, gpId);
         let gpVerified = false;
         let isDoomed = false
         let annotonType = '';//self.determineAnnotonType(gpSubjectNode);
@@ -645,7 +672,7 @@ export class NoctuaGraphService {
             if (predicateId === noctuaFormConfig.edge.hasPart.id && toMFObject !== node.object.id) {
               //do nothing
             } else {
-              let subjectNode = self.subjectToTerm(cam.graph, toMFObject);
+              let subjectNode = self.nodeToTerm(cam.graph, toMFObject);
 
               node.object.individualId = toMFObject;
               node.object.setEvidence(evidence);
@@ -698,7 +725,7 @@ export class NoctuaGraphService {
 
         if (causalEdge && predicateId === causalEdge['id']) {
           let destNode = self.noctuaFormConfigService.generateNode('mf', { id: toMFObject });
-          let mfNode = self.subjectToTerm(cam.graph, toMFObject);
+          let mfNode = self.nodeToTerm(cam.graph, toMFObject);
 
           destNode.setTerm(mfNode.term);
           destNode.setEvidence(evidence);

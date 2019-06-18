@@ -42,7 +42,7 @@ import { TripleFormComponent } from './cam/annoton/triple-form/triple-form.compo
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];
