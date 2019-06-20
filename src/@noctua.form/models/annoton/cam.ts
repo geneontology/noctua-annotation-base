@@ -57,7 +57,7 @@ export class Cam {
 
   configureDisplayType() {
     if (this.filter.individualIds.length > 0) {
-      this.displayType = noctuaFormConfig.camDisplayType.options.triple;
+      this.displayType = noctuaFormConfig.camDisplayType.options.entity;
     }
   }
 

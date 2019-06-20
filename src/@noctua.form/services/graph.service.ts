@@ -32,6 +32,8 @@ import * as _ from 'lodash';
 
 declare const require: any;
 
+
+
 const each = require('lodash/forEach');
 const forOwn = require('lodash/forOwn');
 const uuid = require('uuid/v1');
@@ -553,28 +555,29 @@ export class NoctuaGraphService {
 
   graphToAnnotons3(cam: Cam, individualIds: any[]) {
     const self = this;
-    let simpleAnnotation: SimpleAnnoton[] = [];
+    let simpleAnnotons: SimpleAnnoton[] = [];
 
     each(individualIds, (individualId) => {
       let edgesIn = cam.graph.get_edges_by_object(individualId);
-
-
-
+      let simpleAnnoton = new SimpleAnnoton();
       each(edgesIn, (e) => {
         let subjectId = e.subject_id();
         let evidences: Evidence[] = self.edgeToEvidence(cam.graph, e);
         let subjectNode = self.nodeToTerm(cam.graph, subjectId);
-        let subjectAnnotonNode = self.noctuaFormConfigService.generateNode('subject');
+        let subjectAnnotonNode = self.noctuaFormConfigService.generateNode();
 
         subjectAnnotonNode.setTerm(subjectNode.term, subjectNode.classExpression);
         subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
         subjectAnnotonNode.individualId = subjectId;
 
+        simpleAnnoton.addNode(subjectAnnotonNode);
 
       });
+
+      simpleAnnotons.push(simpleAnnoton);
     });
 
-    return simpleAnnotation;
+    return simpleAnnotons;
   }
 
   graphToCCOnly(graph) {

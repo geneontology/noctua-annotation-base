@@ -1217,7 +1217,7 @@ export class NoctuaFormConfigService {
     return overrides.displaySection;
   }
 
-  generateNode(id, overrides?) {
+  generateNode(id?, overrides?) {
     const self = this;
 
     let nodeDataObject = self._annotonData[id];

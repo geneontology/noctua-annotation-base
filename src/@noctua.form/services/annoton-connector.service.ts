@@ -179,7 +179,6 @@ export class NoctuaAnnotonConnectorService {
 
     this.checkConnection(effect, rules, this.displaySection, subjectMFNode, subjectBPNode);
 
-
     if (edge) {
       rules.originalTriple = rules.triple = edge;
       notes.push(rules.annotonsConsecutive)

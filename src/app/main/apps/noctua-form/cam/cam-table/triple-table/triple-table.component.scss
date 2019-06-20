@@ -5,9 +5,7 @@ $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
 
 :host {
-  padding: 0px;
   width: 100%;
-
 
   .noc-form-container {
     background-color: #EEE;
@@ -25,6 +23,60 @@ $accent: map-get($theme, accent);
       text-transform: uppercase;
       font-weight: bold;
     }
+  }
+
+  .noc-triple {
+    // @include deep-height(180px);
+
+    padding: 20px 10px;
+    border-bottom: #CCC solid 1px;
+
+    .noc-annoton-box {
+      padding: 8px;
+      @include deep-width(150px);
+      @include deep-height(110px);
+      font-size: 12px;
+      @include mat-elevation(1);
+      text-align: center;
+      z-index: 4;
+      border: 1px solid #2e6f9a;
+      opacity: 1;
+      cursor: initial;
+      background-color: white;
+    }
+
+    .noc-line {
+      padding: 4px;
+      // @include deep-height(55px);
+      font-size: 10px;
+      text-align: center;
+      border-bottom: 2px solid #2e6f9a;
+    }
+
+    .noc-arrow {
+      color: #2e6f9a;
+      //margin-top: 40px;
+    }
+
+    &:hover {
+      @include mat-elevation(2);
+      background-color: #E2E2E2;
+
+      .noc-annoton-box {
+        @include mat-elevation(6);
+        border: 1px solid darken(#2e6f9a, 10%);
+        background-color: #F2F2F2;
+      }
+
+      .noc-line {
+        border-bottom: 2px solid darken(#2e6f9a, 10%);
+      }
+
+      .noc-arrow {
+        color: darken(#2e6f9a, 10%);
+      }
+    }
+
   }
 
 

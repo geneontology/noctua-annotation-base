@@ -37,8 +37,9 @@ import { NodeService } from './cam/cam-diagram/nodes/services/node.service';
 import { AnnotonConnectorFormComponent } from './cam/annoton/annoton-connector-form/annoton-connector-form.component';
 import { AnnotonEntityTableComponent } from './cam/cam-table/annoton-entity-table/annoton-entity-table.component';
 import { AnnotonTableComponent } from './cam/cam-table/annoton-table/annoton-table.component';
-import { EvidenceTableComponent } from './cam/cam-table/annoton-entity-table/evidence-table/evidence-table.component';
 import { TripleFormComponent } from './cam/annoton/triple-form/triple-form.component';
+import { TripleTableComponent } from './cam/cam-table/triple-table/triple-table.component';
+import { EvidenceTableComponent } from './cam/cam-table/triple-table/evidence-table/evidence-table.component';
 
 const routes = [
   {
@@ -75,6 +76,7 @@ const routes = [
     AnnotonConnectorFormComponent,
     AnnotonEntityTableComponent,
     AnnotonTableComponent,
+    TripleTableComponent,
     TripleFormComponent
   ],
   providers: [
@@ -103,6 +105,7 @@ const routes = [
     NodesContainerComponent,
     AnnotonConnectorFormComponent,
     AnnotonEntityTableComponent,
+    TripleTableComponent,
     AnnotonTableComponent,
     EvidenceTableComponent,
     TripleFormComponent

@@ -34,13 +34,30 @@ import {
 import * as _ from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { SearchCriteria } from '@noctua.search/models/search-criteria';
+import { SparqlMinervaService } from './sparql-minerva.service';
 declare const require: any;
+
 const each = require('lodash/forEach');
+const forOwn = require('lodash/forOwn');
+const uuid = require('uuid/v1');
+const model = require('bbop-graph-noctua');
+const amigo = require('amigo2');
+const bbopx = require('bbopx');
+const golr_response = require('bbop-response-golr');
+const golr_manager = require('bbop-manager-golr');
+const golr_conf = require("golr-conf");
+const node_engine = require('bbop-rest-manager').node;
+const barista_response = require('bbop-response-barista');
+const minerva_requests = require('minerva-requests');
+const jquery_engine = require('bbop-rest-manager').jquery;
+const class_expression = require('class-expression');
+const minerva_manager = require('bbop-manager-minerva');
 
 @Injectable({
   providedIn: 'root'
 })
 export class SparqlService {
+  minervaDefinitionName = environment.globalMinervaDefinitionName;
   separator = '@@';
   baseUrl = environment.spaqrlApiUrl;
   curieUtil: any;
@@ -56,6 +73,7 @@ export class SparqlService {
     public noctuaUserService: NoctuaUserService,
     private httpClient: HttpClient,
     private noctuaGraphService: NoctuaGraphService,
+    private sparqlMinervaService: SparqlMinervaService,
     private curieService: CurieService) {
     this.onCamsChanged = new BehaviorSubject({});
     this.onCamChanged = new BehaviorSubject({});
@@ -65,10 +83,15 @@ export class SparqlService {
   getCams(searchCriteria): Observable<any> {
     const self = this;
 
+    let query = this.buildCamsQuery(searchCriteria)
+    let url = `${this.baseUrl}?query=${encodeURIComponent(query)}`
+
     self.loading = true;
-    self.searchSummary = {}
+
+    this.sparqlMinervaService.foo(query);
+
     return this.httpClient
-      .get(this.baseUrl + this.buildCamsQuery(searchCriteria))
+      .get(url)
       .pipe(
         map(res => res['results']),
         map(res => res['bindings']),
@@ -83,8 +106,13 @@ export class SparqlService {
 
 
   getAllContributors(): Observable<any> {
+    let query = this.buildAllContributorsQuery();
+    let url = `${this.baseUrl}?query=${encodeURIComponent(query)}`
+
+    this.sparqlMinervaService.foo(query);
+
     return this.httpClient
-      .get(this.baseUrl + this.buildAllContributorsQuery())
+      .get(url)
       .pipe(
         map(res => res['results']),
         map(res => res['bindings']),
@@ -95,8 +123,12 @@ export class SparqlService {
   }
 
   getAllOrganisms(): Observable<any> {
+    let query = this.buildOrganismsQuery();
+    let url = `${this.baseUrl}?query=${encodeURIComponent(query)}`
+
+    this.sparqlMinervaService.foo(query);
     return this.httpClient
-      .get(this.baseUrl + this.buildOrganismsQuery())
+      .get(url)
       .pipe(
         map(res => res['results']),
         map(res => res['bindings']),
@@ -107,8 +139,12 @@ export class SparqlService {
   }
 
   getAllGroups(): Observable<any> {
+    let query = this.buildAllGroupsQuery();
+    let url = `${this.baseUrl}?query=${encodeURIComponent(query)}`
+
+    this.sparqlMinervaService.foo(query);
     return this.httpClient
-      .get(this.baseUrl + this.buildAllGroupsQuery())
+      .get(url)
       .pipe(
         map(res => res['results']),
         map(res => res['bindings']),
@@ -228,47 +264,12 @@ export class SparqlService {
     })
   }
 
-  addBasicCamChildren(srcCam, annotons) {
-    const self = this;
-
-    srcCam.camRow = [];
-
-    _.each(annotons, function (annoton) {
-      let cam = self.annotonToCam(srcCam, annoton);
-
-      cam.model = srcCam.model;
-      cam.graph = srcCam.graph;
-      srcCam.camRow.push(cam);
-    });
-
-    this.onCamsChanged.next(srcCam.camRow);
-  }
-
-  addCamChildren(srcCam, annotons) {
-    const self = this;
-
-    srcCam.camRow = [];
-
-    _.each(annotons, function (annoton) {
-      let cam = self.annotonToCam(srcCam, annoton);
-
-      cam.model = srcCam.model;
-      cam.graph = srcCam.graph;
-      srcCam.camRow.push(cam);
-    });
-
-    this.onCamsChanged.next(srcCam.camRow);
-  }
-
   annotonToCam(cam, annoton) {
-
     let destNode = new AnnotonNode()
     destNode.deepCopyValues(annoton.node);
 
     let result: CamRow = {
-      // id: uuid(),
       treeLevel: annoton.treeLevel,
-      // model: cam.model,
       annotatedEntity: {
         id: '',
         label: annoton.gp
@@ -288,6 +289,8 @@ export class SparqlService {
 
     return result;
   }
+
+  //BUILDER
 
   buildCamsQuery(searchCriteria: SearchCriteria) {
     let query = new NoctuaQuery();
@@ -322,7 +325,7 @@ export class SparqlService {
 
     query.limit(50);
 
-    return '?query=' + encodeURIComponent(query.build());
+    return query.build();
   }
 
   buildAllContributorsQuery() {
@@ -340,7 +343,7 @@ export class SparqlService {
         '(COUNT(distinct ?cam) AS ?cams)'
       )
       .where(
-        triple('?cam', 'metago:graphType', 'metago:noctuaCam'),
+        triple('?cam', '<http://model.geneontology.org/graphType>', '<http://model.geneontology.org/noctuaCam>'),
         triple('?cam', 'dc:contributor', '?orcid'),
         'BIND( IRI(?orcid) AS ?orcidIRI)',
         optional(
@@ -351,11 +354,10 @@ export class SparqlService {
         'BIND(IF(bound(?name), ?name, ?orcid) as ?name)')
       .groupBy('?orcid ?name')
       .orderBy('?name', 'ASC');
-    return '?query=' + encodeURIComponent(query.build());
+    return query.build();
   }
 
   buildOrganismsQuery() {
-
     let query = new Query();
     let graphQuery = new Query();
     graphQuery.graph('?model',
@@ -386,32 +388,32 @@ export class SparqlService {
       .groupBy('?taxonIri ?taxonName')
       .orderBy('?taxonName', 'ASC')
 
-    return '?query=' + encodeURIComponent(query.build());
+    return query.build();
   }
 
   buildAllGroupsQuery() {
     let query = `
-        PREFIX metago: <http://model.geneontology.org/>
-        PREFIX dc: <http://purl.org/dc/elements/1.1/>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-        PREFIX has_affiliation: <http://purl.obolibrary.org/obo/ERO_0000066> 
-		    PREFIX hint: <http://www.bigdata.com/queryHints#>
-    
-        SELECT  distinct ?name ?url         (GROUP_CONCAT(distinct ?orcidIRI;separator="@@") AS ?orcids) 
-                                            (COUNT(distinct ?orcidIRI) AS ?contributors)
-                                            (COUNT(distinct ?cam) AS ?cams)
-        WHERE    
-        {
-          ?cam metago:graphType metago:noctuaCam .
-          ?cam dc:contributor ?orcid .
-          BIND( IRI(?orcid) AS ?orcidIRI ).  
-          ?orcidIRI has_affiliation: ?url .
-          ?url rdfs:label ?name .     
-          hint:Prior hint:runLast true .
-        }
-        GROUP BY ?url ?name`
+    PREFIX metago: <http://model.geneontology.org/>
+    PREFIX dc: <http://purl.org/dc/elements/1.1/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    PREFIX has_affiliation: <http://purl.obolibrary.org/obo/ERO_0000066> 
+    PREFIX hint: <http://www.bigdata.com/queryHints#>
 
-    return '?query=' + encodeURIComponent(query);
+    SELECT  distinct ?name ?url         (GROUP_CONCAT(distinct ?orcidIRI;separator="@@") AS ?orcids) 
+                                        (COUNT(distinct ?orcidIRI) AS ?contributors)
+                                        (COUNT(distinct ?cam) AS ?cams)
+    WHERE    
+    {
+      ?cam metago:graphType metago:noctuaCam .
+      ?cam dc:contributor ?orcid .
+      BIND( IRI(?orcid) AS ?orcidIRI ).  
+      ?orcidIRI has_affiliation: ?url .
+      ?url rdfs:label ?name .     
+      hint:Prior hint:runLast true .
+    }
+    GROUP BY ?url ?name`
+
+    return query;
   }
 
   getXSD(s) {

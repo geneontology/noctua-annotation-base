@@ -26,7 +26,7 @@ import {
   NoctuaFormConfigService,
   NoctuaAnnotonFormService,
   NoctuaLookupService,
-  NoctuaAnnotonEntityService,
+  NoctuaTripleFormService,
   CamService
 } from 'noctua-form-base';
 
@@ -39,18 +39,18 @@ import {
 import { SparqlService } from './../../../../../../../@noctua.sparql/services/sparql/sparql.service';
 
 @Component({
-  selector: 'noc-annoton-entity-table',
-  templateUrl: './annoton-entity-table.component.html',
-  styleUrls: ['./annoton-entity-table.component.scss'],
+  selector: 'noc-triple-table',
+  templateUrl: './triple-table.component.html',
+  styleUrls: ['./triple-table.component.scss'],
   animations: noctuaAnimations
 })
-export class AnnotonEntityTableComponent implements OnInit, OnDestroy {
+export class TripleTableComponent implements OnInit, OnDestroy {
   displayedColumns = [
+    'subject',
+    'aspectS',
     'relationship',
-    'aspect',
-    'term',
-    'relationshipExt',
-    'extension',
+    'object',
+    'aspectO',
     'evidence',
     'reference',
     'with',
@@ -85,31 +85,27 @@ export class AnnotonEntityTableComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     private noctuaLookupService: NoctuaLookupService,
     private noctuaGraphService: NoctuaGraphService,
-    public noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
+    public noctuaTripleFormService: NoctuaTripleFormService,
     private sparqlService: SparqlService) {
 
     this.unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
-
-    this.cam.onGraphChanged.subscribe((annotons: Annoton[]) => {
-      if (annotons) {
-        this.cam.applyFilter();
-        this.loadCam();
-      }
-    });
+    this.loadCam();
   }
 
   loadCam() {
-    this.grid = this.cam.grid;
+    this.grid = this.cam.generateTripleGrid();
+    console.log(this.grid);
   }
 
-  selectEntity(annoton: Annoton, entity: AnnotonNode) {
+  selectTriple(triple) {
+    console.log(this.grid);
     this.camService.onCamChanged.next(this.cam);
 
-    this.noctuaAnnotonEntityService.initializeForm(annoton, entity);
-    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonEntityForm);
+    this.noctuaTripleFormService.initializeForm(triple);
+    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.tripleForm);
   }
 
   ngOnDestroy(): void {
