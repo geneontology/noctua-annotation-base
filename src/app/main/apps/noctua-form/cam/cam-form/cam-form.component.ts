@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatPaginator, MatSort, MatDrawer } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
 import { merge, Observable, Subscription, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 
 
 import * as _ from 'lodash';
@@ -24,8 +24,10 @@ import {
   NoctuaFormConfigService,
   NoctuaGraphService,
   NoctuaAnnotonFormService,
-  CamService
+  CamService,
+  Term
 } from 'noctua-form-base';
+import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
 
 @Component({
@@ -42,17 +44,18 @@ export class CamFormComponent implements OnInit, OnDestroy {
   camFormGroup: FormGroup;
   camFormSub: Subscription;
 
-  private unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
   constructor(private route: ActivatedRoute,
     public noctuaUserService: NoctuaUserService,
+    private sparqlService: SparqlService,
     private camService: CamService,
     public camTableService: CamTableService,
     private noctuaGraphService: NoctuaGraphService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaFormService: NoctuaFormService
   ) {
-    this.unsubscribeAll = new Subject();
+    this._unsubscribeAll = new Subject();
     // this.annoton = self.noctuaCamFormService.annoton;
     //  this.camFormPresentation = this.noctuaCamFormService.annotonPresentation;
   }
@@ -69,9 +72,23 @@ export class CamFormComponent implements OnInit, OnDestroy {
     this.camService.onCamChanged.subscribe((cam) => {
       if (!cam) return;
 
-      this.cam = cam
-      this.camService.initializeForm(cam);
+      this.cam = cam;
+      this.sparqlService.getModelTerms(this.cam.id)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((terms: Term[]) => {
+          this.camService.onCamTermsChanged.next(terms);
+        });
     });
+  }
+
+  loadGoTerms() {
+    this.camService.onCamTermsChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((terms: Term[]) => {
+        if (!terms) return;
+
+        this.cam.goterms = terms;
+      });
   }
 
   checkErrors() {
@@ -108,7 +125,7 @@ export class CamFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }

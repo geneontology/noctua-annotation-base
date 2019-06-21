@@ -93,8 +93,6 @@ export class TripleFormComponent implements OnInit, OnDestroy {
       if (!cam) return;
 
       this.cam = cam
-      this.cam.onGraphChanged.subscribe((annotons) => {
-      });
     });
   }
 

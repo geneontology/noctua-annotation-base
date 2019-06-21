@@ -50,6 +50,7 @@ export class Cam {
   private _displayType;
 
   grid: any = [];
+  goterms: import("c:/work/go/noctua-form-base/src/public-api").Term[];
 
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;

@@ -38,6 +38,8 @@ export class CamService {
   cam: Cam;
   onCamsChanged: BehaviorSubject<any>;
   onCamChanged: BehaviorSubject<any>;
+  onCamTermsChanged: BehaviorSubject<any>;
+
 
   searchSummary: any = {}
 
@@ -46,6 +48,7 @@ export class CamService {
   private camForm: CamForm;
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
+
 
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
     private _fb: FormBuilder,
@@ -56,6 +59,8 @@ export class CamService {
     private curieService: CurieService) {
     this.onCamsChanged = new BehaviorSubject(null);
     this.onCamChanged = new BehaviorSubject(null);
+    this.onCamTermsChanged = new BehaviorSubject(null);
+
     this.curieUtil = this.curieService.getCurieUtil();
 
     this.camFormGroup = new BehaviorSubject(null);

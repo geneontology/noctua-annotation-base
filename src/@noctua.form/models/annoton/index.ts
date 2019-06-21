@@ -5,6 +5,7 @@ export { Cam } from './cam';
 export { Evidence } from './evidence';
 export { SimpleAnnoton } from './simple-annoton';
 export { ConnectorAnnoton } from './connector-annoton'
+export { Term } from './term';
 export { Triple } from './triple';
 
 export * from './parser';

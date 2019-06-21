@@ -31,7 +31,7 @@ export class CamForm {
     if (cam) {
       self.title.setValue(cam.title);
       self.state.setValue(cam.state);
-      self.group.setValue(user.group);
+      self.group.setValue(user ? user.group : '');
     }
   }
 

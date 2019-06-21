@@ -81,8 +81,6 @@ export class NoctuaToolbarComponent implements OnInit {
             if (!cam) return;
 
             this.cam = cam
-            this.cam.onGraphChanged.subscribe((annotons) => {
-            });
         });
     }
 
