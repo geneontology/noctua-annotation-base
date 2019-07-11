@@ -4,26 +4,37 @@ import { HttpClient } from '@angular/common/http';
 
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
-import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
+import { map, filter, reduce, catchError, retry, tap, finalize } from 'rxjs/operators';
 
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
-import { Cam, Contributor, Group, Organism } from 'noctua-form-base';
+import { Cam, Contributor, Group, Organism, NoctuaFormConfigService, NoctuaUserService, Term, AnnotonNode, CamRow } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 
+
 import { saveAs } from 'file-saver';
+import { each } from 'lodash';
+import { CurieService } from '@noctua.curie/services/curie.service';
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class NoctuaSearchService {
-
     onSearcCriteriaChanged: BehaviorSubject<any>;
     baseUrl = environment.spaqrlApiUrl;
     curieUtil: any;
     cams: any[] = [];
     searchCriteria: SearchCriteria;
+
+    baristaApi = environment.globalBaristaLocation;
+    separator = '@@';
+    loading: boolean = false;
+    onCamsChanged: BehaviorSubject<any>;
+    onCamChanged: BehaviorSubject<any>;
+    onContributorFilterChanged: BehaviorSubject<any>;
+
+    searchSummary: any = {}
 
     filterType = {
         gps: 'gps',
@@ -35,14 +46,21 @@ export class NoctuaSearchService {
         states: 'states'
     }
 
-    constructor(private httpClient: HttpClient, private sparqlService: SparqlService) {
+    constructor(private httpClient: HttpClient,
+        public noctuaFormConfigService: NoctuaFormConfigService,
+        public noctuaUserService: NoctuaUserService,
+        private sparqlService: SparqlService,
+        private curieService: CurieService) {
         this.searchCriteria = new SearchCriteria();
         this.onSearcCriteriaChanged = new BehaviorSubject(null);
+        this.onCamsChanged = new BehaviorSubject({});
+        this.onCamChanged = new BehaviorSubject({});
+        this.curieUtil = this.curieService.getCurieUtil();
 
         this.onSearcCriteriaChanged.subscribe((searchCriteria: SearchCriteria) => {
             if (!searchCriteria) return;
 
-            this.sparqlService.getCams(searchCriteria).subscribe((response: any) => {
+            this.getCams(searchCriteria).subscribe((response: any) => {
                 this.sparqlService.cams = this.cams = response;
                 this.sparqlService.onCamsChanged.next(this.cams);
             });
@@ -117,6 +135,121 @@ export class NoctuaSearchService {
         }
 
         this.updateSearch();
+    }
+
+
+    getCams(searchCriteria: SearchCriteria): Observable<any> {
+        const self = this;
+
+        let query = searchCriteria.build()
+        let url = `${this.baristaApi}/search?${query}`
+
+        self.loading = true;
+
+        return this.httpClient
+            .get(url)
+            .pipe(
+                tap(val => console.dir(val)),
+                map(res => this.addCam(res)),
+                tap(val => console.dir(val)),
+                finalize(() => {
+                    self.loading = false;
+                })
+            );
+    }
+
+    addCam(res) {
+        const self = this;
+        let result: Array<Cam> = [];
+
+        res.models.forEach((response) => {
+            let modelId = response.id;
+            let cam = new Cam();
+
+            cam.graph = null;
+            cam.id = modelId;
+            cam.state = self.noctuaFormConfigService.findModelState(response.state);
+            cam.title = response.title;
+            cam.date = response.date
+
+            cam.model = Object.assign({}, {
+                modelInfo: this.noctuaFormConfigService.getModelUrls(modelId)
+            });
+
+            cam.groups = <Group[]>response.groups.map(function (url) {
+                let group = _.find(self.noctuaUserService.groups, (group: Group) => {
+                    return group.url === url
+                })
+
+                return group ? group : { url: url };
+            });
+
+            cam.contributors = <Contributor[]>response.contributors.map((orcid) => {
+                let contributor = _.find(self.noctuaUserService.contributors, (contributor: Contributor) => {
+                    return contributor.orcid === orcid
+                })
+
+                return contributor ? contributor : { orcid: orcid };
+            });
+
+            if (response.entities && response.entities.value !== "") {
+                cam.filter.individualIds.push(...response.entities.value.split(self.separator).map((iri) => {
+                    return self.curieUtil.getCurie(iri);
+                }));
+            }
+
+            cam.configureDisplayType();
+            result.push(cam);
+        });
+
+        return result;
+    }
+
+    addCamTerms(res) {
+        const self = this;
+        let result: Array<Term> = [];
+
+        res.forEach((response) => {
+            let term = new Term(
+                self.curieUtil.getCurie(response.id.value),
+                response.label.value
+            );
+
+            result.push(term);
+        });
+
+        return result;
+    }
+
+    annotonToCam(cam, annoton) {
+        let destNode = new AnnotonNode()
+        destNode.deepCopyValues(annoton.node);
+
+        let result: CamRow = {
+            treeLevel: annoton.treeLevel,
+            annotatedEntity: {
+                id: '',
+                label: annoton.gp
+            },
+            relationship: annoton.relationship,
+            aspect: annoton.aspect,
+            term: annoton.term,
+            relationshipExt: annoton.relationshipExt,
+            extension: annoton.extension,
+            evidence: annoton.evidence,
+            reference: annoton.reference,
+            with: annoton.with,
+            assignedBy: annoton.assignedBy,
+            srcNode: annoton.node,
+            destNode: destNode
+        }
+
+        return result;
+    }
+
+
+    getXSD(s) {
+        return "\"" + s + "\"^^xsd:string";
     }
 
 }

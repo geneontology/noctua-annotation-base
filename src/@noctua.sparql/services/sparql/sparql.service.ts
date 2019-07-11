@@ -547,13 +547,13 @@ GROUP BY ?model ?modelTitle ?modelState ?date ?gocam ?goclasses ?goids ?gonames 
     let graphQuery = new Query();
     graphQuery.graph('?model',
       triple('?entity', 'rdf:type', 'owl:NamedIndividual'),
-      triple('?entity', 'rdf:type', '?goids')
+      triple('?entity', 'rdf:type', '?id')
     );
 
     query.prefix(
       prefix('rdf', '<http://www.w3.org/1999/02/22-rdf-syntax-ns#>'),
       prefix('rdfs', '<http://www.w3.org/2000/01/rdf-schema#>'),
-      prefix('dc', '<http://purl.org/dc/elements/1.1/>'),
+      prefix('dc', '<http://purl.org/dc/elements/1.1/ >'),
       prefix('metago', '<http://model.geneontology.org/>'),
       prefix('gomodel', '<http://model.geneontology.org/>'),
       prefix('definition', '<http://purl.obolibrary.org/obo/IAO_0000115>'),
@@ -582,10 +582,7 @@ GROUP BY ?model ?modelTitle ?modelState ?date ?gocam ?goclasses ?goids ?gonames 
       ).groupBy('?goclasses ?id ?label ?definition')
 
     return query.build();
-
-
   }
-
 
   getXSD(s) {
     return "\"" + s + "\"^^xsd:string";

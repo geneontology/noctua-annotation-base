@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 
 
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, Subscriber } from 'rxjs';
 import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
 
 import { } from './../models/annoton/cam';
@@ -355,7 +355,7 @@ export class NoctuaGraphService {
       });
     });
 
-    return Observable.forkJoin(promises);
+    return forkJoin(promises);
   }
 
   graphPostParse(cam: Cam, graph) {
@@ -371,7 +371,7 @@ export class NoctuaGraphService {
 
     })
 
-    return Observable.forkJoin(promises)
+    return forkJoin(promises)
   }
 
   isaClosurePreParse(a, b, node) {
