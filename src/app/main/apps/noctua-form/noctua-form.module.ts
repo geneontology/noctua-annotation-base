@@ -15,9 +15,7 @@ import { AnnotonEntityFormComponent } from './cam/annoton/annoton-entity-form/an
 import { EntityFormComponent } from './cam/annoton/annoton-form/entity-form/entity-form.component';
 
 import { CamTableComponent } from './cam/cam-table/cam-table.component';
-
 import { CamFormComponent } from './cam/cam-form/cam-form.component';
-
 
 import { CamRowEditDialogComponent } from './dialogs/cam-row-edit/cam-row-edit.component';
 import { AddEvidenceDialogComponent } from './dialogs/add-evidence/add-evidence.component';
@@ -43,7 +41,7 @@ import { EvidenceTableComponent } from './cam/cam-table/triple-table/evidence-ta
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];

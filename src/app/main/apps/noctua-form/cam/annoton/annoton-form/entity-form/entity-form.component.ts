@@ -159,36 +159,18 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   }
 
-  openSelectEvidenceDialog(evidence) {
+  openSelectEvidenceDialog() {
     const self = this;
 
-    /*
-  
-    let evidences = Util.addUniqueEvidencesFromAnnoton(self.annotonForm.annoton);
-    Util.getUniqueEvidences(self.summaryData.annotons, evidences);
-  
-    let gpNode = self.annotonForm.annotonPresentation.geneProduct;
-  
-    let data = {
-      readonly: false,
-      gpNode: gpNode,
-      aspect: entity.aspect,
-      node: entity,
-      evidences: evidences,
-      params: {
-        term: entity.term.control.value.id,
-      }
-    }
-  
-    let success = function (selected) {
-      entity.addEvidences(selected.evidences, ['assignedBy']);
-    }
-    */
-
     let evidences: Evidence[] = this.camService.getUniqueEvidence();
-    let success = (evidences: Evidence[]) => {
 
-      self.entity.setEvidence(evidences, ['assignedBy']);
+
+
+    let success = function (selected) {
+      if (selected.evidences && selected.evidences.length > 0) {
+        self.entity.setEvidence(selected.evidences, ['assignedBy']);
+        self.noctuaAnnotonFormService.initializeForm();
+      }
     }
 
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
