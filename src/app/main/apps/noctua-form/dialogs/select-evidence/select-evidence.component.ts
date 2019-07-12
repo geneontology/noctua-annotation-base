@@ -19,7 +19,6 @@ import { NoctuaSearchService } from './../../../../../../@noctua.search/services
 import { SparqlService } from './../../../../../../@noctua.sparql/services/sparql/sparql.service';
 import { noctuaAnimations } from '@noctua/animations';
 
-
 @Component({
   selector: 'app-select-evidence',
   templateUrl: './select-evidence.component.html',

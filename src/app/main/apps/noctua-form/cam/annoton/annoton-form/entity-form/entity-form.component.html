@@ -84,6 +84,9 @@
           <button mat-menu-item class="" (click)="openSelectEvidenceDialog(evidence)">
             Clone Evidence
           </button>
+          <button mat-menu-item class="" (click)="addNDEvidence(entity.evidence[0])">
+            Add ND Reference
+          </button>
           <!--
           <button mat-menu-item class="" (click)="openMoreEvidenceDialog()">
             More Evidence
@@ -94,9 +97,7 @@
           <button (click)="removeEvidence(i)" mat-menu-item>
             Remove Evidence
           </button>
-          <button mat-menu-item class="" (click)="addNDEvidence(entity.evidence[0])">
-            Add ND Reference
-          </button>
+     
           <h6 class="noc-menu-heading"> Term </h6>
           <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
             NOT Qualifier

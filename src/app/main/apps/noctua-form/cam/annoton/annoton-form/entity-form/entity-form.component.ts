@@ -30,7 +30,8 @@ import {
   NoctuaAnnotonFormService,
   NoctuaLookupService,
   AnnotonNode,
-  Evidence
+  Evidence,
+  noctuaFormConfig
 } from 'noctua-form-base';
 
 @Component({
@@ -155,16 +156,21 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
 
-  addNDEvidence(srcEvidence: Evidence) {
+  addNDEvidence() {
+    const self = this;
 
+    let evidence = new Evidence();
+    evidence.setEvidence(noctuaFormConfig.evidenceAutoPopulate.nd.evidence);
+    evidence.setReference(noctuaFormConfig.evidenceAutoPopulate.nd.reference);
+
+    self.entity.setEvidence([evidence]);
+    self.noctuaAnnotonFormService.initializeForm();
   }
 
   openSelectEvidenceDialog() {
     const self = this;
 
     let evidences: Evidence[] = this.camService.getUniqueEvidence();
-
-
 
     let success = function (selected) {
       if (selected.evidences && selected.evidences.length > 0) {
