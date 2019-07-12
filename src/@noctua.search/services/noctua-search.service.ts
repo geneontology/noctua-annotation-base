@@ -13,7 +13,7 @@ import { SearchCriteria } from './../models/search-criteria';
 
 
 import { saveAs } from 'file-saver';
-import { each } from 'lodash';
+import { each, forOwn } from 'lodash';
 import { CurieService } from '@noctua.curie/services/curie.service';
 
 
@@ -137,7 +137,6 @@ export class NoctuaSearchService {
         this.updateSearch();
     }
 
-
     getCams(searchCriteria: SearchCriteria): Observable<any> {
         const self = this;
 
@@ -192,11 +191,11 @@ export class NoctuaSearchService {
                 return contributor ? contributor : { orcid: orcid };
             });
 
-            if (response.entities && response.entities.value !== "") {
-                cam.filter.individualIds.push(...response.entities.value.split(self.separator).map((iri) => {
+            forOwn(response.query_match, (individuals) => {
+                cam.filter.individualIds.push(...individuals.map((iri) => {
                     return self.curieUtil.getCurie(iri);
                 }));
-            }
+            });
 
             cam.configureDisplayType();
             result.push(cam);
@@ -220,36 +219,4 @@ export class NoctuaSearchService {
 
         return result;
     }
-
-    annotonToCam(cam, annoton) {
-        let destNode = new AnnotonNode()
-        destNode.deepCopyValues(annoton.node);
-
-        let result: CamRow = {
-            treeLevel: annoton.treeLevel,
-            annotatedEntity: {
-                id: '',
-                label: annoton.gp
-            },
-            relationship: annoton.relationship,
-            aspect: annoton.aspect,
-            term: annoton.term,
-            relationshipExt: annoton.relationshipExt,
-            extension: annoton.extension,
-            evidence: annoton.evidence,
-            reference: annoton.reference,
-            with: annoton.with,
-            assignedBy: annoton.assignedBy,
-            srcNode: annoton.node,
-            destNode: destNode
-        }
-
-        return result;
-    }
-
-
-    getXSD(s) {
-        return "\"" + s + "\"^^xsd:string";
-    }
-
 }
