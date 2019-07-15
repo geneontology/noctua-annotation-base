@@ -92,21 +92,15 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   addEvidence() {
     const self = this;
 
-    let evidenceFormGroup: FormArray = this.entityFormGroup.get('evidenceFormArray') as FormArray;
-
-    evidenceFormGroup.push(this.formBuilder.group({
-      evidence: new FormControl(),
-      reference: new FormControl(),
-      with: new FormControl(),
-    }));
+    self.entity.addEvidence();
+    self.noctuaAnnotonFormService.initializeForm();
   }
 
-  removeEvidence(index) {
+  removeEvidence(index: number) {
     const self = this;
 
-    let evidenceFormGroup: FormArray = <FormArray>self.entityFormGroup.get('evidenceFormArray');
-
-    evidenceFormGroup.removeAt(index);
+    self.entity.removeEvidence(index);
+    self.noctuaAnnotonFormService.initializeForm();
   }
 
   toggleIsComplement(entity: AnnotonNode) {
@@ -155,7 +149,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   }
 
-
   addNDEvidence() {
     const self = this;
 
@@ -164,6 +157,24 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     evidence.setReference(noctuaFormConfig.evidenceAutoPopulate.nd.reference);
 
     self.entity.setEvidence([evidence]);
+    self.noctuaAnnotonFormService.initializeForm();
+  }
+
+  addRootTerm() {
+    const self = this;
+
+    let term = _.find(noctuaFormConfig.rootNode, (rootNode) => {
+      return rootNode.aspect === self.entity.aspect
+    });
+
+    self.entity.setTerm(term);
+    self.noctuaAnnotonFormService.initializeForm();
+  }
+
+  clearValues() {
+    const self = this;
+
+    self.entity.clearValues();
     self.noctuaAnnotonFormService.initializeForm();
   }
 

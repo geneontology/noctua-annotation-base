@@ -140,10 +140,10 @@ export class Evidence {
   clearValues() {
     const self = this;
 
-    self.setEvidence(null);
-    self.setReference(null);
-    self.setWith(null);
-    self.setAssignedBy(null);
+    self.setEvidence('');
+    self.setReference('');
+    self.setWith('');
+    self.setAssignedBy('');
   }
 
   copyValues(evidence, except) {

@@ -163,13 +163,13 @@ export class AnnotonNode {
     return evidence;
   }
 
-  removeEvidence(evidence) {
+  removeEvidence(index) {
     const self = this;
 
-    if (self.evidence.length > 1) {
-      self.evidence = _.remove(self.evidence, evidence);
-    } else {
+    if (index === 0 && self.evidence.length === 1) {
       self.evidence[0].clearValues();
+    } else {
+      self.evidence.splice(index, 1);
     }
   }
 
@@ -205,7 +205,7 @@ export class AnnotonNode {
   clearValues() {
     const self = this;
 
-    self.term.control.value = null;
+    self.setTerm('');
     self.evidence = [];
     self.addEvidence();
   }
