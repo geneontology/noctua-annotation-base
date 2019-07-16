@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
-import { TermLookup } from './term-lookup';
+import { EntityLookup } from './entity-lookup';
 declare const require: any;
 const uuid = require('uuid/v1');
 
-export class Term {
+export class Entity {
   uuid: string;
   id: string;
   label: string;

@@ -6,16 +6,16 @@ const each = require('lodash/forEach');
 import { Evidence } from './evidence';
 import { AnnotonError } from "./parser/annoton-error";
 import { Annoton } from './annoton';
-import { Term } from './term';
-import { TermLookup } from './term-lookup';
-import { Contributor } from '../contributor';
+import { Entity } from './entity';
+import { EntityLookup } from './entity-lookup';
+import { Contributor } from './../contributor';
 
 export class AnnotonNode {
   id: string;
   individualId: string;
   label: string;
-  term: Term = new Term();
-  termLookup: TermLookup = new TermLookup();
+  term: Entity = new Entity();
+  termLookup: EntityLookup = new EntityLookup();
   isExtension: boolean = false;
   aspect: string;
   lookupGroup: string;
@@ -70,7 +70,7 @@ export class AnnotonNode {
     return this.term;
   }
 
-  setTerm(term: Term, classExpression?) {
+  setTerm(term: Entity, classExpression?) {
     this.term = term;
 
     if (classExpression) {

@@ -10,6 +10,7 @@ import { Group } from '../group';
 import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
+import { Entity } from './entity';
 
 export class Cam {
 
@@ -50,7 +51,7 @@ export class Cam {
   private _displayType;
 
   grid: any = [];
-  goterms: import("c:/work/go/noctua-form-base/src/public-api").Term[];
+  goterms: Entity[] = [];
 
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;

@@ -3,16 +3,16 @@ declare const require: any;
 const each = require('lodash/forEach');
 
 import { AnnotonError } from "./parser/annoton-error";
-import { Term } from './term';
-import { TermLookup } from './term-lookup';
+import { Entity } from './entity';
+import { EntityLookup } from './entity-lookup';
 
 export class Evidence {
   qualifier;
-  evidence: Term = new Term();
-  evidenceLookup: TermLookup = new TermLookup();
-  reference: Term = new Term();
-  with: Term = new Term();
-  assignedBy: Term = new Term();
+  evidence: Entity = new Entity();
+  evidenceLookup: EntityLookup = new EntityLookup();
+  reference: Entity = new Entity();
+  with: Entity = new Entity();
+  assignedBy: Entity = new Entity();
   classExpression
   individualId;
 
@@ -46,7 +46,7 @@ export class Evidence {
     return self.evidence.id && self.reference.label;
   }
 
-  setAssignedBy(value: Term) {
+  setAssignedBy(value: Entity) {
     this.assignedBy = value;
   }
 
@@ -58,7 +58,7 @@ export class Evidence {
     this.ontologyClass = value;
   }
 
-  setEvidence(value: Term, classExpression?) {
+  setEvidence(value: Entity, classExpression?) {
     this.evidence = value;
 
     if (classExpression) {
@@ -66,21 +66,21 @@ export class Evidence {
     }
   }
 
-  setReference(value: Term) {
+  setReference(value: Entity) {
     this.reference = value;
   }
 
-  setWith(value: Term) {
+  setWith(value: Entity) {
     this.with = value;
   }
 
   clearValues() {
     const self = this;
 
-    self.setEvidence(new Term());
-    self.setReference(new Term());
-    self.setWith(new Term());
-    self.setAssignedBy(new Term());
+    self.setEvidence(new Entity());
+    self.setReference(new Entity());
+    self.setWith(new Entity());
+    self.setAssignedBy(new Entity());
   }
 
   copyValues(evidence, except) {

@@ -25,7 +25,7 @@ import {
   NoctuaGraphService,
   NoctuaAnnotonFormService,
   CamService,
-  Term
+  Entity
 } from 'noctua-form-base';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
@@ -75,7 +75,7 @@ export class CamFormComponent implements OnInit, OnDestroy {
       this.cam = cam;
       this.sparqlService.getModelTerms(this.cam.id)
         .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((terms: Term[]) => {
+        .subscribe((terms: Entity[]) => {
           this.camService.onCamTermsChanged.next(terms);
         });
     });
@@ -84,7 +84,7 @@ export class CamFormComponent implements OnInit, OnDestroy {
   loadGoTerms() {
     this.camService.onCamTermsChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((terms: Term[]) => {
+      .subscribe((terms: Entity[]) => {
         if (!terms) return;
 
         this.cam.goterms = terms;

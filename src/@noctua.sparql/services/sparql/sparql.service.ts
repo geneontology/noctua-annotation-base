@@ -29,7 +29,7 @@ import {
   Group,
   NoctuaUserService,
   Organism,
-  Term
+  Entity
 } from 'noctua-form-base'
 
 import * as _ from 'lodash';
@@ -230,10 +230,10 @@ export class SparqlService {
 
   addCamTerms(res) {
     const self = this;
-    let result: Array<Term> = [];
+    let result: Array<Entity> = [];
 
     res.forEach((response) => {
-      let term = new Term(
+      let term = new Entity(
         self.curieUtil.getCurie(response.id.value),
         response.label.value
       );

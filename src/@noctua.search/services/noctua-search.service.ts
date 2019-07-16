@@ -8,7 +8,7 @@ import { map, filter, reduce, catchError, retry, tap, finalize } from 'rxjs/oper
 
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
-import { Cam, Contributor, Group, Organism, NoctuaFormConfigService, NoctuaUserService, Term, AnnotonNode, CamRow } from 'noctua-form-base';
+import { Cam, Contributor, Group, Organism, NoctuaFormConfigService, NoctuaUserService, Entity, AnnotonNode, CamRow } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 
 
@@ -206,10 +206,10 @@ export class NoctuaSearchService {
 
     addCamTerms(res) {
         const self = this;
-        let result: Array<Term> = [];
+        let result: Array<Entity> = [];
 
         res.forEach((response) => {
-            let term = new Term(
+            let term = new Entity(
                 self.curieUtil.getCurie(response.id.value),
                 response.label.value
             );

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 declare const require: any;
 const uuid = require('uuid/v1');
 
-export class TermLookup {
+export class EntityLookup {
   category: string
   requestParams: any;
 

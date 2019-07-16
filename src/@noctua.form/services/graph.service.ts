@@ -17,7 +17,7 @@ import {
   AnnotonError,
   Evidence,
   SimpleAnnoton,
-  Term
+  Entity
 } from './../models/annoton/';
 
 //Config
@@ -275,7 +275,7 @@ export class NoctuaGraphService {
     let node = graph.get_node(object);
     let nodeInfo = self.getNodeInfo(node);
     let result = {
-      term: new Term(nodeInfo.id, nodeInfo.label),
+      term: new Entity(nodeInfo.id, nodeInfo.label),
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
       isComplement: self.getNodeIsComplement(node)
@@ -299,23 +299,23 @@ export class NoctuaGraphService {
       if (annotationNode) {
 
         let nodeInfo = self.getNodeInfo(annotationNode);
-        evidence.setEvidence(new Term(nodeInfo.id, nodeInfo.label), nodeInfo.classExpression);
+        evidence.setEvidence(new Entity(nodeInfo.id, nodeInfo.label), nodeInfo.classExpression);
 
         let sources = annotationNode.get_annotations_by_key('source');
         let withs = annotationNode.get_annotations_by_key('with');
         let assignedBys = annotationNode.get_annotations_by_key('providedBy');
         if (sources.length > 0) {
-          evidence.setReference(new Term(null, sources[0].value(), self.linker.url(sources[0].value())));
+          evidence.setReference(new Entity(null, sources[0].value(), self.linker.url(sources[0].value())));
         }
         if (withs.length > 0) {
           if (withs[0].value().startsWith('gomodel')) {
-            evidence.setWith(new Term(null, withs[0].value()));
+            evidence.setWith(new Entity(null, withs[0].value()));
           } else {
-            evidence.setWith(new Term(null, withs[0].value(), self.linker.url(withs[0].value())));
+            evidence.setWith(new Entity(null, withs[0].value(), self.linker.url(withs[0].value())));
           }
         }
         if (assignedBys.length > 0) {
-          evidence.setAssignedBy(new Term(null, assignedBys[0].value(), assignedBys[0].value()));
+          evidence.setAssignedBy(new Entity(null, assignedBys[0].value(), assignedBys[0].value()));
         }
         result.push(evidence);
       }
@@ -1245,7 +1245,7 @@ export class NoctuaGraphService {
           let mfNode = annoton.getNode('mf');
           let bpNode = annoton.getNode('bp');
 
-          mfNode.setTerm(new Term('GO:0003674', 'molecular_function'));
+          mfNode.setTerm(new Entity('GO:0003674', 'molecular_function'));
           mfNode.evidence = bpNode.evidence;
           break;
         }

@@ -32,7 +32,7 @@ import {
   AnnotonNode,
   Evidence,
   noctuaFormConfig,
-  Term
+  Entity
 } from 'noctua-form-base';
 
 @Component({
@@ -154,10 +154,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     const self = this;
 
     let evidence = new Evidence();
-    evidence.setEvidence(new Term(
+    evidence.setEvidence(new Entity(
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
-    evidence.setReference(new Term(null, noctuaFormConfig.evidenceAutoPopulate.nd.reference));
+    evidence.setReference(new Entity(null, noctuaFormConfig.evidenceAutoPopulate.nd.reference));
     self.entity.setEvidence([evidence]);
     self.noctuaAnnotonFormService.initializeForm();
   }
@@ -170,7 +170,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     });
 
     if (term) {
-      self.entity.setTerm(new Term(term.id, term.label));
+      self.entity.setTerm(new Entity(term.id, term.label));
       self.noctuaAnnotonFormService.initializeForm();
     }
   }
