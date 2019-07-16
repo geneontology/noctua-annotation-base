@@ -229,7 +229,7 @@
                     <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
                       class="noc-term-autocomplete">
                       <mat-option
-                        *ngFor="let item of noctuaAnnotonConnectorService.subjectMFNode?.evidence[i]?.evidence.lookup.results"
+                        *ngFor="let item of noctuaAnnotonConnectorService.subjectMFNode?.evidence[i]?.evidenceLookup.results"
                         [value]="item">
                         <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                           <div class="noc-term-label">

@@ -114,16 +114,14 @@ export class NoctuaFormConfigService {
         'aspect': 'F',
         "lookupGroup": 'GO:0003674',
         'treeLevel': 1,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
+            ],
+          }),
         },
         'searchResults': []
       },
@@ -136,16 +134,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'GO:0032991',
         'treeLevel': 1,
         'isExtension': false,
-        "term": {
-          "ontologyClass": [],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0032991"'
-              ],
-            }),
-          }
+        "ontologyClass": [],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0032991"'
+            ],
+          }),
         }
       },
       "gp": {
@@ -156,17 +152,15 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'CHEBI:33695',
         'treeLevel': 1,
         'isExtension': false,
-        "term": {
-          "ontologyClass": [],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"CHEBI:33695"'
-                //'isa_closure:"CHEBI:23367"'
-              ],
-            }),
-          }
+        "ontologyClass": [],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"CHEBI:33695"'
+              //'isa_closure:"CHEBI:23367"'
+            ],
+          }),
         }
       },
       'mf': {
@@ -178,16 +172,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'GO:0003674',
         'treeLevel': 1,
         'isExtension': false,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0003674"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0003674"'
+            ],
+          }),
         }
       },
       'mf-1': {
@@ -198,16 +190,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'CHEBI:23367',
         'treeLevel': 2,
         'isExtension': true,
-        "term": {
-          "ontologyClass": [],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"CHEBI:23367"' //Generic Molecule + GP
-              ],
-            }),
-          }
+        "ontologyClass": [],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"CHEBI:23367"' //Generic Molecule + GP
+            ],
+          }),
         }
       },
       'mf-2': {
@@ -218,16 +208,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'GO:0044848',
         'treeLevel': 2,
         'isExtension': true,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0044848"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0044848"'
+            ],
+          }),
         }
       },
       'cc': {
@@ -239,16 +227,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'GO:0005575',
         'treeLevel': 2,
         'isExtension': false,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0005575"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0005575"'
+            ],
+          }),
         }
       },
       'cc-1': {
@@ -260,16 +246,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'GO:0005575',
         'treeLevel': 3,
         'isExtension': true,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0005575"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0005575"'
+            ],
+          }),
         }
       },
       'cc-1-1': {
@@ -280,16 +264,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'CL:0000003',
         'treeLevel': 4,
         'isExtension': true,
-        "term": {
-          "ontologyClass": ['cl'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"CL:0000003"'
-              ],
-            }),
-          }
+        "ontologyClass": ['cl'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"CL:0000003"'
+            ],
+          }),
         }
       },
       'cc-1-1-1': {
@@ -300,16 +282,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'UBERON:0000061',
         'treeLevel': 5,
         'isExtension': true,
-        "term": {
-          "ontologyClass": ['uberon'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"UBERON:0000061"'
-              ],
-            }),
-          }
+        "ontologyClass": ['uberon'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"UBERON:0000061"'
+            ],
+          }),
         }
       },
       'bp': {
@@ -321,16 +301,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'GO:0008150',
         'treeLevel': 2,
         'isExtension': false,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0008150"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0008150"'
+            ],
+          }),
         }
       },
       'bp-1': {
@@ -342,19 +320,16 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'GO:0008150',
         'treeLevel': 3,
         'isExtension': true,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0008150"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0008150"'
+            ],
+          }),
         }
       },
-
       'bp-1-1': {
         "label": 'Part Of (BP)',
         'aspect': 'P',
@@ -364,16 +339,14 @@ export class NoctuaFormConfigService {
         "lookupGroup": 'GO:0008150',
         'treeLevel': 4,
         'isExtension': true,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0008150"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0008150"'
+            ],
+          }),
         }
       },
     }
@@ -386,16 +359,14 @@ export class NoctuaFormConfigService {
         "label": 'Macromolecular Complex',
         "lookupGroup": 'GO:0032991',
         'treeLevel': 1,
-        "term": {
-          "ontologyClass": [],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0032991"'
-              ],
-            }),
-          }
+        "ontologyClass": [],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0032991"'
+            ],
+          }),
         },
         'searchResults': []
       },
@@ -404,17 +375,15 @@ export class NoctuaFormConfigService {
         "label": 'Gene Product',
         "lookupGroup": 'CHEBI:33695',
         'treeLevel': 1,
-        "term": {
-          "ontologyClass": [],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"CHEBI:33695"'
-                //'isa_closure:"CHEBI:23367"'
-              ],
-            }),
-          }
+        "ontologyClass": [],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"CHEBI:33695"'
+              //'isa_closure:"CHEBI:23367"'
+            ],
+          }),
         },
         'searchResults': []
       },
@@ -424,16 +393,14 @@ export class NoctuaFormConfigService {
         'aspect': 'F',
         "lookupGroup": 'GO:0003674',
         'treeLevel': 1,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
+            ],
+          }),
         },
         'searchResults': []
       },
@@ -443,16 +410,14 @@ export class NoctuaFormConfigService {
         'aspect': '',
         "lookupGroup": 'ECO:0000352',
         'treeLevel': 1,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"ECO:0000352"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"ECO:0000352"'
+            ],
+          }),
         },
         'searchResults': []
       },
@@ -461,16 +426,14 @@ export class NoctuaFormConfigService {
         'aspect': 'F',
         "lookupGroup": 'GO:0003674',
         'treeLevel': 1,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0003674"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0003674"'
+            ],
+          }),
         },
         'searchResults': []
       },
@@ -479,16 +442,14 @@ export class NoctuaFormConfigService {
         'aspect': 'F',
         "lookupGroup": 'GO:0140096',
         'treeLevel': 1,
-        "term": {
-          "ontologyClass": ['go'],
-          "lookup": {
-            "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-              fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0140096"'
-              ],
-            }),
-          }
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0140096"'
+            ],
+          }),
         },
         'searchResults': []
       },
@@ -1056,7 +1017,7 @@ export class NoctuaFormConfigService {
 
     let nodeData = JSON.parse(JSON.stringify(self._reviewSearchData[id]));
 
-    return nodeData.term.lookup.requestParams;
+    return nodeData.termLookup.requestParams;
   }
 
   getModelUrls(modelId) {
@@ -1240,8 +1201,8 @@ export class NoctuaFormConfigService {
     annotonNode.lookupGroup = nodeData.lookupGroup;
     annotonNode.treeLevel = nodeData.treeLevel;
     annotonNode.isExtension = nodeData.isExtension;
-    annotonNode.setTermLookup(nodeData.term.lookup.requestParams);
-    annotonNode.setTermOntologyClass(nodeData.term.ontologyClass);
+    annotonNode.setTermLookup(nodeData.termLookup.requestParams);
+    annotonNode.setTermOntologyClass(nodeData.ontologyClass);
     annotonNode.setEvidenceMeta('eco', self.requestParams["evidence"]);
 
     return annotonNode;
@@ -1267,8 +1228,8 @@ export class NoctuaFormConfigService {
     annotonNode.lookupGroup = nodeData.lookupGroup;
     annotonNode.treeLevel = 1;
     annotonNode.isExtension = false;
-    annotonNode.setTermLookup(nodeData.term.lookup.requestParams);
-    annotonNode.setTermOntologyClass(nodeData.term.ontologyClass);
+    annotonNode.setTermLookup(nodeData.termLookup.requestParams);
+    annotonNode.setTermOntologyClass(nodeData.ontologyClass);
     annotonNode.setEvidenceMeta('eco', self.requestParams["evidence"]);
 
     // annotonData[id].node = annotonNode;

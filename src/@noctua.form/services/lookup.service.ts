@@ -11,6 +11,7 @@ import { AnnotonNodeClosure } from './../models/annoton/annoton-node-closure';
 import { Evidence } from './../models/annoton/evidence';
 
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
+import { Term } from '@noctua.form/models';
 
 declare const require: any;
 
@@ -206,20 +207,17 @@ export class NoctuaLookupService {
           let annotonNode
           let evidence = new Evidence();
 
-          evidence.setEvidence({
-            id: doc.evidence,
-            label: doc.evidence_label
-          });
+          evidence.setEvidence(new Term(doc.evidence, doc.evidence_label));
 
           if (doc.reference && doc.reference.length > 0) {
-            evidence.setReference(doc.reference[0], self.linker.url(doc.reference[0]));
+            evidence.setReference(new Term(doc.reference[0], self.linker.url(doc.reference[0])));
           }
 
           if (doc.evidence_with && doc.evidence_with.length > 0) {
-            evidence.setWith(doc.evidence_with[0], self.linker.url(doc.evidence_with[0]));
+            evidence.setWith(new Term(doc.evidence_with[0], self.linker.url(doc.evidence_with[0])));
           }
 
-          evidence.setAssignedBy(doc.assigned_by);
+          evidence.setAssignedBy(new Term(null, doc.assigned_by));
 
           annotonNode = _.find(result, (srcAnnotonNode: AnnotonNode) => {
             return srcAnnotonNode.getTerm().id === doc.annotation_class;

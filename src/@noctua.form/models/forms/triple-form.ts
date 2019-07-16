@@ -38,12 +38,12 @@ export class TripleForm {
 
     this.subject.setValue(triple.subject.getTerm());
     this.object.setValue(triple.object.getTerm());
-    this.onValueChanges(triple.subject.term.lookup);
+    this.onValueChanges(triple.subject.termLookup);
     triple.predicate.forEach((evidence: Evidence) => {
       let evidenceForm = new EvidenceForm(self._metadata, triple.subject, evidence);
 
       self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(evidence.evidence.lookup)
+      evidenceForm.onValueChanges(evidence.evidenceLookup)
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }

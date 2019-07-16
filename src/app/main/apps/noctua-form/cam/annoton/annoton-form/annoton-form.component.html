@@ -37,7 +37,7 @@
              <textarea type="text" matInput formControlName="gp" [matAutocomplete]="gpAuto" rows="2"></textarea>
              <mat-autocomplete #gpAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
                <mat-option class="noc-term-autocomplete"
-                 *ngFor="let item of noctuaAnnotonFormService.annoton.presentation?.geneProduct.term.lookup.results"
+                 *ngFor="let item of noctuaAnnotonFormService.annoton.presentation?.geneProduct.termLookup.results"
                  [value]="item">
                  <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                    <div class="noc-term-label">

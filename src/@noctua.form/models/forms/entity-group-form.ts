@@ -30,7 +30,7 @@ export class EntityGroupForm {
 
             this.entityForms.push(entityForm);
             entityForm.createEvidenceForms(entity);
-            entityForm.onValueChanges(entity.term.lookup)
+            entityForm.onValueChanges(entity.termLookup)
 
             self.entityGroup.addControl(entity.id, self._fb.group(entityForm));
         });

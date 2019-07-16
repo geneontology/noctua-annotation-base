@@ -5,86 +5,56 @@ const each = require('lodash/forEach');
 
 import { Evidence } from './evidence';
 import { AnnotonError } from "./parser/annoton-error";
+import { Annoton } from './annoton';
+import { Term } from './term';
+import { TermLookup } from './term-lookup';
+import { Contributor } from '../contributor';
 
 export class AnnotonNode {
-  id;
-  isExtension;
-  aspect;
-  label;
-  lookupGroup;
-  nodeGroup;
-  displaySection
-  relationship;
+  id: string;
+  individualId: string;
+  label: string;
+  term: Term = new Term();
+  termLookup: TermLookup = new TermLookup();
+  isExtension: boolean = false;
+  aspect: string;
+  lookupGroup: string;
+  nodeGroup: any = {};
+  displaySection: any
+  relationship: any;
   displayGroup
-  treeLevel;
-  annoton;
-  ontologyClass;
-  individualId;
-  isComplement;
-  term;
-  closures;
+  treeLevel: number;
+  annoton: Annoton;
+  ontologyClass: any = [];
+  isComplement: boolean = false;
+  required: boolean;
+  closures: any = [];
   edgeOption;
-  _evidenceMeta;
-  evidence;
-  assignedBy;
-  contributor;
-  termRequiredList;
-  evidenceRequiredList
-  evidenceNotRequiredList
-  errors
-  warnings
-  status
-
   visible = true;
+  evidence = [];
+  assignedBy: boolean = null;
+  contributor: Contributor = null;
+  termRequiredList = ['mf'];
+  evidenceRequiredList = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
+  evidenceNotRequiredList = [];
+  errors = [];
+  warnings = [];
+  status = '0';
 
   isCatalyticActivity = false
-
+  saveMeta: any = {};
   //UI
   _location = {
     x: 0,
     y: 0
   }
+  _evidenceMeta;
 
   constructor() {
-    this.id;
-    this.nodeGroup = {}
-    this.annoton = null;
-    this.ontologyClass = [];
-    this.individualId;
-    this.isExtension = false;
-    this.isComplement = false;
-    this.term = {
-      "validation": {
-        "errors": []
-      },
-      "control": {
-        "required": false,
-        "placeholder": '',
-        "value": '',
-        "searchText": ''
-      },
-      "lookup": {
-        "category": "",
-        "requestParams": null
-      },
-      "classExpression": null
-    };
-    this.closures = [];
-    this.edgeOption;
     this._evidenceMeta = {
       lookupBase: "",
       ontologyClass: "eco"
     };
-    this.evidence = [];
-    this.assignedBy = null;
-    this.contributor = null;
-    this.termRequiredList = ['mf'];
-    this.evidenceRequiredList = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
-    this.evidenceNotRequiredList = []; // ['GO:0003674', 'GO:0008150', 'GO:0005575'];
-    this.errors = [];
-    this.warnings = [];
-    this.status = '0';
-
 
   }
 
@@ -97,11 +67,11 @@ export class AnnotonNode {
   }
 
   getTerm() {
-    return this.term.control.value;
+    return this.term;
   }
 
-  setTerm(value, classExpression?) {
-    this.term.control.value = value;
+  setTerm(term: Term, classExpression?) {
+    this.term = term;
 
     if (classExpression) {
       this.classExpression = classExpression;
@@ -180,7 +150,7 @@ export class AnnotonNode {
   }
 
   setTermOntologyClass(value) {
-    this.term.ontologyClass = value;
+    this.ontologyClass = value;
   }
 
   toggleIsComplement() {
@@ -199,13 +169,14 @@ export class AnnotonNode {
   hasValue() {
     const self = this;
 
-    return self.term.control.value.id;
+    return self.term.hasValue();
   }
 
   clearValues() {
     const self = this;
 
-    self.setTerm('');
+    self.term.id = null;
+    self.term.label = null;
     self.evidence = [];
     self.addEvidence();
   }
@@ -213,7 +184,7 @@ export class AnnotonNode {
   deepCopyValues(node: AnnotonNode) {
     const self = this;
 
-    self.term.control.value = node.term.control.value;
+    self.term = node.term;
     self.evidence = node.evidence;
     self.location = node.location;
     self.individualId = node.individualId;
@@ -235,7 +206,7 @@ export class AnnotonNode {
     const self = this;
 
     self.location = node.location;
-    self.term.control.value = node.term.control.value;
+    self.term = node.term;
     self.evidence = node.evidence;
     self.assignedBy = node.assignedBy;
     self.isComplement = node.isComplement;
@@ -247,7 +218,7 @@ export class AnnotonNode {
   }
 
   setTermLookup(value) {
-    this.term.lookup.requestParams = value;
+    this.termLookup.requestParams = value;
   }
 
   setEvidenceMeta(ontologyClass, lookupBase) {
@@ -273,8 +244,8 @@ export class AnnotonNode {
     const self = this;
     let result = true;
 
-    if (self.termRequiredList.includes(self.id) && !self.term.control.value.id) {
-      self.term.control.required = true;
+    if (self.termRequiredList.includes(self.id) && !self.term.id) {
+      self.required = true;
       let meta = {
         aspect: self.label
       }
@@ -282,13 +253,13 @@ export class AnnotonNode {
       errors.push(error);
       result = false;
     } else {
-      self.term.control.required = false;
+      self.required = false;
     }
 
-    if (self.term.control.value.id && self.evidenceRequiredList.includes(self.id) &&
-      !self.evidenceNotRequiredList.includes(self.term.control.value.id)) {
+    if (self.term.id && self.evidenceRequiredList.includes(self.id) &&
+      !self.evidenceNotRequiredList.includes(self.term.id)) {
       each(self.evidence, function (evidence, key) {
-        if (self.term.control.value.id)
+        if (self.term.id)
           result = evidence.enableSubmit(errors, self, key + 1) && result;
       })
     }
@@ -303,7 +274,6 @@ export class AnnotonNode {
     } else if (n.includes('go')) {
 
     }
-
   }
 
 }

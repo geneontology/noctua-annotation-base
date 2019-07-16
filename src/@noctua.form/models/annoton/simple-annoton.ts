@@ -33,18 +33,6 @@ export class SimpleAnnoton extends SaeGraph {
     this.id = uuid();
   }
 
-  insertTermNode(annotonModel, id, value) {
-    let node = null;
-
-    node = _.find(annotonModel, {
-      id: id
-    });
-
-    if (node) {
-      node.term.control.value = value;
-    }
-  }
-
   addEdgeOptionById(id, edgeOption) {
     const self = this;
 

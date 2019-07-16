@@ -42,7 +42,7 @@ export class AnnotonConnectorForm {
       let evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
 
       self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(evidence.evidence.lookup)
+      evidenceForm.onValueChanges(evidence.evidenceLookup)
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }

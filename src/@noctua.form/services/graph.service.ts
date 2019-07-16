@@ -16,7 +16,8 @@ import {
   AnnotonParser,
   AnnotonError,
   Evidence,
-  SimpleAnnoton
+  SimpleAnnoton,
+  Term
 } from './../models/annoton/';
 
 //Config
@@ -274,10 +275,7 @@ export class NoctuaGraphService {
     let node = graph.get_node(object);
     let nodeInfo = self.getNodeInfo(node);
     let result = {
-      term: {
-        id: nodeInfo.id,
-        label: nodeInfo.label,
-      },
+      term: new Term(nodeInfo.id, nodeInfo.label),
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
       isComplement: self.getNodeIsComplement(node)
@@ -301,26 +299,23 @@ export class NoctuaGraphService {
       if (annotationNode) {
 
         let nodeInfo = self.getNodeInfo(annotationNode);
-        evidence.setEvidence({
-          id: nodeInfo.id,
-          label: nodeInfo.label
-        }, nodeInfo.classExpression);
+        evidence.setEvidence(new Term(nodeInfo.id, nodeInfo.label), nodeInfo.classExpression);
 
         let sources = annotationNode.get_annotations_by_key('source');
         let withs = annotationNode.get_annotations_by_key('with');
         let assignedBys = annotationNode.get_annotations_by_key('providedBy');
         if (sources.length > 0) {
-          evidence.setReference(sources[0].value(), self.linker.url(sources[0].value()));
+          evidence.setReference(new Term(null, sources[0].value(), self.linker.url(sources[0].value())));
         }
         if (withs.length > 0) {
           if (withs[0].value().startsWith('gomodel')) {
-            evidence.setWith(withs[0].value());
+            evidence.setWith(new Term(null, withs[0].value()));
           } else {
-            evidence.setWith(withs[0].value(), self.linker.url(withs[0].value()));
+            evidence.setWith(new Term(null, withs[0].value(), self.linker.url(withs[0].value())));
           }
         }
         if (assignedBys.length > 0) {
-          evidence.setAssignedBy(assignedBys[0].value(), assignedBys[0].value());
+          evidence.setAssignedBy(new Term(null, assignedBys[0].value(), assignedBys[0].value()));
         }
         result.push(evidence);
       }
@@ -820,18 +815,18 @@ export class NoctuaGraphService {
   }
   */
 
-  addIndividual(reqs, node) {
+  addIndividual(reqs, node: AnnotonNode) {
     node.saveMeta = {};
-    if (node.term.control.value && node.term.control.value.id) {
+    if (node.term.hasValue()) {
       if (node.individualId) {
         node.saveMeta.term = node.individualId;
       } else if (node.isComplement) {
         let ce = new class_expression();
-        ce.as_complement(node.term.control.value.id);
+        ce.as_complement(node.term.id);
         node.saveMeta.term = reqs.add_individual(ce);
 
       } else {
-        node.saveMeta.term = reqs.add_individual(node.term.control.value.id);
+        node.saveMeta.term = reqs.add_individual(node.term.id);
       }
 
       node.individualId = node.saveMeta.term;
@@ -979,7 +974,7 @@ export class NoctuaGraphService {
     }
   }
 
-  addFact(reqs, annoton, node) {
+  addFact(reqs, annoton: Annoton, node) {
     let edge = annoton.getEdges(node.id);
 
     each(edge.nodes, function (edgeNode) {
@@ -996,25 +991,24 @@ export class NoctuaGraphService {
           edgeNode.edge.id
         ]);
 
-
         if (edgeNode.object.id === 'gp') {
-          each(node.evidence, function (evidence) {
-            let evidenceReference = evidence.reference.control.value;
-            let evidenceWith = evidence.with.control.value;
+          each(node.evidence, function (evidence: Evidence) {
+            let evidenceReference = evidence.reference;
+            let evidenceWith = evidence.with;
 
-            reqs.add_evidence(evidence.evidence.control.value.id, evidenceReference, evidenceWith, edgeNode.object.saveMeta.edge);
+            reqs.add_evidence(evidence.evidence.id, evidenceReference, evidenceWith, edgeNode.object.saveMeta.edge);
           });
         } else {
-          each(edgeNode.object.evidence, function (evidence) {
-            let evidenceReference = evidence.reference.control.value;
-            let evidenceWith = evidence.with.control.value;
+          each(edgeNode.object.evidence, function (evidence: Evidence) {
+            let evidenceReference = evidence.reference;
+            let evidenceWith = evidence.with;
             // if (edgeNode.object.aspect === 'P') {
             //  let gpNode = annoton.getGPNode();
             //  if (gpNode && gpNode.individualId) {
             // evidenceWith.push(gpNode.individualId)
             //  }
             // }
-            reqs.add_evidence(evidence.evidence.control.value.id, evidenceReference, evidenceWith, edgeNode.object.saveMeta.edge);
+            reqs.add_evidence(evidence.evidence.id, evidenceReference, evidenceWith, edgeNode.object.saveMeta.edge);
           });
         }
       }
@@ -1140,13 +1134,13 @@ export class NoctuaGraphService {
               let meta = {
                 aspect: cc1Node.label,
                 subjectNode: {
-                  label: mfNode.term.control.value.label
+                  label: mfNode.term.label
                 },
                 edge: {
                   label: noctuaFormConfig.edge.occursIn
                 },
                 objectNode: {
-                  label: cc1Node.term.control.value.label
+                  label: cc1Node.term.label
                 },
               }
               let info = new AnnotonError('error', 2, "No CC found, added  ", meta);
@@ -1251,10 +1245,7 @@ export class NoctuaGraphService {
           let mfNode = annoton.getNode('mf');
           let bpNode = annoton.getNode('bp');
 
-          mfNode.setTerm({
-            id: 'GO:0003674',
-            label: 'molecular_function'
-          });
+          mfNode.setTerm(new Term('GO:0003674', 'molecular_function'));
           mfNode.evidence = bpNode.evidence;
           break;
         }
@@ -1300,7 +1291,7 @@ export class NoctuaGraphService {
       let reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
 
       if (!cam.title) {
-        const defaultTitle = 'enabled by ' + geneProduct.term.control.value.label;
+        const defaultTitle = 'enabled by ' + geneProduct.term.label;
         reqs.add_annotation_to_model('title', defaultTitle);
       }
 

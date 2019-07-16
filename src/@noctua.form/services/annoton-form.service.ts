@@ -77,7 +77,7 @@ export class NoctuaAnnotonFormService {
     let annotonForm = new AnnotonForm(annotonFormMetadata, self.annoton.presentation.geneProduct);
 
     annotonForm.createFunctionDescriptionForm(self.annoton.presentation.fd);
-    annotonForm.onValueChanges(self.annoton.presentation.geneProduct.term.lookup);
+    annotonForm.onValueChanges(self.annoton.presentation.geneProduct.termLookup);
 
     return annotonForm;
   }

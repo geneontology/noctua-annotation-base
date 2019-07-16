@@ -256,10 +256,10 @@ export class Cam {
       term: node.isExtension ? {} : term,
       extension: node.isExtension ? term : {},
       aspect: node.aspect,
-      evidence: node.evidence.length > 0 ? node.evidence[0].evidence.control.value : {},
-      reference: node.evidence.length > 0 ? node.evidence[0].reference.control.link : '',
-      with: node.evidence.length > 0 ? node.evidence[0].with.control.value : '',
-      assignedBy: node.evidence.length > 0 ? node.evidence[0].assignedBy.control : '',
+      evidence: node.evidence.length > 0 ? node.evidence[0].evidence : {},
+      reference: node.evidence.length > 0 ? node.evidence[0].reference : {},
+      with: node.evidence.length > 0 ? node.evidence[0].with : {},
+      assignedBy: node.evidence.length > 0 ? node.evidence[0].assignedBy : {},
       annoton: annoton,
       node: node
     })
@@ -267,10 +267,10 @@ export class Cam {
     for (let i = 1; i < node.evidence.length; i++) {
       self.grid.push({
         treeLevel: node.treeLevel,
-        evidence: node.evidence[i].evidence.control.value,
-        reference: node.evidence[i].reference.control.link,
-        with: node.evidence[i].with.control.value,
-        assignedBy: node.evidence[i].assignedBy.control,
+        evidence: node.evidence[i].evidence,
+        reference: node.evidence[i].reference,
+        with: node.evidence[i].with.control,
+        assignedBy: node.evidence[i].assignedBy,
         node: node,
       })
     }

@@ -31,7 +31,8 @@ import {
   NoctuaLookupService,
   AnnotonNode,
   Evidence,
-  noctuaFormConfig
+  noctuaFormConfig,
+  Term
 } from 'noctua-form-base';
 
 @Component({
@@ -153,9 +154,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     const self = this;
 
     let evidence = new Evidence();
-    evidence.setEvidence(noctuaFormConfig.evidenceAutoPopulate.nd.evidence);
-    evidence.setReference(noctuaFormConfig.evidenceAutoPopulate.nd.reference);
-
+    evidence.setEvidence(new Term(
+      noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
+      noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
+    evidence.setReference(new Term(null, noctuaFormConfig.evidenceAutoPopulate.nd.reference));
     self.entity.setEvidence([evidence]);
     self.noctuaAnnotonFormService.initializeForm();
   }
@@ -167,8 +169,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       return rootNode.aspect === self.entity.aspect
     });
 
-    self.entity.setTerm(term);
-    self.noctuaAnnotonFormService.initializeForm();
+    if (term) {
+      self.entity.setTerm(new Term(term.id, term.label));
+      self.noctuaAnnotonFormService.initializeForm();
+    }
   }
 
   clearValues() {

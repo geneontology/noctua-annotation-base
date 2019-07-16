@@ -20,7 +20,7 @@
       <textarea type="text" matInput formControlName="term" [matAutocomplete]="termAuto" row="2">
     </textarea>
       <mat-autocomplete #termAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
-        <mat-option *ngFor="let item of entity?.term.lookup.results" [value]="item">
+        <mat-option *ngFor="let item of entity?.termLookup.results" [value]="item">
           <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
             <div class="noc-term-label">
               {{ item.label }}
@@ -45,7 +45,7 @@
               rows="2"></textarea>
             <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
               class="noc-term-autocomplete">
-              <mat-option *ngFor="let item of entity?.evidence[i]?.evidence.lookup.results" [value]="item">
+              <mat-option *ngFor="let item of entity?.evidence[i]?.evidenceLookup.results" [value]="item">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.label }}

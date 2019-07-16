@@ -3,147 +3,84 @@ declare const require: any;
 const each = require('lodash/forEach');
 
 import { AnnotonError } from "./parser/annoton-error";
+import { Term } from './term';
+import { TermLookup } from './term-lookup';
 
 export class Evidence {
   qualifier;
-  evidence;
-  reference;
-  with;
-  assignedBy;
+  evidence: Term = new Term();
+  evidenceLookup: TermLookup = new TermLookup();
+  reference: Term = new Term();
+  with: Term = new Term();
+  assignedBy: Term = new Term();
+  classExpression
   individualId;
 
-  constructor() {
-    this.evidence = {
-      "validation": {
-        "errors": []
-      },
-      "control": {
-        "required": false,
-        "placeholder": '',
-        "value": ''
-      },
-      "lookup": {
-        "requestParams": null
-      },
-      classExpression: null
-    };
-    this.reference = {
-      "validation": {
-        "errors": []
-      },
-      "control": {
-        "required": false,
-        "placeholder": '',
-        "value": '',
-        "link": ''
-      }
-    };
-    this.with = {
-      "validation": {
-        "errors": []
-      },
-      "control": {
-        "required": false,
-        "placeholder": '',
-        "value": '',
-        "link": ''
-      }
-    };
+  evidenceRequired: boolean = false;
+  referenceRequired: boolean = false
+  ontologyClass = []
 
-    this.assignedBy = {
-      "validation": {
-        "errors": []
-      },
-      "control": {
-        "required": false,
-        "placeholder": '',
-        "value": '',
-        "link": ''
-      }
-    };
+  constructor() {
 
   }
 
   getAssignedBy() {
-    return this.assignedBy.control.value;
+    return this.assignedBy;
   }
 
   getEvidence() {
-    return this.evidence.control.value;
+    return this.evidence;
   }
 
   getReference() {
-    return this.reference.control.value;
+    return this.reference;
   }
 
   getWith() {
-    return this.with.control.value;
-  }
-
-  get classExpression() {
-    return this.evidence.classExpression;
-  }
-
-  set classExpression(classExpression) {
-    this.evidence.classExpression = classExpression;
+    return this.with;
   }
 
   hasValue() {
     const self = this;
 
-    return self.evidence.control.value.id && self.reference.control.value;
+    return self.evidence.id && self.reference.label;
   }
 
-  setAssignedBy(value, link?) {
-    this.assignedBy.control.value = value;
-    this.assignedBy.control.link = {
-      label: value,
-      url: link
-    }
+  setAssignedBy(value: Term) {
+    this.assignedBy = value;
   }
 
   setEvidenceLookup(value) {
-    this.evidence.lookup.requestParams = value;
+    this.evidenceLookup.requestParams = value;
   }
 
   setEvidenceOntologyClass(value) {
-    this.evidence.ontologyClass = value;
+    this.ontologyClass = value;
   }
 
-  setEvidence(value, classExpression?) {
-    this.evidence.control.value = value;
+  setEvidence(value: Term, classExpression?) {
+    this.evidence = value;
 
     if (classExpression) {
       this.classExpression = classExpression;
     }
   }
 
-  setReference(value, link?) {
-    this.reference.control.value = value;
-    this.reference.control.link = {
-      label: value,
-      url: link
-    }
+  setReference(value: Term) {
+    this.reference = value;
   }
 
-  setWith(value, link?) {
-    this.with.control.value = value;
-    if (link) {
-      this.with.control.link = {
-        label: value,
-        url: link
-      }
-    }
-
+  setWith(value: Term) {
+    this.with = value;
   }
 
   clearValues() {
     const self = this;
 
-    self.setEvidence('');
-    self.setReference('');
-    self.setWith('');
-    self.setAssignedBy('');
+    self.setEvidence(new Term());
+    self.setReference(new Term());
+    self.setWith(new Term());
+    self.setAssignedBy(new Term());
   }
 
   copyValues(evidence, except) {
@@ -172,8 +109,8 @@ export class Evidence {
     const self = this;
     let result = true;
 
-    if (!self.evidence.control.value.id) {
-      self.evidence.control.required = true;
+    if (!self.evidence.id) {
+      self.evidenceRequired = true;
       let meta = {
         aspect: node.label
       }
@@ -181,11 +118,11 @@ export class Evidence {
       errors.push(error);
       result = false;
     } else {
-      self.evidence.control.required = false;
+      self.evidenceRequired = false;
     }
 
-    if (self.evidence.control.value.id && !self.reference.control.value) {
-      self.reference.control.required = true;
+    if (self.evidence.id && !self.reference.label) {
+      self.referenceRequired = true;
       let meta = {
         aspect: node.label
       }
@@ -193,7 +130,7 @@ export class Evidence {
       errors.push(error);
       result = false;
     } else {
-      self.reference.control.required = false;
+      self.referenceRequired = false;
     }
     return result;
   }

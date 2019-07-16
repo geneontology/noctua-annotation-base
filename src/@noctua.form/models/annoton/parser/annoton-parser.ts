@@ -5,6 +5,7 @@ const each = require('lodash/forEach');
 import { noctuaFormConfig } from './../../../noctua-form-config';
 
 import { AnnotonError } from './annoton-error';
+import { AnnotonNode } from '../annoton-node';
 
 export class AnnotonParser {
   rules;
@@ -20,7 +21,7 @@ export class AnnotonParser {
     this.clean = true;
   }
 
-  parseCardinality(graph, node, sourceEdges, objectEdges) {
+  parseCardinality(graph, node: AnnotonNode, sourceEdges, objectEdges) {
     const self = this;
 
     let edges = [];
@@ -36,7 +37,7 @@ export class AnnotonParser {
           let meta = {
             aspect: node.label,
             subjectNode: {
-              label: node.term.control.value.label
+              label: node.term.label
             },
             edge: {
               label: predicateLabel
@@ -69,7 +70,7 @@ export class AnnotonParser {
     return predicate ? predicate.label : id;
   }
 
-  parseNodeOntology(node) {
+  parseNodeOntology(node: AnnotonNode) {
     const self = this;
     let result = true;
     let error;
@@ -78,7 +79,7 @@ export class AnnotonParser {
       let meta = {
         aspect: node.label,
         subjectNode: {
-          label: node.term.control.value.label
+          label: node.label
         }
       }
       error = new AnnotonError('error', 4, "Wrong ontology class. Expected " + JSON.stringify(node.lookupGroup), meta);
@@ -91,21 +92,21 @@ export class AnnotonParser {
     return result;
   }
 
-  parseNodeOntologyAll(node, ontologyId) {
+  parseNodeOntologyAll(node: AnnotonNode, ontologyId) {
     const self = this;
     let result = true;
     let error;
     let prefix = ontologyId.split(":")[0].toLowerCase();
 
-    each(node.term.ontologyClass, function (ontologyClass) {
+    each(node.ontologyClass, function (ontologyClass) {
       if (ontologyClass !== prefix) {
         let meta = {
           aspect: node.label,
           subjectNode: {
-            label: node.term.control.value.label
+            label: node.term.label
           }
         }
-        error = new AnnotonError('error', 4, "Wrong ontology class " + prefix + ". Expected " + JSON.stringify(node.term.ontologyClass), meta);
+        error = new AnnotonError('error', 4, "Wrong ontology class " + prefix + ". Expected " + JSON.stringify(node.ontologyClass), meta);
         self.errors.push(error);
         node.errors.push(error);
         result = false;
@@ -116,13 +117,13 @@ export class AnnotonParser {
     return result;
   }
 
-  setCardinalityError(subjectNode, objectNodeTerm, predicateId) {
+  setCardinalityError(subjectNode: AnnotonNode, objectNodeTerm, predicateId) {
     const self = this;
     let result = true;
     let meta = {
       aspect: '',
       subjectNode: {
-        label: subjectNode.term.control.value.label
+        label: subjectNode.term.label
       },
       edge: {
         label: self.getPredicateLabel(predicateId)
@@ -140,13 +141,13 @@ export class AnnotonParser {
     self.clean = false;
   }
 
-  setNodeOntologyError(node) {
+  setNodeOntologyError(node: AnnotonNode) {
     const self = this;
     let result = true;
     let meta = {
       aspect: node.label,
       subjectNode: {
-        label: node.term.control.value.label
+        label: node.term.label
       }
     }
     let error = new AnnotonError('error', 4, "Incorrect association between term and relationship" + JSON.stringify(node.lookupGroup), meta);
@@ -162,7 +163,7 @@ export class AnnotonParser {
     let meta = {
       aspect: '',
       subjectNode: {
-        label: node.term.control.value.label
+        label: node.term.label
       }
     }
     let error = new AnnotonError('warning', 1, "There was an error above ", meta);
@@ -187,7 +188,7 @@ export class AnnotonParser {
     });
   }
 
-  parseCardinalityTemp(graph, node, sourceEdges, objectEdges) {
+  parseCardinalityTemp(graph, node: AnnotonNode, sourceEdges, objectEdges) {
     const self = this;
 
     let edges2 = [];
@@ -204,7 +205,7 @@ export class AnnotonParser {
           let meta = {
             aspect: node.label,
             subjectNode: {
-              label: node.term.control.value.label
+              label: node.term.label
             },
             edge: {
               label: predicateLabel
@@ -231,7 +232,7 @@ export class AnnotonParser {
           let meta = {
             aspect: node.label,
             subjectNode: {
-              label: node.term.control.value.label
+              label: node.term.label
             },
             edge: {
               label: predicateLabel

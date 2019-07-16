@@ -34,12 +34,12 @@ export class AnnotonEntityForm {
 
     this.term.setValue(entity.getTerm());
     this.term.setValidators(entity.id === 'mf' ? termValidator(entity) : null);
-    this.onValueChanges(entity.term.lookup);
+    this.onValueChanges(entity.termLookup);
     entity.evidence.forEach((evidence: Evidence) => {
       let evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
 
       self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(evidence.evidence.lookup)
+      evidenceForm.onValueChanges(evidence.evidenceLookup)
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }
