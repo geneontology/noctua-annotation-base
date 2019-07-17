@@ -18,7 +18,7 @@ import { noctuaAnimations } from './../../../../../../../@noctua/animations';
 
 import { NoctuaFormService } from '../../../services/noctua-form.service';
 
-import { NoctuaAnnotonConnectorService } from 'noctua-form-base';
+import { NoctuaAnnotonConnectorService, ConnectorAnnoton } from 'noctua-form-base';
 import { NoctuaGraphService } from 'noctua-form-base';
 import { NoctuaAnnotonFormService } from 'noctua-form-base';
 import { NoctuaFormConfigService } from 'noctua-form-base';
@@ -55,6 +55,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   };
   selectedPanel: any;
   annoton: Annoton;
+  connectorAnnoton: ConnectorAnnoton;
   mfNode: AnnotonNode;
 
   cam: Cam;
@@ -65,8 +66,6 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   evidenceFormArray: FormArray;
   // annoton: Annoton = new Annoton();
 
-  subjectGPNode: AnnotonNode;
-  objectGPNode: AnnotonNode;
   selectedCausalEffect;
 
   private unsubscribeAll: Subject<any>;
@@ -95,8 +94,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
       .subscribe(connectorFormGroup => {
         if (!connectorFormGroup) return;
         this.connectorFormGroup = connectorFormGroup;
-        this.subjectGPNode = this.noctuaAnnotonConnectorService.subjectAnnoton.getGPNode()
-        this.objectGPNode = this.noctuaAnnotonConnectorService.objectAnnoton.getGPNode()
+        this.connectorAnnoton = this.noctuaAnnotonConnectorService.connectorAnnoton;
 
         this.selectedCausalEffect = this.connectorFormGroup.get('causalEffect').value
 
@@ -122,12 +120,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   }
 
   openAnnotonConnector(connector: Annoton) {
-    this.noctuaAnnotonConnectorService.createConnection(this.noctuaAnnotonConnectorService.annoton.connectionId, connector.connectionId);
-    this.selectPanel(this.panel.annotonConnectorForm);
-  }
-
-  openEditAnnotonConnector(connector: Annoton) {
-    this.noctuaAnnotonConnectorService.createConnection(this.noctuaAnnotonConnectorService.annoton.connectionId, connector.connectionId, true);
+    this.noctuaAnnotonConnectorService.initializeForm(this.noctuaAnnotonConnectorService.annoton.connectionId, connector.connectionId);
     this.selectPanel(this.panel.annotonConnectorForm);
   }
 
@@ -137,11 +130,11 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
   save() {
     const self = this;
-    this.noctuaAnnotonConnectorService.save().then(() => {
-      self.selectPanel(self.panel.selectConnector);
-      self.noctuaAnnotonConnectorService.getConnections();
-      self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully created.', 'OK');
-    });
+    /*  this.noctuaAnnotonConnectorService.save().then(() => {
+       self.selectPanel(self.panel.selectConnector);
+       self.noctuaAnnotonConnectorService.getConnections();
+       self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully created.', 'OK');
+     }); */
   }
 
   addEvidence() {

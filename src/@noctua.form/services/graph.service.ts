@@ -17,7 +17,8 @@ import {
   AnnotonError,
   Evidence,
   SimpleAnnoton,
-  Entity
+  Entity,
+  ConnectorAnnoton
 } from './../models/annoton/';
 
 //Config
@@ -1318,7 +1319,7 @@ export class NoctuaGraphService {
 
   }
 
-  saveConnection(cam, annoton: Annoton, subjectNode: AnnotonNode, objectNode: AnnotonNode) {
+  saveConnection(cam, annoton: ConnectorAnnoton, subjectNode: AnnotonNode, objectNode: AnnotonNode) {
     const self = this;
 
     function success() {
@@ -1327,7 +1328,7 @@ export class NoctuaGraphService {
 
       self.addIndividual(reqs, subjectNode);
       self.addIndividual(reqs, objectNode);
-      self.addFact(reqs, annoton, subjectNode);
+      //   self.addFact(reqs, annoton, subjectNode);
 
       reqs.store_model(cam.model.id);
 

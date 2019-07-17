@@ -11,9 +11,9 @@ import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
+import { ConnectorAnnoton } from './connector-annoton';
 
 export class Cam {
-
 
   //Details
   title: string;
@@ -28,8 +28,9 @@ export class Cam {
   model: any;
   annotatedEntity?: {};
   camRow?: any;
-  _annotons: Annoton[] = [];
-  _triples: Triple[] = [];
+  annotons: Annoton[] = [];
+  connectorAnnotons: ConnectorAnnoton[] = [];
+  triples: Triple[] = [];
 
   error = false;
   engine;
@@ -48,13 +49,22 @@ export class Cam {
     individualIds: [],
   };
 
-  private _displayType;
+  displayType;
 
   grid: any = [];
   goterms: Entity[] = [];
 
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;
+  }
+
+  getConnector(upstreamId: string, downstreamId: string): ConnectorAnnoton {
+    const self = this;
+
+    return _.find(self.connectorAnnotons, (connectorAnnoton: ConnectorAnnoton) => {
+      return connectorAnnoton.upstreamNode.individualId === upstreamId &&
+        connectorAnnoton.downstreamNode.individualId === downstreamId;
+    });
   }
 
   configureDisplayType() {
@@ -68,36 +78,30 @@ export class Cam {
     this.filter.individualIds = [];
   }
 
-  get annotons() {
-    return this._annotons;
-  }
-
-  set annotons(annotons) {
-    this._annotons = annotons;
-  }
-
-  get triples() {
-    return this._triples;
-  }
-
-  set triples(triples) {
-    this._triples = triples;
-  }
-
-  set displayType(type) {
-    this._displayType = type;
-  }
-
-  get displayType() {
-    return this._displayType;
-  }
-
   findAnnotonById(id) {
     const self = this;
 
     return _.find(self.annotons, (annoton) => {
       return annoton.id === id;
     })
+  }
+
+  findAnnotonNode() {
+    const self = this;
+    let result = [];
+
+    each(self.annotons, function (annotonData) {
+      each(annotonData.annoton.nodes, function (node) {
+        if (node.id === 'mf') {
+          result.push({
+            node: node,
+            annoton: annotonData.annoton
+          })
+        }
+      });
+    });
+
+    return result;
   }
 
   annotonsWithoutLocation() {
@@ -137,7 +141,7 @@ export class Cam {
 
   getAnnotonByConnectionId(connectionId) {
     const self = this;
-    let result = _.find(self._annotons, (annoton: Annoton) => {
+    let result = _.find(self.annotons, (annoton: Annoton) => {
       return annoton.connectionId === connectionId;
     })
 
@@ -148,7 +152,7 @@ export class Cam {
     const self = this;
     let result = [];
 
-    each(self._annotons, function (annotonData) {
+    each(self.annotons, function (annotonData) {
       each(annotonData.annoton.nodes, function (node) {
         if (node.id === 'mf') {
           result.push({

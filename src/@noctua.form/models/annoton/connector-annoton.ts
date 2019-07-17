@@ -11,27 +11,24 @@ import { AnnotonError } from "./parser/annoton-error";
 import { AnnotonNode } from './annoton-node';
 import { Evidence } from './evidence';
 
+export type ConnectorMode = 'creation' | 'editing' | null;
+
 export class ConnectorAnnoton extends SaeGraph {
   id;
 
   upstreamNode: AnnotonNode;
   downstreamNode: AnnotonNode;
   processNode: AnnotonNode;
+  mode: ConnectorMode;
 
   private _grid: any[] = [];
 
-  constructor() {
+  constructor(upstreamNode: AnnotonNode, downstreamNode: AnnotonNode) {
     super();
     this.id = uuid();
-  }
 
-
-
-  addEdgeOptionById(id, edgeOption) {
-    const self = this;
-
-    let node = self.getNode(id);
-    node.addEdgeOption(edgeOption)
+    this.upstreamNode = upstreamNode;
+    this.downstreamNode = downstreamNode;
   }
 
 }

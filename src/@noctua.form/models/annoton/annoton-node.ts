@@ -202,9 +202,10 @@ export class AnnotonNode {
     self.isComplement = node.isComplement;
   }
 
-  copyValues(node) {
+  copyValues(node: AnnotonNode) {
     const self = this;
 
+    self.individualId = node.individualId;
     self.location = node.location;
     self.term = node.term;
     self.evidence = node.evidence;

@@ -1,5 +1,4 @@
-
-import { Injector, Injectable } from '@angular/core';
+/*import { Injector, Injectable } from '@angular/core';
 
 import { Observable, BehaviorSubject } from 'rxjs'
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
@@ -15,24 +14,20 @@ import * as _ from 'lodash';
 declare const require: any;
 const each = require('lodash/forEach');
 
-import {
-  Cam,
-  Annoton,
-  AnnotonNode,
-  ConnectorAnnoton
-} from './../models/annoton';
+import { Cam } from './../models/annoton/cam';
+import { Annoton } from './../models/annoton/annoton';
+import { AnnotonNode } from './../models/annoton/annoton-node';
 
 import { AnnotonConnectorForm } from './../models/forms/annoton-connector-form';
 
 import { EntityForm } from './../models/forms/entity-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 
+
 @Injectable({
   providedIn: 'root'
 })
-export class NoctuaAnnotonConnectorService2 {
-
-  // connectorAnnoton: ConnectorAnnoton;
+export class NoctuaAnnotonConnectorService {
   _rules: any = {
     originalTriple: {
       subject: null,
@@ -120,7 +115,7 @@ export class NoctuaAnnotonConnectorService2 {
     this.connectorForm.causalReactionProduct.setValue(effect.causalReactionProduct);
     this.connectorForm.annotonsConsecutive.setValue(effect.annotonsConsecutive);
     this._onAnnotonFormChanges();
-    //just to trigger the on Changes event 
+    //just to trigger the on Changes event
     this.connectorForm.causalEffect.setValue(effect.causalEffect);
     //  this.checkConnection(this.connectorFormGroup.getValue().value, this.rules, this.displaySection, this.subjectBPNode);
   }
@@ -184,7 +179,6 @@ export class NoctuaAnnotonConnectorService2 {
 
     this.checkConnection(effect, rules, this.displaySection, subjectMFNode, subjectBPNode);
 
-
     if (edge) {
       rules.originalTriple = rules.triple = edge;
       notes.push(rules.annotonsConsecutive)
@@ -202,6 +196,7 @@ export class NoctuaAnnotonConnectorService2 {
     this.objectAnnoton = this.cam.getAnnotonByConnectionId(objectId);
     this.subjectMFNode = <AnnotonNode>_.cloneDeep(this.subjectAnnoton.getMFNode());
     this.objectMFNode = <AnnotonNode>_.cloneDeep(this.objectAnnoton.getMFNode());
+
     this.rules.triple.object = this.objectMFNode;
     this.rules.subjectMFCatalyticActivity.condition = this.subjectMFNode.isCatalyticActivity;
     this.rules.objectMFCatalyticActivity.condition = this.objectMFNode.isCatalyticActivity;
@@ -225,7 +220,7 @@ export class NoctuaAnnotonConnectorService2 {
       }
     }
 
-    this.connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(this.subjectMFNode, this.objectMFNode, edge);
+    this.connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(this.subjectMFNode, this.objectMFNode);
 
     this.initializeForm(edge);
   }
@@ -348,3 +343,4 @@ export class NoctuaAnnotonConnectorService2 {
   }
 }
 
+*/

@@ -9,10 +9,12 @@ declare const require: any;
 
 const each = require('lodash/forEach');
 const uuid = require('uuid/v1');
-import { AnnotonNode } from './../../models/annoton/annoton-node';
-import { Annoton } from './../../models/annoton/annoton';
-import { Evidence } from './../../models/annoton/evidence';
-
+import {
+  AnnotonNode,
+  Annoton,
+  Evidence,
+  ConnectorAnnoton
+} from './../..//models';
 
 @Injectable({
   providedIn: 'root'
@@ -1085,23 +1087,20 @@ export class NoctuaFormConfigService {
 
   }
 
-  createAnnotonConnectorModel(subjectMFNode: AnnotonNode, objectMFNode: AnnotonNode, edge: any) {
+  createAnnotonConnectorModel(srcUpstreamNode: AnnotonNode, srcDownstreamNode: AnnotonNode) {
     const self = this;
-    let annoton = new Annoton();
 
-    subjectMFNode.id = 'subject';
-    objectMFNode.id = 'object';
+    let upstreamNode = self.generateNode(srcUpstreamNode.id);
+    let downstreamNode = self.generateNode(srcDownstreamNode.id);
 
-    annoton.addNode(subjectMFNode);
-    annoton.addNode(objectMFNode);
+    upstreamNode.copyValues(srcUpstreamNode);
+    downstreamNode.copyValues(srcDownstreamNode);
 
-    if (edge) {
-      annoton.addEdge(subjectMFNode, objectMFNode, edge.edge);
-    } else {
-      annoton.addEdge(subjectMFNode, objectMFNode, noctuaFormConfig.edge.placeholder);
-    }
+    let annotonConnector = new ConnectorAnnoton(upstreamNode, downstreamNode);
 
-    return annoton;
+    //   annoton.addEdge(srcUpstreamNode, srcDownstreamNode, noctuaFormConfig.edge.placeholder);
+
+    return annotonConnector;
   }
 
   createAnnotonModel(annotonType, modelType, srcAnnoton?) {
