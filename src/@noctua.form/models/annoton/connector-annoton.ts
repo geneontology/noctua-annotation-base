@@ -14,27 +14,38 @@ import {
 } from './';
 import { Annoton } from './annoton';
 
-export type ConnectorMode = 'creation' | 'editing' | null;
+export enum ConnectorState {
+  creation = 1,
+  editing
+}
+
+export enum ConnectorType {
+  basic = 1,
+  intermediate
+}
 
 export class ConnectorAnnoton extends SaeGraph {
-  id;
-
+  id: string;
   upstreamAnnoton: Annoton;
   downstreamAnnoton: Annoton;
   upstreamNode: AnnotonNode;
   downstreamNode: AnnotonNode;
   processNode: AnnotonNode;
-  mode: ConnectorMode;
+  state: ConnectorState;
+  type: ConnectorType = ConnectorType.basic;
   rule: ConnectorRule;
 
   private _grid: any[] = [];
 
-  constructor(upstreamNode: AnnotonNode, downstreamNode: AnnotonNode) {
+  constructor(upstreamNode: AnnotonNode, downstreamNode: AnnotonNode, state?: ConnectorState) {
     super();
     this.id = uuid();
 
     this.upstreamNode = upstreamNode;
     this.downstreamNode = downstreamNode;
+    this.state = state ? state : ConnectorState.creation
+
     this.rule = new ConnectorRule();
   }
+
 }

@@ -18,22 +18,29 @@ import { noctuaAnimations } from './../../../../../../../@noctua/animations';
 
 import { NoctuaFormService } from '../../../services/noctua-form.service';
 
-import { NoctuaAnnotonConnectorService, ConnectorAnnoton } from 'noctua-form-base';
-import { NoctuaGraphService } from 'noctua-form-base';
-import { NoctuaAnnotonFormService } from 'noctua-form-base';
-import { NoctuaFormConfigService } from 'noctua-form-base';
-import { NoctuaLookupService } from 'noctua-form-base';
+
 import { NoctuaSearchService } from './../../../../../../../@noctua.search/services/noctua-search.service';
-import { CamService } from 'noctua-form-base';
 import { CamDiagramService } from './../../cam-diagram/services/cam-diagram.service';
 import { CamTableService } from './../../cam-table/services/cam-table.service';
 
 import { SparqlService } from './../../../../../../../@noctua.sparql/services/sparql/sparql.service';
 
-import { Cam } from 'noctua-form-base';
-import { Annoton } from 'noctua-form-base';
-import { AnnotonNode } from 'noctua-form-base';
-import { Evidence } from 'noctua-form-base';
+import {
+  Cam,
+  Annoton,
+  ConnectorAnnoton,
+  ConnectorState,
+  ConnectorType,
+  AnnotonNode,
+  Evidence,
+  NoctuaAnnotonConnectorService,
+
+  NoctuaGraphService,
+  NoctuaAnnotonFormService,
+  NoctuaFormConfigService,
+  NoctuaLookupService,
+  CamService
+} from 'noctua-form-base';
 import { NoctuaFormDialogService } from '../../../services/dialog.service';
 
 @Component({

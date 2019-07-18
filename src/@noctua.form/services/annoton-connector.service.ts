@@ -101,6 +101,7 @@ export class NoctuaAnnotonConnectorService {
     let downstreamAnnoton = this.cam.getAnnotonByConnectionId(downstreamId);
     let connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(upstreamAnnoton, downstreamAnnoton);
 
+    connectorAnnoton.rule.suggestedEdge.r1 = noctuaFormConfig.edge.causallyUpstreamOf;
     return connectorAnnoton;
   }
 
@@ -125,6 +126,13 @@ export class NoctuaAnnotonConnectorService {
     return result;
   }
 
+  connectorFormToAnnoton() {
+    const self = this;
+    let annotonsConsecutive = self.connectorForm.annotonsConsecutive.value;
+    let causalEffect = self.connectorForm.causalEffect.value;
+    let edge = self.noctuaFormConfigService.getCausalAnnotonConnectorEdge(causalEffect, annotonsConsecutive);
+  }
+
   save() {
     const self = this;
 
@@ -133,17 +141,73 @@ export class NoctuaAnnotonConnectorService {
     // return self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton, subjectNode, objectNode);
   }
 
+
+  checkConnection(value: any, connectorAnnoton: ConnectorAnnoton) {
+    connectorAnnoton.rule.rules.annotonsConsecutive.condition = value.annotonsConsecutive;
+    connectorAnnoton.rule.displaySection.causalEffect = true;
+    connectorAnnoton.rule.displaySection.causalReactionProduct = false;
+
+    if (!value.annotonsConsecutive) {
+      connectorAnnoton.rule.displaySection.effectDependency = false;
+    } else {
+      connectorAnnoton.rule.displaySection.effectDependency = true;
+    }
+
+    if (value.effectDependency) {
+      if (connectorAnnoton.rule.rules.subjectMFCatalyticActivity.condition && connectorAnnoton.rule.rules.objectMFCatalyticActivity.condition) {
+        connectorAnnoton.rule.displaySection.causalReactionProduct = true;
+      }
+    } else {
+      connectorAnnoton.rule.displaySection.causalReactionProduct = false;
+    }
+
+    connectorAnnoton.rule.suggestedEdge.r1 = this.getCausalConnectorEdge(
+      value.causalEffect,
+      value.annotonsConsecutive,
+      value.causalReactionProduct);
+  }
+
+  getCausalConnectorEdge(causalEffect, annotonsConsecutive, causalReactionProduct) {
+    let result;
+
+    if (!annotonsConsecutive) {
+      switch (causalEffect.name) {
+        case noctuaFormConfig.causalEffect.options.positive.name:
+          result = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
+          break;
+        case noctuaFormConfig.causalEffect.options.negative.name:
+          result = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
+          break;
+        case noctuaFormConfig.causalEffect.options.neutral.name:
+          result = noctuaFormConfig.edge.causallyUpstreamOf;
+          break;
+      }
+    } else if (annotonsConsecutive) {
+      if (causalReactionProduct.name === noctuaFormConfig.causalReactionProduct.options.substrate.name) {
+        result = noctuaFormConfig.edge.directlyProvidesInput;
+      } else {
+        switch (causalEffect.name) {
+          case noctuaFormConfig.causalEffect.options.positive.name:
+            result = noctuaFormConfig.edge.directlyPositivelyRegulates;
+            break;
+          case noctuaFormConfig.causalEffect.options.negative.name:
+            result = noctuaFormConfig.edge.directlyNegativelyRegulates;
+            break;
+          case noctuaFormConfig.causalEffect.options.neutral.name:
+            result = noctuaFormConfig.edge.directlyRegulates;
+            break;
+        }
+      }
+    }
+  }
+
   private _onAnnotonFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
-      // this.errors = this.getAnnotonFormErrors();
-      // this.connectorFormToAnnoton();
-      //  this.connectorAnnoton.enableSubmit();
-      //  this.checkConnection(value, this.rules, this.displaySection, this.subjectMFNode, this.processNode);
+      //  this.errors = this.getAnnotonFormErrors();
+      this.connectorFormToAnnoton();
+      this.checkConnection(value, this.connectorAnnoton);
 
-      //   this.rules.triple.edge = this.getCausalConnectorEdge(
-      //    value.causalEffect,
-      //    value.annotonsConsecutive,
-      //    value.causalReactionProduct);
+
     })
   }
 }

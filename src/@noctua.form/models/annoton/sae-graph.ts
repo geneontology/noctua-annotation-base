@@ -78,11 +78,6 @@ export class SaeGraph {
   getEdges(id) {
     const self = this;
     let result = this.edges[id];
-    let subject = this.getNode(id);
-
-    result.nodes.map((edge) => {
-      edge.subject = subject;
-    });
 
     return result;
   };

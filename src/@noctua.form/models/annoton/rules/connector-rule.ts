@@ -17,14 +17,13 @@ export class ConnectorRule {
 
   rules = _.cloneDeep(this._rules);
 
-  public _notes = [
+  private _notes = [
     this._rules.annotonsConsecutive,
     this._rules.subjectMFCatalyticActivity,
     this._rules.objectMFCatalyticActivity
   ];
 
-
-  public notes = [
+  notes = [
     this.rules.annotonsConsecutive,
     this.rules.subjectMFCatalyticActivity,
     this.rules.objectMFCatalyticActivity
@@ -35,6 +34,11 @@ export class ConnectorRule {
     causalEffect: true,
     effectDependency: false,
     causalReactionProduct: false
+  }
+
+  suggestedEdge = {
+    r1: null,
+    r2: null
   }
 
   constructor() {
