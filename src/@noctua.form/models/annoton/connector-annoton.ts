@@ -6,20 +6,26 @@ const uuid = require('uuid/v1');
 import { noctuaFormConfig } from './../../noctua-form-config';
 
 import { SaeGraph } from './sae-graph';
-import { AnnotonError } from "./parser/annoton-error";
-
-import { AnnotonNode } from './annoton-node';
-import { Evidence } from './evidence';
+import {
+  AnnotonError,
+  AnnotonNode,
+  Evidence,
+  ConnectorRule
+} from './';
+import { Annoton } from './annoton';
 
 export type ConnectorMode = 'creation' | 'editing' | null;
 
 export class ConnectorAnnoton extends SaeGraph {
   id;
 
+  upstreamAnnoton: Annoton;
+  downstreamAnnoton: Annoton;
   upstreamNode: AnnotonNode;
   downstreamNode: AnnotonNode;
   processNode: AnnotonNode;
   mode: ConnectorMode;
+  rule: ConnectorRule;
 
   private _grid: any[] = [];
 
@@ -29,6 +35,6 @@ export class ConnectorAnnoton extends SaeGraph {
 
     this.upstreamNode = upstreamNode;
     this.downstreamNode = downstreamNode;
+    this.rule = new ConnectorRule();
   }
-
 }

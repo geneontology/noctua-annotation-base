@@ -1087,20 +1087,23 @@ export class NoctuaFormConfigService {
 
   }
 
-  createAnnotonConnectorModel(srcUpstreamNode: AnnotonNode, srcDownstreamNode: AnnotonNode) {
+  createAnnotonConnectorModel(upstreamAnnoton: Annoton, downstreamAnnoton: Annoton) {
     const self = this;
-
+    let srcUpstreamNode = upstreamAnnoton.getMFNode();
+    let srcDownstreamNode = downstreamAnnoton.getMFNode();
     let upstreamNode = self.generateNode(srcUpstreamNode.id);
     let downstreamNode = self.generateNode(srcDownstreamNode.id);
 
     upstreamNode.copyValues(srcUpstreamNode);
     downstreamNode.copyValues(srcDownstreamNode);
 
-    let annotonConnector = new ConnectorAnnoton(upstreamNode, downstreamNode);
+    let connectorAnnoton = new ConnectorAnnoton(upstreamNode, downstreamNode);
+    connectorAnnoton.upstreamAnnoton = upstreamAnnoton;
+    connectorAnnoton.downstreamAnnoton = downstreamAnnoton;
 
     //   annoton.addEdge(srcUpstreamNode, srcDownstreamNode, noctuaFormConfig.edge.placeholder);
 
-    return annotonConnector;
+    return connectorAnnoton;
   }
 
   createAnnotonModel(annotonType, modelType, srcAnnoton?) {

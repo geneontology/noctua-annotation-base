@@ -12,144 +12,87 @@
   <div class="noc-drawer-body" fxLayout="row" fxLayoutAlign="start start">
     <div class="noc-annoton-list h-100-p p-12" noctuaPerfectScrollbar>
       <div fxLayout="column" fxLayoutAlign="start stretch" class="w-100-p">
-        <div class="noc-annoton-connector-box" *ngFor="let connector of noctuaAnnotonConnectorService.connectors">
-          <div class="noc-annoton-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
-            <div>
-              {{ connector.annoton.presentation.mfText}}<br>
-              <small> enabled by:</small>
-              <strong>{{ connector.annoton.presentation.gpText}}</strong>
-            </div>
-            <span fxFlex></span>
-            <button *ngIf="!connector.rules.originalTriple.edge?.id" mat-raised-button color="primary"
-              class="noc-rounded-button noc-sm" (click)="openAnnotonConnector(connector.annoton)">
-              Connect
-            </button>
-            <button *ngIf="connector.rules.originalTriple.edge?.id" mat-stroked-button color="primary"
-              class="noc-rounded-button noc-sm" (click)="openEditAnnotonConnector(connector.annoton)">
-              <small>
-                Edit Connection
-              </small>
-            </button>
-          </div>
-          <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section noc-bt w-100-p">
-            <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-              <div class="noc-section-heading">
-                Notes
+        <ng-container *ngFor="let connector of noctuaAnnotonConnectorService.connectors">
+          <div class="noc-annoton-connector-box">
+            <div class="noc-annoton-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+              <div>
+                {{ connector.annoton.presentation.mfText}}<br>
+                <small> enabled by:</small>
+                <strong>{{ connector.annoton.presentation.gpText}}</strong>
               </div>
-            </div>
-            <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-              <div class="noc-note" [ngClass]="{'noc-note-disabled':!note.condition}"
-                *ngFor="let note of connector.notes" fxLayout="row" fxLayoutAlign="start center">
-                <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
-                <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
-                <span class="noc-description">
-                  {{note.description}} <strong>
-                    {{note.descriptionSuffix}}
-                  </strong>
-                </span>
-              </div>
+              <span fxFlex></span>
+              <button mat-raised-button color="primary" class="noc-rounded-button noc-sm"
+                (click)="openAnnotonConnector(connector.annoton)">
+                Connect
+              </button>
             </div>
           </div>
-          <div *ngIf="connector.rules.originalTriple.edge?.id" fxLayout="column" fxLayoutAlign="start stretch"
-            class="noc-form-section noc-bt w-100-p">
-            <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-              <div class="noc-section-heading">
-                <strong>Connected:</strong> Connection Summary
+          <div *ngIf="false" class="noc-annoton-connector-box">
+            <div class="noc-annoton-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+              <div>
+                {{ connector.annoton.presentation.mfText}}<br>
+                <small> enabled by:</small>
+                <strong>{{ connector.annoton.presentation.gpText}}</strong>
+              </div>
+              <span fxFlex></span>
+              <button mat-stroked-button color="primary" class="noc-rounded-button noc-sm"
+                (click)="openEditAnnotonConnector(connector.annoton)">
+                <small>
+                  Edit Connection
+                </small>
+              </button>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section noc-bt w-100-p">
+              <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+                <div class="noc-section-heading">
+                  Notes
+                </div>
+              </div>
+              <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+                <div class="noc-note" [ngClass]="{'noc-note-disabled':!note.condition}"
+                  *ngFor="let note of connector.notes" fxLayout="row" fxLayoutAlign="start center">
+                  <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
+                  <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
+                  <span class="noc-description">
+                    {{note.description}} <strong>
+                      {{note.descriptionSuffix}}
+                    </strong>
+                  </span>
+                </div>
               </div>
             </div>
-            <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-              <span>
-                {{ connector.rules.originalTriple.edge?.label }}<small>({{ connector.rules.originalTriple.edge?.id }})</small>
-              </span>
-            </div>
-            <br>
-            <div class="noc-section-body noc-triple w-100-p p-0" fxLayout="row" fxLayoutAlign="start start">
-              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+            <div *ngIf="connector.rules.originalTriple.edge?.id" fxLayout="column" fxLayoutAlign="start stretch"
+              class="noc-form-section noc-bt w-100-p">
+              <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+                <div class="noc-section-heading">
+                  <strong>Connected:</strong> Connection Summary
+                </div>
+              </div>
+              <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
                 <span>
-                  {{ connector.rules.originalTriple.subject?.getTerm().label}}
+                  {{ connector.rules.originalTriple.edge?.label }}<small>({{ connector.rules.originalTriple.edge?.id }})</small>
                 </span>
               </div>
-              <div class="noc-line" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
-                {{ connector.rules.originalTriple.edge?.label}}
-              </div>
-              <mat-icon class="s-32 noc-arrow">chevron_right</mat-icon>
-              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
-                <span>
-                  {{ connector.rules.originalTriple.object?.getTerm().label}}
-                </span>
+              <br>
+              <div class="noc-section-body noc-triple w-100-p p-0" fxLayout="row" fxLayoutAlign="start start">
+                <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+                  <span>
+                    {{ connector.rules.originalTriple.subject?.getTerm().label}}
+                  </span>
+                </div>
+                <div class="noc-line" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
+                  {{ connector.rules.originalTriple.edge?.label}}
+                </div>
+                <mat-icon class="s-32 noc-arrow">chevron_right</mat-icon>
+                <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+                  <span>
+                    {{ connector.rules.originalTriple.object?.getTerm().label}}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="noc-annoton-connector-box" *ngFor="let connector of noctuaAnnotonConnectorService.connectors">
-          <div class="noc-annoton-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
-            <div>
-              {{ connector.annoton.presentation.mfText}}<br>
-              <small> enabled by:</small>
-              <strong>{{ connector.annoton.presentation.gpText}}</strong>
-            </div>
-            <span fxFlex></span>
-            <button *ngIf="!connector.rules.originalTriple.edge?.id" mat-raised-button color="primary"
-              class="noc-rounded-button noc-sm" (click)="openAnnotonConnector(connector.annoton)">
-              Connect
-            </button>
-            <button *ngIf="connector.rules.originalTriple.edge?.id" mat-stroked-button color="primary"
-              class="noc-rounded-button noc-sm" (click)="openEditAnnotonConnector(connector.annoton)">
-              <small>
-                Edit Connection
-              </small>
-            </button>
-          </div>
-          <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section noc-bt w-100-p">
-            <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-              <div class="noc-section-heading">
-                Notes
-              </div>
-            </div>
-            <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-              <div class="noc-note" [ngClass]="{'noc-note-disabled':!note.condition}"
-                *ngFor="let note of connector.notes" fxLayout="row" fxLayoutAlign="start center">
-                <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
-                <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
-                <span class="noc-description">
-                  {{note.description}} <strong>
-                    {{note.descriptionSuffix}}
-                  </strong>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="connector.rules.originalTriple.edge?.id" fxLayout="column" fxLayoutAlign="start stretch"
-            class="noc-form-section noc-bt w-100-p">
-            <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-              <div class="noc-section-heading">
-                <strong>Connected:</strong> Connection Summary
-              </div>
-            </div>
-            <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-              <span>
-                {{ connector.rules.originalTriple.edge?.label }}<small>({{ connector.rules.originalTriple.edge?.id }})</small>
-              </span>
-            </div>
-            <br>
-            <div class="noc-section-body noc-triple w-100-p p-0" fxLayout="row" fxLayoutAlign="start start">
-              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
-                <span>
-                  {{ connector.rules.originalTriple.subject?.getTerm().label}}
-                </span>
-              </div>
-              <div class="noc-line" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
-                {{ connector.rules.originalTriple.edge?.label}}
-              </div>
-              <mat-icon class="s-32 noc-arrow">chevron_right</mat-icon>
-              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
-                <span>
-                  {{ connector.rules.originalTriple.object?.getTerm().label}}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -180,9 +123,9 @@
           <div fxLayout="row" fxLayoutAlign="center center" class="noc-summary-row w-100-p">
             <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
               <span>
-                <small>{{ noctuaAnnotonConnectorService.subjectAnnoton?.presentation.mfText}}</small>
+                <small>{{ connectorAnnoton?.upstreamAnnoton?.presentation.mfText}}</small>
                 enabled by:
-                <strong>{{ noctuaAnnotonConnectorService.subjectAnnoton?.presentation.gpText}}</strong>
+                <strong>{{ connectorAnnoton?.upstreamAnnoton?.presentation.gpText}}</strong>
               </span>
             </div>
             <div>
@@ -190,14 +133,14 @@
             </div>
             <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
               <span>
-                <small>{{ noctuaAnnotonConnectorService.objectAnnoton?.presentation.mfText}}</small>
+                <small>{{ connectorAnnoton?.downstreamAnnoton?.presentation.mfText}}</small>
                 enabled by:
-                <strong>{{ noctuaAnnotonConnectorService.objectAnnoton?.presentation.gpText}}</strong>
+                <strong>{{ connectorAnnoton?.downstreamAnnoto?.presentation.gpText}}</strong>
               </span>
             </div>
           </div>
         </div>
-        <div *ngIf="noctuaAnnotonConnectorService.displaySection.causalEffect" class="noc-form-section p-0 w-100-p">
+        <div *ngIf="connectorAnnoton?.rule.displaySection.causalEffect" class="noc-form-section p-0 w-100-p">
           <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
             <div class="noc-section-heading">
               Causal Relation
@@ -214,8 +157,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="noctuaAnnotonConnectorService.displaySection.annotonsConsecutive"
-          class="noc-form-section p-0 w-100-p">
+        <div *ngIf="connectorAnnoton?.rule.displaySection.annotonsConsecutive" class="noc-form-section p-0 w-100-p">
           <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
             <div class="noc-section-heading">
               Are the activities consecutive?
@@ -231,7 +173,7 @@
           </div>
         </div>
 
-        <div *ngIf="noctuaAnnotonConnectorService.displaySection.effectDependency" class="noc-form-section p-0 w-100-p">
+        <div *ngIf="connectorAnnoton?.rule.displaySection.effectDependency" class="noc-form-section p-0 w-100-p">
           <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
             <div class="noc-section-heading">
               Causal effect dependency
@@ -261,8 +203,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="noctuaAnnotonConnectorService.displaySection.causalReactionProduct"
-          class="noc-form-section p-0 w-100-p">
+        <div *ngIf="connectorAnnoton?.rule.displaySection.causalReactionProduct" class="noc-form-section p-0 w-100-p">
           <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
             <div class="noc-section-heading">
               Does the product of reaction 1 REGULATE or become the SUBSTRATE for activity 2?
@@ -378,7 +319,7 @@
             </span>
           </div>
         </div>
-        <div *ngIf="noctuaAnnotonConnectorService.rules.originalTriple.edge?.id"
+        <!--   <div *ngIf="noctuaAnnotonConnectorService.rules.originalTriple.edge?.id"
           class="noc-form-section noc-bt w-100-p">
           <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
             <div class="noc-section-heading">
@@ -434,7 +375,7 @@
               </span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

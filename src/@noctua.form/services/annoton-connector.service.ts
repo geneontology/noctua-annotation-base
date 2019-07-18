@@ -72,6 +72,8 @@ export class NoctuaAnnotonConnectorService {
         );
       }
     });
+
+    self.connectors = connectors;
   }
 
   initializeForm(upstreamId: string, downstreamId: string) {
@@ -97,9 +99,7 @@ export class NoctuaAnnotonConnectorService {
   createConnectorAnnoton(upstreamId: string, downstreamId: string): ConnectorAnnoton {
     let upstreamAnnoton = this.cam.getAnnotonByConnectionId(upstreamId);
     let downstreamAnnoton = this.cam.getAnnotonByConnectionId(downstreamId);
-    let upstreamNode = upstreamAnnoton.getMFNode();
-    let downstreamNode = downstreamAnnoton.getMFNode();
-    let connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(upstreamNode, downstreamNode);
+    let connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(upstreamAnnoton, downstreamAnnoton);
 
     return connectorAnnoton;
   }
