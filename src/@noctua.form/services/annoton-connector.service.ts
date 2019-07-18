@@ -19,7 +19,8 @@ import {
   Cam,
   Annoton,
   AnnotonNode,
-  ConnectorAnnoton
+  ConnectorAnnoton,
+  Entity
 } from './../models/annoton';
 
 import { AnnotonConnectorForm } from './../models/forms/annoton-connector-form';
@@ -147,18 +148,20 @@ export class NoctuaAnnotonConnectorService {
     connectorAnnoton.rule.displaySection.causalEffect = true;
     connectorAnnoton.rule.displaySection.causalReactionProduct = false;
 
-    if (!value.annotonsConsecutive) {
-      connectorAnnoton.rule.displaySection.effectDependency = false;
-    } else {
-      connectorAnnoton.rule.displaySection.effectDependency = true;
-    }
+    connectorAnnoton.rule.displaySection.effectDependency = value.annotonsConsecutive;
+    connectorAnnoton.rule.displaySection.process = value.effectDependency;
 
     if (value.effectDependency) {
+      connectorAnnoton.setIntermediateProcess()
+    } else {
       if (connectorAnnoton.rule.rules.subjectMFCatalyticActivity.condition && connectorAnnoton.rule.rules.objectMFCatalyticActivity.condition) {
         connectorAnnoton.rule.displaySection.causalReactionProduct = true;
       }
-    } else {
       connectorAnnoton.rule.displaySection.causalReactionProduct = false;
+    }
+
+    if (value.process) {
+      connectorAnnoton.processNode.setTerm(new Entity(value.process.id, value.process.label))
     }
 
     connectorAnnoton.rule.suggestedEdge.r1 = this.getCausalConnectorEdge(
@@ -199,6 +202,8 @@ export class NoctuaAnnotonConnectorService {
         }
       }
     }
+
+    return result;
   }
 
   private _onAnnotonFormChanges(): void {

@@ -12,28 +12,26 @@ export class ConnectorRule {
     annotonsConsecutive: new Rule('annotonsConsecutive', 'Activities are consecutive?'),
     effectDependency: new Rule('effectDependency', 'causal effect yes dependency?'),
     subjectMFCatalyticActivity: new Rule('subjectMFCatalyticActivity', 'Is subject MF a Catalytic Activity'),
-    objectMFCatalyticActivity: new Rule('objectMFCatalyticActivity', 'Is object MF a Catalytic Activity')
+    objectMFCatalyticActivity: new Rule('objectMFCatalyticActivity', 'Is object MF a Catalytic Activity'),
+    activityRegulatingProcess: new Rule('activityRegulatingProcess', 'Activity regulating process')
   }
 
   rules = _.cloneDeep(this._rules);
 
-  private _notes = [
-    this._rules.annotonsConsecutive,
-    this._rules.subjectMFCatalyticActivity,
-    this._rules.objectMFCatalyticActivity
-  ];
-
   notes = [
-    this.rules.annotonsConsecutive,
     this.rules.subjectMFCatalyticActivity,
-    this.rules.objectMFCatalyticActivity
+    this.rules.objectMFCatalyticActivity,
+    this.rules.effectDependency,
+    this.rules.annotonsConsecutive,
+    this.rules.activityRegulatingProcess
   ];
 
   public displaySection = {
     annotonsConsecutive: true,
     causalEffect: true,
     effectDependency: false,
-    causalReactionProduct: false
+    causalReactionProduct: false,
+    process: false,
   }
 
   suggestedEdge = {
@@ -43,8 +41,5 @@ export class ConnectorRule {
 
   constructor() {
   }
-
-
-
 
 }

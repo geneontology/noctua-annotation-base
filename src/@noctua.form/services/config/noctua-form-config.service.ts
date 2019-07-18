@@ -1093,15 +1093,20 @@ export class NoctuaFormConfigService {
     let srcDownstreamNode = downstreamAnnoton.getMFNode();
     let upstreamNode = self.generateNode(srcUpstreamNode.id, { id: 'upstream' });
     let downstreamNode = self.generateNode(srcDownstreamNode.id, { id: 'downstream' });
+    let processNode = self.generateNode('bp', { id: 'bp' });
+    let hasInputNode = self.generateNode('mf-1', { id: 'bp-1' });
 
     upstreamNode.copyValues(srcUpstreamNode);
     downstreamNode.copyValues(srcDownstreamNode);
 
     let connectorAnnoton = new ConnectorAnnoton(upstreamNode, downstreamNode);
+
+    connectorAnnoton.addNodes(upstreamNode, downstreamNode, processNode, hasInputNode);
     connectorAnnoton.upstreamAnnoton = upstreamAnnoton;
     connectorAnnoton.downstreamAnnoton = downstreamAnnoton;
-
-    //connectorAnnoton.addEdge(upstreamNode, downstreamNode, noctuaFormConfig.edge.placeholder);
+    connectorAnnoton.processNode = processNode;
+    connectorAnnoton.hasInputNode = hasInputNode;
+    connectorAnnoton.addEdge(processNode, hasInputNode, noctuaFormConfig.edge.hasInput);
 
     return connectorAnnoton;
   }
@@ -1193,7 +1198,7 @@ export class NoctuaFormConfigService {
       nodeData = JSON.parse(JSON.stringify(self._annotonData['term']));
     }
 
-    annotonNode.id = (overrides && overrides.id) ? id + overrides.id : id;
+    annotonNode.id = (overrides && overrides.id) ? overrides.id : id;
     annotonNode.aspect = nodeData.aspect;
     annotonNode.ontologyClass = nodeData.ontologyClass;
     annotonNode.label = nodeData.label;

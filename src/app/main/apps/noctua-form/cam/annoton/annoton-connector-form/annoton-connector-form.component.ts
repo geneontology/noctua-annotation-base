@@ -53,6 +53,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
+  connectorType = ConnectorType;
   panel = {
     selectConnector: {
       id: 1

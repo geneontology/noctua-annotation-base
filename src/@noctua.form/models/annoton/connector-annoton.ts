@@ -25,12 +25,14 @@ export enum ConnectorType {
 }
 
 export class ConnectorAnnoton extends SaeGraph {
+
   id: string;
   upstreamAnnoton: Annoton;
   downstreamAnnoton: Annoton;
   upstreamNode: AnnotonNode;
   downstreamNode: AnnotonNode;
   processNode: AnnotonNode;
+  hasInputNode: AnnotonNode;
   state: ConnectorState;
   type: ConnectorType = ConnectorType.basic;
   rule: ConnectorRule;
@@ -48,4 +50,40 @@ export class ConnectorAnnoton extends SaeGraph {
     this.rule = new ConnectorRule();
   }
 
+  setIntermediateProcess() {
+    this.type = ConnectorType.intermediate;
+  }
+
+  /* get presentation() {
+    const self = this;
+
+    let gp = self.getNode('gp');
+    let mf = self.getNode('mf');
+
+    let result = {
+      fd: {},
+    }
+
+    each(self.nodes, function (node: AnnotonNode) {
+        if (node.displaySection && node.displayGroup) {
+          if (!result[node.displaySection.id][node.displayGroup.id]) {
+            result[node.displaySection.id][node.displayGroup.id] = {
+              shorthand: node.displayGroup.shorthand,
+              label: node.displayGroup.label,
+              nodes: []
+            };
+          }
+          result[node.displaySection.id][node.displayGroup.id].nodes.push(node);
+          node.nodeGroup = result[node.displaySection.id][node.displayGroup.id];
+          if (node.isComplement) {
+            node.nodeGroup.isComplement = true;
+          }
+        }
+    });
+
+
+    this._presentation = result;
+
+    return this._presentation
+  } */
 }

@@ -189,6 +189,15 @@
                 <mat-radio-button class="mt-8 mb-4" [value]="true" fxFlex="30"> Yes</mat-radio-button>
               </mat-radio-group>
             </div>
+          </div>
+        </div>
+        <div *ngIf="connectorAnnoton?.rule.displaySection.process" class="noc-form-section p-0 w-100-p">
+          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+            <div class="noc-section-heading">
+              Choose activity regulating process
+            </div>
+          </div>
+          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
             <div class="px-12 noc-annoton-group-row" fxLayout="column">
               <mat-form-field appearance="outline" class="">
                 <mat-label>Choose Process</mat-label>
@@ -354,28 +363,83 @@
             Suggested Causal Relation
           </div>
         </div>
-        <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-          {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}}
-        </div>
-        <br>
-        <!--   <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
-          <div class="noc-section-body noc-triple noc-sm w-100-p p-0" fxLayout="row" fxLayoutAlign="start start">
+        <div *ngIf="connectorAnnoton?.type===connectorType.basic" class="noc-section-body w-100-p p-0" fxLayout="column"
+          fxLayoutAlign="start center">
+          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+            {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}}
+          </div>
+          <div class="noc-section-body noc-triple-v w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
             <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
               <span>
-                {{ noctuaAnnotonConnectorService.rules.triple.subject?.getTerm().label}}
+                {{ connectorAnnoton?.upstreamAnnoton?.presentation.mfText}}
               </span>
             </div>
-            <div class="noc-line" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
-              {{ noctuaAnnotonConnectorService.rules.triple.edge?.label}}
+            <svg height="50" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            </svg>
+            <div class="noc-predicate" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
+              {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}}
             </div>
-            <mat-icon class="s-32 noc-arrow">chevron_right</mat-icon>
+            <svg height="50" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            </svg>
+            <svg width="30" height="30">
+              <polygon points="0 0,15 30,30 0,0 0" />
+            </svg>
             <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
               <span>
-                {{ noctuaAnnotonConnectorService.rules.triple.object?.getTerm().label}}
+                {{ connectorAnnoton?.downstreamAnnoton?.presentation.mfText}}
               </span>
             </div>
           </div>
-        </div> -->
+        </div>
+        <div *ngIf="connectorAnnoton?.type===connectorType.intermediate" class="noc-section-body w-100-p p-0"
+          fxLayout="column" fxLayoutAlign="start center">
+          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+            {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}}
+          </div>
+          <div class="noc-section-body noc-triple-v w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
+            <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+              <span>
+                {{ connectorAnnoton?.upstreamAnnoton?.presentation.mfText}}
+              </span>
+            </div>
+            <svg height="50" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            </svg>
+            <div class="noc-predicate" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
+              {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}}
+            </div>
+            <svg height="50" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            </svg>
+            <svg width="30" height="30">
+              <polygon points="0 0,15 30,30 0,0 0" />
+            </svg>
+            <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+              <span>
+                {{ connectorAnnoton?.processNode?.getTerm().label}}
+              </span>
+            </div>
+            <svg height="50" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            </svg>
+            <div class="noc-predicate" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
+              {{ connectorAnnoton?.rule.suggestedEdge.r2?.label}}
+            </div>
+            <svg height="50" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            </svg>
+            <svg width="30" height="30">
+              <polygon points="0 0,15 30,30 0,0 0" />
+            </svg>
+            <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+              <span>
+                {{ connectorAnnoton?.downstreamAnnoton?.presentation.mfText}}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -68,13 +68,6 @@ $accent: map-get($theme, accent);
     width: 500px;
     background-color: rgba($noc-primary-color-lighter, 0.6);
 
-
-
-
-
-
-
-
     .noc-form-section {
       padding-left: 0;
       background-color: transparent;
@@ -184,6 +177,39 @@ $accent: map-get($theme, accent);
         margin-top: 35px;
       }
     }
+  }
+
+
+
+  .noc-triple-v {
+    .noc-annoton-box {
+      padding: 4px;
+      @include deep-width(250px);
+      @include deep-height(90px);
+      font-size: 10px;
+      @include mat-elevation(1);
+      text-align: center;
+      z-index: 4;
+      border: 1px solid #2e6f9a;
+      opacity: 1;
+      cursor: initial;
+      background-color: white;
+    }
+
+    .noc-predicate {
+      font-size: 10px;
+    }
+
+    .noc-line {
+      stroke: #2e6f9a;
+      stroke-width: 2;
+    }
+
+    .noc-arrow {
+      color: #2e6f9a;
+      // margin-top: 40px;
+    }
+
   }
 
   .noc-header {

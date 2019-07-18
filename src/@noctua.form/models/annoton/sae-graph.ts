@@ -21,10 +21,18 @@ export class SaeGraph {
     });
   }
 
-  addNode(node) {
+  addNode(node: AnnotonNode) {
     this.nodes.push(node);
     this.edges[node.id] = {}
     this.edges[node.id]['nodes'] = [];
+  };
+
+  addNodes(...nodes: AnnotonNode[]) {
+    const self = this;
+
+    nodes.forEach((node: AnnotonNode) => {
+      self.addNode(node);
+    });
   };
 
   removeNode(node) {
