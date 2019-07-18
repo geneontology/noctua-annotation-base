@@ -132,9 +132,6 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
     this.selectPanel(this.panel.annotonConnectorForm);
   }
 
-  evidenceDisplayFn(evidence): string | undefined {
-    return evidence ? evidence.label : undefined;
-  }
 
   save() {
     const self = this;
@@ -169,10 +166,16 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
     this.noctuaAnnotonFormService.clearForm();
   }
 
-
-
   close() {
     this.panelDrawer.close()
+  }
+
+  termDisplayFn(term): string | undefined {
+    return term ? term.label : undefined;
+  }
+
+  evidenceDisplayFn(evidence): string | undefined {
+    return evidence ? evidence.label : undefined;
   }
 
   ngOnDestroy(): void {

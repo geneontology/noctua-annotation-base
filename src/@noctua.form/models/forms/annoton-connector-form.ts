@@ -22,10 +22,11 @@ export class AnnotonConnectorForm {
   annotonsConsecutive = new FormControl();
   causalEffect = new FormControl();
   effectDependency = new FormControl();
-  process = new FormControl();
   causalReactionProduct = new FormControl();
   evidenceForms: EvidenceForm[] = []
-  evidenceFormArray = new FormArray([])
+  evidenceFormArray = new FormArray([]);
+  process = new FormControl();
+  hasInput = new FormControl();
   _metadata: AnnotonFormMetadata;
 
   private _fb = new FormBuilder();
@@ -34,10 +35,12 @@ export class AnnotonConnectorForm {
     this._metadata = metadata;
   }
 
-  createEntityForms(entity: AnnotonNode) {
+  createEntityForms(entity: AnnotonNode, hasInput: AnnotonNode) {
     const self = this;
 
     this.term.setValue(entity.getTerm());
+    this.hasInput.setValue(hasInput.getTerm());
+
     entity.evidence.forEach((evidence: Evidence) => {
       let evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
 
@@ -60,4 +63,16 @@ export class AnnotonConnectorForm {
     });
   }
 
+  onValueChanges(lookup) {
+    const self = this;
+
+    self.hasInput.valueChanges.pipe(
+      distinctUntilChanged(),
+      debounceTime(400)
+    ).subscribe(data => {
+      self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
+        lookup.results = response;
+      });
+    });
+  }
 }

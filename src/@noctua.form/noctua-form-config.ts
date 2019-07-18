@@ -299,14 +299,18 @@ export const noctuaFormConfig = {
   connectorProcesses: [{
     id: 'GO:0006351',
     label: 'transcription, DNA templated',
+    edge: edge.directlyPositivelyRegulates
   }, {
     id: 'GO:0006511',
-    label: 'ubiquitin-dependent protein catabolic process'
+    label: 'ubiquitin-dependent protein catabolic process',
+    edge: edge.directlyNegativelyRegulates
   }, {
     id: 'GO:0031623',
-    label: 'receptor internalization'
+    label: 'receptor internalization',
+    edge: edge.directlyNegativelyRegulates
   }, {
     id: 'GO:0051170',
-    label: 'nuclear import'
+    label: 'nuclear import',
+    edge: edge.directlyPositivelyRegulates
   }]
 };

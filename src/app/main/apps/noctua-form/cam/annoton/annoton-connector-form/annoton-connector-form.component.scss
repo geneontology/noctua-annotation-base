@@ -10,7 +10,7 @@ $accent: map-get($theme, accent);
   @include mat-elevation(4);
 
   .noc-connector-form {
-    width: 600px;
+    width: 800px;
     background-color: #FFF;
   }
 
@@ -65,7 +65,7 @@ $accent: map-get($theme, accent);
   }
 
   .noc-connector-form-notes {
-    width: 500px;
+    width: 300px;
     background-color: rgba($noc-primary-color-lighter, 0.6);
 
     .noc-form-section {

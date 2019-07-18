@@ -111,7 +111,8 @@ export class NoctuaAnnotonConnectorService {
     let connectorFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
     let connectorForm = new AnnotonConnectorForm(connectorFormMetadata);
 
-    connectorForm.createEntityForms(self.connectorAnnoton.upstreamNode);
+    connectorForm.createEntityForms(self.connectorAnnoton.upstreamNode, self.connectorAnnoton.hasInputNode);
+    connectorForm.onValueChanges(self.connectorAnnoton.hasInputNode.termLookup)
 
     return connectorForm;
   }
@@ -143,76 +144,13 @@ export class NoctuaAnnotonConnectorService {
   }
 
 
-  checkConnection(value: any, connectorAnnoton: ConnectorAnnoton) {
-    connectorAnnoton.rule.rules.annotonsConsecutive.condition = value.annotonsConsecutive;
-    connectorAnnoton.rule.displaySection.causalEffect = true;
-    connectorAnnoton.rule.displaySection.causalReactionProduct = false;
 
-    connectorAnnoton.rule.displaySection.effectDependency = value.annotonsConsecutive;
-    connectorAnnoton.rule.displaySection.process = value.effectDependency;
-
-    if (value.effectDependency) {
-      connectorAnnoton.setIntermediateProcess()
-    } else {
-      if (connectorAnnoton.rule.rules.subjectMFCatalyticActivity.condition && connectorAnnoton.rule.rules.objectMFCatalyticActivity.condition) {
-        connectorAnnoton.rule.displaySection.causalReactionProduct = true;
-      }
-      connectorAnnoton.rule.displaySection.causalReactionProduct = false;
-    }
-
-    if (value.process) {
-      connectorAnnoton.processNode.setTerm(new Entity(value.process.id, value.process.label))
-    }
-
-    connectorAnnoton.rule.suggestedEdge.r1 = this.getCausalConnectorEdge(
-      value.causalEffect,
-      value.annotonsConsecutive,
-      value.causalReactionProduct);
-  }
-
-  getCausalConnectorEdge(causalEffect, annotonsConsecutive, causalReactionProduct) {
-    let result;
-
-    if (!annotonsConsecutive) {
-      switch (causalEffect.name) {
-        case noctuaFormConfig.causalEffect.options.positive.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
-          break;
-        case noctuaFormConfig.causalEffect.options.negative.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
-          break;
-        case noctuaFormConfig.causalEffect.options.neutral.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOf;
-          break;
-      }
-    } else if (annotonsConsecutive) {
-      if (causalReactionProduct.name === noctuaFormConfig.causalReactionProduct.options.substrate.name) {
-        result = noctuaFormConfig.edge.directlyProvidesInput;
-      } else {
-        switch (causalEffect.name) {
-          case noctuaFormConfig.causalEffect.options.positive.name:
-            result = noctuaFormConfig.edge.directlyPositivelyRegulates;
-            break;
-          case noctuaFormConfig.causalEffect.options.negative.name:
-            result = noctuaFormConfig.edge.directlyNegativelyRegulates;
-            break;
-          case noctuaFormConfig.causalEffect.options.neutral.name:
-            result = noctuaFormConfig.edge.directlyRegulates;
-            break;
-        }
-      }
-    }
-
-    return result;
-  }
 
   private _onAnnotonFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
       //  this.errors = this.getAnnotonFormErrors();
       this.connectorFormToAnnoton();
-      this.checkConnection(value, this.connectorAnnoton);
-
-
+      this.connectorAnnoton.checkConnection(value);
     })
   }
 }
