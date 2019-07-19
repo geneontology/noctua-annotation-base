@@ -2,7 +2,7 @@
   class="noc-drawer w-100-p h-100-p">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-drawer-header-title">
-      Select Activity</span>
+      Select Downstream Activity</span>
     <span fxFlex></span>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
       aria-label="Close dialog">
@@ -23,7 +23,7 @@
               <span fxFlex></span>
               <button mat-raised-button color="primary" class="noc-rounded-button noc-sm"
                 (click)="openAnnotonConnector(connector.annoton)">
-                Connect
+                Select
               </button>
             </div>
           </div>
@@ -140,54 +140,76 @@
             </div>
           </div>
         </div>
-        <div *ngIf="connectorAnnoton?.rule.displaySection.causalEffect" class="noc-form-section p-0 w-100-p">
+        <div class="noc-form-section p-0 w-100-p">
           <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
             <div class="noc-section-heading">
-              Causal Relation
+              Direction of Effect
             </div>
           </div>
-          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-            <div class="px-12 noc-annoton-group-row" fxLayout="column">
-              <mat-radio-group formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start stretch">
-                <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
-                  class="mt-8 mb-4" [value]="causalEffect" fxFlex="30">
-                  {{causalEffect.label}}
+          <div *ngIf="connectorAnnoton?.rule.displaySection.causalEffect" class="px-8 noc-group-row" fxLayout="row"
+            fxLayoutAlign="start center">
+            <div fxFlex="180px">
+              <p> Direction of Effect </p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="causalEffect" fxLayout="row" fxLayoutAlign="start center">
+              <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
+                class="noc-radio-button-rounded mr-12" [value]="causalEffect">
+                {{causalEffect.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div *ngIf="connectorAnnoton?.rule.displaySection.annotonsConsecutive" class="px-8 noc-group-row"
+            fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="180px">
+              <p> Activities Consecutive? </p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="annotonsConsecutive" fxLayout="row"
+              fxLayoutAlign="start center">
+              <mat-radio-button class="noc-radio-button-rounded mr-12" [value]="true"> Yes</mat-radio-button>
+              <mat-radio-button class="noc-radio-button-rounded mr-12" [value]="false"> No/unknown</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div *ngIf="connectorAnnoton?.rule.displaySection.effectDependency" class="px-8 noc-group-row"
+            fxLayout="column" fxLayoutAlign="start">
+            <div class="" fxLayout="row" fxLayoutAlign="start center">
+              <div fxFlex="180px">
+                <p> Causal effect dependency</p>
+              </div>
+              <mat-radio-group fxFlex="" formControlName="effectDependency" fxLayout="row" fxLayoutAlign="start center">
+                <mat-radio-button class="noc-radio-button-rounded mr-12" [value]="true"> Yes
+                </mat-radio-button>
+                <mat-radio-button class="noc-radio-button-rounded mr-12" [value]="false"> No
                 </mat-radio-button>
               </mat-radio-group>
             </div>
-          </div>
-        </div>
-        <div *ngIf="connectorAnnoton?.rule.displaySection.annotonsConsecutive" class="noc-form-section p-0 w-100-p">
-          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-section-heading">
-              Are the activities consecutive?
-            </div>
-          </div>
-          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-            <div class="px-12 noc-annoton-group-row" fxLayout="column">
-              <mat-radio-group formControlName="annotonsConsecutive" fxLayout="column" fxLayoutAlign="start stretch">
-                <mat-radio-button class="mt-8 mb-4" [value]="false" fxFlex="30"> No/unknown</mat-radio-button>
-                <mat-radio-button class="mt-8 mb-4" [value]="true" fxFlex="30"> Yes</mat-radio-button>
-              </mat-radio-group>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="connectorAnnoton?.rule.displaySection.effectDependency" class="noc-form-section p-0 w-100-p">
-          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-section-heading">
-              Causal effect dependency
-            </div>
-          </div>
-          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-            <div class="px-12 noc-annoton-group-row" fxLayout="column">
-              <p>
+            <div fxLayout="row" fxLayoutAlign="start center" class="alert alert-info">
+              <mat-icon class="s-16 mr-4">info</mat-icon>
+              <small>
                 Does the causal effect depend on another process? (for example, transcription factor activity depends on
                 transcription occurring).
-              </p>
-              <mat-radio-group formControlName="effectDependency" fxLayout="column" fxLayoutAlign="start stretch">
-                <mat-radio-button class="mt-8 mb-4" [value]="false" fxFlex="30"> No</mat-radio-button>
-                <mat-radio-button class="mt-8 mb-4" [value]="true" fxFlex="30"> Yes</mat-radio-button>
+              </small>
+            </div>
+          </div>
+          <div *ngIf="connectorAnnoton?.rule.displaySection.causalReactionProduct || true" class="px-8 noc-group-row"
+            fxLayout="column" fxLayoutAlign="start">
+            <div class="" fxLayout="row" fxLayoutAlign="start center">
+              <div fxFlex="180px">
+                <p> Reaction Product</p>
+              </div>
+              <mat-radio-group fxFlex="" formControlName="causalReactionProduct" fxLayout="row"
+                fxLayoutAlign="start center">
+                <mat-radio-button
+                  *ngFor="let causalReactionProduct of noctuaFormConfigService.causalReactionProduct.options"
+                  class="noc-radio-button-rounded mr-12" [value]="causalReactionProduct">
+                  {{causalReactionProduct.label}}
+                </mat-radio-button>
               </mat-radio-group>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center" class="alert alert-info">
+              <mat-icon class="s-16 mr-4">info</mat-icon>
+              <small>
+                Does the product of reaction 1 REGULATE or become the SUBSTRATE for activity 2?
+              </small>
             </div>
           </div>
         </div>
@@ -197,8 +219,8 @@
               Choose activity regulating process
             </div>
           </div>
-          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-            <div class="px-12 noc-annoton-group-row" fxLayout="column">
+          <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
+            <div class="px-8 noc-group-row" fxLayout="column">
               <mat-form-field appearance="outline" class="noc-sm mb-16">
                 <mat-label>Choose Process</mat-label>
                 <mat-select placeholder="" formControlName="process">
@@ -231,31 +253,13 @@
             </div>
           </div>
         </div>
-        <div *ngIf="connectorAnnoton?.rule.displaySection.causalReactionProduct" class="noc-form-section p-0 w-100-p">
-          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-section-heading">
-              Does the product of reaction 1 REGULATE or become the SUBSTRATE for activity 2?
-            </div>
-          </div>
-          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-            <div class="px-12 noc-annoton-group-row" fxLayout="column">
-              <mat-radio-group formControlName="causalReactionProduct" fxLayout="column" fxLayoutAlign="start stretch">
-                <mat-radio-button
-                  *ngFor="let causalReactionProduct of noctuaFormConfigService.causalReactionProduct.options"
-                  class="mt-8 mb-4" [value]="causalReactionProduct" fxFlex="30">
-                  {{causalReactionProduct.label}}
-                </mat-radio-button>
-              </mat-radio-group>
-            </div>
-          </div>
-        </div>
         <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-section-heading">
             Evidence
           </div>
         </div>
         <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
-          <div class="px-12 noc-annoton-group-row" fxLayout="column">
+          <div class="px-12 noc-group-row" fxLayout="column">
             <div formArrayName="evidenceFormArray"
               *ngFor="let evidence of connectorFormGroup.get('evidenceFormArray')?.controls; let i = index;">
               <div [formGroupName]="i" fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
@@ -328,7 +332,7 @@
         </div>
       </div>
     </div>
-    <div class="noc-connector-form-notes p-12 h-100-p" noctuaPerfectScrollbar>
+    <div class="noc-connector-form-notes p-8 h-100-p" noctuaPerfectScrollbar>
       <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section w-100-p">
         <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-section-heading">

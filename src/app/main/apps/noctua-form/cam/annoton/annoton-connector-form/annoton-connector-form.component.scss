@@ -9,11 +9,22 @@ $accent: map-get($theme, accent);
   background-color: white;
   @include mat-elevation(4);
 
+  .noc-radio-button-rounded {
+    min-width: 110px;
+  }
+
   .noc-connector-form {
     width: 600px;
     background-color: #FFF;
     padding-bottom: 300px;
   }
+
+  .noc-form-section {
+    .noc-group-row {
+      border-bottom: rgba(map-get($primary, default), 0.6) solid 10px;
+    }
+  }
+
 
   .noc-annoton-list {
     width: 600px;
