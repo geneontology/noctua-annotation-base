@@ -91,6 +91,7 @@ export class NoctuaAnnotonConnectorService {
     this.connectorForm.causalEffect.setValue(effect.causalEffect);
     this.connectorForm.causalReactionProduct.setValue(effect.causalReactionProduct);
     this.connectorForm.annotonsConsecutive.setValue(effect.annotonsConsecutive);
+    this.connectorForm.effectDependency.setValue(effect.effectDependency);
     this._onAnnotonFormChanges();
     //just to trigger the on Changes event 
     this.connectorForm.causalEffect.setValue(effect.causalEffect);
@@ -121,6 +122,7 @@ export class NoctuaAnnotonConnectorService {
     let result = {
       annotonsConsecutive: true,
       causalEffect: this.noctuaFormConfigService.causalEffect.selected,
+      effectDependency: false,
       edge: this.noctuaFormConfigService.edges.placeholder,
       causalReactionProduct: this.noctuaFormConfigService.causalReactionProduct.selected
     };

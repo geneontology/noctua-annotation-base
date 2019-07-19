@@ -10,8 +10,9 @@ $accent: map-get($theme, accent);
   @include mat-elevation(4);
 
   .noc-connector-form {
-    width: 800px;
+    width: 600px;
     background-color: #FFF;
+    padding-bottom: 300px;
   }
 
   .noc-annoton-list {

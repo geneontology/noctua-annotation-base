@@ -67,6 +67,18 @@ const edge = {
     id: 'RO:0002413',
     label: 'directly provides input'
   },
+  regulates: {
+    id: 'RO:0002211',
+    label: 'regulates'
+  },
+  positivelyRegulates: {
+    id: 'RO_0002213',
+    label: 'positively regulates'
+  },
+  negativelyRegulates: {
+    id: 'RO_0002212',
+    label: 'negatively regulates'
+  },
   directlyRegulates: {
     id: 'RO:0002578',
     label: 'directly regulates'
@@ -299,18 +311,18 @@ export const noctuaFormConfig = {
   connectorProcesses: [{
     id: 'GO:0006351',
     label: 'transcription, DNA templated',
-    edge: edge.directlyPositivelyRegulates
+    edge: edge.positivelyRegulates
   }, {
     id: 'GO:0006511',
     label: 'ubiquitin-dependent protein catabolic process',
-    edge: edge.directlyNegativelyRegulates
+    edge: edge.negativelyRegulates
   }, {
     id: 'GO:0031623',
     label: 'receptor internalization',
-    edge: edge.directlyNegativelyRegulates
+    edge: edge.negativelyRegulates
   }, {
     id: 'GO:0051170',
     label: 'nuclear import',
-    edge: edge.directlyPositivelyRegulates
+    edge: edge.positivelyRegulates
   }]
 };
