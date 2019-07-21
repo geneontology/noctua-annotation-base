@@ -140,10 +140,16 @@ export class NoctuaAnnotonConnectorService {
   save() {
     const self = this;
 
+    const value = this.connectorFormGroup.getValue().value;
+    this.connectorAnnoton.prepareSave(value);
+
     //console.log(self.connectorAnnoton.getEdges('subject'), subjectNode.getTerm())
 
-    // return self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton, subjectNode, objectNode);
+    return self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton);
   }
+
+
+
 
 
 

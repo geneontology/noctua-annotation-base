@@ -135,6 +135,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
   save() {
     const self = this;
+    this.noctuaAnnotonConnectorService.save();
     /*  this.noctuaAnnotonConnectorService.save().then(() => {
        self.selectPanel(self.panel.selectConnector);
        self.noctuaAnnotonConnectorService.getConnections();

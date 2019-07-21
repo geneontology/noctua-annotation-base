@@ -1093,20 +1093,19 @@ export class NoctuaFormConfigService {
     let srcDownstreamNode = downstreamAnnoton.getMFNode();
     let upstreamNode = self.generateNode(srcUpstreamNode.id, { id: 'upstream' });
     let downstreamNode = self.generateNode(srcDownstreamNode.id, { id: 'downstream' });
-    let processNode = self.generateNode('bp', { id: 'bp' });
-    let hasInputNode = self.generateNode('mf-1', { id: 'bp-1' });
+    let processNode = self.generateNode('bp', { id: 'process' });
+    let hasInputNode = self.generateNode('mf-1', { id: 'has-input' });
 
     upstreamNode.copyValues(srcUpstreamNode);
     downstreamNode.copyValues(srcDownstreamNode);
 
     let connectorAnnoton = new ConnectorAnnoton(upstreamNode, downstreamNode);
 
-    connectorAnnoton.addNodes(upstreamNode, downstreamNode, processNode, hasInputNode);
+    // connectorAnnoton.addNodes(upstreamNode, downstreamNode, processNode, hasInputNode);
     connectorAnnoton.upstreamAnnoton = upstreamAnnoton;
     connectorAnnoton.downstreamAnnoton = downstreamAnnoton;
     connectorAnnoton.processNode = processNode;
     connectorAnnoton.hasInputNode = hasInputNode;
-    connectorAnnoton.addEdge(processNode, hasInputNode, noctuaFormConfig.edge.hasInput);
 
     return connectorAnnoton;
   }

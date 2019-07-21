@@ -29,8 +29,8 @@ export class EvidenceForm {
         if (evidence) {
             this.individualId = evidence.individualId;
             this.evidence.setValue(evidence.getEvidence());
-            this.reference.setValue(evidence.getReference());
-            this.with.setValue(evidence.getWith());
+            this.reference.setValue(evidence.getReference().label);
+            this.with.setValue(evidence.getWith().label);
         }
 
         this.setEvidenceValidator();

@@ -39,11 +39,6 @@ export class ConnectorAnnoton extends SaeGraph {
   type: ConnectorType = ConnectorType.basic;
   rule: ConnectorRule;
 
-  private _grid: any[] = [];
-  private _displayableNodes = ['bp-1'];
-  private _presentation;
-
-
   constructor(upstreamNode: AnnotonNode, downstreamNode: AnnotonNode, state?: ConnectorState) {
     super();
     this.id = uuid();
@@ -130,31 +125,36 @@ export class ConnectorAnnoton extends SaeGraph {
     return result;
   }
 
-  get presentation() {
+  prepareSave(value) {
     const self = this;
+    console.log(value);
 
-    let result = {
-      fd: {},
+    let evidences: Evidence[] = value.evidenceFormArray.map((evidence) => {
+      let result = new Evidence()
+
+      result.individualId = evidence.individualId;
+      result.setEvidence(evidence.evidence);
+      result.setReference(evidence.reference);
+      result.setWith(evidence.with);
+
+      return result;
+    });
+    this.downstreamNode.evidence = evidences;
+
+    if (this.type === ConnectorType.basic) {
+      this.addNodes(self.upstreamNode, self.downstreamNode);
+      self.addEdge(self.upstreamNode, self.downstreamNode, this.rule.suggestedEdge.r1);
     }
 
-    each(self.nodes, function (node: AnnotonNode) {
-      if (_.includes(self._displayableNodes, node.id)) {
-        if (node.displaySection && node.displayGroup) {
-          if (!result[node.displaySection.id][node.displayGroup.id]) {
-            result[node.displaySection.id][node.displayGroup.id] = {
-              shorthand: node.displayGroup.shorthand,
-              label: node.displayGroup.label,
-              nodes: []
-            };
-          }
-          result[node.displaySection.id][node.displayGroup.id].nodes.push(node);
-          node.nodeGroup = result[node.displaySection.id][node.displayGroup.id];
-        }
-      }
-    });
+    if (this.type === ConnectorType.intermediate) {
+      this.addNodes(self.upstreamNode, self.downstreamNode, self.processNode, self.hasInputNode);
 
-    this._presentation = result;
+      self.addEdge(self.upstreamNode, self.processNode, this.rule.suggestedEdge.r1);
+      self.addEdge(self.processNode, self.downstreamNode, this.rule.suggestedEdge.r2);
+      self.addEdge(self.processNode, self.hasInputNode, noctuaFormConfig.edge.hasInput);
 
-    return this._presentation
+      self.processNode.evidence = evidences;
+      self.hasInputNode.evidence = evidences;
+    }
   }
 }

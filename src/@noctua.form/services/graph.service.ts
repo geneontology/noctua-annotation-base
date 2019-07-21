@@ -975,7 +975,7 @@ export class NoctuaGraphService {
     }
   }
 
-  addFact(reqs, annoton: Annoton, node) {
+  addFact(reqs, annoton: Annoton | ConnectorAnnoton, node) {
     let edge = annoton.getEdges(node.id);
 
     each(edge.nodes, function (edgeNode) {
@@ -1319,24 +1319,27 @@ export class NoctuaGraphService {
 
   }
 
-  saveConnection(cam, annoton: ConnectorAnnoton, subjectNode: AnnotonNode, objectNode: AnnotonNode) {
+  saveConnection(cam: Cam, annoton: ConnectorAnnoton) {
     const self = this;
 
-    function success() {
-      const manager = cam.manager;
-      let reqs = new minerva_requests.request_set(manager.user_token(), cam.model.id);
+    let success = () => {
+      let reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
 
-      self.addIndividual(reqs, subjectNode);
-      self.addIndividual(reqs, objectNode);
-      //   self.addFact(reqs, annoton, subjectNode);
+      each(annoton.nodes, function (node) {
+        self.addIndividual(reqs, node);
+      });
 
-      reqs.store_model(cam.model.id);
+      each(annoton.nodes, function (node) {
+        self.addFact(reqs, annoton, node);
+      });
+
+      reqs.store_model(cam.modelId);
 
       if (self.userInfo.groups.length > 0) {
         reqs.use_groups([self.userInfo.selectedGroup.id]);
       }
 
-      return manager.request_with(reqs);
+      return cam.manager.request_with(reqs);
     }
 
     //return self.saveGP(geneProduct, success);

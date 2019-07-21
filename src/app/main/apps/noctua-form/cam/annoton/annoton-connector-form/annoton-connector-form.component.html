@@ -182,15 +182,12 @@
                 </mat-radio-button>
               </mat-radio-group>
             </div>
-            <div fxLayout="row" fxLayoutAlign="start center" class="alert alert-info">
-              <mat-icon class="s-16 mr-4">info</mat-icon>
-              <small>
-                Does the causal effect depend on another process? (for example, transcription factor activity depends on
-                transcription occurring).
-              </small>
+            <div class="noc-hint">
+              Does the causal effect depend on another process? (for example, transcription factor activity depends on
+              transcription occurring).
             </div>
           </div>
-          <div *ngIf="connectorAnnoton?.rule.displaySection.causalReactionProduct || true" class="px-8 noc-group-row"
+          <div *ngIf="connectorAnnoton?.rule.displaySection.causalReactionProduct" class="px-8 noc-group-row"
             fxLayout="column" fxLayoutAlign="start">
             <div class="" fxLayout="row" fxLayoutAlign="start center">
               <div fxFlex="180px">
@@ -205,11 +202,8 @@
                 </mat-radio-button>
               </mat-radio-group>
             </div>
-            <div fxLayout="row" fxLayoutAlign="start center" class="alert alert-info">
-              <mat-icon class="s-16 mr-4">info</mat-icon>
-              <small>
-                Does the product of reaction 1 REGULATE or become the SUBSTRATE for activity 2?
-              </small>
+            <div class="noc-hint">
+              Does the product of reaction 1 REGULATE or become the SUBSTRATE for activity 2?
             </div>
           </div>
         </div>
@@ -302,29 +296,32 @@
                 <button mat-icon-button class="noc-action-button" fxFlex="40px" [matMenuTriggerFor]="entityMenu">
                   <mat-icon>more_vert</mat-icon>
                 </button>
-                <mat-menu #entityMenu="matMenu" class="noc-disabled noc-dropdown-menu">
-                  <!--
+                <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
+                  <button mat-menu-item class="" (click)="clearValues()">
+                    Clear Values
+                  </button>
                   <h6 class="noc-menu-heading"> Evidence</h6>
-                  <button mat-menu-item class="" (click)="openSelectEvidenceDialog(evidence)">
-                    Clone Evidence
-                  </button>
-                  <button mat-menu-item class="" (click)="openMoreEvidenceDialog()">
-                    More Evidence
-                  </button>
                   <button mat-menu-item class="" (click)="addEvidence()">
                     Add Evidence
                   </button>
                   <button (click)="removeEvidence(i)" mat-menu-item>
                     Remove Evidence
                   </button>
-                  <button mat-menu-item class="" (click)="addNDEvidence(entity.evidence[0])">
+                  <button mat-menu-item class="" (click)="openSelectEvidenceDialog(evidence)">
+                    Clone Evidence
+                  </button>
+                  <button mat-menu-item class="" (click)="addNDEvidence()">
                     Add ND Reference
                   </button>
-                  <h6 class="noc-menu-heading"> Term </h6>
-                  <button mat-menu-item class="" (click)="entity.clearValues()">
-                    Clear
-                  </button>
-                -->
+
+                  <!--
+                    <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
+                      NOT Qualifier
+                    </button>     
+                    <button mat-menu-item class="" (click)="openMoreEvidenceDialog()">
+                      More Evidence
+                    </button>          
+                    -->
                 </mat-menu>
               </div>
             </div>
@@ -351,37 +348,6 @@
             </span>
           </div>
         </div>
-        <!--   <div *ngIf="noctuaAnnotonConnectorService.rules.originalTriple.edge?.id"
-          class="noc-form-section noc-bt w-100-p">
-          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-section-heading">
-              Current Causal Relation
-            </div>
-          </div>
-          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-            {{ noctuaAnnotonConnectorService.rules.originalTriple.edge?.label}}
-          </div>
-          <br>
-          <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
-            <div class="noc-section-body noc-triple noc-sm w-100-p p-0" fxLayout="row" fxLayoutAlign="start start">
-              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
-                <span>
-                  {{ noctuaAnnotonConnectorService.rules.originalTriple.subject?.getTerm().label}}
-                </span>
-              </div>
-              <div class="noc-line" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
-                {{ noctuaAnnotonConnectorService.rules.originalTriple.edge?.label}}
-              </div>
-              <mat-icon class="s-32 noc-arrow">chevron_right</mat-icon>
-              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
-                <span>
-                  {{ noctuaAnnotonConnectorService.rules.originalTriple.object?.getTerm().label}}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      -->
         <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-section-heading">
             Suggested Causal Relation
@@ -389,7 +355,7 @@
         </div>
         <div *ngIf="connectorAnnoton?.type===connectorType.basic" class="noc-section-body w-100-p p-0" fxLayout="column"
           fxLayoutAlign="start center">
-          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+          <div class="w-100-p pb-24">
             {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}}
           </div>
           <div class="noc-section-body noc-triple-v w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
@@ -419,8 +385,8 @@
         </div>
         <div *ngIf="connectorAnnoton?.type===connectorType.intermediate" class="noc-section-body w-100-p p-0"
           fxLayout="column" fxLayoutAlign="start center">
-          <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-            {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}}
+          <div class="w-100-p pb-24">
+            {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}} + {{ connectorAnnoton?.rule.suggestedEdge.r2?.label}}
           </div>
           <div class="noc-section-body noc-triple-v w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
             <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
