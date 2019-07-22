@@ -72,11 +72,11 @@ const edge = {
     label: 'regulates'
   },
   positivelyRegulates: {
-    id: 'RO_0002213',
+    id: 'RO:0002213',
     label: 'positively regulates'
   },
   negativelyRegulates: {
-    id: 'RO_0002212',
+    id: 'RO:0002212',
     label: 'negatively regulates'
   },
   directlyRegulates: {

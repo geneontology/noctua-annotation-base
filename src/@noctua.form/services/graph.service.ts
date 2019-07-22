@@ -496,7 +496,7 @@ export class NoctuaGraphService {
           annoton.parser.setCardinalityError(annotonNode, gpObjectNode.term, noctuaFormConfig.edge.enabledBy.id);
         }
 
-        self.connectAnnatons(cam, annoton, mfEdgesIn, annotonNode, isDoomed);
+        //self.connectAnnatons(cam, annoton, mfEdgesIn, annotonNode, isDoomed);
 
         self.graphToAnnatonDFS(cam, annoton, mfEdgesIn, annotonNode, isDoomed);
 

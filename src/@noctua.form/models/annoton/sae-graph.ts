@@ -183,5 +183,8 @@ export class SaeGraph {
     return path.reverse().join('-');
   };
 
-
+  resetGraph() {
+    this.edges = []
+    this.nodes = [];
+  }
 }

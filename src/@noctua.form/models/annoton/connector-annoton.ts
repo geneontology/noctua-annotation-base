@@ -127,7 +127,7 @@ export class ConnectorAnnoton extends SaeGraph {
 
   prepareSave(value) {
     const self = this;
-    console.log(value);
+    this.resetGraph();
 
     let evidences: Evidence[] = value.evidenceFormArray.map((evidence) => {
       let result = new Evidence()
@@ -139,6 +139,8 @@ export class ConnectorAnnoton extends SaeGraph {
 
       return result;
     });
+
+
     this.downstreamNode.evidence = evidences;
 
     if (this.type === ConnectorType.basic) {
@@ -147,7 +149,10 @@ export class ConnectorAnnoton extends SaeGraph {
     }
 
     if (this.type === ConnectorType.intermediate) {
-      this.addNodes(self.upstreamNode, self.downstreamNode, self.processNode, self.hasInputNode);
+      self.processNode.term = new Entity(value.process.id, value.process.label);
+      self.hasInputNode.term = new Entity(value.hasInput.id, value.hasInput.label);
+
+      self.addNodes(self.upstreamNode, self.downstreamNode, self.processNode, self.hasInputNode);
 
       self.addEdge(self.upstreamNode, self.processNode, this.rule.suggestedEdge.r1);
       self.addEdge(self.processNode, self.downstreamNode, this.rule.suggestedEdge.r2);
@@ -156,5 +161,7 @@ export class ConnectorAnnoton extends SaeGraph {
       self.processNode.evidence = evidences;
       self.hasInputNode.evidence = evidences;
     }
+
+    console.log(self)
   }
 }
