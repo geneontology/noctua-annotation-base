@@ -4,26 +4,28 @@ const each = require('lodash/forEach');
 const map = require('lodash/map');
 const uuid = require('uuid/v1');
 import { noctuaFormConfig } from './../../../noctua-form-config';
-import { Rule } from './rule';
-
+import {
+  Rule,
+  DirectionRule,
+  ConditionRule,
+  ReactionRule,
+} from '.';
 
 export class ConnectorRule {
-  private _rules: any = {
-    annotonsConsecutive: new Rule('annotonsConsecutive', 'Activities are consecutive?'),
-    effectDependency: new Rule('effectDependency', 'causal effect yes dependency?'),
-    subjectMFCatalyticActivity: new Rule('subjectMFCatalyticActivity', 'Is subject MF a Catalytic Activity'),
-    objectMFCatalyticActivity: new Rule('objectMFCatalyticActivity', 'Is object MF a Catalytic Activity'),
-    activityRegulatingProcess: new Rule('activityRegulatingProcess', 'Activity regulating process')
-  }
-
-  rules = _.cloneDeep(this._rules);
+  annotonsConsecutive = new ConditionRule('annotonsConsecutive', 'Activities are consecutive?');
+  effectDependency = new ConditionRule('effectDependency', 'Causal effect yes dependency?');
+  effectDirection = new DirectionRule('effectDirection', 'Direction of Effect?');
+  effectReactionProduct = new ReactionRule('effectReactionProduct', 'Causal Reaction Product?');
+  subjectMFCatalyticActivity = new ConditionRule('subjectMFCatalyticActivity', 'Is subject MF a Catalytic Activity');
+  objectMFCatalyticActivity = new ConditionRule('objectMFCatalyticActivity', 'Is object MF a Catalytic Activity');
+  activityRegulatingProcess = new ConditionRule('activityRegulatingProcess', 'Activity regulating process');
 
   notes = [
-    this.rules.subjectMFCatalyticActivity,
-    this.rules.objectMFCatalyticActivity,
-    this.rules.effectDependency,
-    this.rules.annotonsConsecutive,
-    this.rules.activityRegulatingProcess
+    this.subjectMFCatalyticActivity,
+    this.objectMFCatalyticActivity,
+    this.effectDependency,
+    this.annotonsConsecutive,
+    this.activityRegulatingProcess
   ];
 
   public displaySection = {
@@ -40,6 +42,10 @@ export class ConnectorRule {
   }
 
   constructor() {
+    this.annotonsConsecutive.condition = true;
+    this.effectDependency.condition = false;
+    this.effectDirection.direction = noctuaFormConfig.causalEffect.options.positive;
+    this.effectReactionProduct.reaction = noctuaFormConfig.causalReactionProduct.options.regulate;
   }
 
 }

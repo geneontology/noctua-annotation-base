@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
 
 declare const require: any;
+
 const each = require('lodash/forEach');
 const cloneDeep = require('lodash/cLoneDeep');
 

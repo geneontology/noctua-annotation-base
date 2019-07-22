@@ -18,7 +18,9 @@ import {
   Evidence,
   SimpleAnnoton,
   Entity,
-  ConnectorAnnoton
+  ConnectorAnnoton,
+  ConnectorType,
+  ConnectorState
 } from './../models/annoton/';
 
 //Config
@@ -271,10 +273,10 @@ export class NoctuaGraphService {
     return result;
   }
 
-  nodeToTerm(graph, object) {
+  nodeToTerm(graph, objectId) {
     const self = this;
 
-    let node = graph.get_node(object);
+    let node = graph.get_node(objectId);
     let nodeInfo = self.getNodeInfo(node);
     let result = {
       term: new Entity(nodeInfo.id, nodeInfo.label),
@@ -338,17 +340,22 @@ export class NoctuaGraphService {
         let objectNode = graph.get_node(e.object_id())
         let objectTermNodeInfo = self.getNodeInfo(objectNode);
 
-        if (self.noctuaFormConfigService.closureCheck[predicateId]) {
-          each(self.noctuaFormConfigService.closureCheck[predicateId].closures, function (closure) {
-            if (closure.subject) {
-              promises.push(self.isaClosurePreParse(termNodeInfo.id, closure.subject.id, node));
-            }
+        each(noctuaFormConfig.closures, (closure) => {
+          promises.push(self.isaClosurePreParse(objectTermNodeInfo.id, closure.id, node));
+        });
 
-            if (objectTermNodeInfo.id && closure.object) {
-              promises.push(self.isaClosurePreParse(objectTermNodeInfo.id, closure.object.id, node));
-            }
-          });
-        }
+
+        /*  if (self.noctuaFormConfigService.closureCheck[predicateId]) {
+           each(self.noctuaFormConfigService.closureCheck[predicateId].closures, function (closure) {
+             if (closure.subject) {
+               promises.push(self.isaClosurePreParse(termNodeInfo.id, closure.subject.id, node));
+             }
+ 
+             if (objectTermNodeInfo.id && closure.object) {
+               promises.push(self.isaClosurePreParse(objectTermNodeInfo.id, closure.object.id, node));
+             }
+           });
+         } */
       });
     });
 
@@ -388,7 +395,6 @@ export class NoctuaGraphService {
     return self.noctuaLookupService.isaClosure(a, b).pipe(
       map(result => {
         node.isCatalyticActivity = result;
-        console.log(result, "ooo")
         return result;
       }))
 
@@ -540,8 +546,6 @@ export class NoctuaGraphService {
         let triple = new Triple(subjectAnnotonNode, evidences, objectAnnotonNode);
 
         triples.push(triple);
-
-        console.log(triple)
       });
     });
 
@@ -700,7 +704,6 @@ export class NoctuaGraphService {
     }
 
     return annoton;
-
   }
 
   getConnectAnnotons(cam: Cam) {
@@ -722,19 +725,74 @@ export class NoctuaGraphService {
             let downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
             let connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, downstreamAnnoton);
 
+            connectorAnnoton.state = ConnectorState.editing;
             connectorAnnoton.rule.suggestedEdge.r1 = causalEdge;
-
             connectorAnnotons.push(connectorAnnoton);
-
           } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.bp.id)) {
+            let processNodeInfo = self.nodeToTerm(cam.graph, objectId);
+            let processNode = self.noctuaFormConfigService.generateNode('bp', { id: 'process' });
+            let connectorAnnotonDTO = this._getConnectAnnotonIntermediate(cam, objectId);
 
+            if (connectorAnnotonDTO.downstreamAnnoton) {
+              processNode.individualId = objectId;
+              processNode.setTerm(processNodeInfo.term);
+              processNode.setEvidence(self.edgeToEvidence(cam.graph, e));
+
+              let connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, connectorAnnotonDTO.downstreamAnnoton, processNode, connectorAnnotonDTO.hasInputNode);
+
+              connectorAnnoton.state = ConnectorState.editing;
+              connectorAnnoton.type = ConnectorType.intermediate;
+              connectorAnnoton.rule.suggestedEdge.r2 = connectorAnnotonDTO.rule.suggestedEdge.r2;
+              connectorAnnotons.push(connectorAnnoton);
+            }
           }
         }
       });
     });
 
+    console.log(connectorAnnotons);
     return connectorAnnotons;
 
+  }
+
+  private _getConnectAnnotonIntermediate(cam: Cam, bpSubjectId: string): ConnectorAnnoton {
+    const self = this;
+    let connectorAnnoton = new ConnectorAnnoton()
+
+    each(cam.graph.get_edges_by_subject(bpSubjectId), (e) => {
+      let predicateId = e.predicate_id();
+      let objectId = e.object_id();
+      let objectInfo = self.nodeToTerm(cam.graph, objectId);
+
+      let causalEdge = _.find(noctuaFormConfig.causalEdges, {
+        id: predicateId
+      })
+
+      if (e.predicate_id() === noctuaFormConfig.edge.hasInput.id) {
+        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.gpHasInput.id)) {
+          let hasInputNodeInfo = self.nodeToTerm(cam.graph, objectId);
+          let hasInputNode = self.noctuaFormConfigService.generateNode('mf-1', { id: 'has-input' });
+
+          hasInputNode.individualId = objectId;
+          hasInputNode.setTerm(hasInputNodeInfo.term);
+          hasInputNode.setEvidence(self.edgeToEvidence(cam.graph, e));
+
+          connectorAnnoton.hasInputNode = hasInputNode;
+          connectorAnnoton.rule.suggestedEdge.r2 = causalEdge;
+        }
+      }
+
+      if (causalEdge) {
+        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.mf.id)) {
+          let downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
+
+          connectorAnnoton.rule.suggestedEdge.r2 = causalEdge;
+          connectorAnnoton.downstreamAnnoton = downstreamAnnoton;
+        }
+      }
+    });
+
+    return connectorAnnoton;
   }
 
   connectAnnatons2(cam, annoton, mfEdgesIn, annotonNode, isDoomed) {

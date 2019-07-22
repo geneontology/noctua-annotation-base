@@ -13,7 +13,7 @@
     <div class="noc-annoton-list h-100-p p-12" noctuaPerfectScrollbar>
       <div fxLayout="column" fxLayoutAlign="start stretch" class="w-100-p">
         <ng-container *ngFor="let connector of noctuaAnnotonConnectorService.connectors">
-          <div class="noc-annoton-connector-box">
+          <div *ngIf="!connector.connectorAnnoton" class="noc-annoton-connector-box">
             <div class="noc-annoton-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
               <div>
                 {{ connector.annoton.presentation.mfText}}<br>
@@ -27,7 +27,7 @@
               </button>
             </div>
           </div>
-          <div *ngIf="false" class="noc-annoton-connector-box">
+          <div *ngIf="connector.connectorAnnoton" class="noc-annoton-connector-box">
             <div class="noc-annoton-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
               <div>
                 {{ connector.annoton.presentation.mfText}}<br>
@@ -36,7 +36,7 @@
               </div>
               <span fxFlex></span>
               <button mat-stroked-button color="primary" class="noc-rounded-button noc-sm"
-                (click)="openEditAnnotonConnector(connector.annoton)">
+                (click)="openAnnotonConnector(connector.annoton)">
                 <small>
                   Edit Connection
                 </small>
@@ -50,43 +50,13 @@
               </div>
               <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
                 <div class="noc-note" [ngClass]="{'noc-note-disabled':!note.condition}"
-                  *ngFor="let note of connector.notes" fxLayout="row" fxLayoutAlign="start center">
+                  *ngFor="let note of connectorAnnoton?.rule.notes" fxLayout="row" fxLayoutAlign="start center">
                   <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
                   <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
                   <span class="noc-description">
                     {{note.description}} <strong>
                       {{note.descriptionSuffix}}
                     </strong>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="connector.rules.originalTriple.edge?.id" fxLayout="column" fxLayoutAlign="start stretch"
-              class="noc-form-section noc-bt w-100-p">
-              <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-                <div class="noc-section-heading">
-                  <strong>Connected:</strong> Connection Summary
-                </div>
-              </div>
-              <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-                <span>
-                  {{ connector.rules.originalTriple.edge?.label }}<small>({{ connector.rules.originalTriple.edge?.id }})</small>
-                </span>
-              </div>
-              <br>
-              <div class="noc-section-body noc-triple w-100-p p-0" fxLayout="row" fxLayoutAlign="start start">
-                <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
-                  <span>
-                    {{ connector.rules.originalTriple.subject?.getTerm().label}}
-                  </span>
-                </div>
-                <div class="noc-line" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
-                  {{ connector.rules.originalTriple.edge?.label}}
-                </div>
-                <mat-icon class="s-32 noc-arrow">chevron_right</mat-icon>
-                <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
-                  <span>
-                    {{ connector.rules.originalTriple.object?.getTerm().label}}
                   </span>
                 </div>
               </div>
@@ -364,14 +334,14 @@
                 {{ connectorAnnoton?.upstreamAnnoton?.presentation.mfText}}
               </span>
             </div>
-            <svg height="50" width="20">
-              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            <svg height="20" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
             </svg>
             <div class="noc-predicate" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
               {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}}
             </div>
-            <svg height="50" width="20">
-              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            <svg height="20" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
             </svg>
             <svg width="20" height="20">
               <polygon points="0 0,10 20,20 0,0 0" />
@@ -394,14 +364,14 @@
                 {{ connectorAnnoton?.upstreamAnnoton?.presentation.mfText}}
               </span>
             </div>
-            <svg height="50" width="20">
-              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            <svg height="20" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
             </svg>
             <div class="noc-predicate" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
               {{ connectorAnnoton?.rule.suggestedEdge.r1?.label}}
             </div>
-            <svg height="50" width="20">
-              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            <svg height="20" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
             </svg>
             <svg width="20" height="20">
               <polygon points="0 0,10 20,20 0,0 0" />
@@ -411,14 +381,14 @@
                 {{ connectorAnnoton?.processNode?.getTerm().label}}
               </span>
             </div>
-            <svg height="50" width="20">
-              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            <svg height="20" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
             </svg>
             <div class="noc-predicate" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
               {{ connectorAnnoton?.rule.suggestedEdge.r2?.label}}
             </div>
-            <svg height="50" width="20">
-              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="50" />
+            <svg height="20" width="20">
+              <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
             </svg>
             <svg width="20" height="20">
               <polygon points="0 0,10 20,20 0,0 0" />

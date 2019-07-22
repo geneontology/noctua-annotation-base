@@ -102,7 +102,6 @@ export class NoctuaLookupService {
         label: item.annotation_class_label
       };
     });
-    console.log(result, response);
     return result;
   }
 
@@ -296,8 +295,6 @@ export class NoctuaLookupService {
         if (docs.length > 0) {
           result = docs[0].annotation_class === a
         }
-        //let result = data.length > 0;
-        console.log(a, b, result, docs);
         return result;
       }))
   }

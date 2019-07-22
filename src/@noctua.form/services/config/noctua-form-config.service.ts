@@ -714,24 +714,6 @@ export class NoctuaFormConfigService {
       }]
     };
 
-    this.closureCheck[noctuaFormConfig.edge.causallyUpstreamOf.id] = {
-      edge: noctuaFormConfig.edge.causallyUpstreamOf,
-      closures: [{
-        object: noctuaFormConfig.closures.bp
-      }, {
-        subject: noctuaFormConfig.closures.mf
-      }]
-    };
-
-    this.closureCheck[noctuaFormConfig.edge.causallyUpstreamOfOrWithin.id] = {
-      edge: noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
-      closures: [{
-        object: noctuaFormConfig.closures.bp
-      }, {
-        subject: noctuaFormConfig.closures.mf
-      }]
-    };
-
     this.closureCheck[noctuaFormConfig.edge.partOf.id] = {
       edge: noctuaFormConfig.edge.partOf,
       closures: [{
@@ -802,6 +784,24 @@ export class NoctuaFormConfigService {
         subject: noctuaFormConfig.closures.mc
       }, {
         object: noctuaFormConfig.closures.gp
+      }]
+    };
+
+    this.closureCheck[noctuaFormConfig.edge.causallyUpstreamOf.id] = {
+      edge: noctuaFormConfig.edge.causallyUpstreamOf,
+      closures: [{
+        object: noctuaFormConfig.closures.bp
+      }, {
+        subject: noctuaFormConfig.closures.mf
+      }]
+    };
+
+    this.closureCheck[noctuaFormConfig.edge.causallyUpstreamOfOrWithin.id] = {
+      edge: noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
+      closures: [{
+        object: noctuaFormConfig.closures.bp
+      }, {
+        subject: noctuaFormConfig.closures.mf
       }]
     };
   }
@@ -1087,14 +1087,14 @@ export class NoctuaFormConfigService {
 
   }
 
-  createAnnotonConnectorModel(upstreamAnnoton: Annoton, downstreamAnnoton: Annoton) {
+  createAnnotonConnectorModel(upstreamAnnoton: Annoton, downstreamAnnoton: Annoton, srcProcessNode?: AnnotonNode, srcHasInputNode?: AnnotonNode) {
     const self = this;
     let srcUpstreamNode = upstreamAnnoton.getMFNode();
     let srcDownstreamNode = downstreamAnnoton.getMFNode();
     let upstreamNode = self.generateNode(srcUpstreamNode.id, { id: 'upstream' });
     let downstreamNode = self.generateNode(srcDownstreamNode.id, { id: 'downstream' });
-    let processNode = self.generateNode('bp', { id: 'process' });
-    let hasInputNode = self.generateNode('mf-1', { id: 'has-input' });
+    let processNode = srcProcessNode ? srcProcessNode : self.generateNode('bp', { id: 'process' });
+    let hasInputNode = srcHasInputNode ? srcHasInputNode : self.generateNode('mf-1', { id: 'has-input' });
 
     upstreamNode.copyValues(srcUpstreamNode);
     downstreamNode.copyValues(srcDownstreamNode);

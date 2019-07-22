@@ -39,7 +39,7 @@ export class ConnectorAnnoton extends SaeGraph {
   type: ConnectorType = ConnectorType.basic;
   rule: ConnectorRule;
 
-  constructor(upstreamNode: AnnotonNode, downstreamNode: AnnotonNode, state?: ConnectorState) {
+  constructor(upstreamNode?: AnnotonNode, downstreamNode?: AnnotonNode, state?: ConnectorState) {
     super();
     this.id = uuid();
 
@@ -51,28 +51,31 @@ export class ConnectorAnnoton extends SaeGraph {
   }
 
   setType() {
-    let effectDependency: Rule = this.rule.rules.effectDependency;
-    this.type = effectDependency.condition ? ConnectorType.intermediate : ConnectorType.basic;
-  }
+    const self = this;
+    let effectDependency = this.rule.effectDependency;
 
-  setIntermediateProcess() {
-    this.type = ConnectorType.intermediate;
+    if (self.type === ConnectorType.intermediate) {
+      self.rule.annotonsConsecutive.condition = true;
+      self.rule.effectDependency.condition = true;
+    }
+
+    this.type = effectDependency.condition ? ConnectorType.intermediate : ConnectorType.basic;
   }
 
   checkConnection(value: any) {
     const self = this;
 
-    self.rule.rules.annotonsConsecutive.condition = value.annotonsConsecutive;
+    self.rule.annotonsConsecutive.condition = value.annotonsConsecutive;
     self.rule.displaySection.causalEffect = true;
     self.rule.displaySection.causalReactionProduct = false;
     self.rule.displaySection.effectDependency = value.annotonsConsecutive;
     self.rule.displaySection.process = value.effectDependency;
-    self.rule.rules.effectDependency.condition = value.annotonsConsecutive && value.effectDependency;
+    self.rule.effectDependency.condition = value.annotonsConsecutive && value.effectDependency;
 
     self.setType();
 
-    if (!self.rule.rules.effectDependency.condition) {
-      if (self.rule.rules.subjectMFCatalyticActivity.condition && self.rule.rules.objectMFCatalyticActivity.condition) {
+    if (!self.rule.effectDependency.condition) {
+      if (self.rule.subjectMFCatalyticActivity.condition && self.rule.objectMFCatalyticActivity.condition) {
         self.rule.displaySection.causalReactionProduct = true;
       }
       self.rule.displaySection.causalReactionProduct = false;

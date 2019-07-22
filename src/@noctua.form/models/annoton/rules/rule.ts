@@ -6,7 +6,6 @@ export class Rule {
   label: string;
   description: string
   url: string;
-  condition: false;
 
   constructor(name?: string, label?: string, description?: string, url?: string) {
     this.name = name;

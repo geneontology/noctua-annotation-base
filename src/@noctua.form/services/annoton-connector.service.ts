@@ -39,7 +39,6 @@ export class NoctuaAnnotonConnectorService {
   private connectorForm: AnnotonConnectorForm;
   private connectorFormGroup: BehaviorSubject<FormGroup | undefined>;
   public connectorFormGroup$: Observable<FormGroup>;
-
   public connectorAnnoton: ConnectorAnnoton;
   public onAnnotonChanged: BehaviorSubject<any>;
 
@@ -64,11 +63,11 @@ export class NoctuaAnnotonConnectorService {
     let connectors = [];
 
     each(this.cam.annotons, (annoton: Annoton) => {
-      if (self.annoton.connectionId !== annoton.connectionId) {
-
+      if (self.annoton.connectionId !== annoton.id) {
         connectors.push(
           Object.assign({
             annoton: annoton,
+            connectorAnnoton: this.cam.getConnector(self.annoton.id, annoton.id)
           })
         );
       }
@@ -78,23 +77,23 @@ export class NoctuaAnnotonConnectorService {
   }
 
   initializeForm(upstreamId: string, downstreamId: string) {
-    let effect = this.getCausalEffect();
     this.connectorAnnoton = this.cam.getConnector(upstreamId, downstreamId);
 
-    if (!this.connectorAnnoton) {
+    if (this.connectorAnnoton) {
+
+    } else {
       this.connectorAnnoton = this.createConnectorAnnoton(upstreamId, downstreamId);
     }
 
     this.connectorForm = this.createConnectorForm();
-
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
-    this.connectorForm.causalEffect.setValue(effect.causalEffect);
-    this.connectorForm.causalReactionProduct.setValue(effect.causalReactionProduct);
-    this.connectorForm.annotonsConsecutive.setValue(effect.annotonsConsecutive);
-    this.connectorForm.effectDependency.setValue(effect.effectDependency);
+    this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
+    this.connectorForm.causalReactionProduct.setValue(this.connectorAnnoton.rule.effectReactionProduct.reaction);
+    this.connectorForm.annotonsConsecutive.setValue(this.connectorAnnoton.rule.annotonsConsecutive.condition);
+    this.connectorForm.effectDependency.setValue(this.connectorAnnoton.rule.effectDependency.condition);
     this._onAnnotonFormChanges();
     //just to trigger the on Changes event 
-    this.connectorForm.causalEffect.setValue(effect.causalEffect);
+    this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
     //  this.checkConnection(this.connectorFormGroup.getValue().value, this.rules, this.displaySection, this.subjectBPNode);
   }
 
@@ -118,17 +117,7 @@ export class NoctuaAnnotonConnectorService {
     return connectorForm;
   }
 
-  getCausalEffect() {
-    let result = {
-      annotonsConsecutive: true,
-      causalEffect: this.noctuaFormConfigService.causalEffect.selected,
-      effectDependency: false,
-      edge: this.noctuaFormConfigService.edges.placeholder,
-      causalReactionProduct: this.noctuaFormConfigService.causalReactionProduct.selected
-    };
 
-    return result;
-  }
 
   connectorFormToAnnoton() {
     const self = this;
@@ -147,12 +136,6 @@ export class NoctuaAnnotonConnectorService {
 
     return self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton);
   }
-
-
-
-
-
-
 
   private _onAnnotonFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
