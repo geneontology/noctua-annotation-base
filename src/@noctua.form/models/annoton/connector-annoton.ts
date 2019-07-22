@@ -140,7 +140,6 @@ export class ConnectorAnnoton extends SaeGraph {
       return result;
     });
 
-
     this.downstreamNode.evidence = evidences;
 
     if (this.type === ConnectorType.basic) {

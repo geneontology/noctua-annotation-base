@@ -73,6 +73,24 @@ export class Cam {
     }
   }
 
+  getActivities() {
+    const self = this;
+    let result = [];
+
+    each(self.annotons, function (annotonData) {
+      each(annotonData.annoton.nodes, function (node) {
+        if (node.id === 'mf') {
+          result.push({
+            node: node,
+            annoton: annotonData.annoton
+          })
+        }
+      });
+    });
+
+    return result;
+  }
+
   resetFilter() {
     this.filter.contributor = null;
     this.filter.individualIds = [];
@@ -148,23 +166,7 @@ export class Cam {
     return result;
   }
 
-  getMFNodes() {
-    const self = this;
-    let result = [];
 
-    each(self.annotons, function (annotonData) {
-      each(annotonData.annoton.nodes, function (node) {
-        if (node.id === 'mf') {
-          result.push({
-            node: node,
-            annoton: annotonData.annoton
-          })
-        }
-      });
-    });
-
-    return result;
-  }
 
   getUniqueEvidences(result?) {
     const self = this;

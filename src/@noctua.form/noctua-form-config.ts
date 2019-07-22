@@ -305,7 +305,10 @@ export const noctuaFormConfig = {
     edge.directlyRegulates,
     edge.directlyPositivelyRegulates,
     edge.directlyNegativelyRegulates,
-    edge.directlyProvidesInput
+    edge.directlyProvidesInput,
+    edge.positivelyRegulates,
+    edge.negativelyRegulates,
+    edge.regulates
   ],
 
   connectorProcesses: [{
