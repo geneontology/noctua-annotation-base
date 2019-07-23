@@ -67,7 +67,7 @@ export class NoctuaAnnotonConnectorService {
         connectors.push(
           Object.assign({
             annoton: annoton,
-            connectorAnnoton: this.cam.getConnector(self.annoton.id, annoton.id)
+            connectorAnnoton: this.cam.getConnectorAnnoton(self.annoton.id, annoton.id)
           })
         );
       }
@@ -77,10 +77,10 @@ export class NoctuaAnnotonConnectorService {
   }
 
   initializeForm(upstreamId: string, downstreamId: string) {
-    this.connectorAnnoton = this.cam.getConnector(upstreamId, downstreamId);
+    this.connectorAnnoton = this.cam.getConnectorAnnoton(upstreamId, downstreamId);
 
     if (this.connectorAnnoton) {
-
+      this.connectorAnnoton.setType();
     } else {
       this.connectorAnnoton = this.createConnectorAnnoton(upstreamId, downstreamId);
     }
@@ -118,14 +118,6 @@ export class NoctuaAnnotonConnectorService {
   }
 
 
-
-  connectorFormToAnnoton() {
-    const self = this;
-    let annotonsConsecutive = self.connectorForm.annotonsConsecutive.value;
-    let causalEffect = self.connectorForm.causalEffect.value;
-    let edge = self.noctuaFormConfigService.getCausalAnnotonConnectorEdge(causalEffect, annotonsConsecutive);
-  }
-
   save() {
     const self = this;
 
@@ -140,7 +132,6 @@ export class NoctuaAnnotonConnectorService {
   private _onAnnotonFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
       //  this.errors = this.getAnnotonFormErrors();
-      this.connectorFormToAnnoton();
       this.connectorAnnoton.checkConnection(value);
     })
   }

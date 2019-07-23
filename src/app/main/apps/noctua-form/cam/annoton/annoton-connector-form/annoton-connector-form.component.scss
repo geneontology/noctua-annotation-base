@@ -128,7 +128,7 @@ $accent: map-get($theme, accent);
   .noc-annoton-box {
     width: 250px;
     height: 100px;
-    padding: 12px;
+    // padding: 12px;
     //box-shadow: 0 1px 40px 0 #B0C1D9;
     @include mat-elevation(2);
     text-align: center;
@@ -138,6 +138,14 @@ $accent: map-get($theme, accent);
     cursor: move;
     background-color: white;
     font-size: 12px;
+
+    .noc-annoton-box-header {
+      @include deep-height(30px);
+      width: 100%;
+      border-bottom: rgba(map-get($primary, default), 0.6) solid 1px;
+      font-size: 12px;
+      color: #777;
+    }
 
     &.noc-sm {
       width: 200px;

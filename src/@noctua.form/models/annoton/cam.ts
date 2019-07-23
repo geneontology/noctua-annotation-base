@@ -58,12 +58,14 @@ export class Cam {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;
   }
 
-  getConnector(upstreamId: string, downstreamId: string): ConnectorAnnoton {
+  getConnectorAnnoton(upstreamId: string, downstreamId: string): ConnectorAnnoton {
     const self = this;
 
     return _.find(self.connectorAnnotons, (connectorAnnoton: ConnectorAnnoton) => {
-      return connectorAnnoton.upstreamNode.individualId === upstreamId &&
+      let re = connectorAnnoton.upstreamNode.individualId === upstreamId &&
         connectorAnnoton.downstreamNode.individualId === downstreamId;
+
+      return re
     });
   }
 

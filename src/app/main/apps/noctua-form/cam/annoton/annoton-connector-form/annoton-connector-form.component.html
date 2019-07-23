@@ -90,23 +90,29 @@
     <div *ngIf="connectorFormGroup" class="noc-connector-form h-100-p" noctuaPerfectScrollbar>
       <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section w-100-p">
         <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
-          <div fxLayout="row" fxLayoutAlign="center center" class="noc-summary-row w-100-p">
+          <div fxLayout="row" fxLayoutAlign="space-between center " class="noc-summary-row w-100-p">
             <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
-              <span>
+              <div class="noc-annoton-box-header">
+                Downstream Activity
+              </div>
+              <div class="p-8 w-100-p" fxFlex="100%">
                 <small>{{ connectorAnnoton?.upstreamAnnoton?.presentation.mfText}}</small>
                 enabled by:
                 <strong>{{ connectorAnnoton?.upstreamAnnoton?.presentation.gpText}}</strong>
-              </span>
+              </div>
             </div>
             <div>
               <mat-icon class="s-32">arrow_right_alt</mat-icon>
             </div>
             <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
-              <span>
+              <div class="noc-annoton-box-header">
+                Upstream Activity
+              </div>
+              <div class="p-8 w-100-p" fxFlex="100%">
                 <small>{{ connectorAnnoton?.downstreamAnnoton?.presentation.mfText}}</small>
                 enabled by:
                 <strong>{{ connectorAnnoton?.downstreamAnnoton?.presentation.gpText}}</strong>
-              </span>
+              </div>
             </div>
           </div>
         </div>
