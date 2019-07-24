@@ -324,11 +324,99 @@
             </span>
           </div>
         </div>
+        <ng-container *ngIf="connectorAnnoton?.state===connectorState.editing">
+          <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">
+            <div class="noc-section-heading">
+              Current Causal Relation
+            </div>
+          </div>
+          <div *ngIf="connectorAnnoton?.type===connectorType.basic" class="noc-section-body w-100-p p-0"
+            fxLayout="column" fxLayoutAlign="start center">
+            <div class="w-100-p pb-24">
+              {{ connectorAnnoton?.rule.actualEdge.r1?.label}}
+            </div>
+            <div class="noc-section-body noc-triple-v w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
+              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+                <span>
+                  {{ connectorAnnoton?.upstreamAnnoton?.presentation.mfText}}
+                </span>
+              </div>
+              <svg height="20" width="20">
+                <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
+              </svg>
+              <div class="noc-predicate" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
+                {{ connectorAnnoton?.rule.actualEdge.r1?.label}}
+              </div>
+              <svg height="20" width="20">
+                <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
+              </svg>
+              <svg width="20" height="20">
+                <polygon points="0 0,10 20,20 0,0 0" />
+              </svg>
+              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+                <span>
+                  {{ connectorAnnoton?.downstreamAnnoton?.presentation.mfText}}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="connectorAnnoton?.type===connectorType.intermediate" class="noc-section-body w-100-p p-0"
+            fxLayout="column" fxLayoutAlign="start center">
+            <div class="w-100-p pb-24">
+              {{ connectorAnnoton?.rule.actualEdge.r1?.label}} + {{ connectorAnnoton?.rule.actualEdge.r2?.label}}
+            </div>
+            <div class="noc-section-body noc-triple-v w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
+              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+                <span>
+                  {{ connectorAnnoton?.upstreamAnnoton?.presentation.mfText}}
+                </span>
+              </div>
+              <svg height="20" width="20">
+                <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
+              </svg>
+              <div class="noc-predicate" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
+                {{ connectorAnnoton?.rule.actualEdge.r1?.label}}
+              </div>
+              <svg height="20" width="20">
+                <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
+              </svg>
+              <svg width="20" height="20">
+                <polygon points="0 0,10 20,20 0,0 0" />
+              </svg>
+              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+                <span>
+                  {{ connectorAnnoton?.processNode?.getTerm().label}}
+                </span>
+              </div>
+              <svg height="20" width="20">
+                <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
+              </svg>
+              <div class="noc-predicate" fxFlex="" fxLayout="column" fxLayoutAlign="end stretch">
+                {{ connectorAnnoton?.rule.actualEdge.r2?.label}}
+              </div>
+              <svg height="20" width="20">
+                <line class="noc-line r1" x1="10" y1="0" x2="10" y2="20" />
+              </svg>
+              <svg width="20" height="20">
+                <polygon points="0 0,10 20,20 0,0 0" />
+              </svg>
+              <div class="noc-annoton-box" fxLayout="column" fxLayoutAlign="center center">
+                <span>
+                  {{ connectorAnnoton?.downstreamAnnoton?.presentation.mfText}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
         <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-section-heading">
             Suggested Causal Relation
           </div>
         </div>
+        <noc-graph-preview [nodes]="connectorAnnoton?.expectedGraphPreview.nodes"
+          [edges]="connectorAnnoton?.expectedGraphPreview.edges" class="noc-graph-preview"></noc-graph-preview>
+
         <div *ngIf="connectorAnnoton?.type===connectorType.basic" class="noc-section-body w-100-p p-0" fxLayout="column"
           fxLayoutAlign="start center">
           <div class="w-100-p pb-24">

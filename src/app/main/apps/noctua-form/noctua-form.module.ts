@@ -38,6 +38,7 @@ import { AnnotonTableComponent } from './cam/cam-table/annoton-table/annoton-tab
 import { TripleFormComponent } from './cam/annoton/triple-form/triple-form.component';
 import { TripleTableComponent } from './cam/cam-table/triple-table/triple-table.component';
 import { EvidenceTableComponent } from './cam/cam-table/triple-table/evidence-table/evidence-table.component';
+import { GraphPreviewComponent } from './cam/cam-diagram/graph-preview/graph-preview.component';
 
 const routes = [
   {
@@ -106,7 +107,8 @@ const routes = [
     TripleTableComponent,
     AnnotonTableComponent,
     EvidenceTableComponent,
-    TripleFormComponent
+    TripleFormComponent,
+      GraphPreviewComponent
   ],
   entryComponents: [
     CamRowEditDialogComponent,

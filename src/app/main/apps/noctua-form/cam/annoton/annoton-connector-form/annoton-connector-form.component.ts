@@ -54,6 +54,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   panelDrawer: MatDrawer;
 
   connectorType = ConnectorType;
+  connectorState = ConnectorState;
   panel = {
     selectConnector: {
       id: 1

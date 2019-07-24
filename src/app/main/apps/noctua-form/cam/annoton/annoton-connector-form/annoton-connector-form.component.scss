@@ -82,8 +82,13 @@ $accent: map-get($theme, accent);
     }
   }
 
+  .noc-graph-preview {
+    height: 300px;
+    width: 100%;
+  }
+
   .noc-connector-form-notes {
-    width: 300px;
+    width: 400px;
     background-color: rgba($noc-primary-color-lighter, 0.6);
 
     .noc-form-section {

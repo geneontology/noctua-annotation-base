@@ -17,7 +17,9 @@ export class Entity {
   }
 
   hasValue() {
-    return this.id !== null;
+    let result = this.id !== null && this.id !== undefined && this.id.length > 0;
+
+    return result
   }
 
-}
+} 

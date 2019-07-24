@@ -3,6 +3,7 @@ declare const require: any;
 const each = require('lodash/forEach');
 const map = require('lodash/map');
 const uuid = require('uuid/v1');
+import { Edge, Node, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 
 import { SaeGraph } from './sae-graph';
@@ -38,6 +39,16 @@ export class ConnectorAnnoton extends SaeGraph {
   state: ConnectorState;
   type: ConnectorType = ConnectorType.basic;
   rule: ConnectorRule;
+
+  actualGraphPreview = {
+    nodes: [],
+    edges: []
+  }
+
+  expectedGraphPreview = {
+    nodes: [],
+    edges: []
+  }
 
   constructor(upstreamNode?: AnnotonNode, downstreamNode?: AnnotonNode, state?: ConnectorState) {
     super();
@@ -90,6 +101,8 @@ export class ConnectorAnnoton extends SaeGraph {
       value.causalEffect,
       value.annotonsConsecutive,
       value.causalReactionProduct);
+
+    self.setPreview();
   }
 
   getCausalConnectorEdge(causalEffect, annotonsConsecutive, causalReactionProduct) {
@@ -126,6 +139,64 @@ export class ConnectorAnnoton extends SaeGraph {
     }
 
     return result;
+  }
+
+  setPreview() {
+    const self = this;
+
+
+    if (self.type === ConnectorType.basic) {
+      self.expectedGraphPreview.nodes = <Node[]>[self.upstreamNode, self.downstreamNode].map((node: AnnotonNode) => {
+        return {
+          id: node.id,
+          label: node.term.label
+        }
+      })
+
+      self.expectedGraphPreview.edges = <Edge[]>[
+        {
+          source: 'upstream',
+          target: 'downstream',
+          label: self.rule.suggestedEdge.r1.label
+        }
+      ]
+
+    } else if (self.type === ConnectorType.intermediate) {
+      let nodes = [self.upstreamNode, self.processNode, self.downstreamNode];
+      if (this.hasInputNode.hasValue()) {
+        nodes.push(this.hasInputNode)
+      }
+      let dim: NodeDimension = {
+        height: 60,
+        width: 120
+      }
+      self.expectedGraphPreview.nodes = <Node[]>nodes.map((node: AnnotonNode) => {
+        return {
+          id: node.id,
+          label: node.term.label ? node.term.label : '',
+          dimension: dim
+        }
+      });
+
+      self.expectedGraphPreview.edges = <Edge[]>[
+        {
+          source: 'upstream',
+          target: 'process',
+          label: self.rule.suggestedEdge.r1.label
+        }, {
+          source: 'process',
+          target: 'downstream',
+          label: self.rule.suggestedEdge.r2 ? self.rule.suggestedEdge.r2.label : ''
+        },
+      ]
+      if (this.hasInputNode.hasValue()) {
+        self.expectedGraphPreview.edges.push({
+          source: 'process',
+          target: 'has-input',
+          label: noctuaFormConfig.edge.hasInput.label
+        });
+      }
+    }
   }
 
   prepareSave(value) {
