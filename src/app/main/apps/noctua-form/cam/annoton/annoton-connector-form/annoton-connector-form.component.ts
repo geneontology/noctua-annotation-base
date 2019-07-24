@@ -64,6 +64,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   };
   selectedPanel: any;
   annoton: Annoton;
+  currentConnectorAnnoton: ConnectorAnnoton;
   connectorAnnoton: ConnectorAnnoton;
   mfNode: AnnotonNode;
 
@@ -103,6 +104,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
       .subscribe(connectorFormGroup => {
         if (!connectorFormGroup) return;
         this.connectorFormGroup = connectorFormGroup;
+        this.currentConnectorAnnoton = this.noctuaAnnotonConnectorService.currentConnectorAnnoton;
         this.connectorAnnoton = this.noctuaAnnotonConnectorService.connectorAnnoton;
 
         this.selectedCausalEffect = this.connectorFormGroup.get('causalEffect').value

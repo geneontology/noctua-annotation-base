@@ -1,6 +1,9 @@
 <div class="w-100-p h-100-p noc-graph-holder">
   <ngx-graph [view]="[400, 500]" [links]="edges" [nodes]="nodes" [curve]="curve" [layout]="layout" [nodeWidth]=120
-    [nodeHeight]=50 [layoutSettings]="layoutSettings" [curve]="curve" [enableZoom]="true" [autoZoom]="true">
+    [nodeHeight]=50 [layoutSettings]="layoutSettings" [curve]="curve" [draggingEnabled]="draggingEnabled"
+    [panningEnabled]="panningEnabled" [enableZoom]="zoomEnabled" [zoomSpeed]="zoomSpeed" [minZoomLevel]="minZoomLevel"
+    [maxZoomLevel]="maxZoomLevel" [panOnZoom]="panOnZoom" [autoZoom]="autoZoom" [autoCenter]="autoCenter"
+    [update$]="update$" [center$]="center$" [zoomToFit$]="zoomToFit$">
 
     <ng-template #defsTemplate>
       <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">

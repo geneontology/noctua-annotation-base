@@ -39,6 +39,7 @@ export class NoctuaAnnotonConnectorService {
   private connectorForm: AnnotonConnectorForm;
   private connectorFormGroup: BehaviorSubject<FormGroup | undefined>;
   public connectorFormGroup$: Observable<FormGroup>;
+  public currentConnectorAnnoton: ConnectorAnnoton;
   public connectorAnnoton: ConnectorAnnoton;
   public onAnnotonChanged: BehaviorSubject<any>;
 
@@ -77,12 +78,16 @@ export class NoctuaAnnotonConnectorService {
   }
 
   initializeForm(upstreamId: string, downstreamId: string) {
-    this.connectorAnnoton = this.cam.getConnectorAnnoton(upstreamId, downstreamId);
+    let upstreamAnnoton = this.cam.getAnnotonByConnectionId(upstreamId);
+    let downstreamAnnoton = this.cam.getAnnotonByConnectionId(downstreamId);
 
-    if (this.connectorAnnoton) {
-      this.connectorAnnoton.setType();
-    } else {
-      this.connectorAnnoton = this.createConnectorAnnoton(upstreamId, downstreamId);
+    this.connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(upstreamAnnoton, downstreamAnnoton);
+    this.currentConnectorAnnoton = this.cam.getConnectorAnnoton(upstreamId, downstreamId);
+
+    if (this.currentConnectorAnnoton) {
+      this.currentConnectorAnnoton.setType();
+      this.currentConnectorAnnoton.setPreview();
+      this.connectorAnnoton.copyValues(this.currentConnectorAnnoton);
     }
 
     this.connectorForm = this.createConnectorForm();
@@ -97,15 +102,6 @@ export class NoctuaAnnotonConnectorService {
     //  this.checkConnection(this.connectorFormGroup.getValue().value, this.rules, this.displaySection, this.subjectBPNode);
   }
 
-  createConnectorAnnoton(upstreamId: string, downstreamId: string): ConnectorAnnoton {
-    let upstreamAnnoton = this.cam.getAnnotonByConnectionId(upstreamId);
-    let downstreamAnnoton = this.cam.getAnnotonByConnectionId(downstreamId);
-    let connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(upstreamAnnoton, downstreamAnnoton);
-
-    connectorAnnoton.rule.suggestedEdge.r1 = noctuaFormConfig.edge.causallyUpstreamOf;
-    return connectorAnnoton;
-  }
-
   createConnectorForm() {
     const self = this;
     let connectorFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
@@ -116,7 +112,6 @@ export class NoctuaAnnotonConnectorService {
 
     return connectorForm;
   }
-
 
   save() {
     const self = this;

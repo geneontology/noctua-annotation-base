@@ -28,7 +28,6 @@ export enum ConnectorType {
 }
 
 export class ConnectorAnnoton extends SaeGraph {
-
   id: string;
   upstreamAnnoton: Annoton;
   downstreamAnnoton: Annoton;
@@ -40,12 +39,7 @@ export class ConnectorAnnoton extends SaeGraph {
   type: ConnectorType = ConnectorType.basic;
   rule: ConnectorRule;
 
-  actualGraphPreview = {
-    nodes: [],
-    edges: []
-  }
-
-  expectedGraphPreview = {
+  graphPreview = {
     nodes: [],
     edges: []
   }
@@ -142,61 +136,42 @@ export class ConnectorAnnoton extends SaeGraph {
   }
 
   setPreview() {
+    this.graphPreview.nodes = this._getPreviewNodes();
+    this.graphPreview.edges = this._getPreviewEdges();
+  }
+
+  private _getPreviewNodes(): Node[] {
     const self = this;
+    let nodes: Node[] = [];
 
+    let annotonNodes = [self.upstreamNode, self.downstreamNode];
 
-    if (self.type === ConnectorType.basic) {
-      self.expectedGraphPreview.nodes = <Node[]>[self.upstreamNode, self.downstreamNode].map((node: AnnotonNode) => {
-        return {
-          id: node.id,
-          label: node.term.label
-        }
-      })
+    if (self.type === ConnectorType.intermediate) {
+      annotonNodes.push(self.processNode);
 
-      self.expectedGraphPreview.edges = <Edge[]>[
-        {
-          source: 'upstream',
-          target: 'downstream',
-          label: self.rule.suggestedEdge.r1.label
-        }
-      ]
-
-    } else if (self.type === ConnectorType.intermediate) {
-      let nodes = [self.upstreamNode, self.processNode, self.downstreamNode];
-      if (this.hasInputNode.hasValue()) {
-        nodes.push(this.hasInputNode)
-      }
-      let dim: NodeDimension = {
-        height: 60,
-        width: 120
-      }
-      self.expectedGraphPreview.nodes = <Node[]>nodes.map((node: AnnotonNode) => {
-        return {
-          id: node.id,
-          label: node.term.label ? node.term.label : '',
-          dimension: dim
-        }
-      });
-
-      self.expectedGraphPreview.edges = <Edge[]>[
-        {
-          source: 'upstream',
-          target: 'process',
-          label: self.rule.suggestedEdge.r1.label
-        }, {
-          source: 'process',
-          target: 'downstream',
-          label: self.rule.suggestedEdge.r2 ? self.rule.suggestedEdge.r2.label : ''
-        },
-      ]
-      if (this.hasInputNode.hasValue()) {
-        self.expectedGraphPreview.edges.push({
-          source: 'process',
-          target: 'has-input',
-          label: noctuaFormConfig.edge.hasInput.label
-        });
+      if (self.hasInputNode.hasValue()) {
+        annotonNodes.push(self.hasInputNode)
       }
     }
+
+    nodes = <Node[]>annotonNodes.map((node: AnnotonNode) => {
+      return {
+        id: node.id,
+        label: node.term.label ? node.term.label : '',
+      }
+    });
+
+    return nodes;
+  }
+
+  copyValues(currentConnectorAnnoton: ConnectorAnnoton) {
+    const self = this;
+
+    self.processNode.term = _.cloneDeep(currentConnectorAnnoton.processNode.term);
+    self.hasInputNode.term = _.cloneDeep(currentConnectorAnnoton.hasInputNode.term);
+    self.rule = _.cloneDeep(currentConnectorAnnoton.rule);
+    self.type = currentConnectorAnnoton.type;;
+
   }
 
   prepareSave(value) {
@@ -236,5 +211,42 @@ export class ConnectorAnnoton extends SaeGraph {
     }
 
     console.log(self)
+  }
+
+  private _getPreviewEdges(): Edge[] {
+    const self = this;
+
+    let edges: Edge[] = [];
+
+    if (self.type === ConnectorType.basic) {
+      edges = <Edge[]>[
+        {
+          source: 'upstream',
+          target: 'downstream',
+          label: self.rule.suggestedEdge.r1.label
+        }
+      ]
+    } else if (self.type === ConnectorType.intermediate) {
+      edges = <Edge[]>[
+        {
+          source: 'upstream',
+          target: 'process',
+          label: self.rule.suggestedEdge.r1.label
+        }, {
+          source: 'process',
+          target: 'downstream',
+          label: self.rule.suggestedEdge.r2 ? self.rule.suggestedEdge.r2.label : ''
+        },
+      ]
+      if (this.hasInputNode.hasValue()) {
+        edges.push({
+          source: 'process',
+          target: 'has-input',
+          label: noctuaFormConfig.edge.hasInput.label
+        });
+      }
+    }
+
+    return edges;
   }
 }

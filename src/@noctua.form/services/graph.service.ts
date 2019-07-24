@@ -726,7 +726,7 @@ export class NoctuaGraphService {
             let connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, downstreamAnnoton);
 
             connectorAnnoton.state = ConnectorState.editing;
-            connectorAnnoton.rule.actualEdge.r1 = causalEdge;
+            connectorAnnoton.rule.suggestedEdge.r1 = causalEdge;
             connectorAnnotons.push(connectorAnnoton);
           } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.bp.id)) {
             let processNodeInfo = self.nodeToTerm(cam.graph, objectId);
@@ -742,7 +742,7 @@ export class NoctuaGraphService {
 
               connectorAnnoton.state = ConnectorState.editing;
               connectorAnnoton.type = ConnectorType.intermediate;
-              connectorAnnoton.rule.actualEdge.r2 = connectorAnnotonDTO.rule.actualEdge.r2;
+              connectorAnnoton.rule.suggestedEdge.r2 = connectorAnnotonDTO.rule.suggestedEdge.r2;
               connectorAnnotons.push(connectorAnnoton);
             }
           }
@@ -778,7 +778,7 @@ export class NoctuaGraphService {
           hasInputNode.setEvidence(self.edgeToEvidence(cam.graph, e));
 
           connectorAnnoton.hasInputNode = hasInputNode;
-          connectorAnnoton.rule.actualEdge.r2 = causalEdge;
+          connectorAnnoton.rule.suggestedEdge.r2 = causalEdge;
         }
       }
 
@@ -786,7 +786,7 @@ export class NoctuaGraphService {
         if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.mf.id)) {
           let downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
 
-          connectorAnnoton.rule.actualEdge.r2 = causalEdge;
+          connectorAnnoton.rule.suggestedEdge.r2 = causalEdge;
           connectorAnnoton.downstreamAnnoton = downstreamAnnoton;
         }
       }

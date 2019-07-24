@@ -36,11 +36,6 @@ export class ConnectorRule {
     process: false,
   }
 
-  actualEdge = {
-    r1: null,
-    r2: null
-  }
-
   suggestedEdge = {
     r1: null,
     r2: null
