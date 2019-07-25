@@ -39,7 +39,9 @@ import {
   NoctuaAnnotonFormService,
   NoctuaFormConfigService,
   NoctuaLookupService,
-  CamService
+  CamService,
+  noctuaFormConfig,
+  Entity
 } from 'noctua-form-base';
 import { NoctuaFormDialogService } from '../../../services/dialog.service';
 
@@ -138,32 +140,59 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
   save() {
     const self = this;
-    this.noctuaAnnotonConnectorService.save();
-    /*  this.noctuaAnnotonConnectorService.save().then(() => {
-       self.selectPanel(self.panel.selectConnector);
-       self.noctuaAnnotonConnectorService.getConnections();
-       self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully created.', 'OK');
-     }); */
+    this.noctuaAnnotonConnectorService.save().then(() => {
+      self.selectPanel(self.panel.selectConnector);
+      self.noctuaAnnotonConnectorService.getConnections();
+      self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully created.', 'OK');
+    });
   }
 
   addEvidence() {
     const self = this;
 
-    let evidenceFormGroup: FormArray = <FormArray>self.connectorFormGroup.get('evidenceFormArray');
-
-    evidenceFormGroup.push(this.formBuilder.group({
-      evidence: new FormControl(),
-      reference: new FormControl(),
-      with: new FormControl(),
-    }));
+    self.connectorAnnoton.upstreamNode.addEvidence();
+    this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
   }
 
-  removeEvidence(index) {
+  removeEvidence(index: number) {
     const self = this;
 
-    let evidenceFormGroup: FormArray = <FormArray>self.connectorFormGroup.get('evidenceFormArray');
+    self.connectorAnnoton.upstreamNode.removeEvidence(index);
+    this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
+  }
 
-    evidenceFormGroup.removeAt(index);
+  addNDEvidence() {
+    const self = this;
+
+    let evidence = new Evidence();
+    evidence.setEvidence(new Entity(
+      noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
+      noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
+    evidence.setReference(new Entity(null, noctuaFormConfig.evidenceAutoPopulate.nd.reference));
+    self.connectorAnnoton.upstreamNode.setEvidence([evidence]);
+    this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
+  }
+
+  clearValues() {
+    const self = this;
+
+    self.connectorAnnoton.upstreamNode.clearValues();
+    this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
+  }
+
+  openSelectEvidenceDialog() {
+    const self = this;
+
+    let evidences: Evidence[] = this.camService.getUniqueEvidence();
+
+    let success = function (selected) {
+      if (selected.evidences && selected.evidences.length > 0) {
+        self.connectorAnnoton.upstreamNode.setEvidence(selected.evidences, ['assignedBy']);
+        this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
+      }
+    }
+
+    self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
   clear() {

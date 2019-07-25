@@ -50,6 +50,21 @@ export class AnnotonConnectorForm {
     });
   }
 
+  updateEvidenceForms(entity: AnnotonNode) {
+    const self = this;
+
+    self.evidenceForms = []
+    self.evidenceFormArray = new FormArray([]);
+
+    entity.evidence.forEach((evidence: Evidence) => {
+      let evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
+
+      self.evidenceForms.push(evidenceForm);
+      evidenceForm.onValueChanges(evidence.evidenceLookup)
+      self.evidenceFormArray.push(self._fb.group(evidenceForm));
+    });
+  }
+
   populateConnectorForm(annoton: Annoton, annotonNode: AnnotonNode) {
     const self = this;
 

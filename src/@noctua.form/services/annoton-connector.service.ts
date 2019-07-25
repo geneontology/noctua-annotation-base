@@ -85,7 +85,6 @@ export class NoctuaAnnotonConnectorService {
     this.currentConnectorAnnoton = this.cam.getConnectorAnnoton(upstreamId, downstreamId);
 
     if (this.currentConnectorAnnoton) {
-      this.currentConnectorAnnoton.setType();
       this.currentConnectorAnnoton.setPreview();
       this.connectorAnnoton.copyValues(this.currentConnectorAnnoton);
     }
@@ -101,6 +100,11 @@ export class NoctuaAnnotonConnectorService {
     this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
   }
 
+  updateEvidence(node: AnnotonNode) {
+    this.connectorForm.updateEvidenceForms(node);
+    this.connectorFormGroup.next(this._fb.group(this.connectorForm));
+  }
+
   createConnectorForm() {
     const self = this;
     let connectorFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
@@ -114,12 +118,9 @@ export class NoctuaAnnotonConnectorService {
 
   save() {
     const self = this;
-
     const value = this.connectorFormGroup.getValue().value;
+
     this.connectorAnnoton.prepareSave(value);
-
-    //console.log(self.connectorAnnoton.getEdges('subject'), subjectNode.getTerm())
-
     return self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton);
   }
 

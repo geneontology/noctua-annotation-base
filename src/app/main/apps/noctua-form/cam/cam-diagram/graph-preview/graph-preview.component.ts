@@ -20,19 +20,36 @@ const clusters: ClusterNode[] = [
   styleUrls: ['./graph-preview.component.scss']
 })
 export class GraphPreviewComponent implements OnInit {
+  _nodes: Node[];
+  _edges: Edge[];
 
+  // @Input('nodes')
+  // nodes: Node[];  
 
-  @Input('nodes')
-  nodes: Node[];
+  //@Input('edges')
+  //edges: Edge[];
 
-  @Input('edges')
-  edges: Edge[];
+  @Input() set nodes(value: Node[]) {
+    this._nodes = [...value];
+    this.update$.next(true);
+  }
 
+  get nodes(): Node[] {
+    return this._nodes;
+  }
+
+  @Input() set edges(value: Edge[]) {
+    this._edges = [...value];
+    this.update$.next(true);
+  }
+
+  get edges(): Edge[] {
+    return this._edges;
+  }
 
   clusters: ClusterNode[] = clusters;
 
-
-  //layout: String | Layout = 'dagreCluster';
+  layout: String | Layout = 'dagreCluster';
   layouts: any[] = [
     {
       label: 'Dagre',
@@ -92,7 +109,7 @@ export class GraphPreviewComponent implements OnInit {
     orientation: "TB"
   }
   //  public curve: any = shape.curveLinear;
-  public layout: Layout = new DagreNodesOnlyLayout();
+  //public layout: Layout = new DagreNodesOnlyLayout();
 
   ngOnInit() {
     this.setInterpolationType(this.curveType);

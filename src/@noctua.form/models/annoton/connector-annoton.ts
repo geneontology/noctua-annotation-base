@@ -73,18 +73,6 @@ export class ConnectorAnnoton extends SaeGraph {
     }
   }
 
-  setType() {
-    const self = this;
-    let effectDependency = this.rule.effectDependency;
-
-    if (self.type === ConnectorType.intermediate) {
-      self.rule.annotonsConsecutive.condition = true;
-      self.rule.effectDependency.condition = true;
-    }
-
-    this.type = effectDependency.condition ? ConnectorType.intermediate : ConnectorType.basic;
-  }
-
   checkConnection(value: any) {
     const self = this;
 
@@ -94,8 +82,7 @@ export class ConnectorAnnoton extends SaeGraph {
     self.rule.displaySection.effectDependency = value.annotonsConsecutive;
     self.rule.displaySection.process = value.effectDependency;
     self.rule.effectDependency.condition = value.annotonsConsecutive && value.effectDependency;
-
-    self.setType();
+    self.type = self.rule.effectDependency.condition ? ConnectorType.intermediate : ConnectorType.basic;
 
     if (!self.rule.effectDependency.condition) {
       if (self.rule.subjectMFCatalyticActivity.condition && self.rule.objectMFCatalyticActivity.condition) {
@@ -179,8 +166,8 @@ export class ConnectorAnnoton extends SaeGraph {
   }
 
   setPreview() {
-    this.graphPreview.nodes = this._getPreviewNodes();
-    this.graphPreview.edges = this._getPreviewEdges();
+    this.graphPreview.nodes = [...this._getPreviewNodes()]
+    this.graphPreview.edges = [...this._getPreviewEdges()]
   }
 
   private _getPreviewNodes(): Node[] {
