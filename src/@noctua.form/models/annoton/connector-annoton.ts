@@ -55,6 +55,24 @@ export class ConnectorAnnoton extends SaeGraph {
     this.rule = new ConnectorRule();
   }
 
+  setRule() {
+    const self = this;
+
+    self.rule.annotonsConsecutive.condition = self.getIsConsecutiveByEdge(self.rule.suggestedEdge.r1);
+    self.rule.effectDirection.direction = self.getEffectDirectionByEdge(self.rule.suggestedEdge.r1);
+
+    if (self.type === ConnectorType.basic) {
+      self.rule.effectDependency.condition = false;
+      self.rule.displaySection.causalReactionProduct = false;
+      self.rule.displaySection.effectDependency = false;
+      self.rule.displaySection.process = false;
+    } else if (self.type === ConnectorType.intermediate) {
+      self.rule.effectDependency.condition = true;
+      self.rule.displaySection.effectDependency = true;
+      self.rule.displaySection.process = true;
+    }
+  }
+
   setType() {
     const self = this;
     let effectDependency = this.rule.effectDependency;
@@ -97,6 +115,30 @@ export class ConnectorAnnoton extends SaeGraph {
       value.causalReactionProduct);
 
     self.setPreview();
+  }
+
+  getIsConsecutiveByEdge(edge) {
+    return edge.id ===
+      !(noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id ||
+        noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id ||
+        noctuaFormConfig.edge.causallyUpstreamOf.id);
+  }
+
+  getEffectDirectionByEdge(edge) {
+    let effectDirection = noctuaFormConfig.causalEffect.options.positive;
+
+    switch (edge.id) {
+      case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
+      case noctuaFormConfig.edge.directlyNegativelyRegulates.id:
+        effectDirection = noctuaFormConfig.causalEffect.options.negative;
+        break;
+      case noctuaFormConfig.edge.causallyUpstreamOf.id:
+      case noctuaFormConfig.edge.directlyRegulates.id:
+        effectDirection = noctuaFormConfig.causalEffect.options.neutral;
+        break;
+    }
+
+    return effectDirection;
   }
 
   getCausalConnectorEdge(causalEffect, annotonsConsecutive, causalReactionProduct) {

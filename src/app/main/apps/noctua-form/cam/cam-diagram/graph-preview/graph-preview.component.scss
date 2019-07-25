@@ -11,7 +11,6 @@ $grid-line-color: rgba(#000, 0.1);
   height: 100%;
 
   background-color: #F2F2F2;
-  overflow: auto;
   background-size: 10px 10px;
   background-image: linear-gradient(to right, $grid-line-color 1px, transparent 1px), linear-gradient(to bottom, $grid-line-color 1px, transparent 1px);
 

@@ -99,7 +99,6 @@ export class NoctuaAnnotonConnectorService {
     this._onAnnotonFormChanges();
     //just to trigger the on Changes event 
     this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
-    //  this.checkConnection(this.connectorFormGroup.getValue().value, this.rules, this.displaySection, this.subjectBPNode);
   }
 
   createConnectorForm() {

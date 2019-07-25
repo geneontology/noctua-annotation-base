@@ -47,5 +47,4 @@ export class ConnectorRule {
     this.effectDirection.direction = noctuaFormConfig.causalEffect.options.positive;
     this.effectReactionProduct.reaction = noctuaFormConfig.causalReactionProduct.options.regulate;
   }
-
 }
