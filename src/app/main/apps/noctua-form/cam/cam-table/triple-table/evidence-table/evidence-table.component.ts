@@ -24,7 +24,6 @@ import {
   Annoton,
   AnnotonNode
 } from 'noctua-form-base';
-import { evidenceValidator } from '@noctua.form/models/forms/validators/evidence-validator';
 
 
 @Component({

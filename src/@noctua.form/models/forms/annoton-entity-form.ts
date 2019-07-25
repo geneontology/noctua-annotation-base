@@ -16,6 +16,7 @@ import { EvidenceForm } from './evidence-form';
 import { Evidence } from './../../models/annoton/evidence'
 import { EntityForm } from './entity-form';
 import { termValidator } from './validators/term-validator';
+import { EntityLookup } from '../annoton/entity-lookup';
 
 export class AnnotonEntityForm {
   term = new FormControl();
@@ -60,7 +61,7 @@ export class AnnotonEntityForm {
     annotonNode.setEvidence(evidences)
   }
 
-  onValueChanges(lookup) {
+  onValueChanges(lookup: EntityLookup) {
     const self = this;
 
     self.term.valueChanges.pipe(

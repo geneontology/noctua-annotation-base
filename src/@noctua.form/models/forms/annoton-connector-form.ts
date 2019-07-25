@@ -15,6 +15,7 @@ import { EvidenceForm } from './evidence-form';
 
 import { Evidence } from './../../models/annoton/evidence'
 import { EntityForm } from './entity-form';
+import { EntityLookup } from '../annoton/entity-lookup';
 
 export class AnnotonConnectorForm {
   edge = new FormControl();
@@ -78,7 +79,7 @@ export class AnnotonConnectorForm {
     });
   }
 
-  onValueChanges(lookup) {
+  onValueChanges(lookup: EntityLookup) {
     const self = this;
 
     self.hasInput.valueChanges.pipe(

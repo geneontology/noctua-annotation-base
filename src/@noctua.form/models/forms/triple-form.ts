@@ -17,7 +17,8 @@ import { EntityForm } from './entity-form';
 import { termValidator } from './validators/term-validator';
 import {
   Triple,
-  Evidence
+  Evidence,
+  EntityLookup
 } from '../annoton';
 
 export class TripleForm {
@@ -64,7 +65,7 @@ export class TripleForm {
     annotonNode.setEvidence(evidences)
   }
 
-  onValueChanges(lookup) {
+  onValueChanges(lookup: EntityLookup) {
     const self = this;
 
     self.subject.valueChanges.pipe(

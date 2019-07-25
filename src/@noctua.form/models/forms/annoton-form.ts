@@ -11,6 +11,7 @@ import { AnnotonNode } from './../annoton/annoton-node';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityGroupForm } from './entity-group-form'
 import { termValidator } from './validators/term-validator';
+import { EntityLookup } from '../annoton/entity-lookup';
 
 export class AnnotonForm {
   entityGroupForms: EntityGroupForm[] = []
@@ -51,7 +52,7 @@ export class AnnotonForm {
     });
   }
 
-  onValueChanges(lookup) {
+  onValueChanges(lookup: EntityLookup) {
     const self = this;
 
     self.gp.valueChanges.pipe(
@@ -60,7 +61,6 @@ export class AnnotonForm {
     ).subscribe(data => {
       self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
         lookup.results = response;
-        console.log(lookup)
       });
     });
   }

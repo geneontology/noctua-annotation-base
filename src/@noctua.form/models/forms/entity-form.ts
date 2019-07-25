@@ -5,6 +5,7 @@ import { Evidence } from './../annoton/evidence';
 import { AnnotonFormMetadata } from './annoton-form-metadata';
 import { EvidenceForm } from './evidence-form';
 import { termValidator } from './validators/term-validator';
+import { EntityLookup } from '../annoton/entity-lookup';
 
 declare const require: any;
 const each = require('lodash/forEach');
@@ -52,7 +53,7 @@ export class EntityForm {
         });
     }
 
-    onValueChanges(lookup) {
+    onValueChanges(lookup: EntityLookup) {
         const self = this;
 
         self.term.valueChanges.pipe(

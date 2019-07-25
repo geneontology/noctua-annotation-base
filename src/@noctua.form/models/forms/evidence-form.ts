@@ -11,6 +11,7 @@ import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 
 import { termValidator } from './validators/term-validator';
 import { evidenceValidator } from './validators/evidence-validator';
+import { EntityLookup } from '../annoton/entity-lookup';
 
 export class EvidenceForm {
     individualId;
@@ -42,7 +43,7 @@ export class EvidenceForm {
         evidence.setWith(this.with.value)
     }
 
-    onValueChanges(lookup) {
+    onValueChanges(lookup: EntityLookup) {
         const self = this;
 
         self.evidence.valueChanges.pipe(
@@ -50,7 +51,6 @@ export class EvidenceForm {
             debounceTime(400)
         ).subscribe(data => {
             self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
-                console.log(0)
                 lookup.results = response;
             });
         });
