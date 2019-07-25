@@ -118,10 +118,11 @@ export class ConnectorAnnoton extends SaeGraph {
   }
 
   getIsConsecutiveByEdge(edge) {
-    return edge.id ===
-      !(noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id ||
-        noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id ||
-        noctuaFormConfig.edge.causallyUpstreamOf.id);
+    let result = edge.id === noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id ||
+      edge.id === noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id ||
+      edge.id === noctuaFormConfig.edge.causallyUpstreamOf.id;
+
+    return !result;
   }
 
   getEffectDirectionByEdge(edge) {
