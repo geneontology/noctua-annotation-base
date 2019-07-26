@@ -49,7 +49,7 @@ export class AnnotonEntityForm {
     const self = this;
     let evidences: Evidence[] = [];
 
-    annotonNode.setTerm(this.term.value);
+    annotonNode.term.setValues(this.term.value);
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
       let evidenceFound = annotonNode.getEvidenceById(evidenceForm.individualId);
       let evidence = evidenceFound ? evidenceFound : new Evidence();

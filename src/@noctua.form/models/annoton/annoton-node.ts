@@ -55,7 +55,6 @@ export class AnnotonNode {
       lookupBase: "",
       ontologyClass: "eco"
     };
-
   }
 
   get location() {
@@ -70,14 +69,6 @@ export class AnnotonNode {
     return this.term;
   }
 
-  setTerm(term: Entity, classExpression?) {
-    this.term = term;
-
-    if (classExpression) {
-      this.classExpression = classExpression;
-    }
-  }
-
   setDisplay(value) {
     if (value) {
       this.displaySection = value.displaySection;
@@ -89,11 +80,6 @@ export class AnnotonNode {
     const self = this;
 
     self.edgeOption = edgeOption;
-  }
-
-
-  getEvidence(): Evidence[] {
-    return this.evidence;
   }
 
   getEvidenceById(id) {

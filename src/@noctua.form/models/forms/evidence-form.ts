@@ -29,9 +29,9 @@ export class EvidenceForm {
 
         if (evidence) {
             this.individualId = evidence.individualId;
-            this.evidence.setValue(evidence.getEvidence());
-            this.reference.setValue(evidence.getReference().label);
-            this.with.setValue(evidence.getWith().label);
+            this.evidence.setValue(evidence.evidence);
+            this.reference.setValue(evidence.reference.label);
+            this.with.setValue(evidence.with.label);
         }
 
         this.setEvidenceValidator();
@@ -39,8 +39,8 @@ export class EvidenceForm {
 
     populateEvidence(evidence: Evidence) {
         evidence.setEvidence(this.evidence.value);
-        evidence.setReference(this.reference.value)
-        evidence.setWith(this.with.value)
+        evidence.reference = this.reference.value;
+        evidence.with = this.with.value;
     }
 
     onValueChanges(lookup: EntityLookup) {

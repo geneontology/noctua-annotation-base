@@ -51,20 +51,20 @@ export class Triple {
       relationship: this._predicate,
       object: this._object.getTerm(),
       aspect: '',
-      evidence: this._predicate.length > 0 ? this._predicate[0].getEvidence() : {},
-      reference: this._predicate.length > 0 ? this._predicate[0].getReference() : '',
-      with: this._predicate.length > 0 ? this._predicate[0].getWith() : '',
-      assignedBy: this._predicate.length > 0 ? this._predicate[0].getAssignedBy() : '',
+      evidence: this._predicate.length > 0 ? this._predicate[0].evidence : {},
+      reference: this._predicate.length > 0 ? this._predicate[0].reference : '',
+      with: this._predicate.length > 0 ? this._predicate[0].with : '',
+      assignedBy: this._predicate.length > 0 ? this._predicate[0].assignedBy : '',
       subjectNode: this._subject,
       objectNode: this._object,
     });
 
     for (let i = 1; i < this._predicate.length; i++) {
       self._grid.push({
-        evidence: this._predicate[i].getEvidence(),
-        reference: this._predicate[i].getReference(),
-        with: this._predicate[i].getWith(),
-        assignedBy: this._predicate[i].getAssignedBy(),
+        evidence: this._predicate[i].evidence,
+        reference: this._predicate[i].reference,
+        with: this._predicate[i].with,
+        assignedBy: this._predicate[i].assignedBy,
         subjectNode: this._subject,
         objectNode: this._object,
       })

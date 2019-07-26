@@ -22,4 +22,9 @@ export class Entity {
     return result
   }
 
+  setValues(values: Entity) {
+    this.id = values.id;
+    this.label = values.label
+  }
+
 } 

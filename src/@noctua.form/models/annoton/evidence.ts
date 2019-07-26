@@ -24,30 +24,10 @@ export class Evidence {
 
   }
 
-  getAssignedBy() {
-    return this.assignedBy;
-  }
-
-  getEvidence() {
-    return this.evidence;
-  }
-
-  getReference() {
-    return this.reference;
-  }
-
-  getWith() {
-    return this.with;
-  }
-
   hasValue() {
     const self = this;
 
     return self.evidence.id && self.reference.label;
-  }
-
-  setAssignedBy(value: Entity) {
-    this.assignedBy = value;
   }
 
   setEvidenceLookup(value) {
@@ -66,30 +46,22 @@ export class Evidence {
     }
   }
 
-  setReference(value: Entity) {
-    this.reference = value;
-  }
-
-  setWith(value: Entity) {
-    this.with = value;
-  }
-
   clearValues() {
     const self = this;
 
     self.setEvidence(new Entity());
-    self.setReference(new Entity());
-    self.setWith(new Entity());
-    self.setAssignedBy(new Entity());
+    self.reference = new Entity();
+    self.with = new Entity();
+    self.assignedBy = new Entity();
   }
 
   copyValues(evidence, except) {
     const self = this;
 
-    self.setEvidence(evidence.getEvidence());
-    !_.includes(except, 'reference') ? self.setReference(evidence.getReference()) : null;
-    !_.includes(except, 'with') ? self.setWith(evidence.getWith()) : null;
-    !_.includes(except, 'assignedBy') ? self.setAssignedBy(evidence.getAssignedBy()) : null;;
+    self.setEvidence(evidence.evidence);
+    !_.includes(except, 'reference') ? self.reference = evidence.reference : null;
+    !_.includes(except, 'with') ? self.with = evidence.with : null;
+    !_.includes(except, 'assignedBy') ? self.assignedBy = evidence.assignedBy() : null;;
   }
 
   isEvidenceEqual(evidence) {
@@ -97,11 +69,11 @@ export class Evidence {
     let result = true;
 
 
-    result = result && _.isEqual(self.getEvidence(), evidence.getEvidence());
-    result = result && _.isEqual(self.getReference(), evidence.getReference());
-    result = result && _.isEqual(self.getWith(), evidence.getWith());
+    result = result && _.isEqual(self.evidence, evidence.evidence);
+    result = result && _.isEqual(self.reference, evidence.reference);
+    result = result && _.isEqual(self.with, evidence.with);
 
-    // console.log(result, '-', self.getEvidence(), evidence.getEvidence())
+    // console.log(result, '-', self.evidence, evidence.evidence)
     return result;
   }
 

@@ -43,7 +43,7 @@ export class EntityForm {
     populateTerm(annotonNode: AnnotonNode) {
         const self = this;
 
-        annotonNode.setTerm(this.term.value);
+        annotonNode.term.setValues(this.term.value);
 
         self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
             let evidence: Evidence = annotonNode.evidence[index];

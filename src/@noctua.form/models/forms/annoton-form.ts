@@ -45,7 +45,7 @@ export class AnnotonForm {
   }
 
   populateAnnoton(annoton: Annoton) {
-    annoton.getGPNode().setTerm(this.gp.value);
+    annoton.getGPNode().term.setValues(this.gp.value);
 
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.populateAnnotonNodes(annoton);

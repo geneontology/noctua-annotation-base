@@ -146,7 +146,7 @@ export class Cam {
         each(annoton.nodes, (node: AnnotonNode) => {
           each(self.filter.individualIds, (individualId) => {
             let match = false
-            each(node.getEvidence(), (evidence: Evidence) => {
+            each(node.evidence, (evidence: Evidence) => {
               match = match || (evidence.individualId === individualId);
             })
             match = match || (node.individualId === individualId);

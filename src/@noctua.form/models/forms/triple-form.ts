@@ -53,7 +53,7 @@ export class TripleForm {
     const self = this;
     let evidences: Evidence[] = [];
 
-    annotonNode.setTerm(this.subject.value);
+    annotonNode.term.setValues(this.subject.value);
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
       let evidenceFound = annotonNode.getEvidenceById(evidenceForm.individualId);
       let evidence = evidenceFound ? evidenceFound : new Evidence();

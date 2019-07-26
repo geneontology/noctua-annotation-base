@@ -124,7 +124,7 @@ export class NoctuaAnnotonFormService {
 
   linkFormNode(entity, srcNode) {
     entity.individualId = srcNode.individualId;
-    entity.setTerm(srcNode.getTerm());
+    entity.term.setValues(srcNode.getTerm());
   }
 
   cloneForm(srcAnnoton, filterNodes) {

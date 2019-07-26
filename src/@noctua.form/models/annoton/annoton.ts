@@ -369,9 +369,9 @@ export class Annoton extends SaeGraph {
 
       node.evidence.forEach((evidence: Evidence) => {
         a.push({
-          evidence: evidence.getEvidence(),
-          reference: evidence.getReference(),
-          with: evidence.getWith()
+          evidence: evidence.evidence,
+          reference: evidence.reference,
+          with: evidence.with
         });
       });
 

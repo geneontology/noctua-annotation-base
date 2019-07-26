@@ -1141,12 +1141,12 @@ export class NoctuaFormConfigService {
       overridesData.isExtension ? node.isExtension = overridesData.isExtension : null;
       overridesData.treeLevel ? node.treeLevel = overridesData.treeLevel : null;
       overridesData.termRequiredList ? node.termRequiredList = overridesData.termRequiredList : null;
-      overridesData.term ? node.setTerm(overridesData.term) : null;
+      overridesData.term ? node.term.setValues(overridesData.term) : null;
       overridesData.display ? node.setDisplay(overridesData.display) : null;
       overridesData.label ? node.label = overridesData.label : null;
       overridesData.relationship ? node.relationship = overridesData.relationship : null;
       overridesData.evidence ? node.evidence[0].setEvidence(overridesData.evidence) : null;
-      overridesData.reference ? node.evidence[0].setReference(overridesData.reference) : null;
+      overridesData.reference ? node.evidence[0].reference = overridesData.reference : null;
     });
 
     annoton.enableSubmit();
@@ -1175,7 +1175,7 @@ export class NoctuaFormConfigService {
 
     each(modelIds[modelType].overrides, function (overridesData) {
       let node = annoton.getNode(overridesData.id);
-      overridesData.term ? node.setTerm(overridesData.term) : null;
+      overridesData.term ? node.term.setValues(overridesData.term) : null;
       overridesData.display ? node.setDisplay(overridesData.display) : null;
       overridesData.label ? node.label = overridesData.label : null;
       overridesData.relationship ? node.relationship = overridesData.relationship : null;
@@ -1258,14 +1258,14 @@ export class NoctuaFormConfigService {
       let annotonNode = annoton.getNode(node.id);
       let destEvidences: Evidence[] = []
 
-      annotonNode.setTerm(node.term);
+      annotonNode.term.setValues(node.term);
 
       each(node.evidence, (evidence) => {
         let destEvidence: Evidence = new Evidence();
 
         destEvidence.setEvidence(evidence.evidence);
-        destEvidence.setReference(evidence.reference);
-        destEvidence.setWith(evidence.with);
+        destEvidence.reference = evidence.reference;
+        destEvidence.with = evidence.with;
 
         destEvidences.push(destEvidence)
       });
