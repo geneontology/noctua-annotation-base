@@ -55,13 +55,13 @@ export class Evidence {
     self.assignedBy = new Entity('', '');
   }
 
-  copyValues(evidence, except) {
+  copyValues(evidence: Evidence, except) {
     const self = this;
 
     self.setEvidence(evidence.evidence);
     !_.includes(except, 'reference') ? self.reference = evidence.reference : null;
     !_.includes(except, 'with') ? self.with = evidence.with : null;
-    !_.includes(except, 'assignedBy') ? self.assignedBy = evidence.assignedBy() : null;;
+    !_.includes(except, 'assignedBy') ? self.assignedBy = evidence.assignedBy : null;;
   }
 
   isEvidenceEqual(evidence) {

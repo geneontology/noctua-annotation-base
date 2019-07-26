@@ -1113,9 +1113,9 @@ export class NoctuaGraphService {
   }
 
 
-  evidenceUseGroups(reqs, evidence) {
+  evidenceUseGroups(reqs, evidence: Evidence) {
     const self = this;
-    let assignedBy = evidence.assignedBy();
+    let assignedBy = evidence.assignedBy;
 
     if (assignedBy) {
       reqs.use_groups(['http://purl.obolibrary.org/go/groups/' + assignedBy]);
