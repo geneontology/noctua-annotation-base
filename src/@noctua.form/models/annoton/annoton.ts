@@ -13,23 +13,21 @@ import { Evidence } from './evidence';
 
 export class Annoton extends SaeGraph {
   gp;
-  _presentation;
+  uuid: string;
+  id: string;
+  label: string;
+  parser;
   annotonRows;
   annotonType;
   annotonModelType;
   complexAnnotonData;
   errors;
   submitErrors;
-  id;
-  label;
   edgeOption;
-  parser;
   expanded = false;
   visible = true;
-  _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
-
-  private _connectionId;
-  private _connections;
+  private _presentation: any;
+  private _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
   private _location = {
     x: 0,
     y: 0
@@ -71,17 +69,7 @@ export class Annoton extends SaeGraph {
     return result ? result : []
   }
 
-  get connectionId() {
-    if (this._connectionId) {
-      return this._connectionId;
-    }
-
-    let mfNode: AnnotonNode = this.getMFNode();
-
-    return mfNode ? mfNode.individualId : null
-  }
-
-  getConnection(individualId) {
+  getConnection(uuid) {
     const self = this;
 
     let mfEdges: any = super.getEdges('mf');
@@ -98,7 +86,7 @@ export class Annoton extends SaeGraph {
     }
 
     edge = _.find(edges, (srcEdge) => {
-      return srcEdge.object.individualId === individualId;
+      return srcEdge.object.uuid === uuid;
     });
 
     return edge;

@@ -46,7 +46,7 @@ export class Cam {
   ///
   filter = {
     contributor: null,
-    individualIds: [],
+    uuids: [],
   };
 
   displayType;
@@ -62,15 +62,15 @@ export class Cam {
     const self = this;
 
     return _.find(self.connectorAnnotons, (connectorAnnoton: ConnectorAnnoton) => {
-      let re = connectorAnnoton.upstreamNode.individualId === upstreamId &&
-        connectorAnnoton.downstreamNode.individualId === downstreamId;
+      let re = connectorAnnoton.upstreamNode.uuid === upstreamId &&
+        connectorAnnoton.downstreamNode.uuid === downstreamId;
 
       return re
     });
   }
 
   configureDisplayType() {
-    if (this.filter.individualIds.length > 0) {
+    if (this.filter.uuids.length > 0) {
       this.displayType = noctuaFormConfig.camDisplayType.options.entity;
     }
   }
@@ -95,7 +95,7 @@ export class Cam {
 
   resetFilter() {
     this.filter.contributor = null;
-    this.filter.individualIds = [];
+    this.filter.uuids = [];
   }
 
   findAnnotonById(id) {
@@ -139,17 +139,17 @@ export class Cam {
   applyFilter() {
     const self = this;
 
-    if (self.filter.individualIds.length > 0) {
+    if (self.filter.uuids.length > 0) {
       self.grid = [];
 
       each(self.annotons, (annoton: Annoton) => {
         each(annoton.nodes, (node: AnnotonNode) => {
-          each(self.filter.individualIds, (individualId) => {
+          each(self.filter.uuids, (uuid) => {
             let match = false
             each(node.evidence, (evidence: Evidence) => {
-              match = match || (evidence.individualId === individualId);
+              match = match || (evidence.uuid === uuid);
             })
-            match = match || (node.individualId === individualId);
+            match = match || (node.uuid === uuid);
             if (match) {
               self.generateGridRow(annoton, node);
             }
@@ -162,13 +162,11 @@ export class Cam {
   getAnnotonByConnectionId(connectionId) {
     const self = this;
     let result = _.find(self.annotons, (annoton: Annoton) => {
-      return annoton.connectionId === connectionId;
+      return annoton.uuid === connectionId;
     })
 
     return result;
   }
-
-
 
   getUniqueEvidences(result?) {
     const self = this;

@@ -12,7 +12,7 @@ import { Contributor } from './../contributor';
 
 export class AnnotonNode {
   id: string;
-  individualId: string;
+  uuid: string;
   label: string;
   term: Entity = new Entity('', '');
   termLookup: EntityLookup = new EntityLookup();
@@ -86,7 +86,7 @@ export class AnnotonNode {
     const self = this;
 
     return _.find(self.evidence, (evidence: Evidence) => {
-      return evidence.individualId === id;
+      return evidence.uuid === id;
     })
   }
 
@@ -173,7 +173,7 @@ export class AnnotonNode {
     self.term = node.term;
     self.evidence = node.evidence;
     self.location = node.location;
-    self.individualId = node.individualId;
+    self.uuid = node.uuid;
     self.annoton = node.annoton;
     self.ontologyClass = node.ontologyClass;
     self.assignedBy = node.assignedBy;
@@ -191,7 +191,7 @@ export class AnnotonNode {
   copyValues(node: AnnotonNode) {
     const self = this;
 
-    self.individualId = node.individualId;
+    self.uuid = node.uuid;
     self.location = node.location;
     self.term = node.term;
     self.evidence = node.evidence;

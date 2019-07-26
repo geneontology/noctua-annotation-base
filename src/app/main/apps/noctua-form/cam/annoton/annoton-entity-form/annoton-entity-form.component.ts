@@ -135,7 +135,7 @@ export class AnnotonEntityFormComponent implements OnInit, OnDestroy {
       let evidenceArray: Evidence[] = destCam.evidenceFormArray.map((evidence) => {
         let result = new Evidence()
   
-        result.individualId = evidence.individualId;
+        result.uuid = evidence.uuid;
         result.setEvidence(evidence.evidence);
         result.reference=evidence.reference;
         result.with=evidence.with;

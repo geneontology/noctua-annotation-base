@@ -216,7 +216,7 @@ export class SparqlService {
       }
 
       if (response.entities && response.entities.value !== "") {
-        cam.filter.individualIds.push(...response.entities.value.split(self.separator).map((iri) => {
+        cam.filter.uuids.push(...response.entities.value.split(self.separator).map((iri) => {
           return self.curieUtil.getCurie(iri);
         }));
       }

@@ -94,7 +94,7 @@ export class CamDiagramComponent implements AfterViewInit, OnInit {
         let destAnnotons = this.cam.annotons;
 
         destAnnotons.forEach((destAnnoton: Annoton) => {
-          let location = JSON.parse(localStorage.getItem(destAnnoton.connectionId));
+          let location = JSON.parse(localStorage.getItem(destAnnoton.uuid));
           if (location) {
             destAnnoton.location = location;
           }
@@ -103,7 +103,7 @@ export class CamDiagramComponent implements AfterViewInit, OnInit {
           //     destAnnoton.location = this.noctuaAnnotonFormService.mfLocation;
 
           if (this.noctuaAnnotonFormService.mfLocation) {
-            localStorage.setItem(destAnnoton.connectionId, JSON.stringify(destAnnoton.location));
+            localStorage.setItem(destAnnoton.uuid, JSON.stringify(destAnnoton.location));
           }
         });
         //   let data = this.summaryGridService.getGrid(annotons);

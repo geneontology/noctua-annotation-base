@@ -52,7 +52,7 @@ export class AnnotonEntityForm {
 
     annotonNode.term = new Entity(this.term.value.id, this.term.value.label);
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
-      let evidenceFound = annotonNode.getEvidenceById(evidenceForm.individualId);
+      let evidenceFound = annotonNode.getEvidenceById(evidenceForm.uuid);
       let evidence = evidenceFound ? evidenceFound : new Evidence();
 
       evidenceForm.populateEvidence(evidence);

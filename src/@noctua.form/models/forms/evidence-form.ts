@@ -15,7 +15,7 @@ import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
 
 export class EvidenceForm {
-    individualId;
+    uuid;
     evidence = new FormControl();
     reference = new FormControl();
     with = new FormControl();
@@ -29,7 +29,7 @@ export class EvidenceForm {
         this._term = term;
 
         if (evidence) {
-            this.individualId = evidence.individualId;
+            this.uuid = evidence.uuid;
             this.evidence.setValue(evidence.evidence);
             this.reference.setValue(evidence.reference);
             this.with.setValue(evidence.with);

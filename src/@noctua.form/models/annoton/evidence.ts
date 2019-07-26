@@ -15,7 +15,7 @@ export class Evidence {
   with: string;
   assignedBy: Entity = new Entity('', '');;
   classExpression
-  individualId;
+  uuid;
   evidenceRequired: boolean = false;
   referenceRequired: boolean = false
   ontologyClass = []

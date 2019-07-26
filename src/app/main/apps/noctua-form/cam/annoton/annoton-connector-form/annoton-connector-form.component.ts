@@ -133,7 +133,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   }
 
   openAnnotonConnector(connector: Annoton) {
-    this.noctuaAnnotonConnectorService.initializeForm(this.noctuaAnnotonConnectorService.annoton.connectionId, connector.connectionId);
+    this.noctuaAnnotonConnectorService.initializeForm(this.noctuaAnnotonConnectorService.annoton.uuid, connector.uuid);
     this.selectPanel(this.panel.annotonConnectorForm);
   }
 

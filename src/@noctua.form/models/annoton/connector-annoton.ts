@@ -211,7 +211,7 @@ export class ConnectorAnnoton extends SaeGraph {
     let evidences: Evidence[] = value.evidenceFormArray.map((evidence) => {
       let result = new Evidence()
 
-      result.individualId = evidence.individualId;
+      result.uuid = evidence.uuid;
       result.evidence = new Entity(evidence.evidence.id, evidence.evidence.label);
       result.reference = evidence.reference;
       result.with = evidence.with;

@@ -64,7 +64,7 @@ export class NoctuaAnnotonConnectorService {
     let connectors = [];
 
     each(this.cam.annotons, (annoton: Annoton) => {
-      if (self.annoton.connectionId !== annoton.id) {
+      if (self.annoton.uuid !== annoton.id) {
         connectors.push(
           Object.assign({
             annoton: annoton,

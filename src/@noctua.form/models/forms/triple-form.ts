@@ -56,7 +56,7 @@ export class TripleForm {
 
     annotonNode.term = new Entity(this.subject.value.id, this.subject.value.label);
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
-      let evidenceFound = annotonNode.getEvidenceById(evidenceForm.individualId);
+      let evidenceFound = annotonNode.getEvidenceById(evidenceForm.uuid);
       let evidence = evidenceFound ? evidenceFound : new Evidence();
 
       evidenceForm.populateEvidence(evidence);
