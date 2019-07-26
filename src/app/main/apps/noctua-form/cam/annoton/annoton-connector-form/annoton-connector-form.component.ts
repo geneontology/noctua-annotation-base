@@ -168,7 +168,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
     evidence.setEvidence(new Entity(
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
-    evidence.reference = new Entity(null, noctuaFormConfig.evidenceAutoPopulate.nd.reference);
+    evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference;
     self.connectorAnnoton.upstreamNode.setEvidence([evidence]);
     this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
   }

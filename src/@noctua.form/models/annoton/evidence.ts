@@ -5,17 +5,17 @@ const each = require('lodash/forEach');
 import { AnnotonError } from "./parser/annoton-error";
 import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
+import { AnnotonNode } from './annoton-node';
 
 export class Evidence {
   qualifier;
-  evidence: Entity = new Entity();
+  evidence: Entity = new Entity('', '');
   evidenceLookup: EntityLookup = new EntityLookup();
-  reference: Entity = new Entity();
-  with: Entity = new Entity();
-  assignedBy: Entity = new Entity();
+  reference: string;
+  with: string;
+  assignedBy: Entity = new Entity('', '');;
   classExpression
   individualId;
-
   evidenceRequired: boolean = false;
   referenceRequired: boolean = false
   ontologyClass = []
@@ -27,7 +27,7 @@ export class Evidence {
   hasValue() {
     const self = this;
 
-    return self.evidence.id && self.reference.label;
+    return self.evidence.id && self.reference;
   }
 
   setEvidenceLookup(value) {
@@ -49,10 +49,10 @@ export class Evidence {
   clearValues() {
     const self = this;
 
-    self.setEvidence(new Entity());
-    self.reference = new Entity();
-    self.with = new Entity();
-    self.assignedBy = new Entity();
+    self.setEvidence(new Entity('', ''));
+    self.reference = ''
+    self.with = ''
+    self.assignedBy = new Entity('', '');
   }
 
   copyValues(evidence, except) {
@@ -68,7 +68,6 @@ export class Evidence {
     const self = this;
     let result = true;
 
-
     result = result && _.isEqual(self.evidence, evidence.evidence);
     result = result && _.isEqual(self.reference, evidence.reference);
     result = result && _.isEqual(self.with, evidence.with);
@@ -77,7 +76,7 @@ export class Evidence {
     return result;
   }
 
-  enableSubmit(errors, node, position) {
+  enableSubmit(errors, node: AnnotonNode, position) {
     const self = this;
     let result = true;
 
@@ -93,7 +92,7 @@ export class Evidence {
       self.evidenceRequired = false;
     }
 
-    if (self.evidence.id && !self.reference.label) {
+    if (self.evidence.id && !self.reference) {
       self.referenceRequired = true;
       let meta = {
         aspect: node.label

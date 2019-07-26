@@ -18,7 +18,8 @@ import { termValidator } from './validators/term-validator';
 import {
   Triple,
   Evidence,
-  EntityLookup
+  EntityLookup,
+  Entity
 } from '../annoton';
 
 export class TripleForm {
@@ -53,7 +54,7 @@ export class TripleForm {
     const self = this;
     let evidences: Evidence[] = [];
 
-    annotonNode.term.setValues(this.subject.value);
+    annotonNode.term = new Entity(this.subject.value.id, this.subject.value.label);
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
       let evidenceFound = annotonNode.getEvidenceById(evidenceForm.individualId);
       let evidence = evidenceFound ? evidenceFound : new Evidence();

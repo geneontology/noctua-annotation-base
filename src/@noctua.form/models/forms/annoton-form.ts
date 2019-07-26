@@ -12,6 +12,7 @@ import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityGroupForm } from './entity-group-form'
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
+import { Entity } from '../annoton/entity';
 
 export class AnnotonForm {
   entityGroupForms: EntityGroupForm[] = []
@@ -45,7 +46,7 @@ export class AnnotonForm {
   }
 
   populateAnnoton(annoton: Annoton) {
-    annoton.getGPNode().term.setValues(this.gp.value);
+    annoton.getGPNode().term = new Entity(this.gp.value.id, this.gp.value.label);
 
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.populateAnnotonNodes(annoton);

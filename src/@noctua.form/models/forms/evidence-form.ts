@@ -12,6 +12,7 @@ import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { termValidator } from './validators/term-validator';
 import { evidenceValidator } from './validators/evidence-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
+import { Entity } from '../annoton/entity';
 
 export class EvidenceForm {
     individualId;
@@ -30,15 +31,15 @@ export class EvidenceForm {
         if (evidence) {
             this.individualId = evidence.individualId;
             this.evidence.setValue(evidence.evidence);
-            this.reference.setValue(evidence.reference.label);
-            this.with.setValue(evidence.with.label);
+            this.reference.setValue(evidence.reference);
+            this.with.setValue(evidence.with);
         }
 
         this.setEvidenceValidator();
     }
 
     populateEvidence(evidence: Evidence) {
-        evidence.setEvidence(this.evidence.value);
+        evidence.evidence = new Entity(this.evidence.value.id, this.evidence.value.label);
         evidence.reference = this.reference.value;
         evidence.with = this.with.value;
     }

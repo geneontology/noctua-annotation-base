@@ -92,7 +92,7 @@ export class ConnectorAnnoton extends SaeGraph {
     }
 
     if (value.process) {
-      self.processNode.term.setValues(value.process);
+      self.processNode.term = new Entity(value.process.id, value.process.label);
       self.rule.suggestedEdge.r2 = value.process.edge;
     }
 
@@ -212,7 +212,7 @@ export class ConnectorAnnoton extends SaeGraph {
       let result = new Evidence()
 
       result.individualId = evidence.individualId;
-      result.setEvidence(evidence.evidence);
+      result.evidence = new Entity(evidence.evidence.id, evidence.evidence.label);
       result.reference = evidence.reference;
       result.with = evidence.with;
 

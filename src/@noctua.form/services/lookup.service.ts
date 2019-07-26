@@ -206,11 +206,11 @@ export class NoctuaLookupService {
           evidence.setEvidence(new Entity(doc.evidence, doc.evidence_label));
 
           if (doc.reference && doc.reference.length > 0) {
-            evidence.reference = new Entity(doc.reference[0], self.linker.url(doc.reference[0]));
+            evidence.reference = doc.reference[0];
           }
 
           if (doc.evidence_with && doc.evidence_with.length > 0) {
-            evidence.with = new Entity(doc.evidence_with[0], self.linker.url(doc.evidence_with[0]));
+            evidence.with = doc.evidence_with[0];
           }
 
           evidence.assignedBy = new Entity(null, doc.assigned_by);
@@ -223,10 +223,7 @@ export class NoctuaLookupService {
             annotonNode.addEvidence(evidence);
           } else {
             annotonNode = new AnnotonNode();
-            annotonNode.term.setValues({
-              id: doc.annotation_class,
-              label: doc.annotation_class_label
-            });
+            annotonNode.term = new Entity(doc.annotation_class, doc.annotation_class_label);
             annotonNode.addEvidence(evidence);
             result.push(annotonNode);
           }

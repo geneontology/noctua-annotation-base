@@ -17,6 +17,7 @@ import { Evidence } from './../../models/annoton/evidence'
 import { EntityForm } from './entity-form';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
+import { Entity } from '../annoton/entity';
 
 export class AnnotonEntityForm {
   term = new FormControl();
@@ -49,7 +50,7 @@ export class AnnotonEntityForm {
     const self = this;
     let evidences: Evidence[] = [];
 
-    annotonNode.term.setValues(this.term.value);
+    annotonNode.term = new Entity(this.term.value.id, this.term.value.label);
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
       let evidenceFound = annotonNode.getEvidenceById(evidenceForm.individualId);
       let evidence = evidenceFound ? evidenceFound : new Evidence();

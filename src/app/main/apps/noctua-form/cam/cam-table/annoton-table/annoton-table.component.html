@@ -54,13 +54,13 @@
         <ng-container cdkColumnDef="reference">
           <mat-header-cell *cdkHeaderCellDef fxFlex="150px">Reference</mat-header-cell>
           <mat-cell *cdkCellDef="let entity" fxFlex="150px">
-            <a href="{{entity.reference?.url}}" class="" target="_blank">{{entity.reference?.label}}</a>
+            <p class="">{{entity.reference}}</p>
           </mat-cell>
         </ng-container>
         <ng-container cdkColumnDef="with">
           <mat-header-cell *cdkHeaderCellDef fxFlex="120px">With</mat-header-cell>
           <mat-cell *cdkCellDef="let entity" fxFlex="150px">
-            <p class="">{{entity.with?.label}}</p>
+            <p class="">{{entity.with}}</p>
           </mat-cell>
         </ng-container>
         <ng-container cdkColumnDef="assignedBy">

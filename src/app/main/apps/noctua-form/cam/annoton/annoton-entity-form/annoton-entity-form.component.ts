@@ -130,7 +130,7 @@ export class AnnotonEntityFormComponent implements OnInit, OnDestroy {
 
   /*   openSummary() {
       let destCam = this.camForm.value;
-      this.cam.destNode.term.setValues(destCam.term)
+      this.cam.destNode.term=new Entity(destCam.term)
   
       let evidenceArray: Evidence[] = destCam.evidenceFormArray.map((evidence) => {
         let result = new Evidence()

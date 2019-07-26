@@ -14,7 +14,7 @@ export class AnnotonNode {
   id: string;
   individualId: string;
   label: string;
-  term: Entity = new Entity();
+  term: Entity = new Entity('', '');
   termLookup: EntityLookup = new EntityLookup();
   isExtension: boolean = false;
   aspect: string;
@@ -227,7 +227,7 @@ export class AnnotonNode {
     return result;
   }
 
-  enableSubmit(errors, annoton) {
+  enableSubmit(errors) {
     const self = this;
     let result = true;
 
@@ -245,7 +245,7 @@ export class AnnotonNode {
 
     if (self.term.id && self.evidenceRequiredList.includes(self.id) &&
       !self.evidenceNotRequiredList.includes(self.term.id)) {
-      each(self.evidence, function (evidence, key) {
+      each(self.evidence, (evidence: Evidence, key) => {
         if (self.term.id)
           result = evidence.enableSubmit(errors, self, key + 1) && result;
       })

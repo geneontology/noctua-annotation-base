@@ -13,7 +13,8 @@ import {
   AnnotonNode,
   Annoton,
   Evidence,
-  ConnectorAnnoton
+  ConnectorAnnoton,
+  Entity
 } from './../..//models';
 
 @Injectable({
@@ -1141,7 +1142,7 @@ export class NoctuaFormConfigService {
       overridesData.isExtension ? node.isExtension = overridesData.isExtension : null;
       overridesData.treeLevel ? node.treeLevel = overridesData.treeLevel : null;
       overridesData.termRequiredList ? node.termRequiredList = overridesData.termRequiredList : null;
-      overridesData.term ? node.term.setValues(overridesData.term) : null;
+      overridesData.term ? node.term = overridesData.term : null;
       overridesData.display ? node.setDisplay(overridesData.display) : null;
       overridesData.label ? node.label = overridesData.label : null;
       overridesData.relationship ? node.relationship = overridesData.relationship : null;
@@ -1153,36 +1154,6 @@ export class NoctuaFormConfigService {
     return annoton;
   }
 
-
-  generateAnnotonSection(annoton, modelType, connector) {
-    const self = this;
-    let overrides = {
-      displaySection: modelType + uuid(),
-    }
-
-    let modelIds = _.cloneDeep(self._modelRelationship);
-
-    each(modelIds[modelType].nodes, function (id) {
-      annoton.addNode(self.generateNode(id, overrides));
-    });
-
-    each(modelIds[modelType].triples, function (triple) {
-      // annoton.addEdgeById(triple.subject, triple.object, triple.edge);
-      if (triple.edgeOption) {
-        //  annoton.addEdgeOptionById(triple.object, triple.edgeOption);
-      }
-    });
-
-    each(modelIds[modelType].overrides, function (overridesData) {
-      let node = annoton.getNode(overridesData.id);
-      overridesData.term ? node.term.setValues(overridesData.term) : null;
-      overridesData.display ? node.setDisplay(overridesData.display) : null;
-      overridesData.label ? node.label = overridesData.label : null;
-      overridesData.relationship ? node.relationship = overridesData.relationship : null;
-    });
-
-    return overrides.displaySection;
-  }
 
   generateNode(id?, overrides?) {
     const self = this;
@@ -1258,12 +1229,12 @@ export class NoctuaFormConfigService {
       let annotonNode = annoton.getNode(node.id);
       let destEvidences: Evidence[] = []
 
-      annotonNode.term.setValues(node.term);
+      annotonNode.term = new Entity(node.term.id, node.term.label);
 
       each(node.evidence, (evidence) => {
         let destEvidence: Evidence = new Evidence();
 
-        destEvidence.setEvidence(evidence.evidence);
+        destEvidence.evidence = new Entity(evidence.evidence.id, evidence.evidence.label);
         destEvidence.reference = evidence.reference;
         destEvidence.with = evidence.with;
 

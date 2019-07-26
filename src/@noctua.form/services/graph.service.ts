@@ -309,13 +309,13 @@ export class NoctuaGraphService {
         let withs = annotationNode.get_annotations_by_key('with');
         let assignedBys = annotationNode.get_annotations_by_key('providedBy');
         if (sources.length > 0) {
-          evidence.reference = new Entity(null, sources[0].value(), self.linker.url(sources[0].value()));
+          evidence.reference = sources[0].value();
         }
         if (withs.length > 0) {
           if (withs[0].value().startsWith('gomodel')) {
-            evidence.with = new Entity(null, withs[0].value());
+            evidence.with = withs[0].value();
           } else {
-            evidence.with = new Entity(null, withs[0].value(), self.linker.url(withs[0].value()));
+            evidence.with = withs[0].value();
           }
         }
         if (assignedBys.length > 0) {
@@ -483,7 +483,7 @@ export class NoctuaGraphService {
         let annotonNode = annoton.getNode('mf');
 
         annotonNode.location = mfSubjectNode.location;
-        annotonNode.term.setValues(mfSubjectNode.term);
+        annotonNode.term = mfSubjectNode.term;
         annotonNode.classExpression = mfSubjectNode.classExpression
         annotonNode.setEvidence(evidence);
         annotonNode.setIsComplement(mfSubjectNode.isComplement);
@@ -536,12 +536,12 @@ export class NoctuaGraphService {
         let subjectAnnotonNode = self.noctuaFormConfigService.generateNode('subject');
         let objectAnnotonNode = self.noctuaFormConfigService.generateNode('object');
 
-        subjectAnnotonNode.term.setValues(subjectNode.term);
+        subjectAnnotonNode.term = subjectNode.term;
         subjectAnnotonNode.classExpression = subjectNode.classExpression;
         subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
         subjectAnnotonNode.individualId = subjectId;
 
-        objectAnnotonNode.term.setValues(objectNode.term);
+        objectAnnotonNode.term = objectNode.term;
         objectAnnotonNode.classExpression = objectNode.classExpression;
         objectAnnotonNode.setIsComplement(objectNode.isComplement);
         objectAnnotonNode.individualId = objectId;
@@ -568,7 +568,7 @@ export class NoctuaGraphService {
         let subjectNode = self.nodeToTerm(cam.graph, subjectId);
         let subjectAnnotonNode = self.noctuaFormConfigService.generateNode();
 
-        subjectAnnotonNode.term.setValues(subjectNode.term);
+        subjectAnnotonNode.term = new Entity(subjectNode.term.id, subjectNode.term.label);
         subjectAnnotonNode.classExpression = subjectNode.classExpression;
         subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
         subjectAnnotonNode.individualId = subjectId;
@@ -606,7 +606,7 @@ export class NoctuaGraphService {
         );
 
         let annotonNode = annoton.getNode('gp');
-        annotonNode.term.setValues(gpSubjectNode.term);
+        annotonNode.term = new Entity(gpSubjectNode.term.id, gpSubjectNode.term.label);
         annotonNode.classExpression = gpSubjectNode.classExpression;
         annotonNode.setEvidence(evidence);
         annotonNode.setIsComplement(gpSubjectNode.isComplement);
@@ -683,7 +683,8 @@ export class NoctuaGraphService {
 
               node.object.individualId = toMFObject;
               node.object.setEvidence(evidence);
-              node.object.term.setValues(subjectNode.term, subjectNode.classExpression);
+              node.object.term = subjectNode.term
+              node.classExpression = subjectNode.classExpression;
               node.object.location = subjectNode.location;
               node.object.setIsComplement(subjectNode.isComplement)
 
@@ -742,7 +743,7 @@ export class NoctuaGraphService {
 
             if (connectorAnnotonDTO.downstreamAnnoton) {
               processNode.individualId = objectId;
-              processNode.term.setValues(processNodeInfo.term);
+              processNode.term = processNodeInfo.term;
               processNode.setEvidence(self.edgeToEvidence(cam.graph, e));
 
               let connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, connectorAnnotonDTO.downstreamAnnoton, processNode, connectorAnnotonDTO.hasInputNode);
@@ -791,7 +792,7 @@ export class NoctuaGraphService {
           let hasInputNode = self.noctuaFormConfigService.generateNode('mf-1', { id: 'has-input' });
 
           hasInputNode.individualId = objectId;
-          hasInputNode.term.setValues(hasInputNodeInfo.term);
+          hasInputNode.term = hasInputNodeInfo.term;
           hasInputNode.setEvidence(self.edgeToEvidence(cam.graph, e));
           connectorAnnoton.hasInputNode = hasInputNode;
         }
@@ -821,7 +822,7 @@ export class NoctuaGraphService {
           let destNode = self.noctuaFormConfigService.generateNode('mf', { id: toMFObject });
           let mfNode = self.nodeToTerm(cam.graph, toMFObject);
 
-          destNode.term.setValues(mfNode.term);
+          destNode.term = new Entity(mfNode.term.id, mfNode.term.label);
           destNode.setEvidence(evidence);
           destNode.individualId = toMFObject;
           annoton.addNode(destNode);
@@ -1321,16 +1322,17 @@ export class NoctuaGraphService {
           let cc1Node = annoton.getNode('cc-1');
           let cc11Node = annoton.getNode('cc-1-1');
           let cc111Node = annoton.getNode('cc-1-1-1');
+          let ccRootNode = noctuaFormConfig.rootNode['cc']
 
           if (!ccNode.hasValue()) {
             if (cc1Node.hasValue()) {
-              ccNode.term.setValues(noctuaFormConfig.rootNode[ccNode.id]);
+              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
               ccNode.evidence = cc1Node.evidence;
             } else if (cc11Node.hasValue()) {
-              ccNode.term.setValues(noctuaFormConfig.rootNode[ccNode.id]);
+              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
               ccNode.evidence = cc11Node.evidence;
             } else if (cc111Node.hasValue()) {
-              ccNode.term.setValues(noctuaFormConfig.rootNode[ccNode.id]);
+              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
               ccNode.evidence = cc111Node.evidence;
             }
           }
@@ -1341,7 +1343,7 @@ export class NoctuaGraphService {
           let mfNode = annoton.getNode('mf');
           let bpNode = annoton.getNode('bp');
 
-          mfNode.term.setValues(new Entity('GO:0003674', 'molecular_function'));
+          mfNode.term = new Entity('GO:0003674', 'molecular_function');
           mfNode.evidence = bpNode.evidence;
           break;
         }

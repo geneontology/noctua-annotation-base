@@ -6,6 +6,7 @@ import { AnnotonFormMetadata } from './annoton-form-metadata';
 import { EvidenceForm } from './evidence-form';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
+import { Entity } from '../annoton/entity';
 
 declare const require: any;
 const each = require('lodash/forEach');
@@ -43,7 +44,7 @@ export class EntityForm {
     populateTerm(annotonNode: AnnotonNode) {
         const self = this;
 
-        annotonNode.term.setValues(this.term.value);
+        annotonNode.term = new Entity(this.term.value.id, this.term.value.label);
 
         self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
             let evidence: Evidence = annotonNode.evidence[index];

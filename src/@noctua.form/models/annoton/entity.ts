@@ -10,7 +10,7 @@ export class Entity {
   url: string;
   classExpression: any;
 
-  constructor(id?: string, label?: string, url?: string) {
+  constructor(id: string, label: string, url?: string) {
     this.id = id;
     this.label = label;
     this.url = url;
@@ -22,9 +22,5 @@ export class Entity {
     return result
   }
 
-  setValues(values: Entity) {
-    this.id = values.id;
-    this.label = values.label
-  }
 
 } 

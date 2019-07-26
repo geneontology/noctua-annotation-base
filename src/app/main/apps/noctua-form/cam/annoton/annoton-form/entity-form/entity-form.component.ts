@@ -126,7 +126,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
       let success = function (selected) {
         if (selected.term) {
-          entity.term.setValues(selected.term.getTerm());
+          entity.term = new Entity(selected.term.term.id, selected.term.term.label);
 
           if (selected.evidences && selected.evidences.length > 0) {
             entity.setEvidence(selected.evidences);
@@ -157,7 +157,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     evidence.setEvidence(new Entity(
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
-    evidence.reference = new Entity(null, noctuaFormConfig.evidenceAutoPopulate.nd.reference);
+    evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference
     self.entity.setEvidence([evidence]);
     self.noctuaAnnotonFormService.initializeForm();
   }
@@ -170,7 +170,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     });
 
     if (term) {
-      self.entity.term.setValues(new Entity(term.id, term.label));
+      self.entity.term = new Entity(term.id, term.label);
       self.noctuaAnnotonFormService.initializeForm();
     }
   }
