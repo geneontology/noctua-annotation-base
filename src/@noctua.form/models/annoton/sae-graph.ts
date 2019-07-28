@@ -10,12 +10,14 @@ const each = require('lodash/forEach');
 import {
   Graph,
   Edge,
-  insertNode,
-  insertEdge,
+  addNode,
+  removeNode,
+  removeEdge,
+  addEdge,
   findEdge,
-  nodeForKey,
-  allNodes,
-  allEdges,
+  findNode,
+  getNodes,
+  getEdges,
 } from './noctua-form-graph'
 
 export class SaeGraph {
@@ -25,25 +27,25 @@ export class SaeGraph {
   constructor() {
     this.numberOfEdges = 0;
 
-    //  this.graph = {nodes:{}, edge:{}}
+    this.graph = <Graph<AnnotonNode, Triple>>{ _nodes: {}, _edges: {} }
   }
 
   get nodes(): AnnotonNode[] {
-    let recordNodes = allNodes(this.graph)
-    //recordNodes.mapValues(graph._nodes, (_, key) => transformKey(key)),
-    return []
+    let keyNodes = getNodes(this.graph);
+
+    return Object.values(keyNodes);
   }
 
   get edges() {
-    return allEdges(this.graph);
+    return getEdges(this.graph);
   }
 
   getNode(id: string): AnnotonNode {
-    return nodeForKey(this.graph, id)
+    return findNode(this.graph, id)
   }
 
   addNode(node: AnnotonNode) {
-    return insertNode(this.graph, node, node.id);
+    return addNode(this.graph, node, node.id);
   };
 
   addNodes(...nodes: AnnotonNode[]) {
@@ -54,16 +56,16 @@ export class SaeGraph {
     });
   };
 
-  removeNode(node) {
-
+  removeNode(node: AnnotonNode) {
+    removeNode(this.graph, node.id);
   };
 
   addEdge(subjectNode: AnnotonNode, objectNode: AnnotonNode, predicate: Predicate) {
 
     let triple = new Triple(subjectNode, predicate, objectNode)
-    let edge: Edge<Triple> = { src: subjectNode.id, dst: objectNode.id, metadata: triple }
+    let edge: Edge<Triple> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple }
 
-    insertEdge(this.graph, edge, triple.id)
+    addEdge(this.graph, edge);
   };
 
   addEdgeById(sourceId: string, objectId: string, predicate: Predicate) {
@@ -81,14 +83,13 @@ export class SaeGraph {
 
   getEdge(subjectId, objectId) {
     //let edge = this.edges[subjectId];
-    //  findEdge(this.graph)
+    let edge: Edge<Triple> = { subjectId: subjectId, objectId: objectId, metadata: null }
+
+    return findEdge(this.graph, edge);
   }
 
   getEdges(id) {
-    const self = this;
-    //let result = this.edges[id];
-
-    //  return result;
+    return getEdges(this.graph, id);
   };
 
   removeEdge(source, object) {

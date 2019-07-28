@@ -22,5 +22,11 @@ export class Entity {
     return result
   }
 
+  static createEntity(value) {
+    let entity = new Entity(value.id, value.label);
+
+    return entity;
+  }
+
 
 } 

@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, forkJoin, Observable, Subscriber } from 'rxjs';
-import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { } from './../models/annoton/cam';
 import {
@@ -724,7 +724,7 @@ export class NoctuaGraphService {
         let objectId = e.object_id();
         let objectInfo = self.nodeToTerm(cam.graph, objectId);
 
-        let causalEdge = _.find(noctuaFormConfig.causalEdges, {
+        let causalEdge = <Entity>_.find(noctuaFormConfig.causalEdges, {
           id: predicateId
         })
 
@@ -735,7 +735,7 @@ export class NoctuaGraphService {
 
             connectorAnnoton.state = ConnectorState.editing;
             connectorAnnoton.type = ConnectorType.basic;
-            connectorAnnoton.rule.r1Edge = new Entity(causalEdge.id, causalEdge.label);
+            connectorAnnoton.rule.r1Edge = causalEdge;
             connectorAnnoton.setRule();
             connectorAnnotons.push(connectorAnnoton);
           } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.bp.id)) {
@@ -775,7 +775,7 @@ export class NoctuaGraphService {
       let objectId = e.object_id();
       let objectInfo = self.nodeToTerm(cam.graph, objectId);
 
-      let causalEdge = _.find(noctuaFormConfig.causalEdges, {
+      let causalEdge = <Entity>_.find(noctuaFormConfig.causalEdges, {
         id: predicateId
       })
 
@@ -1076,7 +1076,7 @@ export class NoctuaGraphService {
   addFact(reqs, annoton: Annoton | ConnectorAnnoton, node) {
     let edge = annoton.getEdges(node.id);
 
-    each(edge.nodes, function (edgeNode) {
+    each(edge, function (edgeNode) {
       let subject = node.saveMeta.term;
       let object = edgeNode.object ? edgeNode.object.saveMeta.term : null;
 
@@ -1113,80 +1113,6 @@ export class NoctuaGraphService {
       }
     });
   }
-
-
-
-  addFact2(reqs, annoton: Annoton | ConnectorAnnoton, node) {
-    let edge = annoton.getEdges(node.id);
-
-    if (node.term.hasValue()) {
-      if (node.uuid) {
-        node.saveMeta.term = node.uuid;
-      } else if (node.isComplement) {
-        let ce = new class_expression();
-        ce.as_complement(node.term.id);
-        node.saveMeta.term = reqs.add_individual(ce);
-
-      } else {
-        node.saveMeta.term = reqs.add_individual(node.term.id);
-      }
-
-      node.uuid = node.saveMeta.term;
-
-      if (node.location && node.location.x > 0 && node.id === 'mf') {
-        //  reqs.update_annotations(node.saveMeta.term, 'hint-layout-x', node.location.x);
-        // reqs.update_annotations(node.saveMeta.term, 'hint-layout-y', node.location.y);
-      }
-    }
-
-    each(node.evidence, function (evidence: Evidence) {
-      edgeNode.object.saveMeta.edge = reqs.add_fact([
-        node.saveMeta.term,
-        edgeNode.object.saveMeta.term,
-        edgeNode.edge.id
-      ]);
-      reqs.add_evidence(evidence.evidence.id, evidence.reference, evidence.with, evidence.edge);
-    });
-
-    each(edge.nodes, function (edgeNode) {
-      let subject = node.saveMeta.term;
-      let object = edgeNode.object ? edgeNode.object.saveMeta.term : null;
-
-      if (subject && object && edge) {
-        if (edgeNode.object.edgeOption) {
-          edgeNode.edge = edgeNode.object.edgeOption.selected
-        }
-        edgeNode.object.saveMeta.edge = reqs.add_fact([
-          node.saveMeta.term,
-          edgeNode.object.saveMeta.term,
-          edgeNode.edge.id
-        ]);
-
-        if (edgeNode.object.id === 'gp') {
-          each(node.evidence, function (evidence: Evidence) {
-            let evidenceReference = evidence.reference;
-            let evidenceWith = evidence.with;
-
-            reqs.add_evidence(evidence.evidence.id, evidenceReference, evidenceWith, edgeNode.object.saveMeta.edge);
-          });
-        } else {
-          each(edgeNode.object.evidence, function (evidence: Evidence) {
-            let evidenceReference = evidence.reference;
-            let evidenceWith = evidence.with;
-            // if (edgeNode.object.aspect === 'P') {
-            //  let gpNode = annoton.getGPNode();
-            //  if (gpNode && gpNode.uuid) {
-            // evidenceWith.push(gpNode.uuid)
-            //  }
-            // }
-            reqs.add_evidence(evidence.evidence.id, evidenceReference, evidenceWith, edgeNode.object.saveMeta.edge);
-          });
-        }
-      }
-    });
-  }
-
-
 
 
   evidenceUseGroups(reqs, evidence: Evidence) {
@@ -1344,7 +1270,7 @@ export class NoctuaGraphService {
       let srcEdge = srcAnnoton.edges[objectId];
 
       if (srcEdge) {
-        each(srcEdge.nodes, function (srcNode) {
+        each(srcEdge, function (srcNode) {
           let nodeExist = destAnnoton.getNode(sourceId) && destAnnoton.getNode(srcNode.object.id);
           if (nodeExist && srcNode.object.hasValue()) {
             destAnnoton.addEdgeById(sourceId, srcNode.object.id, srcNode.edge);

@@ -41,7 +41,7 @@ export class TripleForm {
     this.subject.setValue(triple.subject.getTerm());
     this.object.setValue(triple.object.getTerm());
     this.onValueChanges(triple.subject.termLookup);
-    triple.predicate.forEach((evidence: Evidence) => {
+    triple.predicate.evidence.forEach((evidence: Evidence) => {
       let evidenceForm = new EvidenceForm(self._metadata, triple.subject, evidence);
 
       self.evidenceForms.push(evidenceForm);
