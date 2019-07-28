@@ -8,7 +8,7 @@ import { EntityLookup } from './entity-lookup';
 import { AnnotonNode } from './annoton-node';
 
 export class Evidence {
-  qualifier;
+  edge: Entity;
   evidence: Entity = new Entity('', '');
   evidenceLookup: EntityLookup = new EntityLookup();
   reference: string;

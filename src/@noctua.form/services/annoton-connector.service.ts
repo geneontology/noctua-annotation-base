@@ -124,6 +124,13 @@ export class NoctuaAnnotonConnectorService {
     return self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton);
   }
 
+  delete() {
+    const self = this;
+    const uuids = this.connectorAnnoton.prepareDelete();
+
+    return self.noctuaGraphService.deleteConnection(self.cam, uuids);
+  }
+
   private _onAnnotonFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
       //  this.errors = this.getAnnotonFormErrors();

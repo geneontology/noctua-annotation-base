@@ -11,6 +11,7 @@ export {
 } from './connector-annoton'
 export { EntityLookup } from './entity-lookup';
 export { Entity } from './entity';
+export { Predicate } from './predicate';
 export { Triple } from './triple';
 export { Rule } from './rules/rule';
 export { ConnectorRule } from './rules/connector-rule';

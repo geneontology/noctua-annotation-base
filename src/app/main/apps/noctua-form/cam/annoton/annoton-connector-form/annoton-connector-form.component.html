@@ -52,9 +52,9 @@
                 <div class="noc-note" fxLayout="row" fxLayoutAlign="start center">
                   <mat-icon class="green-500-fg">check_circle</mat-icon>
                   <span class="noc-description">
-                    {{connector.connectorAnnoton?.rule.suggestedEdge.r1?.label}}
-                    <span *ngIf="connector.connectorAnnoton?.rule.suggestedEdge.r2">
-                      <strong> + </strong> {{connector.connectorAnnoton?.rule.suggestedEdge.r2?.label}}
+                    {{connector.connectorAnnoton?.rule.r1Edge?.label}}
+                    <span *ngIf="connector.connectorAnnoton?.rule.r2Edge">
+                      <strong> + </strong> {{connector.connectorAnnoton?.rule.r2Edge?.label}}
                     </span>
                   </span>
                 </div>
@@ -351,9 +351,9 @@
           <div class="noc-note mb-4" fxLayout="row" fxLayoutAlign="start center">
             <mat-icon class="green-500-fg">check_circle</mat-icon>
             <span class="noc-description">
-              {{currentConnectorAnnoton?.rule.suggestedEdge.r1?.label}}
-              <span *ngIf="currentConnectorAnnoton?.rule.suggestedEdge.r2">
-                <strong> + </strong> {{currentConnectorAnnoton?.rule.suggestedEdge.r2?.label}}
+              {{currentConnectorAnnoton?.rule.r1Edge?.label}}
+              <span *ngIf="currentConnectorAnnoton?.rule.r2Edge">
+                <strong> + </strong> {{currentConnectorAnnoton?.rule.r2Edge?.label}}
               </span>
             </span>
           </div>
@@ -368,9 +368,9 @@
         <div class="noc-note mb-4" fxLayout="row" fxLayoutAlign="start center">
           <mat-icon class="green-500-fg">check_circle</mat-icon>
           <span class="noc-description">
-            {{connectorAnnoton?.rule.suggestedEdge.r1?.label}}
-            <span *ngIf="connectorAnnoton?.rule.suggestedEdge.r2">
-              <strong> + </strong> {{connectorAnnoton?.rule.suggestedEdge.r2?.label}}
+            {{connectorAnnoton?.rule.r1Edge?.label}}
+            <span *ngIf="connectorAnnoton?.rule.r2Edge">
+              <strong> + </strong> {{connectorAnnoton?.rule.r2Edge?.label}}
             </span>
           </span>
         </div>

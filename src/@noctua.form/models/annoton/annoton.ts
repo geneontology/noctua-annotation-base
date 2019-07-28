@@ -57,16 +57,7 @@ export class Annoton extends SaeGraph {
   }
 
   get annotonConnections() {
-    let result = [];
-    let edges = this.getEdges('mf')
-
-    if (edges && edges.nodes) {
-      result = edges.nodes.map((node) => {
-        return node
-      })
-    }
-
-    return result ? result : []
+    throw new Error('Method not implemented');
   }
 
   getConnection(uuid) {

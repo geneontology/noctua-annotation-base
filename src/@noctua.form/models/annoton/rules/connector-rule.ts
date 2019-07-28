@@ -5,11 +5,11 @@ const map = require('lodash/map');
 const uuid = require('uuid/v1');
 import { noctuaFormConfig } from './../../../noctua-form-config';
 import {
-  Rule,
   DirectionRule,
   ConditionRule,
   ReactionRule,
 } from '.';
+import { Entity } from '../entity';
 
 export class ConnectorRule {
   annotonsConsecutive = new ConditionRule('annotonsConsecutive', 'Activities are consecutive?');
@@ -20,6 +20,9 @@ export class ConnectorRule {
   objectMFCatalyticActivity = new ConditionRule('objectMFCatalyticActivity', 'Is object MF a Catalytic Activity');
   activityRegulatingProcess = new ConditionRule('activityRegulatingProcess', 'Activity regulating process');
 
+  r1Edge: Entity;
+  r2Edge: Entity;
+
   notes = [
     this.subjectMFCatalyticActivity,
     this.objectMFCatalyticActivity,
@@ -28,17 +31,12 @@ export class ConnectorRule {
     this.activityRegulatingProcess
   ];
 
-  public displaySection = {
+  displaySection = {
     annotonsConsecutive: true,
     causalEffect: true,
     effectDependency: false,
     causalReactionProduct: false,
     process: false,
-  }
-
-  suggestedEdge = {
-    r1: null,
-    r2: null
   }
 
   constructor() {

@@ -13,7 +13,8 @@ import {
   Evidence,
   ConnectorRule,
   Rule,
-  Entity
+  Entity,
+  Predicate
 } from './';
 import { Annoton } from './annoton';
 
@@ -58,8 +59,8 @@ export class ConnectorAnnoton extends SaeGraph {
   setRule() {
     const self = this;
 
-    self.rule.annotonsConsecutive.condition = self.getIsConsecutiveByEdge(self.rule.suggestedEdge.r1);
-    self.rule.effectDirection.direction = self.getEffectDirectionByEdge(self.rule.suggestedEdge.r1);
+    self.rule.annotonsConsecutive.condition = self.getIsConsecutiveByEdge(self.rule.r1Edge);
+    self.rule.effectDirection.direction = self.getEffectDirectionByEdge(self.rule.r1Edge);
 
     if (self.type === ConnectorType.basic) {
       self.rule.effectDependency.condition = false;
@@ -93,10 +94,10 @@ export class ConnectorAnnoton extends SaeGraph {
 
     if (value.process) {
       self.processNode.term = new Entity(value.process.id, value.process.label);
-      self.rule.suggestedEdge.r2 = value.process.edge;
+      self.rule.r2Edge = value.process.edge;
     }
 
-    self.rule.suggestedEdge.r1 = this.getCausalConnectorEdge(
+    self.rule.r1Edge = this.getCausalConnectorEdge(
       value.causalEffect,
       value.annotonsConsecutive,
       value.causalReactionProduct);
@@ -223,7 +224,7 @@ export class ConnectorAnnoton extends SaeGraph {
 
     if (this.type === ConnectorType.basic) {
       this.addNodes(self.upstreamNode, self.downstreamNode);
-      self.addEdge(self.upstreamNode, self.downstreamNode, this.rule.suggestedEdge.r1);
+      self.addEdge(self.upstreamNode, self.downstreamNode, new Predicate(this.rule.r1Edge, evidences));
     }
 
     if (this.type === ConnectorType.intermediate) {
@@ -232,15 +233,40 @@ export class ConnectorAnnoton extends SaeGraph {
 
       self.addNodes(self.upstreamNode, self.downstreamNode, self.processNode, self.hasInputNode);
 
-      self.addEdge(self.upstreamNode, self.processNode, this.rule.suggestedEdge.r1);
-      self.addEdge(self.processNode, self.downstreamNode, this.rule.suggestedEdge.r2);
-      self.addEdge(self.processNode, self.hasInputNode, noctuaFormConfig.edge.hasInput);
+      self.addEdge(self.upstreamNode, self.processNode, new Predicate(this.rule.r1Edge, evidences));
+      self.addEdge(self.processNode, self.downstreamNode, new Predicate(this.rule.r2Edge, evidences));
+      self.addEdge(self.processNode, self.hasInputNode, new Predicate(new Entity(noctuaFormConfig.edge.hasInput.id, noctuaFormConfig.edge.hasInput.label), evidences));
 
       self.processNode.evidence = evidences;
       self.hasInputNode.evidence = evidences;
     }
 
     console.log(self)
+  }
+
+  prepareDelete() {
+    const self = this;
+
+    let uuids: string[] = [];
+
+    each(self.downstreamNode.evidence, (evidence: Evidence) => {
+      if (evidence.uuid) {
+        uuids.push(evidence.uuid);
+      }
+    });
+
+    each([self.processNode, self.hasInputNode], function (node: AnnotonNode) {
+      if (node.uuid) {
+        each(node.evidence, (evidence: Evidence) => {
+          if (evidence.uuid) {
+            uuids.push(evidence.uuid);
+          }
+        });
+        uuids.push(node.uuid);
+      }
+    });
+
+    return uuids;
   }
 
   private _getPreviewEdges(): Edge[] {
@@ -253,7 +279,7 @@ export class ConnectorAnnoton extends SaeGraph {
         {
           source: 'upstream',
           target: 'downstream',
-          label: self.rule.suggestedEdge.r1.label
+          label: self.rule.r1Edge.label
         }
       ]
     } else if (self.type === ConnectorType.intermediate) {
@@ -261,11 +287,11 @@ export class ConnectorAnnoton extends SaeGraph {
         {
           source: 'upstream',
           target: 'process',
-          label: self.rule.suggestedEdge.r1.label
+          label: self.rule.r1Edge.label
         }, {
           source: 'process',
           target: 'downstream',
-          label: self.rule.suggestedEdge.r2 ? self.rule.suggestedEdge.r2.label : ''
+          label: self.rule.r2Edge ? self.rule.r2Edge.label : ''
         },
       ]
       if (this.hasInputNode.hasValue()) {
