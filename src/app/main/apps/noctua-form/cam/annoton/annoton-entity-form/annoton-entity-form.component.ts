@@ -97,7 +97,6 @@ export class AnnotonEntityFormComponent implements OnInit, OnDestroy {
       this.cam = cam
       this.cam.onGraphChanged.subscribe((annotons) => {
         //  let data = this.summaryGridService.getGrid(annotons);
-        //  this.sparqlService.addCamChildren(cam, data);
         //  this.dataSource = new CamsDataSource(this.sparqlService, this.paginator, this.sort);
       });
     });

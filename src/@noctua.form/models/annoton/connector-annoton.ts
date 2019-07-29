@@ -28,7 +28,7 @@ export enum ConnectorType {
   intermediate
 }
 
-export class ConnectorAnnoton extends SaeGraph {
+export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   id: string;
   upstreamAnnoton: Annoton;
   downstreamAnnoton: Annoton;
@@ -207,10 +207,9 @@ export class ConnectorAnnoton extends SaeGraph {
 
   prepareSave(value) {
     const self = this;
-    this.resetGraph();
 
-    let evidences: Evidence[] = value.evidenceFormArray.map((evidence) => {
-      let result = new Evidence()
+    const evidences: Evidence[] = value.evidenceFormArray.map((evidence: Evidence) => {
+      const result = new Evidence();
 
       result.uuid = evidence.uuid;
       result.evidence = new Entity(evidence.evidence.id, evidence.evidence.label);
@@ -220,7 +219,7 @@ export class ConnectorAnnoton extends SaeGraph {
       return result;
     });
 
-    this.downstreamNode.evidence = evidences;
+    // this.downstreamNode.evidence = evidences;
 
     if (this.type === ConnectorType.basic) {
       this.addNodes(self.upstreamNode, self.downstreamNode);
@@ -237,35 +236,33 @@ export class ConnectorAnnoton extends SaeGraph {
       self.addEdge(self.processNode, self.downstreamNode, new Predicate(this.rule.r2Edge, evidences));
       self.addEdge(self.processNode, self.hasInputNode, new Predicate(new Entity(noctuaFormConfig.edge.hasInput.id, noctuaFormConfig.edge.hasInput.label), evidences));
 
-      self.processNode.evidence = evidences;
-      self.hasInputNode.evidence = evidences;
+      // self.processNode.evidence = evidences;
+      //  self.hasInputNode.evidence = evidences;
     }
-
-    console.log(self)
   }
 
   prepareDelete() {
     const self = this;
 
     let uuids: string[] = [];
-
-    each(self.downstreamNode.evidence, (evidence: Evidence) => {
-      if (evidence.uuid) {
-        uuids.push(evidence.uuid);
-      }
-    });
-
-    each([self.processNode, self.hasInputNode], function (node: AnnotonNode) {
-      if (node.uuid) {
-        each(node.evidence, (evidence: Evidence) => {
+    /* 
+        each(self.downstreamNode.evidence, (evidence: Evidence) => {
           if (evidence.uuid) {
             uuids.push(evidence.uuid);
           }
         });
-        uuids.push(node.uuid);
-      }
-    });
-
+    
+        each([self.processNode, self.hasInputNode], function (node: AnnotonNode) {
+          if (node.uuid) {
+            each(node.evidence, (evidence: Evidence) => {
+              if (evidence.uuid) {
+                uuids.push(evidence.uuid);
+              }
+            });
+            uuids.push(node.uuid);
+          }
+        });
+     */
     return uuids;
   }
 

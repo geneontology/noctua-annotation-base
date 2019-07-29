@@ -16,8 +16,8 @@ export class Evidence {
   assignedBy: Entity = new Entity('', '');;
   classExpression
   uuid;
-  evidenceRequired: boolean = false;
-  referenceRequired: boolean = false
+  evidenceRequired = false;
+  referenceRequired = false;
   ontologyClass = []
 
   constructor() {

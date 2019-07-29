@@ -1,9 +1,6 @@
 import { Injector, Injectable } from '@angular/core';
-
-import { Observable, BehaviorSubject } from 'rxjs'
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
-
-//Config
+import { Observable, BehaviorSubject } from 'rxjs';
+import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
@@ -14,7 +11,6 @@ const each = require('lodash/forEach');
 
 import { Annoton } from './../models/annoton/annoton';
 import { AnnotonNode } from './../models/annoton/annoton-node';
-
 import { AnnotonForm } from './../models/forms/annoton-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 
@@ -25,7 +21,6 @@ export class NoctuaAnnotonFormService {
   public mfLocation;
   public errors = [];
   public annoton: Annoton;
-  // public annotonPresentation;
   public annotonForm: AnnotonForm;
   public annotonFormGroup: BehaviorSubject<FormGroup | undefined>;
   public annotonFormGroup$: Observable<FormGroup>;
@@ -46,35 +41,27 @@ export class NoctuaAnnotonFormService {
   initializeForm(annoton?: Annoton) {
     const self = this;
 
-    this.errors = [];
+    self.errors = [];
 
     if (annoton) {
-      this.annoton = annoton;
+      self.annoton = annoton;
     }
 
-    if (self.mfLocation) {
-      let mfNode = self.annoton.getNode('mf');
-
-      if (mfNode) {
-        mfNode.location = self.mfLocation;
-      }
-    }
-    this.annotonForm = this.createAnnotonForm()
-    this.annotonFormGroup.next(this._fb.group(this.annotonForm));
-    this.annoton.enableSubmit();
-    this._onAnnotonFormChanges();
+    self.annotonForm = this.createAnnotonForm();
+    self.annotonFormGroup.next(this._fb.group(this.annotonForm));
+    self.annoton.enableSubmit();
+    self._onAnnotonFormChanges();
   }
 
   initializeFormData(nodes) {
     this.annoton = this.noctuaFormConfigService.createAnnotonModelFakeData(nodes);
-    this.initializeForm()
+    this.initializeForm();
   }
 
   createAnnotonForm() {
     const self = this;
-
-    let annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    let annotonForm = new AnnotonForm(annotonFormMetadata, self.annoton.presentation.geneProduct);
+    const annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
+    const annotonForm = new AnnotonForm(annotonFormMetadata, self.annoton.presentation.geneProduct);
 
     annotonForm.createFunctionDescriptionForm(self.annoton.presentation.fd);
     annotonForm.onValueChanges(self.annoton.presentation.geneProduct.termLookup);
@@ -90,7 +77,7 @@ export class NoctuaAnnotonFormService {
     this.annotonFormGroup.getValue().valueChanges.subscribe(value => {
       this.annotonFormToAnnoton();
       this.annoton.enableSubmit();
-    })
+    });
   }
 
   getAnnotonFormErrors() {

@@ -7,7 +7,6 @@ declare const require: any;
 const each = require('lodash/forEach');
 
 import { Annoton } from './../annoton/annoton';
-import { AnnotonNode } from './../annoton/annoton-node';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityGroupForm } from './entity-group-form'
 
@@ -18,11 +17,12 @@ import { EntityForm } from './entity-form';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
+import { NodeDisplay } from '..';
 
 export class AnnotonEntityForm {
   term = new FormControl();
-  evidenceForms: EvidenceForm[] = []
-  evidenceFormArray = new FormArray([])
+  evidenceForms: EvidenceForm[] = [];
+  evidenceFormArray = new FormArray([]);
   _metadata: AnnotonFormMetadata;
 
   private _fb = new FormBuilder();
@@ -31,14 +31,14 @@ export class AnnotonEntityForm {
     this._metadata = metadata;
   }
 
-  createAnnotonEntityForms(entity: AnnotonNode) {
+  createAnnotonEntityForms(entity: NodeDisplay) {
     const self = this;
 
     this.term.setValue(entity.getTerm());
     this.term.setValidators(entity.id === 'mf' ? termValidator(entity) : null);
     this.onValueChanges(entity.termLookup);
-    entity.evidence.forEach((evidence: Evidence) => {
-      let evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
+    entity.predicate.evidence.forEach((evidence: Evidence) => {
+      const evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
 
       self.evidenceForms.push(evidenceForm);
       evidenceForm.onValueChanges(evidence.evidenceLookup)
@@ -46,20 +46,20 @@ export class AnnotonEntityForm {
     });
   }
 
-  populateAnnotonEntityForm(annotonNode: AnnotonNode) {
+  populateAnnotonEntityForm(annotonNode: NodeDisplay) {
     const self = this;
     let evidences: Evidence[] = [];
 
     annotonNode.term = new Entity(this.term.value.id, this.term.value.label);
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
-      let evidenceFound = annotonNode.getEvidenceById(evidenceForm.uuid);
+      let evidenceFound //nnotonNode.getEvidenceById(evidenceForm.uuid);
       let evidence = evidenceFound ? evidenceFound : new Evidence();
 
       evidenceForm.populateEvidence(evidence);
-      evidences.push(evidence)
+      evidences.push(evidence);
     });
 
-    annotonNode.setEvidence(evidences)
+    // annotonNode.setEvidence(evidences)
   }
 
   onValueChanges(lookup: EntityLookup) {

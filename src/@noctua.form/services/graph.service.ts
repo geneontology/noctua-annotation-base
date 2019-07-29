@@ -486,7 +486,7 @@ export class NoctuaGraphService {
         annotonNode.location = mfSubjectNode.location;
         annotonNode.term = mfSubjectNode.term;
         annotonNode.classExpression = mfSubjectNode.classExpression
-        annotonNode.setEvidence(evidence);
+        // annotonNode.setEvidence(evidence);
         annotonNode.setIsComplement(mfSubjectNode.isComplement);
         annotonNode.uuid = mfId;
 
@@ -610,7 +610,7 @@ export class NoctuaGraphService {
         let annotonNode = annoton.getNode('gp');
         annotonNode.term = new Entity(gpSubjectNode.term.id, gpSubjectNode.term.label);
         annotonNode.classExpression = gpSubjectNode.classExpression;
-        annotonNode.setEvidence(evidence);
+        //  annotonNode.setEvidence(evidence);
         annotonNode.setIsComplement(gpSubjectNode.isComplement);
         annotonNode.uuid = gpId;
 
@@ -662,9 +662,6 @@ export class NoctuaGraphService {
         let evidence = self.edgeToEvidence(cam.graph, toMFEdge);
         let toMFObject = toMFEdge.object_id();
 
-        if (annotonNode.id === "mc" && predicateId === noctuaFormConfig.edge.hasPart.id) {
-          self.noctuaFormConfigService.addGPAnnotonData(annoton, toMFObject);
-        }
 
         if (annoton.annotonModelType === noctuaFormConfig.annotonModelType.options.bpOnly.name) {
           let causalEdge = _.find(noctuaFormConfig.causalEdges, {
@@ -746,7 +743,7 @@ export class NoctuaGraphService {
             if (connectorAnnotonDTO.downstreamAnnoton) {
               processNode.uuid = objectId;
               processNode.term = processNodeInfo.term;
-              processNode.setEvidence(self.edgeToEvidence(cam.graph, e));
+              // processNode.setEvidence(self.edgeToEvidence(cam.graph, e));
 
               let connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, connectorAnnotonDTO.downstreamAnnoton, processNode, connectorAnnotonDTO.hasInputNode);
 
@@ -943,7 +940,7 @@ export class NoctuaGraphService {
 
       // Extract the current local coord.
       //   var pos = self.locationStore.get(nid);
-      //var new_x = pos['x'];
+      // var new_x = pos['x'];
       //  var new_y = pos['y'];
 
       // console.log('node pos', pos)
@@ -973,15 +970,15 @@ export class NoctuaGraphService {
         annotonNode.getTerm().id);
     }
 
-    each(annotonNode.evidence, (evidence: Evidence, key) => {
-      if (evidence.hasValue()) {
-        self.editIndividual(reqs,
-          cam.modelId,
-          evidence.uuid,
-          evidence.classExpression,
-          evidence.evidence.id);
-      }
-    });
+    /*    each(annotonNode.evidence, (evidence: Evidence, key) => {
+         if (evidence.hasValue()) {
+           self.editIndividual(reqs,
+             cam.modelId,
+             evidence.uuid,
+             evidence.classExpression,
+             evidence.evidence.id);
+         }
+       }); */
 
     let rebuild = (resp) => {
       let noctua_graph = model.graph;
@@ -1327,47 +1324,6 @@ export class NoctuaGraphService {
     console.log('create save', destAnnoton);
 
     return destAnnoton;
-  }
-
-  adjustAnnoton(annoton: Annoton) {
-    const self = this;
-
-    switch (annoton.annotonModelType) {
-      case noctuaFormConfig.annotonModelType.options.default.name:
-        {
-          let mfNode = annoton.getNode('mf');
-          let ccNode = annoton.getNode('cc');
-          let cc1Node = annoton.getNode('cc-1');
-          let cc11Node = annoton.getNode('cc-1-1');
-          let cc111Node = annoton.getNode('cc-1-1-1');
-          let ccRootNode = noctuaFormConfig.rootNode['cc']
-
-          if (!ccNode.hasValue()) {
-            if (cc1Node.hasValue()) {
-              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
-              ccNode.evidence = cc1Node.evidence;
-            } else if (cc11Node.hasValue()) {
-              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
-              ccNode.evidence = cc11Node.evidence;
-            } else if (cc111Node.hasValue()) {
-              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
-              ccNode.evidence = cc111Node.evidence;
-            }
-          }
-          break;
-        }
-      case noctuaFormConfig.annotonModelType.options.bpOnly.name:
-        {
-          let mfNode = annoton.getNode('mf');
-          let bpNode = annoton.getNode('bp');
-
-          mfNode.term = new Entity('GO:0003674', 'molecular_function');
-          mfNode.evidence = bpNode.evidence;
-          break;
-        }
-    }
-
-    return self.createSave(annoton);
   }
 
   saveMF(cam, individual, success) {

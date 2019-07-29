@@ -14,8 +14,11 @@ import {
   Annoton,
   Evidence,
   ConnectorAnnoton,
-  Entity
-} from './../..//models';
+  Entity,
+  Predicate,
+  AnnotonDisplay,
+  NodeDisplay
+} from './../../models';
 
 @Injectable({
   providedIn: 'root'
@@ -702,7 +705,7 @@ export class NoctuaFormConfigService {
       },
     }
 
-    this.closureCheck = {}
+    this.closureCheck = {};
 
     this.closureCheck[noctuaFormConfig.edge.enabledBy.id] = {
       edge: noctuaFormConfig.edge.enabledBy,
@@ -1090,17 +1093,17 @@ export class NoctuaFormConfigService {
 
   createAnnotonConnectorModel(upstreamAnnoton: Annoton, downstreamAnnoton: Annoton, srcProcessNode?: AnnotonNode, srcHasInputNode?: AnnotonNode) {
     const self = this;
-    let srcUpstreamNode = upstreamAnnoton.getMFNode();
-    let srcDownstreamNode = downstreamAnnoton.getMFNode();
-    let upstreamNode = self.generateNode(srcUpstreamNode.id, { id: 'upstream' });
-    let downstreamNode = self.generateNode(srcDownstreamNode.id, { id: 'downstream' });
-    let processNode = srcProcessNode ? srcProcessNode : self.generateNode('bp', { id: 'process' });
-    let hasInputNode = srcHasInputNode ? srcHasInputNode : self.generateNode('mf-1', { id: 'has-input' });
+    const srcUpstreamNode = upstreamAnnoton.getMFNode();
+    const srcDownstreamNode = downstreamAnnoton.getMFNode();
+    const upstreamNode = self.generateNode(srcUpstreamNode.id, { id: 'upstream' });
+    const downstreamNode = self.generateNode(srcDownstreamNode.id, { id: 'downstream' });
+    const processNode = srcProcessNode ? srcProcessNode : self.generateNode('bp', { id: 'process' });
+    const hasInputNode = srcHasInputNode ? srcHasInputNode : self.generateNode('mf-1', { id: 'has-input' });
 
     upstreamNode.copyValues(srcUpstreamNode);
     downstreamNode.copyValues(srcDownstreamNode);
 
-    let connectorAnnoton = new ConnectorAnnoton(upstreamNode, downstreamNode);
+    const connectorAnnoton = new ConnectorAnnoton(upstreamNode, downstreamNode);
 
     // connectorAnnoton.addNodes(upstreamNode, downstreamNode, processNode, hasInputNode);
     connectorAnnoton.upstreamAnnoton = upstreamAnnoton;
@@ -1113,31 +1116,34 @@ export class NoctuaFormConfigService {
 
   createAnnotonModel(annotonType, modelType, srcAnnoton?) {
     const self = this;
-    let annoton = new Annoton();
-    let modelIds = _.cloneDeep(self._modelRelationship);
+    const annoton = new AnnotonDisplay();
+    const modelIds = _.cloneDeep(self._modelRelationship);
 
     annoton.setAnnotonType(annotonType);
     annoton.setAnnotonModelType(modelType);
 
     each(modelIds[modelType].nodes, function (id) {
-      annoton.addNode(self.generateNode(id));
+      const predicate = new Predicate();
+      const nodeDisplay = self.generateNode(id);
+
+      predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
+      nodeDisplay.predicate = predicate;
+      annoton.addNode(nodeDisplay);
     });
 
-    self.addGPAnnotonData(annoton);
-
     each(modelIds[modelType].triples, function (triple) {
-      annoton.addEdgeById(triple.subject, triple.object, triple.edge);
-      if (triple.edgeOption) {
-        annoton.addEdgeOptionById(triple.object, triple.edgeOption);
-      }
+      const predicate = new Predicate(triple.edge);
+
+      //  predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
+      //  annoton.addEdgeById(triple.subject, triple.object, predicate);
     });
 
     if (srcAnnoton) {
-      annoton.copyValues(srcAnnoton);
+      // annoton.copyValues(srcAnnoton);
     }
 
     each(modelIds[modelType].overrides, function (overridesData) {
-      let node: AnnotonNode = annoton.getNode(overridesData.id);
+      const node: NodeDisplay = annoton.getNode(overridesData.id);
 
       overridesData.isExtension ? node.isExtension = overridesData.isExtension : null;
       overridesData.treeLevel ? node.treeLevel = overridesData.treeLevel : null;
@@ -1146,8 +1152,6 @@ export class NoctuaFormConfigService {
       overridesData.display ? node.setDisplay(overridesData.display) : null;
       overridesData.label ? node.label = overridesData.label : null;
       overridesData.relationship ? node.relationship = overridesData.relationship : null;
-      overridesData.evidence ? node.evidence[0].setEvidence(overridesData.evidence) : null;
-      overridesData.reference ? node.evidence[0].reference = overridesData.reference : null;
     });
 
     annoton.enableSubmit();
@@ -1155,66 +1159,29 @@ export class NoctuaFormConfigService {
   }
 
 
-  generateNode(id?, overrides?) {
+  generateNode(id?, overrides?): NodeDisplay {
     const self = this;
 
-    let nodeDataObject = self._annotonData[id];
-    let nodeData;
-    let annotonNode = new AnnotonNode()
+    const nodeDataObject = self._annotonData[id];
+    const nodeDisplay = new NodeDisplay();
+    const nodeData = nodeDataObject ?
+      JSON.parse(JSON.stringify(nodeDataObject)) :
+      JSON.parse(JSON.stringify(self._annotonData['term']));
 
-    if (nodeDataObject) {
-      nodeData = JSON.parse(JSON.stringify(nodeDataObject));
-    } else {
-      nodeData = JSON.parse(JSON.stringify(self._annotonData['term']));
-    }
+    nodeDisplay.id = (overrides && overrides.id) ? overrides.id : id;
+    nodeDisplay.aspect = nodeData.aspect;
+    nodeDisplay.ontologyClass = nodeData.ontologyClass;
+    nodeDisplay.label = nodeData.label;
+    nodeDisplay.relationship = nodeData.relationship;
+    nodeDisplay.displaySection = (overrides && overrides.displaySection) ? overrides.displaySection : nodeData.displaySection;
+    nodeDisplay.displayGroup = nodeData.displayGroup;
+    nodeDisplay.lookupGroup = nodeData.lookupGroup;
+    nodeDisplay.treeLevel = nodeData.treeLevel;
+    nodeDisplay.isExtension = nodeData.isExtension;
+    nodeDisplay.setTermLookup(nodeData.termLookup.requestParams);
+    nodeDisplay.setTermOntologyClass(nodeData.ontologyClass);
 
-    annotonNode.id = (overrides && overrides.id) ? overrides.id : id;
-    annotonNode.aspect = nodeData.aspect;
-    annotonNode.ontologyClass = nodeData.ontologyClass;
-    annotonNode.label = nodeData.label;
-    annotonNode.relationship = nodeData.relationship;
-    annotonNode.displaySection = (overrides && overrides.displaySection) ? overrides.displaySection : nodeData.displaySection;
-    annotonNode.displayGroup = nodeData.displayGroup;
-    annotonNode.lookupGroup = nodeData.lookupGroup;
-    annotonNode.treeLevel = nodeData.treeLevel;
-    annotonNode.isExtension = nodeData.isExtension;
-    annotonNode.setTermLookup(nodeData.termLookup.requestParams);
-    annotonNode.setTermOntologyClass(nodeData.ontologyClass);
-    annotonNode.setEvidenceMeta('eco', self.requestParams["evidence"]);
-
-    return annotonNode;
-  }
-
-  addGPAnnotonData(annoton, id?) {
-    const self = this;
-
-    let nodeData = JSON.parse(JSON.stringify(self._annotonData['gp']));
-    let annotonNode = new AnnotonNode()
-
-    if (!id) {
-      id = 'gp' + uuid();
-    }
-
-    annotonNode.id = id;
-    annotonNode.aspect = nodeData.aspect;
-    annotonNode.ontologyClass = nodeData.ontologyClass;
-    annotonNode.label = "has part (GP)";
-    annotonNode.relationship = nodeData.relationship;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.mc;
-    annotonNode.lookupGroup = nodeData.lookupGroup;
-    annotonNode.treeLevel = 1;
-    annotonNode.isExtension = false;
-    annotonNode.setTermLookup(nodeData.termLookup.requestParams);
-    annotonNode.setTermOntologyClass(nodeData.ontologyClass);
-    annotonNode.setEvidenceMeta('eco', self.requestParams["evidence"]);
-
-    // annotonData[id].node = annotonNode;
-    annoton.addNode(annotonNode);
-
-    annoton.addEdgeById('mc', id, noctuaFormConfig.edge.hasPart);
-
-    return annotonNode;
+    return nodeDisplay;
   }
 
   createAnnotonModelFakeData(nodes) {
@@ -1241,7 +1208,7 @@ export class NoctuaFormConfigService {
         destEvidences.push(destEvidence)
       });
 
-      annotonNode.setEvidence(destEvidences);
+      //annotonNode.setEvidence(destEvidences);
     });
 
     annoton.enableSubmit();

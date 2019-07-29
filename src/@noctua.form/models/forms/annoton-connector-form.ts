@@ -16,10 +16,10 @@ import { EvidenceForm } from './evidence-form';
 import { Evidence } from './../../models/annoton/evidence'
 import { EntityForm } from './entity-form';
 import { EntityLookup } from '../annoton/entity-lookup';
+import { Predicate } from '..';
 
 export class AnnotonConnectorForm {
   edge = new FormControl();
-  term = new FormControl();
   annotonsConsecutive = new FormControl();
   causalEffect = new FormControl();
   effectDependency = new FormControl();
@@ -36,14 +36,13 @@ export class AnnotonConnectorForm {
     this._metadata = metadata;
   }
 
-  createEntityForms(entity: AnnotonNode, hasInput: AnnotonNode) {
+  createEntityForms(predicate: Predicate, hasInput: AnnotonNode) {
     const self = this;
 
-    this.term.setValue(entity.getTerm());
     this.hasInput.setValue(hasInput.getTerm());
 
-    entity.evidence.forEach((evidence: Evidence) => {
-      let evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
+    predicate.evidence.forEach((evidence: Evidence) => {
+      const evidenceForm = new EvidenceForm(self._metadata, evidence);
 
       self.evidenceForms.push(evidenceForm);
       evidenceForm.onValueChanges(evidence.evidenceLookup)
@@ -51,14 +50,14 @@ export class AnnotonConnectorForm {
     });
   }
 
-  updateEvidenceForms(entity: AnnotonNode) {
+  updateEvidenceForms(predicate: Predicate) {
     const self = this;
 
     self.evidenceForms = []
     self.evidenceFormArray = new FormArray([]);
 
-    entity.evidence.forEach((evidence: Evidence) => {
-      let evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
+    predicate.evidence.forEach((evidence: Evidence) => {
+      let evidenceForm = new EvidenceForm(self._metadata, evidence);
 
       self.evidenceForms.push(evidenceForm);
       evidenceForm.onValueChanges(evidence.evidenceLookup)

@@ -304,32 +304,6 @@ export class SparqlService {
     })
   }
 
-  annotonToCam(cam, annoton) {
-    let destNode = new AnnotonNode()
-    destNode.deepCopyValues(annoton.node);
-
-    let result: CamRow = {
-      treeLevel: annoton.treeLevel,
-      annotatedEntity: {
-        id: '',
-        label: annoton.gp
-      },
-      relationship: annoton.relationship,
-      aspect: annoton.aspect,
-      term: annoton.term,
-      relationshipExt: annoton.relationshipExt,
-      extension: annoton.extension,
-      evidence: annoton.evidence,
-      reference: annoton.reference,
-      with: annoton.with,
-      assignedBy: annoton.assignedBy,
-      srcNode: annoton.node,
-      destNode: destNode
-    }
-
-    return result;
-  }
-
   //BUILDER
 
   buildCamsQuery(searchCriteria: SearchCriteria) {

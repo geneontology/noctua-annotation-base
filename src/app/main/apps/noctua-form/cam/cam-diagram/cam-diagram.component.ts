@@ -108,20 +108,12 @@ export class CamDiagramComponent implements AfterViewInit, OnInit {
         });
         //   let data = this.summaryGridService.getGrid(annotons);
 
-        //    this.camService.addCamChildren(this.cam, data);
         //   console.log('poo', this.cam)
       }
     });
 
   }
 
-  ngAfterViewInit() {
-    // this.jsPlumbInstance = jsPlumb.getInstance();
-    //this.jsPlumbInstance.draggable('Source');
-
-    console.log("pppp")
-
-  }
 
   addNode(name: string) {
     this.nodes = [name];

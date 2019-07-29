@@ -18,20 +18,18 @@ import {
   findNode,
   getNodes,
   getEdges,
-} from './noctua-form-graph'
+} from './noctua-form-graph';
 
-export class SaeGraph {
+export class SaeGraph<T extends AnnotonNode> {
   numberOfEdges: number;
-  graph: Graph<AnnotonNode, Triple>;
+  graph: Graph<T, Triple>;
 
   constructor() {
-    this.numberOfEdges = 0;
-
-    this.graph = <Graph<AnnotonNode, Triple>>{ _nodes: {}, _edges: {} }
+    this.graph = <Graph<T, Triple>>{ _nodes: {}, _edges: {} };
   }
 
-  get nodes(): AnnotonNode[] {
-    let keyNodes = getNodes(this.graph);
+  get nodes(): T[] {
+    const keyNodes = getNodes(this.graph);
 
     return Object.values(keyNodes);
   }
@@ -40,61 +38,60 @@ export class SaeGraph {
     return this.getEdges(null);
   }
 
-  getNode(id: string): AnnotonNode {
+  getNode(id: string): T {
     return findNode(this.graph, id)
   }
 
-  addNode(node: AnnotonNode) {
+  addNode(node: T) {
     return addNode(this.graph, node, node.id);
-  };
+  }
 
-  addNodes(...nodes: AnnotonNode[]) {
+  addNodes(...nodes: T[]) {
     const self = this;
 
-    nodes.forEach((node: AnnotonNode) => {
+    nodes.forEach((node: T) => {
       self.addNode(node);
     });
-  };
+  }
 
-  removeNode(node: AnnotonNode) {
+  removeNode(node: T) {
     removeNode(this.graph, node.id);
-  };
+  }
 
-  addEdge(subjectNode: AnnotonNode, objectNode: AnnotonNode, predicate: Predicate) {
+  addEdge(subjectNode: T, objectNode: T, predicate: Predicate) {
 
-    let triple = new Triple(subjectNode, predicate, objectNode)
-    let edge: Edge<Triple> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple }
+    const triple = new Triple(subjectNode, predicate, objectNode)
+    const edge: Edge<Triple> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple }
 
     addEdge(this.graph, edge);
-  };
+  }
 
   addEdgeById(sourceId: string, objectId: string, predicate: Predicate) {
-    let source = this.getNode(sourceId);
-    let object = this.getNode(objectId);
+    const source = this.getNode(sourceId);
+    const object = this.getNode(objectId);
 
     this.addEdge(source, object, predicate)
-  };
+  }
 
   editEdge(subjectId, objectId, srcEdge) {
-    let destEdge = this.getEdge(subjectId, objectId);
+    const destEdge = this.getEdge(subjectId, objectId);
 
     // destEdge.edge = srcEdge;
   }
 
   getEdge(subjectId, objectId) {
-    //let edge = this.edges[subjectId];
-    let edge: Edge<Triple> = { subjectId: subjectId, objectId: objectId, metadata: null }
+    const edge: Edge<Triple> = { subjectId: subjectId, objectId: objectId, metadata: null }
 
     return findEdge(this.graph, edge);
   }
 
   getEdges(id: string): Triple[] {
-    let edges: Edge<Triple>[] = getEdges(this.graph, id);
+    const edges: Edge<Triple>[] = getEdges(this.graph, id);
 
     return edges.map((edge: Edge<Triple>) => {
-      return edge.metadata
-    })
-  };
+      return edge.metadata;
+    });
+  }
 
   removeEdge(source, object) {
     // var objectNodes = this.edges[source.id]['nodes']
@@ -106,7 +103,7 @@ export class SaeGraph {
       this.numberOfEdges--;
     }
     */
-  };
+  }
 
 
 

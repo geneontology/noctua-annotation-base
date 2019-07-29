@@ -147,50 +147,7 @@ export class CamService {
       );
   }
 
-  addCamChildren(srcCam, annotons) {
-    const self = this;
 
-    srcCam.camRow = [];
-
-    _.each(annotons, function (annoton) {
-      let cam = self.annotonToCam(srcCam, annoton);
-
-      cam.model = srcCam.model;
-      cam.graph = srcCam.graph;
-      srcCam.camRow.push(cam);
-    });
-
-    this.onCamsChanged.next(srcCam.camRow);
-  }
-
-  annotonToCam(cam, annoton) {
-
-    let destNode = new AnnotonNode()
-    destNode.deepCopyValues(annoton.node);
-
-    let result: CamRow = {
-      // id: uuid(),
-      treeLevel: annoton.treeLevel,
-      // model: cam.model,
-      annotatedEntity: {
-        id: '',
-        label: annoton.gp
-      },
-      relationship: annoton.relationship,
-      aspect: annoton.aspect,
-      term: annoton.term,
-      relationshipExt: annoton.relationshipExt,
-      extension: annoton.extension,
-      evidence: annoton.evidence,
-      reference: annoton.reference,
-      with: annoton.with,
-      assignedBy: annoton.assignedBy,
-      srcNode: annoton.node,
-      destNode: destNode
-    }
-
-    return result;
-  }
 
   getUniqueEvidence() {
     return this.cam.getUniqueEvidences();

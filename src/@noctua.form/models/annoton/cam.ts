@@ -12,6 +12,7 @@ import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
 import { ConnectorAnnoton } from './connector-annoton';
+import { NodeDisplay } from '..';
 
 export class Cam {
 
@@ -124,17 +125,6 @@ export class Cam {
     return result;
   }
 
-  annotonsWithoutLocation() {
-    let result = [];
-
-    this.annotons.forEach((annoton: Annoton) => {
-      if (annoton.location.x === 0 && annoton.location.y === 0) {
-        result.push(annoton);
-      }
-    });
-
-    return result;
-  }
 
   applyFilter() {
     const self = this;
@@ -143,12 +133,12 @@ export class Cam {
       self.grid = [];
 
       each(self.annotons, (annoton: Annoton) => {
-        each(annoton.nodes, (node: AnnotonNode) => {
+        each(annoton.nodes, (node: NodeDisplay) => {
           each(self.filter.uuids, (uuid) => {
             let match = false
-            each(node.evidence, (evidence: Evidence) => {
-              match = match || (evidence.uuid === uuid);
-            })
+            // each(node.evidence, (evidence: Evidence) => {
+            //    match = match || (evidence.uuid === uuid);
+            //  })
             match = match || (node.uuid === uuid);
             if (match) {
               self.generateGridRow(annoton, node);
@@ -176,8 +166,8 @@ export class Cam {
     }
 
     each(self.annotons, function (annoton: Annoton) {
-      each(annoton.nodes, function (node: AnnotonNode) {
-        each(node.evidence, function (evidence) {
+      each(annoton.edges, function (triple: Triple) {
+        each(triple.predicate.evidence, function (evidence: Evidence) {
           if (evidence.hasValue()) {
             if (!self.evidenceExists(result, evidence)) {
               result.push(evidence);
@@ -250,7 +240,7 @@ export class Cam {
 
 
 
-  generateGridRow(annoton: Annoton, node: AnnotonNode) {
+  generateGridRow(annoton: Annoton, node: NodeDisplay) {
     const self = this;
 
     let term = node.getTerm();
@@ -263,33 +253,33 @@ export class Cam {
       term: node.isExtension ? {} : term,
       extension: node.isExtension ? term : {},
       aspect: node.aspect,
-      evidence: node.evidence.length > 0 ? node.evidence[0].evidence : {},
-      reference: node.evidence.length > 0 ? node.evidence[0].reference : {},
-      with: node.evidence.length > 0 ? node.evidence[0].with : {},
-      assignedBy: node.evidence.length > 0 ? node.evidence[0].assignedBy : {},
+      /*  evidence: node.evidence.length > 0 ? node.evidence[0].evidence : {},
+       reference: node.evidence.length > 0 ? node.evidence[0].reference : {},
+       with: node.evidence.length > 0 ? node.evidence[0].with : {},
+       assignedBy: node.evidence.length > 0 ? node.evidence[0].assignedBy : {}, */
       annoton: annoton,
       node: node
     })
-
-    for (let i = 1; i < node.evidence.length; i++) {
-      self.grid.push({
-        treeLevel: node.treeLevel,
-        evidence: node.evidence[i].evidence,
-        reference: node.evidence[i].reference,
-        with: node.evidence[i].with.control,
-        assignedBy: node.evidence[i].assignedBy,
-        node: node,
-      })
-    }
+    /* 
+        for (let i = 1; i < node.evidence.length; i++) {
+          self.grid.push({
+            treeLevel: node.treeLevel,
+            evidence: node.evidence[i].evidence,
+            reference: node.evidence[i].reference,
+            with: node.evidence[i].with.control,
+            assignedBy: node.evidence[i].assignedBy,
+            node: node,
+          }) 
+        }*/
   }
 
-  tableCanDisplayEnabledBy(node: AnnotonNode) {
+  tableCanDisplayEnabledBy(node: NodeDisplay) {
     const self = this;
 
     return node.relationship.id === noctuaFormConfig.edge.enabledBy.id
   }
 
-  tableDisplayExtension(node: AnnotonNode) {
+  tableDisplayExtension(node: NodeDisplay) {
     const self = this;
 
     if (node.id === 'mf') {
