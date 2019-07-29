@@ -10,6 +10,8 @@ import { AnnotonError } from "./parser/annoton-error";
 
 import { AnnotonNode } from './annoton-node';
 import { Evidence } from './evidence';
+import { Triple } from './triple';
+import { Entity } from './entity';
 
 export class Annoton extends SaeGraph {
   gp;
@@ -137,6 +139,85 @@ export class Annoton extends SaeGraph {
 
     let node = self.getNode(id);
     node.addEdgeOption(edgeOption)
+  }
+
+  createSave() {
+    const self = this;
+    let saveData = {
+      triples: []
+    }
+
+    let skipNodeDFS = (triples: Triple[]): AnnotonNode | null => {
+      each(triples, (triple: Triple) => {
+        if (triple.object.hasValue()) {
+          return triple.object;
+        } else {
+          return skipNodeDFS(self.getEdges(triple.object.id));
+        }
+      });
+
+      return null
+    }
+
+    each(self.nodes, (srcNode: AnnotonNode) => {
+      if (srcNode.hasValue()) {
+        let triples: Triple[] = self.getEdges(srcNode.id);
+
+        each(triples, (triple: Triple) => {
+          if (triple.object.hasValue()) {
+            saveData.triples.push(triple);
+          } else {
+            let objectNode: AnnotonNode = skipNodeDFS(self.getEdges(triple.object.id));
+            if (objectNode) {
+              let destTriple = new Triple(triple.subject, triple.predicate, objectNode);
+              saveData.triples.push(destTriple);
+            }
+          }
+        })
+      }
+    });
+
+    return saveData;
+  }
+
+  adjustAnnoton(annoton: Annoton) {
+    const self = this;
+
+    switch (annoton.annotonModelType) {
+      case noctuaFormConfig.annotonModelType.options.default.name:
+        {
+          let mfNode = annoton.getNode('mf');
+          let ccNode = annoton.getNode('cc');
+          let cc1Node = annoton.getNode('cc-1');
+          let cc11Node = annoton.getNode('cc-1-1');
+          let cc111Node = annoton.getNode('cc-1-1-1');
+          let ccRootNode = noctuaFormConfig.rootNode['cc']
+
+          if (!ccNode.hasValue()) {
+            if (cc1Node.hasValue()) {
+              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
+              ccNode.evidence = cc1Node.evidence;
+            } else if (cc11Node.hasValue()) {
+              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
+              ccNode.evidence = cc11Node.evidence;
+            } else if (cc111Node.hasValue()) {
+              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
+              ccNode.evidence = cc111Node.evidence;
+            }
+          }
+          break;
+        }
+      case noctuaFormConfig.annotonModelType.options.bpOnly.name:
+        {
+          let mfNode = annoton.getNode('mf');
+          let bpNode = annoton.getNode('bp');
+
+          mfNode.term = new Entity('GO:0003674', 'molecular_function');
+          mfNode.evidence = bpNode.evidence;
+          break;
+        }
+    }
+
   }
 
   enableSubmit() {

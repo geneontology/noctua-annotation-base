@@ -14,10 +14,10 @@ export class Triple {
 
   private _grid: any[] = [];
 
-  constructor(object: AnnotonNode, predicate: Predicate, subject: AnnotonNode) {
+  constructor(subject: AnnotonNode, predicate: Predicate, object: AnnotonNode) {
     this.id = uuid();
-    this.object = object;
     this.subject = subject;
+    this.object = object;
     this.predicate = predicate;
   }
 

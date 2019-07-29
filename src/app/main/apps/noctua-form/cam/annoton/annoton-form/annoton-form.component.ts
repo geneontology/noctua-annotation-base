@@ -103,8 +103,10 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
 
     let saveAnnoton = function () {
       //self.annotonForm.linkFormNode(entity, selected.node);
-      let annoton = self.noctuaGraphService.adjustAnnoton(self.noctuaAnnotonFormService.annoton)
-      self.noctuaGraphService.saveAnnoton(self.cam, annoton).then((data) => {
+      let saveData = self.noctuaAnnotonFormService.annoton.createSave();
+      let title = 'enabled by ' + self.noctuaAnnotonFormService.annoton.getGPNode().term.label
+
+      self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, title).then((data) => {
         //  localStorage.setItem('barista_token', value);  
         self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully created.', 'OK');
         self.noctuaAnnotonFormService.clearForm();

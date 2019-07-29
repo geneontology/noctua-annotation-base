@@ -914,27 +914,20 @@ export class NoctuaGraphService {
   }
   */
 
-  addIndividual(reqs, node: AnnotonNode) {
-    node.saveMeta = {};
-    if (node.term.hasValue()) {
-      if (node.uuid) {
-        node.saveMeta.term = node.uuid;
-      } else if (node.isComplement) {
+  addIndividual(reqs: any, node: AnnotonNode): string | null {
+    if (node.uuid) return node.uuid;
+    if (node.hasValue()) {
+      if (node.isComplement) {
         let ce = new class_expression();
         ce.as_complement(node.term.id);
-        node.saveMeta.term = reqs.add_individual(ce);
-
+        node.uuid = reqs.add_individual(ce);
       } else {
-        node.saveMeta.term = reqs.add_individual(node.term.id);
+        node.uuid = reqs.add_individual(node.term.id);
       }
-
-      node.uuid = node.saveMeta.term;
-
-      if (node.location && node.location.x > 0 && node.id === 'mf') {
-        //  reqs.update_annotations(node.saveMeta.term, 'hint-layout-x', node.location.x);
-        // reqs.update_annotations(node.saveMeta.term, 'hint-layout-y', node.location.y);
-      }
+      return node.uuid;
     }
+
+    return null;
   }
 
   saveMFLocation(cam) {
@@ -1073,7 +1066,7 @@ export class NoctuaGraphService {
     }
   }
 
-  addFact(reqs, annoton: Annoton | ConnectorAnnoton, node) {
+  addFactLegacy(reqs, annoton: Annoton | ConnectorAnnoton, node) {
     let edge = annoton.getEdges(node.id);
 
     each(edge, function (edgeNode) {
@@ -1114,6 +1107,29 @@ export class NoctuaGraphService {
     });
   }
 
+  addFact(reqs, triples: Triple[]) {
+    const self = this;
+
+    each(triples, function (triple: Triple) {
+      let subject = self.addIndividual(reqs, triple.subject);
+      let object = self.addIndividual(reqs, triple.object);
+
+      if (subject && object) {
+        triple.predicate.uuid = reqs.add_fact([
+          subject,
+          object,
+          triple.predicate.edge.id
+        ]);
+
+        each(triple.predicate.evidence, function (evidence: Evidence) {
+          let evidenceReference = evidence.reference;
+          let evidenceWith = evidence.with;
+
+          reqs.add_evidence(evidence.evidence.id, evidenceReference, evidenceWith, triple.predicate.uuid);
+        });
+      }
+    });
+  }
 
   evidenceUseGroups(reqs, evidence: Evidence) {
     const self = this;
@@ -1374,34 +1390,17 @@ export class NoctuaGraphService {
     return cam.individualManager.request_with(reqs);
   }
 
-
-
-  saveAnnoton(cam, annoton: Annoton) {
+  saveAnnoton(cam, triples: Triple[], title) {
     const self = this;
-    let geneProduct;
-    let mfNode = annoton.getMFNode();
 
-    if (annoton.annotonType === noctuaFormConfig.annotonType.options.complex.name) {
-      geneProduct = annoton.getNode('mc');
-    } else {
-      geneProduct = annoton.getNode('gp');
-    }
-
-    function success() {
+    let save = () => {
       let reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
 
       if (!cam.title) {
-        const defaultTitle = 'enabled by ' + geneProduct.term.label;
-        reqs.add_annotation_to_model('title', defaultTitle);
+        reqs.add_annotation_to_model('title', title);
       }
 
-      each(annoton.nodes, function (node) {
-        self.addIndividual(reqs, node);
-      });
-
-      each(annoton.nodes, function (node) {
-        self.addFact(reqs, annoton, node);
-      });
+      self.addFact(reqs, triples);
 
       reqs.store_model(cam.modelId);
 
@@ -1412,9 +1411,9 @@ export class NoctuaGraphService {
       return cam.manager.request_with(reqs);
     }
 
-    return self.saveMF(cam, mfNode, success);
+    //return self.saveMF(cam, mfNode, success);
 
-    // return success();
+    return save();
 
   }
 
@@ -1429,7 +1428,7 @@ export class NoctuaGraphService {
       });
 
       each(annoton.nodes, function (node) {
-        self.addFact(reqs, annoton, node);
+        self.addFactLegacy(reqs, annoton, node);
       });
 
       if (self.userInfo.groups.length > 0) {

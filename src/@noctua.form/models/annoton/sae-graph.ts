@@ -36,8 +36,8 @@ export class SaeGraph {
     return Object.values(keyNodes);
   }
 
-  get edges() {
-    return getEdges(this.graph);
+  get edges(): Triple[] {
+    return this.getEdges(null);
   }
 
   getNode(id: string): AnnotonNode {
@@ -88,8 +88,12 @@ export class SaeGraph {
     return findEdge(this.graph, edge);
   }
 
-  getEdges(id) {
-    return getEdges(this.graph, id);
+  getEdges(id: string): Triple[] {
+    let edges: Edge<Triple>[] = getEdges(this.graph, id);
+
+    return edges.map((edge: Edge<Triple>) => {
+      return edge.metadata
+    })
   };
 
   removeEdge(source, object) {

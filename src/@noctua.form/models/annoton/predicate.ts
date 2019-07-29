@@ -5,6 +5,7 @@ declare const require: any;
 const uuid = require('uuid/v1');
 
 export class Predicate {
+  uuid: string;
   edge: Entity;
   evidence: Evidence[];
 
