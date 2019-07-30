@@ -28,7 +28,8 @@ import {
   NoctuaAnnotonFormService,
   NoctuaLookupService,
   NoctuaAnnotonEntityService,
-  CamService
+  CamService,
+  AnnotonDisplay
 } from 'noctua-form-base';
 
 import {
@@ -46,7 +47,7 @@ import {
 export class CamTableComponent implements OnInit, OnDestroy {
 
   searchCriteria: any = {};
-  searchFormData: any = []
+  searchFormData: any = [];
   searchForm: FormGroup;
   camDisplayType = noctuaFormConfig.camDisplayType.options;
 
@@ -112,7 +113,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.noctuaSearchService.search(searchCriteria);
   }
 
-  toggleExpand(annoton: Annoton) {
+  toggleExpand(annoton: AnnotonDisplay) {
     annoton.expanded = !annoton.expanded;
   }
 
@@ -129,7 +130,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.connectorForm);
   }
 
-  openAnnotonForm(annoton: Annoton) {
+  openAnnotonForm(annoton: AnnotonDisplay) {
     this.camService.onCamChanged.next(this.cam);
     this.camService.annoton = annoton;
     this.noctuaAnnotonFormService.initializeForm(annoton);

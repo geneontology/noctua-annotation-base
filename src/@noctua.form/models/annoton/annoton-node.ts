@@ -12,6 +12,7 @@ import { Contributor } from './../contributor';
 
 export class AnnotonNode {
   id: string;
+  label: string;
   uuid: string;
   term: Entity = new Entity('', '');
   termLookup: EntityLookup = new EntityLookup();
@@ -26,6 +27,8 @@ export class AnnotonNode {
   assignedBy: boolean = null;
   contributor: Contributor = null;
   isCatalyticActivity = false;
+  errors = [];
+  warnings = [];
 
   constructor() {
 

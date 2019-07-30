@@ -9,11 +9,11 @@ const each = require('lodash/forEach');
 import { Annoton } from './../annoton/annoton';
 import { AnnotonNode } from './../annoton/annoton-node';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
-import { EntityGroupForm } from './entity-group-form'
+import { EntityGroupForm } from './entity-group-form';
 
 import { EvidenceForm } from './evidence-form';
 
-import { Evidence } from './../../models/annoton/evidence'
+import { Evidence } from './../../models/annoton/evidence';
 import { EntityForm } from './entity-form';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Predicate } from '..';
@@ -42,7 +42,7 @@ export class AnnotonConnectorForm {
     this.hasInput.setValue(hasInput.getTerm());
 
     predicate.evidence.forEach((evidence: Evidence) => {
-      const evidenceForm = new EvidenceForm(self._metadata, evidence);
+      const evidenceForm = new EvidenceForm(self._metadata, null, evidence);
 
       self.evidenceForms.push(evidenceForm);
       evidenceForm.onValueChanges(evidence.evidenceLookup)
@@ -53,11 +53,11 @@ export class AnnotonConnectorForm {
   updateEvidenceForms(predicate: Predicate) {
     const self = this;
 
-    self.evidenceForms = []
+    self.evidenceForms = [];
     self.evidenceFormArray = new FormArray([]);
 
     predicate.evidence.forEach((evidence: Evidence) => {
-      let evidenceForm = new EvidenceForm(self._metadata, evidence);
+      const evidenceForm = new EvidenceForm(self._metadata, null, evidence);
 
       self.evidenceForms.push(evidenceForm);
       evidenceForm.onValueChanges(evidence.evidenceLookup)
@@ -68,13 +68,13 @@ export class AnnotonConnectorForm {
   populateConnectorForm(annoton: Annoton, annotonNode: AnnotonNode) {
     const self = this;
 
-    let evidences: Evidence[] = [];
+    const evidences: Evidence[] = [];
 
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
-      let evidence = new Evidence()
+      const evidence = new Evidence();
 
       evidenceForm.populateEvidence(evidence);
-      evidences.push(evidence)
+      evidences.push(evidence);
     });
   }
 

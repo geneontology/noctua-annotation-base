@@ -466,24 +466,22 @@ export class NoctuaGraphService {
 
     each(cam.graph.all_edges(), function (e) {
       if (e.predicate_id() === noctuaFormConfig.edge.enabledBy.id) {
-        let mfId = e.subject_id();
-        let gpId = e.object_id();
-        let evidence = self.edgeToEvidence(cam.graph, e);
-        let mfEdgesIn = cam.graph.get_edges_by_subject(mfId);
-        let mfSubjectNode = self.nodeToTerm(cam.graph, mfId);
-        let gpObjectNode = self.nodeToTerm(cam.graph, gpId);
-        let gpVerified = false;
-        let isDoomed = false
-        let annotonType = '';// self.determineAnnotonType(gpObjectNode);
-        let annotonModelType = self.determineAnnotonModelType(mfSubjectNode, mfEdgesIn);
-
-        let annoton = self.noctuaFormConfigService.createAnnotonModel(
+        const mfId = e.subject_id();
+        const gpId = e.object_id();
+        const evidence = self.edgeToEvidence(cam.graph, e);
+        const mfEdgesIn = cam.graph.get_edges_by_subject(mfId);
+        const mfSubjectNode = self.nodeToTerm(cam.graph, mfId);
+        const gpObjectNode = self.nodeToTerm(cam.graph, gpId);
+        const gpVerified = false;
+        const isDoomed = false
+        const annotonType = '';// self.determineAnnotonType(gpObjectNode);
+        const annotonModelType = self.determineAnnotonModelType(mfSubjectNode, mfEdgesIn);
+        const annoton = self.noctuaFormConfigService.createAnnotonModel(
           annotonType ? annotonType : noctuaFormConfig.annotonType.options.simple.name,
           annotonModelType
         );
-        let annotonNode = annoton.getNode('mf');
+        const annotonNode = annoton.getNode('mf');
 
-        annotonNode.location = mfSubjectNode.location;
         annotonNode.term = mfSubjectNode.term;
         annotonNode.classExpression = mfSubjectNode.classExpression
         // annotonNode.setEvidence(evidence);

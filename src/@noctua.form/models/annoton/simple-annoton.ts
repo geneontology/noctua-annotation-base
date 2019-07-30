@@ -11,7 +11,7 @@ import { AnnotonError } from "./parser/annoton-error";
 import { AnnotonNode } from './annoton-node';
 import { Evidence } from './evidence';
 
-export class SimpleAnnoton extends SaeGraph {
+export class SimpleAnnoton extends SaeGraph<AnnotonNode> {
   gp;
   _presentation;
   annotonType;
@@ -33,11 +33,6 @@ export class SimpleAnnoton extends SaeGraph {
     this.id = uuid();
   }
 
-  addEdgeOptionById(id, edgeOption) {
-    const self = this;
 
-    let node = self.getNode(id);
-    node.addEdgeOption(edgeOption)
-  }
 
 }

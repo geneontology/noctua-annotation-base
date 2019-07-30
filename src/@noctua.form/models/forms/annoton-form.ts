@@ -13,6 +13,7 @@ import { EntityGroupForm } from './entity-group-form'
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
+import { AnnotonDisplay, NodeDisplay } from '../ui';
 
 export class AnnotonForm {
   entityGroupForms: EntityGroupForm[] = []
@@ -23,7 +24,7 @@ export class AnnotonForm {
 
   private _fb = new FormBuilder();
 
-  constructor(metadata, geneProduct?: AnnotonNode) {
+  constructor(metadata, geneProduct?: NodeDisplay) {
     this._metadata = metadata;
 
     if (geneProduct) {
@@ -45,8 +46,8 @@ export class AnnotonForm {
     });
   }
 
-  populateAnnoton(annoton: Annoton) {
-    annoton.getGPNode().term = new Entity(this.gp.value.id, this.gp.value.label);
+  populateAnnoton(annoton: AnnotonDisplay) {
+    //   annoton.getGPNode().term = new Entity(this.gp.value.id, this.gp.value.label);
 
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.populateAnnotonNodes(annoton);

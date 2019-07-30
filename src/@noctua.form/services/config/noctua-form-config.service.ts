@@ -1114,7 +1114,7 @@ export class NoctuaFormConfigService {
     return connectorAnnoton;
   }
 
-  createAnnotonModel(annotonType, modelType, srcAnnoton?) {
+  createAnnotonModel(annotonType, modelType, srcAnnoton?): AnnotonDisplay {
     const self = this;
     const annoton = new AnnotonDisplay();
     const modelIds = _.cloneDeep(self._modelRelationship);

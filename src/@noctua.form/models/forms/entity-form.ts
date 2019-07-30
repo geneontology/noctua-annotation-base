@@ -1,12 +1,12 @@
 import { FormArray, FormBuilder, FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { AnnotonNode } from './../annoton/annoton-node';
 import { Evidence } from './../annoton/evidence';
 import { AnnotonFormMetadata } from './annoton-form-metadata';
 import { EvidenceForm } from './evidence-form';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
+import { NodeDisplay } from '..';
 
 declare const require: any;
 const each = require('lodash/forEach');
@@ -25,14 +25,14 @@ export class EntityForm {
         this.id = id;
     }
 
-    createEvidenceForms(entity: AnnotonNode) {
+    createEvidenceForms(entity: NodeDisplay) {
         const self = this;
 
         this.term.setValue(entity.getTerm());
         this.setTermValidator(entity);
 
-        entity.evidence.forEach((evidence: Evidence) => {
-            let evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
+        entity.predicate.evidence.forEach((evidence: Evidence) => {
+            const evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
 
             self.evidenceForms.push(evidenceForm);
             evidenceForm.onValueChanges(evidence.evidenceLookup);
@@ -41,13 +41,13 @@ export class EntityForm {
         });
     }
 
-    populateTerm(annotonNode: AnnotonNode) {
+    populateTerm(annotonNode: NodeDisplay) {
         const self = this;
 
         annotonNode.term = new Entity(this.term.value.id, this.term.value.label);
 
         self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
-            let evidence: Evidence = annotonNode.evidence[index];
+            const evidence: Evidence = annotonNode.predicate.evidence[index];
             if (evidence) {
                 evidenceForm.populateEvidence(evidence);
             }

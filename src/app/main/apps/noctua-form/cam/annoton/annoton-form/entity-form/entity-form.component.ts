@@ -32,7 +32,8 @@ import {
   AnnotonNode,
   Evidence,
   noctuaFormConfig,
-  Entity
+  Entity,
+  NodeDisplay
 } from 'noctua-form-base';
 
 @Component({
@@ -53,7 +54,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   cams: any[] = [];
 
   nodeGroup: any = {}
-  entity: AnnotonNode;
+  entity: NodeDisplay;
 
   @Input('entityFormGroup')
   public entityFormGroup: FormGroup;
@@ -84,7 +85,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.nodeGroup = this.noctuaAnnotonFormService.annoton.presentation['fd'][this.nodeGroupName];
-    this.entity = <AnnotonNode>_.find(this.nodeGroup.nodes, { id: this.entityName });
+    this.entity = <NodeDisplay>_.find(this.nodeGroup.nodes, { id: this.entityName });
     // this.entityFormGroup = this.createEntityGroup();
 
 
@@ -93,22 +94,22 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   addEvidence() {
     const self = this;
 
-    self.entity.addEvidence();
+    self.entity.predicate.addEvidence();
     self.noctuaAnnotonFormService.initializeForm();
   }
 
   removeEvidence(index: number) {
     const self = this;
 
-    self.entity.removeEvidence(index);
+    self.entity.predicate.removeEvidence(index);
     self.noctuaAnnotonFormService.initializeForm();
   }
 
-  toggleIsComplement(entity: AnnotonNode) {
+  toggleIsComplement(entity: NodeDisplay) {
 
   }
 
-  openSearchDatabaseDialog(entity: AnnotonNode) {
+  openSearchDatabaseDialog(entity: NodeDisplay) {
     const self = this;
     let gpNode = this.noctuaAnnotonFormService.annotonForm.gp.value;
 
@@ -122,19 +123,19 @@ export class EntityFormComponent implements OnInit, OnDestroy {
           term: '',
           evidence: ''
         }
-      }
+      };
 
       let success = function (selected) {
         if (selected.term) {
           entity.term = new Entity(selected.term.term.id, selected.term.term.label);
 
           if (selected.evidences && selected.evidences.length > 0) {
-            entity.setEvidence(selected.evidences);
+            entity.predicate.setEvidence(selected.evidences);
           }
           self.noctuaAnnotonFormService.initializeForm();
         }
       }
-      self.noctuaFormDialogService.openSearchDatabaseDialog(data, success)
+      self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
     } else {
       let errors = [];
       let meta = {
@@ -158,7 +159,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
     evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference
-    self.entity.setEvidence([evidence]);
+    self.entity.predicate.setEvidence([evidence]);
     self.noctuaAnnotonFormService.initializeForm();
   }
 
@@ -189,7 +190,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     let success = function (selected) {
       if (selected.evidences && selected.evidences.length > 0) {
-        self.entity.setEvidence(selected.evidences, ['assignedBy']);
+        self.entity.predicate.setEvidence(selected.evidences, ['assignedBy']);
         self.noctuaAnnotonFormService.initializeForm();
       }
     }

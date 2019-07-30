@@ -6,6 +6,7 @@ import { AnnotonError } from "./parser/annoton-error";
 import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { AnnotonNode } from './annoton-node';
+import { NodeDisplay } from '..';
 
 export class Evidence {
   edge: Entity;
@@ -76,7 +77,7 @@ export class Evidence {
     return result;
   }
 
-  enableSubmit(errors, node: AnnotonNode, position) {
+  enableSubmit(errors, node: NodeDisplay, position) {
     const self = this;
     let result = true;
 

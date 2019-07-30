@@ -23,6 +23,10 @@ import {
   Entity
 } from './../models/annoton';
 
+import {
+  NodeDisplay
+} from './../models';
+
 import { AnnotonConnectorForm } from './../models/forms/annoton-connector-form';
 
 import { EntityForm } from './../models/forms/entity-form';
@@ -53,7 +57,9 @@ export class NoctuaAnnotonConnectorService {
     this.connectorFormGroup$ = this.connectorFormGroup.asObservable()
 
     this.camService.onCamChanged.subscribe((cam) => {
-      if (!cam) return;
+      if (!cam) {
+        return;
+      }
 
       this.cam = cam;
     });
@@ -100,8 +106,8 @@ export class NoctuaAnnotonConnectorService {
     this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
   }
 
-  updateEvidence(node: AnnotonNode) {
-    this.connectorForm.updateEvidenceForms(node);
+  updateEvidence(node: NodeDisplay) {
+    this.connectorForm.updateEvidenceForms(node.predicate);
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
   }
 
@@ -110,8 +116,8 @@ export class NoctuaAnnotonConnectorService {
     let connectorFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
     let connectorForm = new AnnotonConnectorForm(connectorFormMetadata);
 
-    connectorForm.createEntityForms(self.connectorAnnoton.upstreamNode, self.connectorAnnoton.hasInputNode);
-    connectorForm.onValueChanges(self.connectorAnnoton.hasInputNode.termLookup)
+    // connectorForm.createEntityForms(self.connectorAnnoton.upstreamNode, self.connectorAnnoton.hasInputNode);
+    connectorForm.onValueChanges(self.connectorAnnoton.hasInputNode.termLookup);
 
     return connectorForm;
   }

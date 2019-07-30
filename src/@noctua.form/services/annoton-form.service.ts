@@ -13,6 +13,7 @@ import { Annoton } from './../models/annoton/annoton';
 import { AnnotonNode } from './../models/annoton/annoton-node';
 import { AnnotonForm } from './../models/forms/annoton-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
+import { AnnotonDisplay } from '../models/';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 export class NoctuaAnnotonFormService {
   public mfLocation;
   public errors = [];
-  public annoton: Annoton;
+  public annoton: AnnotonDisplay;
   public annotonForm: AnnotonForm;
   public annotonFormGroup: BehaviorSubject<FormGroup | undefined>;
   public annotonFormGroup$: Observable<FormGroup>;
@@ -38,7 +39,7 @@ export class NoctuaAnnotonFormService {
     this.initializeForm();
   }
 
-  initializeForm(annoton?: Annoton) {
+  initializeForm(annoton?: AnnotonDisplay) {
     const self = this;
 
     self.errors = [];
@@ -132,7 +133,7 @@ export class NoctuaAnnotonFormService {
         }
       })
     } else {
-      this.annoton.copyValues(srcAnnoton);
+      // this.annoton.copyValues(srcAnnoton);
     }
 
     this.initializeForm();

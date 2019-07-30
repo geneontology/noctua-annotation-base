@@ -21,14 +21,15 @@ import { AnnotonEntityForm } from './../models/forms/annoton-entity-form';
 
 import { EntityForm } from './../models/forms/entity-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
+import { NodeDisplay, AnnotonDisplay } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaAnnotonEntityService {
   cam: Cam;
-  public annoton: Annoton;
-  public termNode: AnnotonNode;
+  public annoton: AnnotonDisplay;
+  public termNode: NodeDisplay;
   private annotonEntityForm: AnnotonEntityForm;
   private annotonEntityFormGroup: BehaviorSubject<FormGroup | undefined>;
   public annotonEntityFormGroup$: Observable<FormGroup>;
@@ -47,7 +48,7 @@ export class NoctuaAnnotonEntityService {
     });
   }
 
-  initializeForm(annoton: Annoton, termNode: AnnotonNode) {
+  initializeForm(annoton: AnnotonDisplay, termNode: NodeDisplay) {
     this.annoton = annoton;
     this.termNode = termNode;
     this.annotonEntityForm = this.createAnnotonEntityForm(termNode);
@@ -55,7 +56,7 @@ export class NoctuaAnnotonEntityService {
     this._onAnnotonFormChanges();
   }
 
-  createAnnotonEntityForm(termNode: AnnotonNode) {
+  createAnnotonEntityForm(termNode: NodeDisplay) {
     const self = this;
     let annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
     let annotonEntityForm = new AnnotonEntityForm(annotonFormMetadata);
