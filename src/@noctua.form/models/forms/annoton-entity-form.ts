@@ -17,7 +17,7 @@ import { EntityForm } from './entity-form';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
-import { NodeDisplay } from '..';
+import { AnnotonNode } from '..';
 
 export class AnnotonEntityForm {
   term = new FormControl();
@@ -31,7 +31,7 @@ export class AnnotonEntityForm {
     this._metadata = metadata;
   }
 
-  createAnnotonEntityForms(entity: NodeDisplay) {
+  createAnnotonEntityForms(entity: AnnotonNode) {
     const self = this;
 
     this.term.setValue(entity.getTerm());
@@ -46,7 +46,7 @@ export class AnnotonEntityForm {
     });
   }
 
-  populateAnnotonEntityForm(annotonNode: NodeDisplay) {
+  populateAnnotonEntityForm(annotonNode: AnnotonNode) {
     const self = this;
     let evidences: Evidence[] = [];
 

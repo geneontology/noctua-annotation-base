@@ -67,7 +67,7 @@ export function findEdge<Node, EdgeMetadata>(
     edge: Edge<EdgeMetadata>
 ): Edge<EdgeMetadata> {
     return find(graph._edges[edge.subjectId], (e: Edge<EdgeMetadata>) => {
-        return e.objectId === edge.objectId
+        return e.objectId === edge.objectId;
     });
 }
 

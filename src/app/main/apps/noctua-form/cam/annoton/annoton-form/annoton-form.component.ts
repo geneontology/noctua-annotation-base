@@ -102,7 +102,7 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
 
   save() {
     const self = this;
-    let infos;
+    let infos = [];
 
     self.noctuaAnnotonFormService.annotonFormToAnnoton();
 

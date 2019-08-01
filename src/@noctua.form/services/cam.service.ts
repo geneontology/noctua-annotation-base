@@ -11,7 +11,6 @@ import { NoctuaGraphService } from './../services/graph.service';
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './user.service';
-//import { Cam } from '../models/cam';
 import { CamRow } from '../models/cam-row';
 import { Contributor } from '../models/contributor';
 import { Group } from '../models/group';
@@ -34,17 +33,14 @@ const each = require('lodash/forEach');
 export class CamService {
   baseUrl = environment.spaqrlApiUrl;
   curieUtil: any;
-  loading: boolean = false;
+  loading = false;
   cam: Cam;
   onCamsChanged: BehaviorSubject<any>;
   onCamChanged: BehaviorSubject<any>;
   onCamTermsChanged: BehaviorSubject<any>;
 
 
-  searchSummary: any = {}
-
   public annoton: Annoton;
-  // public annotonPresentation;
   private camForm: CamForm;
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
@@ -82,11 +78,10 @@ export class CamService {
   createCamForm() {
     const self = this;
 
-    let camFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    let camForm = new CamForm(camFormMetadata);
+    const camFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
+    const camForm = new CamForm(camFormMetadata);
 
     camForm.createCamForm(this.cam, this.noctuaUserService.user);
-    console.log(0)
 
     return camForm;
   }
@@ -94,7 +89,7 @@ export class CamService {
   getCam(modelId): Cam {
     const self = this;
 
-    let cam: Cam = new Cam();
+    const cam: Cam = new Cam();
 
     cam.id = uuid();
     cam.graph = null;
@@ -110,7 +105,6 @@ export class CamService {
 
     return cam;
   }
-
 
   getAnnotonLocation(id): Observable<any> {
     const self = this;

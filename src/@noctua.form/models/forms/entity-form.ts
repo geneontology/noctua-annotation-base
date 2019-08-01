@@ -6,7 +6,7 @@ import { EvidenceForm } from './evidence-form';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
-import { NodeDisplay } from '..';
+import { AnnotonNode } from '..';
 
 declare const require: any;
 const each = require('lodash/forEach');
@@ -25,7 +25,7 @@ export class EntityForm {
         this.id = id;
     }
 
-    createEvidenceForms(entity: NodeDisplay) {
+    createEvidenceForms(entity: AnnotonNode) {
         const self = this;
 
         this.term.setValue(entity.getTerm());
@@ -41,7 +41,7 @@ export class EntityForm {
         });
     }
 
-    populateTerm(annotonNode: NodeDisplay) {
+    populateTerm(annotonNode: AnnotonNode) {
         const self = this;
 
         annotonNode.term = new Entity(this.term.value.id, this.term.value.label);

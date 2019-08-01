@@ -30,7 +30,7 @@ import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 })
 export class NoctuaTripleFormService {
   cam: Cam;
-  public triple: Triple;
+  public triple: Triple<AnnotonNode>;
   private tripleForm: TripleForm;
   private tripleFormGroup: BehaviorSubject<FormGroup | undefined>;
   public tripleFormGroup$: Observable<FormGroup>;
@@ -49,14 +49,14 @@ export class NoctuaTripleFormService {
     });
   }
 
-  initializeForm(triple: Triple) {
+  initializeForm(triple: Triple<AnnotonNode>) {
     this.triple = triple;
     this.tripleForm = this.createTripleForm(triple);
     this.tripleFormGroup.next(this._fb.group(this.tripleForm));
     this._onAnnotonFormChanges();
   }
 
-  createTripleForm(triple: Triple) {
+  createTripleForm(triple: Triple<AnnotonNode>) {
     const self = this;
     let annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
     let tripleForm = new TripleForm(annotonFormMetadata);

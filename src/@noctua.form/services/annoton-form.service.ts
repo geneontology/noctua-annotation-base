@@ -13,7 +13,6 @@ import { Annoton } from './../models/annoton/annoton';
 import { AnnotonNode } from './../models/annoton/annoton-node';
 import { AnnotonForm } from './../models/forms/annoton-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
-import { AnnotonDisplay } from '../models/';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +20,7 @@ import { AnnotonDisplay } from '../models/';
 export class NoctuaAnnotonFormService {
   public mfLocation;
   public errors = [];
-  public annoton: AnnotonDisplay;
+  public annoton: Annoton;
   public annotonForm: AnnotonForm;
   public annotonFormGroup: BehaviorSubject<FormGroup | undefined>;
   public annotonFormGroup$: Observable<FormGroup>;
@@ -29,7 +28,6 @@ export class NoctuaAnnotonFormService {
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaLookupService: NoctuaLookupService) {
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      noctuaFormConfig.annotonType.options.simple.name,
       noctuaFormConfig.annotonModelType.options.default.name
     );
 
@@ -39,7 +37,7 @@ export class NoctuaAnnotonFormService {
     this.initializeForm();
   }
 
-  initializeForm(annoton?: AnnotonDisplay) {
+  initializeForm(annoton?: Annoton) {
     const self = this;
 
     self.errors = [];
@@ -93,7 +91,6 @@ export class NoctuaAnnotonFormService {
     annoton.setAnnotonType(annotonType.name);
 
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      annotonType,
       annoton.annotonModelType,
       annoton
     )
@@ -102,7 +99,6 @@ export class NoctuaAnnotonFormService {
 
   setAnnotonModelType(annoton, annotonModelType) {
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      annoton.annotonType,
       annotonModelType,
       annoton)
     this.initializeForm();
@@ -117,7 +113,6 @@ export class NoctuaAnnotonFormService {
 
   cloneForm(srcAnnoton, filterNodes) {
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      srcAnnoton.annotonType,
       srcAnnoton.annotonModelType
     );
 
@@ -142,7 +137,6 @@ export class NoctuaAnnotonFormService {
 
   clearForm() {
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      this.annoton.annotonType,
       this.annoton.annotonModelType
     )
     this.initializeForm();

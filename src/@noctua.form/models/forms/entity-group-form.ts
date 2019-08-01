@@ -2,7 +2,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Annoton } from './../annoton/annoton';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityForm } from './entity-form';
-import { AnnotonDisplay } from '..';
 
 
 declare const require: any;
@@ -37,7 +36,7 @@ export class EntityGroupForm {
         });
     }
 
-    populateAnnotonNodes(annoton: AnnotonDisplay) {
+    populateAnnotonNodes(annoton: Annoton) {
         const self = this;
 
         self.entityForms.forEach((entityForm: EntityForm) => {

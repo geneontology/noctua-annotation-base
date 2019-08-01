@@ -4,5 +4,4 @@ export { Group } from './group';
 export { Organism } from './organism';
 
 export * from './annoton';
-export * from './ui';
 export * from './/forms';

@@ -32,8 +32,7 @@ import {
   AnnotonNode,
   Evidence,
   noctuaFormConfig,
-  Entity,
-  NodeDisplay
+  Entity
 } from 'noctua-form-base';
 
 @Component({
@@ -54,7 +53,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   cams: any[] = [];
 
   nodeGroup: any = {}
-  entity: NodeDisplay;
+  entity: AnnotonNode;
 
   @Input('entityFormGroup')
   public entityFormGroup: FormGroup;
@@ -85,7 +84,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.nodeGroup = this.noctuaAnnotonFormService.annoton.presentation['fd'][this.nodeGroupName];
-    this.entity = <NodeDisplay>_.find(this.nodeGroup.nodes, { id: this.entityName });
+    this.entity = <AnnotonNode>_.find(this.nodeGroup.nodes, { id: this.entityName });
     // this.entityFormGroup = this.createEntityGroup();
 
 
@@ -105,11 +104,11 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     self.noctuaAnnotonFormService.initializeForm();
   }
 
-  toggleIsComplement(entity: NodeDisplay) {
+  toggleIsComplement(entity: AnnotonNode) {
 
   }
 
-  openSearchDatabaseDialog(entity: NodeDisplay) {
+  openSearchDatabaseDialog(entity: AnnotonNode) {
     const self = this;
     let gpNode = this.noctuaAnnotonFormService.annotonForm.gp.value;
 

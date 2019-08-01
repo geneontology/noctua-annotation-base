@@ -12,7 +12,7 @@ import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
 import { ConnectorAnnoton } from './connector-annoton';
-import { NodeDisplay } from '..';
+
 
 export class Cam {
 
@@ -31,7 +31,7 @@ export class Cam {
   camRow?: any;
   annotons: Annoton[] = [];
   connectorAnnotons: ConnectorAnnoton[] = [];
-  triples: Triple[] = [];
+  triples: Triple<AnnotonNode>[] = [];
 
   error = false;
   engine;
@@ -133,7 +133,7 @@ export class Cam {
       self.grid = [];
 
       each(self.annotons, (annoton: Annoton) => {
-        each(annoton.nodes, (node: NodeDisplay) => {
+        each(annoton.nodes, (node: AnnotonNode) => {
           each(self.filter.uuids, (uuid) => {
             let match = false
             // each(node.evidence, (evidence: Evidence) => {
@@ -166,7 +166,7 @@ export class Cam {
     }
 
     each(self.annotons, function (annoton: Annoton) {
-      each(annoton.edges, function (triple: Triple) {
+      each(annoton.edges, function (triple: Triple<AnnotonNode>) {
         each(triple.predicate.evidence, function (evidence: Evidence) {
           if (evidence.hasValue()) {
             if (!self.evidenceExists(result, evidence)) {
@@ -240,7 +240,7 @@ export class Cam {
 
 
 
-  generateGridRow(annoton: Annoton, node: NodeDisplay) {
+  generateGridRow(annoton: Annoton, node: AnnotonNode) {
     const self = this;
 
     let term = node.getTerm();
@@ -273,13 +273,13 @@ export class Cam {
         }*/
   }
 
-  tableCanDisplayEnabledBy(node: NodeDisplay) {
+  tableCanDisplayEnabledBy(node: AnnotonNode) {
     const self = this;
 
     return node.relationship.id === noctuaFormConfig.edge.enabledBy.id
   }
 
-  tableDisplayExtension(node: NodeDisplay) {
+  tableDisplayExtension(node: AnnotonNode) {
     const self = this;
 
     if (node.id === 'mf') {

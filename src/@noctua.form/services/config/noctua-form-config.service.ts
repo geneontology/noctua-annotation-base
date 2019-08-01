@@ -15,23 +15,21 @@ import {
   Evidence,
   ConnectorAnnoton,
   Entity,
-  Predicate,
-  AnnotonDisplay,
-  NodeDisplay
+  Predicate
 } from './../../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaFormConfigService {
-  baseRequestParams
-  baseSpeciesRequestParam
-  requestParams
-  _annotonData
-  _reviewSearchData
-  _modelRelationship
+  baseRequestParams;
+  baseSpeciesRequestParam;
+  requestParams;
+  _annotonData;
+  _reviewSearchData;
+  _modelRelationship;
   closureCheck;
-  loggedIn: boolean = false;
+  loggedIn = false;
 
   private _baristaToken;
 
@@ -464,13 +462,9 @@ export class NoctuaFormConfigService {
     this._modelRelationship = {
       default: {
         nodes: [
-          'gp', 'mc', 'mf', 'mf-1', 'mf-2', 'bp', 'bp-1', 'bp-1-1', 'cc', 'cc-1', 'cc-1-1', 'cc-1-1-1'
+          'gp', 'mf', 'mf-1', 'mf-2', 'bp', 'bp-1', 'bp-1-1', 'cc', 'cc-1', 'cc-1-1', 'cc-1-1-1'
         ],
         triples: [{
-          subject: 'mf',
-          object: 'mc',
-          edge: noctuaFormConfig.edge.enabledBy
-        }, {
           subject: 'mf',
           object: 'gp',
           edge: noctuaFormConfig.edge.enabledBy
@@ -511,26 +505,10 @@ export class NoctuaFormConfigService {
           object: 'cc-1-1-1',
           edge: noctuaFormConfig.edge.partOf
         }],
-        simple: {
-          node: 'gp',
-          triple: {
-            subject: 'mf',
-            object: 'gp',
-            edge: noctuaFormConfig.edge.enabledBy
-          }
-        },
-        complex: {
-          node: 'mc',
-          triple: {
-            subject: 'mf',
-            object: 'mc',
-            edge: noctuaFormConfig.edge.enabledBy
-          }
-        }
       },
       ccOnly: {
         nodes: [
-          'gp', 'mc', 'cc', 'cc-1', 'cc-1-1', 'cc-1-1-1'
+          'gp', 'cc', 'cc-1', 'cc-1-1', 'cc-1-1-1'
         ],
         overrides: {
           'cc': {
@@ -552,10 +530,6 @@ export class NoctuaFormConfigService {
           object: 'cc',
           edge: noctuaFormConfig.edge.partOf
         }, {
-          subject: 'mc',
-          object: 'cc',
-          edge: noctuaFormConfig.edge.partOf
-        }, {
           subject: 'cc',
           object: 'cc-1',
           edge: noctuaFormConfig.edge.partOf
@@ -567,27 +541,11 @@ export class NoctuaFormConfigService {
           subject: 'cc-1-1',
           object: 'cc-1-1-1',
           edge: noctuaFormConfig.edge.partOf
-        }],
-        simple: {
-          node: 'gp',
-          triple: {
-            subject: 'gp',
-            object: 'cc',
-            edge: noctuaFormConfig.edge.partOf
-          }
-        },
-        complex: {
-          node: 'mc',
-          triple: {
-            subject: 'mc',
-            object: 'cc',
-            edge: noctuaFormConfig.edge.partOf
-          }
-        }
+        }]
       },
       bpOnly: {
         nodes: [
-          'gp', 'mc', 'mf', 'bp', 'cc-1-1', 'cc-1-1-1'
+          'gp', 'mf', 'bp', 'cc-1-1', 'cc-1-1-1'
         ],
         overrides: {
           mf: {
@@ -625,10 +583,6 @@ export class NoctuaFormConfigService {
         },
         triples: [{
           subject: 'mf',
-          object: 'mc',
-          edge: noctuaFormConfig.edge.enabledBy
-        }, {
-          subject: 'mf',
           object: 'gp',
           edge: noctuaFormConfig.edge.enabledBy
         }, {
@@ -654,23 +608,7 @@ export class NoctuaFormConfigService {
               //noctuaFormConfig.edge.upstreamOfOrWithinNegativeEffect,
             ]
           }
-        }],
-        simple: {
-          node: 'gp',
-          triple: {
-            subject: 'mf',
-            object: 'gp',
-            edge: noctuaFormConfig.edge.enabledBy
-          }
-        },
-        complex: {
-          node: 'mc',
-          triple: {
-            subject: 'mf',
-            object: 'mc',
-            edge: noctuaFormConfig.edge.enabledBy
-          }
-        }
+        }]
       },
       connector: {
         nodes: [
@@ -1095,10 +1033,10 @@ export class NoctuaFormConfigService {
     const self = this;
     const srcUpstreamNode = upstreamAnnoton.getMFNode();
     const srcDownstreamNode = downstreamAnnoton.getMFNode();
-    const upstreamNode = self.generateNode(srcUpstreamNode.id, { id: 'upstream' });
-    const downstreamNode = self.generateNode(srcDownstreamNode.id, { id: 'downstream' });
-    const processNode = srcProcessNode ? srcProcessNode : self.generateNode('bp', { id: 'process' });
-    const hasInputNode = srcHasInputNode ? srcHasInputNode : self.generateNode('mf-1', { id: 'has-input' });
+    const upstreamNode = self.generateAnnotonNode(srcUpstreamNode.id, { id: 'upstream' });
+    const downstreamNode = self.generateAnnotonNode(srcDownstreamNode.id, { id: 'downstream' });
+    const processNode = srcProcessNode ? srcProcessNode : self.generateAnnotonNode('bp', { id: 'process' });
+    const hasInputNode = srcHasInputNode ? srcHasInputNode : self.generateAnnotonNode('mf-1', { id: 'has-input' });
 
     upstreamNode.copyValues(srcUpstreamNode);
     downstreamNode.copyValues(srcDownstreamNode);
@@ -1114,33 +1052,36 @@ export class NoctuaFormConfigService {
     return connectorAnnoton;
   }
 
-  createAnnotonModel(annotonType, modelType, srcAnnoton?): AnnotonDisplay {
+  createAnnotonModel(modelType, srcAnnoton?): Annoton {
     const self = this;
-    const annoton = new AnnotonDisplay();
+    const annoton = new Annoton();
     const modelIds = _.cloneDeep(self._modelRelationship);
 
-    annoton.setAnnotonType(annotonType);
     annoton.setAnnotonModelType(modelType);
 
     each(modelIds[modelType].nodes, function (id) {
-      const nodeDisplay = self.generateNode(id);
-      annoton.addNode(nodeDisplay);
+      const annotonNode = self.generateAnnotonNode(id);
+      annoton.addNode(annotonNode);
     });
 
     each(modelIds[modelType].triples, function (triple) {
-      const predicate = new Predicate(triple.edge);
+      const predicate = annoton.getNode(triple.object).predicate;
 
-      predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
+      predicate.edge = triple.edge;
       annoton.addEdgeById(triple.subject, triple.object, predicate);
-      annoton.getNode(triple.object).predicate = predicate;
     });
+
+    const startNode = annoton.getNode(modelIds[modelType].nodes[0]);
+    const startTriple = annoton.getEdge(modelIds[modelType].triples[0].subject, modelIds[modelType].triples[0].object);
+
+    startNode.predicate = startTriple.predicate;
 
     if (srcAnnoton) {
       // annoton.copyValues(srcAnnoton);
     }
 
     each(modelIds[modelType].overrides, function (overridesData) {
-      const node: NodeDisplay = annoton.getNode(overridesData.id);
+      const node: AnnotonNode = annoton.getNode(overridesData.id);
 
       overridesData.isExtension ? node.isExtension = overridesData.isExtension : null;
       overridesData.treeLevel ? node.treeLevel = overridesData.treeLevel : null;
@@ -1155,37 +1096,37 @@ export class NoctuaFormConfigService {
     return annoton;
   }
 
-
-  generateNode(id?, overrides?): NodeDisplay {
+  generateAnnotonNode(id?, overrides?): AnnotonNode {
     const self = this;
-
     const nodeDataObject = self._annotonData[id];
-    const nodeDisplay = new NodeDisplay();
+    const annotonNode = new AnnotonNode();
     const nodeData = nodeDataObject ?
       JSON.parse(JSON.stringify(nodeDataObject)) :
       JSON.parse(JSON.stringify(self._annotonData['term']));
+    const predicate = new Predicate(null);
 
-    nodeDisplay.id = (overrides && overrides.id) ? overrides.id : id;
-    nodeDisplay.aspect = nodeData.aspect;
-    nodeDisplay.ontologyClass = nodeData.ontologyClass;
-    nodeDisplay.label = nodeData.label;
-    nodeDisplay.relationship = nodeData.relationship;
-    nodeDisplay.displaySection = (overrides && overrides.displaySection) ? overrides.displaySection : nodeData.displaySection;
-    nodeDisplay.displayGroup = nodeData.displayGroup;
-    nodeDisplay.lookupGroup = nodeData.lookupGroup;
-    nodeDisplay.treeLevel = nodeData.treeLevel;
-    nodeDisplay.isExtension = nodeData.isExtension;
-    nodeDisplay.setTermLookup(nodeData.termLookup.requestParams);
-    nodeDisplay.setTermOntologyClass(nodeData.ontologyClass);
+    predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
+    annotonNode.id = (overrides && overrides.id) ? overrides.id : id;
+    annotonNode.aspect = nodeData.aspect;
+    annotonNode.ontologyClass = nodeData.ontologyClass;
+    annotonNode.label = nodeData.label;
+    annotonNode.relationship = nodeData.relationship;
+    annotonNode.displaySection = (overrides && overrides.displaySection) ? overrides.displaySection : nodeData.displaySection;
+    annotonNode.displayGroup = nodeData.displayGroup;
+    annotonNode.lookupGroup = nodeData.lookupGroup;
+    annotonNode.treeLevel = nodeData.treeLevel;
+    annotonNode.isExtension = nodeData.isExtension;
+    annotonNode.setTermLookup(nodeData.termLookup.requestParams);
+    annotonNode.setTermOntologyClass(nodeData.ontologyClass);
+    annotonNode.predicate = predicate;
 
-    return nodeDisplay;
+    return annotonNode;
   }
 
   createAnnotonModelFakeData(nodes) {
     const self = this;
 
     const annoton = self.createAnnotonModel(
-      noctuaFormConfig.annotonType.options.simple.name,
       noctuaFormConfig.annotonModelType.options.default.name
     );
 

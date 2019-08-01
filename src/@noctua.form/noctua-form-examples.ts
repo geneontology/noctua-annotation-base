@@ -20,23 +20,6 @@ export const noctuaFormExample = {
         ]
       },
       {
-        "id": "mc",
-        "term": {
-          "id": "UniProtKB:O95477",
-          "label": "ABCA1 Hsap (UniProtKB:O95477)"
-        },
-        "evidence": [
-          {
-            "evidence": {
-              "id": "ECO:0000314",
-              "label": "direct assay evidence used in manual assertion (ECO:0000314)"
-            },
-            "reference": "PMID:1234",
-            "with": "PMID:123445"
-          }
-        ]
-      },
-      {
         "id": "mf",
         "term": {
           "id": "GO:0017127",

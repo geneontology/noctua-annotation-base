@@ -85,7 +85,6 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     this.cam = this.camService.getCam(modelId);
   }
 
-
   addAnnoton() {
     this.openAnnotonForm(location);
   }

@@ -20,7 +20,7 @@ import {
   EntityLookup,
   Entity
 } from '../annoton';
-import { NodeDisplay } from '..';
+import { AnnotonNode } from '..';
 
 export class TripleForm {
   subject = new FormControl();
@@ -35,7 +35,7 @@ export class TripleForm {
     this._metadata = metadata;
   }
 
-  createTripleForm(triple: Triple) {
+  createTripleForm(triple: Triple<AnnotonNode>) {
     const self = this;
 
     this.subject.setValue(triple.subject.getTerm());
@@ -50,7 +50,7 @@ export class TripleForm {
     });
   }
 
-  populateAnnotonEntityForm(annotonNode: NodeDisplay) {
+  populateAnnotonEntityForm(annotonNode: AnnotonNode) {
     const self = this;
     const evidences: Evidence[] = [];
 

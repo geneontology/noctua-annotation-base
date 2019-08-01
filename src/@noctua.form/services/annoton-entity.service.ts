@@ -14,22 +14,20 @@ declare const require: any;
 const each = require('lodash/forEach');
 
 import { Cam } from './../models/annoton/cam';
-import { Annoton } from './../models/annoton/annoton';
-import { AnnotonNode } from './../models/annoton/annoton-node';
 
 import { AnnotonEntityForm } from './../models/forms/annoton-entity-form';
 
 import { EntityForm } from './../models/forms/entity-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
-import { NodeDisplay, AnnotonDisplay } from '../models';
+import { AnnotonNode, Annoton } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaAnnotonEntityService {
   cam: Cam;
-  public annoton: AnnotonDisplay;
-  public termNode: NodeDisplay;
+  public annoton: Annoton;
+  public termNode: AnnotonNode;
   private annotonEntityForm: AnnotonEntityForm;
   private annotonEntityFormGroup: BehaviorSubject<FormGroup | undefined>;
   public annotonEntityFormGroup$: Observable<FormGroup>;
@@ -48,7 +46,7 @@ export class NoctuaAnnotonEntityService {
     });
   }
 
-  initializeForm(annoton: AnnotonDisplay, termNode: NodeDisplay) {
+  initializeForm(annoton: Annoton, termNode: AnnotonNode) {
     this.annoton = annoton;
     this.termNode = termNode;
     this.annotonEntityForm = this.createAnnotonEntityForm(termNode);
@@ -56,7 +54,7 @@ export class NoctuaAnnotonEntityService {
     this._onAnnotonFormChanges();
   }
 
-  createAnnotonEntityForm(termNode: NodeDisplay) {
+  createAnnotonEntityForm(termNode: AnnotonNode) {
     const self = this;
     let annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
     let annotonEntityForm = new AnnotonEntityForm(annotonFormMetadata);

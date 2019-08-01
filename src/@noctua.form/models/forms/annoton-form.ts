@@ -9,14 +9,13 @@ const each = require('lodash/forEach');
 import { Annoton } from './../annoton/annoton';
 import { AnnotonNode } from './../annoton/annoton-node';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
-import { EntityGroupForm } from './entity-group-form'
+import { EntityGroupForm } from './entity-group-form';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
-import { AnnotonDisplay, NodeDisplay } from '../ui';
 
 export class AnnotonForm {
-  entityGroupForms: EntityGroupForm[] = []
+  entityGroupForms: EntityGroupForm[] = [];
   gp = new FormControl();
   fd = new FormArray([]);
 
@@ -24,7 +23,7 @@ export class AnnotonForm {
 
   private _fb = new FormBuilder();
 
-  constructor(metadata, geneProduct?: NodeDisplay) {
+  constructor(metadata, geneProduct?: AnnotonNode) {
     this._metadata = metadata;
 
     if (geneProduct) {
@@ -46,7 +45,7 @@ export class AnnotonForm {
     });
   }
 
-  populateAnnoton(annoton: AnnotonDisplay) {
+  populateAnnoton(annoton: Annoton) {
     //   annoton.getGPNode().term = new Entity(this.gp.value.id, this.gp.value.label);
 
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {

@@ -150,14 +150,14 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   addEvidence() {
     const self = this;
 
-    self.connectorAnnoton.upstreamNode.addEvidence();
+    self.connectorAnnoton.upstreamNode.predicate.addEvidence();
     this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
   }
 
   removeEvidence(index: number) {
     const self = this;
 
-    self.connectorAnnoton.upstreamNode.removeEvidence(index);
+    self.connectorAnnoton.upstreamNode.predicate.removeEvidence(index);
     this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
   }
 
@@ -169,7 +169,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
     evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference;
-    self.connectorAnnoton.upstreamNode.setEvidence([evidence]);
+    self.connectorAnnoton.upstreamNode.predicate.setEvidence([evidence]);
     this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
   }
 
@@ -187,7 +187,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
     let success = function (selected) {
       if (selected.evidences && selected.evidences.length > 0) {
-        self.connectorAnnoton.upstreamNode.setEvidence(selected.evidences, ['assignedBy']);
+        self.connectorAnnoton.upstreamNode.predicate.setEvidence(selected.evidences, ['assignedBy']);
         this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
       }
     }

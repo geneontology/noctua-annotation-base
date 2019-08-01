@@ -39,7 +39,7 @@ export class SaeGraph<T extends AnnotonNode> {
   }
 
   getNode(id: string): T {
-    return findNode(this.graph, id)
+    return findNode(this.graph, id);
   }
 
   addNode(node: T) {
@@ -79,10 +79,11 @@ export class SaeGraph<T extends AnnotonNode> {
     // destEdge.edge = srcEdge;
   }
 
-  getEdge(subjectId, objectId) {
-    const edge: Edge<Triple<T>> = { subjectId: subjectId, objectId: objectId, metadata: null }
+  getEdge(subjectId: string, objectId: string): Triple<T> {
+    const srcEdge: Edge<Triple<T>> = { subjectId: subjectId, objectId: objectId, metadata: null }
+    const destEdge = findEdge(this.graph, srcEdge);
 
-    return findEdge(this.graph, edge);
+    return destEdge ? destEdge.metadata : null;
   }
 
   getEdges(id: string): Triple<T>[] {
@@ -105,13 +106,16 @@ export class SaeGraph<T extends AnnotonNode> {
     */
   }
 
-  getTrimmedGraph(edgeId: string): Graph<T, Triple<T>> {
+  getTrimmedGraph(startNodeId: string): Graph<T, Triple<T>> {
     const self = this;
     const graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
-    const startingEdges = self.getEdges(edgeId);
+    const startingEdges = self.getEdges(startNodeId);
+    const startingNode = self.getNode(startNodeId);
+
+    addNode(graph, startingNode, startingNode.id);
 
     each(startingEdges, (triple: Triple<T>) => {
-      self._skipNodeDFS(graph, triple.subject, triple.object, triple.predicate, triple.predicate);
+      self._trimGraphDFS(graph, triple.subject, triple.object, triple.predicate, triple.predicate);
     });
 
     return graph;
@@ -121,13 +125,12 @@ export class SaeGraph<T extends AnnotonNode> {
     this.graph = this.graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
   }
 
-  private _skipNodeDFS(graph: Graph<T, Triple<T>>,
+  private _trimGraphDFS(graph: Graph<T, Triple<T>>,
     subjectNode: T,
     objectNode: T,
     subjectPredicate: Predicate,
     objectPredicate: Predicate) {
     const self = this;
-
     if (objectNode.hasValue()) {
       const destPredicate = new Predicate(subjectPredicate.edge, objectPredicate.evidence);
       const triple = new Triple(subjectNode, destPredicate, objectNode);
@@ -135,11 +138,14 @@ export class SaeGraph<T extends AnnotonNode> {
 
       addNode(graph, objectNode, objectNode.id);
       addEdge(graph, edge);
-
-    } else {
-      each(self.getEdges(objectNode.id), (triple: Triple<T>) => {
-        self._skipNodeDFS(graph, objectNode, triple.object, subjectPredicate, triple.predicate);
-      });
     }
+
+    each(self.getEdges(objectNode.id), (triple: Triple<T>) => {
+      self._trimGraphDFS(graph,
+        objectNode,
+        triple.object,
+        objectNode.hasValue() ? triple.predicate : subjectPredicate,
+        triple.predicate);
+    });
   }
 }

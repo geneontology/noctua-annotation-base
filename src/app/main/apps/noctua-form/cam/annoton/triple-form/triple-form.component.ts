@@ -57,7 +57,7 @@ export class TripleFormComponent implements OnInit, OnDestroy {
   tripleFormGroup: FormGroup;
   tripleFormSub: Subscription;
   evidenceFormArray: FormArray;
-  triple: Triple;
+  triple: Triple<AnnotonNode>;
 
   private unsubscribeAll: Subject<any>;
 

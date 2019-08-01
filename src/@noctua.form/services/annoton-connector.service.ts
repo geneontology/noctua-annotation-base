@@ -23,9 +23,6 @@ import {
   Entity
 } from './../models/annoton';
 
-import {
-  NodeDisplay
-} from './../models';
 
 import { AnnotonConnectorForm } from './../models/forms/annoton-connector-form';
 
@@ -106,7 +103,7 @@ export class NoctuaAnnotonConnectorService {
     this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
   }
 
-  updateEvidence(node: NodeDisplay) {
+  updateEvidence(node: AnnotonNode) {
     this.connectorForm.updateEvidenceForms(node.predicate);
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
   }
