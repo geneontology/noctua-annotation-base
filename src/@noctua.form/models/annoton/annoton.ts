@@ -43,10 +43,10 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   getConnection(uuid) {
     const self = this;
 
-    let mfEdges: any = super.getEdges('mf');
-    let bpEdges: any = super.getEdges('bp');
+    const mfEdges: any = super.getEdges('mf');
+    const bpEdges: any = super.getEdges('bp');
     let edge: any;
-    let edges = [];
+    const edges = [];
 
     if (mfEdges) {
       edges.push(...mfEdges.nodes);
@@ -103,41 +103,10 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   createSave() {
     const self = this;
-    let saveData = {
+    const saveData = {
       triples: []
     }
 
-    let skipNodeDFS = (triples: Triple[]): AnnotonNode | null => {
-      each(triples, (triple: Triple) => {
-        if (triple.object.hasValue()) {
-          return triple.object;
-        } else {
-          return skipNodeDFS(self.getEdges(triple.object.id));
-        }
-      });
-
-      return null
-    }
-
-    each(self.nodes, (srcNode: AnnotonNode) => {
-      if (srcNode.hasValue()) {
-        let triples: Triple[] = self.getEdges(srcNode.id);
-
-        each(triples, (triple: Triple) => {
-          if (triple.object.hasValue()) {
-            saveData.triples.push(triple);
-          } else {
-            let objectNode: AnnotonNode = skipNodeDFS(self.getEdges(triple.object.id));
-            if (objectNode) {
-              let destTriple = new Triple(triple.subject, triple.predicate, objectNode);
-              saveData.triples.push(destTriple);
-            }
-          }
-        })
-      }
-    });
-
-    return saveData;
   }
 
   /*
@@ -147,12 +116,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     switch (annoton.annotonModelType) {
       case noctuaFormConfig.annotonModelType.options.default.name:
         {
-          let mfNode = annoton.getNode('mf');
-          let ccNode = annoton.getNode('cc');
-          let cc1Node = annoton.getNode('cc-1');
-          let cc11Node = annoton.getNode('cc-1-1');
-          let cc111Node = annoton.getNode('cc-1-1-1');
-          let ccRootNode = noctuaFormConfig.rootNode['cc']
+          const mfNode = annoton.getNode('mf');
+          const ccNode = annoton.getNode('cc');
+          const cc1Node = annoton.getNode('cc-1');
+          const cc11Node = annoton.getNode('cc-1-1');
+          const cc111Node = annoton.getNode('cc-1-1-1');
+          const ccRootNode = noctuaFormConfig.rootNode['cc']
 
           if (!ccNode.hasValue()) {
             if (cc1Node.hasValue()) {
@@ -170,8 +139,8 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         }
       case noctuaFormConfig.annotonModelType.options.bpOnly.name:
         {
-          let mfNode = annoton.getNode('mf');
-          let bpNode = annoton.getNode('bp');
+          const mfNode = annoton.getNode('mf');
+          const bpNode = annoton.getNode('bp');
 
           mfNode.term = new Entity('GO:0003674', 'molecular_function');
           mfNode.evidence = bpNode.evidence;
@@ -195,7 +164,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     const self = this;
 
     each(self.nodes, function (destNode) {
-      let srcNode = srcAnnoton.getNode(destNode.id);
+      const srcNode = srcAnnoton.getNode(destNode.id);
       if (srcNode) {
         destNode.copyValues(srcNode);
       }
@@ -203,9 +172,9 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   }
 
   print() {
-    let result = []
+    const result = []
     this.nodes.forEach((node) => {
-      let a = [];
+      const a = [];
 
       /*  node.evidence.forEach((evidence: Evidence) => {
          a.push({

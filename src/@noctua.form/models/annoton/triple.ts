@@ -5,16 +5,16 @@ const uuid = require('uuid/v1');
 import { AnnotonNode } from './annoton-node';
 import { Predicate } from './predicate';
 
-export class Triple {
+export class Triple<T extends AnnotonNode> {
 
   id
-  object: AnnotonNode;
+  object: T;
   predicate: Predicate;
-  subject: AnnotonNode;
+  subject: T;
 
   private _grid: any[] = [];
 
-  constructor(subject: AnnotonNode, predicate: Predicate, object: AnnotonNode) {
+  constructor(subject: T, predicate: Predicate, object: T) {
     this.id = uuid();
     this.subject = subject;
     this.object = object;
@@ -55,7 +55,7 @@ export class Triple {
         assignedBy: this.predicate[i].assignedBy,
         subjectNode: this.subject,
         objectNode: this.object,
-      })
+      });
     }
   }
 

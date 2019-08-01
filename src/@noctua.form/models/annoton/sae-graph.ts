@@ -22,10 +22,10 @@ import {
 
 export class SaeGraph<T extends AnnotonNode> {
   numberOfEdges: number;
-  graph: Graph<T, Triple>;
+  graph: Graph<T, Triple<T>>;
 
   constructor() {
-    this.graph = <Graph<T, Triple>>{ _nodes: {}, _edges: {} };
+    this.graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
   }
 
   get nodes(): T[] {
@@ -34,7 +34,7 @@ export class SaeGraph<T extends AnnotonNode> {
     return Object.values(keyNodes);
   }
 
-  get edges(): Triple[] {
+  get edges(): Triple<T>[] {
     return this.getEdges(null);
   }
 
@@ -60,8 +60,8 @@ export class SaeGraph<T extends AnnotonNode> {
 
   addEdge(subjectNode: T, objectNode: T, predicate: Predicate) {
 
-    const triple = new Triple(subjectNode, predicate, objectNode)
-    const edge: Edge<Triple> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple }
+    const triple = new Triple(subjectNode, predicate, objectNode);
+    const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple }
 
     addEdge(this.graph, edge);
   }
@@ -70,7 +70,7 @@ export class SaeGraph<T extends AnnotonNode> {
     const source = this.getNode(sourceId);
     const object = this.getNode(objectId);
 
-    this.addEdge(source, object, predicate)
+    this.addEdge(source, object, predicate);
   }
 
   editEdge(subjectId, objectId, srcEdge) {
@@ -80,15 +80,15 @@ export class SaeGraph<T extends AnnotonNode> {
   }
 
   getEdge(subjectId, objectId) {
-    const edge: Edge<Triple> = { subjectId: subjectId, objectId: objectId, metadata: null }
+    const edge: Edge<Triple<T>> = { subjectId: subjectId, objectId: objectId, metadata: null }
 
     return findEdge(this.graph, edge);
   }
 
-  getEdges(id: string): Triple[] {
-    const edges: Edge<Triple>[] = getEdges(this.graph, id);
+  getEdges(id: string): Triple<T>[] {
+    const edges: Edge<Triple<T>>[] = getEdges(this.graph, id);
 
-    return edges.map((edge: Edge<Triple>) => {
+    return edges.map((edge: Edge<Triple<T>>) => {
       return edge.metadata;
     });
   }
@@ -105,10 +105,41 @@ export class SaeGraph<T extends AnnotonNode> {
     */
   }
 
+  getTrimmedGraph(edgeId: string): Graph<T, Triple<T>> {
+    const self = this;
+    const graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
+    const startingEdges = self.getEdges(edgeId);
 
+    each(startingEdges, (triple: Triple<T>) => {
+      self._skipNodeDFS(graph, triple.subject, triple.object, triple.predicate, triple.predicate);
+    });
+
+    return graph;
+  }
 
   resetGraph() {
-    //  this.edges = {}
-    //    this.nodes = [];
+    this.graph = this.graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
+  }
+
+  private _skipNodeDFS(graph: Graph<T, Triple<T>>,
+    subjectNode: T,
+    objectNode: T,
+    subjectPredicate: Predicate,
+    objectPredicate: Predicate) {
+    const self = this;
+
+    if (objectNode.hasValue()) {
+      const destPredicate = new Predicate(subjectPredicate.edge, objectPredicate.evidence);
+      const triple = new Triple(subjectNode, destPredicate, objectNode);
+      const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple };
+
+      addNode(graph, objectNode, objectNode.id);
+      addEdge(graph, edge);
+
+    } else {
+      each(self.getEdges(objectNode.id), (triple: Triple<T>) => {
+        self._skipNodeDFS(graph, objectNode, triple.object, subjectPredicate, triple.predicate);
+      });
+    }
   }
 }

@@ -21,6 +21,7 @@ export class NodeDisplay extends AnnotonNode {
   edgeOption;
   visible = true;
   termRequiredList = ['mf'];
+  edgeRange: string[];
   evidenceRequiredList = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
   evidenceNotRequiredList = [];
   errors = [];

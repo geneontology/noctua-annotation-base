@@ -4,9 +4,9 @@ const each = require('lodash/forEach');
 const map = require('lodash/map');
 const uuid = require('uuid/v1');
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { AnnotonError } from '../annoton';
+import { AnnotonError, Annoton, AnnotonNode, Triple, Predicate } from '../annoton';
 import { NodeDisplay } from './node-display';
-import { Graph, getNodes, findNode, addNode } from '../annoton/noctua-form-graph';
+import { Graph, getNodes, findNode, addNode, getEdges, Edge } from '../annoton/noctua-form-graph';
 import { SaeGraph } from '../annoton/sae-graph';
 
 
@@ -76,6 +76,36 @@ export class AnnotonDisplay extends SaeGraph<NodeDisplay>  {
     }
 
     return result;
+  }
+
+  getAnnotonNode(nodeDisplay: NodeDisplay): AnnotonNode {
+    const annotonNode = new AnnotonNode();
+    annotonNode.id = nodeDisplay.id;
+    annotonNode.uuid = nodeDisplay.uuid;
+    annotonNode.term = nodeDisplay.term;
+
+    return annotonNode;
+  }
+
+  createSave() {
+    const self = this;
+    const saveData = {
+      title: 'enabled by ' + self.getNode('gp').term.label,
+      triples: []
+    };
+
+    const graph = self.getTrimmedGraph('mf');
+    const edges: Edge<Triple<NodeDisplay>>[] = getEdges(graph);
+    const triples: Triple<NodeDisplay>[] = edges.map((edge: Edge<Triple<NodeDisplay>>) => {
+      return edge.metadata;
+    });
+
+    saveData.triples = triples;
+
+    console.log(graph);
+    console.log(saveData);
+
+    return saveData;
   }
 
   get presentation() {

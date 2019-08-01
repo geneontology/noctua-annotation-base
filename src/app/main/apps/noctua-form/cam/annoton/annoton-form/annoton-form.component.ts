@@ -50,7 +50,7 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
   annotonFormPresentation: any;
   //annotonForm: FormGroup;
   evidenceFormArray: FormArray;
-  annotonFormData: any = []
+  annotonFormData: any = [];
   // annoton: Annoton = new Annoton();
 
   private unsubscribeAll: Subject<any>;
@@ -77,21 +77,26 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.annotonFormSub = this.noctuaAnnotonFormService.annotonFormGroup$
       .subscribe(annotonFormGroup => {
-        if (!annotonFormGroup) return;
+        if (!annotonFormGroup) {
+          return;
+        }
+
         this.annotonFormGroup = annotonFormGroup;
       });
 
     this.camService.onCamChanged.subscribe((cam) => {
-      if (!cam) return;
+      if (!cam) {
+        return;
+      }
 
-      this.cam = cam
+      this.cam = cam;
       this.cam.onGraphChanged.subscribe((annotons) => {
       });
     });
   }
 
   checkErrors() {
-    let errors = this.noctuaAnnotonFormService.annoton.submitErrors;
+    const errors = this.noctuaAnnotonFormService.annoton.submitErrors;
     this.noctuaFormDialogService.openAnnotonErrorsDialog(errors)
   }
 
@@ -101,23 +106,21 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
 
     self.noctuaAnnotonFormService.annotonFormToAnnoton();
 
-    let saveAnnoton = function () {
-      //self.annotonForm.linkFormNode(entity, selected.node);
-      let saveData = self.noctuaAnnotonFormService.annoton.createSave();
-      let title = 'enabled by ' + self.noctuaAnnotonFormService.annoton.getGPNode().term.label
+    const saveAnnoton = function () {
+      // self.annotonForm.linkFormNode(entity, selected.node);
+      const saveData = self.noctuaAnnotonFormService.annoton.createSave();
 
-      self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, title).then((data) => {
-        //  localStorage.setItem('barista_token', value);  
+      self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, saveData.title).then((data) => {
         self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully created.', 'OK');
         self.noctuaAnnotonFormService.clearForm();
       });
     }
 
-    infos = self.noctuaGraphService.annotonAdjustments(self.noctuaAnnotonFormService.annoton);
+    // infos = self.noctuaGraphService.annotonAdjustments(self.noctuaAnnotonFormService.annoton);
     // self.graph.createSave(self.annotonForm.annoton);
     //temporarily off
     if (infos.length > 0) {
-      let data = {
+      const data = {
         annoton: self.noctuaAnnotonFormService.annoton,
         infos: infos
       };

@@ -824,7 +824,7 @@ export class NoctuaFormConfigService {
   }
 
   get modelState() {
-    let options = [
+    const options = [
       noctuaFormConfig.modelState.options.development,
       noctuaFormConfig.modelState.options.production,
       noctuaFormConfig.modelState.options.review,
@@ -850,20 +850,20 @@ export class NoctuaFormConfigService {
     return noctuaFormConfig.closures;
   }
   get annotonType() {
-    let options = [
+    const options = [
       noctuaFormConfig.annotonType.options.simple,
       noctuaFormConfig.annotonType.options.complex,
-    ]
+    ];
 
     return {
       options: options,
       selected: options[0]
-    }
+    };
   }
 
 
   get annotonModelType() {
-    let options = [
+    const options = [
       noctuaFormConfig.annotonModelType.options.default,
       noctuaFormConfig.annotonModelType.options.bpOnly,
       noctuaFormConfig.annotonModelType.options.ccOnly,
@@ -876,7 +876,7 @@ export class NoctuaFormConfigService {
   }
 
   get camDisplayType() {
-    let options = [
+    const options = [
       noctuaFormConfig.camDisplayType.options.model,
       noctuaFormConfig.camDisplayType.options.triple,
       noctuaFormConfig.camDisplayType.options.entity
@@ -889,7 +889,7 @@ export class NoctuaFormConfigService {
   }
 
   get causalEffect() {
-    let options = [
+    const options = [
       noctuaFormConfig.causalEffect.options.positive,
       noctuaFormConfig.causalEffect.options.negative,
       noctuaFormConfig.causalEffect.options.neutral
@@ -902,7 +902,7 @@ export class NoctuaFormConfigService {
   }
 
   get connectorProcess() {
-    let options = noctuaFormConfig.connectorProcesses;
+    const options = noctuaFormConfig.connectorProcesses;
 
     return {
       options: options,
@@ -911,15 +911,15 @@ export class NoctuaFormConfigService {
   }
 
   get causalReactionProduct() {
-    let options = [
+    const options = [
       noctuaFormConfig.causalReactionProduct.options.regulate,
       noctuaFormConfig.causalReactionProduct.options.substrate,
-    ]
+    ];
 
     return {
       options: options,
       selected: options[0]
-    }
+    };
   }
 
   getCausalEffectByEdge(edge) {
@@ -928,17 +928,17 @@ export class NoctuaFormConfigService {
 
     switch (edge.id) {
       case noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id:
-        annotonsConsecutive = true
+        annotonsConsecutive = true;
       case noctuaFormConfig.edge.directlyPositivelyRegulates.id:
         causalEffect = noctuaFormConfig.causalEffect.options.positive;
         break;
       case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
-        annotonsConsecutive = true
+        annotonsConsecutive = true;
       case noctuaFormConfig.edge.directlyNegativelyRegulates.id:
         causalEffect = noctuaFormConfig.causalEffect.options.negative;
         break;
       case noctuaFormConfig.edge.causallyUpstreamOf.id:
-        annotonsConsecutive = true
+        annotonsConsecutive = true;
       case noctuaFormConfig.edge.directlyRegulates.id:
         causalEffect = noctuaFormConfig.causalEffect.options.neutral;
         break;
@@ -947,7 +947,7 @@ export class NoctuaFormConfigService {
     return {
       causalEffect: causalEffect,
       annotonsConsecutive: annotonsConsecutive
-    }
+    };
   }
 
   get noctuaFormExample() {
@@ -1021,17 +1021,17 @@ export class NoctuaFormConfigService {
   getRequestParams(id) {
     const self = this;
 
-    let nodeData = JSON.parse(JSON.stringify(self._reviewSearchData[id]));
+    const nodeData = JSON.parse(JSON.stringify(self._reviewSearchData[id]));
 
     return nodeData.termLookup.requestParams;
   }
 
   getModelUrls(modelId) {
-    let modelInfo: any = {};
-    let baristaParams = {
+    const modelInfo: any = {};
+    const baristaParams = {
       'barista_token': this.baristaToken
     }
-    let modelIdParams = {
+    const modelIdParams = {
       'model_id': modelId
     }
 
@@ -1123,19 +1123,16 @@ export class NoctuaFormConfigService {
     annoton.setAnnotonModelType(modelType);
 
     each(modelIds[modelType].nodes, function (id) {
-      const predicate = new Predicate();
       const nodeDisplay = self.generateNode(id);
-
-      predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
-      nodeDisplay.predicate = predicate;
       annoton.addNode(nodeDisplay);
     });
 
     each(modelIds[modelType].triples, function (triple) {
       const predicate = new Predicate(triple.edge);
 
-      //  predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
-      //  annoton.addEdgeById(triple.subject, triple.object, predicate);
+      predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
+      annoton.addEdgeById(triple.subject, triple.object, predicate);
+      annoton.getNode(triple.object).predicate = predicate;
     });
 
     if (srcAnnoton) {
@@ -1187,28 +1184,28 @@ export class NoctuaFormConfigService {
   createAnnotonModelFakeData(nodes) {
     const self = this;
 
-    let annoton = self.createAnnotonModel(
+    const annoton = self.createAnnotonModel(
       noctuaFormConfig.annotonType.options.simple.name,
       noctuaFormConfig.annotonModelType.options.default.name
     );
 
     nodes.forEach((node) => {
-      let annotonNode = annoton.getNode(node.id);
-      let destEvidences: Evidence[] = []
+      const annotonNode = annoton.getNode(node.id);
+      const destEvidences: Evidence[] = [];
 
       annotonNode.term = new Entity(node.term.id, node.term.label);
 
       each(node.evidence, (evidence) => {
-        let destEvidence: Evidence = new Evidence();
+        const destEvidence: Evidence = new Evidence();
 
         destEvidence.evidence = new Entity(evidence.evidence.id, evidence.evidence.label);
         destEvidence.reference = evidence.reference;
         destEvidence.with = evidence.with;
 
-        destEvidences.push(destEvidence)
+        destEvidences.push(destEvidence);
       });
 
-      //annotonNode.setEvidence(destEvidences);
+      annotonNode.predicate.setEvidence(destEvidences);
     });
 
     annoton.enableSubmit();
@@ -1224,7 +1221,7 @@ export class NoctuaFormConfigService {
   createJoyrideSteps() {
     const self = this;
 
-    let steps = [{
+    const steps = [{
       type: 'element',
       selector: "#noc-model-section",
       title: "Model Creation",
