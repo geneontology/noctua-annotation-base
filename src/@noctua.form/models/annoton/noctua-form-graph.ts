@@ -76,7 +76,7 @@ export function removeEdge<Node, EdgeMetadata>(
     edge: Edge<EdgeMetadata>
 ): Graph<Node, EdgeMetadata> {
     remove(graph._edges[edge.subjectId], (e: Edge<EdgeMetadata>) => {
-        return e.objectId === edge.objectId
+        return e.objectId === edge.objectId;
     })
     return graph;
 }

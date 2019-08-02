@@ -13,13 +13,14 @@ import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
 import { getEdges, Edge } from './noctua-form-graph';
+import { AnnotonParser } from './parser';
 
 export class Annoton extends SaeGraph<AnnotonNode> {
   gp;
   uuid: string;
   id: string;
   label: string;
-  parser;
+  parser: AnnotonParser;
   annotonRows;
   annotonType;
   annotonModelType;
@@ -329,23 +330,23 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       term: node.isExtension ? {} : term,
       extension: node.isExtension ? term : {},
       aspect: node.aspect,
-      /*    evidence: node.evidence.length > 0 ? node.evidence[0].evidence : {},
-         reference: node.evidence.length > 0 ? node.evidence[0].reference : {},
-         with: node.evidence.length > 0 ? node.evidence[0].with : {},
-         assignedBy: node.evidence.length > 0 ? node.evidence[0].assignedBy : {},
-         node: node */
+      evidence: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].evidence : {},
+      reference: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].reference : {},
+      with: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].with : {},
+      assignedBy: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].assignedBy : {},
+      node: node
     })
 
-    /*for (let i = 1; i < node.evidence.length; i++) {
+    for (let i = 1; i < node.predicate.evidence.length; i++) {
       self._grid.push({
         treeLevel: node.treeLevel,
-        evidence: node.evidence[i].evidence,
-        reference: node.evidence[i].reference,
-        with: node.evidence[i].with.control,
-        assignedBy: node.evidence[i].assignedBy,
+        evidence: node.predicate.evidence[i].evidence,
+        reference: node.predicate.evidence[i].reference,
+        with: node.predicate.evidence[i].with,
+        assignedBy: node.predicate.evidence[i].assignedBy,
         node: node,
       })
-    } */
+    }
   }
 
   tableDisplayGp(node: AnnotonNode) {
@@ -388,13 +389,13 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     this.nodes.forEach((node) => {
       const a = [];
 
-      /*  node.evidence.forEach((evidence: Evidence) => {
-         a.push({
-           evidence: evidence.evidence,
-           reference: evidence.reference,
-           with: evidence.with
-         });
-       }); */
+      node.predicate.evidence.forEach((evidence: Evidence) => {
+        a.push({
+          evidence: evidence.evidence,
+          reference: evidence.reference,
+          with: evidence.with
+        });
+      });
 
       result.push({
         id: node.id,

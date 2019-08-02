@@ -21,16 +21,16 @@ export class AnnotonParser {
     this.clean = true;
   }
 
-  parseCardinality(graph, node: AnnotonNode, sourceEdges, objectEdges) {
+  parseCardinality(graph, node: AnnotonNode, sourceEdges) {
     const self = this;
 
-    let edges = [];
+    const edges = [];
     let result = true;
     let error;
 
     each(sourceEdges, function (edge) {
-      let predicateId = edge.predicate_id();
-      let predicateLabel = self.getPredicateLabel(predicateId);
+      const predicateId = edge.predicate_id();
+      const predicateLabel = self.getPredicateLabel(predicateId);
 
       if (_.includes(noctuaFormConfig.noDuplicateEdges, predicateId)) {
         if (_.includes(edges, predicateId)) {

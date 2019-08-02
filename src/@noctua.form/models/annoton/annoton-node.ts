@@ -137,10 +137,10 @@ export class AnnotonNode {
 
     if (self.termRequiredList.includes(self.id) && !self.term.id) {
       self.required = true;
-      let meta = {
+      const meta = {
         aspect: self.label
       }
-      let error = new AnnotonError('error', 1, "A '" + self.label + "' is required", meta)
+      const error = new AnnotonError('error', 1, "A '" + self.label + "' is required", meta)
       errors.push(error);
       result = false;
     } else {
