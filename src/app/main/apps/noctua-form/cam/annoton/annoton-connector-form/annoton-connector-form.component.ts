@@ -76,9 +76,6 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
   searchCriteria: any = {};
   evidenceFormArray: FormArray;
-  // annoton: Annoton = new Annoton();
-
-  selectedCausalEffect;
 
   private unsubscribeAll: Subject<any>;
 
@@ -108,10 +105,6 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
         this.connectorFormGroup = connectorFormGroup;
         this.currentConnectorAnnoton = this.noctuaAnnotonConnectorService.currentConnectorAnnoton;
         this.connectorAnnoton = this.noctuaAnnotonConnectorService.connectorAnnoton;
-
-        this.selectedCausalEffect = this.connectorFormGroup.get('causalEffect').value
-
-        console.log(this.selectedCausalEffect)
       });
 
     this.camService.onCamChanged.subscribe((cam) => {
@@ -133,7 +126,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   }
 
   openAnnotonConnector(connector: Annoton) {
-    this.noctuaAnnotonConnectorService.initializeForm(this.noctuaAnnotonConnectorService.annoton.uuid, connector.uuid);
+    this.noctuaAnnotonConnectorService.initializeForm(this.noctuaAnnotonConnectorService.annoton.id, connector.id);
     this.selectPanel(this.panel.annotonConnectorForm);
   }
 
@@ -164,7 +157,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   addNDEvidence() {
     const self = this;
 
-    let evidence = new Evidence();
+    const evidence = new Evidence();
     evidence.setEvidence(new Entity(
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
@@ -183,14 +176,14 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   openSelectEvidenceDialog() {
     const self = this;
 
-    let evidences: Evidence[] = this.camService.getUniqueEvidence();
+    const evidences: Evidence[] = this.camService.getUniqueEvidence();
 
-    let success = function (selected) {
+    const success = (selected) => {
       if (selected.evidences && selected.evidences.length > 0) {
         self.connectorAnnoton.upstreamNode.predicate.setEvidence(selected.evidences, ['assignedBy']);
         this.noctuaAnnotonConnectorService.updateEvidence(self.connectorAnnoton.upstreamNode);
       }
-    }
+    };
 
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
@@ -200,7 +193,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   }
 
   close() {
-    this.panelDrawer.close()
+    this.panelDrawer.close();
   }
 
   termDisplayFn(term): string | undefined {

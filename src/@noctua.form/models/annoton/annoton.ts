@@ -17,7 +17,6 @@ import { AnnotonParser } from './parser';
 
 export class Annoton extends SaeGraph<AnnotonNode> {
   gp;
-  uuid: string;
   id: string;
   label: string;
   parser: AnnotonParser;

@@ -64,10 +64,10 @@ export class NoctuaAnnotonConnectorService {
 
   getConnections() {
     const self = this;
-    let connectors = [];
+    const connectors = [];
 
     each(this.cam.annotons, (annoton: Annoton) => {
-      if (self.annoton.uuid !== annoton.id) {
+      if (self.annoton.id !== annoton.id) {
         connectors.push(
           Object.assign({
             annoton: annoton,
@@ -81,8 +81,8 @@ export class NoctuaAnnotonConnectorService {
   }
 
   initializeForm(upstreamId: string, downstreamId: string) {
-    let upstreamAnnoton = this.cam.getAnnotonByConnectionId(upstreamId);
-    let downstreamAnnoton = this.cam.getAnnotonByConnectionId(downstreamId);
+    const upstreamAnnoton = this.cam.getAnnotonByConnectionId(upstreamId);
+    const downstreamAnnoton = this.cam.getAnnotonByConnectionId(downstreamId);
 
     this.connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(upstreamAnnoton, downstreamAnnoton);
     this.currentConnectorAnnoton = this.cam.getConnectorAnnoton(upstreamId, downstreamId);
@@ -110,8 +110,8 @@ export class NoctuaAnnotonConnectorService {
 
   createConnectorForm() {
     const self = this;
-    let connectorFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    let connectorForm = new AnnotonConnectorForm(connectorFormMetadata);
+    const connectorFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
+    const connectorForm = new AnnotonConnectorForm(connectorFormMetadata);
 
     // connectorForm.createEntityForms(self.connectorAnnoton.upstreamNode, self.connectorAnnoton.hasInputNode);
     connectorForm.onValueChanges(self.connectorAnnoton.hasInputNode.termLookup);
@@ -122,9 +122,9 @@ export class NoctuaAnnotonConnectorService {
   save() {
     const self = this;
     const value = this.connectorFormGroup.getValue().value;
+    const saveData = this.connectorAnnoton.createSave(value);
 
-    this.connectorAnnoton.prepareSave(value);
-    return self.noctuaGraphService.saveConnection(self.cam, self.connectorAnnoton);
+    return self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, saveData.title);
   }
 
   delete() {
@@ -138,7 +138,7 @@ export class NoctuaAnnotonConnectorService {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
       //  this.errors = this.getAnnotonFormErrors();
       this.connectorAnnoton.checkConnection(value);
-    })
+    });
   }
 }
 

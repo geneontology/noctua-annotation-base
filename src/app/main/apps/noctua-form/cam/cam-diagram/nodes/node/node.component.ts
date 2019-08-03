@@ -45,7 +45,7 @@ export class NodeComponent implements OnInit, AfterViewInit {
 
     //  self.onNodeReady = new BehaviorSubject({});
     //  self.camDiagramService.onNodesReady.push(this.onNodeReady)
-    self.connectionId = self.annoton.uuid
+    self.connectionId = self.annoton.id
     self.gpTerm = self.annoton.getGPNode().getTerm();
     self.connector = self.annoton.getMFNode();
   }
@@ -58,7 +58,7 @@ export class NodeComponent implements OnInit, AfterViewInit {
     // if()
 
 
-    let location = JSON.parse(localStorage.getItem(self.annoton.uuid));
+    let location = JSON.parse(localStorage.getItem(self.annoton.id));
     if (location) {
       let locationX = location.x + 'px';
       let locationY = location.y + 'px'

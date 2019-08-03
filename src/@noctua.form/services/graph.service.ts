@@ -244,7 +244,7 @@ export class NoctuaGraphService {
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
       isComplement: self.getNodeIsComplement(node)
-    }
+    };
 
     return result;
   }
@@ -1094,7 +1094,6 @@ export class NoctuaGraphService {
     }
 
     return success();
-
   }
 
   deleteConnection(cam: Cam, uuids: string[]) {

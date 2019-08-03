@@ -152,7 +152,7 @@ export class Cam {
   getAnnotonByConnectionId(connectionId) {
     const self = this;
     let result = _.find(self.annotons, (annoton: Annoton) => {
-      return annoton.uuid === connectionId;
+      return annoton.id === connectionId;
     })
 
     return result;

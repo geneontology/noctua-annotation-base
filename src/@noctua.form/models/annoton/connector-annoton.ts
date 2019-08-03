@@ -3,10 +3,11 @@ declare const require: any;
 const each = require('lodash/forEach');
 const map = require('lodash/map');
 const uuid = require('uuid/v1');
-import { Edge, Node, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
+import { Edge as NgxEdge, Node, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 
 import { SaeGraph } from './sae-graph';
+import { getEdges, Edge } from './noctua-form-graph';
 import {
   AnnotonError,
   AnnotonNode,
@@ -14,7 +15,8 @@ import {
   ConnectorRule,
   Rule,
   Entity,
-  Predicate
+  Predicate,
+  Triple
 } from './';
 import { Annoton } from './annoton';
 
@@ -201,11 +203,34 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     self.processNode.term = _.cloneDeep(currentConnectorAnnoton.processNode.term);
     self.hasInputNode.term = _.cloneDeep(currentConnectorAnnoton.hasInputNode.term);
     self.rule = _.cloneDeep(currentConnectorAnnoton.rule);
-    self.type = currentConnectorAnnoton.type;;
+    self.type = currentConnectorAnnoton.type;
 
   }
 
-  prepareSave(value) {
+  createSave(value) {
+    const self = this;
+    const saveData = {
+      title: '',
+      triples: []
+    };
+
+    self._prepareSave(value);
+
+    const graph = self.getTrimmedGraph('upstream');
+    const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
+    const triples: Triple<AnnotonNode>[] = edges.map((edge: Edge<Triple<AnnotonNode>>) => {
+      return edge.metadata;
+    });
+
+    saveData.triples = triples;
+
+    console.log(graph);
+    console.log(saveData);
+
+    return saveData;
+  }
+
+  private _prepareSave(value) {
     const self = this;
 
     const evidences: Evidence[] = value.evidenceFormArray.map((evidence: Evidence) => {
@@ -266,13 +291,13 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     return uuids;
   }
 
-  private _getPreviewEdges(): Edge[] {
+  private _getPreviewEdges(): NgxEdge[] {
     const self = this;
 
-    let edges: Edge[] = [];
+    let edges: NgxEdge[] = [];
 
     if (self.type === ConnectorType.basic) {
-      edges = <Edge[]>[
+      edges = <NgxEdge[]>[
         {
           source: 'upstream',
           target: 'downstream',
@@ -280,7 +305,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
         }
       ]
     } else if (self.type === ConnectorType.intermediate) {
-      edges = <Edge[]>[
+      edges = <NgxEdge[]>[
         {
           source: 'upstream',
           target: 'process',
