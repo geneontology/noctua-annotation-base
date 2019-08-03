@@ -142,7 +142,7 @@ export class SaeGraph<T extends AnnotonNode> {
 
     each(self.getEdges(objectNode.id), (triple: Triple<T>) => {
       self._trimGraphDFS(graph,
-        objectNode,
+        objectNode.hasValue() ? objectNode : subjectNode,
         triple.object,
         objectNode.hasValue() ? triple.predicate : subjectPredicate,
         triple.predicate);

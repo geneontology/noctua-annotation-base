@@ -36,7 +36,7 @@ export class AnnotonForm {
     const self = this;
 
     each(fdData, (nodeGroup, nodeKey) => {
-      let entityGroupForm = new EntityGroupForm(this._metadata);
+      const entityGroupForm = new EntityGroupForm(this._metadata);
 
       this.entityGroupForms.push(entityGroupForm);
       entityGroupForm.name = nodeKey;
@@ -46,7 +46,8 @@ export class AnnotonForm {
   }
 
   populateAnnoton(annoton: Annoton) {
-    //   annoton.getGPNode().term = new Entity(this.gp.value.id, this.gp.value.label);
+    const gpNode = annoton.getGPNode();
+    gpNode.term = new Entity(this.gp.value.id, this.gp.value.label);
 
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.populateAnnotonNodes(annoton);

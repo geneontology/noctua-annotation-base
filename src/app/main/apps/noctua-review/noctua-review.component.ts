@@ -194,7 +194,6 @@ export class NoctuaReviewComponent implements OnInit, OnDestroy {
       cam.expanded = false;
     } else {
       cam.expanded = true;
-      this.noctuaGraphService.getGraphInfo2(cam, cam.model.id);
     }
   }
 

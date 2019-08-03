@@ -71,11 +71,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   getGPNode() {
     const self = this;
 
-    if (self.annotonType === 'simple') {
-      return self.getNode('gp');
-    } else {
-      return self.getNode('mc');
-    }
+    return self.getNode('gp');
   }
 
   getMFNode() {

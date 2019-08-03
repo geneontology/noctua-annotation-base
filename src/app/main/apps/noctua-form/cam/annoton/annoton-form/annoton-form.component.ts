@@ -48,7 +48,6 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
 
   searchCriteria: any = {};
   annotonFormPresentation: any;
-  //annotonForm: FormGroup;
   evidenceFormArray: FormArray;
   annotonFormData: any = [];
   // annoton: Annoton = new Annoton();

@@ -182,47 +182,6 @@ export class NoctuaGraphService {
   }
 
 
-
-
-
-  getGraphInfo2(cam: Cam, modelId) {
-    const self = this;
-
-    cam.onGraphChanged = new BehaviorSubject(null);
-    cam.modelId = modelId;
-    cam.manager = this.registerManager();
-    cam.individualManager = this.registerManager();
-    cam.groupManager = this.registerManager();
-
-    const rebuild = (resp) => {
-      const noctua_graph = model.graph;
-
-      cam.graph = new noctua_graph();
-      cam.modelId = resp.data().id;
-      cam.graph.load_data_basic(resp.data());
-      const titleAnnotations = cam.graph.get_annotations_by_key('title');
-      const stateAnnotations = cam.graph.get_annotations_by_key('state');
-
-      if (titleAnnotations.length > 0) {
-        cam.title = titleAnnotations[0].value();
-      }
-
-      if (stateAnnotations.length > 0) {
-        cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
-      }
-
-      cam.triples = self.graphToAnnotons2(cam, cam.filter.uuids);
-      cam.onGraphChanged.next(cam.annotons);
-    }
-
-    cam.manager.register('rebuild', function (resp) {
-      rebuild(resp);
-    }, 10);
-
-    cam.manager.get_model(modelId);
-  }
-
-
   addModel(manager) {
     manager.add_model();
   }
@@ -472,7 +431,7 @@ export class NoctuaGraphService {
         annotonNode.setIsComplement(subjectNode.isComplement);
         annotonNode.uuid = bbopSubjectId;
         triple.predicate.evidence = evidence;
-        self.graphToAnnatonDFS(cam, annoton, subjectEdges, annotonNode);
+        self._graphToAnnatonDFS(cam, annoton, subjectEdges, annotonNode);
 
         annoton.id = bbopSubjectId;
         annotons.push(annoton);
@@ -484,137 +443,7 @@ export class NoctuaGraphService {
     return annotons;
   }
 
-  graphToAnnotons2(cam: Cam, uuids: any) {
-    const self = this;
-    const triples: Triple<AnnotonNode>[] = [];
-
-    each(uuids, (uuid) => {
-      const edgesIn = cam.graph.get_edges_by_object(uuid);
-
-      each(edgesIn, (e) => {
-        const subjectId = e.subject_id();
-        const objectId = e.object_id();
-        const edge = new Entity(e.predicate_id(), '');
-        const evidences: Evidence[] = self.edgeToEvidence(cam.graph, e);
-        const subjectNode = self.nodeToAnnotonNode(cam.graph, subjectId);
-        const objectNode = self.nodeToAnnotonNode(cam.graph, objectId);
-        const subjectAnnotonNode = self.noctuaFormConfigService.generateAnnotonNode('subject');
-        const objectAnnotonNode = self.noctuaFormConfigService.generateAnnotonNode('object');
-
-        subjectAnnotonNode.term = subjectNode.term;
-        subjectAnnotonNode.classExpression = subjectNode.classExpression;
-        subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
-        subjectAnnotonNode.uuid = subjectId;
-
-        objectAnnotonNode.term = objectNode.term;
-        objectAnnotonNode.classExpression = objectNode.classExpression;
-        objectAnnotonNode.setIsComplement(objectNode.isComplement);
-        objectAnnotonNode.uuid = objectId;
-
-        const triple = new Triple(subjectAnnotonNode, new Predicate(edge, evidences), objectAnnotonNode);
-
-        triples.push(triple);
-      });
-    });
-
-    return triples;
-  }
-
-  graphToAnnotons3(cam: Cam, uuids: any[]) {
-    const self = this;
-    const simpleAnnotons: SimpleAnnoton[] = [];
-
-    each(uuids, (uuid) => {
-      const edgesIn = cam.graph.get_edges_by_object(uuid);
-      const simpleAnnoton = new SimpleAnnoton();
-      each(edgesIn, (e) => {
-        const subjectId = e.subject_id();
-        const evidences: Evidence[] = self.edgeToEvidence(cam.graph, e);
-        const subjectNode = self.nodeToAnnotonNode(cam.graph, subjectId);
-        const subjectAnnotonNode = self.noctuaFormConfigService.generateAnnotonNode();
-
-        subjectAnnotonNode.term = new Entity(subjectNode.term.id, subjectNode.term.label);
-        subjectAnnotonNode.classExpression = subjectNode.classExpression;
-        subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
-        subjectAnnotonNode.uuid = subjectId;
-
-        simpleAnnoton.addNode(subjectAnnotonNode);
-
-      });
-
-      simpleAnnotons.push(simpleAnnoton);
-    });
-
-    return simpleAnnotons;
-  }
-
-  graphToCCOnly(graph) {
-    const self = this;
-    const annotons: Annoton[] = [];
-
-    each(graph.all_edges(), function (e) {
-      if (e.predicate_id() === noctuaFormConfig.edge.partOf.id) {
-        const predicateId = e.predicate_id();
-        const gpId = e.subject_id();
-        const ccId = e.object_id();
-        const evidence = self.edgeToEvidence(graph, e);
-        const gpEdgesIn = graph.get_edges_by_subject(gpId);
-        const ccObjectNode = self.nodeToAnnotonNode(graph, ccId);
-        const gpSubjectNode = self.nodeToAnnotonNode(graph, gpId);
-        const gpVerified = false;
-        const isDoomed = false;
-        const annotonType = '';//self.determineAnnotonType(gpSubjectNode);
-
-        const annoton = self.noctuaFormConfigService.createAnnotonModel(
-          noctuaFormConfig.annotonModelType.options.ccOnly.name
-        );
-
-        const annotonNode = annoton.getNode('gp');
-        annotonNode.term = new Entity(gpSubjectNode.term.id, gpSubjectNode.term.label);
-        annotonNode.classExpression = gpSubjectNode.classExpression;
-        //  annotonNode.setEvidence(evidence);
-        annotonNode.setIsComplement(gpSubjectNode.isComplement);
-        annotonNode.uuid = gpId;
-
-        annoton.parser = new AnnotonParser();
-
-        if (annotonType) {
-          //   const closureRange = self.noctuaLookupService.getLocalClosureRange(ccObjectNode.term.id, self.noctuaFormConfigService.closureCheck[predicateId]);
-
-          //   if (!closureRange) {
-          //      isDoomed = true;
-          //  }
-
-          if (isDoomed) {
-            annoton.parser.setCardinalityError(annotonNode, ccObjectNode.term, predicateId);
-          }
-
-          if (annoton.annotonModelType === noctuaFormConfig.annotonModelType.options.bpOnly.name) {
-            const causalEdge = _.find(noctuaFormConfig.causalEdges, {
-              id: predicateId
-            })
-          }
-
-          self.graphToAnnatonDFS(graph, annoton, gpEdgesIn, annotonNode, isDoomed);
-
-          if (annoton.annotonType === noctuaFormConfig.annotonType.options.complex.name) {
-            //annoton.populateComplexData();
-          }
-
-          annotons.push(annoton);
-        } else {
-          annoton.parser.setCardinalityError(annotonNode, ccObjectNode.term, predicateId);
-          //  self.graphToAnnatonDFS(graph, annoton, ccEdgesIn, annotonNode, true);
-        }
-      }
-    });
-
-    //  self.parseNodeClosure(annotons);
-
-    return annotons;
-  }
-
-  graphToAnnatonDFS(cam: Cam, annoton: Annoton, bbopEdges, annotonNode: AnnotonNode) {
+  private _graphToAnnatonDFS(cam: Cam, annoton: Annoton, bbopEdges, annotonNode: AnnotonNode) {
     const self = this;
     const triples: Triple<AnnotonNode>[] = annoton.getEdges(annotonNode.id);
 
@@ -643,7 +472,7 @@ export class NoctuaGraphService {
           triple.object.setIsComplement(objectNode.isComplement);
 
           triple.predicate.evidence = evidence;
-          self.graphToAnnatonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
+          self._graphToAnnatonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
         }
       });
     });

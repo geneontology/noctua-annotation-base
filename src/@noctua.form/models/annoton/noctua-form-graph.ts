@@ -40,16 +40,18 @@ export function getNodes<Node, EdgeMetadata>(
 
 export function getEdges<Node, EdgeMetadata>(
     graph: Graph<Node, EdgeMetadata>,
-    key?: string
+    id?: string
 ): Edge<EdgeMetadata>[] {
 
-    if (key) return graph._edges[key];
+    if (id) {
+        return graph._edges[id];
+    }
 
-    let edges: Edge<EdgeMetadata>[] = [];
+    const edges: Edge<EdgeMetadata>[] = [];
 
     Object.keys(graph._edges).forEach((key) => {
-        edges.push(...graph._edges[key])
-    })
+        edges.push(...graph._edges[key]);
+    });
 
     return edges;
 }
