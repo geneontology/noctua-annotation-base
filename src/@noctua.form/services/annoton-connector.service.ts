@@ -127,11 +127,11 @@ export class NoctuaAnnotonConnectorService {
     return self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, saveData.title);
   }
 
-  delete() {
+  deleteAnnoton(connectorAnnoton: ConnectorAnnoton) {
     const self = this;
-    const uuids = this.connectorAnnoton.prepareDelete();
+    const uuids = connectorAnnoton.createDelete();
 
-    return self.noctuaGraphService.deleteConnection(self.cam, uuids);
+    return self.noctuaGraphService.deleteAnnoton(self.cam, uuids);
   }
 
   private _onAnnotonFormChanges(): void {

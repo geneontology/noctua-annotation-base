@@ -230,6 +230,23 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     return saveData;
   }
 
+  createDelete(): string[] {
+    const self = this;
+    const uuids: string[] = [];
+
+    if (this.type === ConnectorType.basic) {
+      const triple: Triple<AnnotonNode> = self.getEdge(self.upstreamNode.id, self.downstreamNode.id);
+      uuids.push(triple.predicate.uuid);
+    } else if (this.type === ConnectorType.intermediate) {
+      uuids.push(self.processNode.uuid);
+      if (self.hasInputNode.hasValue()) {
+        uuids.push(self.hasInputNode.uuid);
+      }
+    }
+
+    return uuids;
+  }
+
   private _prepareSave(value) {
     const self = this;
 
@@ -266,30 +283,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     }
   }
 
-  prepareDelete() {
-    const self = this;
 
-    let uuids: string[] = [];
-    /* 
-        each(self.downstreamNode.evidence, (evidence: Evidence) => {
-          if (evidence.uuid) {
-            uuids.push(evidence.uuid);
-          }
-        });
-    
-        each([self.processNode, self.hasInputNode], function (node: AnnotonNode) {
-          if (node.uuid) {
-            each(node.evidence, (evidence: Evidence) => {
-              if (evidence.uuid) {
-                uuids.push(evidence.uuid);
-              }
-            });
-            uuids.push(node.uuid);
-          }
-        });
-     */
-    return uuids;
-  }
 
   private _getPreviewEdges(): NgxEdge[] {
     const self = this;

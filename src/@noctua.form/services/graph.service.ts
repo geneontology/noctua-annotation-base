@@ -40,7 +40,6 @@ declare const require: any;
 
 const each = require('lodash/forEach');
 const forOwn = require('lodash/forOwn');
-const uuid = require('uuid/v1');
 const model = require('bbop-graph-noctua');
 const amigo = require('amigo2');
 const bbopx = require('bbopx');
@@ -826,6 +825,19 @@ export class NoctuaGraphService {
     });
   }
 
+  deleteFact(reqs, triples: Triple<AnnotonNode>[]) {
+    const self = this;
+
+    each(triples, function (triple: Triple<AnnotonNode>) {
+      const subject = self.addIndividual(reqs, triple.subject);
+      const object = self.addIndividual(reqs, triple.object);
+      each(triple.predicate.evidence, function (evidence: Evidence) {
+        reqs.remove_individual(evidence.uuid);
+      });
+      reqs.remove_individual(triple.subject.uuid);
+    });
+  }
+
   evidenceUseGroups(reqs, evidence: Evidence) {
     const self = this;
     const assignedBy = evidence.assignedBy;
@@ -1063,40 +1075,12 @@ export class NoctuaGraphService {
       }
 
       return cam.manager.request_with(reqs);
-    }
-
-    //return self.saveMF(cam, mfNode, success);
+    };
 
     return save();
-
   }
 
-  saveConnection(cam: Cam, annoton: ConnectorAnnoton) {
-    const self = this;
-
-    const success = () => {
-      const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
-
-      each(annoton.nodes, function (node) {
-        self.addIndividual(reqs, node);
-      });
-
-      each(annoton.nodes, function (node) {
-        //   self.addFactLegacy(reqs, annoton, node);
-      });
-
-      if (self.userInfo.groups.length > 0) {
-        reqs.use_groups([self.userInfo.selectedGroup.id]);
-      }
-
-      reqs.store_model(cam.modelId);
-      return cam.manager.request_with(reqs);
-    }
-
-    return success();
-  }
-
-  deleteConnection(cam: Cam, uuids: string[]) {
+  deleteAnnoton(cam: Cam, uuids: string[]) {
     const self = this;
 
     const success = () => {
@@ -1113,15 +1097,9 @@ export class NoctuaGraphService {
       }
 
       return cam.manager.request_with(reqs);
-    }
+    };
 
     return success();
   }
-
-
-  deleteAnnoton(annoton, ev) {
-    const self = this;
-  }
-
 
 }
