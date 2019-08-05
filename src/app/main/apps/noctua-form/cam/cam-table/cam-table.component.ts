@@ -132,6 +132,13 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm)
   }
 
+  deleteAnnoton(annoton: Annoton) {
+    const self = this;
+    this.camService.deleteAnnoton(annoton).then(() => {
+      self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully deleted.', 'OK');
+    });
+  }
+
   ngOnDestroy(): void {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();

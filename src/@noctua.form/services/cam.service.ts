@@ -141,14 +141,17 @@ export class CamService {
       );
   }
 
+  deleteAnnoton(annoton: Annoton) {
+    const self = this;
+    const uuids = annoton.createDelete();
+
+    return self.noctuaGraphService.deleteAnnoton(self.cam, uuids);
+  }
 
 
   getUniqueEvidence() {
     return this.cam.getUniqueEvidences();
   }
 
-  getOrcid(orcid) {
-    return "\"" + orcid + "\"^^xsd:string";
-  }
 
 }

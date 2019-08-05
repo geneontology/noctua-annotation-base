@@ -223,6 +223,19 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     return saveData;
   }
 
+  createDelete(): string[] {
+    const self = this;
+    const uuids: string[] = [];
+
+    each(self.nodes, (node: AnnotonNode) => {
+      if (node.hasValue()) {
+        uuids.push(node.uuid);
+      }
+    });
+
+    return uuids;
+  }
+
   get presentation() {
     const self = this;
 
