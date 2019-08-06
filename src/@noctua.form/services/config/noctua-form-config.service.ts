@@ -462,7 +462,7 @@ export class NoctuaFormConfigService {
     this._modelRelationship = {
       default: {
         nodes: [
-          'gp', 'mf', 'mf-1', 'mf-2', 'bp', 'bp-1', 'bp-1-1', 'cc', 'cc-1', 'cc-1-1', 'cc-1-1-1'
+          'mf', 'gp', 'mf-1', 'mf-2', 'bp', 'bp-1', 'bp-1-1', 'cc', 'cc-1', 'cc-1-1', 'cc-1-1-1'
         ],
         triples: [{
           subject: 'mf',
@@ -545,7 +545,7 @@ export class NoctuaFormConfigService {
       },
       bpOnly: {
         nodes: [
-          'gp', 'mf', 'bp', 'cc-1-1', 'cc-1-1-1'
+          'mf', 'gp', 'bp', 'cc-1-1', 'cc-1-1-1'
         ],
         overrides: {
           mf: {

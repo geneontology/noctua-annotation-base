@@ -143,9 +143,9 @@ export class CamService {
 
   deleteAnnoton(annoton: Annoton) {
     const self = this;
-    const uuids = annoton.createDelete();
+    const deleteData = annoton.createDelete();
 
-    return self.noctuaGraphService.deleteAnnoton(self.cam, uuids);
+    return self.noctuaGraphService.deleteAnnoton(self.cam, deleteData.uuids, deleteData.triples);
   }
 
 

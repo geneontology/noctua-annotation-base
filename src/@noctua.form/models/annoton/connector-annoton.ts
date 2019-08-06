@@ -34,6 +34,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   downstreamNode: AnnotonNode;
   processNode: AnnotonNode;
   hasInputNode: AnnotonNode;
+  predicate: Predicate;
   state: ConnectorState;
   type: ConnectorType = ConnectorType.basic;
   rule: ConnectorRule;
@@ -49,7 +50,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
 
     this.upstreamNode = upstreamNode;
     this.downstreamNode = downstreamNode;
-    this.state = state ? state : ConnectorState.creation
+    this.state = state ? state : ConnectorState.creation;
 
     this.rule = new ConnectorRule();
   }
@@ -226,13 +227,17 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     return saveData;
   }
 
-  createDelete(): string[] {
+  createDelete() {
     const self = this;
     const uuids: string[] = [];
 
+    const deleteData = {
+      uuids: [],
+      triples: []
+    };
+
     if (this.type === ConnectorType.basic) {
-      const triple: Triple<AnnotonNode> = self.getEdge(self.upstreamNode.id, self.downstreamNode.id);
-      uuids.push(triple.predicate.uuid);
+      deleteData.triples.push(new Triple(self.upstreamNode, self.predicate, self.downstreamNode));
     } else if (this.type === ConnectorType.intermediate) {
       uuids.push(self.processNode.uuid);
       if (self.hasInputNode.hasValue()) {
@@ -240,7 +245,9 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
       }
     }
 
-    return uuids;
+    deleteData.uuids = uuids;
+
+    return deleteData;
   }
 
   private _prepareSave(value) {
@@ -278,8 +285,6 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
       //  self.hasInputNode.evidence = evidences;
     }
   }
-
-
 
   private _getPreviewEdges(): NgxEdge[] {
     const self = this;

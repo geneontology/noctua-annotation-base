@@ -51,7 +51,7 @@ export class NoctuaAnnotonConnectorService {
 
     this.onAnnotonChanged = new BehaviorSubject(null);
     this.connectorFormGroup = new BehaviorSubject(null);
-    this.connectorFormGroup$ = this.connectorFormGroup.asObservable()
+    this.connectorFormGroup$ = this.connectorFormGroup.asObservable();
 
     this.camService.onCamChanged.subscribe((cam) => {
       if (!cam) {
@@ -129,9 +129,9 @@ export class NoctuaAnnotonConnectorService {
 
   deleteAnnoton(connectorAnnoton: ConnectorAnnoton) {
     const self = this;
-    const uuids = connectorAnnoton.createDelete();
+    const deleteData = connectorAnnoton.createDelete();
 
-    return self.noctuaGraphService.deleteAnnoton(self.cam, uuids);
+    return self.noctuaGraphService.deleteAnnoton(self.cam, deleteData.uuids, deleteData.triples);
   }
 
   private _onAnnotonFormChanges(): void {

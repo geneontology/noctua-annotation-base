@@ -372,13 +372,13 @@ export class NoctuaGraphService {
     const self = this;
     const annotons: Annoton[] = [];
 
-    each(cam.graph.all_edges(), function (e) {
-      if (e.predicate_id() === noctuaFormConfig.edge.enabledBy.id) {
-        const bbopSubjectId = e.subject_id();
-        const bbopObjectId = e.object_id();
+    each(cam.graph.all_edges(), (bbopEdge) => {
+      if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id) {
+        const bbopSubjectId = bbopEdge.subject_id();
+        const bbopObjectId = bbopEdge.object_id();
         const subjectNode = self.nodeToAnnotonNode(cam.graph, bbopSubjectId);
         const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
-        const evidence = self.edgeToEvidence(cam.graph, e);
+        const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
         const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
         const annotonModelType = self.determineAnnotonModelType(subjectNode, subjectEdges);
         const annoton = self.noctuaFormConfigService.createAnnotonModel(
@@ -392,6 +392,7 @@ export class NoctuaGraphService {
         annotonNode.setIsComplement(subjectNode.isComplement);
         annotonNode.uuid = bbopSubjectId;
         triple.predicate.evidence = evidence;
+        triple.predicate.uuid = bbopEdge.id();
         self._graphToAnnatonDFS(cam, annoton, subjectEdges, annotonNode);
 
         annoton.id = bbopSubjectId;
@@ -407,9 +408,10 @@ export class NoctuaGraphService {
     const connectorAnnotons: ConnectorAnnoton[] = [];
 
     each(cam.annotons, (subjectAnnoton: Annoton) => {
-      each(cam.graph.get_edges_by_subject(subjectAnnoton.id), (e) => {
-        const predicateId = e.predicate_id();
-        const objectId = e.object_id();
+      each(cam.graph.get_edges_by_subject(subjectAnnoton.id), (bbopEdge) => {
+        const predicateId = bbopEdge.predicate_id();
+        const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
+        const objectId = bbopEdge.object_id();
         const objectInfo = self.nodeToAnnotonNode(cam.graph, objectId);
 
         const causalEdge = <Entity>_.find(noctuaFormConfig.causalEdges, {
@@ -424,6 +426,7 @@ export class NoctuaGraphService {
             connectorAnnoton.state = ConnectorState.editing;
             connectorAnnoton.type = ConnectorType.basic;
             connectorAnnoton.rule.r1Edge = causalEdge;
+            connectorAnnoton.predicate = new Predicate(causalEdge, evidence);
             connectorAnnoton.setRule();
             connectorAnnotons.push(connectorAnnoton);
           } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.bp.id)) {
@@ -440,9 +443,11 @@ export class NoctuaGraphService {
 
               connectorAnnoton.state = ConnectorState.editing;
               connectorAnnoton.type = ConnectorType.intermediate;
-              connectorAnnoton.rule.r1Edge = new Entity(causalEdge.id, causalEdge.label);;
+              connectorAnnoton.rule.r1Edge = new Entity(causalEdge.id, causalEdge.label);
               connectorAnnoton.rule.r2Edge = connectorAnnotonDTO.rule.r2Edge;
+              connectorAnnoton.predicate = new Predicate(causalEdge, evidence);
               connectorAnnoton.setRule();
+
               connectorAnnotons.push(connectorAnnoton);
             }
           }
@@ -543,7 +548,6 @@ export class NoctuaGraphService {
     const self = this;
     const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
 
-    console.dir(reqs);
     each(destNodes, function (destNode: AnnotonNode) {
       const srcNode = _.find(srcNodes, (node: AnnotonNode) => {
         return node.uuid === destNode.uuid;
@@ -554,7 +558,10 @@ export class NoctuaGraphService {
       }
     });
 
-    self.editFact(reqs, cam, srcTriples, destTriples)
+    self.editFact(reqs, cam, srcTriples, destTriples);
+    self.addFact(reqs, destTriples);
+
+    console.dir(reqs._requests);
 
     reqs.store_model(cam.modelId);
 
@@ -565,6 +572,35 @@ export class NoctuaGraphService {
     return cam.manager.request_with(reqs);
   }
 
+  deleteAnnoton(cam: Cam, uuids: string[], triples: Triple<AnnotonNode>[]) {
+    const self = this;
+
+    const success = () => {
+      const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
+
+      each(triples, function (triple: Triple<AnnotonNode>) {
+        reqs.remove_fact([
+          triple.subject.uuid,
+          triple.object.uuid,
+          triple.predicate.edge.id
+        ]);
+      });
+
+      each(uuids, function (uuid: string) {
+        reqs.remove_individual(uuid);
+      });
+
+      reqs.store_model(cam.modelId);
+
+      if (self.userInfo.groups.length > 0) {
+        reqs.use_groups([self.userInfo.selectedGroup.id]);
+      }
+
+      return cam.manager.request_with(reqs);
+    };
+
+    return success();
+  }
 
   private _graphToAnnatonDFS(cam: Cam, annoton: Annoton, bbopEdges, annotonNode: AnnotonNode) {
     const self = this;
@@ -595,6 +631,7 @@ export class NoctuaGraphService {
           triple.object.setIsComplement(objectNode.isComplement);
 
           triple.predicate.evidence = evidence;
+          triple.predicate.uuid = bbopEdge.id();
           self._graphToAnnatonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
         }
       });
@@ -671,16 +708,16 @@ export class NoctuaGraphService {
     each(destTriples, (destTriple: Triple<AnnotonNode>) => {
 
       const srcTriple = _.find(srcTriples, (triple: Triple<AnnotonNode>) => {
-        return triple.subject.id === destTriple.subject.id;
+        return triple.subject.uuid === destTriple.subject.uuid && triple.object.uuid === destTriple.object.uuid;
       });
 
       if (srcTriple) {
         reqs.remove_fact([
           srcTriple.subject.uuid,
           srcTriple.object.uuid,
-        ])
+          srcTriple.predicate.edge.id
+        ]);
       }
-
     });
   }
 
@@ -698,27 +735,7 @@ export class NoctuaGraphService {
   }
 
 
-  deleteAnnoton(cam: Cam, uuids: string[]) {
-    const self = this;
 
-    const success = () => {
-      const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
-
-      each(uuids, function (uuid: string) {
-        reqs.remove_individual(uuid);
-      });
-
-      reqs.store_model(cam.modelId);
-
-      if (self.userInfo.groups.length > 0) {
-        reqs.use_groups([self.userInfo.selectedGroup.id]);
-      }
-
-      return cam.manager.request_with(reqs);
-    };
-
-    return success();
-  }
 
   addIndividual(reqs: any, node: AnnotonNode): string | null {
     if (node.uuid) {
@@ -742,8 +759,7 @@ export class NoctuaGraphService {
   editIndividual(reqs, cam: Cam, srcNode, destNode) {
     if (srcNode.hasValue() && destNode.hasValue()) {
       reqs.remove_type_from_individual(
-        //  class_expression.cls(srcNode.getTerm().id),
-        srcNode.getNodeType(),
+        srcNode.classExpression,
         srcNode.uuid,
         cam.modelId,
       );

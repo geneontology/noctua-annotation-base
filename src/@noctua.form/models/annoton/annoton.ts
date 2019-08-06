@@ -248,7 +248,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       return edge.metadata;
     });
 
-
     console.log(graph);
     console.log(saveData);
 
@@ -269,8 +268,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     return saveData;
   }
 
-  createDelete(): string[] {
+  createDelete() {
     const self = this;
+    const deleteData = {
+      uuids: [],
+      triples: []
+    };
     const uuids: string[] = [];
 
     each(self.nodes, (node: AnnotonNode) => {
@@ -279,7 +282,9 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       }
     });
 
-    return uuids;
+    deleteData.uuids = uuids;
+
+    return deleteData;
   }
 
   get presentation() {
