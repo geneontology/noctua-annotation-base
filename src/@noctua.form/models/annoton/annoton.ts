@@ -12,8 +12,13 @@ import { AnnotonNode } from './annoton-node';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
-import { getEdges, Edge } from './noctua-form-graph';
+import { getEdges, Edge, getNodes } from './noctua-form-graph';
 import { AnnotonParser } from './parser';
+
+export enum AnnotonState {
+  creation = 1,
+  editing
+}
 
 export class Annoton extends SaeGraph<AnnotonNode> {
   gp;
@@ -149,12 +154,35 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   copyValues(srcAnnoton) {
     const self = this;
 
-    each(self.nodes, function (destNode) {
+    each(self.nodes, function (destNode: AnnotonNode) {
       const srcNode = srcAnnoton.getNode(destNode.id);
       if (srcNode) {
         destNode.copyValues(srcNode);
       }
     });
+  }
+
+  formalize(srcAnnoton) {
+    const self = this;
+    const triples: Triple<AnnotonNode>[] = srcAnnoton.getEdges();
+
+    // self.copyValues(srcAnnoton);
+
+    /*   each(triples, function (triple: Triple<AnnotonNode>) {      
+        const predicate = self.getNode(triple.object.id).predicate;
+  
+        predicate.edge = triple.edge;
+        annoton.addEdgeById(triple.subject, triple.object, predicate);
+      });
+  
+  
+      const startNode = annoton.getNode(modelIds[modelType].nodes[0]);
+      const startTriple = annoton.getEdge(modelIds[modelType].triples[0].subject, modelIds[modelType].triples[0].object);
+  
+      startNode.predicate = startTriple.predicate; */
+
+    return _.cloneDeep(srcAnnoton);
+
   }
 
   setAnnotonType(type) {
@@ -206,19 +234,37 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     const self = this;
     const saveData = {
       title: 'enabled by ' + self.getNode('gp').term.label,
-      triples: []
+      triples: [],
+      nodes: []
     };
 
     const graph = self.getTrimmedGraph('mf');
+    const keyNodes = getNodes(graph);
     const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
-    const triples: Triple<AnnotonNode>[] = edges.map((edge: Edge<Triple<AnnotonNode>>) => {
+
+    saveData.nodes = Object.values(keyNodes);
+
+    saveData.triples = edges.map((edge: Edge<Triple<AnnotonNode>>) => {
       return edge.metadata;
     });
 
-    saveData.triples = triples;
 
     console.log(graph);
     console.log(saveData);
+
+    return saveData;
+  }
+
+  createEdit(srcAnnoton: Annoton) {
+    const self = this;
+    const srcSaveData = srcAnnoton.createSave();
+    const destSaveData = self.createSave();
+    const saveData = {
+      srcNodes: srcSaveData.nodes,
+      destNodes: destSaveData.nodes,
+      srcTriples: srcSaveData.triples,
+      destTriples: destSaveData.triples
+    };
 
     return saveData;
   }

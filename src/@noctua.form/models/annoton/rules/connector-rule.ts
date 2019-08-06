@@ -4,12 +4,11 @@ const each = require('lodash/forEach');
 const map = require('lodash/map');
 const uuid = require('uuid/v1');
 import { noctuaFormConfig } from './../../../noctua-form-config';
-import {
-  DirectionRule,
-  ConditionRule,
-  ReactionRule,
-} from '.';
+
 import { Entity } from '../entity';
+import { ConditionRule } from './condition-rule';
+import { DirectionRule } from './direction-rule';
+import { ReactionRule } from './reaction-rule';
 
 export class ConnectorRule {
   annotonsConsecutive = new ConditionRule('annotonsConsecutive', 'Activities are consecutive?');

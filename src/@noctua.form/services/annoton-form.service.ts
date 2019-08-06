@@ -9,24 +9,39 @@ import * as _ from 'lodash';
 declare const require: any;
 const each = require('lodash/forEach');
 
-import { Annoton } from './../models/annoton/annoton';
+import { Annoton, AnnotonState } from './../models/annoton/annoton';
 import { AnnotonNode } from './../models/annoton/annoton-node';
 import { AnnotonForm } from './../models/forms/annoton-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
+import { NoctuaGraphService } from './graph.service';
+import { CamService } from './cam.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaAnnotonFormService {
+  public state: AnnotonState;
   public mfLocation;
   public errors = [];
+  public currentAnnoton: Annoton;
   public annoton: Annoton;
   public annotonForm: AnnotonForm;
   public annotonFormGroup: BehaviorSubject<FormGroup | undefined>;
   public annotonFormGroup$: Observable<FormGroup>;
+  public cam: any;
 
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
+    private camService: CamService,
+    private noctuaGraphService: NoctuaGraphService,
     private noctuaLookupService: NoctuaLookupService) {
+
+    this.camService.onCamChanged.subscribe((cam) => {
+      if (!cam) {
+        return;
+      }
+
+      this.cam = cam;
+    });
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
       noctuaFormConfig.annotonModelType.options.default.name
     );
@@ -43,7 +58,12 @@ export class NoctuaAnnotonFormService {
     self.errors = [];
 
     if (annoton) {
-      self.annoton = annoton;
+      self.state = AnnotonState.editing;
+      self.currentAnnoton = annoton;
+      self.annoton = _.cloneDeep(annoton);
+    } else {
+      self.state = AnnotonState.creation;
+      self.currentAnnoton = null;
     }
 
     self.annotonForm = this.createAnnotonForm();
@@ -134,11 +154,29 @@ export class NoctuaAnnotonFormService {
     this.initializeForm();
   }
 
+  saveAnnoton() {
+    const self = this;
+    self.annotonFormToAnnoton();
+
+    if (self.state === AnnotonState.editing) {
+      const saveData = self.annoton.createEdit(self.currentAnnoton);
+
+      return self.noctuaGraphService.editAnnoton(self.cam,
+        saveData.srcNodes,
+        saveData.destNodes,
+        saveData.srcTriples,
+        saveData.destTriples);
+    } else { // creation
+      const saveData = self.annoton.createSave();
+      return self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, saveData.title);
+    }
+  }
 
   clearForm() {
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
       this.annoton.annotonModelType
-    )
+    );
+
     this.initializeForm();
   }
 }

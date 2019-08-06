@@ -26,8 +26,6 @@ import {
 import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
-import { NoctuaAnnotonFormService } from './../services/annoton-form.service';
-//User
 import { NoctuaUserService } from './../services/user.service';
 
 import 'rxjs/add/observable/forkJoin';
@@ -45,7 +43,7 @@ const amigo = require('amigo2');
 const bbopx = require('bbopx');
 const golr_response = require('bbop-response-golr');
 const golr_manager = require('bbop-manager-golr');
-const golr_conf = require("golr-conf");
+const golr_conf = require('golr-conf');
 const node_engine = require('bbop-rest-manager').node;
 const barista_response = require('bbop-response-barista');
 const minerva_requests = require('minerva-requests');
@@ -57,34 +55,27 @@ const minerva_manager = require('bbop-manager-minerva');
   providedIn: 'root'
 })
 export class NoctuaGraphService {
-  title;
-  golrServer = environment.globalGolrServer;
   baristaLocation = environment.globalBaristaLocation;
   minervaDefinitionName = environment.globalMinervaDefinitionName;
   locationStore = new bbopx.noctua.location_store();
   baristaToken;
   linker;
-  loggedIn;
   userInfo;
   modelInfo;
-  localClosures;
 
   constructor(
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    private annotonFormService: NoctuaAnnotonFormService,
     private httpClient: HttpClient,
     private noctuaLookupService: NoctuaLookupService) {
     this.linker = new amigo.linker();
     this.userInfo = {
       groups: [],
       selectedGroup: {}
-    }
+    };
     this.modelInfo = {
-      graphEditorUrl: ""
-    }
-    this.localClosures = [];
-
+      graphEditorUrl: ''
+    };
   }
 
   registerManager() {
@@ -101,12 +92,12 @@ export class NoctuaGraphService {
     const managerError = (resp) => {
       console.log('There was a manager error (' +
         resp.message_type() + '): ' + resp.message());
-    }
+    };
 
     const warning = (resp) => {
       alert('Warning: ' + resp.message() + '; ' +
         'your operation was likely not performed');
-    }
+    };
 
     const error = (resp) => {
       const perm_flag = 'InsufficientPermissionsException';
@@ -123,10 +114,10 @@ export class NoctuaGraphService {
           //  cam.error = true
         }
       }
-    }
+    };
 
-    const shieldsUp = () => { }
-    const shieldsDown = () => { }
+    const shieldsUp = () => { };
+    const shieldsDown = () => { };
 
     manager.register('prerun', shieldsUp);
     manager.register('postrun', shieldsDown, 9);
@@ -166,7 +157,6 @@ export class NoctuaGraphService {
       self.graphPreParse(cam.graph).subscribe((data) => {
         cam.annotons = self.graphToAnnotons(cam);
         cam.connectorAnnotons = self.getConnectorAnnotons(cam);
-        self.saveMFLocation(cam);
         self.graphPostParse(cam, cam.graph).subscribe((data) => {
           cam.onGraphChanged.next(cam.annotons);
         });
@@ -334,7 +324,7 @@ export class NoctuaGraphService {
         map((response) => {
           self.noctuaLookupService.addLocalClosure(a, b, response);
         })
-      )
+      );
   }
 
   isaClosurePostParse(a, b, node: AnnotonNode) {
@@ -344,36 +334,8 @@ export class NoctuaGraphService {
       map(result => {
         node.isCatalyticActivity = result;
         return result;
-      }))
-
-    /*
-    .subscribe(function (data) {
-      self.noctuaLookupService.addLocalClosure(a, b, data);
-    });
-    */
+      }));
   }
-
-  /*
-  isaNodeClosure(a, b, node, annoton) {
-    const self = this;
-    const deferred = self.$q.defer();
-   
-    self.noctuaLookupService.isaClosure(a, b).then(function (data) {
-      if (data) {
-        node.closures.push(a);
-        //annoton.parser.parseNodeOntology(node, data);
-      }
-      // console.log("node closure", data, node);
-      deferred.resolve({
-        annoton: annoton,
-        node: node,
-        result: data
-      });
-    });
-   
-    return deferred.promise;
-  }
-  */
 
   determineAnnotonType(gpObjectNode) {
     const self = this;
@@ -437,46 +399,7 @@ export class NoctuaGraphService {
       }
     });
 
-    // self.parseNodeClosure(annotons);
-
     return annotons;
-  }
-
-  private _graphToAnnatonDFS(cam: Cam, annoton: Annoton, bbopEdges, annotonNode: AnnotonNode) {
-    const self = this;
-    const triples: Triple<AnnotonNode>[] = annoton.getEdges(annotonNode.id);
-
-    each(bbopEdges, (bbopEdge) => {
-      const bbopPredicateId = bbopEdge.predicate_id();
-      const bbopObjectId = bbopEdge.object_id();
-      const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
-
-      if (annoton.annotonModelType === noctuaFormConfig.annotonModelType.options.bpOnly.name) {
-        const causalEdge = _.find(noctuaFormConfig.causalEdges, {
-          id: bbopPredicateId
-        });
-
-        if (causalEdge) {
-          //   self.adjustBPOnly(annoton, causalEdge);
-        }
-      }
-
-      each(triples, (triple: Triple<AnnotonNode>) => {
-        if (bbopPredicateId === triple.predicate.edge.id) {
-          const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
-
-          triple.object.uuid = objectNode.uuid;
-          triple.object.term = objectNode.term;
-          triple.object.classExpression = objectNode.classExpression;
-          triple.object.setIsComplement(objectNode.isComplement);
-
-          triple.predicate.evidence = evidence;
-          self._graphToAnnatonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
-        }
-      });
-    });
-
-    return annoton;
   }
 
   getConnectorAnnotons(cam: Cam) {
@@ -491,7 +414,7 @@ export class NoctuaGraphService {
 
         const causalEdge = <Entity>_.find(noctuaFormConfig.causalEdges, {
           id: predicateId
-        })
+        });
 
         if (causalEdge) {
           if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.mf.id)) {
@@ -529,6 +452,155 @@ export class NoctuaGraphService {
 
     console.log(connectorAnnotons);
     return connectorAnnotons;
+  }
+
+  graphToAnnatonDFSError(annoton, annotonNode) {
+    const self = this;
+    const edge = annoton.getEdges(annotonNode.id);
+
+    each(edge.nodes, function (node) {
+      node.object.status = 2;
+      self.graphToAnnatonDFSError(annoton, node.object);
+    });
+  }
+
+  evidenceUseGroups(reqs, evidence: Evidence) {
+    const self = this;
+    const assignedBy = evidence.assignedBy;
+
+    if (assignedBy) {
+      reqs.use_groups(['http://purl.obolibrary.org/go/groups/' + assignedBy]);
+    } else if (self.userInfo.groups.length > 0) {
+      reqs.use_groups([self.userInfo.selectedGroup.id]);
+    } else {
+      reqs.use_groups([]);
+    }
+  }
+
+  adjustBPOnly(annoton, srcEdge) {
+    const self = this;
+    const mfNode = annoton.getNode('mf');
+    const bpNode = annoton.getNode('bp');
+
+    if (mfNode && bpNode && annoton.annotonModelType === noctuaFormConfig.annotonModelType.options.bpOnly.name) {
+      mfNode.displaySection = noctuaFormConfig.displaySection.fd;
+      mfNode.displayGroup = noctuaFormConfig.displayGroup.mf;
+      annoton.editEdge('mf', 'bp', srcEdge);
+      bpNode.relationship = annoton.getEdge('mf', 'bp').edge;
+    }
+  }
+
+  saveModelGroup(cam: Cam, groupId) {
+    cam.manager.use_groups([groupId]);
+  }
+
+  saveCamAnnotations(cam: Cam, annotations) {
+    const self = this;
+
+    const titleAnnotations = cam.graph.get_annotations_by_key('title');
+    const stateAnnotations = cam.graph.get_annotations_by_key('state');
+    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
+
+    each(titleAnnotations, function (annotation) {
+      reqs.remove_annotation_from_model('title', annotation.value());
+    });
+
+    each(stateAnnotations, function (annotation) {
+      reqs.remove_annotation_from_model('state', annotation.value());
+    });
+
+    reqs.add_annotation_to_model('title', annotations.title);
+    reqs.add_annotation_to_model('state', annotations.state);
+
+    cam.manager.request_with(reqs);
+  }
+
+  saveAnnoton(cam, triples: Triple<AnnotonNode>[], title) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
+
+    if (!cam.title) {
+      reqs.add_annotation_to_model('title', title);
+    }
+
+    self.addFact(reqs, triples);
+    reqs.store_model(cam.modelId);
+
+    if (self.userInfo.groups.length > 0) {
+      reqs.use_groups([self.userInfo.selectedGroup.id]);
+    }
+
+    return cam.manager.request_with(reqs);
+
+  }
+
+  editAnnoton(cam: Cam,
+    srcNodes: AnnotonNode[],
+    destNodes: AnnotonNode[],
+    srcTriples: Triple<AnnotonNode>[],
+    destTriples: Triple<AnnotonNode>[]) {
+
+    const self = this;
+    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
+
+    console.dir(reqs);
+    each(destNodes, function (destNode: AnnotonNode) {
+      const srcNode = _.find(srcNodes, (node: AnnotonNode) => {
+        return node.uuid === destNode.uuid;
+      });
+
+      if (srcNode) {
+        self.editIndividual(reqs, cam, srcNode, destNode);
+      }
+    });
+
+    self.editFact(reqs, cam, srcTriples, destTriples)
+
+    reqs.store_model(cam.modelId);
+
+    if (self.userInfo.groups.length > 0) {
+      reqs.use_groups([self.userInfo.selectedGroup.id]);
+    }
+
+    return cam.manager.request_with(reqs);
+  }
+
+
+  private _graphToAnnatonDFS(cam: Cam, annoton: Annoton, bbopEdges, annotonNode: AnnotonNode) {
+    const self = this;
+    const triples: Triple<AnnotonNode>[] = annoton.getEdges(annotonNode.id);
+
+    each(bbopEdges, (bbopEdge) => {
+      const bbopPredicateId = bbopEdge.predicate_id();
+      const bbopObjectId = bbopEdge.object_id();
+      const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
+
+      if (annoton.annotonModelType === noctuaFormConfig.annotonModelType.options.bpOnly.name) {
+        const causalEdge = _.find(noctuaFormConfig.causalEdges, {
+          id: bbopPredicateId
+        });
+
+        if (causalEdge) {
+          //   self.adjustBPOnly(annoton, causalEdge);
+        }
+      }
+
+      each(triples, (triple: Triple<AnnotonNode>) => {
+        if (bbopPredicateId === triple.predicate.edge.id) {
+          const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
+
+          triple.object.uuid = objectNode.uuid;
+          triple.object.term = objectNode.term;
+          triple.object.classExpression = objectNode.classExpression;
+          triple.object.setIsComplement(objectNode.isComplement);
+
+          triple.predicate.evidence = evidence;
+          self._graphToAnnatonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
+        }
+      });
+    });
+
+    return annoton;
   }
 
   private _getConnectAnnotonIntermediate(cam: Cam, bpSubjectId: string): ConnectorAnnoton {
@@ -569,238 +641,6 @@ export class NoctuaGraphService {
     return connectorAnnoton;
   }
 
-  /*
-  parseNodeClosure(annotons) {
-    const self = this;
-    const promises = [];
-   
-    each(annotons, function (annoton) {
-      each(annoton.nodes, function (node) {
-        const term = node.getTerm();
-        if (term) {
-          promises.push(self.isaNodeClosure(node.noctuaLookupServiceGroup, term.id, node, annoton));
-   
-          forOwn(annoton.edges, function (srcEdge, key) {
-            each(srcEdge.nodes, function (srcNode) {
-              //  const nodeExist = destAnnoton.getNode(key);
-              //  if (nodeExist && srcNode.object.hasValue()) {
-              //   destAnnoton.addEdgeById(key, srcNode.object.id, srcNode.edge);
-              //   }
-            });
-          });
-        }
-      });
-    });
-   
-    self.$q.all(promises).then(function (data) {
-      console.log('done node clodure', data)
-   
-      each(data, function (entity) {
-        //entity.annoton.parser.parseNodeOntology(entity.node);
-      });
-    });
-  }
-  */
-
-  graphToAnnatonDFSError(annoton, annotonNode) {
-    const self = this;
-    const edge = annoton.getEdges(annotonNode.id);
-
-    each(edge.nodes, function (node) {
-      node.object.status = 2;
-      self.graphToAnnatonDFSError(annoton, node.object);
-    });
-  }
-
-
-  ccComponentsToTable(graph, annotons) {
-    const self = this;
-    const result = [];
-
-    each(annotons, function (annoton) {
-      //   const annotonRows = self.ccComponentsToTableRows(graph, annoton);
-
-      //  result = result.concat(annotonRows);
-    });
-
-    return result;
-  }
-
-  /*
-   
-  ccComponentsToTableRows(graph, annoton) {
-    const self = this;
-    const result = [];
-   
-    const gpNode = annoton.getGPNode();
-    const ccNode = annoton.getNode('cc');
-   
-    const row = {
-      gp: gpNode.term.control.value.label,
-      cc: ccNode.term.control.value.label,
-      original: JSON.parse(JSON.stringify(annoton)),
-      annoton: annoton,
-      annotonPresentation: self.annotonForm.getAnnotonPresentation(annoton),
-    }
-   
-    row.evidence = gpNode.evidence
-   
-    return row;
-  }
-  */
-
-  addIndividual(reqs: any, node: AnnotonNode): string | null {
-    if (node.uuid) return node.uuid;
-    if (node.hasValue()) {
-      if (node.isComplement) {
-        const ce = new class_expression();
-        ce.as_complement(node.term.id);
-        node.uuid = reqs.add_individual(ce);
-      } else {
-        node.uuid = reqs.add_individual(node.term.id);
-      }
-      return node.uuid;
-    }
-
-    return null;
-  }
-
-  saveMFLocation(cam) {
-    const self = this;
-
-    const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.modelId);
-
-
-    // Update all of the nodes with their current local (should be
-    // most recent) positions before saving.
-    each(cam.graph.all_nodes(), function (node) {
-      const nid = node.id();
-
-      // Extract the current local coord.
-      //   const pos = self.locationStore.get(nid);
-      // const new_x = pos['x'];
-      //  const new_y = pos['y'];
-
-      // console.log('node pos', pos)
-
-      //  reqs.update_annotations(node, 'hint-layout-x', new_x);
-      //  reqs.update_annotations(node, 'hint-layout-y', new_y);
-
-    });
-
-    // And add the actual storage.
-    reqs.store_model();
-    // cam.manager.user_token(this.noctuaUserService.baristaToken);
-    //  cam.manager.request_with(reqs);
-  }
-
-  edit(cam: Cam, annotonNode: AnnotonNode) {
-    const self = this;
-
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
-    reqs.store_model(cam.modelId);
-
-    if (annotonNode.hasValue()) {
-      self.editIndividual(reqs,
-        cam.modelId,
-        annotonNode.uuid,
-        annotonNode.classExpression,
-        annotonNode.getTerm().id);
-    }
-
-    /*    each(annotonNode.evidence, (evidence: Evidence, key) => {
-         if (evidence.hasValue()) {
-           self.editIndividual(reqs,
-             cam.modelId,
-             evidence.uuid,
-             evidence.classExpression,
-             evidence.evidence.id);
-         }
-       }); */
-
-    const rebuild = (resp) => {
-      const noctua_graph = model.graph;
-
-      cam.graph = new noctua_graph();
-      cam.modelId = resp.data().id;
-      cam.graph.load_data_basic(resp.data());
-
-      self.graphPreParse(cam.graph).subscribe((data) => {
-        cam.annotons = self.graphToAnnotons(cam);
-        self.saveMFLocation(cam)
-        cam.onGraphChanged.next(cam.annotons);
-      });
-    }
-
-    cam.manager.register('rebuild', (resp) => {
-      rebuild(resp);
-    }, 10);
-
-    cam.manager.user_token(this.noctuaUserService.baristaToken);
-
-    return cam.manager.request_with(reqs);
-  }
-
-  editIndividual(reqs, modelId, uuid, classExpression, classId) {
-    reqs.remove_type_from_individual(
-      // class_expression.cls(oldClassId),
-      classExpression,
-      uuid,
-      modelId,
-    );
-
-    reqs.add_type_to_individual(
-      class_expression.cls(classId),
-      uuid,
-      modelId,
-    );
-  }
-
-  editIndividual2(reqs, cam, srcNode, destNode) {
-    if (srcNode.hasValue() && destNode.hasValue()) {
-      reqs.remove_type_from_individual(
-        //  class_expression.cls(srcNode.getTerm().id),
-        srcNode.getNodeType(),
-        srcNode.uuid,
-        cam.modelId,
-      );
-
-      reqs.add_type_to_individual(
-        class_expression.cls(destNode.getTerm().id),
-        srcNode.uuid,
-        cam.modelId,
-      );
-    }
-  }
-
-  deleteIndividual(reqs, node) {
-    if (node.uuid) {
-      reqs.remove_individual(node.uuid);
-    }
-  }
-
-  addEvidence(cam, srcNode, destNode) {
-    const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.modelId);
-
-    if (srcNode.hasValue() && destNode.hasValue()) {
-      // const ce = new class_expression(destNode.term.control.value.id);
-      reqs.remove_type_from_individual(
-        class_expression.cls(srcNode.getTerm().id),
-        srcNode.uuid,
-        cam.modelId,
-      );
-
-      reqs.add_type_to_individual(
-        class_expression.cls(destNode.getTerm().id),
-        srcNode.uuid,
-        cam.modelId,
-      );
-
-      cam.manager.user_token(cam.baristaToken);
-      cam.manager.request_with(reqs);
-    }
-  }
-
   addFact(reqs, triples: Triple<AnnotonNode>[]) {
     const self = this;
 
@@ -825,6 +665,25 @@ export class NoctuaGraphService {
     });
   }
 
+  editFact(reqs, cam: Cam, srcTriples: Triple<AnnotonNode>[], destTriples: Triple<AnnotonNode>[]) {
+    const self = this;
+
+    each(destTriples, (destTriple: Triple<AnnotonNode>) => {
+
+      const srcTriple = _.find(srcTriples, (triple: Triple<AnnotonNode>) => {
+        return triple.subject.id === destTriple.subject.id;
+      });
+
+      if (srcTriple) {
+        reqs.remove_fact([
+          srcTriple.subject.uuid,
+          srcTriple.object.uuid,
+        ])
+      }
+
+    });
+  }
+
   deleteFact(reqs, triples: Triple<AnnotonNode>[]) {
     const self = this;
 
@@ -838,247 +697,6 @@ export class NoctuaGraphService {
     });
   }
 
-  evidenceUseGroups(reqs, evidence: Evidence) {
-    const self = this;
-    const assignedBy = evidence.assignedBy;
-
-    if (assignedBy) {
-      reqs.use_groups(['http://purl.obolibrary.org/go/groups/' + assignedBy]);
-    } else if (self.userInfo.groups.length > 0) {
-      reqs.use_groups([self.userInfo.selectedGroup.id]);
-    } else {
-      reqs.use_groups([]);
-    }
-  }
-
-  adjustBPOnly(annoton, srcEdge) {
-    const self = this;
-    const mfNode = annoton.getNode('mf');
-    const bpNode = annoton.getNode('bp');
-
-
-
-    if (mfNode && bpNode && annoton.annotonModelType === noctuaFormConfig.annotonModelType.options.bpOnly.name) {
-      mfNode.displaySection = noctuaFormConfig.displaySection.fd;
-      mfNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-      annoton.editEdge('mf', 'bp', srcEdge);
-      bpNode.relationship = annoton.getEdge('mf', 'bp').edge;
-    }
-  }
-
-
-
-  saveModelGroup(cam: Cam, groupId) {
-    const self = this
-
-    cam.manager.use_groups([groupId]);
-  }
-
-  saveCamAnnotations(cam: Cam, annotations) {
-    const self = this;
-
-    const titleAnnotations = cam.graph.get_annotations_by_key('title');
-    const stateAnnotations = cam.graph.get_annotations_by_key('state');
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
-
-    each(titleAnnotations, function (annotation) {
-      reqs.remove_annotation_from_model('title', annotation.value())
-    });
-
-    each(stateAnnotations, function (annotation) {
-      reqs.remove_annotation_from_model('state', annotation.value())
-    });
-
-    reqs.add_annotation_to_model('title', annotations.title);
-    reqs.add_annotation_to_model('state', annotations.state);
-
-    cam.manager.request_with(reqs);
-  }
-
-  /*
-  checkIfNodeExist(srcAnnoton) {
-    const self = this;
-    const infos = [];
-   
-    each(srcAnnoton.nodes, function (srcNode) {
-      const srcTerm = srcNode.getTerm();
-   
-      if (srcTerm.id && !srcNode.uuid) {
-        const meta = {
-          aspect: srcNode.label,
-          subjectNode: {
-            node: srcNode,
-            label: srcNode.term.control.value.label
-          },
-          linkedNodes: []
-        }
-   
-        each(self.gridData.annotons, function (annotonData) {
-          each(annotonData.annoton.nodes, function (node) {
-   
-            if (srcTerm.id === node.getTerm().id) {
-              if (!_.find(meta.linkedNodes, {
-                modelId: node.uuid
-              })) {
-                meta.linkedNodes.push(node);
-              }
-            }
-          });
-        });
-   
-        if (meta.linkedNodes.length > 0) {
-          const info = new AnnotonError('error', 5, "Instance exists " + srcNode.term.control.value.label, meta);
-   
-          infos.push(info);
-        }
-      }
-   
-    });
-   
-    return infos;
-  }
-  */
-  annotonAdjustments(annoton: Annoton) {
-    const self = this;
-    const infos = []; //self.checkIfNodeExist(annoton);
-
-    switch (annoton.annotonModelType) {
-      case noctuaFormConfig.annotonModelType.options.default.name:
-        {
-          const mfNode = annoton.getNode('mf');
-          const ccNode = annoton.getNode('cc');
-          const cc1Node = annoton.getNode('cc-1');
-          const cc11Node = annoton.getNode('cc-1-1');
-          const cc111Node = annoton.getNode('cc-1-1-1');
-
-          if (!ccNode.hasValue()) {
-            if (cc1Node.hasValue()) {
-              const meta = {
-                aspect: cc1Node.label,
-                subjectNode: {
-                  label: mfNode.term.label
-                },
-                edge: {
-                  label: noctuaFormConfig.edge.occursIn
-                },
-                objectNode: {
-                  label: cc1Node.term.label
-                },
-              }
-              const info = new AnnotonError('error', 2, "No CC found, added  ", meta);
-
-              infos.push(info);
-            } else if (cc11Node.hasValue()) { }
-          }
-          break;
-        }
-      case noctuaFormConfig.annotonModelType.options.bpOnly.name:
-        {
-          const mfNode = annoton.getNode('mf');
-          const bpNode = annoton.getNode('bp');
-
-          break;
-        }
-    }
-    return infos;
-  }
-
-  createSave(srcAnnoton: Annoton) {
-    const self = this;
-    const destAnnoton = new Annoton();
-    destAnnoton.copyStructure(srcAnnoton);
-
-    const skipNodeDFS = function (sourceId, objectId) {
-      const self = this;
-      const srcEdge = srcAnnoton.edges[objectId];
-
-      if (srcEdge) {
-        each(srcEdge, function (srcNode) {
-          const nodeExist = destAnnoton.getNode(sourceId) && destAnnoton.getNode(srcNode.object.id);
-          if (nodeExist && srcNode.object.hasValue()) {
-            destAnnoton.addEdgeById(sourceId, srcNode.object.id, srcNode.edge);
-          } else {
-            skipNodeDFS(sourceId, srcNode.object.id);
-          }
-        });
-      }
-    }
-
-    each(srcAnnoton.nodes, function (srcNode) {
-      if (srcNode.hasValue()) {
-        const destNode = srcNode;
-
-        if (destAnnoton.annotonType === noctuaFormConfig.annotonType.options.simple.name) {
-          if (srcNode.displayGroup.id !== noctuaFormConfig.displayGroup.mc.id) {
-            destAnnoton.addNode(destNode);
-          }
-        } else {
-          if (srcNode.id !== 'gp') {
-            destAnnoton.addNode(destNode);
-          }
-        }
-      }
-    });
-
-    forOwn(srcAnnoton.edges, function (srcEdge, key) {
-      each(srcEdge.nodes, function (srcNode) {
-        const nodeExist = destAnnoton.getNode(key);
-        if (nodeExist && srcNode.object.hasValue()) {
-          destAnnoton.addEdgeById(key, srcNode.object.id, srcNode.edge);
-        } else {
-          skipNodeDFS(key, srcNode.object.id);
-        }
-      });
-    });
-
-    console.log('create save', destAnnoton);
-
-    return destAnnoton;
-  }
-
-  saveMF(cam, individual, success) {
-    const self = this;
-
-    const merge = (resp) => {
-      const individuals = resp.individuals();
-      if (individuals.length > 0) {
-        const mfResponse = individuals[0];
-
-        individual.uuid = mfResponse.id;
-        success(mfResponse);
-      }
-    }
-
-    cam.individualManager.register('merge', merge, 10);
-
-    const reqs = new minerva_requests.request_set(cam.individualManager.user_token(), cam.model.id);
-    reqs.add_individual(individual.getTerm().id);
-    return cam.individualManager.request_with(reqs);
-  }
-
-  saveAnnoton(cam, triples: Triple<AnnotonNode>[], title) {
-    const self = this;
-
-    const save = () => {
-      const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
-
-      if (!cam.title) {
-        reqs.add_annotation_to_model('title', title);
-      }
-
-      self.addFact(reqs, triples);
-
-      reqs.store_model(cam.modelId);
-
-      if (self.userInfo.groups.length > 0) {
-        reqs.use_groups([self.userInfo.selectedGroup.id]);
-      }
-
-      return cam.manager.request_with(reqs);
-    };
-
-    return save();
-  }
 
   deleteAnnoton(cam: Cam, uuids: string[]) {
     const self = this;
@@ -1100,6 +718,48 @@ export class NoctuaGraphService {
     };
 
     return success();
+  }
+
+  addIndividual(reqs: any, node: AnnotonNode): string | null {
+    if (node.uuid) {
+      return node.uuid;
+    }
+
+    if (node.hasValue()) {
+      if (node.isComplement) {
+        const ce = new class_expression();
+        ce.as_complement(node.term.id);
+        node.uuid = reqs.add_individual(ce);
+      } else {
+        node.uuid = reqs.add_individual(node.term.id);
+      }
+      return node.uuid;
+    }
+
+    return null;
+  }
+
+  editIndividual(reqs, cam: Cam, srcNode, destNode) {
+    if (srcNode.hasValue() && destNode.hasValue()) {
+      reqs.remove_type_from_individual(
+        //  class_expression.cls(srcNode.getTerm().id),
+        srcNode.getNodeType(),
+        srcNode.uuid,
+        cam.modelId,
+      );
+
+      reqs.add_type_to_individual(
+        class_expression.cls(destNode.getTerm().id),
+        srcNode.uuid,
+        cam.modelId,
+      );
+    }
+  }
+
+  deleteIndividual(reqs, node) {
+    if (node.uuid) {
+      reqs.remove_individual(node.uuid);
+    }
   }
 
 }

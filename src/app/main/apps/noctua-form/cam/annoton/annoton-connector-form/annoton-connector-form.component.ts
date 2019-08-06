@@ -34,7 +34,6 @@ import {
   AnnotonNode,
   Evidence,
   NoctuaAnnotonConnectorService,
-
   NoctuaGraphService,
   NoctuaAnnotonFormService,
   NoctuaFormConfigService,
@@ -101,16 +100,20 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.connectorFormSub = this.noctuaAnnotonConnectorService.connectorFormGroup$
       .subscribe(connectorFormGroup => {
-        if (!connectorFormGroup) return;
+        if (!connectorFormGroup) {
+          return;
+        }
         this.connectorFormGroup = connectorFormGroup;
         this.currentConnectorAnnoton = this.noctuaAnnotonConnectorService.currentConnectorAnnoton;
         this.connectorAnnoton = this.noctuaAnnotonConnectorService.connectorAnnoton;
       });
 
     this.camService.onCamChanged.subscribe((cam) => {
-      if (!cam) return;
+      if (!cam) {
+        return;
+      }
 
-      this.cam = cam
+      this.cam = cam;
     });
 
     this.noctuaAnnotonConnectorService.onAnnotonChanged.subscribe((annoton) => {

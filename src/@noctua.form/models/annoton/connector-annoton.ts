@@ -5,20 +5,16 @@ const map = require('lodash/map');
 const uuid = require('uuid/v1');
 import { Edge as NgxEdge, Node, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
-
 import { SaeGraph } from './sae-graph';
 import { getEdges, Edge } from './noctua-form-graph';
-import {
-  AnnotonError,
-  AnnotonNode,
-  Evidence,
-  ConnectorRule,
-  Rule,
-  Entity,
-  Predicate,
-  Triple
-} from './';
+
 import { Annoton } from './annoton';
+import { AnnotonNode } from './annoton-node';
+import { ConnectorRule } from './rules';
+import { Entity } from './entity';
+import { Triple } from './triple';
+import { Evidence } from './evidence';
+import { Predicate } from './predicate';
 
 export enum ConnectorState {
   creation = 1,
