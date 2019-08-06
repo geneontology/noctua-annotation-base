@@ -1042,8 +1042,9 @@ export class NoctuaFormConfigService {
     downstreamNode.copyValues(srcDownstreamNode);
 
     const connectorAnnoton = new ConnectorAnnoton(upstreamNode, downstreamNode);
-
-    // connectorAnnoton.addNodes(upstreamNode, downstreamNode, processNode, hasInputNode);
+    connectorAnnoton.predicate = new Predicate(null);
+    connectorAnnoton.predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
+    connectorAnnoton.predicate.setEvidence(srcUpstreamNode.predicate.evidence);
     connectorAnnoton.upstreamAnnoton = upstreamAnnoton;
     connectorAnnoton.downstreamAnnoton = downstreamAnnoton;
     connectorAnnoton.processNode = processNode;

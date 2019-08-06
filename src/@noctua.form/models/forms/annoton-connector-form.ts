@@ -45,7 +45,7 @@ export class AnnotonConnectorForm {
       const evidenceForm = new EvidenceForm(self._metadata, null, evidence);
 
       self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(evidence.evidenceLookup)
+      evidenceForm.onValueChanges(evidence.evidenceLookup);
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }
@@ -60,7 +60,7 @@ export class AnnotonConnectorForm {
       const evidenceForm = new EvidenceForm(self._metadata, null, evidence);
 
       self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(evidence.evidenceLookup)
+      evidenceForm.onValueChanges(evidence.evidenceLookup);
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }

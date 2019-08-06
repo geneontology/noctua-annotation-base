@@ -99,7 +99,7 @@ export class NoctuaAnnotonConnectorService {
     this.connectorForm.annotonsConsecutive.setValue(this.connectorAnnoton.rule.annotonsConsecutive.condition);
     this.connectorForm.effectDependency.setValue(this.connectorAnnoton.rule.effectDependency.condition);
     this._onAnnotonFormChanges();
-    //just to trigger the on Changes event 
+    // just to trigger the on Changes event
     this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
   }
 
@@ -113,7 +113,7 @@ export class NoctuaAnnotonConnectorService {
     const connectorFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
     const connectorForm = new AnnotonConnectorForm(connectorFormMetadata);
 
-    // connectorForm.createEntityForms(self.connectorAnnoton.upstreamNode, self.connectorAnnoton.hasInputNode);
+    connectorForm.createEntityForms(self.connectorAnnoton.predicate, self.connectorAnnoton.hasInputNode);
     connectorForm.onValueChanges(self.connectorAnnoton.hasInputNode.termLookup);
 
     return connectorForm;

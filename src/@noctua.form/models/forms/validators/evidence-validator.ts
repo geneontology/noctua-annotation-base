@@ -3,7 +3,7 @@ import { AnnotonNode } from './../../..//models/annoton';
 
 export function evidenceValidator(termNode: AnnotonNode): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-        if (termNode.hasValue()) {
+        if (termNode && termNode.hasValue()) {
             if (control.value) {
                 if (!control.value.id) {
                     console.log('-', termNode.getTerm(), termNode.label, control);

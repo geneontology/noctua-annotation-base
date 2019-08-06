@@ -32,13 +32,13 @@ export class Predicate {
 
     each(evidences, function (srcEvidence, i) {
       self.addEvidence(srcEvidence);
-      //  destEvidence.copyValues(srcEvidence, except);
+      //destEvidence.copyValues(srcEvidence, except);
     });
   }
 
   addEvidence(srcEvidence?: Evidence) {
     const self = this;
-    const evidence = srcEvidence ? srcEvidence : new Evidence();
+    const evidence = srcEvidence ? _.cloneDeep(srcEvidence) : new Evidence();
 
     evidence.setEvidenceLookup(JSON.parse(JSON.stringify(self._evidenceMeta.lookupBase)));
     evidence.setEvidenceOntologyClass(self._evidenceMeta.ontologyClass);
