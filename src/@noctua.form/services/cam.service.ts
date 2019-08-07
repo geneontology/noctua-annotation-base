@@ -148,7 +148,6 @@ export class CamService {
     return self.noctuaGraphService.deleteAnnoton(self.cam, deleteData.uuids, deleteData.triples);
   }
 
-
   getUniqueEvidence() {
     return this.cam.getUniqueEvidences();
   }

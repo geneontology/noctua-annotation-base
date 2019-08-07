@@ -4,7 +4,6 @@ import { Injector, Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs'
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
 
-//Config
 import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
@@ -20,7 +19,8 @@ import {
   Annoton,
   AnnotonNode,
   ConnectorAnnoton,
-  Entity
+  Entity,
+  ConnectorState
 } from './../models/annoton';
 
 
@@ -122,12 +122,23 @@ export class NoctuaAnnotonConnectorService {
     return connectorForm;
   }
 
-  save() {
+  saveAnnoton() {
     const self = this;
     const value = this.connectorFormGroup.getValue().value;
-    const saveData = this.connectorAnnoton.createSave(value);
+    this.connectorAnnoton.prepareSave(value);
 
-    return self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, saveData.title);
+    if (self.connectorAnnoton.state === ConnectorState.editing) {
+      const saveData = self.connectorAnnoton.createEdit(self.currentConnectorAnnoton);
+
+      return self.noctuaGraphService.editAnnoton(self.cam,
+        saveData.srcNodes,
+        saveData.destNodes,
+        saveData.srcTriples,
+        saveData.destTriples);
+    } else { // creation
+      const saveData = self.annoton.createSave();
+      return self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, saveData.title);
+    }
   }
 
   deleteAnnoton(connectorAnnoton: ConnectorAnnoton) {

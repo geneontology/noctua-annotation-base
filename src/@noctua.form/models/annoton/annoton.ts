@@ -394,7 +394,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       with: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].with : {},
       assignedBy: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].assignedBy : {},
       node: node
-    })
+    });
 
     for (let i = 1; i < node.predicate.evidence.length; i++) {
       self._grid.push({
@@ -404,7 +404,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         with: node.predicate.evidence[i].with,
         assignedBy: node.predicate.evidence[i].assignedBy,
         node: node,
-      })
+      });
     }
   }
 

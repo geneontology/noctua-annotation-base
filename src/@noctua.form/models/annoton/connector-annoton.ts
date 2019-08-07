@@ -6,7 +6,7 @@ const uuid = require('uuid/v1');
 import { Edge as NgxEdge, Node, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
-import { getEdges, Edge } from './noctua-form-graph';
+import { getEdges, Edge, getNodes } from './noctua-form-graph';
 
 import { Annoton } from './annoton';
 import { AnnotonNode } from './annoton-node';
@@ -201,28 +201,43 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     self.hasInputNode.term = _.cloneDeep(currentConnectorAnnoton.hasInputNode.term);
     self.rule = _.cloneDeep(currentConnectorAnnoton.rule);
     self.type = currentConnectorAnnoton.type;
-
+    self.state = currentConnectorAnnoton.state;
   }
 
-  createSave(value) {
+  createSave() {
     const self = this;
     const saveData = {
       title: '',
+      nodes: [],
       triples: []
     };
 
-    self._prepareSave(value);
-
     const graph = self.getTrimmedGraph('upstream');
+    const keyNodes = getNodes(graph);
     const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
     const triples: Triple<AnnotonNode>[] = edges.map((edge: Edge<Triple<AnnotonNode>>) => {
       return edge.metadata;
     });
 
+    saveData.nodes = Object.values(keyNodes);
     saveData.triples = triples;
 
     console.log(graph);
     console.log(saveData);
+
+    return saveData;
+  }
+
+  createEdit(srcAnnoton: ConnectorAnnoton) {
+    const self = this;
+    const srcSaveData = srcAnnoton.createSave();
+    const destSaveData = self.createSave();
+    const saveData = {
+      srcNodes: srcSaveData.nodes,
+      destNodes: destSaveData.nodes,
+      srcTriples: srcSaveData.triples,
+      destTriples: destSaveData.triples
+    };
 
     return saveData;
   }
@@ -233,7 +248,8 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
 
     const deleteData = {
       uuids: [],
-      triples: []
+      triples: [],
+      nodes: []
     };
 
     if (this.type === ConnectorType.basic) {
@@ -250,10 +266,28 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     return deleteData;
   }
 
-  private _prepareSave(value) {
+  createGraph(srcEvidence?: Evidence[]) {
+    const self = this;
+    const evidence = srcEvidence ? srcEvidence : self.predicate.evidence;
+
+    if (this.type === ConnectorType.basic) {
+      this.addNodes(self.upstreamNode, self.downstreamNode);
+      self.addEdge(self.upstreamNode, self.downstreamNode, new Predicate(this.rule.r1Edge, evidence));
+    } else if (this.type === ConnectorType.intermediate) {
+      self.addNodes(self.upstreamNode, self.downstreamNode, self.processNode);
+      self.addEdge(self.upstreamNode, self.processNode, new Predicate(this.rule.r1Edge, evidence));
+      self.addEdge(self.processNode, self.downstreamNode, new Predicate(this.rule.r2Edge, evidence));
+      if (this.hasInputNode.hasValue()) {
+        self.addNodes(self.hasInputNode);
+        self.addEdge(self.processNode, self.hasInputNode, new Predicate(new Entity(noctuaFormConfig.edge.hasInput.id, noctuaFormConfig.edge.hasInput.label), evidence));
+      }
+    }
+  }
+
+  prepareSave(value) {
     const self = this;
 
-    const evidences: Evidence[] = value.evidenceFormArray.map((evidence: Evidence) => {
+    const evidence: Evidence[] = value.evidenceFormArray.map((evidence: Evidence) => {
       const result = new Evidence();
 
       result.uuid = evidence.uuid;
@@ -264,26 +298,12 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
       return result;
     });
 
-    // this.downstreamNode.evidence = evidences;
-
-    if (this.type === ConnectorType.basic) {
-      this.addNodes(self.upstreamNode, self.downstreamNode);
-      self.addEdge(self.upstreamNode, self.downstreamNode, new Predicate(this.rule.r1Edge, evidences));
-    }
-
     if (this.type === ConnectorType.intermediate) {
       self.processNode.term = new Entity(value.process.id, value.process.label);
       self.hasInputNode.term = new Entity(value.hasInput.id, value.hasInput.label);
-
-      self.addNodes(self.upstreamNode, self.downstreamNode, self.processNode, self.hasInputNode);
-
-      self.addEdge(self.upstreamNode, self.processNode, new Predicate(this.rule.r1Edge, evidences));
-      self.addEdge(self.processNode, self.downstreamNode, new Predicate(this.rule.r2Edge, evidences));
-      self.addEdge(self.processNode, self.hasInputNode, new Predicate(new Entity(noctuaFormConfig.edge.hasInput.id, noctuaFormConfig.edge.hasInput.label), evidences));
-
-      // self.processNode.evidence = evidences;
-      //  self.hasInputNode.evidence = evidences;
     }
+
+    this.createGraph(evidence);
   }
 
   private _getPreviewEdges(): NgxEdge[] {

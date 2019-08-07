@@ -428,6 +428,7 @@ export class NoctuaGraphService {
             connectorAnnoton.rule.r1Edge = causalEdge;
             connectorAnnoton.predicate = new Predicate(causalEdge, evidence);
             connectorAnnoton.setRule();
+            connectorAnnoton.createGraph();
             connectorAnnotons.push(connectorAnnoton);
           } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.bp.id)) {
             const processNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
@@ -447,7 +448,7 @@ export class NoctuaGraphService {
               connectorAnnoton.rule.r2Edge = connectorAnnotonDTO.rule.r2Edge;
               connectorAnnoton.predicate = new Predicate(causalEdge, evidence);
               connectorAnnoton.setRule();
-
+              connectorAnnoton.createGraph();
               connectorAnnotons.push(connectorAnnoton);
             }
           }

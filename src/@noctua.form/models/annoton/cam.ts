@@ -63,10 +63,8 @@ export class Cam {
     const self = this;
 
     return _.find(self.connectorAnnotons, (connectorAnnoton: ConnectorAnnoton) => {
-      let re = connectorAnnoton.upstreamNode.uuid === upstreamId &&
+      return connectorAnnoton.upstreamNode.uuid === upstreamId &&
         connectorAnnoton.downstreamNode.uuid === downstreamId;
-
-      return re
     });
   }
 
