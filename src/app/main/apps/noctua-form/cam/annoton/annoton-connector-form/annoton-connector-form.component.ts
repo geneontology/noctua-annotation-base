@@ -43,6 +43,7 @@ import {
   Entity
 } from 'noctua-form-base';
 import { NoctuaFormDialogService } from '../../../services/dialog.service';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'noc-annoton-connector',
@@ -81,6 +82,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
     private camService: CamService,
+    private confirmDialogService: NoctuaConfirmDialogService,
     private formBuilder: FormBuilder,
     public noctuaAnnotonConnectorService: NoctuaAnnotonConnectorService,
     private noctuaSearchService: NoctuaSearchService,
@@ -144,11 +146,17 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
   deleteAnnoton(connectorAnnoton: ConnectorAnnoton) {
     const self = this;
-    this.noctuaAnnotonConnectorService.deleteAnnoton(connectorAnnoton).then(() => {
-      self.selectPanel(self.panel.selectConnector);
-      self.noctuaAnnotonConnectorService.getConnections();
-      self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully deleted.', 'OK');
-    });
+    const success = () => {
+      self.noctuaAnnotonConnectorService.deleteAnnoton(connectorAnnoton).then(() => {
+        self.selectPanel(self.panel.selectConnector);
+        self.noctuaAnnotonConnectorService.getConnections();
+        self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully deleted.', 'OK');
+      });
+    };
+
+    this.confirmDialogService.openConfirmDialog('Confirm Delete?',
+      'You are about to remove the causal relation',
+      success);
   }
 
   addEvidence() {

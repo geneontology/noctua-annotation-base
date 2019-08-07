@@ -38,6 +38,7 @@ import { AnnotonTableComponent } from './cam/cam-table/annoton-table/annoton-tab
 import { TripleTableComponent } from './cam/cam-table/triple-table/triple-table.component';
 import { EvidenceTableComponent } from './cam/cam-table/triple-table/evidence-table/evidence-table.component';
 import { GraphPreviewComponent } from './cam/cam-diagram/graph-preview/graph-preview.component';
+import { NoctuaConfirmDialogModule } from '@noctua/components';
 
 const routes = [
   {
@@ -53,6 +54,7 @@ const routes = [
     // NoctuaModule.forRoot(noctuaConfig),
     RouterModule.forChild(routes),
     ContextMenuModule.forRoot(),
+    NoctuaConfirmDialogModule,
   ],
   exports: [
     AnnotonFormComponent,

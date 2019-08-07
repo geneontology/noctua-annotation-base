@@ -59,6 +59,9 @@ export class NoctuaAnnotonConnectorService {
       }
 
       this.cam = cam;
+      if (this.annoton) {
+        this.getConnections();
+      }
     });
   }
 

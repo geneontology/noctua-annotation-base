@@ -71,7 +71,7 @@ export class CamService {
       this.cam = cam;
     }
 
-    self.camForm = this.createCamForm()
+    self.camForm = this.createCamForm();
     self.camFormGroup.next(this._fb.group(this.camForm));
   }
 

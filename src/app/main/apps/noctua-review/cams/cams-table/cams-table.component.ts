@@ -111,14 +111,14 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   openCamForm(cam: Cam) {
     this.sparqlService.getModelMeta(cam.id).subscribe((response: any) => {
       if (response && response.length > 0) {
-        let responseCam = <Cam>response[0]
+        let responseCam = <Cam>response[0];
         cam.contributors = responseCam.contributors;
         cam.groups = responseCam.groups;
         this.camService.onCamChanged.next(cam);
       }
     });
     this.camService.initializeForm(cam);
-    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.camForm)
+    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.camForm);
   }
 
   changeCamDisplayView(cam: Cam, displayType) {

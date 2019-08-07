@@ -32,6 +32,7 @@ import {
   Cam,
   Annoton
 } from 'noctua-form-base';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'noc-cam-table',
@@ -67,6 +68,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
     public camService: CamService,
     public noctuaFormService: NoctuaFormService,
     public noctuaFormConfigService: NoctuaFormConfigService,
+    private confirmDialogService: NoctuaConfirmDialogService,
     private noctuaSearchService: NoctuaSearchService,
     private noctuaAnnotonConnectorService: NoctuaAnnotonConnectorService,
     //  public noctuaFormService: NoctuaFormService,
@@ -127,9 +129,16 @@ export class CamTableComponent implements OnInit, OnDestroy {
 
   deleteAnnoton(annoton: Annoton) {
     const self = this;
-    this.camService.deleteAnnoton(annoton).then(() => {
-      self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully deleted.', 'OK');
-    });
+
+    const success = () => {
+      this.camService.deleteAnnoton(annoton).then(() => {
+        self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully deleted.', 'OK');
+      });
+    };
+
+    this.confirmDialogService.openConfirmDialog('Confirm Delete?',
+      'You are about to delete an activity.',
+      success);
   }
 
   ngOnDestroy(): void {
