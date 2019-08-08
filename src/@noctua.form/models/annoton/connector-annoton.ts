@@ -3,7 +3,7 @@ declare const require: any;
 const each = require('lodash/forEach');
 const map = require('lodash/map');
 const uuid = require('uuid/v1');
-import { Edge as NgxEdge, Node, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
+import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
 import { getEdges, Edge, getNodes } from './noctua-form-graph';
@@ -42,7 +42,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   graphPreview = {
     nodes: [],
     edges: []
-  }
+  };
 
   constructor(upstreamNode?: AnnotonNode, downstreamNode?: AnnotonNode, state?: ConnectorState) {
     super();
@@ -166,13 +166,13 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   }
 
   setPreview() {
-    this.graphPreview.nodes = [...this._getPreviewNodes()]
-    this.graphPreview.edges = [...this._getPreviewEdges()]
+    this.graphPreview.nodes = [...this._getPreviewNodes()];
+    this.graphPreview.edges = [...this._getPreviewEdges()];
   }
 
-  private _getPreviewNodes(): Node[] {
+  private _getPreviewNodes(): NgxNode[] {
     const self = this;
-    let nodes: Node[] = [];
+    let nodes: NgxNode[] = [];
 
     let annotonNodes = [self.upstreamNode, self.downstreamNode];
 
@@ -184,11 +184,11 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
       }
     }
 
-    nodes = <Node[]>annotonNodes.map((node: AnnotonNode) => {
+    nodes = <NgxNode[]>annotonNodes.map((node: AnnotonNode) => {
       return {
         id: node.id,
         label: node.term.label ? node.term.label : '',
-      }
+      };
     });
 
     return nodes;

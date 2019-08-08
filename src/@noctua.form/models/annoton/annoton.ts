@@ -3,6 +3,7 @@ declare const require: any;
 const each = require('lodash/forEach');
 const map = require('lodash/map');
 const uuid = require('uuid/v1');
+import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 
 import { SaeGraph } from './sae-graph';
@@ -33,6 +34,10 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   submitErrors;
   expanded = false;
   visible = true;
+  graphPreview = {
+    nodes: [],
+    edges: []
+  };
   private _presentation: any;
   private _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1'];
   private _grid: any[] = [];
@@ -162,29 +167,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     });
   }
 
-  formalize(srcAnnoton) {
-    const self = this;
-    const triples: Triple<AnnotonNode>[] = srcAnnoton.getEdges();
-
-    // self.copyValues(srcAnnoton);
-
-    /*   each(triples, function (triple: Triple<AnnotonNode>) {      
-        const predicate = self.getNode(triple.object.id).predicate;
-  
-        predicate.edge = triple.edge;
-        annoton.addEdgeById(triple.subject, triple.object, predicate);
-      });
-  
-  
-      const startNode = annoton.getNode(modelIds[modelType].nodes[0]);
-      const startTriple = annoton.getEdge(modelIds[modelType].triples[0].subject, modelIds[modelType].triples[0].object);
-  
-      startNode.predicate = startTriple.predicate; */
-
-    return _.cloneDeep(srcAnnoton);
-
-  }
-
   setAnnotonType(type) {
     this.annotonType = type;
   }
@@ -285,6 +267,34 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     deleteData.uuids = uuids;
 
     return deleteData;
+  }
+
+  setPreview() {
+    const self = this;
+
+    const graph = self.getTrimmedGraph('mf');
+    const keyNodes = getNodes(graph);
+    const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
+
+    const nodes = Object.values(keyNodes);
+    const triples = edges.map((edge: Edge<Triple<AnnotonNode>>) => {
+      return edge.metadata;
+    });
+
+    self.graphPreview.nodes = <NgxNode[]>nodes.map((node: AnnotonNode) => {
+      return {
+        id: node.id,
+        label: node.term.label ? node.term.label : '',
+      };
+    });
+
+    self.graphPreview.edges = <NgxEdge[]>triples.map((triple: Triple<AnnotonNode>) => {
+      return {
+        source: triple.subject.id,
+        target: triple.object.id,
+        label: triple.predicate.edge.label
+      };
+    });
   }
 
   get presentation() {

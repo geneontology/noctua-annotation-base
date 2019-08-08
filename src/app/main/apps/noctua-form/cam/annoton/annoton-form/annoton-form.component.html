@@ -96,6 +96,9 @@
          </div>
        </div>
      </div>
+     <noc-graph-preview [nodes]="noctuaAnnotonFormService.annoton?.graphPreview.nodes"
+       [edges]="noctuaAnnotonFormService.annoton?.graphPreview.edges" class="noc-graph-preview"></noc-graph-preview>
+
    </div>
    <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
      <button *ngIf="noctuaAnnotonFormService.annoton.submitErrors.length>0" (click)='checkErrors()' mat-button
@@ -103,6 +106,7 @@
        Why is the "Save" button disabled?
      </button>
      <span fxFlex></span>
+     <button (click)='preview()' type="button" mat-raised-button color="" class="mr-8">Preview</button>
      <button (click)='clear()' type="button" mat-raised-button color="" class="mr-8">Clear</button>
      <button [disabled]="noctuaAnnotonFormService.annoton.submitErrors.length>0" (click)="save()" type="submit" class=""
        mat-raised-button color="primary">Save</button>

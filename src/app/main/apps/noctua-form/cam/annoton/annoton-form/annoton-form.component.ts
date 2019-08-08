@@ -116,6 +116,10 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  preview() {
+    this.noctuaAnnotonFormService.annoton.setPreview();
+  }
+
   clear() {
     this.noctuaAnnotonFormService.clearForm();
   }
