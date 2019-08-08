@@ -157,6 +157,7 @@ export class NoctuaGraphService {
       self.graphPreParse(cam.graph).subscribe((data) => {
         cam.annotons = self.graphToAnnotons(cam);
         cam.connectorAnnotons = self.getConnectorAnnotons(cam);
+        cam.setPreview();
         self.graphPostParse(cam, cam.graph).subscribe((data) => {
           cam.onGraphChanged.next(cam.annotons);
         });

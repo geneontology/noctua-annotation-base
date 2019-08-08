@@ -37,8 +37,9 @@ import { AnnotonEntityTableComponent } from './cam/cam-table/annoton-entity-tabl
 import { AnnotonTableComponent } from './cam/cam-table/annoton-table/annoton-table.component';
 import { TripleTableComponent } from './cam/cam-table/triple-table/triple-table.component';
 import { EvidenceTableComponent } from './cam/cam-table/triple-table/evidence-table/evidence-table.component';
-import { GraphPreviewComponent } from './cam/cam-diagram/graph-preview/graph-preview.component';
+import { GraphPreviewComponent } from './cam/cam-preview/graph-preview/graph-preview.component';
 import { NoctuaConfirmDialogModule } from '@noctua/components';
+import { CamPreviewComponent } from './cam/cam-preview/cam-preview.component';
 
 const routes = [
   {
@@ -77,6 +78,7 @@ const routes = [
     AnnotonEntityTableComponent,
     AnnotonTableComponent,
     TripleTableComponent,
+    CamPreviewComponent
   ],
   providers: [
     NoctuaFormDialogService,
@@ -107,7 +109,8 @@ const routes = [
     TripleTableComponent,
     AnnotonTableComponent,
     EvidenceTableComponent,
-    GraphPreviewComponent
+    GraphPreviewComponent,
+    CamPreviewComponent
   ],
   entryComponents: [
     CamRowEditDialogComponent,
@@ -118,8 +121,8 @@ const routes = [
     LinkToExistingDialogComponent,
     SelectEvidenceDialogComponent,
     SearchDatabaseDialogComponent,
-    NodeComponent,
-    NodesContainerComponent
+    //  NodeComponent,
+    // NodesContainerComponent
   ]
 })
 

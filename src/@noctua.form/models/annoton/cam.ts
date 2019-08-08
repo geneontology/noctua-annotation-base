@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 declare const require: any;
 const each = require('lodash/forEach');
 const uuid = require('uuid/v1');
+import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
 
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { Annoton } from './annoton'
@@ -55,6 +56,11 @@ export class Cam {
   grid: any = [];
   goterms: Entity[] = [];
 
+  graphPreview = {
+    nodes: [],
+    edges: []
+  };
+
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;
   }
@@ -74,23 +80,6 @@ export class Cam {
     }
   }
 
-  getActivities() {
-    const self = this;
-    let result = [];
-
-    each(self.annotons, function (annotonData) {
-      each(annotonData.annoton.nodes, function (node) {
-        if (node.id === 'mf') {
-          result.push({
-            node: node,
-            annoton: annotonData.annoton
-          })
-        }
-      });
-    });
-
-    return result;
-  }
 
   resetFilter() {
     this.filter.contributor = null;
@@ -222,6 +211,27 @@ export class Cam {
     return result;
   }
 
+
+  setPreview() {
+    const self = this;
+
+    self.graphPreview.nodes = <NgxNode[]>self.annotons.map((annoton: Annoton) => {
+      return {
+        id: annoton.id,
+        label: annoton.presentation.mfText
+      };
+    });
+
+    console.log(self.graphPreview.nodes);
+    /*
+        self.graphPreview.edges = <NgxEdge[]>triples.map((triple: Triple<AnnotonNode>) => {
+          return {
+            source: triple.subject.id,
+            target: triple.object.id,
+            label: triple.predicate.edge.label
+          };
+        });*/
+  }
 
   generateTripleGrid() {
     let grid = [...this.triples.map((triple) => {
