@@ -1,5 +1,5 @@
-<div *ngIf="selectedPanel.id === panel.selectConnector.id" fxLayout="column" fxLayoutAlign="start stretch"
-  class="noc-drawer w-100-p h-100-p">
+<div *ngIf="noctuaAnnotonConnectorService.selectedPanel.id === noctuaAnnotonConnectorService.panel.selectConnector.id"
+  fxLayout="column" fxLayoutAlign="start stretch" class="noc-drawer w-100-p h-100-p">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-drawer-header-title">
       Select Downstream Activity</span>
@@ -98,11 +98,14 @@
     <button (click)='close()' type="button" mat-raised-button color="" class="mr-8">Close</button>
   </div>
 </div>
-<form *ngIf="selectedPanel.id === panel.annotonConnectorForm.id" name="connectorFormGroup"
-  [formGroup]="connectorFormGroup" fxLayout="column" fxLayoutAlign="start stretch" class="noc-drawer w-100-p h-100-p">
+<form
+  *ngIf="noctuaAnnotonConnectorService.selectedPanel.id === noctuaAnnotonConnectorService.panel.annotonConnectorForm.id"
+  name="connectorFormGroup" [formGroup]="connectorFormGroup" fxLayout="column" fxLayoutAlign="start stretch"
+  class="noc-drawer w-100-p h-100-p">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
-    <button mat-icon-button (click)="selectPanel(panel.selectConnector)" class="noc-rounded-button noc-sm"
-      color="primary">
+    <button mat-icon-button
+      (click)="noctuaAnnotonConnectorService.selectPanel(noctuaAnnotonConnectorService.panel.selectConnector)"
+      class="noc-rounded-button noc-sm" color="primary">
       <mat-icon>arrow_back</mat-icon>
     </button>
     <span class="noc-drawer-header-title">

@@ -44,6 +44,15 @@ export class NoctuaAnnotonConnectorService {
   public connectorAnnoton: ConnectorAnnoton;
   public onAnnotonChanged: BehaviorSubject<any>;
 
+  panel = {
+    selectConnector: {
+      id: 1
+    }, annotonConnectorForm: {
+      id: 2
+    },
+  };
+
+  selectedPanel: any;
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
     private noctuaLookupService: NoctuaLookupService,
@@ -63,6 +72,10 @@ export class NoctuaAnnotonConnectorService {
         this.getConnections();
       }
     });
+  }
+
+  selectPanel(panel) {
+    this.selectedPanel = panel;
   }
 
   getConnections() {
@@ -136,7 +149,7 @@ export class NoctuaAnnotonConnectorService {
         saveData.srcTriples,
         saveData.destTriples);
     } else { // creation
-      const saveData = self.annoton.createSave();
+      const saveData = self.connectorAnnoton.createSave();
       return self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, saveData.title);
     }
   }

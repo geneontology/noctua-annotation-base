@@ -45,7 +45,7 @@
           </button>
         </div>
       </div>
-      <div [ngSwitch]="noctuaFormService.selectedMiddlePanel.id" class="w-100-p" noctuaPerfectScrollbar>
+      <div [ngSwitch]="noctuaFormService.selectedMiddlePanel.id" class="w-100-p h-100-p" noctuaPerfectScrollbar>
         <noc-cam-preview *ngSwitchCase="noctuaFormService.panel.camPreview.id" [cam]="cam"></noc-cam-preview>
         <noc-cam-table *ngSwitchCase="noctuaFormService.panel.camTable.id" [cam]="cam"></noc-cam-table>
       </div>

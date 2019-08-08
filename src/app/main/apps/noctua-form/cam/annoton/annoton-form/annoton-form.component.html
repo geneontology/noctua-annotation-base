@@ -96,7 +96,8 @@
          </div>
        </div>
      </div>
-     <noc-graph-preview [nodes]="noctuaAnnotonFormService.annoton?.graphPreview.nodes"
+     <noc-graph-preview *ngIf="noctuaAnnotonFormService.annoton"
+       [nodes]="noctuaAnnotonFormService.annoton?.graphPreview.nodes"
        [edges]="noctuaAnnotonFormService.annoton?.graphPreview.edges" class="noc-graph-preview"></noc-graph-preview>
 
    </div>

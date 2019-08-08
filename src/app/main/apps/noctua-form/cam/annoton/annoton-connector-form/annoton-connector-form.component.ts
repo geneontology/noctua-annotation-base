@@ -57,14 +57,8 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
   connectorType = ConnectorType;
   connectorState = ConnectorState;
-  panel = {
-    selectConnector: {
-      id: 1
-    }, annotonConnectorForm: {
-      id: 2
-    },
-  };
-  selectedPanel: any;
+
+
   annoton: Annoton;
   currentConnectorAnnoton: ConnectorAnnoton;
   connectorAnnoton: ConnectorAnnoton;
@@ -120,26 +114,24 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
     this.noctuaAnnotonConnectorService.onAnnotonChanged.subscribe((annoton) => {
       this.annoton = annoton;
-      this.selectPanel(this.panel.selectConnector);
+      this.noctuaAnnotonConnectorService.selectPanel(this.noctuaAnnotonConnectorService.panel.selectConnector);
     });
 
-    this.selectPanel(this.panel.selectConnector);
+    this.noctuaAnnotonConnectorService.selectPanel(this.noctuaAnnotonConnectorService.panel.selectConnector);
   }
 
-  selectPanel(panel) {
-    this.selectedPanel = panel;
-  }
+
 
   openAnnotonConnector(connector: Annoton) {
     this.noctuaAnnotonConnectorService.initializeForm(this.noctuaAnnotonConnectorService.annoton.id, connector.id);
-    this.selectPanel(this.panel.annotonConnectorForm);
+    this.noctuaAnnotonConnectorService.selectPanel(this.noctuaAnnotonConnectorService.panel.annotonConnectorForm);
   }
 
   save() {
     const self = this;
     this.noctuaAnnotonConnectorService.saveAnnoton().then(() => {
-      self.selectPanel(self.panel.selectConnector);
-      self.noctuaAnnotonConnectorService.getConnections();
+      self.noctuaAnnotonConnectorService.selectPanel(self.noctuaAnnotonConnectorService.panel.selectConnector);
+     self.noctuaAnnotonConnectorService.getConnections();
       self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully created.', 'OK');
     });
   }
@@ -148,7 +140,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
     const self = this;
     const success = () => {
       self.noctuaAnnotonConnectorService.saveAnnoton().then(() => {
-        self.selectPanel(self.panel.selectConnector);
+        self.noctuaAnnotonConnectorService.selectPanel(self.noctuaAnnotonConnectorService.panel.selectConnector);
         self.noctuaAnnotonConnectorService.getConnections();
         self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully updated.', 'OK');
       });
@@ -163,7 +155,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
     const self = this;
     const success = () => {
       self.noctuaAnnotonConnectorService.deleteAnnoton(connectorAnnoton).then(() => {
-        self.selectPanel(self.panel.selectConnector);
+        self.noctuaAnnotonConnectorService.selectPanel(self.noctuaAnnotonConnectorService.panel.selectConnector);
         self.noctuaAnnotonConnectorService.getConnections();
         self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully deleted.', 'OK');
       });

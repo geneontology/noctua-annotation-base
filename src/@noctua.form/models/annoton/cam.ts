@@ -12,7 +12,7 @@ import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
-import { ConnectorAnnoton } from './connector-annoton';
+import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
 
 
 export class Cam {
@@ -214,12 +214,55 @@ export class Cam {
 
   setPreview() {
     const self = this;
-
+    self.graphPreview.edges = [];
     self.graphPreview.nodes = <NgxNode[]>self.annotons.map((annoton: Annoton) => {
       return {
         id: annoton.id,
-        label: annoton.presentation.mfText
+        label: annoton.presentation.mfText,
+        data: {
+          annoton: annoton
+        }
       };
+    });
+
+    each(self.connectorAnnotons, (connectorAnnoton: ConnectorAnnoton) => {
+      if (connectorAnnoton.type === ConnectorType.basic) {
+        self.graphPreview.edges.push(
+          <NgxEdge>{
+            source: connectorAnnoton.upstreamNode.uuid,
+            target: connectorAnnoton.downstreamNode.uuid,
+            label: connectorAnnoton.rule.r1Edge.label,
+            data: {
+              connectorAnnoton: connectorAnnoton
+            }
+          });
+      } else if (connectorAnnoton.type === ConnectorType.intermediate) {
+        self.graphPreview.nodes.push({
+          id: connectorAnnoton.processNode.uuid,
+          label: connectorAnnoton.processNode.term.label,
+          data: {
+            connectorAnnoton: connectorAnnoton
+          }
+        });
+        self.graphPreview.edges.push(
+          <NgxEdge>{
+            source: connectorAnnoton.upstreamNode.uuid,
+            target: connectorAnnoton.processNode.uuid,
+            label: connectorAnnoton.rule.r1Edge.label,
+            data: {
+              connectorAnnoton: connectorAnnoton
+            }
+          });
+        self.graphPreview.edges.push(
+          <NgxEdge>{
+            source: connectorAnnoton.processNode.uuid,
+            target: connectorAnnoton.downstreamNode.uuid,
+            label: connectorAnnoton.rule.r2Edge.label,
+            data: {
+              connectorAnnoton: connectorAnnoton
+            }
+          });
+      }
     });
 
     console.log(self.graphPreview.nodes);

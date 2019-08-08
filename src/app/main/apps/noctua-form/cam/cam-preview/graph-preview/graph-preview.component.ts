@@ -6,14 +6,6 @@ import { Subject } from 'rxjs';
 import { DagreNodesOnlyLayout } from './tree-layout';
 
 
-const clusters: ClusterNode[] = [
-  {
-    id: 'third',
-    label: 'C',
-    childNodeIds: ['c1', 'c2']
-  }
-]
-
 @Component({
   selector: 'noc-graph-preview',
   templateUrl: './graph-preview.component.html',
@@ -46,8 +38,6 @@ export class GraphPreviewComponent implements OnInit {
   get edges(): Edge[] {
     return this._edges;
   }
-
-  clusters: ClusterNode[] = clusters;
 
   layout: String | Layout = 'dagreCluster';
   layouts: any[] = [
@@ -87,18 +77,17 @@ export class GraphPreviewComponent implements OnInit {
     'Step After',
     'Step Before'
   ];
+  draggingEnabled = true;
+  panningEnabled = true;
+  zoomEnabled = true;
 
-  draggingEnabled: boolean = true;
-  panningEnabled: boolean = true;
-  zoomEnabled: boolean = true;
+  zoomSpeed = 0.1;
+  minZoomLevel = 0.1;
+  maxZoomLevel = 4.0;
+  panOnZoom = false;
 
-  zoomSpeed: number = 0.1;
-  minZoomLevel: number = 0.1;
-  maxZoomLevel: number = 4.0;
-  panOnZoom: boolean = false;
-
-  autoZoom: boolean = false;
-  autoCenter: boolean = true;
+  autoZoom = false;
+  autoCenter = true;
 
   update$: Subject<boolean> = new Subject();
   center$: Subject<boolean> = new Subject();
@@ -151,12 +140,7 @@ export class GraphPreviewComponent implements OnInit {
 
   setLayout(layoutName: string): void {
     const layout = this.layouts.find(l => l.value === layoutName);
-    // this.layout = layoutName;
-    if (!layout.isClustered) {
-      this.clusters = undefined;
-    } else {
-      this.clusters = clusters;
-    }
+    // this.layout = layoutName;  
   }
 
   public getStyles(node: Node): any {

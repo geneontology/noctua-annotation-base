@@ -40,6 +40,7 @@ import { EvidenceTableComponent } from './cam/cam-table/triple-table/evidence-ta
 import { GraphPreviewComponent } from './cam/cam-preview/graph-preview/graph-preview.component';
 import { NoctuaConfirmDialogModule } from '@noctua/components';
 import { CamPreviewComponent } from './cam/cam-preview/cam-preview.component';
+import { CamGraphComponent } from './cam/cam-preview/cam-graph/cam-graph.component';
 
 const routes = [
   {
@@ -110,7 +111,8 @@ const routes = [
     AnnotonTableComponent,
     EvidenceTableComponent,
     GraphPreviewComponent,
-    CamPreviewComponent
+    CamPreviewComponent,
+    CamGraphComponent
   ],
   entryComponents: [
     CamRowEditDialogComponent,
