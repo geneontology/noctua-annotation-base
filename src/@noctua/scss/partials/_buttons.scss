@@ -32,3 +32,16 @@ $noc-border-color: #BBB;
     font-weight: normal;
   }
 }
+
+.noc-half-button {
+  &.noc-r {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    margin-right: 2px;
+  }
+
+  &.noc-l {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+}

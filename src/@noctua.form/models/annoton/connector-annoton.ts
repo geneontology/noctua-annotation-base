@@ -239,7 +239,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
       removeIds: subtractNodes(srcSaveData.graph, destSaveData.graph).map((node: AnnotonNode) => {
         return node.uuid;
       }),
-      removeTriples: subtractEdges(srcSaveData.graph, destSaveData.graph)
+      removeTriples: <Triple<AnnotonNode>[]>subtractEdges(srcSaveData.graph, destSaveData.graph)
     };
 
     console.log(saveData);

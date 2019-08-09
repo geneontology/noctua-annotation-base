@@ -104,7 +104,7 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
 
   checkErrors() {
     const errors = this.noctuaAnnotonFormService.annoton.submitErrors;
-    this.noctuaFormDialogService.openAnnotonErrorsDialog(errors)
+    this.noctuaFormDialogService.openAnnotonErrorsDialog(errors);
   }
 
   save() {
@@ -128,12 +128,6 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
     const self = this;
 
     self.noctuaAnnotonFormService.initializeFormData(example);
-  }
-
-  changeAnnotonTypeForm(annotonType) {
-    const self = this;
-
-    self.noctuaAnnotonFormService.setAnnotonType(self.noctuaAnnotonFormService.annoton, annotonType.name);
   }
 
   changeAnnotonModelTypeForm(annotonModelType) {

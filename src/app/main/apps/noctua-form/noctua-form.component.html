@@ -15,10 +15,26 @@
     autosize>
     <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
-        <div class="noc-summary-bar-section mr-12">
-          <button mat-flat-button (click)="addAnnoton()" color="primary" class="noc-rounded-button noc-sm mr-8">
-            <mat-icon class=""> add </mat-icon> New Activity
+        <div class="noc-summary-bar-section mr-12" fxLayout="row" fxLayoutAlign="start center">
+          <button mat-flat-button (click)="addAnnoton()" color="primary"
+            class="noc-rounded-button noc-half-button noc-r noc-sm">
+            <mat-icon class=""> add </mat-icon> Create
           </button>
+          <button mat-flat-button fxFlex="35px" [matMenuTriggerFor]="createOptions" color="primary"
+            class="noc-rounded-button noc-half-button noc-l noc-sm mr-8 p-0">
+            <mat-icon class=""> arrow_drop_down </mat-icon>
+          </button>
+          <mat-menu #createOptions="matMenu">
+            <a mat-menu-item (click)="addAnnoton()">
+              Default Activity
+            </a>
+            <a mat-menu-item (click)="addAnnoton()">
+              BP Only Activity
+            </a>
+            <a mat-menu-item (click)="addAnnoton()">
+              CC Only
+            </a>
+          </mat-menu>
         </div>
         <div class="noc-summary-bar-section noc-br">
           <span class="noc-section-label">

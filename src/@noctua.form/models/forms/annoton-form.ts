@@ -17,6 +17,7 @@ import { Entity } from '../annoton/entity';
 export class AnnotonForm {
   entityGroupForms: EntityGroupForm[] = [];
   gp = new FormControl();
+  bpOnlyEdge = new FormControl();
   fd = new FormArray([]);
 
   _metadata: AnnotonFormMetadata;

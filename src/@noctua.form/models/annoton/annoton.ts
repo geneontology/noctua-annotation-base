@@ -86,21 +86,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   getMFNode() {
     const self = this;
 
-    if (self.annotonModelType === 'bpOnly') {
-      return null;
-    } else {
-      return self.getNode('mf');
-    }
-  }
-
-  getBPNode() {
-    const self = this;
-
-    if (self.annotonModelType === 'ccOnly') {
-      return null;
-    } else {
-      return self.getNode('bp');
-    }
+    return self.getNode('mf');
   }
 
 

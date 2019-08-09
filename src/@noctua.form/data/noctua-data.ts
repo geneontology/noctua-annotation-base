@@ -90,7 +90,7 @@ const edge = {
         id: 'RO:0002630',
         label: 'directly negatively regulates'
     },
-}
+};
 
 export const noctuaFormConfig = {
     "annotonType": {

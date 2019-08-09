@@ -100,10 +100,10 @@ export class NoctuaFormConfigService {
       //  q: *:*
       packet: 3,
       callback_type: 'search',
-    }
+    };
 
     this.requestParams = {
-      "evidence": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+      'evidence': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
         fq: [
           'document_category:"ontology_class"',
           'isa_closure:"ECO:0000352"'
@@ -114,13 +114,13 @@ export class NoctuaFormConfigService {
     this._annotonData = {
       'term': {
         'id': 'goterm',
-        "label": 'Molecular Function',
+        'label': 'Molecular Function',
         'aspect': 'F',
-        "lookupGroup": 'GO:0003674',
+        'lookupGroup': 'GO:0003674',
         'treeLevel': 1,
-        "ontologyClass": ['go'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+        'ontologyClass': ['go'],
+        'termLookup': {
+          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
             fq: [
               'document_category:"ontology_class"',
               'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
@@ -129,18 +129,18 @@ export class NoctuaFormConfigService {
         },
         'searchResults': []
       },
-      "mc": {
+      'mc': {
         'id': 'mc',
-        "label": 'Macromolecular Complex',
-        "relationship": noctuaFormConfig.edge.hasPart,
-        "displaySection": noctuaFormConfig.displaySection.gp,
-        "displayGroup": noctuaFormConfig.displayGroup.mc,
-        "lookupGroup": 'GO:0032991',
+        'label': 'Macromolecular Complex',
+        'relationship': noctuaFormConfig.edge.hasPart,
+        'displaySection': noctuaFormConfig.displaySection.gp,
+        'displayGroup': noctuaFormConfig.displayGroup.mc,
+        'lookupGroup': 'GO:0032991',
         'treeLevel': 1,
         'isExtension': false,
-        "ontologyClass": [],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+        'ontologyClass': [],
+        'termLookup': {
+          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
             fq: [
               'document_category:"ontology_class"',
               'isa_closure:"GO:0032991"'
@@ -148,17 +148,17 @@ export class NoctuaFormConfigService {
           }),
         }
       },
-      "gp": {
-        "label": 'Gene Product',
-        "relationship": noctuaFormConfig.edge.enabledBy,
-        "displaySection": noctuaFormConfig.displaySection.gp,
-        "displayGroup": noctuaFormConfig.displayGroup.gp,
-        "lookupGroup": 'CHEBI:33695',
+      'gp': {
+        'label': 'Gene Product',
+        'relationship': noctuaFormConfig.edge.enabledBy,
+        'displaySection': noctuaFormConfig.displaySection.gp,
+        'displayGroup': noctuaFormConfig.displayGroup.gp,
+        'lookupGroup': 'CHEBI:33695',
         'treeLevel': 1,
         'isExtension': false,
-        "ontologyClass": [],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+        'ontologyClass': [],
+        'termLookup': {
+          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
             fq: [
               'document_category:"ontology_class"',
               'isa_closure:"CHEBI:33695"'
@@ -168,17 +168,17 @@ export class NoctuaFormConfigService {
         }
       },
       'mf': {
-        "label": 'Molecular Function',
+        'label': 'Molecular Function',
         'aspect': 'F',
-        "relationship": noctuaFormConfig.edge.enabledBy,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.mf,
-        "lookupGroup": 'GO:0003674',
+        'relationship': noctuaFormConfig.edge.enabledBy,
+        'displaySection': noctuaFormConfig.displaySection.fd,
+        'displayGroup': noctuaFormConfig.displayGroup.mf,
+        'lookupGroup': 'GO:0003674',
         'treeLevel': 1,
         'isExtension': false,
-        "ontologyClass": ['go'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+        'ontologyClass': ['go'],
+        'termLookup': {
+          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
             fq: [
               'document_category:"ontology_class"',
               'isa_closure:"GO:0003674"'
@@ -187,16 +187,16 @@ export class NoctuaFormConfigService {
         }
       },
       'mf-1': {
-        "label": 'Has Input (Gene Product/Chemical)',
-        "relationship": noctuaFormConfig.edge.hasInput,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.mf,
-        "lookupGroup": 'CHEBI:23367',
+        'label': 'Has Input (Gene Product/Chemical)',
+        'relationship': noctuaFormConfig.edge.hasInput,
+        'displaySection': noctuaFormConfig.displaySection.fd,
+        'displayGroup': noctuaFormConfig.displayGroup.mf,
+        'lookupGroup': 'CHEBI:23367',
         'treeLevel': 2,
         'isExtension': true,
-        "ontologyClass": [],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+        'ontologyClass': [],
+        'termLookup': {
+          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
             fq: [
               'document_category:"ontology_class"',
               'isa_closure:"CHEBI:23367"' //Generic Molecule + GP
@@ -513,8 +513,8 @@ export class NoctuaFormConfigService {
         overrides: {
           'cc': {
             id: 'cc',
-            label: "GP part of Cellular Component",
-            relationship: noctuaFormConfig.edge.partOf
+            label: 'GP located in Cellular Component',
+            relationship: noctuaFormConfig.edge.locatedIn
           },
           'cc-1': {
             id: 'cc-1',
@@ -528,7 +528,7 @@ export class NoctuaFormConfigService {
         triples: [{
           subject: 'gp',
           object: 'cc',
-          edge: noctuaFormConfig.edge.partOf
+          edge: noctuaFormConfig.edge.locatedIn
         }, {
           subject: 'cc',
           object: 'cc-1',
@@ -551,18 +551,14 @@ export class NoctuaFormConfigService {
           mf: {
             termRequiredList: [],
             id: 'mf',
-            display: {
-              displaySection: '',
-              displayGroup: '',
-            }
           },
           'bp': {
             id: 'bp',
-            label: "Biological Process",
+            label: 'Biological Process',
           },
           'cc-1-1': {
             id: 'cc-1-1',
-            label: "occurs in (Cell Type)",
+            label: 'occurs in (Cell Type)',
             relationship: noctuaFormConfig.edge.occursIn,
             display: {
               displaySection: noctuaFormConfig.displaySection.fd,
@@ -577,7 +573,7 @@ export class NoctuaFormConfigService {
               displaySection: noctuaFormConfig.displaySection.fd,
               displayGroup: noctuaFormConfig.displayGroup.bp,
             },
-            label: "occurs in (Anatomy)",
+            label: 'occurs in (Anatomy)',
             treeLevel: 2
           },
         },
@@ -604,8 +600,8 @@ export class NoctuaFormConfigService {
               noctuaFormConfig.edge.causallyUpstreamOf,
               noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect,
               noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect,
-              // noctuaFormConfig.edge.upstreamOfOrWithinPositiveEffect,
-              //noctuaFormConfig.edge.upstreamOfOrWithinNegativeEffect,
+              noctuaFormConfig.edge.causallyUpstreamOfOrWithinPositiveEffect,
+              noctuaFormConfig.edge.causallyUpstreamOfOrWithinNegativeEffect,
             ]
           }
         }]
@@ -813,6 +809,22 @@ export class NoctuaFormConfigService {
     }
   }
 
+  get bpOnlyEdges() {
+    const options = [
+      noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
+      noctuaFormConfig.edge.causallyUpstreamOf,
+      noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect,
+      noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect,
+      noctuaFormConfig.edge.causallyUpstreamOfOrWithinPositiveEffect,
+      noctuaFormConfig.edge.causallyUpstreamOfOrWithinNegativeEffect,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
   get camDisplayType() {
     const options = [
       noctuaFormConfig.camDisplayType.options.model,
@@ -978,10 +990,10 @@ export class NoctuaFormConfigService {
     }
 
     modelInfo.goUrl = 'http://www.geneontology.org/';
-    modelInfo.noctuaUrl = environment.noctuaUrl + "?" + (this.loggedIn ? parameterize(baristaParams) : '');
-    modelInfo.owlUrl = environment.noctuaUrl + "/download/" + modelId + "/owl";
-    modelInfo.gpadUrl = environment.noctuaUrl + "/download/" + modelId + "/gpad";
-    modelInfo.graphEditorUrl = environment.noctuaUrl + "/editor/graph/" + modelId + "?" + (this.loggedIn ? parameterize(baristaParams) : '');
+    modelInfo.noctuaUrl = environment.noctuaUrl + '?' + (this.loggedIn ? parameterize(baristaParams) : '');
+    modelInfo.owlUrl = environment.noctuaUrl + '/download/' + modelId + '/owl';
+    modelInfo.gpadUrl = environment.noctuaUrl + '/download/' + modelId + '/gpad';
+    modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + (this.loggedIn ? parameterize(baristaParams) : '');
     modelInfo.saeUrl = environment.workbenchUrl + 'simple-annoton-editor?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : '');
     // modelInfo.logoutUrl = self.baristaLocation + '/logout?' + parameterize(baristaParams) + '&amp;return=' + environment.workbenchUrl+'simple-annoton-editor?' + parameterize(baristaParams)
     // modelInfo.loginUrl = self.baristaLocation + '/login?return=' + environment.workbenchUrl+'simple-annoton-editor';
@@ -1003,7 +1015,7 @@ export class NoctuaFormConfigService {
       label: 'Cytoscape Layout Tool',
       url: environment.workbenchUrl + 'cytoview?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
     }, {
-      label: "Gosling (Noctua's little GOOSE)",
+      label: 'Gosling (Noctua\'s little GOOSE) ',
       url: environment.workbenchUrl + 'gosling-model?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Inference Explanations',
@@ -1165,20 +1177,20 @@ export class NoctuaFormConfigService {
 
     const steps = [{
       type: 'element',
-      selector: "#noc-model-section",
-      title: "Model Creation",
+      selector: '#noc-model-section',
+      title: 'Model Creation',
       content: `Define model's title and state. <a target="_blank" href="http://wiki.geneontology.org/index.php/Noctua#Starting_a_new_model">more</a>`,
       placement: 'bottom'
     }, {
       type: 'element',
-      selector: "#noc-gp-section",
-      title: "Enter gene product",
+      selector: '#noc-gp-section',
+      title: 'Enter gene product',
       content: `Enter gene product or macromolecular complex to be annotated <a target="_blank" href="http://wiki.geneontology.org/index.php/Noctua#Starting_a_new_model">more</a>`,
       placement: 'bottom'
     }, {
       type: 'element',
-      selector: "#noc-gp-toggle-button",
-      title: "Select",
+      selector: '#noc-gp-toggle-button',
+      title: 'Select',
       content: `Toggle between gene product or macromolecular complex <a target="_blank" href="http://wiki.geneontology.org/index.php/Noctua#Starting_a_new_model">more</a>`,
       placement: 'left'
     }, {

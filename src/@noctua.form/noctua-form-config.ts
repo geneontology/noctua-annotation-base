@@ -17,6 +17,10 @@ const edge = {
     id: 'RO:0002092',
     label: 'happens during'
   },
+  locatedIn: {
+    id: 'RO:0001025',
+    label: 'located in'
+  },
   occursIn: {
     id: 'BFO:0000066',
     label: 'occurs in'
