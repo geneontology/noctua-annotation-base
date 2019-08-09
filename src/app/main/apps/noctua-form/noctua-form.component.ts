@@ -12,7 +12,8 @@ import {
   NoctuaFormConfigService,
   NoctuaGraphService,
   NoctuaAnnotonFormService,
-  CamService
+  CamService,
+  noctuaFormConfig
 } from 'noctua-form-base';
 
 import { NoctuaFormService } from './services/noctua-form.service';
@@ -37,6 +38,8 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   searchResults = [];
   modelId: string = '';
   baristaToken: string = '';
+
+  noctuaFormConfig = noctuaFormConfig;
 
   private unsubscribeAll: Subject<any>;
 
@@ -85,18 +88,14 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     this.cam = this.camService.getCam(modelId);
   }
 
-  addAnnoton() {
-    this.openAnnotonForm(location);
-  }
-
   openCamForm() {
     this.camService.initializeForm(this.cam);
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.camForm);
   }
 
-  openAnnotonForm(location?) {
-    this.noctuaAnnotonFormService.initializeForm();
-    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm)
+  openAnnotonForm(annotonModelType?) {
+    this.noctuaAnnotonFormService.initializeForm(null, annotonModelType);
+    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm);
   }
 
   ngOnDestroy(): void {

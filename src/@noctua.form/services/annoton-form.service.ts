@@ -52,7 +52,7 @@ export class NoctuaAnnotonFormService {
     this.initializeForm();
   }
 
-  initializeForm(annoton?: Annoton) {
+  initializeForm(annoton?: Annoton, annotonModelType?) {
     const self = this;
 
     self.errors = [];
@@ -70,6 +70,10 @@ export class NoctuaAnnotonFormService {
     self.annotonFormGroup.next(this._fb.group(this.annotonForm));
     self.annoton.enableSubmit();
     self._onAnnotonFormChanges();
+
+    if (annotonModelType) {
+      self.setAnnotonModelType(self.annoton, annotonModelType);
+    }
   }
 
   initializeFormData(nodes) {
@@ -105,16 +109,6 @@ export class NoctuaAnnotonFormService {
     this.annotonForm.getErrors(errors);
 
     return errors;
-  }
-
-  setAnnotonType(annoton, annotonType) {
-    annoton.setAnnotonType(annotonType.name);
-
-    this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      annoton.annotonModelType,
-      annoton
-    )
-    this.initializeForm();
   }
 
   setAnnotonModelType(annoton, annotonModelType) {

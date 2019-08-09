@@ -16,7 +16,7 @@
     <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-summary-bar-section mr-12" fxLayout="row" fxLayoutAlign="start center">
-          <button mat-flat-button (click)="addAnnoton()" color="primary"
+          <button mat-flat-button (click)="openAnnotonForm()" color="primary"
             class="noc-rounded-button noc-half-button noc-r noc-sm">
             <mat-icon class=""> add </mat-icon> Create
           </button>
@@ -25,13 +25,13 @@
             <mat-icon class=""> arrow_drop_down </mat-icon>
           </button>
           <mat-menu #createOptions="matMenu">
-            <a mat-menu-item (click)="addAnnoton()">
+            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonModelType.options.default.name)">
               Default Activity
             </a>
-            <a mat-menu-item (click)="addAnnoton()">
+            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonModelType.options.bpOnly.name)">
               BP Only Activity
             </a>
-            <a mat-menu-item (click)="addAnnoton()">
+            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonModelType.options.ccOnly.name)">
               CC Only
             </a>
           </mat-menu>

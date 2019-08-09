@@ -801,7 +801,7 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.annotonModelType.options.default,
       noctuaFormConfig.annotonModelType.options.bpOnly,
       noctuaFormConfig.annotonModelType.options.ccOnly,
-    ]
+    ];
 
     return {
       options: options,
