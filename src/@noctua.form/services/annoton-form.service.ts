@@ -165,7 +165,9 @@ export class NoctuaAnnotonFormService {
         saveData.srcNodes,
         saveData.destNodes,
         saveData.srcTriples,
-        saveData.destTriples);
+        saveData.destTriples,
+        saveData.removeIds,
+        saveData.removeTriples);
     } else { // creation
       const saveData = self.annoton.createSave();
       return self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, saveData.title);

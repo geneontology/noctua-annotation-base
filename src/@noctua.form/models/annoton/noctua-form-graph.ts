@@ -1,4 +1,5 @@
-import { find, omit, pickBy, mapKeys, mapValues, remove } from 'lodash';
+import { find, each, omit, pickBy, mapKeys, mapValues, remove, difference, differenceWith } from 'lodash';
+import { AnnotonNode } from './annoton-node';
 
 export type Edge<EdgeMetadata> = { subjectId: string, objectId: string, metadata: EdgeMetadata };
 export interface Graph<Node, EdgeMetadata> {
@@ -79,6 +80,60 @@ export function removeEdge<Node, EdgeMetadata>(
 ): Graph<Node, EdgeMetadata> {
     remove(graph._edges[edge.subjectId], (e: Edge<EdgeMetadata>) => {
         return e.objectId === edge.objectId;
-    })
+    });
     return graph;
+}
+
+export function compareNode<Node extends AnnotonNode>(a: Node, b: Node) {
+    return a.uuid === b.uuid;
+}
+
+export function compareTriple<EdgeMetadata>(a: Edge<EdgeMetadata>, b: Edge<EdgeMetadata>) {
+    return a.subjectId === b.subjectId && a.objectId === b.objectId;
+}
+
+export function subtractNodes<Node extends AnnotonNode, EdgeMetadata>(
+    graph1: Graph<Node, EdgeMetadata>,
+    graph2: Graph<Node, EdgeMetadata>
+): Node[] {
+    const keys1 = Object.values(getNodes(graph1));
+    const keys2 = Object.values(getNodes(graph2));
+    return differenceWith(keys1, keys2, compareNode);
+}
+
+export function subtractEdges<Node, EdgeMetadata>(
+    graph1: Graph<Node, EdgeMetadata>,
+    graph2: Graph<Node, EdgeMetadata>
+): EdgeMetadata[] {
+    const edges1 = getEdges(graph1);
+    const edges2 = getEdges(graph2);
+    const edges: Edge<EdgeMetadata>[] = differenceWith(edges1, edges2, compareTriple);
+
+    return edges.map((edge: Edge<EdgeMetadata>) => {
+        return edge.metadata;
+    });
+}
+
+export function subtractGraph<Node, EdgeMetadata>(
+    graph1: Graph<Node, EdgeMetadata>,
+    graph2: Graph<Node, EdgeMetadata>
+): Graph<Node, EdgeMetadata> {
+    const result: Graph<Node, EdgeMetadata> = <Graph<Node, EdgeMetadata>>{ _nodes: {}, _edges: {} };
+    const keys1 = Object.keys(getNodes(graph1));
+    const keys2 = Object.keys(getNodes(graph2));
+    const edges1 = getEdges(graph1);
+    const edges2 = getEdges(graph2);
+    const nodeIds: string[] = difference(keys1, keys2);
+    const edgeIds: Edge<EdgeMetadata>[] = differenceWith(edges1, edges2, compareTriple);
+
+    each(nodeIds, (nodeId: string) => {
+        const node = findNode(graph1, nodeId);
+        addNode(result, node, nodeId);
+    });
+
+    each(edgeIds, (edge: Edge<EdgeMetadata>) => {
+        // addEdge(result, edge);
+    });
+
+    return result;
 }

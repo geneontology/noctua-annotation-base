@@ -117,6 +117,7 @@ export class NoctuaAnnotonConnectorService {
     this._onAnnotonFormChanges();
     // just to trigger the on Changes event
     this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
+    this.selectPanel(this.panel.annotonConnectorForm);
   }
 
   updateEvidence(node: AnnotonNode) {
@@ -147,7 +148,9 @@ export class NoctuaAnnotonConnectorService {
         saveData.srcNodes,
         saveData.destNodes,
         saveData.srcTriples,
-        saveData.destTriples);
+        saveData.destTriples,
+        saveData.removeIds,
+        saveData.removeTriples);
     } else { // creation
       const saveData = self.connectorAnnoton.createSave();
       return self.noctuaGraphService.saveAnnoton(self.cam, saveData.triples, saveData.title);

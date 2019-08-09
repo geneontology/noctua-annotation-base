@@ -106,6 +106,7 @@ export class SaeGraph<T extends AnnotonNode> {
     */
   }
 
+
   getTrimmedGraph(startNodeId: string): Graph<T, Triple<T>> {
     const self = this;
     const graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };

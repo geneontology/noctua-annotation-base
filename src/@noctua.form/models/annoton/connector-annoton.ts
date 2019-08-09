@@ -6,7 +6,7 @@ const uuid = require('uuid/v1');
 import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
-import { getEdges, Edge, getNodes } from './noctua-form-graph';
+import { getEdges, Edge, getNodes, subtractNodes, subtractEdges } from './noctua-form-graph';
 
 import { Annoton } from './annoton';
 import { AnnotonNode } from './annoton-node';
@@ -209,7 +209,8 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     const saveData = {
       title: '',
       nodes: [],
-      triples: []
+      triples: [],
+      graph: null
     };
 
     const graph = self.getTrimmedGraph('upstream');
@@ -221,9 +222,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
 
     saveData.nodes = Object.values(keyNodes);
     saveData.triples = triples;
-
-    console.log(graph);
-    console.log(saveData);
+    saveData.graph = graph;
 
     return saveData;
   }
@@ -236,9 +235,14 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
       srcNodes: srcSaveData.nodes,
       destNodes: destSaveData.nodes,
       srcTriples: srcSaveData.triples,
-      destTriples: destSaveData.triples
+      destTriples: destSaveData.triples,
+      removeIds: subtractNodes(srcSaveData.graph, destSaveData.graph).map((node: AnnotonNode) => {
+        return node.uuid;
+      }),
+      removeTriples: subtractEdges(srcSaveData.graph, destSaveData.graph)
     };
 
+    console.log(saveData);
     return saveData;
   }
 

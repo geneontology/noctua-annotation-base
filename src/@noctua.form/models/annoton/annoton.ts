@@ -13,7 +13,7 @@ import { AnnotonNode } from './annoton-node';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
-import { getEdges, Edge, getNodes } from './noctua-form-graph';
+import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import { AnnotonParser } from './parser';
 
 export enum AnnotonState {
@@ -217,7 +217,8 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     const saveData = {
       title: 'enabled by ' + self.getNode('gp').term.label,
       triples: [],
-      nodes: []
+      nodes: [],
+      graph: null
     };
 
     const graph = self.getTrimmedGraph('mf');
@@ -230,6 +231,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       return edge.metadata;
     });
 
+    saveData.graph = graph;
     console.log(graph);
     console.log(saveData);
 
@@ -244,9 +246,14 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       srcNodes: srcSaveData.nodes,
       destNodes: destSaveData.nodes,
       srcTriples: srcSaveData.triples,
-      destTriples: destSaveData.triples
+      destTriples: destSaveData.triples,
+      removeIds: subtractNodes(srcSaveData.graph, destSaveData.graph).map((node: AnnotonNode) => {
+        return node.uuid;
+      }),
+      removeTriples: []
     };
 
+    console.log(saveData);
     return saveData;
   }
 

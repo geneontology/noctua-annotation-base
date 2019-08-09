@@ -545,7 +545,9 @@ export class NoctuaGraphService {
     srcNodes: AnnotonNode[],
     destNodes: AnnotonNode[],
     srcTriples: Triple<AnnotonNode>[],
-    destTriples: Triple<AnnotonNode>[]) {
+    destTriples: Triple<AnnotonNode>[],
+    removeIds: string[],
+    removeTriples: Triple<AnnotonNode>[]) {
 
     const self = this;
     const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
@@ -562,6 +564,18 @@ export class NoctuaGraphService {
 
     self.editFact(reqs, cam, srcTriples, destTriples);
     self.addFact(reqs, destTriples);
+
+    each(removeTriples, function (triple: Triple<AnnotonNode>) {
+      reqs.remove_fact([
+        triple.subject.uuid,
+        triple.object.uuid,
+        triple.predicate.edge.id
+      ]);
+    });
+
+    each(removeIds, function (uuid: string) {
+      reqs.remove_individual(uuid);
+    });
 
     console.dir(reqs._requests);
 
@@ -735,8 +749,6 @@ export class NoctuaGraphService {
       reqs.remove_individual(triple.subject.uuid);
     });
   }
-
-
 
 
   addIndividual(reqs: any, node: AnnotonNode): string | null {
