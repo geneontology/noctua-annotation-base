@@ -98,6 +98,7 @@ export class AnnotonNode {
     self.term = node.term;
     self.assignedBy = node.assignedBy;
     self.isComplement = node.isComplement;
+    self.isCatalyticActivity = node.isCatalyticActivity;
   }
 
   setTermLookup(value) {

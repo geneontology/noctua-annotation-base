@@ -1,4 +1,4 @@
-<div class="w-100-p p-8 cam-table" noctuaPerfectScrollbar>
+<div class="w-100-p p-0 cam-table" noctuaPerfectScrollbar>
   <ng-container [ngSwitch]="cam?.displayType.name">
     <noc-annoton-entity-table *ngSwitchCase="camDisplayType.entity.name" [cam]="cam" class="noc-cam-table-body"
       fxLayout="row" fxLayoutAlign="start center">
@@ -7,7 +7,7 @@
       fxLayoutAlign="start center">
     </noc-triple-table>
     <ng-container *ngSwitchDefault>
-      <div *ngFor="let annoton of cam.annotons" class="mb-16 w-100-p"
+      <div *ngFor="let annoton of cam.annotons" class="w-100-p"
         [ngClass]="{'noc-annoton-selected': annoton.id=== camService.annoton?.id}">
         <div class="noc-annoton-table-heading" fxLayout="row" fxLayoutAlign="start center">
           <div fxFlex="50px" (click)="$event.stopPropagation()">
@@ -49,7 +49,7 @@
           </div>
         </div>
         <noc-annoton-table [cam]="cam" [annoton]="annoton" *ngIf="annoton.expanded" class="noc-cam-table-body"
-          fxLayout="row" fxLayoutAlign="start center">
+          [@annotonExpand]="annoton.expanded ? 'expanded' : 'collapsed'" fxLayout="row" fxLayoutAlign="start center">
         </noc-annoton-table>
       </div>
     </ng-container>

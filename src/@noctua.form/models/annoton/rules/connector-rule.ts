@@ -15,8 +15,8 @@ export class ConnectorRule {
   effectDependency = new ConditionRule('effectDependency', 'Causal effect yes dependency?');
   effectDirection = new DirectionRule('effectDirection', 'Direction of Effect?');
   effectReactionProduct = new ReactionRule('effectReactionProduct', 'Causal Reaction Product?');
-  subjectMFCatalyticActivity = new ConditionRule('subjectMFCatalyticActivity', 'Is subject MF a Catalytic Activity');
-  objectMFCatalyticActivity = new ConditionRule('objectMFCatalyticActivity', 'Is object MF a Catalytic Activity');
+  subjectMFCatalyticActivity = new ConditionRule('subjectMFCatalyticActivity', 'Is upstream MF a Catalytic Activity');
+  objectMFCatalyticActivity = new ConditionRule('objectMFCatalyticActivity', 'Is sownstream MF a Catalytic Activity');
   activityRegulatingProcess = new ConditionRule('activityRegulatingProcess', 'Activity regulating process');
 
   r1Edge: Entity;

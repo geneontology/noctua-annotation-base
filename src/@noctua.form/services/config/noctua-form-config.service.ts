@@ -522,7 +522,8 @@ export class NoctuaFormConfigService {
           },
           'cc-1-1': {
             id: 'cc-1-1',
-            relationship: noctuaFormConfig.edge.partOf
+            relationship: noctuaFormConfig.edge.partOf,
+            treeLevel: 4
           }
         },
         triples: [{
@@ -551,6 +552,10 @@ export class NoctuaFormConfigService {
           mf: {
             termRequiredList: [],
             id: 'mf',
+            display: {
+              displaySection: '',
+              displayGroup: '',
+            },
           },
           'bp': {
             id: 'bp',
@@ -564,17 +569,17 @@ export class NoctuaFormConfigService {
               displaySection: noctuaFormConfig.displaySection.fd,
               displayGroup: noctuaFormConfig.displayGroup.bp,
             },
-            treeLevel: 1
+            treeLevel: 3
           },
           'cc-1-1-1': {
             id: 'cc-1-1-1',
-            relationship: noctuaFormConfig.edge.occursIn,
+            relationship: noctuaFormConfig.edge.partOf,
             display: {
               displaySection: noctuaFormConfig.displaySection.fd,
               displayGroup: noctuaFormConfig.displayGroup.bp,
             },
-            label: 'occurs in (Anatomy)',
-            treeLevel: 2
+            label: 'part Of (Anatomy)',
+            treeLevel: 4
           },
         },
         triples: [{
@@ -588,7 +593,7 @@ export class NoctuaFormConfigService {
         }, {
           subject: 'cc-1-1',
           object: 'cc-1-1-1',
-          edge: noctuaFormConfig.edge.occursIn
+          edge: noctuaFormConfig.edge.partOf
         }, {
           subject: 'mf',
           object: 'bp',

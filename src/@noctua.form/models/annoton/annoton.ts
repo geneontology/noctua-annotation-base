@@ -39,7 +39,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     edges: []
   };
   private _presentation: any;
-  private _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1'];
+  private _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'cc-1-1-1'];
   private _grid: any[] = [];
 
   constructor() {

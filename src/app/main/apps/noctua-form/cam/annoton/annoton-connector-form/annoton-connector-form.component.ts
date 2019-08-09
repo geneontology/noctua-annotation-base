@@ -120,8 +120,6 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
     this.noctuaAnnotonConnectorService.selectPanel(this.noctuaAnnotonConnectorService.panel.selectConnector);
   }
 
-
-
   openAnnotonConnector(connector: Annoton) {
     this.noctuaAnnotonConnectorService.initializeForm(this.noctuaAnnotonConnectorService.annoton.id, connector.id);
     this.noctuaAnnotonConnectorService.selectPanel(this.noctuaAnnotonConnectorService.panel.annotonConnectorForm);
@@ -131,7 +129,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
     const self = this;
     this.noctuaAnnotonConnectorService.saveAnnoton().then(() => {
       self.noctuaAnnotonConnectorService.selectPanel(self.noctuaAnnotonConnectorService.panel.selectConnector);
-     self.noctuaAnnotonConnectorService.getConnections();
+      self.noctuaAnnotonConnectorService.getConnections();
       self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully created.', 'OK');
     });
   }

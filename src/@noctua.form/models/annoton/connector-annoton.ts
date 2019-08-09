@@ -53,6 +53,8 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     this.state = state ? state : ConnectorState.creation;
 
     this.rule = new ConnectorRule();
+    this.rule.subjectMFCatalyticActivity.condition = upstreamNode.isCatalyticActivity;
+    this.rule.objectMFCatalyticActivity.condition = downstreamNode.isCatalyticActivity;
   }
 
   setRule() {
@@ -87,8 +89,9 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     if (!self.rule.effectDependency.condition) {
       if (self.rule.subjectMFCatalyticActivity.condition && self.rule.objectMFCatalyticActivity.condition) {
         self.rule.displaySection.causalReactionProduct = true;
+      } else {
+        self.rule.displaySection.causalReactionProduct = false;
       }
-      self.rule.displaySection.causalReactionProduct = false;
     }
 
     if (value.process) {

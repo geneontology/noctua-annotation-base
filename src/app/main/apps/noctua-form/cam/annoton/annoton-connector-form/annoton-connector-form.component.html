@@ -344,7 +344,7 @@
         </div>
         <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
           <div class="noc-note" [ngClass]="{'noc-note-disabled':!note.condition}"
-            *ngFor="let note of currentConnectorAnnoton?.rule.notes" fxLayout="row" fxLayoutAlign="start center">
+            *ngFor="let note of connectorAnnoton?.rule.notes" fxLayout="row" fxLayoutAlign="start center">
             <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
             <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
             <span class="noc-description">

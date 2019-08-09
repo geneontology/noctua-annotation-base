@@ -33,12 +33,19 @@ import {
   Annoton
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
+import { trigger, state, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'noc-cam-table',
   templateUrl: './cam-table.component.html',
   styleUrls: ['./cam-table.component.scss'],
-  animations: noctuaAnimations
+  animations: [
+    trigger('annotonExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0', display: 'none' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class CamTableComponent implements OnInit, OnDestroy {
 
