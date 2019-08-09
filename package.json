@@ -1,11 +1,11 @@
 {
   "name": "noctua-form-base",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4202  --extra-webpack-config webpack.extra.js",
-    "build": "ng build --prod --index src/inject.tmpl  --base-href  /workbench/noctua-form/ --extra-webpack-config webpack.extra.js",
+    "build": "ng build --index src/inject.tmpl  --base-href  /workbench/noctua-form/ --extra-webpack-config webpack.extra.js",
     "start-hmr": "ng serve --configuration hmr -sm=false",
     "start-hmr-sourcemaps": "ng serve --hmr -e=hmr",
     "build-dev": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --dev",
