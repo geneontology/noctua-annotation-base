@@ -1,8 +1,12 @@
  <form name="annotonFormGroup" [formGroup]="annotonFormGroup" fxLayout="column" fxLayoutAlign="start stretch"
    class="noc-drawer w-100-p h-100-p">
    <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
-     <span class="noc-drawer-header-title">
-       Activity Form</span>
+     <span *ngIf="state === annotonState.creating" class="noc-drawer-header-title">
+       Create New Activity
+     </span>
+     <span *ngIf="state === annotonState.editing" class="noc-drawer-header-title">
+       Edit Existing Activity
+     </span>
      <span fxFlex></span>
      <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
        aria-label="Close dialog">
@@ -31,10 +35,10 @@
            Gene Product
          </div>
          <span fxFlex></span>
-         <button mat-stroked-button [matMenuTriggerFor]="annotonTypeOptions" class="noc-rounded-button noc-xs">
-           {{noctuaAnnotonFormService.annoton.annotonType}} <b class="caret"></b>
+         <button mat-stroked-button [matMenuTriggerFor]="annotonExampleOptions" class="noc-rounded-button noc-xs">
+           . <b class="caret"></b>
          </button>
-         <mat-menu #annotonTypeOptions="matMenu">
+         <mat-menu #annotonExampleOptions="matMenu">
            <a *ngFor="let noctuaFormExample of noctuaFormConfigService.noctuaFormExample.basic" mat-menu-item
              (click)="createExample(noctuaFormExample.annoton)">
              {{noctuaFormExample.name}}
@@ -71,19 +75,19 @@
            Function Description
          </div>
          <span fxFlex></span>
-         <button mat-stroked-button [matMenuTriggerFor]="annotonModelTypeOptions" class="noc-rounded-button noc-xs">
-           {{noctuaAnnotonFormService.annoton.annotonModelType}} <b class="caret"></b>
+         <button mat-stroked-button [matMenuTriggerFor]="annotonTypeOptions" class="noc-rounded-button noc-xs">
+           {{noctuaAnnotonFormService.annoton.annotonType}} <b class="caret"></b>
          </button>
-         <mat-menu #annotonModelTypeOptions="matMenu">
-           <a mat-menu-item *ngFor="let annotonModelType of noctuaFormConfigService.annotonModelType.options"
-             (click)="changeAnnotonModelTypeForm(annotonModelType)">
-             {{annotonModelType.label}}
+         <mat-menu #annotonTypeOptions="matMenu">
+           <a mat-menu-item *ngFor="let annotonType of noctuaFormConfigService.annotonType.options"
+             (click)="changeAnnotonTypeForm(annotonType)">
+             {{annotonType.label}}
            </a>
          </mat-menu>
        </div>
        <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
-         <div *ngIf="noctuaAnnotonFormService.annoton.annotonModelType ==='bpOnly'"
-           class="mat-elevation-z1 mb-4 px-8 pt-4" fxLayout="row" fxLayoutAlign="start center">
+         <div *ngIf="noctuaAnnotonFormService.annoton.annotonType ==='bpOnly'" class="mat-elevation-z1 mb-4 px-8 pt-4"
+           fxLayout="row" fxLayoutAlign="start center">
            <div class="p-4" fxFlex fxLayout="row" fxLayoutAlign="start stretch">
              <mat-form-field class="noc-sm w-100-p" appearance="outline">
                <mat-label><strong>(readonly)</strong> Molecular Function </mat-label>

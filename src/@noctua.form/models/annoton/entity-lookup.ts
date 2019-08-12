@@ -3,7 +3,7 @@ declare const require: any;
 const uuid = require('uuid/v1');
 
 export class EntityLookup {
-  category: string
+  category: string;
   requestParams: any;
   results: any;
 

@@ -102,18 +102,6 @@ const edge = {
 export const noctuaFormConfig = {
   "annotonType": {
     "options": {
-      'simple': {
-        "name": 'simple',
-        "label": 'Single Gene Product'
-      },
-      'complex': {
-        "name": 'complex',
-        "label": 'Macromolecular Complex'
-      }
-    }
-  },
-  "annotonModelType": {
-    "options": {
       "default": {
         "name": 'default',
         "label": 'Default'

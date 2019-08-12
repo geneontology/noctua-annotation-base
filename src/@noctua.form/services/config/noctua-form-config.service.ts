@@ -457,7 +457,8 @@ export class NoctuaFormConfigService {
         },
         'searchResults': []
       },
-    }
+    };
+
 
     this._modelRelationship = {
       default: {
@@ -642,7 +643,9 @@ export class NoctuaFormConfigService {
           }
         }],
       },
-    }
+    };
+
+
 
     this.closureCheck = {};
 
@@ -749,6 +752,8 @@ export class NoctuaFormConfigService {
     };
   }
 
+
+
   set baristaToken(value) {
     this._baristaToken = value;
     localStorage.setItem('barista_token', value);
@@ -788,24 +793,14 @@ export class NoctuaFormConfigService {
   get closures() {
     return noctuaFormConfig.closures;
   }
+
+
+
   get annotonType() {
     const options = [
-      noctuaFormConfig.annotonType.options.simple,
-      noctuaFormConfig.annotonType.options.complex,
-    ];
-
-    return {
-      options: options,
-      selected: options[0]
-    };
-  }
-
-
-  get annotonModelType() {
-    const options = [
-      noctuaFormConfig.annotonModelType.options.default,
-      noctuaFormConfig.annotonModelType.options.bpOnly,
-      noctuaFormConfig.annotonModelType.options.ccOnly,
+      noctuaFormConfig.annotonType.options.default,
+      noctuaFormConfig.annotonType.options.bpOnly,
+      noctuaFormConfig.annotonType.options.ccOnly,
     ];
 
     return {
@@ -1075,7 +1070,7 @@ export class NoctuaFormConfigService {
     const annoton = new Annoton();
     const modelIds = _.cloneDeep(self._modelRelationship);
 
-    annoton.setAnnotonModelType(modelType);
+    annoton.setAnnotonType(modelType);
 
     each(modelIds[modelType].nodes, function (id) {
       const annotonNode = self.generateAnnotonNode(id);
@@ -1145,7 +1140,7 @@ export class NoctuaFormConfigService {
     const self = this;
 
     const annoton = self.createAnnotonModel(
-      noctuaFormConfig.annotonModelType.options.default.name
+      noctuaFormConfig.annotonType.options.default.name
     );
 
     nodes.forEach((node) => {

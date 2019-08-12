@@ -130,10 +130,10 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
     self.noctuaAnnotonFormService.initializeFormData(example);
   }
 
-  changeAnnotonModelTypeForm(annotonModelType) {
+  changeAnnotonTypeForm(annotonType) {
     const self = this;
 
-    self.noctuaAnnotonFormService.setAnnotonModelType(self.noctuaAnnotonFormService.annoton, annotonModelType.name);
+    self.noctuaAnnotonFormService.setAnnotonType(self.noctuaAnnotonFormService.annoton, annotonType.name);
   }
 
   termDisplayFn(term): string | undefined {

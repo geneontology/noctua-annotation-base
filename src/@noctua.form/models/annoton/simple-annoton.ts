@@ -14,7 +14,6 @@ import { Evidence } from './evidence';
 export class SimpleAnnoton extends SaeGraph<AnnotonNode> {
   gp;
   _presentation;
-  annotonType;
   errors;
   submitErrors;
   id;

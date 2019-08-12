@@ -21,6 +21,12 @@ export enum AnnotonState {
   editing
 }
 
+export enum AnnotonType {
+  default = 'default',
+  bpOnly = 'bpOnly',
+  ccOnly = 'ccOnly'
+}
+
 export class Annoton extends SaeGraph<AnnotonNode> {
   gp;
   id: string;
@@ -28,7 +34,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   parser: AnnotonParser;
   annotonRows;
   annotonType;
-  annotonModelType;
   complexAnnotonData;
   errors;
   submitErrors;
@@ -44,7 +49,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   constructor() {
     super();
-    this.annotonModelType = 'default';
+    this.annotonType = 'default';
     this.id = uuid();
     this.errors = [];
     this.submitErrors = [];
@@ -95,8 +100,8 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   adjustAnnoton(annoton: Annoton) {
     const self = this;
 
-    switch (annoton.annotonModelType) {
-      case noctuaFormConfig.annotonModelType.options.default.name:
+    switch (annoton.annotonType) {
+      case noctuaFormConfig.annotonType.options.default.name:
         {
           const mfNode = annoton.getNode('mf');
           const ccNode = annoton.getNode('cc');
@@ -119,7 +124,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
           }
           break;
         }
-      case noctuaFormConfig.annotonModelType.options.bpOnly.name:
+      case noctuaFormConfig.annotonType.options.bpOnly.name:
         {
           const mfNode = annoton.getNode('mf');
           const bpNode = annoton.getNode('bp');
@@ -134,13 +139,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
 
 
-  copyStructure(srcAnnoton) {
-    const self = this;
-
-    self.annotonType = srcAnnoton.annotonType;
-    self.annotonModelType = srcAnnoton.annotonModelType;
-    self.complexAnnotonData = srcAnnoton.complexAnnotonData;
-  }
 
   copyValues(srcAnnoton) {
     const self = this;
@@ -153,12 +151,10 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     });
   }
 
+
+
   setAnnotonType(type) {
     this.annotonType = type;
-  }
-
-  setAnnotonModelType(type) {
-    this.annotonModelType = type;
   }
 
   get grid() {
@@ -179,19 +175,17 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       result = node.enableSubmit(self.submitErrors) && result;
     });
 
-    if (self.annotonType === 'simple') {
-      let gp = self.getNode('gp');
-      if (gp) {
-        gp.required = false;
-        if (!gp.getTerm().id) {
-          gp.required = true;
-          let meta = {
-            aspect: self.label
-          }
-          let error = new AnnotonError('error', 1, "A '" + gp.label + "' is required", meta)
-          self.submitErrors.push(error);
-          result = false;
+    let gp = self.getNode('gp');
+    if (gp) {
+      gp.required = false;
+      if (!gp.getTerm().id) {
+        gp.required = true;
+        let meta = {
+          aspect: self.label
         }
+        let error = new AnnotonError('error', 1, "A '" + gp.label + "' is required", meta)
+        self.submitErrors.push(error);
+        result = false;
       }
     }
 
@@ -416,12 +410,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
     let display = false;
 
-    switch (self.annotonModelType) {
-      case noctuaFormConfig.annotonModelType.options.default.name:
-      case noctuaFormConfig.annotonModelType.options.bpOnly.name:
+    switch (self.annotonType) {
+      case noctuaFormConfig.annotonType.options.default.name:
+      case noctuaFormConfig.annotonType.options.bpOnly.name:
         display = node.id === 'mf';
         break;
-      case noctuaFormConfig.annotonModelType.options.ccOnly.name:
+      case noctuaFormConfig.annotonType.options.ccOnly.name:
         display = node.id === 'cc';
         break;
     }

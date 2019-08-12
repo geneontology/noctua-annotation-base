@@ -105,22 +105,6 @@ export const noctuaFormConfig = {
             }
         }
     },
-    "annotonModelType": {
-        "options": {
-            "default": {
-                "name": 'default',
-                "label": 'Default'
-            },
-            "ccOnly": {
-                "name": 'ccOnly',
-                "label": 'CC only'
-            },
-            "bpOnly": {
-                "name": 'bpOnly',
-                "label": 'BP only'
-            }
-        }
-    },
     "camDisplayType": {
         "options": {
             'triple': {

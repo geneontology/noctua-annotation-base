@@ -16,22 +16,22 @@
     <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-summary-bar-section mr-12" fxLayout="row" fxLayoutAlign="start center">
-          <button mat-flat-button (click)="openAnnotonForm(noctuaFormConfig.annotonModelType.options.default.name)"
+          <button mat-flat-button (click)="openAnnotonForm(noctuaFormConfig.annotonType.options.default.name)"
             color="primary" class="noc-rounded-button noc-half-button noc-r noc-sm">
-            <mat-icon class=""> add </mat-icon> Create New Activity
+            <mat-icon class=""> add </mat-icon> Create Activity
           </button>
           <button mat-flat-button fxFlex="35px" [matMenuTriggerFor]="createOptions" color="primary"
             class="noc-rounded-button noc-half-button noc-l noc-sm mr-8 p-0">
             <mat-icon class=""> arrow_drop_down </mat-icon>
           </button>
           <mat-menu #createOptions="matMenu">
-            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonModelType.options.default.name)">
+            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonType.options.default.name)">
               Create New Activity Unit
             </a>
-            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonModelType.options.bpOnly.name)">
+            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonType.options.bpOnly.name)">
               Create New BP Annotation
             </a>
-            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonModelType.options.ccOnly.name)">
+            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonType.options.ccOnly.name)">
               Create New CC Annotation
             </a>
           </mat-menu>

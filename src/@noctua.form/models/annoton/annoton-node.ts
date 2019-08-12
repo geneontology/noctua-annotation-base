@@ -32,9 +32,8 @@ export class AnnotonNode {
   displayGroup;
   predicate: Predicate;
   relationship: any;
-  treeLevel: number;
-  required: boolean;
-  edgeOption;
+  treeLevel = 1;
+  required = false;
   visible = true;
   termRequiredList = ['mf'];
   edgeRange: string[];
@@ -113,11 +112,6 @@ export class AnnotonNode {
     }
   }
 
-  addEdgeOption(edgeOption) {
-    const self = this;
-
-    self.edgeOption = edgeOption;
-  }
 
   enableRow() {
     const self = this;

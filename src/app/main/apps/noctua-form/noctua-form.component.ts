@@ -93,8 +93,8 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.camForm);
   }
 
-  openAnnotonForm(annotonModelType?) {
-    this.noctuaAnnotonFormService.initializeForm(null, annotonModelType);
+  openAnnotonForm(annotonType?) {
+    this.noctuaAnnotonFormService.initializeForm(null, annotonType);
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm);
   }
 

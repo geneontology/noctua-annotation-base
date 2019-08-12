@@ -338,21 +338,10 @@ export class NoctuaGraphService {
       }));
   }
 
-  determineAnnotonType(gpObjectNode) {
+
+  determineAnnotonType(mfNode, mfEdgesIn) {
     const self = this;
-
-    if (self.noctuaLookupService.getLocalClosure(gpObjectNode.term.id, noctuaFormConfig.closures.gp.id)) {
-      return noctuaFormConfig.annotonType.options.simple.name;
-    } else if (self.noctuaLookupService.getLocalClosure(gpObjectNode.term.id, noctuaFormConfig.closures.mc.id)) {
-      return noctuaFormConfig.annotonType.options.complex.name;
-    }
-
-    return null;
-  }
-
-  determineAnnotonModelType(mfNode, mfEdgesIn) {
-    const self = this;
-    let result = noctuaFormConfig.annotonModelType.options.default.name;
+    let result = noctuaFormConfig.annotonType.options.default.name;
 
     if (mfNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(mfEdgesIn, function (toMFEdge) {
@@ -361,7 +350,7 @@ export class NoctuaGraphService {
         if (_.find(noctuaFormConfig.causalEdges, {
           id: predicateId
         })) {
-          result = noctuaFormConfig.annotonModelType.options.bpOnly.name;
+          result = noctuaFormConfig.annotonType.options.bpOnly.name;
         }
       });
     }
@@ -381,9 +370,9 @@ export class NoctuaGraphService {
         const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
         const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
         const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
-        const annotonModelType = self.determineAnnotonModelType(subjectNode, subjectEdges);
+        const annotonType = self.determineAnnotonType(subjectNode, subjectEdges);
         const annoton = self.noctuaFormConfigService.createAnnotonModel(
-          annotonModelType
+          annotonType
         );
         const annotonNode = annoton.getNode('mf');
         const triple = annoton.getEdge('mf', 'gp');
@@ -489,7 +478,7 @@ export class NoctuaGraphService {
     const mfNode = annoton.getNode('mf');
     const bpNode = annoton.getNode('bp');
 
-    if (mfNode && bpNode && annoton.annotonModelType === noctuaFormConfig.annotonModelType.options.bpOnly.name) {
+    if (mfNode && bpNode && annoton.annotonType === noctuaFormConfig.annotonType.options.bpOnly.name) {
       mfNode.displaySection = noctuaFormConfig.displaySection.fd;
       mfNode.displayGroup = noctuaFormConfig.displayGroup.mf;
       annoton.editEdge('mf', 'bp', srcEdge);
@@ -627,7 +616,7 @@ export class NoctuaGraphService {
       const bbopObjectId = bbopEdge.object_id();
       const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
 
-      if (annoton.annotonModelType === noctuaFormConfig.annotonModelType.options.bpOnly.name) {
+      if (annoton.annotonType === noctuaFormConfig.annotonType.options.bpOnly.name) {
         const causalEdge = _.find(noctuaFormConfig.causalEdges, {
           id: bbopPredicateId
         });

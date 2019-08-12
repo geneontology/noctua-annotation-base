@@ -43,7 +43,7 @@ export class NoctuaAnnotonFormService {
       this.cam = cam;
     });
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      noctuaFormConfig.annotonModelType.options.default.name
+      noctuaFormConfig.annotonType.options.default.name
     );
 
     this.annotonFormGroup = new BehaviorSubject(null);
@@ -52,7 +52,7 @@ export class NoctuaAnnotonFormService {
     this.initializeForm();
   }
 
-  initializeForm(annoton?: Annoton, annotonModelType?) {
+  initializeForm(annoton?: Annoton, annotonType?) {
     const self = this;
 
     self.errors = [];
@@ -71,8 +71,8 @@ export class NoctuaAnnotonFormService {
     self.annoton.enableSubmit();
     self._onAnnotonFormChanges();
 
-    if (annotonModelType) {
-      self.setAnnotonModelType(self.annoton, annotonModelType);
+    if (annotonType) {
+      self.setAnnotonType(self.annoton, annotonType);
     }
   }
 
@@ -111,9 +111,9 @@ export class NoctuaAnnotonFormService {
     return errors;
   }
 
-  setAnnotonModelType(annoton, annotonModelType) {
+  setAnnotonType(annoton, annotonType) {
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      annotonModelType,
+      annotonType,
       annoton)
     this.initializeForm();
   }
@@ -127,7 +127,7 @@ export class NoctuaAnnotonFormService {
 
   cloneForm(srcAnnoton, filterNodes) {
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      srcAnnoton.annotonModelType
+      srcAnnoton.annotonType
     );
 
     if (filterNodes) {
@@ -170,7 +170,7 @@ export class NoctuaAnnotonFormService {
 
   clearForm() {
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      this.annoton.annotonModelType
+      this.annoton.annotonType
     );
 
     this.initializeForm();
