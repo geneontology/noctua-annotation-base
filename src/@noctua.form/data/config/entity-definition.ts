@@ -81,7 +81,7 @@ export class GoChemicalEntity {
 
 export class GoEvidence {
     public static readonly id = annotonNodeType.GoEvidence;
-    public static readonly type = 'ECO_0000000';
+    public static readonly type = 'ECO_0000352';
 }
 
 export class GoCellTypeEntity {
@@ -105,11 +105,29 @@ export class GoBiologicalPhase {
 }
 
 
-export const generateBaseTerm = (): AnnotonNode => {
+export const generateBaseTerm = (goType?: string): AnnotonNode => {
     const annotonNode = new AnnotonNode();
     const predicate = new Predicate(null);
 
+    predicate.setEvidenceMeta('eco', Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
+        fq: [
+            'document_category:"ontology_class"',
+            `isa_closure:"${GoEvidence.type}"`
+        ],
+    }));
+
     annotonNode.predicate = predicate;
+
+    if (goType) {
+        annotonNode.termLookup = new EntityLookup(null,
+            Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
+                fq: [
+                    'document_category:"ontology_class"',
+                    `isa_closure:"${goType}"`
+                ],
+            })
+        );
+    }
 
     return annotonNode;
 };
@@ -132,56 +150,35 @@ export const generateGoTerm = (): AnnotonNode => {
 };
 
 export const generateProteinContainingComplex = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+    const annotonNode = generateBaseTerm(GoProteinContainingComplex.type);
 
     annotonNode.id = GoProteinContainingComplex.id;
     annotonNode.lookupGroup = GoProteinContainingComplex.type;
-
     annotonNode.label = 'Macromolecular Complex';
     annotonNode.relationship = noctuaFormConfig.edge.hasPart;
     annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mc;
 
-    annotonNode.ontologyClass = ['go'];
-    annotonNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0032991"'
-            ],
-        })
-    );
-
     return annotonNode;
 };
 
 export const generateMolecularEntity = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+    const annotonNode = generateBaseTerm(GoMolecularEntity.type);
 
     annotonNode.id = GoMolecularEntity.id;
     annotonNode.lookupGroup = GoMolecularEntity.type;
-
     annotonNode.label = 'Gene Product';
     annotonNode.relationship = noctuaFormConfig.edge.enabledBy;
     annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.gp;
 
     annotonNode.ontologyClass = [];
-    annotonNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"CHEBI:33695"'
-            ],
-        })
-    );
 
     return annotonNode;
 };
 
-
 export const generateMolecularFunction = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+    const annotonNode = generateBaseTerm(GoMolecularFunction.type);
 
     annotonNode.id = GoMolecularFunction.id;
     annotonNode.lookupGroup = GoMolecularFunction.type;
@@ -206,7 +203,7 @@ export const generateMolecularFunction = (): AnnotonNode => {
 };
 
 export const generateBiologicalProcess = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+    const annotonNode = generateBaseTerm(GoBiologicalProcess.type);
 
     annotonNode.id = GoBiologicalProcess.id;
     annotonNode.lookupGroup = GoBiologicalProcess.type;
@@ -218,21 +215,12 @@ export const generateBiologicalProcess = (): AnnotonNode => {
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.bp;
 
     annotonNode.treeLevel = 2;
-    annotonNode.ontologyClass = ['go'];
-    annotonNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0008150"'
-            ],
-        })
-    );
 
     return annotonNode;
 };
 
 export const generateCellularComponent = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+    const annotonNode = generateBaseTerm(GoCellularComponent.type);
 
     annotonNode.id = GoCellularComponent.id;
     annotonNode.lookupGroup = GoCellularComponent.type;
@@ -243,21 +231,12 @@ export const generateCellularComponent = (): AnnotonNode => {
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
     annotonNode.treeLevel = 2;
-    annotonNode.ontologyClass = ['go'];
-    annotonNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0005575"'
-            ],
-        })
-    );
 
     return annotonNode;
 };
 
 export const generateGeneProductChemical = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+    const annotonNode = generateBaseTerm(GoChemicalEntity.type);
     annotonNode.id = GoChemicalEntity.id;
     annotonNode.lookupGroup = GoChemicalEntity.type;
 
@@ -267,21 +246,12 @@ export const generateGeneProductChemical = (): AnnotonNode => {
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
     annotonNode.treeLevel = 3;
     annotonNode.isExtension = true;
-    annotonNode.ontologyClass = [];
-    annotonNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"CHEBI:23367"'
-            ],
-        })
-    );
 
     return annotonNode;
 };
 
 export const generateBiologicalPhase = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+    const annotonNode = generateBaseTerm(GoBiologicalPhase.type);
 
     annotonNode.id = GoBiologicalPhase.id;
     annotonNode.lookupGroup = GoBiologicalPhase.type;
@@ -290,23 +260,14 @@ export const generateBiologicalPhase = (): AnnotonNode => {
     annotonNode.relationship = noctuaFormConfig.edge.happensDuring;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-    annotonNode.treeLevel = 3;
+    annotonNode.treeLevel = 2;
     annotonNode.isExtension = true;
-    annotonNode.ontologyClass = ['go'];
-    annotonNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0044848"'
-            ],
-        })
-    );
 
     return annotonNode;
 };
 
 export const generateCellTypeEntity = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+    const annotonNode = generateBaseTerm(GoCellTypeEntity.type);
     annotonNode.id = GoCellTypeEntity.id;
     annotonNode.lookupGroup = GoCellTypeEntity.type;
 
@@ -314,23 +275,14 @@ export const generateCellTypeEntity = (): AnnotonNode => {
     annotonNode.relationship = noctuaFormConfig.edge.partOf;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-    annotonNode.treeLevel = 4;
+    annotonNode.treeLevel = 3;
     annotonNode.isExtension = true;
-    annotonNode.ontologyClass = ['cl'];
-    annotonNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"CL:0000003"'
-            ],
-        })
-    );
 
     return annotonNode;
 };
 
 export const generateAnatomicalEntity = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+    const annotonNode = generateBaseTerm(GoAnatomicalEntity.type);
 
     annotonNode.id = GoAnatomicalEntity.id;
     annotonNode.lookupGroup = GoAnatomicalEntity.type;
@@ -339,23 +291,14 @@ export const generateAnatomicalEntity = (): AnnotonNode => {
     annotonNode.relationship = noctuaFormConfig.edge.partOf;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-    annotonNode.treeLevel = 5;
+    annotonNode.treeLevel = 4;
     annotonNode.isExtension = true;
-    annotonNode.ontologyClass = ['uberon'];
-    annotonNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"UBERON:0000061"'
-            ],
-        })
-    );
 
     return annotonNode;
 };
 
-export const generateGoOrganism = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+export const generateOrganism = (): AnnotonNode => {
+    const annotonNode = generateBaseTerm(GoOrganism.type);
 
     annotonNode.id = GoOrganism.id;
     annotonNode.lookupGroup = GoOrganism.type;
@@ -366,15 +309,6 @@ export const generateGoOrganism = (): AnnotonNode => {
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
     annotonNode.treeLevel = 5;
     annotonNode.isExtension = true;
-    annotonNode.ontologyClass = ['uberon'];
-    annotonNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"UBERON:0000061"'
-            ],
-        })
-    );
 
     return annotonNode;
 };

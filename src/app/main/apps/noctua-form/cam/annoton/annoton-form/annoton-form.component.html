@@ -107,10 +107,9 @@
            </div>
          </div>
          <div [formArrayName]="'fd'" *ngFor="let nodeGroup of annotonFormGroup.get('fd')?.controls; let i = index;"
-           class="mat-elevation-z1 mb-4 px-8 pt-4">
-           <div [formGroupName]="i" *ngFor="let entity of nodeGroup.get('entityGroup')?.controls| keyvalue" class="">
-             <noc-entity-form [entityFormGroup]="entity.value" [nodeGroupName]="nodeGroup.get('name').value"
-               [entityName]="entity.key" fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
+           class="mat-elevation-z1 noc-term-group mb-4 px-8 pt-4  {{nodeGroup.get('name').value}}">
+           <div [formGroupName]="i" *ngFor="let entity of nodeGroup.get('entityGroup')?.controls" class="">
+             <noc-entity-form [entityFormGroup]="entity" fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
              </noc-entity-form>
            </div>
          </div>

@@ -30,6 +30,7 @@ import { NoctuaUserService } from './../services/user.service';
 
 import 'rxjs/add/observable/forkJoin';
 import * as _ from 'lodash';
+import { annotonNodeType } from './../data/config/entity-definition';
 
 
 declare const require: any;
@@ -374,8 +375,8 @@ export class NoctuaGraphService {
         const annoton = self.noctuaFormConfigService.createAnnotonModel(
           annotonType
         );
-        const annotonNode = annoton.getNode('mf');
-        const triple = annoton.getEdge('mf', 'gp');
+        const annotonNode = annoton.getNode(annotonNodeType.GoMolecularFunction);
+        const triple = annoton.getEdge(annotonNodeType.GoMolecularFunction, annotonNodeType.GoMolecularEntity);
 
         annotonNode.term = subjectNode.term;
         annotonNode.classExpression = subjectNode.classExpression;
@@ -475,14 +476,14 @@ export class NoctuaGraphService {
 
   adjustBPOnly(annoton, srcEdge) {
     const self = this;
-    const mfNode = annoton.getNode('mf');
+    const mfNode = annoton.getNode(annotonNodeType.GoMolecularFunction);
     const bpNode = annoton.getNode('bp');
 
     if (mfNode && bpNode && annoton.annotonType === noctuaFormConfig.annotonType.options.bpOnly.name) {
       mfNode.displaySection = noctuaFormConfig.displaySection.fd;
       mfNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-      annoton.editEdge('mf', 'bp', srcEdge);
-      bpNode.relationship = annoton.getEdge('mf', 'bp').edge;
+      annoton.editEdge(annotonNodeType.GoMolecularFunction, 'bp', srcEdge);
+      bpNode.relationship = annoton.getEdge(annotonNodeType.GoMolecularFunction, 'bp').edge;
     }
   }
 

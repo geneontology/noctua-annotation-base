@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Annoton } from './../annoton/annoton';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityForm } from './entity-form';
@@ -7,12 +7,10 @@ import { EntityForm } from './entity-form';
 declare const require: any;
 const each = require('lodash/forEach');
 
-
-
 export class EntityGroupForm {
     name = '';
-    entityForms: EntityForm[] = []
-    entityGroup = new FormGroup({});
+    entityForms: EntityForm[] = [];
+    entityGroup = new FormArray([]);
 
     _metadata: AnnotonFormMetadata;
     private _fb = new FormBuilder();
@@ -32,7 +30,7 @@ export class EntityGroupForm {
             entityForm.createEvidenceForms(entity);
             entityForm.onValueChanges(entity.termLookup);
 
-            self.entityGroup.addControl(entity.id, self._fb.group(entityForm));
+            self.entityGroup.push(self._fb.group(entityForm));
         });
     }
 

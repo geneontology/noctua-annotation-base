@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { noctuaFormExample } from './../..//noctua-form-examples';
 
+import * as ModelDefinition from './../../data/config/model-definition';
+
 import * as _ from 'lodash';
 
 declare const require: any;
@@ -1066,6 +1068,10 @@ export class NoctuaFormConfigService {
   }
 
   createAnnotonModel(modelType, srcAnnoton?): Annoton {
+    return ModelDefinition.createActivityUnit();
+  }
+
+  createAnnotonModel2(modelType, srcAnnoton?): Annoton {
     const self = this;
     const annoton = new Annoton();
     const modelIds = _.cloneDeep(self._modelRelationship);

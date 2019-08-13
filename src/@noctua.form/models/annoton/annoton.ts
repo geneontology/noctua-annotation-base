@@ -15,6 +15,7 @@ import { Triple } from './triple';
 import { Entity } from './entity';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import { AnnotonParser } from './parser';
+import { annotonNodeType } from '../../data/config/entity-definition';
 
 export enum AnnotonState {
   creation = 1,
@@ -59,39 +60,17 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     throw new Error('Method not implemented');
   }
 
-  getConnection(uuid) {
-    const self = this;
-
-    const mfEdges: any = super.getEdges('mf');
-    const bpEdges: any = super.getEdges('bp');
-    let edge: any;
-    const edges = [];
-
-    if (mfEdges) {
-      edges.push(...mfEdges.nodes);
-    }
-
-    if (bpEdges) {
-      edges.push(...bpEdges.nodes);
-    }
-
-    edge = _.find(edges, (srcEdge) => {
-      return srcEdge.object.uuid === uuid;
-    });
-
-    return edge;
-  }
 
   getGPNode() {
     const self = this;
 
-    return self.getNode('gp');
+    return self.getNode(annotonNodeType.GoMolecularEntity);
   }
 
   getMFNode() {
     const self = this;
 
-    return self.getNode('mf');
+    return self.getNode(annotonNodeType.GoMolecularFunction);
   }
 
 
@@ -175,7 +154,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       result = node.enableSubmit(self.submitErrors) && result;
     });
 
-    let gp = self.getNode('gp');
+    let gp = self.getNode(annotonNodeType.GoMolecularEntity);
     if (gp) {
       gp.required = false;
       if (!gp.getTerm().id) {
@@ -195,13 +174,13 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   createSave() {
     const self = this;
     const saveData = {
-      title: 'enabled by ' + self.getNode('gp').term.label,
+      title: 'enabled by ' + self.getNode(annotonNodeType.GoMolecularEntity).term.label,
       triples: [],
       nodes: [],
       graph: null
     };
 
-    const graph = self.getTrimmedGraph('mf');
+    const graph = self.getTrimmedGraph(annotonNodeType.GoMolecularFunction);
     const keyNodes = getNodes(graph);
     const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
 
@@ -259,7 +238,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   setPreview() {
     const self = this;
 
-    const graph = self.getTrimmedGraph('mf');
+    const graph = self.getTrimmedGraph(annotonNodeType.GoMolecularFunction);
     const keyNodes = getNodes(graph);
     const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
 
@@ -291,35 +270,32 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       return this._presentation;
     }
 
-    const gp = self.getNode('gp');
-    const mf = self.getNode('mf');
+    const gp = self.getNode(annotonNodeType.GoMolecularEntity);
+    const mf = self.getNode(annotonNodeType.GoMolecularFunction);
     const result = {
       gpText: gp ? gp.getTerm().label : '',
       mfText: mf ? mf.getTerm().label : '',
       geneProduct: gp,
-      mcNode: self.getNode('mc'),
       gp: {},
       fd: {},
       extra: []
     };
 
     each(self.nodes, function (node: AnnotonNode) {
-      if (_.includes(self._displayableNodes, node.id)) {
-        if (node.displaySection && node.displayGroup) {
-          if (!result[node.displaySection.id][node.displayGroup.id]) {
-            result[node.displaySection.id][node.displayGroup.id] = {
-              shorthand: node.displayGroup.shorthand,
-              label: node.displayGroup.label,
-              nodes: []
-            };
-          }
+      if (node.displaySection && node.displayGroup) {
+        if (!result[node.displaySection.id][node.displayGroup.id]) {
+          result[node.displaySection.id][node.displayGroup.id] = {
+            shorthand: node.displayGroup.shorthand,
+            label: node.displayGroup.label,
+            nodes: []
+          };
+        }
 
-          result[node.displaySection.id][node.displayGroup.id].nodes.push(node);
-          node.nodeGroup = result[node.displaySection.id][node.displayGroup.id];
+        result[node.displaySection.id][node.displayGroup.id].nodes.push(node);
+        node.nodeGroup = result[node.displaySection.id][node.displayGroup.id];
 
-          if (node.isComplement) {
-            node.nodeGroup.isComplement = true;
-          }
+        if (node.isComplement) {
+          node.nodeGroup.isComplement = true;
         }
       }
     });
@@ -327,7 +303,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
     this._presentation = result;
 
-    return this._presentation
+    return this._presentation;
   }
 
   addAnnotonPresentation(displaySectionId) {
@@ -365,7 +341,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       each(nodeGroup.nodes, function (node: AnnotonNode) {
         let term = node.getTerm();
 
-        if (node.id !== 'mc' && node.id !== 'gp' && term.id && _.includes(self._displayableNodes, node.id)) {
+        if (node.id !== 'mc' && node.id !== annotonNodeType.GoMolecularEntity && term.id && _.includes(self._displayableNodes, node.id)) {
           self.generateGridRow(node);
         }
       });
@@ -413,7 +389,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     switch (self.annotonType) {
       case noctuaFormConfig.annotonType.options.default.name:
       case noctuaFormConfig.annotonType.options.bpOnly.name:
-        display = node.id === 'mf';
+        display = node.id === annotonNodeType.GoMolecularFunction;
         break;
       case noctuaFormConfig.annotonType.options.ccOnly.name:
         display = node.id === 'cc';
@@ -431,7 +407,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   tableDisplayExtension(node: AnnotonNode) {
     const self = this;
 
-    if (node.id === 'mf') {
+    if (node.id === annotonNodeType.GoMolecularFunction) {
       return '';
     } else if (node.isComplement) {
       return 'NOT ' + node.relationship.label;

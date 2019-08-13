@@ -58,12 +58,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   @Input('entityFormGroup')
   public entityFormGroup: FormGroup;
 
-  @Input('nodeGroupName')
-  public nodeGroupName: any;
-
-  @Input('entityName')
-  public entityName: any;
-
   private unsubscribeAll: Subject<any>;
 
   constructor(private route: ActivatedRoute,
@@ -83,11 +77,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.nodeGroup = this.noctuaAnnotonFormService.annoton.presentation['fd'][this.nodeGroupName];
-    this.entity = <AnnotonNode>_.find(this.nodeGroup.nodes, { id: this.entityName });
-    // this.entityFormGroup = this.createEntityGroup();
-
-
+    this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
   }
 
   addEvidence() {
