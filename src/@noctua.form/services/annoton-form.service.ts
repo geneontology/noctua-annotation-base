@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 declare const require: any;
 const each = require('lodash/forEach');
 
-import { Annoton, AnnotonState } from './../models/annoton/annoton';
+import { Annoton, AnnotonState, AnnotonType } from './../models/annoton/annoton';
 import { AnnotonNode } from './../models/annoton/annoton-node';
 import { AnnotonForm } from './../models/forms/annoton-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
@@ -42,9 +42,7 @@ export class NoctuaAnnotonFormService {
 
       this.cam = cam;
     });
-    this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      noctuaFormConfig.annotonType.options.default.name
-    );
+    this.annoton = this.noctuaFormConfigService.createAnnotonModel(AnnotonType.default);
 
     this.annotonFormGroup = new BehaviorSubject(null);
     this.annotonFormGroup$ = this.annotonFormGroup.asObservable();
@@ -52,7 +50,7 @@ export class NoctuaAnnotonFormService {
     this.initializeForm();
   }
 
-  initializeForm(annoton?: Annoton, annotonType?) {
+  initializeForm(annoton?: Annoton) {
     const self = this;
 
     self.errors = [];
@@ -71,9 +69,6 @@ export class NoctuaAnnotonFormService {
     self.annoton.enableSubmit();
     self._onAnnotonFormChanges();
 
-    if (annotonType) {
-      self.setAnnotonType(self.annoton, annotonType);
-    }
   }
 
   initializeFormData(nodes) {
@@ -113,14 +108,10 @@ export class NoctuaAnnotonFormService {
     return errors;
   }
 
-  setAnnotonType(annoton, annotonType) {
-    this.annoton = this.noctuaFormConfigService.createAnnotonModel(
-      annotonType,
-      annoton)
+  setAnnotonType(annotonType: AnnotonType) {
+    this.annoton = this.noctuaFormConfigService.createAnnotonModel(annotonType);
     this.initializeForm();
   }
-
-
 
   linkFormNode(entity, srcNode) {
     entity.uuid = srcNode.uuid;

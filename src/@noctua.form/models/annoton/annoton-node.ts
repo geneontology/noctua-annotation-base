@@ -11,7 +11,22 @@ import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { Predicate } from '.';
 
-export class AnnotonNode {
+export interface AnnotonNodeDisplay {
+  id: string;
+  label: string;
+  uuid: string;
+  isExtension: boolean;
+  aspect: string;
+  lookupGroup: string;
+  displaySection: any;
+  displayGroup: any;
+  relationship: any;
+  treeLevel: number;
+  required: boolean;
+  visible: boolean;
+}
+
+export class AnnotonNode implements AnnotonNodeDisplay {
   id: string;
   label: string;
   uuid: string;
@@ -29,7 +44,7 @@ export class AnnotonNode {
   contributor: Contributor = null;
   isCatalyticActivity = false;
   displaySection: any;
-  displayGroup;
+  displayGroup: any;
   predicate: Predicate;
   relationship: any;
   treeLevel = 1;

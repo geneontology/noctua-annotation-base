@@ -16,8 +16,8 @@
     <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-summary-bar-section mr-12" fxLayout="row" fxLayoutAlign="start center">
-          <button mat-flat-button (click)="openAnnotonForm(noctuaFormConfig.annotonType.options.default.name)"
-            color="primary" class="noc-rounded-button noc-half-button noc-r noc-sm">
+          <button mat-flat-button (click)="openAnnotonForm(AnnotonType.default)" color="primary"
+            class="noc-rounded-button noc-half-button noc-r noc-sm">
             <mat-icon class=""> add </mat-icon> Create Activity
           </button>
           <button mat-flat-button fxFlex="35px" [matMenuTriggerFor]="createOptions" color="primary"
@@ -25,13 +25,13 @@
             <mat-icon class=""> arrow_drop_down </mat-icon>
           </button>
           <mat-menu #createOptions="matMenu">
-            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonType.options.default.name)">
+            <a mat-menu-item (click)="openAnnotonForm(AnnotonType.default)">
               Create New Activity Unit
             </a>
-            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonType.options.bpOnly.name)">
+            <a mat-menu-item (click)="openAnnotonForm(AnnotonType.bpOnly)">
               Create New BP Annotation
             </a>
-            <a mat-menu-item (click)="openAnnotonForm(noctuaFormConfig.annotonType.options.ccOnly.name)">
+            <a mat-menu-item (click)="openAnnotonForm(AnnotonType.ccOnly)">
               Create New CC Annotation
             </a>
           </mat-menu>
@@ -47,13 +47,13 @@
         </div>
         <span fxFlex></span>
         <div [ngSwitch]="noctuaFormService.selectedMiddlePanel.id">
-          <button mat-button class="noc-bb" *ngSwitchCase="noctuaFormService.panel.camTable.id"
+          <button mat-button class="" *ngSwitchCase="noctuaFormService.panel.camTable.id"
             (click)="noctuaFormService.openMiddlePanel(noctuaFormService.panel.camPreview)" matTooltip="Search"
             [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500"
             [ngClass]="{'noc-active':noctuaFormService.selectedMiddlePanel.id===noctuaFormService.panel.camDiagram.id}">
             <mat-icon> scatter_plot </mat-icon>
           </button>
-          <button mat-button class="noc-bb" *ngSwitchCase="noctuaFormService.panel.camPreview.id"
+          <button mat-button class="" *ngSwitchCase="noctuaFormService.panel.camPreview.id"
             (click)="noctuaFormService.openMiddlePanel(noctuaFormService.panel.camTable)" matTooltip="Search"
             [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500"
             [ngClass]="{'noc-active':noctuaFormService.selectedMiddlePanel.id===noctuaFormService.panel.camTable.id}">

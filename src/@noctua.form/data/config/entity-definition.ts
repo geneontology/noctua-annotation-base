@@ -1,5 +1,10 @@
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { AnnotonNode, EntityLookup, Predicate } from './../../models/annoton';
+import {
+    AnnotonNode,
+    EntityLookup,
+    AnnotonNodeDisplay,
+    Predicate
+} from './../../models/annoton';
 
 const baseRequestParams = {
     defType: 'edismax',
@@ -149,7 +154,7 @@ export const generateGoTerm = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateProteinContainingComplex = (): AnnotonNode => {
+export const generateProteinContainingComplex = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoProteinContainingComplex.type);
 
     annotonNode.id = GoProteinContainingComplex.id;
@@ -162,7 +167,7 @@ export const generateProteinContainingComplex = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateMolecularEntity = (): AnnotonNode => {
+export const generateMolecularEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoMolecularEntity.type);
 
     annotonNode.id = GoMolecularEntity.id;
@@ -177,7 +182,7 @@ export const generateMolecularEntity = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateMolecularFunction = (): AnnotonNode => {
+export const generateMolecularFunction = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoMolecularFunction.type);
 
     annotonNode.id = GoMolecularFunction.id;
@@ -202,7 +207,7 @@ export const generateMolecularFunction = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateBiologicalProcess = (): AnnotonNode => {
+export const generateBiologicalProcess = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoBiologicalProcess.type);
 
     annotonNode.id = GoBiologicalProcess.id;
@@ -219,7 +224,7 @@ export const generateBiologicalProcess = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateCellularComponent = (): AnnotonNode => {
+export const generateCellularComponent = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoCellularComponent.type);
 
     annotonNode.id = GoCellularComponent.id;
@@ -235,7 +240,7 @@ export const generateCellularComponent = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateGeneProductChemical = (): AnnotonNode => {
+export const generateGeneProductChemical = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoChemicalEntity.type);
     annotonNode.id = GoChemicalEntity.id;
     annotonNode.lookupGroup = GoChemicalEntity.type;
@@ -250,7 +255,7 @@ export const generateGeneProductChemical = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateBiologicalPhase = (): AnnotonNode => {
+export const generateBiologicalPhase = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoBiologicalPhase.type);
 
     annotonNode.id = GoBiologicalPhase.id;
@@ -266,7 +271,7 @@ export const generateBiologicalPhase = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateCellTypeEntity = (): AnnotonNode => {
+export const generateCellTypeEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoCellTypeEntity.type);
     annotonNode.id = GoCellTypeEntity.id;
     annotonNode.lookupGroup = GoCellTypeEntity.type;
@@ -281,7 +286,7 @@ export const generateCellTypeEntity = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateAnatomicalEntity = (): AnnotonNode => {
+export const generateAnatomicalEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoAnatomicalEntity.type);
 
     annotonNode.id = GoAnatomicalEntity.id;
@@ -297,17 +302,32 @@ export const generateAnatomicalEntity = (): AnnotonNode => {
     return annotonNode;
 };
 
-export const generateOrganism = (): AnnotonNode => {
+export const generateOrganism = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoOrganism.type);
 
     annotonNode.id = GoOrganism.id;
     annotonNode.lookupGroup = GoOrganism.type;
 
-    annotonNode.label = 'Part Of (Anatomy)';
+    annotonNode.label = 'Part Of (Organism)';
     annotonNode.relationship = noctuaFormConfig.edge.partOf;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
     annotonNode.treeLevel = 5;
+    annotonNode.isExtension = true;
+
+    return annotonNode;
+};
+
+export const insertNode = (type): AnnotonNode => {
+    const annotonNode = generateBaseTerm(type);
+    annotonNode.id = GoChemicalEntity.id;
+    annotonNode.lookupGroup = GoChemicalEntity.type;
+
+    annotonNode.label = 'Has Input (Gene Product/Chemical)';
+    annotonNode.relationship = noctuaFormConfig.edge.hasInput;
+    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
+    annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
+    annotonNode.treeLevel = 3;
     annotonNode.isExtension = true;
 
     return annotonNode;

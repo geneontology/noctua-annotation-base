@@ -19,6 +19,7 @@ import {
   Entity,
   Predicate
 } from './../../models';
+import { AnnotonType } from '@noctua.form/models/annoton/annoton';
 
 @Injectable({
   providedIn: 'root'
@@ -1067,8 +1068,15 @@ export class NoctuaFormConfigService {
     return connectorAnnoton;
   }
 
-  createAnnotonModel(modelType, srcAnnoton?): Annoton {
-    return ModelDefinition.createActivityUnit();
+  createAnnotonModel(modelType: AnnotonType, srcAnnoton?): Annoton {
+    switch (modelType) {
+      case AnnotonType.default:
+        return ModelDefinition.createActivity(ModelDefinition.activityUnitData);
+      case AnnotonType.bpOnly:
+        return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotation);
+      case AnnotonType.ccOnly:
+        return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotation);
+    }
   }
 
   createAnnotonModel2(modelType, srcAnnoton?): Annoton {
@@ -1144,10 +1152,7 @@ export class NoctuaFormConfigService {
 
   createAnnotonModelFakeData(nodes) {
     const self = this;
-
-    const annoton = self.createAnnotonModel(
-      noctuaFormConfig.annotonType.options.default.name
-    );
+    const annoton = self.createAnnotonModel(AnnotonType.default);
 
     nodes.forEach((node) => {
       const annotonNode = annoton.getNode(node.id);

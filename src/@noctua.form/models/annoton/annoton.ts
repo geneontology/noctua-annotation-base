@@ -35,7 +35,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   parser: AnnotonParser;
   annotonRows;
   annotonType;
-  complexAnnotonData;
   errors;
   submitErrors;
   expanded = false;

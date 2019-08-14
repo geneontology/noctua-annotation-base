@@ -75,15 +75,6 @@
            Function Description
          </div>
          <span fxFlex></span>
-         <button mat-stroked-button [matMenuTriggerFor]="annotonTypeOptions" class="noc-rounded-button noc-xs">
-           {{noctuaAnnotonFormService.annoton.annotonType}} <b class="caret"></b>
-         </button>
-         <mat-menu #annotonTypeOptions="matMenu">
-           <a mat-menu-item *ngFor="let annotonType of noctuaFormConfigService.annotonType.options"
-             (click)="changeAnnotonTypeForm(annotonType)">
-             {{annotonType.label}}
-           </a>
-         </mat-menu>
        </div>
        <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
          <div *ngIf="noctuaAnnotonFormService.annoton.annotonType ==='bpOnly'" class="mat-elevation-z1 mb-4 px-8 pt-4"

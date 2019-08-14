@@ -1,7 +1,11 @@
-export { AnnotonNode } from './annoton-node';
+export {
+    AnnotonNode,
+    AnnotonNodeDisplay,
+} from './annoton-node';
 export { AnnotonNodeClosure } from './annoton-node-closure';
 export {
     Annoton,
+    AnnotonType,
     AnnotonState
 } from './annoton';
 export { Cam } from './cam';

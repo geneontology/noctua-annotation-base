@@ -31,6 +31,7 @@ import { NoctuaUserService } from './../services/user.service';
 import 'rxjs/add/observable/forkJoin';
 import * as _ from 'lodash';
 import { annotonNodeType } from './../data/config/entity-definition';
+import { AnnotonType } from '@noctua.form/models/annoton/annoton';
 
 
 declare const require: any;
@@ -372,9 +373,7 @@ export class NoctuaGraphService {
         const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
         const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
         const annotonType = self.determineAnnotonType(subjectNode, subjectEdges);
-        const annoton = self.noctuaFormConfigService.createAnnotonModel(
-          annotonType
-        );
+        const annoton = self.noctuaFormConfigService.createAnnotonModel(AnnotonType.default);
         const annotonNode = annoton.getNode(annotonNodeType.GoMolecularFunction);
         const triple = annoton.getEdge(annotonNodeType.GoMolecularFunction, annotonNodeType.GoMolecularEntity);
 

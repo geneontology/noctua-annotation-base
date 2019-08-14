@@ -7,6 +7,7 @@ import { noctuaAnimations } from './../../../../@noctua/animations';
 
 import {
   Cam,
+  AnnotonType,
   Contributor,
   NoctuaUserService,
   NoctuaFormConfigService,
@@ -26,6 +27,7 @@ import { NoctuaFormService } from './services/noctua-form.service';
   animations: noctuaAnimations
 })
 export class NoctuaFormComponent implements OnInit, OnDestroy {
+  AnnotonType = AnnotonType;
 
   @ViewChild('leftDrawer')
   leftDrawer: MatDrawer;
@@ -93,8 +95,8 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.camForm);
   }
 
-  openAnnotonForm(annotonType?) {
-    this.noctuaAnnotonFormService.initializeForm(null, annotonType);
+  openAnnotonForm(annotonType: AnnotonType) {
+    this.noctuaAnnotonFormService.setAnnotonType(annotonType);
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm);
   }
 
