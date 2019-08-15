@@ -42,7 +42,6 @@ export class EntityGroupForm {
             if (annotonNode) {
                 entityForm.populateTerm(annotonNode);
             }
-
         });
     }
 

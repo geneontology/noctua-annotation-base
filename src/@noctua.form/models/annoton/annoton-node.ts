@@ -59,8 +59,8 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   status = '0';
 
   constructor() {
-
   }
+
 
   getTerm() {
     return this.term;
@@ -168,4 +168,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     return result;
   }
 
+  overrideValues(override: Partial<AnnotonNodeDisplay> = {}) {
+    Object.assign(this, override);
+  }
 }

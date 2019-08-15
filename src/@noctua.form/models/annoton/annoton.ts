@@ -274,7 +274,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     const result = {
       gpText: gp ? gp.getTerm().label : '',
       mfText: mf ? mf.getTerm().label : '',
-      geneProduct: gp,
+      molecularEntity: gp,
       gp: {},
       fd: {},
       extra: []

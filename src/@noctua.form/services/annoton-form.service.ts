@@ -79,10 +79,10 @@ export class NoctuaAnnotonFormService {
   createAnnotonForm() {
     const self = this;
     const annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    const annotonForm = new AnnotonForm(annotonFormMetadata, self.annoton.presentation.geneProduct);
+    const annotonForm = new AnnotonForm(annotonFormMetadata, self.annoton.presentation.molecularEntity);
 
     annotonForm.createFunctionDescriptionForm(self.annoton.presentation.fd);
-    annotonForm.onValueChanges(self.annoton.presentation.geneProduct.termLookup);
+    annotonForm.createMolecularEntityForm(self.annoton.presentation.molecularEntity);
 
     console.log(annotonForm);
 
@@ -126,7 +126,7 @@ export class NoctuaAnnotonFormService {
     if (filterNodes) {
       each(filterNodes, function (srcNode) {
 
-        //this.complexAnnotonData.geneProducts = srcAnnoton.complexAnnotonData.geneProducts;
+        //this.complexAnnotonData.molecularEntitys = srcAnnoton.complexAnnotonData.molecularEntitys;
         // this.complexAnnotonData.mcNode.copyValues(srcAnnoton.complexAnnotonData.mcNode);
 
         let destNode = this.annoton.getNode(srcNode.id);

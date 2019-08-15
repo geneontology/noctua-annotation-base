@@ -13,10 +13,11 @@ import { EntityGroupForm } from './entity-group-form';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
+import { EntityForm } from './entity-form';
 
 export class AnnotonForm {
   entityGroupForms: EntityGroupForm[] = [];
-  gp = new FormControl();
+  molecularEntity: FormGroup;
   bpOnlyEdge = new FormControl();
   fd = new FormArray([]);
 
@@ -24,13 +25,21 @@ export class AnnotonForm {
 
   private _fb = new FormBuilder();
 
-  constructor(metadata, geneProduct?: AnnotonNode) {
+  constructor(metadata, gp?: AnnotonNode) {
     this._metadata = metadata;
 
-    if (geneProduct) {
-      this.gp.setValue(geneProduct.getTerm());
-      this.gp.setValidators(termValidator(geneProduct));
+    if (gp) {
+      // this.gp.setValue(gp.getTerm());
+      //  this.gp.setValidators(termValidator(gp));
     }
+  }
+
+  createMolecularEntityForm(molecularEntity: AnnotonNode) {
+    const self = this;
+    const entityForm = new EntityForm(self._metadata, molecularEntity.id);
+
+    entityForm.onValueChanges(molecularEntity.termLookup);
+    this.molecularEntity = self._fb.group(entityForm);
   }
 
   createFunctionDescriptionForm(fdData) {
@@ -48,31 +57,15 @@ export class AnnotonForm {
 
   populateAnnoton(annoton: Annoton) {
     const gpNode = annoton.getGPNode();
-    gpNode.term = new Entity(this.gp.value.id, this.gp.value.label);
+    //  gpNode.term = new Entity(this.gp.value.id, this.gp.value.label);
 
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.populateAnnotonNodes(annoton);
     });
   }
 
-  onValueChanges(lookup: EntityLookup) {
-    const self = this;
-
-    self.gp.valueChanges.pipe(
-      distinctUntilChanged(),
-      debounceTime(400)
-    ).subscribe(data => {
-      self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
-        lookup.results = response;
-      });
-    });
-  }
 
   getErrors(error) {
-    if (this.gp.errors) {
-      error.push(this.gp.errors);
-    }
-
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.getErrors(error);
     });

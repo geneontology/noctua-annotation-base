@@ -15,8 +15,8 @@ const each = require('lodash/forEach');
 export class EntityForm {
     id
     term = new FormControl();
-    evidenceForms: EvidenceForm[] = []
-    evidenceFormArray = new FormArray([])
+    evidenceForms: EvidenceForm[] = [];
+    evidenceFormArray = new FormArray([]);
     _metadata: AnnotonFormMetadata;
     private _fb = new FormBuilder();
 
@@ -63,6 +63,7 @@ export class EntityForm {
         ).subscribe(data => {
             self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
                 lookup.results = response;
+                console.log(response)
             });
         });
     }

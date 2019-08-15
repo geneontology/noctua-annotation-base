@@ -61,32 +61,32 @@ export class GoProteinContainingComplex {
 
 export class GoCellularComponent {
     public static readonly id = annotonNodeType.GoCellularComponent;
-    public static readonly type = 'GO_0005575';
+    public static readonly type = 'GO:0005575';
 }
 
 export class GoBiologicalProcess {
     public static readonly id = annotonNodeType.GoBiologicalProcess;
-    public static readonly type = 'GO_0008150';
+    public static readonly type = 'GO:0008150';
 }
 
 export class GoMolecularFunction {
     public static readonly id = annotonNodeType.GoMolecularFunction;
-    public static readonly type = 'GO_0003674';
+    public static readonly type = 'GO:0003674';
 }
 
 export class GoMolecularEntity {
     public static readonly id = annotonNodeType.GoMolecularEntity;
-    public static readonly type = 'CHEBI_23367';
+    public static readonly type = 'CHEBI:23367';
 }
 
 export class GoChemicalEntity {
     public static readonly id = annotonNodeType.GoChemicalEntity;
-    public static readonly type = 'CHEBI_24431';
+    public static readonly type = 'CHEBI:24431';
 }
 
 export class GoEvidence {
     public static readonly id = annotonNodeType.GoEvidence;
-    public static readonly type = 'ECO_0000352';
+    public static readonly type = 'ECO:0000352';
 }
 
 export class GoCellTypeEntity {
@@ -106,7 +106,7 @@ export class GoOrganism {
 
 export class GoBiologicalPhase {
     public static readonly id = annotonNodeType.GoBiologicalPhase;
-    public static readonly type = 'GO_0044848';
+    public static readonly type = 'GO:0044848';
 }
 
 

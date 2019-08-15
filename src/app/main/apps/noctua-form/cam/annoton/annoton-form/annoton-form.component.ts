@@ -31,6 +31,7 @@ import {
   NoctuaFormConfigService,
   NoctuaLookupService,
   AnnotonState,
+  AnnotonType,
 } from 'noctua-form-base';
 
 @Component({
@@ -40,14 +41,17 @@ import {
 })
 
 export class AnnotonFormComponent implements OnInit, OnDestroy {
+  AnnotonState = AnnotonState;
+  AnnotonType = AnnotonType;
 
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
-  annotonState = AnnotonState;
   cam: Cam;
   annotonFormGroup: FormGroup;
   annotonFormSub: Subscription;
+
+  molecularEntity: AnnotonNode;
 
   searchCriteria: any = {};
   annotonFormPresentation: any;
@@ -74,6 +78,7 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
     private sparqlService: SparqlService
   ) {
     this.unsubscribeAll = new Subject();
+
     // this.annoton = self.noctuaAnnotonFormService.annoton;
     //  this.annotonFormPresentation = this.noctuaAnnotonFormService.annotonPresentation;
   }
@@ -89,6 +94,10 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
         this.currentAnnoton = this.noctuaAnnotonFormService.currentAnnoton;
         this.annoton = this.noctuaAnnotonFormService.annoton;
         this.state = this.noctuaAnnotonFormService.state;
+
+        // this.molecularEntity = this.noctuaAnnotonFormService.annoton.getNode(this.annotonFormGroup.controls['gp'].get('id').value);
+
+        console.log(this.molecularEntity)
       });
 
     this.camService.onCamChanged.subscribe((cam) => {

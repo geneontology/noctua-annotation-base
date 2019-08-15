@@ -1,15 +1,17 @@
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { AnnotonNode, EntityLookup, Predicate, Annoton, Entity } from './../../models/annoton';
+import { AnnotonNode, EntityLookup, Predicate, Annoton, Entity, AnnotonType, AnnotonNodeDisplay } from './../../models/annoton';
 import * as EntityDefinition from './entity-definition';
 import { each } from 'lodash';
 
 export interface ActivityDescription {
+    type: AnnotonType;
     nodes: (() => AnnotonNode)[];
-    triples,
-    overrides?: AnnotonNode;
+    triples: { subject: string, object: string, predicate: any }[];
+    overrides?: { [key: string]: AnnotonNodeDisplay };
 }
 
 export const activityUnitData: ActivityDescription = {
+    type: AnnotonType.default,
     nodes: [
         EntityDefinition.generateMolecularFunction,
         EntityDefinition.generateMolecularEntity,
@@ -22,36 +24,36 @@ export const activityUnitData: ActivityDescription = {
     triples: [{
         subject: EntityDefinition.annotonNodeType.GoMolecularFunction,
         object: EntityDefinition.annotonNodeType.GoMolecularEntity,
-        edge: noctuaFormConfig.edge.enabledBy
+        predicate: noctuaFormConfig.edge.enabledBy
     }, {
         subject: EntityDefinition.annotonNodeType.GoMolecularFunction,
         object: EntityDefinition.annotonNodeType.GoBiologicalProcess,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.partOf
     }, {
         subject: EntityDefinition.annotonNodeType.GoMolecularFunction,
         object: EntityDefinition.annotonNodeType.GoCellularComponent,
-        edge: noctuaFormConfig.edge.occursIn
+        predicate: noctuaFormConfig.edge.occursIn
     }, {
         subject: EntityDefinition.annotonNodeType.GoCellularComponent,
         object: EntityDefinition.annotonNodeType.GoCellTypeEntity,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.partOf
     }, {
         subject: EntityDefinition.annotonNodeType.GoCellTypeEntity,
         object: EntityDefinition.annotonNodeType.GoAnatomicalEntity,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.partOf
     }, {
         subject: EntityDefinition.annotonNodeType.GoAnatomicalEntity,
         object: EntityDefinition.annotonNodeType.GoOrganism,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.partOf
     }],
 };
 
-export const bpOnlyAnnotation = {
+export const bpOnlyAnnotation: ActivityDescription = {
+    type: AnnotonType.bpOnly,
     nodes: [
         EntityDefinition.generateMolecularFunction,
         EntityDefinition.generateMolecularEntity,
         EntityDefinition.generateBiologicalProcess,
-        EntityDefinition.generateCellularComponent,
         EntityDefinition.generateCellTypeEntity,
         EntityDefinition.generateAnatomicalEntity,
         EntityDefinition.generateOrganism
@@ -59,65 +61,49 @@ export const bpOnlyAnnotation = {
     triples: [{
         subject: EntityDefinition.annotonNodeType.GoMolecularFunction,
         object: EntityDefinition.annotonNodeType.GoMolecularEntity,
-        edge: noctuaFormConfig.edge.enabledBy
+        predicate: noctuaFormConfig.edge.enabledBy
     }, {
         subject: EntityDefinition.annotonNodeType.GoMolecularFunction,
         object: EntityDefinition.annotonNodeType.GoBiologicalProcess,
-        edge: noctuaFormConfig.edge.causallyUpstreamOfOrWithin
+        predicate: noctuaFormConfig.edge.causallyUpstreamOfOrWithin
     }, {
         subject: EntityDefinition.annotonNodeType.GoMolecularFunction,
-        object: EntityDefinition.annotonNodeType.GoCellularComponent,
-        edge: noctuaFormConfig.edge.occursIn
-    }, {
-        subject: EntityDefinition.annotonNodeType.GoCellularComponent,
         object: EntityDefinition.annotonNodeType.GoCellTypeEntity,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.occursIn
     }, {
         subject: EntityDefinition.annotonNodeType.GoCellTypeEntity,
         object: EntityDefinition.annotonNodeType.GoAnatomicalEntity,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.partOf
     }, {
         subject: EntityDefinition.annotonNodeType.GoAnatomicalEntity,
         object: EntityDefinition.annotonNodeType.GoOrganism,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.partOf
     }],
     overrides: {
-        mf: {
-            termRequiredList: [],
-            id: 'mf',
-            display: {
-                displaySection: '',
-                displayGroup: '',
-            },
+        [EntityDefinition.annotonNodeType.GoMolecularFunction]: <AnnotonNodeDisplay>{
+            displaySection: '',
+            displayGroup: '',
         },
-        'bp': {
-            id: 'bp',
+        [EntityDefinition.annotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             label: 'Biological Process',
+            treeLevel: 2
         },
-        'cc-1-1': {
-            id: 'cc-1-1',
+        [EntityDefinition.annotonNodeType.GoCellTypeEntity]: <AnnotonNodeDisplay>{
             label: 'occurs in (Cell Type)',
             relationship: noctuaFormConfig.edge.occursIn,
-            display: {
-                displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.bp,
-            },
             treeLevel: 3
         },
-        'cc-1-1-1': {
-            id: 'cc-1-1-1',
-            relationship: noctuaFormConfig.edge.partOf,
-            display: {
-                displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.bp,
-            },
-            label: 'part Of (Anatomy)',
+        [EntityDefinition.annotonNodeType.GoAnatomicalEntity]: <AnnotonNodeDisplay>{
             treeLevel: 4
         },
+        [EntityDefinition.annotonNodeType.GoOrganism]: <AnnotonNodeDisplay>{
+            treeLevel: 5
+        }
     }
 };
 
-export const ccOnlyAnnotation = {
+export const ccOnlyAnnotation: ActivityDescription = {
+    type: AnnotonType.ccOnly,
     nodes: [
         EntityDefinition.generateMolecularEntity,
         EntityDefinition.generateCellularComponent,
@@ -128,34 +114,58 @@ export const ccOnlyAnnotation = {
     triples: [{
         subject: EntityDefinition.annotonNodeType.GoMolecularEntity,
         object: EntityDefinition.annotonNodeType.GoCellularComponent,
-        edge: noctuaFormConfig.edge.enabledBy
+        predicate: noctuaFormConfig.edge.enabledBy
     }, {
         subject: EntityDefinition.annotonNodeType.GoCellularComponent,
         object: EntityDefinition.annotonNodeType.GoCellTypeEntity,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.partOf
     }, {
         subject: EntityDefinition.annotonNodeType.GoCellTypeEntity,
         object: EntityDefinition.annotonNodeType.GoAnatomicalEntity,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.partOf
     }, {
         subject: EntityDefinition.annotonNodeType.GoAnatomicalEntity,
         object: EntityDefinition.annotonNodeType.GoOrganism,
-        edge: noctuaFormConfig.edge.partOf
+        predicate: noctuaFormConfig.edge.partOf
     }],
+    overrides: {
+        [EntityDefinition.annotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
+            label: 'GP located in Cellular Component',
+            relationship: noctuaFormConfig.edge.locatedIn,
+            treeLevel: 2
+        },
+        [EntityDefinition.annotonNodeType.GoCellTypeEntity]: <AnnotonNodeDisplay>{
+            relationship: noctuaFormConfig.edge.occursIn,
+            treeLevel: 3
+        },
+        [EntityDefinition.annotonNodeType.GoAnatomicalEntity]: <AnnotonNodeDisplay>{
+            treeLevel: 4
+        },
+        [EntityDefinition.annotonNodeType.GoOrganism]: <AnnotonNodeDisplay>{
+            treeLevel: 5
+        }
+    }
 };
 
 export const createActivity = (activityDescription: ActivityDescription): Annoton => {
     const self = this;
     const annoton = new Annoton();
 
+    annoton.annotonType = activityDescription.type;
+
     each(activityDescription.nodes, (nodeFn) => {
         annoton.addNode(nodeFn.call(self));
+    });
+
+    each(activityDescription.overrides, (override: AnnotonNodeDisplay, key: EntityDefinition.annotonNodeType) => {
+        const node: AnnotonNode = annoton.getNode(key);
+        node.overrideValues(override);
     });
 
     each(activityDescription.triples, (triple) => {
         const predicate: Predicate = annoton.getNode(triple.object).predicate;
 
-        predicate.edge = Entity.createEntity(triple.edge);
+        predicate.edge = Entity.createEntity(triple.predicate);
         annoton.addEdgeById(triple.subject, triple.object, predicate);
     });
 

@@ -100,7 +100,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: AnnotonNode) {
     const self = this;
-    let gpNode = this.noctuaAnnotonFormService.annotonForm.gp.value;
+    let gpNode = this.noctuaAnnotonFormService.annotonForm.molecularEntity.get('term').value;
 
     if (gpNode) {
       let data = {
