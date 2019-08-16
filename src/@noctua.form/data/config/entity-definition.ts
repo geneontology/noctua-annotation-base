@@ -170,6 +170,9 @@ export const generateProteinContainingComplex = (override: Partial<AnnotonNodeDi
 export const generateMolecularEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoMolecularEntity.type);
 
+    //removing evidence for gp
+    annotonNode.predicate.evidence = [];
+
     annotonNode.id = GoMolecularEntity.id;
     annotonNode.lookupGroup = GoMolecularEntity.type;
     annotonNode.label = 'Gene Product';
@@ -275,7 +278,6 @@ export const generateCellTypeEntity = (override: Partial<AnnotonNodeDisplay> = {
     const annotonNode = generateBaseTerm(GoCellTypeEntity.type);
     annotonNode.id = GoCellTypeEntity.id;
     annotonNode.lookupGroup = GoCellTypeEntity.type;
-
     annotonNode.label = 'Part Of (Cell Type)';
     annotonNode.relationship = noctuaFormConfig.edge.partOf;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;

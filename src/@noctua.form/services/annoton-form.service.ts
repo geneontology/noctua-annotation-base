@@ -15,6 +15,8 @@ import { AnnotonForm } from './../models/forms/annoton-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { NoctuaGraphService } from './graph.service';
 import { CamService } from './cam.service';
+import { Entity } from '../models/annoton/entity';
+import { Evidence } from '../models/annoton/evidence';
 
 @Injectable({
   providedIn: 'root'
@@ -72,7 +74,9 @@ export class NoctuaAnnotonFormService {
   }
 
   initializeFormData(nodes) {
-    this.annoton = this.noctuaFormConfigService.createAnnotonModelFakeData(nodes);
+    //  this.annoton = this.noctuaFormConfigService.createAnnotonModelFakeData(nodes);
+
+    this.fakester(this.annoton);
     this.initializeForm();
   }
 
@@ -167,6 +171,44 @@ export class NoctuaAnnotonFormService {
     );
 
     this.initializeForm();
+  }
+
+
+  fakester(annoton: Annoton) {
+    const self = this;
+
+    each(annoton.nodes, (node: AnnotonNode) => {
+      self.noctuaLookupService.golrLookup('a', Object.assign({}, node.termLookup.requestParams, { rows: 100 })).subscribe(response => {
+        if (response && response.length > 0) {
+          const termsCount = response.length;
+          console.log(termsCount)
+          node.term = Entity.createEntity(response[Math.floor(Math.random() * termsCount)]);
+
+          each(node.predicate.evidence, (evidence: Evidence) => {
+            self.noctuaLookupService.golrLookup('a', Object.assign({}, evidence.evidenceLookup.requestParams, { rows: 100 })).subscribe(response => {
+              if (response && response.length > 0) {
+                const evidenceCount = response.length;
+                console.log(evidenceCount);
+                evidence.evidence = Entity.createEntity(response[Math.floor(Math.random() * evidenceCount)]);
+                evidence.reference = `PMID:${Math.floor(Math.random() * 1000000) + 1000}`;
+              }
+            });
+          });
+        }
+      });
+    });
+  }
+
+  private _fakeTerm(term: Entity, lookupFunc, requestParams) {
+    const self = this;
+
+    lookupFunc('a', requestParams).subscribe(response => {
+      if (response && response.length > 0) {
+        const count = response.length;
+        console.log(count);
+        term = Entity.createEntity(response[Math.floor(Math.random() * count)]);
+      }
+    });
   }
 }
 

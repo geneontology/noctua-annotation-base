@@ -44,7 +44,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     edges: []
   };
   private _presentation: any;
-  private _displayableNodes = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'cc-1-1-1'];
   private _grid: any[] = [];
 
   constructor() {
@@ -58,7 +57,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   get annotonConnections() {
     throw new Error('Method not implemented');
   }
-
 
   getGPNode() {
     const self = this;
@@ -129,8 +127,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     });
   }
 
-
-
   setAnnotonType(type) {
     this.annotonType = type;
   }
@@ -147,21 +143,22 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   enableSubmit() {
     const self = this;
     let result = true;
+    const gp = self.getNode(annotonNodeType.GoMolecularEntity);
+
     self.submitErrors = [];
 
-    each(self.nodes, function (node: AnnotonNode) {
+    each(self.nodes, (node: AnnotonNode) => {
       result = node.enableSubmit(self.submitErrors) && result;
     });
 
-    let gp = self.getNode(annotonNodeType.GoMolecularEntity);
     if (gp) {
       gp.required = false;
       if (!gp.getTerm().id) {
         gp.required = true;
-        let meta = {
+        const meta = {
           aspect: self.label
-        }
-        let error = new AnnotonError('error', 1, "A '" + gp.label + "' is required", meta)
+        };
+        const error = new AnnotonError('error', 1, "A '" + gp.label + "' is required", meta)
         self.submitErrors.push(error);
         result = false;
       }
@@ -305,32 +302,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     return this._presentation;
   }
 
-  addAnnotonPresentation(displaySectionId) {
-    const self = this;
-    let result = {};
-    result[displaySectionId] = {};
-
-    each(self.nodes, function (node: AnnotonNode) {
-      if (node.displaySection === displaySectionId && node.displayGroup) {
-        if (!result[displaySectionId][node.displayGroup.id]) {
-          result[displaySectionId][node.displayGroup.id] = {
-            shorthand: node.displayGroup.shorthand,
-            label: node.displayGroup.label,
-            nodes: []
-          };
-        }
-        result[displaySectionId][node.displayGroup.id].nodes.push(node);
-        node.nodeGroup = result[displaySectionId][node.displayGroup.id];
-        if (node.isComplement) {
-          node.nodeGroup.isComplement = true;
-        }
-      }
-    });
-
-    this.presentation.extra.push(result);
-
-    return result[displaySectionId];
-  }
 
   generateGrid() {
     const self = this;
@@ -340,7 +311,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       each(nodeGroup.nodes, function (node: AnnotonNode) {
         let term = node.getTerm();
 
-        if (node.id !== 'mc' && node.id !== annotonNodeType.GoMolecularEntity && term.id && _.includes(self._displayableNodes, node.id)) {
+        if (node.id !== 'mc' && node.id !== annotonNodeType.GoMolecularEntity && term.id) {
           self.generateGridRow(node);
         }
       });

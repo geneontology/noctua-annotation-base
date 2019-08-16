@@ -17,6 +17,7 @@ import { EntityForm } from './entity-form';
 
 export class AnnotonForm {
   entityGroupForms: EntityGroupForm[] = [];
+  molecularEntityForm: EntityForm;
   molecularEntity: FormGroup;
   bpOnlyEdge = new FormControl();
   fd = new FormArray([]);
@@ -36,10 +37,10 @@ export class AnnotonForm {
 
   createMolecularEntityForm(molecularEntity: AnnotonNode) {
     const self = this;
-    const entityForm = new EntityForm(self._metadata, molecularEntity.id);
 
-    entityForm.onValueChanges(molecularEntity.termLookup);
-    this.molecularEntity = self._fb.group(entityForm);
+    self.molecularEntityForm = new EntityForm(self._metadata, molecularEntity);
+    // self.molecularEntityForm.onValueChanges(molecularEntity.termLookup);
+    self.molecularEntity = self._fb.group(self.molecularEntityForm);
   }
 
   createFunctionDescriptionForm(fdData) {
@@ -59,6 +60,7 @@ export class AnnotonForm {
     const gpNode = annoton.getGPNode();
     //  gpNode.term = new Entity(this.gp.value.id, this.gp.value.label);
 
+    this.molecularEntityForm.populateTerm();
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.populateAnnotonNodes(annoton);
     });

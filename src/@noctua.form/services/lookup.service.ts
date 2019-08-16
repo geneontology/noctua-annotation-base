@@ -52,7 +52,6 @@ export class NoctuaLookupService {
   }
 
 
-
   escapeGolrValue(str) {
     var pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g;
     return str.replace(pattern, "\\$1");

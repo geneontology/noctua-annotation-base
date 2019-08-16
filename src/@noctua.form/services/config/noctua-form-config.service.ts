@@ -1079,49 +1079,6 @@ export class NoctuaFormConfigService {
     }
   }
 
-  createAnnotonModel2(modelType, srcAnnoton?): Annoton {
-    const self = this;
-    const annoton = new Annoton();
-    const modelIds = _.cloneDeep(self._modelRelationship);
-
-    annoton.setAnnotonType(modelType);
-
-    each(modelIds[modelType].nodes, function (id) {
-      const annotonNode = self.generateAnnotonNode(id);
-      annoton.addNode(annotonNode);
-    });
-
-    each(modelIds[modelType].triples, function (triple) {
-      const predicate = annoton.getNode(triple.object).predicate;
-
-      predicate.edge = triple.edge;
-      annoton.addEdgeById(triple.subject, triple.object, predicate);
-    });
-
-    const startNode = annoton.getNode(modelIds[modelType].nodes[0]);
-    const startTriple = annoton.getEdge(modelIds[modelType].triples[0].subject, modelIds[modelType].triples[0].object);
-
-    startNode.predicate = startTriple.predicate;
-
-    if (srcAnnoton) {
-      // annoton.copyValues(srcAnnoton);
-    }
-
-    each(modelIds[modelType].overrides, function (overridesData) {
-      const node: AnnotonNode = annoton.getNode(overridesData.id);
-
-      overridesData.isExtension ? node.isExtension = overridesData.isExtension : null;
-      overridesData.treeLevel ? node.treeLevel = overridesData.treeLevel : null;
-      overridesData.termRequiredList ? node.termRequiredList = overridesData.termRequiredList : null;
-      overridesData.term ? node.term = overridesData.term : null;
-      overridesData.display ? node.setDisplay(overridesData.display) : null;
-      overridesData.label ? node.label = overridesData.label : null;
-      overridesData.relationship ? node.relationship = overridesData.relationship : null;
-    });
-
-    annoton.enableSubmit();
-    return annoton;
-  }
 
   generateAnnotonNode(id?, overrides?): AnnotonNode {
     const self = this;
@@ -1176,6 +1133,7 @@ export class NoctuaFormConfigService {
     annoton.enableSubmit();
     return annoton;
   }
+
 
   findEdge(predicateId) {
     _.find(noctuaFormConfig.edge, {

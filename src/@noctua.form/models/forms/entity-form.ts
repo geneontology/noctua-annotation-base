@@ -11,21 +11,25 @@ import { AnnotonNode } from '..';
 declare const require: any;
 const each = require('lodash/forEach');
 
-
 export class EntityForm {
-    id
+    id: string;
+    node: AnnotonNode;
     term = new FormControl();
     evidenceForms: EvidenceForm[] = [];
     evidenceFormArray = new FormArray([]);
     _metadata: AnnotonFormMetadata;
     private _fb = new FormBuilder();
 
-    constructor(metadata, id) {
+    constructor(metadata, entity: AnnotonNode) {
         this._metadata = metadata;
-        this.id = id;
+        this.id = entity.id;
+        this.node = entity;
+
+        this._createEvidenceForms(entity);
+        this._onValueChanges(entity.termLookup);
     }
 
-    createEvidenceForms(entity: AnnotonNode) {
+    private _createEvidenceForms(entity: AnnotonNode) {
         const self = this;
 
         this.term.setValue(entity.getTerm());
@@ -41,20 +45,20 @@ export class EntityForm {
         });
     }
 
-    populateTerm(annotonNode: AnnotonNode) {
+    populateTerm() {
         const self = this;
 
-        annotonNode.term = new Entity(this.term.value.id, this.term.value.label);
+        self.node.term = new Entity(this.term.value.id, this.term.value.label);
 
         self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
-            const evidence: Evidence = annotonNode.predicate.evidence[index];
+            const evidence: Evidence = self.node.predicate.evidence[index];
             if (evidence) {
                 evidenceForm.populateEvidence(evidence);
             }
         });
     }
 
-    onValueChanges(lookup: EntityLookup) {
+    private _onValueChanges(lookup: EntityLookup) {
         const self = this;
 
         self.term.valueChanges.pipe(
@@ -63,7 +67,6 @@ export class EntityForm {
         ).subscribe(data => {
             self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
                 lookup.results = response;
-                console.log(response)
             });
         });
     }

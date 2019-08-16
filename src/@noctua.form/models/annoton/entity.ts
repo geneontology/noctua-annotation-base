@@ -3,7 +3,12 @@ import { EntityLookup } from './entity-lookup';
 declare const require: any;
 const uuid = require('uuid/v1');
 
-export class Entity {
+export interface EntityBase {
+  id: string;
+  label: string;
+}
+
+export class Entity implements EntityBase {
   uuid: string;
   id: string;
   label: string;
@@ -16,17 +21,15 @@ export class Entity {
     this.url = url;
   }
 
-  hasValue() {
-    let result = this.id !== null && this.id !== undefined && this.id.length > 0;
-
-    return result
-  }
-
-  static createEntity(value) {
-    let entity = new Entity(value.id, value.label);
+  static createEntity(value: Partial<EntityBase>) {
+    const entity = new Entity(value.id, value.label);
 
     return entity;
   }
 
+  hasValue() {
+    const result = this.id !== null && this.id !== undefined && this.id.length > 0;
 
+    return result;
+  }
 } 

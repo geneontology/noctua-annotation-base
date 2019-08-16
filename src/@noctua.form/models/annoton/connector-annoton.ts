@@ -51,10 +51,12 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     this.upstreamNode = upstreamNode;
     this.downstreamNode = downstreamNode;
     this.state = state ? state : ConnectorState.creation;
-
     this.rule = new ConnectorRule();
-    this.rule.subjectMFCatalyticActivity.condition = upstreamNode.isCatalyticActivity;
-    this.rule.objectMFCatalyticActivity.condition = downstreamNode.isCatalyticActivity;
+
+    if (upstreamNode) {
+      this.rule.subjectMFCatalyticActivity.condition = upstreamNode.isCatalyticActivity;
+      this.rule.objectMFCatalyticActivity.condition = downstreamNode.isCatalyticActivity;
+    }
   }
 
   setRule() {

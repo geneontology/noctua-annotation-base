@@ -24,12 +24,9 @@ export class EntityGroupForm {
 
         this.entityForms = [];
         entities.forEach((entity) => {
-            const entityForm = new EntityForm(self._metadata, entity.id);
+            const entityForm = new EntityForm(self._metadata, entity);
 
-            this.entityForms.push(entityForm);
-            entityForm.createEvidenceForms(entity);
-            entityForm.onValueChanges(entity.termLookup);
-
+            self.entityForms.push(entityForm);
             self.entityGroup.push(self._fb.group(entityForm));
         });
     }
@@ -38,10 +35,7 @@ export class EntityGroupForm {
         const self = this;
 
         self.entityForms.forEach((entityForm: EntityForm) => {
-            let annotonNode = annoton.getNode(entityForm.id);
-            if (annotonNode) {
-                entityForm.populateTerm(annotonNode);
-            }
+            entityForm.populateTerm();
         });
     }
 
