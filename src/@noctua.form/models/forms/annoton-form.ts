@@ -39,7 +39,6 @@ export class AnnotonForm {
     const self = this;
 
     self.molecularEntityForm = new EntityForm(self._metadata, molecularEntity);
-    // self.molecularEntityForm.onValueChanges(molecularEntity.termLookup);
     self.molecularEntity = self._fb.group(self.molecularEntityForm);
   }
 
@@ -57,15 +56,11 @@ export class AnnotonForm {
   }
 
   populateAnnoton(annoton: Annoton) {
-    const gpNode = annoton.getGPNode();
-    //  gpNode.term = new Entity(this.gp.value.id, this.gp.value.label);
-
     this.molecularEntityForm.populateTerm();
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.populateAnnotonNodes(annoton);
     });
   }
-
 
   getErrors(error) {
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {

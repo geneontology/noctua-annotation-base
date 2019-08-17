@@ -136,10 +136,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  openMoreEvidenceDialog() {
-
-  }
-
   addNDEvidence() {
     const self = this;
 

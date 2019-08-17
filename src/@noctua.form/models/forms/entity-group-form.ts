@@ -26,6 +26,7 @@ export class EntityGroupForm {
         entities.forEach((entity) => {
             const entityForm = new EntityForm(self._metadata, entity);
 
+            entityForm.createEvidenceForms(entity);
             self.entityForms.push(entityForm);
             self.entityGroup.push(self._fb.group(entityForm));
         });

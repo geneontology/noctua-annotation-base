@@ -76,24 +76,28 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
+          <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
+            Search Database
+          </button>
+          <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
+            NOT Qualifier
+          </button>
+          <button mat-menu-item [matMenuTriggerFor]="addMenu">Add</button>
+          <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
+          <button mat-menu-item [matMenuTriggerFor]="helpersMenu">Easy Fill</button>
           <button mat-menu-item class="" (click)="clearValues()">
             Clear Values
           </button>
-          <button mat-menu-item *ngIf="entity.aspect" class="" (click)="addRootTerm()">
-            Root Term
-          </button>
-          <h6 class="noc-menu-heading"> Add More Data </h6>
+        </mat-menu>
+        <mat-menu #addMenu="matMenu">
           <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
             Add Has Input
           </button>
           <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
             Add Has Output
           </button>
-          <h6 class="noc-menu-heading"> Search </h6>
-          <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
-            Search Database
-          </button>
-          <h6 class="noc-menu-heading"> Evidence</h6>
+        </mat-menu>
+        <mat-menu #evidenceMenu="matMenu">
           <button mat-menu-item class="" (click)="addEvidence()">
             Add Evidence
           </button>
@@ -103,14 +107,13 @@
           <button mat-menu-item class="" (click)="openSelectEvidenceDialog(evidence)">
             Clone Evidence
           </button>
+        </mat-menu>
+        <mat-menu #helpersMenu="matMenu">
+          <button mat-menu-item *ngIf="entity.aspect" class="" (click)="addRootTerm()">
+            Add Root Term Value
+          </button>
           <button mat-menu-item class="" (click)="addNDEvidence()">
-            Add ND Reference
-          </button>
-          <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
-            NOT Qualifier
-          </button>
-          <button mat-menu-item class="" (click)="openMoreEvidenceDialog()">
-            More Evidence
+            Add ND Reference Value
           </button>
         </mat-menu>
       </div>

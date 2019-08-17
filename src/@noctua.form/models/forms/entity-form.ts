@@ -25,11 +25,10 @@ export class EntityForm {
         this.id = entity.id;
         this.node = entity;
 
-        this._createEvidenceForms(entity);
         this._onValueChanges(entity.termLookup);
     }
 
-    private _createEvidenceForms(entity: AnnotonNode) {
+    createEvidenceForms(entity: AnnotonNode) {
         const self = this;
 
         this.term.setValue(entity.getTerm());

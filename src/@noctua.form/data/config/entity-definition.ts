@@ -1,3 +1,5 @@
+const getUuid = require('uuid/v1');
+
 import { noctuaFormConfig } from './../../noctua-form-config';
 import {
     AnnotonNode,
@@ -40,7 +42,7 @@ const baseRequestParams = {
     _: Date.now()
 };
 
-export enum annotonNodeType {
+export enum AnnotonNodeType {
     GoProteinContainingComplex = 'GoProteinContainingComplex',
     GoCellularComponent = 'GoCellularComponent',
     GoBiologicalProcess = 'GoBiologicalProcess',
@@ -55,57 +57,57 @@ export enum annotonNodeType {
 }
 
 export class GoProteinContainingComplex {
-    public static readonly id = annotonNodeType.GoProteinContainingComplex;
+    public static readonly id = AnnotonNodeType.GoProteinContainingComplex;
     public static readonly type = 'GO:0032991';
 }
 
 export class GoCellularComponent {
-    public static readonly id = annotonNodeType.GoCellularComponent;
+    public static readonly id = AnnotonNodeType.GoCellularComponent;
     public static readonly type = 'GO:0005575';
 }
 
 export class GoBiologicalProcess {
-    public static readonly id = annotonNodeType.GoBiologicalProcess;
+    public static readonly id = AnnotonNodeType.GoBiologicalProcess;
     public static readonly type = 'GO:0008150';
 }
 
 export class GoMolecularFunction {
-    public static readonly id = annotonNodeType.GoMolecularFunction;
+    public static readonly id = AnnotonNodeType.GoMolecularFunction;
     public static readonly type = 'GO:0003674';
 }
 
 export class GoMolecularEntity {
-    public static readonly id = annotonNodeType.GoMolecularEntity;
+    public static readonly id = AnnotonNodeType.GoMolecularEntity;
     public static readonly type = 'CHEBI:23367';
 }
 
 export class GoChemicalEntity {
-    public static readonly id = annotonNodeType.GoChemicalEntity;
+    public static readonly id = AnnotonNodeType.GoChemicalEntity;
     public static readonly type = 'CHEBI:24431';
 }
 
 export class GoEvidence {
-    public static readonly id = annotonNodeType.GoEvidence;
+    public static readonly id = AnnotonNodeType.GoEvidence;
     public static readonly type = 'ECO:0000352';
 }
 
 export class GoCellTypeEntity {
-    public static readonly id = annotonNodeType.GoCellTypeEntity;
+    public static readonly id = AnnotonNodeType.GoCellTypeEntity;
     public static readonly type = 'CL:0000003';
 }
 
 export class GoAnatomicalEntity {
-    public static readonly id = annotonNodeType.GoAnatomicalEntity;
+    public static readonly id = AnnotonNodeType.GoAnatomicalEntity;
     public static readonly type = 'UBERON:0000061';
 }
 
 export class GoOrganism {
-    public static readonly id = annotonNodeType.GoOrganism;
+    public static readonly id = AnnotonNodeType.GoOrganism;
     public static readonly type = 'NCBITaxon_1';
 }
 
 export class GoBiologicalPhase {
-    public static readonly id = annotonNodeType.GoBiologicalPhase;
+    public static readonly id = AnnotonNodeType.GoBiologicalPhase;
     public static readonly type = 'GO:0044848';
 }
 
@@ -169,9 +171,6 @@ export const generateProteinContainingComplex = (override: Partial<AnnotonNodeDi
 
 export const generateMolecularEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = generateBaseTerm(GoMolecularEntity.type);
-
-    //removing evidence for gp
-    annotonNode.predicate.evidence = [];
 
     annotonNode.id = GoMolecularEntity.id;
     annotonNode.lookupGroup = GoMolecularEntity.type;
@@ -322,7 +321,7 @@ export const generateOrganism = (override: Partial<AnnotonNodeDisplay> = {}): An
 
 export const insertNode = (type): AnnotonNode => {
     const annotonNode = generateBaseTerm(type);
-    annotonNode.id = GoChemicalEntity.id;
+    annotonNode.id = GoChemicalEntity.id + getUuid();
     annotonNode.lookupGroup = GoChemicalEntity.type;
 
     annotonNode.label = 'Has Input (Gene Product/Chemical)';

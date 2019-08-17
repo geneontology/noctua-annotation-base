@@ -67,7 +67,7 @@ export const bpOnlyAnnotation: ActivityDescription = {
         object: EntityDefinition.annotonNodeType.GoBiologicalProcess,
         predicate: noctuaFormConfig.edge.causallyUpstreamOfOrWithin
     }, {
-        subject: EntityDefinition.annotonNodeType.GoMolecularFunction,
+        subject: EntityDefinition.annotonNodeType.GoBiologicalProcess,
         object: EntityDefinition.annotonNodeType.GoCellTypeEntity,
         predicate: noctuaFormConfig.edge.occursIn
     }, {
