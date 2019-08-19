@@ -10,14 +10,16 @@ import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { Predicate } from '.';
+import { AnnotonNodeType } from './../../data/config/entity-definition';
 
 export interface AnnotonNodeDisplay {
   id: string;
+  name: string;
   label: string;
   uuid: string;
   isExtension: boolean;
   aspect: string;
-  lookupGroup: string;
+  type: string;
   displaySection: any;
   displayGroup: any;
   relationship: any;
@@ -28,13 +30,14 @@ export interface AnnotonNodeDisplay {
 
 export class AnnotonNode implements AnnotonNodeDisplay {
   id: string;
+  name: string;
   label: string;
   uuid: string;
+  type: string;
   term: Entity = new Entity('', '');
   termLookup: EntityLookup = new EntityLookup();
   isExtension = false;
   aspect: string;
-  lookupGroup: string;
   nodeGroup: any = {};
   annoton: Annoton;
   ontologyClass: any = [];
@@ -50,10 +53,8 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   treeLevel = 1;
   required = false;
   visible = true;
-  termRequiredList = ['mf'];
-  edgeRange: string[];
-  evidenceRequiredList = ['mf', 'bp', 'cc', 'mf-1', 'mf-2', 'bp-1', 'bp-1-1', 'cc-1', 'cc-1-1', 'c-1-1-1']
-  evidenceNotRequiredList = [];
+  termRequiredList: string[] = [AnnotonNodeType.GoMolecularFunction];
+  canInsert = [];
   errors = [];
   warnings = [];
   status = '0';

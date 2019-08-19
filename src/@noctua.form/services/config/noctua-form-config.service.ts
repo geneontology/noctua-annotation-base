@@ -1071,11 +1071,11 @@ export class NoctuaFormConfigService {
   createAnnotonModel(modelType: AnnotonType, srcAnnoton?): Annoton {
     switch (modelType) {
       case AnnotonType.default:
-        return ModelDefinition.createActivity(ModelDefinition.activityUnitData);
+        return ModelDefinition.createActivity(ModelDefinition.activityUnitDescription);
       case AnnotonType.bpOnly:
-        return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotation);
+        return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationDescription);
       case AnnotonType.ccOnly:
-        return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotation);
+        return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationDescription);
     }
   }
 
@@ -1097,7 +1097,7 @@ export class NoctuaFormConfigService {
     annotonNode.relationship = nodeData.relationship;
     annotonNode.displaySection = (overrides && overrides.displaySection) ? overrides.displaySection : nodeData.displaySection;
     annotonNode.displayGroup = nodeData.displayGroup;
-    annotonNode.lookupGroup = nodeData.lookupGroup;
+    annotonNode.type = nodeData.lookupGroup;
     annotonNode.treeLevel = nodeData.treeLevel;
     annotonNode.isExtension = nodeData.isExtension;
     annotonNode.setTermLookup(nodeData.termLookup.requestParams);

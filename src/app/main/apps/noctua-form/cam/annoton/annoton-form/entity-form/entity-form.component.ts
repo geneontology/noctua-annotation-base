@@ -80,6 +80,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
   }
 
+  addTerm(entity) {
+
+  }
+
   addEvidence() {
     const self = this;
 

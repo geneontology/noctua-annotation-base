@@ -30,7 +30,7 @@ import { NoctuaUserService } from './../services/user.service';
 
 import 'rxjs/add/observable/forkJoin';
 import * as _ from 'lodash';
-import { annotonNodeType } from './../data/config/entity-definition';
+import { AnnotonNodeType } from './../data/config/entity-definition';
 import { AnnotonType } from '@noctua.form/models/annoton/annoton';
 
 
@@ -374,8 +374,8 @@ export class NoctuaGraphService {
         const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
         const annotonType = self.determineAnnotonType(subjectNode, subjectEdges);
         const annoton = self.noctuaFormConfigService.createAnnotonModel(AnnotonType.default);
-        const annotonNode = annoton.getNode(annotonNodeType.GoMolecularFunction);
-        const triple = annoton.getEdge(annotonNodeType.GoMolecularFunction, annotonNodeType.GoMolecularEntity);
+        const annotonNode = annoton.getNode(AnnotonNodeType.GoMolecularFunction);
+        const triple = annoton.getEdge(AnnotonNodeType.GoMolecularFunction, AnnotonNodeType.GoMolecularEntity);
 
         annotonNode.term = subjectNode.term;
         annotonNode.classExpression = subjectNode.classExpression;
@@ -475,14 +475,14 @@ export class NoctuaGraphService {
 
   adjustBPOnly(annoton, srcEdge) {
     const self = this;
-    const mfNode = annoton.getNode(annotonNodeType.GoMolecularFunction);
+    const mfNode = annoton.getNode(AnnotonNodeType.GoMolecularFunction);
     const bpNode = annoton.getNode('bp');
 
     if (mfNode && bpNode && annoton.annotonType === noctuaFormConfig.annotonType.options.bpOnly.name) {
       mfNode.displaySection = noctuaFormConfig.displaySection.fd;
       mfNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-      annoton.editEdge(annotonNodeType.GoMolecularFunction, 'bp', srcEdge);
-      bpNode.relationship = annoton.getEdge(annotonNodeType.GoMolecularFunction, 'bp').edge;
+      annoton.editEdge(AnnotonNodeType.GoMolecularFunction, 'bp', srcEdge);
+      bpNode.relationship = annoton.getEdge(AnnotonNodeType.GoMolecularFunction, 'bp').edge;
     }
   }
 

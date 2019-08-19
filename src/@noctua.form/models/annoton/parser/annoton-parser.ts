@@ -75,14 +75,14 @@ export class AnnotonParser {
     let result = true;
     let error;
 
-    if (!_.includes(node.closures, node.lookupGroup)) {
+    if (!_.includes(node.closures, node.type)) {
       let meta = {
         aspect: node.label,
         subjectNode: {
           label: node.label
         }
       }
-      error = new AnnotonError('error', 4, "Wrong ontology class. Expected " + JSON.stringify(node.lookupGroup), meta);
+      error = new AnnotonError('error', 4, "Wrong ontology class. Expected " + JSON.stringify(node.type), meta);
       self.errors.push(error);
       node.errors.push(error);
       result = false;
@@ -150,7 +150,7 @@ export class AnnotonParser {
         label: node.term.label
       }
     }
-    let error = new AnnotonError('error', 4, "Incorrect association between term and relationship" + JSON.stringify(node.lookupGroup), meta);
+    let error = new AnnotonError('error', 4, "Incorrect association between term and relationship" + JSON.stringify(node.type), meta);
     self.errors.push(error);
     node.errors.push(error);
 
