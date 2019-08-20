@@ -4,6 +4,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { noctuaFormExample } from './../..//noctua-form-examples';
 
 import * as ModelDefinition from './../../data/config/model-definition';
+import * as EntityDefinition from './../../data/config/entity-definition';
 
 import * as _ from 'lodash';
 
@@ -1068,6 +1069,20 @@ export class NoctuaFormConfigService {
     return connectorAnnoton;
   }
 
+  getInsertEntityMenuItems(annotonNodeType: EntityDefinition.AnnotonNodeType): [] {
+    const options = {
+      [EntityDefinition.AnnotonNodeType.GoMolecularFunction]: [{
+        label: 'Add Has Input',
+        id: EntityDefinition.AnnotonNodeType.GoChemicalEntity
+      }, {
+        label: 'Add Has Output',
+        id: EntityDefinition.AnnotonNodeType.GoChemicalEntity
+      }]
+    };
+
+    return options[annotonNodeType] || [];
+  }
+
   createAnnotonModel(modelType: AnnotonType, srcAnnoton?): Annoton {
     switch (modelType) {
       case AnnotonType.default:
@@ -1079,6 +1094,9 @@ export class NoctuaFormConfigService {
     }
   }
 
+  insertAnnotonNode(annoton: Annoton, subjectNode: AnnotonNode, nodeType: EntityDefinition.AnnotonNodeType) {
+    ModelDefinition.insertNode(annoton, subjectNode, nodeType);
+  }
 
   generateAnnotonNode(id?, overrides?): AnnotonNode {
     const self = this;
@@ -1097,7 +1115,7 @@ export class NoctuaFormConfigService {
     annotonNode.relationship = nodeData.relationship;
     annotonNode.displaySection = (overrides && overrides.displaySection) ? overrides.displaySection : nodeData.displaySection;
     annotonNode.displayGroup = nodeData.displayGroup;
-    annotonNode.type = nodeData.lookupGroup;
+    annotonNode.category = nodeData.lookupGroup;
     annotonNode.treeLevel = nodeData.treeLevel;
     annotonNode.isExtension = nodeData.isExtension;
     annotonNode.setTermLookup(nodeData.termLookup.requestParams);

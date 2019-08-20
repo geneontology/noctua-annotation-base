@@ -14,12 +14,12 @@ import { AnnotonNodeType } from './../../data/config/entity-definition';
 
 export interface AnnotonNodeDisplay {
   id: string;
-  name: string;
+  type: AnnotonNodeType;
   label: string;
   uuid: string;
   isExtension: boolean;
   aspect: string;
-  type: string;
+  category: string;
   displaySection: any;
   displayGroup: any;
   relationship: any;
@@ -30,10 +30,10 @@ export interface AnnotonNodeDisplay {
 
 export class AnnotonNode implements AnnotonNodeDisplay {
   id: string;
-  name: string;
+  type: AnnotonNodeType;
   label: string;
   uuid: string;
-  type: string;
+  category: string;
   term: Entity = new Entity('', '');
   termLookup: EntityLookup = new EntityLookup();
   isExtension = false;

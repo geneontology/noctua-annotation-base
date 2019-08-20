@@ -90,11 +90,9 @@
           </button>
         </mat-menu>
         <mat-menu #addMenu="matMenu">
-          <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
-            Add Has Input
-          </button>
-          <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
-            Add Has Output
+          <button mat-menu-item *ngFor="let insertMenuItem of insertMenuItems" class=""
+            (click)="insertEntity(insertMenuItem.id)">
+            {{insertMenuItem.label}}
           </button>
         </mat-menu>
         <mat-menu #evidenceMenu="matMenu">

@@ -32,8 +32,10 @@ import {
   AnnotonNode,
   Evidence,
   noctuaFormConfig,
-  Entity
+  Entity,
+  EntityDefinition
 } from 'noctua-form-base';
+
 
 @Component({
   selector: 'noc-entity-form',
@@ -42,21 +44,12 @@ import {
 })
 
 export class EntityFormComponent implements OnInit, OnDestroy {
-  searchCriteria: any = {};
-  // annotonForm: FormGroup;
-  annotonFormPresentation: any;
-  evidenceFormArray: FormArray;
-  autcompleteResults = {
-    term: [],
-    evidence: []
-  };
-  cams: any[] = [];
-
-  nodeGroup: any = {}
-  entity: AnnotonNode;
-
   @Input('entityFormGroup')
   public entityFormGroup: FormGroup;
+
+  evidenceFormArray: FormArray;
+  entity: AnnotonNode;
+  insertMenuItems = [];
 
   private unsubscribeAll: Subject<any>;
 
@@ -78,6 +71,8 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
+    this.insertMenuItems = this.noctuaFormConfigService.getInsertEntityMenuItems(this.entity.type);
+    console.log(this.insertMenuItems)
   }
 
   addTerm(entity) {
@@ -104,10 +99,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: AnnotonNode) {
     const self = this;
-    let gpNode = this.noctuaAnnotonFormService.annotonForm.molecularEntity.get('term').value;
+    const gpNode = this.noctuaAnnotonFormService.annotonForm.molecularEntity.get('term').value;
 
     if (gpNode) {
-      let data = {
+      const data = {
         readonly: false,
         gpNode: gpNode,
         aspect: entity.aspect,
@@ -118,7 +113,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
         }
       };
 
-      let success = function (selected) {
+      const success = function (selected) {
         if (selected.term) {
           entity.term = new Entity(selected.term.term.id, selected.term.term.label);
 
@@ -130,20 +125,24 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       }
       self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
     } else {
-      let errors = [];
-      let meta = {
+      const errors = [];
+      const meta = {
         aspect: gpNode ? gpNode.label : 'Gene Product'
       }
-      // let error = new AnnotonError('error', 1, "Please enter a gene product", meta)
+      // const error = new AnnotonError('error', 1, "Please enter a gene product", meta)
       //errors.push(error);
       // self.dialogService.openAnnotonErrorsDialog(ev, entity, errors)
     }
   }
 
+  insertEntity(nodeType: EntityDefinition.AnnotonNodeType) {
+    this.noctuaFormConfigService.insertAnnotonNode(this.noctuaAnnotonFormService.annoton, this.entity, nodeType);
+  }
+
   addNDEvidence() {
     const self = this;
 
-    let evidence = new Evidence();
+    const evidence = new Evidence();
     evidence.setEvidence(new Entity(
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
@@ -155,7 +154,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   addRootTerm() {
     const self = this;
 
-    let term = _.find(noctuaFormConfig.rootNode, (rootNode) => {
+    const term = _.find(noctuaFormConfig.rootNode, (rootNode) => {
       return rootNode.aspect === self.entity.aspect
     });
 
@@ -175,9 +174,9 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   openSelectEvidenceDialog() {
     const self = this;
 
-    let evidences: Evidence[] = this.camService.getUniqueEvidence();
+    const evidences: Evidence[] = this.camService.getUniqueEvidence();
 
-    let success = function (selected) {
+    const success = function (selected) {
       if (selected.evidences && selected.evidences.length > 0) {
         self.entity.predicate.setEvidence(selected.evidences, ['assignedBy']);
         self.noctuaAnnotonFormService.initializeForm();
