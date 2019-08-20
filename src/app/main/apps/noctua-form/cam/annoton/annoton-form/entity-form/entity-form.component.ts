@@ -72,11 +72,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
     this.insertMenuItems = this.noctuaFormConfigService.getInsertEntityMenuItems(this.entity.type);
-    console.log(this.insertMenuItems)
-  }
-
-  addTerm(entity) {
-
   }
 
   addEvidence() {
@@ -137,6 +132,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   insertEntity(nodeType: EntityDefinition.AnnotonNodeType) {
     this.noctuaFormConfigService.insertAnnotonNode(this.noctuaAnnotonFormService.annoton, this.entity, nodeType);
+    this.noctuaAnnotonFormService.initializeForm();
   }
 
   addNDEvidence() {

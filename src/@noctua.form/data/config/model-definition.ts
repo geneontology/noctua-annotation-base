@@ -3,6 +3,9 @@ import { AnnotonNode, EntityLookup, Predicate, Annoton, Entity, AnnotonType, Ann
 import * as EntityDefinition from './entity-definition';
 import { each } from 'lodash';
 
+declare const require: any;
+const getUuid = require('uuid/v1');
+
 export interface ActivityDescription {
     type: AnnotonType;
     nodes: { [key: string]: AnnotonNodeDisplay };
@@ -311,7 +314,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
 
 export const insertNodeDescription = {
     [EntityDefinition.AnnotonNodeType.GoMolecularFunction]: {
-        [EntityDefinition.AnnotonNodeType.GoChemicalEntity]: <InsertNodeDescription>{
+        [EntityDefinition.AnnotonNodeType.GoChemicalEntityHasInput]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
                 id: EntityDefinition.GoChemicalEntity.id,
                 category: EntityDefinition.GoChemicalEntity.category,
@@ -319,16 +322,50 @@ export const insertNodeDescription = {
                 relationship: noctuaFormConfig.edge.hasInput,
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
-                treeLevel: 3,
+                treeLevel: 2,
                 isExtension: true,
             },
             triples: [{
                 subject: EntityDefinition.AnnotonNodeType.GoMolecularFunction,
-                object: EntityDefinition.AnnotonNodeType.GoChemicalEntity,
+                object: null,
                 predicate: noctuaFormConfig.edge.hasInput
             }],
+        },
+        [EntityDefinition.AnnotonNodeType.GoChemicalEntityHasOutput]: <InsertNodeDescription>{
+            node: <AnnotonNodeDisplay>{
+                id: EntityDefinition.GoChemicalEntity.id,
+                category: EntityDefinition.GoChemicalEntity.category,
+                label: 'Has Output (Gene Product/Chemical)',
+                relationship: noctuaFormConfig.edge.hasOutput,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.mf,
+                treeLevel: 2,
+                isExtension: true,
+            },
+            triples: [{
+                subject: EntityDefinition.AnnotonNodeType.GoMolecularFunction,
+                object: null,
+                predicate: noctuaFormConfig.edge.hasOutput
+            }],
+        },
+        [EntityDefinition.AnnotonNodeType.GoBiologicalPhase]: <InsertNodeDescription>{
+            node: <AnnotonNodeDisplay>{
+                id: EntityDefinition.GoBiologicalPhase.id,
+                category: EntityDefinition.GoBiologicalPhase.category,
+                label: 'Happens During (Temporal Phase)',
+                relationship: noctuaFormConfig.edge.happensDuring,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.mf,
+                treeLevel: 2,
+                isExtension: true,
+            },
+            triples: [{
+                subject: EntityDefinition.AnnotonNodeType.GoMolecularFunction,
+                object: null,
+                predicate: noctuaFormConfig.edge.happensDuring
+            }]
         }
-    },
+    }
 };
 
 
@@ -365,14 +402,17 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType:
     const nodeDescription: InsertNodeDescription = insertNodeDescription[subjectNode.id][nodeType];
 
     const annotonNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
+
+    annotonNode.id += '-' + getUuid();
     annoton.addNode(annotonNode);
 
     each(nodeDescription.triples, (triple) => {
-        const predicate: Predicate = annoton.getNode(triple.object).predicate;
+        const objectId = triple.object ? triple.object : annotonNode.id;
+        const predicate: Predicate = annoton.getNode(objectId).predicate;
 
         predicate.edge = Entity.createEntity(triple.predicate);
-        annoton.addEdgeById(triple.subject, triple.object, predicate);
+        annoton.addEdgeById(triple.subject, objectId, predicate);
     });
 
-    return annoton;
+    annoton.resetPresentation();
 };

@@ -47,14 +47,16 @@ export class EntityForm {
     populateTerm() {
         const self = this;
 
-        self.node.term = new Entity(this.term.value.id, this.term.value.label);
+        if (this.term.value && this.term.value) {
+            self.node.term = new Entity(this.term.value.id, this.term.value.label);
 
-        self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
-            const evidence: Evidence = self.node.predicate.evidence[index];
-            if (evidence) {
-                evidenceForm.populateEvidence(evidence);
-            }
-        });
+            self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
+                const evidence: Evidence = self.node.predicate.evidence[index];
+                if (evidence) {
+                    evidenceForm.populateEvidence(evidence);
+                }
+            });
+        }
     }
 
     private _onValueChanges(lookup: EntityLookup) {

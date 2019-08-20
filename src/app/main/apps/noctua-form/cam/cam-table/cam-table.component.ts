@@ -30,7 +30,8 @@ import {
   NoctuaAnnotonEntityService,
   CamService,
   Cam,
-  Annoton
+  Annoton,
+  EntityDefinition
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
@@ -48,7 +49,6 @@ import { trigger, state, transition, style, animate } from '@angular/animations'
   ],
 })
 export class CamTableComponent implements OnInit, OnDestroy {
-
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;
@@ -132,6 +132,10 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.camService.annoton = annoton;
     this.noctuaAnnotonFormService.initializeForm(annoton);
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm)
+  }
+
+  sortBy(sortCriteria) {
+    this.cam.sort = sortCriteria;
   }
 
   deleteAnnoton(annoton: Annoton) {

@@ -13,6 +13,10 @@ const edge = {
     id: 'RO:0002233',
     label: 'has input'
   },
+  hasOutput: {
+    id: 'RO:0002234',
+    label: 'has output'
+  },
   happensDuring: {
     id: 'RO:0002092',
     label: 'happens during'

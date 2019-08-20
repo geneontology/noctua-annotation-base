@@ -30,9 +30,10 @@ export class Cam {
   model: any;
   annotatedEntity?: {};
   camRow?: any;
-  annotons: Annoton[] = [];
+
   connectorAnnotons: ConnectorAnnoton[] = [];
   triples: Triple<AnnotonNode>[] = [];
+  sort;
 
   error = false;
   engine;
@@ -61,8 +62,18 @@ export class Cam {
     edges: []
   };
 
+  private _annotons: Annoton[] = [];
+
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;
+  }
+
+  get annotons() {
+    return this._annotons.sort(this._compareMolecularFunction);
+  }
+
+  set annotons(value: Annoton[]) {
+    this._annotons = value;
   }
 
   getConnectorAnnoton(upstreamId: string, downstreamId: string): ConnectorAnnoton {
@@ -341,4 +352,13 @@ export class Cam {
       return node.relationship.label;
     }
   }
+  private _compareMolecularFunction(a: Annoton, b: Annoton): number {
+    console.log(a.presentation.gpText < b.presentation.gpText)
+    if (a.presentation.gpText.toLowerCase() < b.presentation.gpText.toLowerCase()) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }
 }
+

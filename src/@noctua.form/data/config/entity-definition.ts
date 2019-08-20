@@ -56,6 +56,9 @@ export enum AnnotonNodeType {
     GoAnatomicalEntity = 'GoAnatomicalEntity',
     GoOrganism = 'GoOrganism',
     GoBiologicalPhase = 'GoBiologicalPhase',
+    //extra internal use
+    GoChemicalEntityHasInput = 'GoChemicalEntityHasInput',
+    GoChemicalEntityHasOutput = 'GoChemicalEntityHasOutput',
 }
 
 export class GoProteinContainingComplex {
@@ -324,20 +327,4 @@ export const generateOrganism = (override: Partial<AnnotonNodeDisplay> = {}): An
     annotonNode.overrideValues(override);
     return annotonNode;
 };
-
-export const insertNode = (type: AnnotonNodeType): AnnotonNode => {
-    const annotonNode = generateBaseTerm(type);
-    annotonNode.id = type + '-' + getUuid();
-    annotonNode.category = GoChemicalEntity.category;
-
-    annotonNode.label = 'Has Input (Gene Product/Chemical)';
-    annotonNode.relationship = noctuaFormConfig.edge.hasInput;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-    annotonNode.treeLevel = 3;
-    annotonNode.isExtension = true;
-
-    return annotonNode;
-};
-
 

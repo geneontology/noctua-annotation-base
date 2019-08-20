@@ -1073,10 +1073,13 @@ export class NoctuaFormConfigService {
     const options = {
       [EntityDefinition.AnnotonNodeType.GoMolecularFunction]: [{
         label: 'Add Has Input',
-        id: EntityDefinition.AnnotonNodeType.GoChemicalEntity
+        id: EntityDefinition.AnnotonNodeType.GoChemicalEntityHasInput
       }, {
         label: 'Add Has Output',
-        id: EntityDefinition.AnnotonNodeType.GoChemicalEntity
+        id: EntityDefinition.AnnotonNodeType.GoChemicalEntityHasOutput
+      }, {
+        label: 'Add biological Phase',
+        id: EntityDefinition.AnnotonNodeType.GoBiologicalPhase
       }]
     };
 
