@@ -1,6 +1,9 @@
 @import "src/@noctua/scss/noctua";
 @import "src/@noctua.common/scss/noctua.common";
 
+$primary: map-get($theme, primary);
+$accent: map-get($theme, accent);
+
 :host {
   position: relative;
   display: flex;
@@ -118,5 +121,9 @@
 
   .noc-search-bar {
     max-width: 600px !important;
+  }
+
+  .noc-create-button {
+    background-color: rgba(map-get($primary, default), 0.7) !important;
   }
 }

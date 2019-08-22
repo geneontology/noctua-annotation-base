@@ -41,6 +41,7 @@ export class Cam {
   manager;
   individualManager;
   groupManager;
+  newModelManager;
   graph;
   date;
   modelId;
@@ -352,8 +353,8 @@ export class Cam {
       return node.relationship.label;
     }
   }
+
   private _compareMolecularFunction(a: Annoton, b: Annoton): number {
-    console.log(a.presentation.gpText < b.presentation.gpText)
     if (a.presentation.gpText.toLowerCase() < b.presentation.gpText.toLowerCase()) {
       return -1;
     } else {

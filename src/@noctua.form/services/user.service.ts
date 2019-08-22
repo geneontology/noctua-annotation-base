@@ -43,8 +43,7 @@ export class NoctuaUserService {
   groups: Group[] = [];
 
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
-    private httpClient: HttpClient,
-    private noctuaLookupService: NoctuaLookupService) {
+    private httpClient: HttpClient, ) {
     this.onUserChanged = new BehaviorSubject(null);
   }
 

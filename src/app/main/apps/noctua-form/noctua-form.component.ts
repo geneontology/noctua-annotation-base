@@ -38,8 +38,8 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   public cam: Cam;
   public user: Contributor;
   searchResults = [];
-  modelId: string = '';
-  baristaToken: string = '';
+  modelId = '';
+  baristaToken = '';
 
   noctuaFormConfig = noctuaFormConfig;
 
@@ -61,6 +61,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         this.modelId = params['model_id'] || null;
         this.baristaToken = params['barista_token'] || null;
         this.noctuaUserService.baristaToken = this.baristaToken;
+        this.noctuaFormConfigService.baristaToken = this.baristaToken;
         this.getUserInfo();
         this.loadCam(this.modelId);
       });

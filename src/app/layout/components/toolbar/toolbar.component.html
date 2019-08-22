@@ -5,6 +5,9 @@
       <mat-icon>apps</mat-icon>
     </button>
     <mat-menu #changeView="matMenu">
+      <button class="noc-create-button" (click)="createModel()" mat-menu-item>
+        Create New Model
+      </button>
       <a *ngFor="let workbench of cam?.model?.modelInfo?.workbenches" href="{{workbench.url}}" target="_blank"
         mat-menu-item>
         {{workbench.label}}

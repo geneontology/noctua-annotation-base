@@ -365,6 +365,27 @@ export const insertNodeDescription = {
                 predicate: noctuaFormConfig.edge.happensDuring
             }]
         }
+    },
+    [EntityDefinition.AnnotonNodeType.GoBiologicalProcess]: {
+        [EntityDefinition.AnnotonNodeType.GoBiologicalProcess]: <InsertNodeDescription>{
+            node: <AnnotonNodeDisplay>{
+                id: EntityDefinition.GoBiologicalProcess.id,
+                type: EntityDefinition.AnnotonNodeType.GoBiologicalProcess,
+                category: EntityDefinition.GoBiologicalProcess.category,
+                label: 'Part Of (Biological Process)',
+                aspect: 'P',
+                relationship: noctuaFormConfig.edge.partOf,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.bp,
+                treeLevel: 3,
+                isExtension: true,
+            },
+            triples: [{
+                subject: EntityDefinition.AnnotonNodeType.GoBiologicalProcess,
+                object: null,
+                predicate: noctuaFormConfig.edge.partOf
+            }],
+        },
     }
 };
 

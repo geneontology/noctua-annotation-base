@@ -981,62 +981,65 @@ export class NoctuaFormConfigService {
   }
 
   getModelUrls(modelId) {
+    const self = this;
     const modelInfo: any = {};
-    const baristaParams = {
-      'barista_token': this.baristaToken
-    }
-    const modelIdParams = {
-      'model_id': modelId
-    }
-
-    function parameterize(params) {
-      return Object.keys(params).map(key => key + '=' + params[key]).join('&');
-    }
+    const baristaParams = { 'barista_token': self.baristaToken };
+    const modelIdParams = { 'model_id': modelId };
 
     modelInfo.goUrl = 'http://www.geneontology.org/';
-    modelInfo.noctuaUrl = environment.noctuaUrl + '?' + (this.loggedIn ? parameterize(baristaParams) : '');
+    modelInfo.noctuaUrl = environment.noctuaUrl + '?' + (self.baristaToken ? self._parameterize(baristaParams) : '');
     modelInfo.owlUrl = environment.noctuaUrl + '/download/' + modelId + '/owl';
     modelInfo.gpadUrl = environment.noctuaUrl + '/download/' + modelId + '/gpad';
-    modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + (this.loggedIn ? parameterize(baristaParams) : '');
-    modelInfo.saeUrl = environment.workbenchUrl + 'simple-annoton-editor?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : '');
-    // modelInfo.logoutUrl = self.baristaLocation + '/logout?' + parameterize(baristaParams) + '&amp;return=' + environment.workbenchUrl+'simple-annoton-editor?' + parameterize(baristaParams)
+    modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + (self.baristaToken ? self._parameterize(baristaParams) : '');
+    modelInfo.saeUrl = environment.workbenchUrl + 'simple-annoton-editor?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : '');
+    // modelInfo.logoutUrl = self.baristaLocation + '/logout?' + self._parameterize(baristaParams) + '&amp;return=' + environment.workbenchUrl+'simple-annoton-editor?' + self._parameterize(baristaParams)
     // modelInfo.loginUrl = self.baristaLocation + '/login?return=' + environment.workbenchUrl+'simple-annoton-editor';
 
     //Workbenches 
     modelInfo.workbenches = [{
       label: 'Noctua Form',
-      url: environment.workbenchUrl + 'simple-annoton-editor?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'simple-annoton-editor?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Graph Editor',
       url: modelInfo.graphEditorUrl
     }, {
       label: 'Annotation Preview',
-      url: environment.workbenchUrl + 'annpreview?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'annpreview?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Function Companion',
-      url: environment.workbenchUrl + 'companion?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'companion?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Cytoscape Layout Tool',
-      url: environment.workbenchUrl + 'cytoview?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'cytoview?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Gosling (Noctua\'s little GOOSE) ',
-      url: environment.workbenchUrl + 'gosling-model?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'gosling-model?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Inference Explanations',
-      url: environment.workbenchUrl + 'inferredrelations?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'inferredrelations?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Macromolecular Complex Creator',
-      url: environment.workbenchUrl + 'mmcc?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'mmcc?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Pathway View',
-      url: environment.workbenchUrl + 'pathwayview?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'pathwayview?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Annotation Preview',
-      url: environment.workbenchUrl + 'simple-annoton-editor?' + (this.loggedIn ? parameterize(Object.assign({}, modelIdParams, baristaParams)) : parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'simple-annoton-editor?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }]
 
     return modelInfo;
   }
+
+  getNewModelUrl(modelId) {
+    const self = this;
+    const baristaParams = { 'barista_token': self.baristaToken };
+    const modelIdParams = { 'model_id': modelId };
+    const url = environment.workbenchUrl + 'simple-annoton-editor?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams)));
+
+    return url;
+  }
+
 
   createReviewSearchFormData() {
     const self = this;
@@ -1080,6 +1083,10 @@ export class NoctuaFormConfigService {
       }, {
         label: 'Add biological Phase',
         id: EntityDefinition.AnnotonNodeType.GoBiologicalPhase
+      }],
+      [EntityDefinition.AnnotonNodeType.GoBiologicalProcess]: [{
+        label: 'Add nested Biological Process',
+        id: EntityDefinition.AnnotonNodeType.GoBiologicalProcess
       }]
     };
 
@@ -1225,4 +1232,9 @@ export class NoctuaFormConfigService {
   getIndividalId(url: string) {
     return 'gomodel:' + url.substr(url.lastIndexOf('/') + 2)
   }
+
+  private _parameterize = (params) => {
+    return Object.keys(params).map(key => key + '=' + params[key]).join('&');
+  }
+
 }

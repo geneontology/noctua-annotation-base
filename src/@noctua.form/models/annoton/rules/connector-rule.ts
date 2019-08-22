@@ -36,7 +36,7 @@ export class ConnectorRule {
     effectDependency: false,
     causalReactionProduct: false,
     process: false,
-  }
+  };
 
   constructor() {
     this.annotonsConsecutive.condition = true;
