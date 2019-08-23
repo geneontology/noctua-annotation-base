@@ -296,7 +296,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
     triples: [{
         subject: EntityDefinition.AnnotonNodeType.GoMolecularEntity,
         object: EntityDefinition.AnnotonNodeType.GoCellularComponent,
-        predicate: noctuaFormConfig.edge.enabledBy
+        predicate: noctuaFormConfig.edge.locatedIn
     }, {
         subject: EntityDefinition.AnnotonNodeType.GoCellularComponent,
         object: EntityDefinition.AnnotonNodeType.GoCellTypeEntity,

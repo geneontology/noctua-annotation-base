@@ -58,6 +58,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     throw new Error('Method not implemented');
   }
 
+  get startNodeType(): AnnotonNodeType {
+    return this.annotonType === AnnotonType.ccOnly ?
+      AnnotonNodeType.GoMolecularEntity :
+      AnnotonNodeType.GoMolecularFunction;
+  }
+
   getGPNode() {
     const self = this;
 
@@ -146,7 +152,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
     self.adjustAnnoton();
 
-    const graph = self.getTrimmedGraph(AnnotonNodeType.GoMolecularFunction);
+    const graph = self.getTrimmedGraph(this.startNodeType);
     const keyNodes = getNodes(graph);
     const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
 
@@ -203,17 +209,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   setPreview() {
     const self = this;
-
     const saveData = self.createSave();
-
-    const graph = self.getTrimmedGraph(AnnotonNodeType.GoMolecularFunction);
-    const keyNodes = getNodes(graph);
-    const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
-
-    const nodes = Object.values(keyNodes);
-    const triples = edges.map((edge: Edge<Triple<AnnotonNode>>) => {
-      return edge.metadata;
-    });
 
     self.graphPreview.nodes = <NgxNode[]>saveData.nodes.map((node: AnnotonNode) => {
       return {
