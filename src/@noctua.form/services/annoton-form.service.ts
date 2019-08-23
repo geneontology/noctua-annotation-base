@@ -73,7 +73,7 @@ export class NoctuaAnnotonFormService {
 
   }
 
-  initializeFormData(nodes) {
+  initializeFormData() {
     //  this.annoton = this.noctuaFormConfigService.createAnnotonModelFakeData(nodes);
 
     this.fakester(this.annoton);
@@ -95,6 +95,10 @@ export class NoctuaAnnotonFormService {
 
   annotonFormToAnnoton() {
     this.annotonForm.populateAnnoton(this.annoton);
+
+    if (this.annoton.annotonType === AnnotonType.bpOnly) {
+      //const mfNode = this.annotonNode
+    }
   }
 
   private _onAnnotonFormChanges(): void {

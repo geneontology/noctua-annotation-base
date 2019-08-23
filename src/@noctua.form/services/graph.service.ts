@@ -351,9 +351,9 @@ export class NoctuaGraphService {
   }
 
 
-  determineAnnotonType(mfNode, mfEdgesIn) {
+  getActivityPreset(mfNode, mfEdgesIn): Annoton {
     const self = this;
-    let result = noctuaFormConfig.annotonType.options.default.name;
+    let annotonType = AnnotonType.default;
 
     if (mfNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(mfEdgesIn, function (toMFEdge) {
@@ -362,12 +362,13 @@ export class NoctuaGraphService {
         if (_.find(noctuaFormConfig.causalEdges, {
           id: predicateId
         })) {
-          result = noctuaFormConfig.annotonType.options.bpOnly.name;
+          annotonType = AnnotonType.bpOnly;
         }
       });
     }
 
-    return result;
+    return self.noctuaFormConfigService.createAnnotonModel(annotonType);
+
   }
 
   graphToAnnotons(cam: Cam): Annoton[] {
@@ -382,18 +383,17 @@ export class NoctuaGraphService {
         const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
         const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
         const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
-        const annotonType = self.determineAnnotonType(subjectNode, subjectEdges);
-        const annoton = self.noctuaFormConfigService.createAnnotonModel(AnnotonType.default);
-        const annotonNode = annoton.getNode(AnnotonNodeType.GoMolecularFunction);
+        const annoton: Annoton = self.getActivityPreset(subjectNode, subjectEdges);
+        const subjectAnnotonNode = annoton.getNode(AnnotonNodeType.GoMolecularFunction);
         const triple = annoton.getEdge(AnnotonNodeType.GoMolecularFunction, AnnotonNodeType.GoMolecularEntity);
 
-        annotonNode.term = subjectNode.term;
-        annotonNode.classExpression = subjectNode.classExpression;
-        annotonNode.setIsComplement(subjectNode.isComplement);
-        annotonNode.uuid = bbopSubjectId;
+        subjectAnnotonNode.term = subjectNode.term;
+        subjectAnnotonNode.classExpression = subjectNode.classExpression;
+        subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
+        subjectAnnotonNode.uuid = bbopSubjectId;
         triple.predicate.evidence = evidence;
         triple.predicate.uuid = bbopEdge.id();
-        self._graphToAnnatonDFS(cam, annoton, subjectEdges, annotonNode);
+        self._graphToAnnatonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
 
         annoton.id = bbopSubjectId;
         annotons.push(annoton);
@@ -488,7 +488,7 @@ export class NoctuaGraphService {
     const mfNode = annoton.getNode(AnnotonNodeType.GoMolecularFunction);
     const bpNode = annoton.getNode('bp');
 
-    if (mfNode && bpNode && annoton.annotonType === noctuaFormConfig.annotonType.options.bpOnly.name) {
+    if (mfNode && bpNode && annoton.annotonType === AnnotonType.bpOnly) {
       mfNode.displaySection = noctuaFormConfig.displaySection.fd;
       mfNode.displayGroup = noctuaFormConfig.displayGroup.mf;
       annoton.editEdge(AnnotonNodeType.GoMolecularFunction, 'bp', srcEdge);
@@ -626,13 +626,13 @@ export class NoctuaGraphService {
       const bbopObjectId = bbopEdge.object_id();
       const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
 
-      if (annoton.annotonType === noctuaFormConfig.annotonType.options.bpOnly.name) {
+      if (annoton.annotonType === AnnotonType.bpOnly) {
         const causalEdge = _.find(noctuaFormConfig.causalEdges, {
           id: bbopPredicateId
         });
 
         if (causalEdge) {
-          //   self.adjustBPOnly(annoton, causalEdge);
+          // self.adjustBPOnly(annoton, causalEdge);
         }
       }
 
@@ -655,43 +655,6 @@ export class NoctuaGraphService {
     return annoton;
   }
 
-  private _graphToAnnatonDFS2(cam: Cam, annoton: Annoton, bbopEdges, annotonNode: AnnotonNode) {
-    const self = this;
-    const triples: Triple<AnnotonNode>[] = annoton.getEdges(annotonNode.id);
-
-    each(bbopEdges, (bbopEdge) => {
-      const bbopPredicateId = bbopEdge.predicate_id();
-      const bbopObjectId = bbopEdge.object_id();
-      const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
-
-      if (annoton.annotonType === noctuaFormConfig.annotonType.options.bpOnly.name) {
-        const causalEdge = _.find(noctuaFormConfig.causalEdges, {
-          id: bbopPredicateId
-        });
-
-        if (causalEdge) {
-          //   self.adjustBPOnly(annoton, causalEdge);
-        }
-      }
-
-      each(triples, (triple: Triple<AnnotonNode>) => {
-        if (bbopPredicateId === triple.predicate.edge.id) {
-          const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
-
-          triple.object.uuid = objectNode.uuid;
-          triple.object.term = objectNode.term;
-          triple.object.classExpression = objectNode.classExpression;
-          triple.object.setIsComplement(objectNode.isComplement);
-
-          triple.predicate.evidence = evidence;
-          triple.predicate.uuid = bbopEdge.id();
-          self._graphToAnnatonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
-        }
-      });
-    });
-
-    return annoton;
-  }
 
   private _getConnectAnnotonIntermediate(cam: Cam, bpSubjectId: string): ConnectorAnnoton {
     const self = this;

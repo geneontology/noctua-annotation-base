@@ -39,9 +39,8 @@
            . <b class="caret"></b>
          </button>
          <mat-menu #annotonExampleOptions="matMenu">
-           <a *ngFor="let noctuaFormExample of noctuaFormConfigService.noctuaFormExample.basic" mat-menu-item
-             (click)="createExample(noctuaFormExample.annoton)">
-             {{noctuaFormExample.name}}
+           <a mat-menu-item (click)="createExample()">
+             Fill All
            </a>
          </mat-menu>
        </div>

@@ -70,51 +70,19 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     return self.getNode(AnnotonNodeType.GoMolecularFunction);
   }
 
-
-
-  /*
-  adjustAnnoton(annoton: Annoton) {
+  adjustAnnoton() {
     const self = this;
 
-    switch (annoton.annotonType) {
-      case noctuaFormConfig.annotonType.options.default.name:
-        {
-          const mfNode = annoton.getNode('mf');
-          const ccNode = annoton.getNode('cc');
-          const cc1Node = annoton.getNode('cc-1');
-          const cc11Node = annoton.getNode('cc-1-1');
-          const cc111Node = annoton.getNode('cc-1-1-1');
-          const ccRootNode = noctuaFormConfig.rootNode['cc']
-
-          if (!ccNode.hasValue()) {
-            if (cc1Node.hasValue()) {
-              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
-              ccNode.evidence = cc1Node.evidence;
-            } else if (cc11Node.hasValue()) {
-              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
-              ccNode.evidence = cc11Node.evidence;
-            } else if (cc111Node.hasValue()) {
-              ccNode.term = new Entity(ccRootNode.id, ccRootNode.label);
-              ccNode.evidence = cc111Node.evidence;
-            }
-          }
-          break;
-        }
+    switch (self.annotonType) {
       case noctuaFormConfig.annotonType.options.bpOnly.name:
-        {
-          const mfNode = annoton.getNode('mf');
-          const bpNode = annoton.getNode('bp');
+        const rootMF = noctuaFormConfig.rootNode.mf;
+        const mfNode = self.getMFNode();
+        const bpNode = self.getNode(AnnotonNodeType.GoBiologicalProcess);
 
-          mfNode.term = new Entity('GO:0003674', 'molecular_function');
-          mfNode.evidence = bpNode.evidence;
-          break;
-        }
+        mfNode.term = new Entity(rootMF.id, rootMF.label);
+        break;
     }
-
-  }*/
-
-
-
+  }
 
   copyValues(srcAnnoton) {
     const self = this;
@@ -176,6 +144,8 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       graph: null
     };
 
+    self.adjustAnnoton();
+
     const graph = self.getTrimmedGraph(AnnotonNodeType.GoMolecularFunction);
     const keyNodes = getNodes(graph);
     const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
@@ -234,6 +204,8 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   setPreview() {
     const self = this;
 
+    const saveData = self.createSave();
+
     const graph = self.getTrimmedGraph(AnnotonNodeType.GoMolecularFunction);
     const keyNodes = getNodes(graph);
     const edges: Edge<Triple<AnnotonNode>>[] = getEdges(graph);
@@ -243,14 +215,14 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       return edge.metadata;
     });
 
-    self.graphPreview.nodes = <NgxNode[]>nodes.map((node: AnnotonNode) => {
+    self.graphPreview.nodes = <NgxNode[]>saveData.nodes.map((node: AnnotonNode) => {
       return {
         id: node.id,
         label: node.term.label ? node.term.label : '',
       };
     });
 
-    self.graphPreview.edges = <NgxEdge[]>triples.map((triple: Triple<AnnotonNode>) => {
+    self.graphPreview.edges = <NgxEdge[]>saveData.triples.map((triple: Triple<AnnotonNode>) => {
       return {
         source: triple.subject.id,
         target: triple.object.id,
