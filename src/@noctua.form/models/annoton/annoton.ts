@@ -9,14 +9,12 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
 import { AnnotonError } from "./parser/annoton-error";
 
-import { AnnotonNode } from './annoton-node';
+import { AnnotonNode, AnnotonNodeType } from './annoton-node';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import { AnnotonParser } from './parser';
-import { AnnotonNodeType } from '../../data/config/entity-definition';
-
 export enum AnnotonState {
   creation = 1,
   editing

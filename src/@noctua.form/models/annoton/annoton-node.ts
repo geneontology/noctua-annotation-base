@@ -10,7 +10,23 @@ import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { Predicate } from '.';
-import { AnnotonNodeType } from './../../data/config/entity-definition';
+
+export enum AnnotonNodeType {
+  GoProteinContainingComplex = 'GoProteinContainingComplex',
+  GoCellularComponent = 'GoCellularComponent',
+  GoBiologicalProcess = 'GoBiologicalProcess',
+  GoMolecularFunction = 'GoMolecularFunction',
+  GoMolecularEntity = 'GoMolecularEntity',
+  GoChemicalEntity = 'GoChemicalEntity',
+  GoEvidence = 'GoEvidence',
+  GoCellTypeEntity = 'GoCellTypeEntity',
+  GoAnatomicalEntity = 'GoAnatomicalEntity',
+  GoOrganism = 'GoOrganism',
+  GoBiologicalPhase = 'GoBiologicalPhase',
+  //extra internal use
+  GoChemicalEntityHasInput = 'GoChemicalEntityHasInput',
+  GoChemicalEntityHasOutput = 'GoChemicalEntityHasOutput',
+}
 
 export interface AnnotonNodeDisplay {
   id: string;

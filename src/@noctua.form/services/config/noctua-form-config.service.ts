@@ -20,7 +20,8 @@ import {
   Entity,
   Predicate
 } from './../../models';
-import { AnnotonType } from '@noctua.form/models/annoton/annoton';
+import { AnnotonType } from './../../models/annoton/annoton';
+import { AnnotonNodeType } from './../../models/annoton/annoton-node';
 
 @Injectable({
   providedIn: 'root'
@@ -1072,21 +1073,21 @@ export class NoctuaFormConfigService {
     return connectorAnnoton;
   }
 
-  getInsertEntityMenuItems(annotonNodeType: EntityDefinition.AnnotonNodeType): [] {
+  getInsertEntityMenuItems(annotonNodeType: AnnotonNodeType): [] {
     const options = {
-      [EntityDefinition.AnnotonNodeType.GoMolecularFunction]: [{
+      [AnnotonNodeType.GoMolecularFunction]: [{
         label: 'Add Has Input',
-        id: EntityDefinition.AnnotonNodeType.GoChemicalEntityHasInput
+        id: AnnotonNodeType.GoChemicalEntityHasInput
       }, {
         label: 'Add Has Output',
-        id: EntityDefinition.AnnotonNodeType.GoChemicalEntityHasOutput
+        id: AnnotonNodeType.GoChemicalEntityHasOutput
       }, {
         label: 'Add biological Phase',
-        id: EntityDefinition.AnnotonNodeType.GoBiologicalPhase
+        id: AnnotonNodeType.GoBiologicalPhase
       }],
-      [EntityDefinition.AnnotonNodeType.GoBiologicalProcess]: [{
+      [AnnotonNodeType.GoBiologicalProcess]: [{
         label: 'Add nested Biological Process',
-        id: EntityDefinition.AnnotonNodeType.GoBiologicalProcess
+        id: AnnotonNodeType.GoBiologicalProcess
       }]
     };
 
@@ -1104,7 +1105,7 @@ export class NoctuaFormConfigService {
     }
   }
 
-  insertAnnotonNode(annoton: Annoton, subjectNode: AnnotonNode, nodeType: EntityDefinition.AnnotonNodeType) {
+  insertAnnotonNode(annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType) {
     ModelDefinition.insertNode(annoton, subjectNode, nodeType);
   }
 

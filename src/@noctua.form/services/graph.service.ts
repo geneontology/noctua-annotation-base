@@ -30,8 +30,8 @@ import { NoctuaUserService } from './../services/user.service';
 
 import 'rxjs/add/observable/forkJoin';
 import * as _ from 'lodash';
-import { AnnotonNodeType } from './../data/config/entity-definition';
-import { AnnotonType } from '@noctua.form/models/annoton/annoton';
+import { AnnotonType } from './../models/annoton/annoton';
+import { AnnotonNodeType } from './../models/annoton/annoton-node';
 
 declare const require: any;
 

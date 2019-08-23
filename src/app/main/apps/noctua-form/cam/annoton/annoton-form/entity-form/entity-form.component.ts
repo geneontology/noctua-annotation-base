@@ -35,6 +35,7 @@ import {
   Entity,
   EntityDefinition
 } from 'noctua-form-base';
+import { AnnotonNodeType } from '@noctua.form/models/annoton/annoton-node';
 
 
 @Component({
@@ -130,7 +131,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  insertEntity(nodeType: EntityDefinition.AnnotonNodeType) {
+  insertEntity(nodeType: AnnotonNodeType) {
     this.noctuaFormConfigService.insertAnnotonNode(this.noctuaAnnotonFormService.annoton, this.entity, nodeType);
     this.noctuaAnnotonFormService.initializeForm();
   }

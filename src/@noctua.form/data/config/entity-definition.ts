@@ -5,10 +5,12 @@ const getUuid = require('uuid/v1');
 import { noctuaFormConfig } from './../../noctua-form-config';
 import {
     AnnotonNode,
-    EntityLookup,
-    AnnotonNodeDisplay,
-    Predicate
-} from './../../models/annoton';
+    AnnotonNodeType,
+    AnnotonNodeDisplay
+} from './../../models/annoton/annoton-node';
+import { EntityLookup } from './../..//models/annoton/entity-lookup';
+import { Predicate } from './../../models/annoton/predicate';
+
 
 const baseRequestParams = {
     defType: 'edismax',
@@ -44,22 +46,6 @@ const baseRequestParams = {
     _: Date.now()
 };
 
-export enum AnnotonNodeType {
-    GoProteinContainingComplex = 'GoProteinContainingComplex',
-    GoCellularComponent = 'GoCellularComponent',
-    GoBiologicalProcess = 'GoBiologicalProcess',
-    GoMolecularFunction = 'GoMolecularFunction',
-    GoMolecularEntity = 'GoMolecularEntity',
-    GoChemicalEntity = 'GoChemicalEntity',
-    GoEvidence = 'GoEvidence',
-    GoCellTypeEntity = 'GoCellTypeEntity',
-    GoAnatomicalEntity = 'GoAnatomicalEntity',
-    GoOrganism = 'GoOrganism',
-    GoBiologicalPhase = 'GoBiologicalPhase',
-    //extra internal use
-    GoChemicalEntityHasInput = 'GoChemicalEntityHasInput',
-    GoChemicalEntityHasOutput = 'GoChemicalEntityHasOutput',
-}
 
 export class GoProteinContainingComplex {
     public static readonly id = AnnotonNodeType.GoProteinContainingComplex;
