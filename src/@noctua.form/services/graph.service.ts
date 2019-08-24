@@ -351,17 +351,15 @@ export class NoctuaGraphService {
   }
 
 
-  getActivityPreset(mfNode, mfEdgesIn): Annoton {
+  getActivityPreset(subjectNode, predicateId, bbopSubjectEdges): Annoton {
     const self = this;
     let annotonType = AnnotonType.default;
 
-    if (mfNode.term.id === noctuaFormConfig.rootNode.mf.id) {
-      each(mfEdgesIn, function (toMFEdge) {
-        const predicateId = toMFEdge.predicate_id();
-
-        if (_.find(noctuaFormConfig.causalEdges, {
-          id: predicateId
-        })) {
+    if (predicateId === noctuaFormConfig.edge.locatedIn.id) {
+      annotonType = AnnotonType.ccOnly;
+    } else if (subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
+      each(bbopSubjectEdges, function (subjectEdge) {
+        if (_.find(noctuaFormConfig.causalEdges, { id: subjectEdge.predicate_id() })) {
           annotonType = AnnotonType.bpOnly;
         }
       });
@@ -376,23 +374,24 @@ export class NoctuaGraphService {
     const annotons: Annoton[] = [];
 
     each(cam.graph.all_edges(), (bbopEdge) => {
-      if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id) {
+      if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
+        bbopEdge.predicate_id() === noctuaFormConfig.edge.locatedIn.id) {
         const bbopSubjectId = bbopEdge.subject_id();
         const bbopObjectId = bbopEdge.object_id();
         const subjectNode = self.nodeToAnnotonNode(cam.graph, bbopSubjectId);
         const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
         const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
         const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
-        const annoton: Annoton = self.getActivityPreset(subjectNode, subjectEdges);
-        const subjectAnnotonNode = annoton.getNode(AnnotonNodeType.GoMolecularFunction);
+        const annoton: Annoton = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
+        const subjectAnnotonNode = annoton.rootNode;
         const triple = annoton.getEdge(AnnotonNodeType.GoMolecularFunction, AnnotonNodeType.GoMolecularEntity);
 
         subjectAnnotonNode.term = subjectNode.term;
         subjectAnnotonNode.classExpression = subjectNode.classExpression;
         subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
         subjectAnnotonNode.uuid = bbopSubjectId;
-        triple.predicate.evidence = evidence;
-        triple.predicate.uuid = bbopEdge.id();
+        //triple.predicate.evidence = evidence;
+        //  triple.predicate.uuid = bbopEdge.id();
         self._graphToAnnatonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
 
         annoton.id = bbopSubjectId;
