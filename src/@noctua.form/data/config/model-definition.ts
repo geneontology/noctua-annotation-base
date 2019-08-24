@@ -154,7 +154,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             category: EntityDefinition.GoBiologicalProcess.category,
             label: 'Biological Process',
             aspect: 'P',
-            relationship: noctuaFormConfig.edge.causallyUpstreamOf,
+            relationship: noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
             treeLevel: 2,
