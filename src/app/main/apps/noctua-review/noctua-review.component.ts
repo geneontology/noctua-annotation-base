@@ -37,10 +37,10 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class NoctuaReviewComponent implements OnInit, OnDestroy {
 
-  @ViewChild('leftDrawer')
+  @ViewChild('leftDrawer', { static: true })
   leftDrawer: MatDrawer;
 
-  @ViewChild('rightDrawer')
+  @ViewChild('rightDrawer', { static: true })
   rightDrawer: MatDrawer;
 
 

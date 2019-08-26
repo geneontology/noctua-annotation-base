@@ -29,10 +29,10 @@ import { NoctuaFormService } from './services/noctua-form.service';
 export class NoctuaFormComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
 
-  @ViewChild('leftDrawer')
+  @ViewChild('leftDrawer', { static: true })
   leftDrawer: MatDrawer;
 
-  @ViewChild('rightDrawer')
+  @ViewChild('rightDrawer', { static: true })
   rightDrawer: MatDrawer;
 
   public cam: Cam;

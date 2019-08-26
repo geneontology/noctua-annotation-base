@@ -119,9 +119,7 @@ $accent: map-get($theme, accent);
     }
   }
 
-  .noc-search-bar {
-    max-width: 600px !important;
-  }
+
 
   .noc-create-button {
     background-color: rgba(map-get($primary, default), 0.7) !important;

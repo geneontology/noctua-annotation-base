@@ -13,7 +13,7 @@ import { takeUntil, startWith } from 'rxjs/internal/operators';
 
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
-import { forEach } from '@angular/router/src/utils/collection';
+
 
 import { NoctuaFormService } from './../../services/noctua-form.service';
 import { CamTableService } from './services/cam-table.service';
@@ -57,14 +57,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
   @Input('cam')
   public cam: Cam;
 
-  @ViewChild(MatPaginator)
-  paginator: MatPaginator;
-
-  @ViewChild('filter')
-  filter: ElementRef;
-
-  @ViewChild(MatSort)
-  sort: MatSort;
 
   searchResults = [];
   modelId: string = '';
