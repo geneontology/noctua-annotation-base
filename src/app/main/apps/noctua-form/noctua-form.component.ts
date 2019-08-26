@@ -98,7 +98,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   openAnnotonForm(annotonType: AnnotonType) {
     this.noctuaAnnotonFormService.setAnnotonType(annotonType);
-    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm);
+    this.noctuaFormService.openLeftDrawer(this.noctuaFormService.panel.annotonForm);
   }
 
   ngOnDestroy(): void {

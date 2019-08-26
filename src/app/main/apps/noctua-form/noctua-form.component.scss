@@ -17,11 +17,16 @@
     margin-bottom: 4px;
     padding: 0 10px;
     @include deep-height(40px);
+    width: 100%;
     //min-height: 35px;
     background-color: #FFF;
     font-size: 16px;
 
     @include mat-elevation(2);
+
+    .noc-cam-title {
+      max-width: 400px;
+    }
 
     .noc-summary-bar-section {
       .noc-section-label {

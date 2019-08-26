@@ -5,8 +5,8 @@ import { AnnotonFormMetadata } from './annoton-form-metadata';
 import { EvidenceForm } from './evidence-form';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
-import { Entity } from '../annoton/entity';
-import { AnnotonNode } from '..';
+import { Entity } from './../annoton/entity';
+import { AnnotonNode } from './../annoton/annoton-node';
 
 declare const require: any;
 const each = require('lodash/forEach');

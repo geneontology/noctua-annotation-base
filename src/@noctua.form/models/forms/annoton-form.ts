@@ -22,17 +22,11 @@ export class AnnotonForm {
   bpOnlyEdge = new FormControl();
   fd = new FormArray([]);
 
-  _metadata: AnnotonFormMetadata;
-
+  private _metadata: AnnotonFormMetadata;
   private _fb = new FormBuilder();
 
-  constructor(metadata, gp?: AnnotonNode) {
+  constructor(metadata, ) {
     this._metadata = metadata;
-
-    if (gp) {
-      // this.gp.setValue(gp.getTerm());
-      //  this.gp.setValidators(termValidator(gp));
-    }
   }
 
   createMolecularEntityForm(molecularEntity: AnnotonNode) {

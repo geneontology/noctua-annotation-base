@@ -10,6 +10,7 @@ import {
     NoctuaFormConfigService,
     NoctuaGraphService,
     NoctuaAnnotonFormService,
+    AnnotonType,
 } from 'noctua-form-base';
 
 import { NoctuaConfigService } from '@noctua/services/config.service';
@@ -24,6 +25,8 @@ import { takeUntil } from 'rxjs/operators';
 })
 
 export class NoctuaToolbarComponent implements OnInit, OnDestroy {
+    AnnotonType = AnnotonType;
+
     public user: Contributor;
     public cam: Cam;
     userStatusOptions: any[];
@@ -92,19 +95,20 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
             });
     }
 
-    addAnnoton() {
-        this.openAnnotonForm(location);
-    }
+
 
     openCamForm() {
-        //  this.noctuaFormService.initializeForm();
+        this.camService.initializeForm(this.cam);
         this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.camForm);
     }
 
-    openAnnotonForm(location?) {
-        this.camService.initializeForm(this.cam);
-        this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm);
+    openAnnotonForm(annotonType: AnnotonType) {
+        this.noctuaAnnotonFormService.setAnnotonType(annotonType);
+        this.noctuaFormService.openLeftDrawer(this.noctuaFormService.panel.annotonForm);
     }
+
+
+
 
     search(value): void {
         console.log(value);

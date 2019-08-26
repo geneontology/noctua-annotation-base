@@ -27,33 +27,33 @@
       </a>
     </div>
   </div>
-  <div *ngIf="cam" class="noc-title" fxLayout="column" fxLayoutAlign="start stretch">
-    <div class="h-100-p" *ngIf="cam.title; else noCamTitle" fxLayout="row" fxLayoutAlign="start center">
-      {{cam.title}}
-      <button mat-stroked-button (click)="openCamForm(annoton)" color="primary" class="ml-8 noc-rounded-button noc-xxs">
-        Edit Title
-      </button>
-    </div>
-    <ng-template #noCamTitle>
-      <div class="h-100-p" fxLayout="row" fxLayoutAlign="start center">
-        <div class="noc-description">
-          <small>No Title Yet</small>
-        </div>
-        <button mat-stroked-button (click)="openCamForm(annoton)" color="primary"
-          class="ml-8 noc-rounded-button noc-xxs">
-          Add Title
-        </button>
-      </div>
-    </ng-template>
+  <div class="noc-title mr-12" fxLayout="row" fxLayoutAlign="start center">
+    <button mat-flat-button (click)="openAnnotonForm(AnnotonType.default)" color="primary"
+      class="noc-rounded-button noc-half-button noc-r noc-sm">
+      <mat-icon class=""> add </mat-icon> Create Activity
+    </button>
+    <button mat-flat-button fxFlex="35px" [matMenuTriggerFor]="createOptions" color="primary"
+      class="noc-rounded-button noc-half-button noc-l noc-sm mr-8 p-0">
+      <mat-icon class=""> arrow_drop_down </mat-icon>
+    </button>
+    <mat-menu #createOptions="matMenu">
+      <a mat-menu-item (click)="openAnnotonForm(AnnotonType.default)">
+        Create New Activity Unit
+      </a>
+      <a mat-menu-item (click)="openAnnotonForm(AnnotonType.bpOnly)">
+        Create New BP Annotation
+      </a>
+      <a mat-menu-item (click)="openAnnotonForm(AnnotonType.ccOnly)">
+        Create New CC Annotation
+      </a>
+    </mat-menu>
   </div>
   <span fxFlex=""></span>
-
   <div *ngIf="!noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
     <a mat-button href="{{loginUrl}}">
       Login
     </a>
   </div>
-
   <div *ngIf="noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
     <button mat-button class="noc-name-button">
       <div fxLayout="row" fxLayoutAlign="start center">
