@@ -238,9 +238,16 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
     const gp = self.getNode(AnnotonNodeType.GoMolecularEntity);
     const mf = self.getNode(AnnotonNodeType.GoMolecularFunction);
+    const gpText = gp ? gp.getTerm().label : '';
+    const mfText = mf ? mf.getTerm().label : '';
+
+    const title = self.annotonType === AnnotonType.ccOnly ?
+      `${gpText}` :
+      `enabled by ${gpText}`;
     const result = {
-      gpText: gp ? gp.getTerm().label : '',
-      mfText: mf ? mf.getTerm().label : '',
+      title: title,
+      gpText: gpText,
+      mfText: mfText,
       molecularEntity: gp,
       gp: {},
       fd: {},

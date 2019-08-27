@@ -8,6 +8,20 @@ $accent: map-get($theme, accent);
   width: 100%;
   background-color: #EEE;
 
+  md-chip {
+    &.default {
+      background-color: rgba(#cdf1d2, 0.8);
+    }
+
+    &.bpOnly {
+      background-color: rgba(#f8c6e5, 0.8);
+    }
+
+    &.ccOnly {
+      background-color: rgba(#d3b5f5, 0.8);
+    }
+  }
+
   .noc-summary-bar {
     margin-bottom: 4px;
     padding: 0 10px;

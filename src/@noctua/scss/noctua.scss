@@ -21,6 +21,13 @@ $noc-secondary-color: #995014;
   @include deep-height($number);
 }
 
+mat-chip {
+  &.noc-chip-sm {
+    @include deep-height(25px);
+    font-size: 10px;
+  }
+}
+
 .navbar {
   display: none !important;
   visibility: hidden

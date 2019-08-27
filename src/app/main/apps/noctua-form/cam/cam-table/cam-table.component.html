@@ -29,9 +29,12 @@
           </div>
           <div class="noc-title">
             <div class="text-truncate">
-              <small>enabled by: </small> {{annoton?.presentation.gpText}}
+              {{annoton?.presentation.title}}
             </div>
           </div>
+          <mat-chip class="noc-chip-sm ">
+            <span>{{annoton.annotonType}}</span>
+          </mat-chip>
           <span fxFlex=""></span>
           <div class="" fxFlex="200px" fxLayout="row" fxLayoutAlign="end center">
             <button mat-stroked-button (click)="openAnnotonForm(annoton)" color="primary"

@@ -1,6 +1,6 @@
 <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
   <div class="noc-cam-heading" fxLayout="row" fxLayoutAlign="start center">
-    <div class="h-100-p" *ngIf="cam.title; else noCamTitle" fxLayout="row" fxLayoutAlign="start center">
+    <div class="h-100-p mr-12" *ngIf="cam.title; else noCamTitle" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-section-label noc-cam-title">
         <div class="text-truncate" (click)="openCamForm(annoton)">
           {{cam.title}}
@@ -8,7 +8,7 @@
       </div>
     </div>
     <ng-template #noCamTitle>
-      <div class="h-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <div class="h-100-p mr-12" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-label" (click)="openCamForm(annoton)">
           No Title Yet
         </div>
@@ -73,10 +73,8 @@
         <noc-cam-table *ngSwitchCase="noctuaFormService.panel.camTable.id" [cam]="cam"></noc-cam-table>
       </div>
     </mat-drawer-content>
-    <mat-drawer #rightDrawer class="noc-right-drawer" mode="side" position="end">
+    <mat-drawer #rightDrawer class="noc-right-drawer" mode="over" position="end">
       <div [ngSwitch]="noctuaFormService.selectedRightPanel?.id" class="h-100-p">
-        <noc-cam-form [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormService.panel.camForm.id">
-        </noc-cam-form>
         <noc-annoton-form [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormService.panel.annotonForm.id">
         </noc-annoton-form>
         <noc-annoton-entity-form [panelDrawer]="rightDrawer"

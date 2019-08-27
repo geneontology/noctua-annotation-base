@@ -1,11 +1,8 @@
  <form name="annotonFormGroup" [formGroup]="annotonFormGroup" fxLayout="column" fxLayoutAlign="start stretch"
    class="noc-drawer w-100-p h-100-p">
    <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
-     <span *ngIf="state === AnnotonState.creating" class="noc-drawer-header-title">
+     <span class="noc-drawer-header-title">
        Create New Activity
-     </span>
-     <span *ngIf="state === AnnotonState.editing" class="noc-drawer-header-title">
-       Edit Existing Activity
      </span>
      <span fxFlex></span>
      <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"

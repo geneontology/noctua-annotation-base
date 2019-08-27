@@ -13,12 +13,7 @@
     background-color: #E2E2E2;
   }
 
-  mat-chip {
-    &.noc-chip-sm {
-      @include deep-height(25px);
-      font-size: 10px;
-    }
-  }
+
 
   .noc-cam-heading {
     margin-bottom: 4px;
@@ -32,7 +27,7 @@
     @include mat-elevation(2);
 
     .noc-cam-title {
-      max-width: 400px;
+      max-width: 400px !important;
     }
 
     .noc-cam-heading-section {
