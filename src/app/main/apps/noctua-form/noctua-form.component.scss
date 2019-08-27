@@ -13,14 +13,21 @@
     background-color: #E2E2E2;
   }
 
-  .noc-summary-bar {
+  mat-chip {
+    &.noc-chip-sm {
+      @include deep-height(25px);
+      font-size: 10px;
+    }
+  }
+
+  .noc-cam-heading {
     margin-bottom: 4px;
     padding: 0 10px;
     @include deep-height(40px);
     width: 100%;
     //min-height: 35px;
     background-color: #FFF;
-    font-size: 16px;
+    font-size: 12px;
 
     @include mat-elevation(2);
 
@@ -28,7 +35,9 @@
       max-width: 400px;
     }
 
-    .noc-summary-bar-section {
+    .noc-cam-heading-section {
+      height: 100%;
+
       .noc-section-label {
         font-size: 12px;
         color: #555;

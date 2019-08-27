@@ -4,24 +4,7 @@
       ACTIVITIES
     </span>
     <span fxFlex></span>
-    <div class="noc-summary-bar-section noc-br">
-      <span class="noc-section-label">
-        Sort By:
-      </span>
-      <button mat-stroked-button [matMenuTriggerFor]="sortOptions" color="primary"
-        class="noc-rounded-button noc-sm ml-4 mr-8">
-        {{cam?.sort?.label}}
-        <mat-icon class=""> arrow_drop_down </mat-icon>
-      </button>
-      <mat-menu #sortOptions="matMenu">
-        <a mat-menu-item (click)="sortBy('gp')">
-          Molecular Entity
-        </a>
-        <a mat-menu-item (click)="sortBy('mf')">
-          Molecular Function
-        </a>
-      </mat-menu>
-    </div>
+
   </div>
   <ng-container [ngSwitch]="cam?.displayType.name">
     <noc-annoton-entity-table *ngSwitchCase="camDisplayType.entity.name" [cam]="cam" class="noc-cam-table-body"

@@ -18,6 +18,8 @@ import {
 } from 'noctua-form-base';
 
 import { NoctuaFormService } from './services/noctua-form.service';
+import { takeUntil } from 'rxjs/operators';
+import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
 @Component({
   selector: 'app-noctua-form',
@@ -43,7 +45,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   noctuaFormConfig = noctuaFormConfig;
 
-  private unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
   constructor(private route: ActivatedRoute,
     private camService: CamService,
@@ -51,9 +53,10 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
     public noctuaFormService: NoctuaFormService,
+    private sparqlService: SparqlService,
     private noctuaGraphService: NoctuaGraphService, ) {
 
-    this.unsubscribeAll = new Subject();
+    this._unsubscribeAll = new Subject();
 
     this.route
       .queryParams
@@ -85,7 +88,14 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.noctuaFormService.setLeftDrawer(this.leftDrawer);
     this.noctuaFormService.setRightDrawer(this.rightDrawer);
+    this.sparqlService.getAllContributors()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((contributors: Contributor[]) => {
+        this.noctuaUserService.contributors = contributors;
+        this.noctuaGraphService.popuiateContributors(this.cam);
+      });
   }
+
 
   loadCam(modelId) {
     this.cam = this.camService.getCam(modelId);
@@ -93,7 +103,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   openCamForm() {
     this.camService.initializeForm(this.cam);
-    this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.camForm);
+    this.noctuaFormService.openLeftDrawer(this.noctuaFormService.panel.camForm);
   }
 
   openAnnotonForm(annotonType: AnnotonType) {
@@ -102,8 +112,8 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }
 

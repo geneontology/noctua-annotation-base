@@ -1,50 +1,54 @@
 <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
-  <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
-    <div class="noc-summary-bar-section noc-br mr-12 pr-12" fxLayout="row" fxLayoutAlign="start center">
-      <div class="h-100-p" *ngIf="cam.title; else noCamTitle" fxLayout="row" fxLayoutAlign="start center">
-        <div class="noc-section-label noc-cam-title">
-          <div class="text-truncate">
-            {{cam.title}}
-          </div>
+  <div class="noc-cam-heading" fxLayout="row" fxLayoutAlign="start center">
+    <div class="h-100-p" *ngIf="cam.title; else noCamTitle" fxLayout="row" fxLayoutAlign="start center">
+      <div class="noc-section-label noc-cam-title">
+        <div class="text-truncate" (click)="openCamForm(annoton)">
+          {{cam.title}}
         </div>
-        <button mat-stroked-button (click)="openCamForm(annoton)" color="primary"
-          class="ml-8 noc-rounded-button noc-xxs">
-          Edit Title
+      </div>
+    </div>
+    <ng-template #noCamTitle>
+      <div class="h-100-p" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-label" (click)="openCamForm(annoton)">
+          No Title Yet
+        </div>
+      </div>
+    </ng-template>
+    <div class="pr-12" fxFlex="110px" fxLayout="row" fxLayoutAlign="start center">
+      <mat-chip class="noc-chip-sm w-100-p" (click)="openCamForm(annoton)">
+        <mat-icon class="s-16">playlist_add_check</mat-icon> <span> {{cam.state?.label }}</span>
+      </mat-chip>
+    </div>
+    <div class="noc-date" fxFlex="100px" fxLayout="row" fxLayoutAlign="start center">
+      <mat-icon class="s-16">date_range</mat-icon> <span>{{cam.date }}</span>
+    </div>
+    <div class="" fxFlex="">
+      <mat-chip-list>
+        <mat-chip class="noc-chip-sm" *ngFor="let contributor of cam.contributors">
+          <mat-icon class="s-12">person</mat-icon>
+          <span>{{contributor.name}}</span>
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+    <div class="" fxFlex="100px" fxLayout="row" fxLayoutAlign="end center">
+      <div [ngSwitch]="noctuaFormService.selectedMiddlePanel.id">
+        <button mat-button class="" *ngSwitchCase="noctuaFormService.panel.camTable.id"
+          (click)="noctuaFormService.openMiddlePanel(noctuaFormService.panel.camPreview)" matTooltip="Search"
+          [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500"
+          [ngClass]="{'noc-active':noctuaFormService.selectedMiddlePanel.id===noctuaFormService.panel.camDiagram.id}">
+          <mat-icon> scatter_plot </mat-icon>
+        </button>
+        <button mat-button class="" *ngSwitchCase="noctuaFormService.panel.camPreview.id"
+          (click)="noctuaFormService.openMiddlePanel(noctuaFormService.panel.camTable)" matTooltip="Search"
+          [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500"
+          [ngClass]="{'noc-active':noctuaFormService.selectedMiddlePanel.id===noctuaFormService.panel.camTable.id}">
+          <mat-icon> table_chart </mat-icon>
         </button>
       </div>
-      <ng-template #noCamTitle>
-        <div class="h-100-p" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-description">
-            <small>No Title Yet</small>
-          </div>
-          <button mat-stroked-button (click)="openCamForm(annoton)" color="primary"
-            class="ml-8 noc-rounded-button noc-xxs">
-            Add Title
-          </button>
-        </div>
-      </ng-template>
-    </div>
-    <div class="noc-summary-bar-section noc-br">
-      <span class="noc-section-label">
-        State:
-      </span>
-      <button mat-stroked-button (click)="openCamForm()" color="primary" class="noc-rounded-button noc-sm ml-4 mr-8">
-        {{cam?.state?.label}}
-      </button>
-    </div>
-    <span fxFlex></span>
-    <div [ngSwitch]="noctuaFormService.selectedMiddlePanel.id">
-      <button mat-button class="" *ngSwitchCase="noctuaFormService.panel.camTable.id"
-        (click)="noctuaFormService.openMiddlePanel(noctuaFormService.panel.camPreview)" matTooltip="Search"
-        [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500"
-        [ngClass]="{'noc-active':noctuaFormService.selectedMiddlePanel.id===noctuaFormService.panel.camDiagram.id}">
-        <mat-icon> scatter_plot </mat-icon>
-      </button>
-      <button mat-button class="" *ngSwitchCase="noctuaFormService.panel.camPreview.id"
-        (click)="noctuaFormService.openMiddlePanel(noctuaFormService.panel.camTable)" matTooltip="Search"
-        [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500"
-        [ngClass]="{'noc-active':noctuaFormService.selectedMiddlePanel.id===noctuaFormService.panel.camTable.id}">
-        <mat-icon> table_chart </mat-icon>
+      <button mat-icon-button (click)="openCamForm(annoton)" class="">
+        <mat-icon class="">
+          info
+        </mat-icon>
       </button>
     </div>
   </div>
@@ -57,7 +61,8 @@
         <noc-annoton-form [panelDrawer]="leftDrawer" *ngSwitchCase="noctuaFormService.panel.annotonForm.id">
         </noc-annoton-form>
         <noc-annoton-entity-form [panelDrawer]="leftDrawer"
-          *ngSwitchCase="noctuaFormService.panel.annotonEntityForm.id"></noc-annoton-entity-form>
+          *ngSwitchCase="noctuaFormService.panel.annotonEntityForm.id">
+        </noc-annoton-entity-form>
         <noc-annoton-connector [panelDrawer]="leftDrawer" *ngSwitchCase="noctuaFormService.panel.connectorForm.id">
         </noc-annoton-connector>
       </div>
@@ -75,7 +80,8 @@
         <noc-annoton-form [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormService.panel.annotonForm.id">
         </noc-annoton-form>
         <noc-annoton-entity-form [panelDrawer]="rightDrawer"
-          *ngSwitchCase="noctuaFormService.panel.annotonEntityForm.id"></noc-annoton-entity-form>
+          *ngSwitchCase="noctuaFormService.panel.annotonEntityForm.id">
+        </noc-annoton-entity-form>
         <noc-annoton-connector [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormService.panel.connectorForm.id">
         </noc-annoton-connector>
       </div>

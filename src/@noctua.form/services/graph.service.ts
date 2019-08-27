@@ -32,6 +32,7 @@ import 'rxjs/add/observable/forkJoin';
 import * as _ from 'lodash';
 import { AnnotonType } from './../models/annoton/annoton';
 import { AnnotonNodeType } from './../models/annoton/annoton-node';
+import { Contributor } from './../models/contributor';
 
 declare const require: any;
 
@@ -147,6 +148,11 @@ export class NoctuaGraphService {
       cam.graph.load_data_basic(resp.data());
       const titleAnnotations = cam.graph.get_annotations_by_key('title');
       const stateAnnotations = cam.graph.get_annotations_by_key('state');
+      const dateAnnotations = cam.graph.get_annotations_by_key('date');
+
+      if (dateAnnotations.length > 0) {
+        cam.date = dateAnnotations[0].value();
+      }
 
       if (titleAnnotations.length > 0) {
         cam.title = titleAnnotations[0].value();
@@ -181,6 +187,20 @@ export class NoctuaGraphService {
     }, 10);
 
     cam.manager.get_model(modelId);
+  }
+
+  popuiateContributors(cam: Cam) {
+    const self = this;
+    const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
+
+    cam.contributors = <Contributor[]>contributorAnnotations.map((contributorAnnotation) => {
+      const orcid = contributorAnnotation.value();
+      const contributor = _.find(self.noctuaUserService.contributors, (srcContributor: Contributor) => {
+        return srcContributor.orcid === orcid;
+      });
+
+      return contributor ? contributor : { orcid: orcid };
+    });
   }
 
 

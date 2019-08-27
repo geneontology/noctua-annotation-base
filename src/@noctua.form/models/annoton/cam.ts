@@ -17,10 +17,8 @@ import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
 
 export class Cam {
 
-  //Details
   title: string;
   state: any;
-  //User Info
   groups: Group[] = [];
   contributors: Contributor[] = [];
   group: any;

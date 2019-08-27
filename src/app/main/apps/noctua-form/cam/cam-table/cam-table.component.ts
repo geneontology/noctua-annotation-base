@@ -61,7 +61,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   searchResults = [];
   modelId: string = '';
 
-  private unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
   constructor(private route: ActivatedRoute,
     public camService: CamService,
@@ -79,7 +79,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   ) {
 
     this.searchFormData = this.noctuaFormConfigService.createReviewSearchFormData();
-    this.unsubscribeAll = new Subject();
+    this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
@@ -145,7 +145,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }
