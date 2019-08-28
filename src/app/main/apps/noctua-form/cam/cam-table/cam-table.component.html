@@ -4,7 +4,6 @@
       ACTIVITIES
     </span>
     <span fxFlex></span>
-
   </div>
   <ng-container [ngSwitch]="cam?.displayType.name">
     <noc-annoton-entity-table *ngSwitchCase="camDisplayType.entity.name" [cam]="cam" class="noc-cam-table-body"
@@ -27,12 +26,12 @@
               </mat-icon>
             </button>
           </div>
-          <div class="noc-title">
+          <div class="noc-title mr-12">
             <div class="text-truncate">
               {{annoton?.presentation.title}}
             </div>
           </div>
-          <mat-chip class="noc-chip-sm ">
+          <mat-chip class="noc-chip-xs" [ngClass]="annoton.annotonType">
             <span>{{annoton.annotonType}}</span>
           </mat-chip>
           <span fxFlex=""></span>

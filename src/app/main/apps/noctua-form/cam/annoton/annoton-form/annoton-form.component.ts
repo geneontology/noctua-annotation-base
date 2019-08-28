@@ -51,7 +51,7 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
   annotonFormGroup: FormGroup;
   annotonFormSub: Subscription;
 
-  molecularEntity: AnnotonNode;
+  molecularEntity: FormGroup;
 
   searchCriteria: any = {};
   annotonFormPresentation: any;
@@ -95,7 +95,7 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
         this.annoton = this.noctuaAnnotonFormService.annoton;
         this.state = this.noctuaAnnotonFormService.state;
 
-        // this.molecularEntity = this.noctuaAnnotonFormService.annoton.getNode(this.annotonFormGroup.controls['gp'].get('id').value);
+        this.molecularEntity = <FormGroup>this.annotonFormGroup.get('molecularEntity');
 
         console.log(this.molecularEntity)
       });
@@ -144,7 +144,7 @@ export class AnnotonFormComponent implements OnInit, OnDestroy {
   }
 
   close() {
-    this.panelDrawer.close()
+    this.panelDrawer.close();
   }
 
   ngOnDestroy(): void {

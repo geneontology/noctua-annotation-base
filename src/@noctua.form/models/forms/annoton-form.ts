@@ -7,19 +7,13 @@ declare const require: any;
 const each = require('lodash/forEach');
 
 import { Annoton } from './../annoton/annoton';
-import { AnnotonNode } from './../annoton/annoton-node';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityGroupForm } from './entity-group-form';
-import { termValidator } from './validators/term-validator';
-import { EntityLookup } from '../annoton/entity-lookup';
-import { Entity } from '../annoton/entity';
-import { EntityForm } from './entity-form';
 
 export class AnnotonForm {
   entityGroupForms: EntityGroupForm[] = [];
-  molecularEntityForm: EntityForm;
-  molecularEntity: FormGroup;
   bpOnlyEdge = new FormControl();
+  gp = new FormArray([]);
   fd = new FormArray([]);
 
   private _metadata: AnnotonFormMetadata;
@@ -29,11 +23,17 @@ export class AnnotonForm {
     this._metadata = metadata;
   }
 
-  createMolecularEntityForm(molecularEntity: AnnotonNode) {
+  createMolecularEntityForm(gpData) {
     const self = this;
 
-    self.molecularEntityForm = new EntityForm(self._metadata, molecularEntity);
-    self.molecularEntity = self._fb.group(self.molecularEntityForm);
+    each(gpData, (nodeGroup, nodeKey) => {
+      const entityGroupForm = new EntityGroupForm(this._metadata);
+
+      this.entityGroupForms.push(entityGroupForm);
+      entityGroupForm.name = nodeKey;
+      entityGroupForm.createEntityForms(nodeGroup.nodes);
+      self.gp.push(self._fb.group(entityGroupForm));
+    });
   }
 
   createFunctionDescriptionForm(fdData) {
@@ -50,7 +50,6 @@ export class AnnotonForm {
   }
 
   populateAnnoton(annoton: Annoton) {
-    this.molecularEntityForm.populateTerm();
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.populateAnnotonNodes(annoton);
     });

@@ -72,6 +72,12 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
+
+    if (this.entity.type === AnnotonNodeType.GoMolecularEntity) {
+      console.log(this.entity.term);
+      console.log(this.entity.termLookup.results);
+    }
+
     this.insertMenuItems = this.noctuaFormConfigService.getInsertEntityMenuItems(this.entity.type);
   }
 
@@ -95,12 +101,12 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: AnnotonNode) {
     const self = this;
-    const gpNode = this.noctuaAnnotonFormService.annotonForm.molecularEntity.get('term').value;
+    const gpNode = this.noctuaAnnotonFormService.annoton.getGPNode();
 
     if (gpNode) {
       const data = {
         readonly: false,
-        gpNode: gpNode,
+        gpNode: gpNode.term,
         aspect: entity.aspect,
         entity: entity,
         params: {

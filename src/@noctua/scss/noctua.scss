@@ -26,6 +26,11 @@ mat-chip {
     @include deep-height(25px);
     font-size: 10px;
   }
+
+  &.noc-chip-xs {
+    @include deep-height(20px);
+    font-size: 10px;
+  }
 }
 
 .navbar {

@@ -42,10 +42,14 @@
          </mat-menu>
        </div>
        <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
-         <noc-entity-form [entityFormGroup]="annotonFormGroup.get('molecularEntity')" fxLayout="row"
-           fxLayoutAlign="start center" class="w-100-p">
-         </noc-entity-form>
-
+         <div [formArrayName]="'gp'" *ngFor="let nodeGroup of annotonFormGroup.get('gp')?.controls; let i = index;"
+           class="mat-elevation-z1 noc-term-group mb-4 px-8 pt-4  {{nodeGroup.get('name').value}}">
+           <div [formGroupName]="i" *ngFor="let entityForm of nodeGroup.get('entityGroup')?.controls" class="">
+             <noc-entity-form [entityFormGroup]="entityForm" fxLayout="row" fxLayoutAlign="start center"
+               class="w-100-p">
+             </noc-entity-form>
+           </div>
+         </div>
          <!-- 
          <div class="p-12" fxLayout="column">
            <mat-form-field appearance="outline" class="noc-sm">

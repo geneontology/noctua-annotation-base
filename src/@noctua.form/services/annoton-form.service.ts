@@ -45,7 +45,6 @@ export class NoctuaAnnotonFormService {
       this.cam = cam;
     });
     this.annoton = this.noctuaFormConfigService.createAnnotonModel(AnnotonType.default);
-
     this.annotonFormGroup = new BehaviorSubject(null);
     this.annotonFormGroup$ = this.annotonFormGroup.asObservable();
 
@@ -66,11 +65,11 @@ export class NoctuaAnnotonFormService {
       self.currentAnnoton = null;
     }
 
+    self.annoton.resetPresentation();
     self.annotonForm = this.createAnnotonForm();
     self.annotonFormGroup.next(this._fb.group(this.annotonForm));
     self.annoton.enableSubmit();
     self._onAnnotonFormChanges();
-
   }
 
   initializeFormData() {
@@ -86,7 +85,7 @@ export class NoctuaAnnotonFormService {
     const annotonForm = new AnnotonForm(annotonFormMetadata);
 
     annotonForm.createFunctionDescriptionForm(self.annoton.presentation.fd);
-    annotonForm.createMolecularEntityForm(self.annoton.presentation.molecularEntity);
+    annotonForm.createMolecularEntityForm(self.annoton.presentation.gp);
 
     console.log(annotonForm);
 

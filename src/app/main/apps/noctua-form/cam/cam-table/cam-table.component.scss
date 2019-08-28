@@ -8,17 +8,17 @@ $accent: map-get($theme, accent);
   width: 100%;
   background-color: #EEE;
 
-  md-chip {
+  mat-chip {
     &.default {
-      background-color: rgba(#cdf1d2, 0.8);
+      border: #cdf1d2 solid 2px;
     }
 
     &.bpOnly {
-      background-color: rgba(#f8c6e5, 0.8);
+      border: #f8c6e5 solid 2px;
     }
 
     &.ccOnly {
-      background-color: rgba(#d3b5f5, 0.8);
+      border: #d3b5f5 solid 2px;
     }
   }
 

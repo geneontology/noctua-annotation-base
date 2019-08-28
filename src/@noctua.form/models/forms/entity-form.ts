@@ -25,13 +25,13 @@ export class EntityForm {
         this.id = entity.id;
         this.node = entity;
 
+        this.term.setValue(entity.getTerm());
         this._onValueChanges(entity.termLookup);
     }
 
     createEvidenceForms(entity: AnnotonNode) {
         const self = this;
 
-        this.term.setValue(entity.getTerm());
         this.setTermValidator(entity);
 
         entity.predicate.evidence.forEach((evidence: Evidence) => {
@@ -68,6 +68,7 @@ export class EntityForm {
         ).subscribe(data => {
             self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
                 lookup.results = response;
+                console.log(lookup.results);
             });
         });
     }

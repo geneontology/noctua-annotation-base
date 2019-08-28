@@ -248,7 +248,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       title: title,
       gpText: gpText,
       mfText: mfText,
-      molecularEntity: gp,
       gp: {},
       fd: {},
       extra: []
