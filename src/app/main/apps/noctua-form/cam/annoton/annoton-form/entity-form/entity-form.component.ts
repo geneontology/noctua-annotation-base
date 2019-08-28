@@ -136,27 +136,23 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     this.noctuaAnnotonFormService.initializeForm();
   }
 
-  addNDEvidence() {
-    const self = this;
-
-    const evidence = new Evidence();
-    evidence.setEvidence(new Entity(
-      noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
-      noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
-    evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference
-    self.entity.predicate.setEvidence([evidence]);
-    self.noctuaAnnotonFormService.initializeForm();
-  }
-
   addRootTerm() {
     const self = this;
 
     const term = _.find(noctuaFormConfig.rootNode, (rootNode) => {
-      return rootNode.aspect === self.entity.aspect
+      return rootNode.aspect === self.entity.aspect;
     });
 
     if (term) {
       self.entity.term = new Entity(term.id, term.label);
+      self.noctuaAnnotonFormService.initializeForm();
+
+      const evidence = new Evidence();
+      evidence.setEvidence(new Entity(
+        noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
+        noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
+      evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference;
+      self.entity.predicate.setEvidence([evidence]);
       self.noctuaAnnotonFormService.initializeForm();
     }
   }
@@ -170,15 +166,13 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSelectEvidenceDialog() {
     const self = this;
-
-    const evidences: Evidence[] = this.camService.getUniqueEvidence();
-
-    const success = function (selected) {
+    const evidences: Evidence[] = this.camService.getUniqueEvidence(self.noctuaAnnotonFormService.annoton);
+    const success = (selected) => {
       if (selected.evidences && selected.evidences.length > 0) {
         self.entity.predicate.setEvidence(selected.evidences, ['assignedBy']);
         self.noctuaAnnotonFormService.initializeForm();
       }
-    }
+    };
 
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }

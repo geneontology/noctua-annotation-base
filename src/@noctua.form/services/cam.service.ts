@@ -148,9 +148,11 @@ export class CamService {
     return self.noctuaGraphService.deleteAnnoton(self.cam, deleteData.uuids, deleteData.triples);
   }
 
-  getUniqueEvidence() {
-    return this.cam.getUniqueEvidences();
+  getUniqueEvidence(formAnnoton?: Annoton) {
+
+    const evidences = formAnnoton ?
+      this.cam.addUniqueEvidencesFromAnnoton(formAnnoton) :
+      [];
+    return this.cam.getUniqueEvidences(evidences);
   }
-
-
 }

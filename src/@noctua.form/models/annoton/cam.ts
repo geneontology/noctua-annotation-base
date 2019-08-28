@@ -204,12 +204,12 @@ export class Cam {
     return result;
   }
 
-  addUniqueEvidencesFromAnnoton(annoton) {
+  addUniqueEvidencesFromAnnoton(annoton: Annoton) {
     const self = this;
-    let result = [];
+    const result = [];
 
-    each(annoton.nodes, function (node) {
-      each(node.evidence, function (evidence) {
+    each(annoton.nodes, function (node: AnnotonNode) {
+      each(node.predicate.evidence, function (evidence: Evidence) {
         if (evidence.hasValue()) {
           if (!self.evidenceExists(result, evidence)) {
             result.push(evidence);
@@ -220,7 +220,6 @@ export class Cam {
 
     return result;
   }
-
 
   setPreview() {
     const self = this;
