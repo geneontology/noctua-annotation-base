@@ -6,11 +6,11 @@
     <span fxFlex></span>
   </div>
   <ng-container [ngSwitch]="cam?.displayType.name">
-    <noc-annoton-entity-table *ngSwitchCase="camDisplayType.entity.name" [cam]="cam" class="noc-cam-table-body"
+    <noc-annoton-entity-table *ngSwitchCase="camDisplayTypeOptions.entity.name" [cam]="cam" class="noc-cam-table-body"
       fxLayout="row" fxLayoutAlign="start center">
     </noc-annoton-entity-table>
-    <noc-triple-table *ngSwitchCase="camDisplayType.triple.name" [cam]="cam" class="noc-cam-table-body" fxLayout="row"
-      fxLayoutAlign="start center">
+    <noc-triple-table *ngSwitchCase="camDisplayTypeOptions.triple.name" [cam]="cam" class="noc-cam-table-body"
+      fxLayout="row" fxLayoutAlign="start center">
     </noc-triple-table>
     <ng-container *ngSwitchDefault>
       <div *ngFor="let annoton of cam.annotons" class="w-100-p"
@@ -32,7 +32,7 @@
             </div>
           </div>
           <mat-chip class="noc-chip-xs" [ngClass]="annoton.annotonType">
-            <span>{{annoton.annotonType}}</span>
+            <span>{{annotonTypeOptions[annoton.annotonType]?.label}}</span>
           </mat-chip>
           <span fxFlex=""></span>
           <div class="" fxFlex="200px" fxLayout="row" fxLayoutAlign="end center">

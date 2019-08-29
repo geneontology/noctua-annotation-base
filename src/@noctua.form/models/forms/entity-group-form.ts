@@ -2,6 +2,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Annoton } from './../annoton/annoton';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityForm } from './entity-form';
+import { AnnotonNode } from '../annoton';
 
 
 declare const require: any;
@@ -19,14 +20,16 @@ export class EntityGroupForm {
         this._metadata = metadata;
     }
 
-    createEntityForms(entities) {
+    createEntityForms(entities: AnnotonNode[]) {
         const self = this;
 
         this.entityForms = [];
-        entities.forEach((entity) => {
+        entities.forEach((entity: AnnotonNode) => {
             const entityForm = new EntityForm(self._metadata, entity);
 
-            entityForm.createEvidenceForms(entity);
+            if (!entity.skipEvidence) {
+                entityForm.createEvidenceForms(entity);
+            }
             self.entityForms.push(entityForm);
             self.entityGroup.push(self._fb.group(entityForm));
         });

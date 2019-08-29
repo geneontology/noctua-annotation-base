@@ -52,7 +52,8 @@ export class CamTableComponent implements OnInit, OnDestroy {
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;
-  camDisplayType = noctuaFormConfig.camDisplayType.options;
+  camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
+  annotonTypeOptions = noctuaFormConfig.annotonType.options;
 
   @Input('cam')
   public cam: Cam;

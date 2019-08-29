@@ -42,6 +42,7 @@ export interface AnnotonNodeDisplay {
   treeLevel: number;
   required: boolean;
   visible: boolean;
+  skipEvidence: boolean;
 }
 
 export class AnnotonNode implements AnnotonNodeDisplay {
@@ -71,6 +72,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   visible = true;
   termRequiredList: string[] = [AnnotonNodeType.GoMolecularFunction];
   canInsert = [];
+  skipEvidence = false;
   errors = [];
   warnings = [];
   status = '0';

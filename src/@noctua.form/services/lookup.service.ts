@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
 import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
 
 import * as _ from 'lodash';
-import { AnnotonNode, AnnotonNodeClosure, Entity, Evidence } from './../models/annoton/';
+import { AnnotonNode, AnnotonNodeClosure, Entity, Evidence, Predicate } from './../models/annoton/';
 
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 
@@ -58,7 +58,7 @@ export class NoctuaLookupService {
   }
 
   buildQ(str) {
-    let manager = new golr_manager(gserv, gconf, engine, 'async');
+    const manager = new golr_manager(gserv, gconf, engine, 'async');
 
     manager.set_comfy_query(str);
     return manager.get_query(str);
@@ -67,7 +67,7 @@ export class NoctuaLookupService {
   golrTermLookup(searchText, id) {
     const self = this;
 
-    let requestParams = self.noctuaFormConfigService.getRequestParams(id);
+    const requestParams = self.noctuaFormConfigService.getRequestParams(id);
 
     return self.golrLookup(searchText, requestParams);
   }
@@ -77,7 +77,7 @@ export class NoctuaLookupService {
 
     requestParams.q = self.buildQ(searchText);
 
-    let params = new HttpParams({
+    const params = new HttpParams({
       fromObject: requestParams
     })
     // .set('callback', 'JSONP_CALLBACK')
@@ -93,8 +93,8 @@ export class NoctuaLookupService {
   }
 
   _foo(response) {
-    let data = response.response.docs;
-    let result = data.map((item) => {
+    const data = response.response.docs;
+    const result = data.map((item) => {
 
       return {
         id: item.annotation_class,
@@ -106,7 +106,7 @@ export class NoctuaLookupService {
 
   golrLookupManager(searchText, requestParams) {
     const self = this;
-    let manager = new golr_manager(gserv, gconf, engine, 'async');
+    const manager = new golr_manager(gserv, gconf, engine, 'async');
     // manager.jsonpCallbackParam: 'json.wrf'
 
     manager.set_query(searchText);
@@ -137,7 +137,7 @@ export class NoctuaLookupService {
     const self = this;
     const golrUrl = environment.globalGolrCompanionServer + `select?`;
 
-    let requestParams = {
+    const requestParams = {
       defType: 'edismax',
       qt: 'standard',
       indent: 'on',
@@ -183,7 +183,7 @@ export class NoctuaLookupService {
       requestParams.fq.push('evidence:"' + extraParams.evidence + '"')
     }
 
-    let params = new HttpParams({
+    const params = new HttpParams({
       fromObject: requestParams
     })
     // .set('callback', 'JSONP_CALLBACK')
@@ -195,12 +195,12 @@ export class NoctuaLookupService {
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
       map(response => {
-        let docs = response["response"].docs;
-        let result = [];
+        const docs = response["response"].docs;
+        const result = [];
 
         each(docs, function (doc) {
-          let annotonNode
-          let evidence = new Evidence();
+          let annotonNode: AnnotonNode;
+          const evidence = new Evidence();
 
           evidence.setEvidence(new Entity(doc.evidence, doc.evidence_label));
 
@@ -219,23 +219,24 @@ export class NoctuaLookupService {
           });
 
           if (annotonNode) {
-            annotonNode.addEvidence(evidence);
+            annotonNode.predicate.addEvidence(evidence);
           } else {
             annotonNode = new AnnotonNode();
+            annotonNode.predicate = new Predicate(null);
             annotonNode.term = new Entity(doc.annotation_class, doc.annotation_class_label);
-            annotonNode.addEvidence(evidence);
+            annotonNode.predicate.addEvidence(evidence);
             result.push(annotonNode);
           }
         });
 
         return result;
-      }))
+      }));
   }
 
   isaClosure(a, b) {
     const self = this;
 
-    let requestParams = {
+    const requestParams = {
       q: self.buildQ(a),
       defType: 'edismax',
       indent: 'on',
@@ -273,7 +274,7 @@ export class NoctuaLookupService {
       ],
       // _: Date.now()
     };
-    let params = new HttpParams({
+    const params = new HttpParams({
       fromObject: requestParams
     })
     // .set('callback', 'JSONP_CALLBACK')
@@ -285,7 +286,7 @@ export class NoctuaLookupService {
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
       map(response => {
-        let docs = response["response"].docs;
+        const docs = response["response"].docs;
         let result = false;
 
         if (docs.length > 0) {
@@ -306,7 +307,7 @@ export class NoctuaLookupService {
   //Closures
   addLocalClosure(term, closure, isaClosure) {
     const self = this;
-    let data = {
+    const data = {
       term: term,
       closure: closure,
       isaClosure: isaClosure
@@ -319,14 +320,14 @@ export class NoctuaLookupService {
 
   localClosureExist(term, closure) {
     const self = this;
-    let data = new AnnotonNodeClosure(term, closure);
+    const data = new AnnotonNodeClosure(term, closure);
 
     return (_.find(self.localClosures, data));
   }
 
   getLocalClosure(term, closure) {
     const self = this;
-    let data = self.localClosureExist(term, closure);
+    const data = self.localClosureExist(term, closure);
 
     if (data) {
       return data.isaClosure;
@@ -343,7 +344,7 @@ export class NoctuaLookupService {
     if (closureRange) {
       each(closureRange.closures, function (closure) {
         if (closure.object) {
-          let data = self.localClosureExist(term, closure.object.id);
+          const data = self.localClosureExist(term, closure.object.id);
           if (data && data.isaClosure) {
             result = data;
           }

@@ -108,15 +108,15 @@ export const noctuaFormConfig = {
     "options": {
       "default": {
         "name": 'default',
-        "label": 'Default'
+        "label": 'Activity Unit'
       },
       "ccOnly": {
         "name": 'ccOnly',
-        "label": 'CC only'
+        "label": 'CC Annotation'
       },
       "bpOnly": {
         "name": 'bpOnly',
-        "label": 'BP only'
+        "label": 'BP Annotation'
       }
     }
   },
