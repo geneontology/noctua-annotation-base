@@ -42,6 +42,29 @@ $accent: map-get($theme, accent);
       }
     }
 
+    .noc-cam-title {
+      max-width: 400px !important;
+    }
+
+    .noc-cam-heading-section {
+      height: 100%;
+
+      .noc-section-label {
+        font-size: 12px;
+        color: #555;
+      }
+    }
+
+    .noc-title {
+      strong {
+        font-size: 12px;
+      }
+    }
+
+    .noc-title-truncate {
+      max-width: 200px
+    }
+
     .loading-bar {
       position: absolute;
       top: 0;

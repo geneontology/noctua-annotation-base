@@ -27,26 +27,21 @@
       </a>
     </div>
   </div>
-  <div class="noc-title mr-12" fxLayout="row" fxLayoutAlign="start center">
-    <button mat-flat-button (click)="openAnnotonForm(AnnotonType.default)" color="primary"
-      class="noc-rounded-button noc-half-button noc-r noc-sm">
-      <mat-icon class=""> add </mat-icon> Create Activity
-    </button>
-    <button mat-flat-button fxFlex="35px" [matMenuTriggerFor]="createOptions" color="primary"
-      class="noc-rounded-button noc-half-button noc-l noc-sm mr-8 p-0">
-      <mat-icon class=""> arrow_drop_down </mat-icon>
-    </button>
-    <mat-menu #createOptions="matMenu" xPosition="before">
-      <a mat-menu-item (click)="openAnnotonForm(AnnotonType.default)">
-        Create New Activity Unit
-      </a>
-      <a mat-menu-item (click)="openAnnotonForm(AnnotonType.bpOnly)">
-        Create New BP Annotation
-      </a>
-      <a mat-menu-item (click)="openAnnotonForm(AnnotonType.ccOnly)">
-        Create New CC Annotation
-      </a>
-    </mat-menu>
+  <div *ngIf="cam" class="noc-title mr-12" fxLayout="row" fxLayoutAlign="start center">
+    <div class="h-100-p mr-12" *ngIf="cam.title; else noCamTitle" fxLayout="row" fxLayoutAlign="start center">
+      <div class="noc-section-label noc-cam-title">
+        <div class="text-truncate" (click)="openCamForm()">
+          {{cam.title}}
+        </div>
+      </div>
+    </div>
+    <ng-template #noCamTitle>
+      <div class="h-100-p mr-12" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-label" (click)="openCamForm(annoton)">
+          No Title Yet
+        </div>
+      </div>
+    </ng-template>
   </div>
   <span fxFlex=""></span>
   <div *ngIf="!noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
