@@ -799,7 +799,18 @@ export class NoctuaFormConfigService {
     return noctuaFormConfig.closures;
   }
 
+  get evidenceDBs() {
+    const options = [
+      noctuaFormConfig.evidenceDB.options.pmid,
+      noctuaFormConfig.evidenceDB.options.doi,
+      noctuaFormConfig.evidenceDB.options.goRef,
+    ];
 
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
 
   get annotonType() {
     const options = [

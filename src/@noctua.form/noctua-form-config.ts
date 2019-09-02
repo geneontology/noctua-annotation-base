@@ -1,4 +1,4 @@
-import { Entity } from "./models/annoton/entity";
+import { Entity } from './models/annoton/entity';
 
 const edge = {
   placeholder: {
@@ -104,124 +104,140 @@ const edge = {
 }
 
 export const noctuaFormConfig = {
-  "annotonType": {
-    "options": {
-      "default": {
-        "name": 'default',
-        "label": 'Activity Unit'
+  'annotonType': {
+    'options': {
+      'default': {
+        'name': 'default',
+        'label': 'Activity Unit'
       },
-      "ccOnly": {
-        "name": 'ccOnly',
-        "label": 'CC Annotation'
+      'ccOnly': {
+        'name': 'ccOnly',
+        'label': 'CC Annotation'
       },
-      "bpOnly": {
-        "name": 'bpOnly',
-        "label": 'BP Annotation'
+      'bpOnly': {
+        'name': 'bpOnly',
+        'label': 'BP Annotation'
       }
     }
   },
-  "camDisplayType": {
-    "options": {
+  'camDisplayType': {
+    'options': {
       'triple': {
-        "name": 'triple',
-        "label": 'Simple Triple View'
+        'name': 'triple',
+        'label': 'Simple Triple View'
       },
       'entity': {
-        "name": 'entity',
-        "label": 'Annotated Entity View'
+        'name': 'entity',
+        'label': 'Annotated Entity View'
       },
       'model': {
-        "name": 'model',
-        "label": 'Activity View'
+        'name': 'model',
+        'label': 'Activity View'
       }
     }
   },
-  "modelState": {
-    "options": {
+  'evidenceDB': {
+    'options': {
+      'pmid': {
+        'name': 'PMID',
+        'label': 'PMID:'
+      },
+      'doi': {
+        'name': 'DOI',
+        'label': 'DOI:'
+      },
+      'goRef': {
+        'name': 'GO_REF',
+        'label': 'GO_REF:'
+      }
+    }
+  },
+  'modelState': {
+    'options': {
       'development': {
-        "name": 'development',
-        "label": 'Development'
+        'name': 'development',
+        'label': 'Development'
       },
       'production': {
-        "name": 'production',
-        "label": 'Production'
+        'name': 'production',
+        'label': 'Production'
       },
       'review': {
-        "name": 'review',
-        "label": 'Review'
+        'name': 'review',
+        'label': 'Review'
       },
       'closed': {
-        "name": 'closed',
-        "label": 'Closed'
+        'name': 'closed',
+        'label': 'Closed'
       },
       'delete': {
-        "name": 'delete',
-        "label": 'Delete'
+        'name': 'delete',
+        'label': 'Delete'
       }
     }
   },
-  "causalEffect": {
-    "options": {
+  'causalEffect': {
+    'options': {
       'positive': {
-        "name": 'positive',
-        "label": 'Positive'
+        'name': 'positive',
+        'label': 'Positive'
       },
       'negative': {
-        "name": 'negative',
-        "label": 'Negative'
+        'name': 'negative',
+        'label': 'Negative'
       },
       'neutral': {
-        "name": 'neutral',
-        "label": 'Unknown/neutral'
+        'name': 'neutral',
+        'label': 'Unknown/neutral'
       }
     }
   },
-  "causalReactionProduct": {
-    "options": {
-      "regulate": {
-        "name": 'regulate',
-        "label": 'Regulate',
+  'causalReactionProduct': {
+    'options': {
+      'regulate': {
+        'name': 'regulate',
+        'label': 'Regulate',
       },
-      "substrate": {
-        "name": 'substrate',
-        "label": 'Substrate',
+      'substrate': {
+        'name': 'substrate',
+        'label': 'Substrate',
       }
     }
   },
-  "displaySection": {
-    "gp": {
-      id: "gp",
+  'displaySection': {
+    'gp': {
+      id: 'gp',
       label: 'Gene Product'
     },
-    "fd": {
-      id: "fd",
+    'fd': {
+      id: 'fd',
       label: 'Macromolecular Complex'
     },
   },
-  "displayGroup": {
-    "gp": {
-      id: "gp",
-      shorthand: "GP",
+  'displayGroup': {
+    'gp': {
+      id: 'gp',
+      shorthand: 'GP',
       label: 'Gene Product'
     },
-    "mc": {
-      id: "mc",
-      shorthand: "MC",
+    'mc': {
+      id: 'mc',
+      shorthand: 'MC',
       label: 'Macromolecular Complex'
     },
-    "mf": {
-      id: "mf",
-      shorthand: "MF",
+    'mf': {
+      id: 'mf',
+      shorthand: 'MF',
       label: 'Molecular Function'
     },
-    "bp": {
-      id: "bp",
-      shorthand: "BP",
+    'bp': {
+      id: 'bp',
+      shorthand: 'BP',
       label: 'Biological Process'
     },
-    "cc": {
-      id: "cc",
-      shorthand: "CC",
+    'cc': {
+      id: 'cc',
+      shorthand: 'CC',
       label: 'Location of Activity'
     }
   },
