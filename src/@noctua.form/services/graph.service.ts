@@ -653,7 +653,7 @@ export class NoctuaGraphService {
         }
       }
 
-      this._addFoo(annoton, bbopPredicateId, subjectNode, objectNode);
+      this._insertNode(annoton, bbopPredicateId, subjectNode, objectNode);
       const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
 
       each(triples, (triple: Triple<AnnotonNode>) => {
@@ -674,15 +674,15 @@ export class NoctuaGraphService {
     return annoton;
   }
 
-  private _addFoo(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode, bbopObjectNode: any) {
+  private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode, bbopObjectNode: any) {
     const self = this;
     const edges: ModelDefinition.InsertNodeDescription = ModelDefinition.insertNodeDescription[subjectNode.type];
 
     each(edges, (edge: ModelDefinition.InsertNodeDescription, nodeType: AnnotonNodeType) => {
       if (bbopPredicateId === edge.predicate.id) {
-        if (self.noctuaLookupService.getLocalClosure(bbopObjectNode.term.id, edge.node.category)) {
-          ModelDefinition.insertNode(annoton, subjectNode, nodeType);
-        }
+        //  if (self.noctuaLookupService.getLocalClosure(bbopObjectNode.term.id, edge.node.category)) {
+        ModelDefinition.insertNode(annoton, subjectNode, nodeType);
+        //  }
       }
     });
   }
@@ -780,7 +780,6 @@ export class NoctuaGraphService {
       reqs.remove_individual(triple.subject.uuid);
     });
   }
-
 
   addIndividual(reqs: any, node: AnnotonNode): string | null {
     if (node.uuid) {
