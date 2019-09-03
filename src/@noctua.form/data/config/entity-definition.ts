@@ -102,7 +102,6 @@ export class GoBiologicalPhase {
     public static readonly category = 'GO:0044848';
 }
 
-
 export const generateBaseTerm = (goType?: string, override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = new AnnotonNode();
     const predicate = new Predicate(null);
