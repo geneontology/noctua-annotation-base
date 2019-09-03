@@ -16,7 +16,7 @@ export interface ActivityDescription {
 
 export interface InsertNodeDescription {
     node: AnnotonNodeDisplay;
-    triples: { subject: string, object: string, predicate: any }[];
+    predicate: Entity;
 }
 
 export const activityUnitDescription: ActivityDescription = {
@@ -191,7 +191,6 @@ export const insertNodeDescription = {
     [AnnotonNodeType.GoMolecularFunction]: {
         [AnnotonNodeType.GoChemicalEntityHasInput]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
-                id: EntityDefinition.GoChemicalEntity.id,
                 category: EntityDefinition.GoChemicalEntity.category,
                 label: 'Has Input (Gene Product/Chemical)',
                 relationship: noctuaFormConfig.edge.hasInput,
@@ -200,15 +199,10 @@ export const insertNodeDescription = {
                 treeLevel: 2,
                 isExtension: true,
             },
-            triples: [{
-                subject: AnnotonNodeType.GoMolecularFunction,
-                object: null,
-                predicate: noctuaFormConfig.edge.hasInput
-            }],
+            predicate: noctuaFormConfig.edge.hasInput,
         },
         [AnnotonNodeType.GoChemicalEntityHasOutput]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
-                id: EntityDefinition.GoChemicalEntity.id,
                 category: EntityDefinition.GoChemicalEntity.category,
                 label: 'Has Output (Gene Product/Chemical)',
                 relationship: noctuaFormConfig.edge.hasOutput,
@@ -217,15 +211,10 @@ export const insertNodeDescription = {
                 treeLevel: 2,
                 isExtension: true,
             },
-            triples: [{
-                subject: AnnotonNodeType.GoMolecularFunction,
-                object: null,
-                predicate: noctuaFormConfig.edge.hasOutput
-            }],
+            predicate: noctuaFormConfig.edge.hasOutput
         },
         [AnnotonNodeType.GoBiologicalPhase]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
-                id: EntityDefinition.GoBiologicalPhase.id,
                 category: EntityDefinition.GoBiologicalPhase.category,
                 label: 'Happens During (Temporal Phase)',
                 relationship: noctuaFormConfig.edge.happensDuring,
@@ -234,18 +223,12 @@ export const insertNodeDescription = {
                 treeLevel: 2,
                 isExtension: true,
             },
-            triples: [{
-                subject: AnnotonNodeType.GoMolecularFunction,
-                object: null,
-                predicate: noctuaFormConfig.edge.happensDuring
-            }]
+            predicate: noctuaFormConfig.edge.happensDuring
         }
     },
     [AnnotonNodeType.GoBiologicalProcess]: {
         [AnnotonNodeType.GoBiologicalProcess]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
-                id: EntityDefinition.GoBiologicalProcess.id,
-                type: AnnotonNodeType.GoBiologicalProcess,
                 category: EntityDefinition.GoBiologicalProcess.category,
                 label: 'Part Of (Biological Process)',
                 aspect: 'P',
@@ -255,18 +238,12 @@ export const insertNodeDescription = {
                 treeLevel: 3,
                 isExtension: true,
             },
-            triples: [{
-                subject: AnnotonNodeType.GoBiologicalProcess,
-                object: null,
-                predicate: noctuaFormConfig.edge.partOf
-            }],
+            predicate: noctuaFormConfig.edge.partOf
         },
     },
     [AnnotonNodeType.GoCellularComponent]: {
         [AnnotonNodeType.GoCellTypeEntity]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
-                id: EntityDefinition.GoCellTypeEntity.id,
-                type: AnnotonNodeType.GoCellTypeEntity,
                 category: EntityDefinition.GoCellTypeEntity.category,
                 label: 'Part Of (Cell Type)',
                 relationship: noctuaFormConfig.edge.partOf,
@@ -275,18 +252,13 @@ export const insertNodeDescription = {
                 treeLevel: 3,
                 isExtension: true,
             },
-            triples: [{
-                subject: AnnotonNodeType.GoCellularComponent,
-                object: null,
-                predicate: noctuaFormConfig.edge.partOf
-            }],
+            predicate: noctuaFormConfig.edge.partOf
+
         }
     },
     [AnnotonNodeType.GoCellTypeEntity]: {
         [AnnotonNodeType.GoAnatomicalEntity]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
-                id: EntityDefinition.GoAnatomicalEntity.id,
-                type: AnnotonNodeType.GoAnatomicalEntity,
                 category: EntityDefinition.GoAnatomicalEntity.category,
                 label: 'Part Of (Anatomy)',
                 relationship: noctuaFormConfig.edge.partOf,
@@ -295,18 +267,12 @@ export const insertNodeDescription = {
                 treeLevel: 4,
                 isExtension: true,
             },
-            triples: [{
-                subject: AnnotonNodeType.GoCellularComponent,
-                object: null,
-                predicate: noctuaFormConfig.edge.partOf
-            }],
+            predicate: noctuaFormConfig.edge.partOf
         }
     },
     [AnnotonNodeType.GoAnatomicalEntity]: {
         [AnnotonNodeType.GoOrganism]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
-                id: EntityDefinition.GoOrganism.id,
-                type: AnnotonNodeType.GoOrganism,
                 category: EntityDefinition.GoOrganism.category,
                 label: 'Part Of (Organism)',
                 relationship: noctuaFormConfig.edge.partOf,
@@ -315,11 +281,7 @@ export const insertNodeDescription = {
                 treeLevel: 5,
                 isExtension: true,
             },
-            triples: [{
-                subject: AnnotonNodeType.GoCellularComponent,
-                object: null,
-                predicate: noctuaFormConfig.edge.partOf
-            }],
+            predicate: noctuaFormConfig.edge.partOf
         }
     }
 };
@@ -383,20 +345,16 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
 };
 
 export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType) => {
-    const nodeDescription: InsertNodeDescription = insertNodeDescription[subjectNode.id][nodeType];
+    const nodeDescription: InsertNodeDescription = insertNodeDescription[subjectNode.type][nodeType];
+    const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
-    const annotonNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
+    objectNode.id = `${nodeType}'@@'${getUuid()}`;
+    objectNode.type = nodeType;
+    annoton.addNode(objectNode);
 
-    annotonNode.id += '-' + getUuid();
-    annoton.addNode(annotonNode);
-
-    each(nodeDescription.triples, (triple) => {
-        const objectId = triple.object ? triple.object : annotonNode.id;
-        const predicate: Predicate = annoton.getNode(objectId).predicate;
-
-        predicate.edge = Entity.createEntity(triple.predicate);
-        annoton.addEdgeById(triple.subject, objectId, predicate);
-    });
+    const predicate: Predicate = annoton.getNode(objectNode.id).predicate;
+    predicate.edge = Entity.createEntity(nodeDescription.predicate);
+    annoton.addEdgeById(subjectNode.id, objectNode.id, predicate);
 
     annoton.resetPresentation();
 };
