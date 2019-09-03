@@ -1085,24 +1085,7 @@ export class NoctuaFormConfigService {
   }
 
   getInsertEntityMenuItems(annotonNodeType: AnnotonNodeType): [] {
-    const options = {
-      [AnnotonNodeType.GoMolecularFunction]: [{
-        label: 'Add Has Input',
-        id: AnnotonNodeType.GoChemicalEntityHasInput
-      }, {
-        label: 'Add Has Output',
-        id: AnnotonNodeType.GoChemicalEntityHasOutput
-      }, {
-        label: 'Add biological Phase',
-        id: AnnotonNodeType.GoBiologicalPhase
-      }],
-      [AnnotonNodeType.GoBiologicalProcess]: [{
-        label: 'Add nested Biological Process',
-        id: AnnotonNodeType.GoBiologicalProcess
-      }]
-    };
-
-    return options[annotonNodeType] || [];
+    return ModelDefinition.entityMenuItems[annotonNodeType] || [];
   }
 
   createAnnotonModel(modelType: AnnotonType, srcAnnoton?): Annoton {
