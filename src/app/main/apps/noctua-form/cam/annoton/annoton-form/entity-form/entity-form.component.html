@@ -63,8 +63,7 @@
           <mat-form-field appearance="outline" class="noc-sm w-100-p">
             <mat-label>Reference</mat-label>
             <textarea matInput formControlName="reference" rows="2"></textarea>
-            <button mat-icon-button matSuffix #evidenceDBreferenceMenuTrigger="matMenuTrigger"
-              class="noc-evidence-db-trigger" [matMenuTriggerFor]="evidenceDBMenu"
+            <button mat-icon-button matSuffix class="noc-evidence-db-trigger" [matMenuTriggerFor]="evidenceDBMenu"
               [matMenuTriggerData]="{evidence: evidence, name: 'reference'}">
               <mat-icon>playlist_add</mat-icon>
             </button>
@@ -126,8 +125,8 @@
 </div>
 <mat-menu #evidenceDBMenu="matMenu" class="noc-evidence-db-menu" xPosition="before">
   <ng-template matMenuContent let-evidence="evidence" let-name="name">
-    <form class="p-8" [formGroup]="evidenceDBForm" (ngSubmit)="onSubmitEvidedenceDb(evidence, name)" novalidate
-      (click)="$event.stopPropagation()" class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+    <form [formGroup]="evidenceDBForm" (ngSubmit)="onSubmitEvidedenceDb(evidence, name)" novalidate
+      (click)="$event.stopPropagation()" class="pl-8 pr-8 w-100-p" fxLayout="row" fxLayoutAlign="start center">
       <mat-form-field appearance="outline" fxFlex="100px" class="noc-sm  mr-12">
         <mat-select placeholder="" formControlName="db">
           <mat-option *ngFor="let evidenceDB of noctuaFormConfigService.evidenceDBs.options" [value]="evidenceDB">
@@ -138,7 +137,7 @@
       <mat-form-field appearance="outline" fxFlex="" class="noc-sm w-100-p">
         <input matInput formControlName="accession" type="text" placeholder="Accession">
       </mat-form-field>
-      <button mat-icon-button (click)="cancelEvidenceDb">
+      <button mat-icon-button (click)="cancelEvidenceDb()">
         <mat-icon>cancel</mat-icon>
       </button>
       <button mat-icon-button (click)="onSubmitEvidedenceDb(evidence, name)">

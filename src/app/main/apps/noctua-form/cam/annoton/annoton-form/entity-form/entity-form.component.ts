@@ -48,7 +48,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   @Input('entityFormGroup')
   public entityFormGroup: FormGroup;
 
-  @ViewChild('evidenceDBreferenceMenuTrigger', { static: true })
+  @ViewChild('evidenceDBreferenceMenuTrigger', { static: true, read: MatMenuTrigger })
   evidenceDBreferenceMenuTrigger: MatMenuTrigger;
 
   evidenceDBForm: FormGroup;
@@ -202,12 +202,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     const control: FormControl = evidence.controls[name] as FormControl;
     control.setValue(DB.name + ':' + accession);
-
-    this.evidenceDBreferenceMenuTrigger.closeMenu();
   }
 
-  cancelEvidedenceDb() {
-    this.evidenceDBreferenceMenuTrigger.closeMenu();
+  cancelEvidenceDb() {
+    this.evidenceDBForm.controls['accession'].setValue('');
   }
 
   termDisplayFn(term): string | undefined {
@@ -220,7 +218,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   private _createEvidenceDBForm() {
     return new FormGroup({
-      db: new FormControl('PMID'),
+      db: new FormControl(this.noctuaFormConfigService.evidenceDBs.selected),
       accession: new FormControl()
     });
   }
