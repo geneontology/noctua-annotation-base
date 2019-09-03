@@ -2,7 +2,7 @@ import { Component, Input, Inject, OnInit, ElementRef, OnDestroy, ViewEncapsulat
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatSort } from '@angular/material';
+import { MatPaginator, MatSort, MatMenuTrigger } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
 import { merge, Observable, BehaviorSubject, fromEvent, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
@@ -48,6 +48,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   @Input('entityFormGroup')
   public entityFormGroup: FormGroup;
 
+  @ViewChild('evidenceDBreferenceMenuTrigger', { static: true })
+  evidenceDBreferenceMenuTrigger: MatMenuTrigger;
+
+  evidenceDBForm: FormGroup;
   evidenceFormArray: FormArray;
   entity: AnnotonNode;
   insertMenuItems = [];
@@ -78,7 +82,13 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       console.log(this.entity.termLookup.results);
     }
 
+    this.evidenceDBForm = this._createEvidenceDBForm();
     this.insertMenuItems = this.noctuaFormConfigService.getInsertEntityMenuItems(this.entity.type);
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
   }
 
   addEvidence() {
@@ -183,6 +193,23 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
+  onSubmitEvidedenceDb(evidence: FormGroup, name: string) {
+    console.log(evidence);
+    console.log(this.evidenceDBForm.value);
+
+    const DB = this.evidenceDBForm.value.db;
+    const accession = this.evidenceDBForm.value.accession;
+
+    const control: FormControl = evidence.controls[name] as FormControl;
+    control.setValue(DB.name + ':' + accession);
+
+    this.evidenceDBreferenceMenuTrigger.closeMenu();
+  }
+
+  cancelEvidedenceDb() {
+    this.evidenceDBreferenceMenuTrigger.closeMenu();
+  }
+
   termDisplayFn(term): string | undefined {
     return term ? term.label : undefined;
   }
@@ -191,8 +218,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     return evidence ? evidence.label : undefined;
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
+  private _createEvidenceDBForm() {
+    return new FormGroup({
+      db: new FormControl('PMID'),
+      accession: new FormControl()
+    });
   }
 }
