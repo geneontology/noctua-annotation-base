@@ -50,28 +50,6 @@
              </noc-entity-form>
            </div>
          </div>
-         <!-- 
-         <div class="p-12" fxLayout="column">
-           <mat-form-field appearance="outline" class="noc-sm">
-             <mat-label>Gene Product</mat-label>
-             <textarea type="text" matInput formControlName="gp" [matAutocomplete]="gpAuto" rows="2"></textarea>
-             <mat-autocomplete #gpAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
-               <mat-option class="noc-term-autocomplete"
-                 *ngFor="let item of noctuaAnnotonFormService.annoton.presentation?.molecularEntity.termLookup.results"
-                 [value]="item">
-                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                   <div class="noc-term-label">
-                     {{ item.label }}
-                   </div>
-                   <span fxFlex></span>
-                   <div class="noc-term-id">
-                     {{ item.id }}
-                   </div>
-                 </div>
-               </mat-option>
-             </mat-autocomplete>
-           </mat-form-field>
-         </div> -->
        </div>
      </div>
      <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
@@ -83,7 +61,7 @@
        </div>
        <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
          <div *ngIf="noctuaAnnotonFormService.annoton.annotonType===AnnotonType.bpOnly"
-           class="mat-elevation-z1 mb-4 px-8 pt-4" fxLayout="row" fxLayoutAlign="start center">
+           class="mat-elevation-z1 noc-term-group mb-4 px-8 mf" fxLayout="row" fxLayoutAlign="start center">
            <div class="p-4" fxFlex fxLayout="row" fxLayoutAlign="start stretch">
              <mat-form-field class="noc-sm w-100-p" appearance="outline">
                <mat-label><strong>(readonly)</strong> Molecular Function </mat-label>
@@ -103,7 +81,7 @@
            </div>
          </div>
          <div [formArrayName]="'fd'" *ngFor="let nodeGroup of annotonFormGroup.get('fd')?.controls; let i = index;"
-           class="mat-elevation-z1 noc-term-group mb-4 px-8 pt-4  {{nodeGroup.get('name').value}}">
+           class="mat-elevation-z1 noc-term-group mb-4 px-8 {{nodeGroup.get('name').value}}">
            <div [formGroupName]="i" *ngFor="let entityForm of nodeGroup.get('entityGroup')?.controls" class="">
              <noc-entity-form [entityFormGroup]="entityForm" fxLayout="row" fxLayoutAlign="start center"
                class="w-100-p">

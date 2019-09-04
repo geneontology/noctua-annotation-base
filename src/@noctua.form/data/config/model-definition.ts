@@ -31,6 +31,7 @@ export const activityUnitDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
+            termRequired: true
         },
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
@@ -41,6 +42,7 @@ export const activityUnitDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
+            termRequired: true
         },
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoBiologicalProcess.id,
@@ -77,7 +79,7 @@ export const activityUnitDescription: ActivityDescription = {
         subject: AnnotonNodeType.GoMolecularFunction,
         object: AnnotonNodeType.GoCellularComponent,
         predicate: noctuaFormConfig.edge.occursIn
-    },],
+    }],
 };
 
 export const bpOnlyAnnotationDescription: ActivityDescription = {
@@ -90,8 +92,9 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             label: 'Molecular Function',
             aspect: 'F',
             relationship: noctuaFormConfig.edge.enabledBy,
-            displaySection: '',
-            displayGroup: '',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.mf,
+            visible: false
         },
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
@@ -102,6 +105,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
+            termRequired: true
         },
 
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
@@ -114,6 +118,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
             treeLevel: 2,
+            termRequired: true
         },
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
@@ -141,10 +146,6 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         predicate: noctuaFormConfig.edge.occursIn
     }],
     overrides: {
-        [AnnotonNodeType.GoMolecularFunction]: <AnnotonNodeDisplay>{
-            displaySection: '',
-            displayGroup: '',
-        },
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             label: 'Biological Process',
             treeLevel: 2

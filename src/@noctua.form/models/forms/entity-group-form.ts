@@ -25,13 +25,14 @@ export class EntityGroupForm {
 
         this.entityForms = [];
         entities.forEach((entity: AnnotonNode) => {
-            const entityForm = new EntityForm(self._metadata, entity);
-
-            if (!entity.skipEvidence) {
-                entityForm.createEvidenceForms(entity);
+            if (entity.visible) {
+                const entityForm = new EntityForm(self._metadata, entity);
+                if (!entity.skipEvidence) {
+                    entityForm.createEvidenceForms(entity);
+                }
+                self.entityForms.push(entityForm);
+                self.entityGroup.push(self._fb.group(entityForm));
             }
-            self.entityForms.push(entityForm);
-            self.entityGroup.push(self._fb.group(entityForm));
         });
     }
 

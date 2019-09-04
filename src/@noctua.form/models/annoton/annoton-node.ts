@@ -41,6 +41,7 @@ export interface AnnotonNodeDisplay {
   relationship: any;
   treeLevel: number;
   required: boolean;
+  termRequired: boolean;
   visible: boolean;
   skipEvidence: boolean;
 }
@@ -69,8 +70,8 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   relationship: any;
   treeLevel = 1;
   required = false;
+  termRequired = false;
   visible = true;
-  termRequiredList: string[] = [AnnotonNodeType.GoMolecularFunction];
   canInsert = [];
   skipEvidence = false;
   errors = [];
@@ -164,11 +165,11 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     const self = this;
     let result = true;
 
-    if (self.termRequiredList.includes(self.id) && !self.term.id) {
+    if (self.termRequired && !self.term.id) {
       self.required = true;
       const meta = {
         aspect: self.label
-      }
+      };
       const error = new AnnotonError('error', 1, "A '" + self.label + "' is required", meta)
       errors.push(error);
       result = false;

@@ -119,26 +119,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   enableSubmit() {
     const self = this;
     let result = true;
-    const gp = self.getNode(AnnotonNodeType.GoMolecularEntity);
 
     self.submitErrors = [];
 
     each(self.nodes, (node: AnnotonNode) => {
       result = node.enableSubmit(self.submitErrors) && result;
     });
-
-    if (gp) {
-      gp.required = false;
-      if (!gp.getTerm().id) {
-        gp.required = true;
-        const meta = {
-          aspect: self.label
-        };
-        const error = new AnnotonError('error', 1, "A '" + gp.label + "' is required", meta)
-        self.submitErrors.push(error);
-        result = false;
-      }
-    }
 
     return result;
   }
@@ -291,7 +277,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       each(nodeGroup.nodes, function (node: AnnotonNode) {
         let term = node.getTerm();
 
-        if (node.id !== 'mc' && node.id !== AnnotonNodeType.GoMolecularEntity && term.id) {
+        if (node.id !== AnnotonNodeType.GoMolecularEntity && term.id) {
           self.generateGridRow(node);
         }
       });
@@ -300,8 +286,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   generateGridRow(node: AnnotonNode) {
     const self = this;
-
-    let term = node.getTerm();
+    const term = node.getTerm();
 
     self._grid.push({
       displayEnabledBy: self.tableCanDisplayEnabledBy(node),
@@ -383,10 +368,10 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         id: node.id,
         term: node.term,
         evidence: a
-      })
+      });
     });
 
     console.log(result, JSON.stringify(result))
     return result;
-  };
+  }
 }
