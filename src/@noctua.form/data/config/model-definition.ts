@@ -173,7 +173,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             type: AnnotonNodeType.GoCellularComponent,
             category: EntityDefinition.GoCellularComponent.category,
             aspect: 'C',
-            label: 'GP located in Cellular Component',
+            label: 'Located In Cellular Component',
             relationship: noctuaFormConfig.edge.locatedIn,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -253,7 +253,19 @@ export const insertNodeDescription = {
                 isExtension: true,
             },
             predicate: noctuaFormConfig.edge.partOf
-
+        },
+        [AnnotonNodeType.GoCellularComponent]: <InsertNodeDescription>{
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoCellularComponent.category,
+                aspect: 'C',
+                label: 'Part Of Cellular Component',
+                relationship: noctuaFormConfig.edge.locatedIn,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 3,
+                isExtension: true,
+            },
+            predicate: noctuaFormConfig.edge.partOf
         }
     },
     [AnnotonNodeType.GoCellTypeEntity]: {
@@ -288,20 +300,23 @@ export const insertNodeDescription = {
 
 export const entityMenuItems = {
     [AnnotonNodeType.GoMolecularFunction]: [{
-        label: 'Add Has Input',
+        label: 'Add Has Input (Gene Product/Chemical)',
         id: AnnotonNodeType.GoChemicalEntityHasInput
     }, {
-        label: 'Add Has Output',
+        label: 'Add Has Output (Gene Product/Chemical)',
         id: AnnotonNodeType.GoChemicalEntityHasOutput
     }, {
-        label: 'Add biological Phase',
+        label: 'Add Happens During (Biological Phase)',
         id: AnnotonNodeType.GoBiologicalPhase
     }],
     [AnnotonNodeType.GoBiologicalProcess]: [{
-        label: 'Add nested Biological Process',
+        label: 'Add Part Of (Biological Process)',
         id: AnnotonNodeType.GoBiologicalProcess
     }],
     [AnnotonNodeType.GoCellularComponent]: [{
+        label: 'Add Part Of (Cellular Component)',
+        id: AnnotonNodeType.GoCellularComponent
+    }, {
         label: 'Add Part Of (Cell Type)',
         id: AnnotonNodeType.GoCellTypeEntity
     }],
@@ -310,7 +325,7 @@ export const entityMenuItems = {
         id: AnnotonNodeType.GoAnatomicalEntity
     }],
     [AnnotonNodeType.GoAnatomicalEntity]: [{
-        label: 'Add part Of (Organism)',
+        label: 'Add Part Of (Organism)',
         id: AnnotonNodeType.GoOrganism
     }]
 };
