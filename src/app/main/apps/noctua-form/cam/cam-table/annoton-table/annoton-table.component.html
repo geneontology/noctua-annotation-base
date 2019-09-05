@@ -19,6 +19,11 @@
           <mat-header-cell *cdkHeaderCellDef fxFlex="150px">Term</mat-header-cell>
           <mat-cell *cdkCellDef="let entity" fxFlex="150px">
             <p class="">{{entity.term?.label}}</p>
+            <button mat-icon-button matSuffix class="noc-evidence-db-trigger" [matMenuTriggerFor]="evidenceDBMenu"
+              [matMenuTriggerData]="{evidence: 'evidence', name: 'reference'}">
+              <mat-icon>playlist_add</mat-icon>
+            </button>
+            <noctua-search-bar fxFlex="60" class="noc-search-bar" (input)="search($event)"></noctua-search-bar>
           </mat-cell>
         </ng-container>
         <ng-container cdkColumnDef="relationshipExt">
@@ -67,3 +72,34 @@
     </div>
   </div>
 </div>
+<mat-menu #evidenceDBMenu="matMenu" class="noc-evidence-db-menu" xPosition="before">
+  <ng-template matMenuContent let-evidence="evidence" let-name="name">
+    <form (ngSubmit)="onSubmitEvidedenceDb(evidence, name)" novalidate (click)="$event.stopPropagation()"
+      class="pl-8 pr-8 w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <mat-form-field appearance="outline" class="noc-sm w-100-p">
+        <mat-label>Evidence</mat-label>
+        <textarea type="text" matInput [matAutocomplete]="evidenceAuto" rows="2"></textarea>
+        <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
+          class="noc-term-autocomplete">
+          <mat-option *ngFor="let item of entity?.predicate?.evidence[i]?.evidenceLookup.results" [value]="item">
+            <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+              <div class="noc-term-label">
+                {{ item.label }}
+              </div>
+              <span fxFlex></span>
+              <div class="noc-term-id">
+                {{ item.id }}
+              </div>
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <button mat-icon-button (click)="cancelEvidenceDb()">
+        <mat-icon>cancel</mat-icon>
+      </button>
+      <button mat-icon-button (click)="onSubmitEvidedenceDb(evidence, name)">
+        <mat-icon>check_circle</mat-icon>
+      </button>
+    </form>
+  </ng-template>
+</mat-menu>

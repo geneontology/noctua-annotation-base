@@ -41,6 +41,7 @@ import { GraphPreviewComponent } from './cam/cam-preview/graph-preview/graph-pre
 import { NoctuaConfirmDialogModule } from '@noctua/components';
 import { CamPreviewComponent } from './cam/cam-preview/cam-preview.component';
 import { CamGraphComponent } from './cam/cam-preview/cam-graph/cam-graph.component';
+import { NoctuaEditorModule } from '@noctua.editor/noctua-editor.module';
 
 const routes = [
   {
@@ -57,6 +58,7 @@ const routes = [
     RouterModule.forChild(routes),
     ContextMenuModule.forRoot(),
     NoctuaConfirmDialogModule,
+    NoctuaEditorModule,
   ],
   exports: [
     AnnotonFormComponent,
@@ -112,7 +114,7 @@ const routes = [
     EvidenceTableComponent,
     GraphPreviewComponent,
     CamPreviewComponent,
-    CamGraphComponent
+    CamGraphComponent,
   ],
   entryComponents: [
     CamRowEditDialogComponent,
@@ -122,7 +124,7 @@ const routes = [
     CreateFromExistingDialogComponent,
     LinkToExistingDialogComponent,
     SelectEvidenceDialogComponent,
-    SearchDatabaseDialogComponent,
+    SearchDatabaseDialogComponent
     //  NodeComponent,
     // NodesContainerComponent
   ]
