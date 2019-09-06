@@ -57,7 +57,8 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     'evidence',
     'reference',
     'with',
-    'assignedBy'];
+    'assignedBy',
+    'actions'];
 
   grid: any[] = [];
 

@@ -98,7 +98,8 @@ export class NoctuaLookupService {
 
       return {
         id: item.annotation_class,
-        label: item.annotation_class_label
+        label: item.annotation_class_label,
+        link: 'http://amigo.geneontology.org/amigo/term/' + item.annotation_class
       };
     });
     return result;

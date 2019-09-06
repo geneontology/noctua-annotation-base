@@ -21,7 +21,7 @@
       </mat-autocomplete>
     </mat-form-field>
   </div>
-  <ng-container [formGroup]="evidenceFormGroup">
+  <div [formGroup]="evidenceFormGroup" class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
     <div *ngIf="category === EditorCategory.evidence" class="noc-edit-field p-4" fxFlex="55">
       <mat-form-field appearance="outline" class="noc-sm w-100-p">
         <mat-label>Evidence</mat-label>
@@ -88,7 +88,7 @@
     <button mat-icon-button (click)="onSubmitEvidedenceDb(evidence, name)">
       <mat-icon>check_circle</mat-icon>
     </button>
-  </ng-container>
+  </div>
 </div>
 <mat-menu #evidenceDBMenu="matMenu" class="noc-evidence-db-menu" xPosition="before">
   <ng-template matMenuContent let-evidence="evidence" let-name="name">

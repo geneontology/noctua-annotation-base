@@ -4,20 +4,21 @@
 
       <table fxFlex="1 1 auto" mat-table class="" [dataSource]="grid" [@animateStagger]="{value:'50'}">
         <ng-container matColumnDef="relationship">
-          <th mat-header-cell *matHeaderCellDef fxFlex="120px">Relationship</th>
+          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Relationship
+          </th>
           <td mat-cell *matCellDef="let entity" fxFlex="120px">
             <p class="">{{entity.relationship}}</p>
           </td>
         </ng-container>
         <ng-container matColumnDef="aspect">
-          <th mat-header-cell *matHeaderCellDef fxFlex="50px">Asp</th>
-          <td mat-cell *matCellDef="let entity" fxFlex="50px">
+          <th mat-header-cell *matHeaderCellDef fxFlex="30px" fxLayout="row" fxLayoutAlign="start center">Asp</th>
+          <td mat-cell *matCellDef="let entity" fxFlex="30px">
             <p class="">{{entity.aspect}}</p>
           </td>
         </ng-container>
         <ng-container matColumnDef="term">
-          <th mat-header-cell *matHeaderCellDef fxFlex="150px">Term</th>
-          <td mat-cell *matCellDef="let entity" fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">
+          <th mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row" fxLayoutAlign="start center">Term</th>
+          <td mat-cell *matCellDef="let entity" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.term?.label}}</p>
             <noctua-search-bar *ngIf="entity.term" [cam]="cam" [annoton]='annoton' [entity]="entity.node"
               [category]="EditorCategory.term" class="noc-edit-button">
@@ -25,13 +26,15 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="relationshipExt">
-          <th mat-header-cell *matHeaderCellDef fxFlex="120px">Relationship (ext)</th>
+          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Relationship
+            (ext)</th>
           <td mat-cell *matCellDef="let entity" fxFlex="120px">
             <p class="">{{entity.relationshipExt}}</p>
           </td>
         </ng-container>
         <ng-container matColumnDef="extension">
-          <th mat-header-cell *matHeaderCellDef fxFlex="150px">Extension</th>
+          <th mat-header-cell *matHeaderCellDef fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">Extension
+          </th>
           <td mat-cell *matCellDef="let entity" fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.extension?.label}}</p>
             <noctua-search-bar *ngIf="entity.extension" [cam]="cam" [annoton]='annoton' [entity]="entity.node"
@@ -40,8 +43,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="evidence">
-          <th mat-header-cell *matHeaderCellDef fxFlex="150px">Evidence</th>
-          <td mat-cell *matCellDef="let entity" fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">
+          <th mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row" fxLayoutAlign="start center">Evidence</th>
+          <td mat-cell *matCellDef="let entity" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.evidence?.label}}</p>
             <noctua-search-bar [cam]="cam" [annoton]='annoton' [entity]="entity.node"
               [category]="EditorCategory.evidence" class="noc-edit-button">
@@ -49,7 +52,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="reference">
-          <th mat-header-cell *matHeaderCellDef fxFlex="150px">Reference</th>
+          <th mat-header-cell *matHeaderCellDef fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">Reference
+          </th>
           <td mat-cell *matCellDef="let entity" fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.reference}}</p>
             <noctua-search-bar [cam]="cam" [annoton]='annoton' [entity]="entity.node"
@@ -58,8 +62,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="with">
-          <th mat-header-cell *matHeaderCellDef fxFlex="120px">With</th>
-          <td mat-cell *matCellDef="let entity" fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">
+          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">With</th>
+          <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.with}}</p>
             <noctua-search-bar [cam]="cam" [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.with"
               class="noc-edit-button">
@@ -67,9 +71,43 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="assignedBy">
-          <th mat-header-cell *matHeaderCellDef fxFlex="150px">Assigned By</th>
+          <th mat-header-cell *matHeaderCellDef fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">Assigned By
+          </th>
           <td mat-cell *matCellDef="let entity" fxFlex="150px">
             <a href="{{entity.assignedBy?.url}}" class="" target="_blank">{{entity.assignedBy?.label}}</a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef fxFlex="50px" fxLayout="row" fxLayoutAlign="start center"></th>
+          <td mat-cell *matCellDef="let entity" fxFlex="50px" fxLayout="row" fxLayoutAlign="start center">
+            <span fxFlex=""></span>
+            <button mat-icon-button class="noc-action-button" fxFlex="40px" [matMenuTriggerFor]="entityMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
+              <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
+                NOT Qualifier
+              </button>
+              <button mat-menu-item [matMenuTriggerFor]="addMenu">Add</button>
+              <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
+              <button mat-menu-item class="">
+                Delete
+              </button>
+            </mat-menu>
+            <mat-menu #addMenu="matMenu">
+              <button mat-menu-item *ngFor="let insertMenuItem of insertMenuItems" class=""
+                (click)="insertEntity(insertMenuItem.id)">
+                {{insertMenuItem.label}}
+              </button>
+            </mat-menu>
+            <mat-menu #evidenceMenu="matMenu">
+              <button mat-menu-item class="" (click)="addEvidence()">
+                Add Evidence
+              </button>
+              <button (click)="removeEvidence(i)" mat-menu-item>
+                Remove Evidence
+              </button>
+            </mat-menu>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
