@@ -35,6 +35,7 @@ import { Evidence } from 'noctua-form-base';
 import { advancedSearchData } from './advanced-search.tokens';
 import { AdvancedSearchOverlayRef } from './advanced-search-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
+import { EditorCategory } from './../../../models/editor-category';
 
 @Component({
   selector: 'app-advanced-search',
@@ -43,14 +44,16 @@ import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 })
 
 export class NoctuaAdvancedSearchComponent implements OnInit, OnDestroy {
-
+  EditorCategory = EditorCategory;
   evidenceDBForm: FormGroup;
   annoton: Annoton;
   cam: Cam;
   entity: AnnotonNode;
+  category: EditorCategory;
   entityFormGroup: FormGroup;
+  evidenceFormGroup: FormGroup;
   entityFormSub: Subscription;
-  evidenceFormArray: FormArray;
+
   termNode: AnnotonNode;
 
   private unsubscribeAll: Subject<any>;
@@ -74,31 +77,24 @@ export class NoctuaAdvancedSearchComponent implements OnInit, OnDestroy {
     this.cam = data.cam;
     this.annoton = data.annoton;
     this.entity = data.entity;
+    this.category = data.category;
   }
 
   ngOnInit(): void {
     this.evidenceDBForm = this._createEvidenceDBForm();
     this.entityFormSub = this.noctuaAnnotonEntityService.annotonEntityFormGroup$
-      .subscribe(annotonEntityFormGroup => {
-        if (!annotonEntityFormGroup) return;
-        this.entityFormGroup = annotonEntityFormGroup;
-        this.annoton = this.noctuaAnnotonEntityService.annoton;
-        this.termNode = this.noctuaAnnotonEntityService.termNode;
+      .subscribe(entityFormGroup => {
+        if (!entityFormGroup) {
+          return;
+        }
 
-        console.log(this.termNode)
+        const evidenceFormArray = entityFormGroup.get('evidenceFormArray') as FormArray;
+
+        this.entityFormGroup = entityFormGroup;
+        this.evidenceFormGroup = evidenceFormArray.at(0) as FormGroup;
+        console.log(this.evidenceFormGroup);
       });
-
-    this.camService.onCamChanged.subscribe((cam) => {
-      if (!cam) return;
-
-      this.cam = cam
-      this.cam.onGraphChanged.subscribe((annotons) => {
-        //  let data = this.summaryGridService.getGrid(annotons);
-        //  this.dataSource = new CamsDataSource(this.sparqlService, this.paginator, this.sort);
-      });
-    });
   }
-
 
   addEvidence() {
     const self = this;

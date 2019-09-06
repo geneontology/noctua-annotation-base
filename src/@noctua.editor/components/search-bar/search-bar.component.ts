@@ -13,7 +13,8 @@ import {
     AnnotonNode,
     Annoton,
     Cam
-} from './../../../@noctua.form';
+} from 'noctua-form-base';
+import { EditorCategory } from './../../models/editor-category';
 
 @Component({
     selector: 'noctua-search-bar',
@@ -27,6 +28,7 @@ export class NoctuaSearchBarComponent implements OnInit, OnDestroy {
     @Input() cam: Cam;
     @Input() annoton: Annoton;
     @Input() entity: AnnotonNode;
+    @Input() category: EditorCategory;
 
     @ViewChild('advancedSearchTrigger', { read: ElementRef, static: false })
     private advancedSearchTrigger: ElementRef;
@@ -45,7 +47,8 @@ export class NoctuaSearchBarComponent implements OnInit, OnDestroy {
         const data = {
             cam: this.cam,
             annoton: this.annoton,
-            entity: this.entity
+            entity: this.entity,
+            category: this.category
         };
         // this.camService.onCamChanged.next(this.cam);
 

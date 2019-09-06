@@ -19,8 +19,8 @@
           <mat-header-cell *cdkHeaderCellDef fxFlex="150px">Term</mat-header-cell>
           <mat-cell *cdkCellDef="let entity" fxFlex="150px">
             <p class="">{{entity.term?.label}}</p>
-            <noctua-search-bar [cam]="cam" [annoton]='annoton' [entity]="entity.node" fxFlex="60"
-              class="noc-search-bar">
+            <noctua-search-bar [cam]="cam" [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.term"
+              class="">
             </noctua-search-bar>
           </mat-cell>
         </ng-container>

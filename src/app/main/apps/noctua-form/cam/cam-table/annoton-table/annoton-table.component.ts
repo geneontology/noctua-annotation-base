@@ -37,6 +37,7 @@ import {
 } from 'noctua-form-base';
 
 import { SparqlService } from './../../../../../../../@noctua.sparql/services/sparql/sparql.service';
+import { EditorCategory } from '@noctua.editor/models/editor-category';
 
 @Component({
   selector: 'noc-annoton-table',
@@ -45,6 +46,8 @@ import { SparqlService } from './../../../../../../../@noctua.sparql/services/sp
   animations: noctuaAnimations
 })
 export class AnnotonTableComponent implements OnInit, OnDestroy {
+  EditorCategory = EditorCategory;
+
   displayedColumns = [
     'relationship',
     'aspect',
