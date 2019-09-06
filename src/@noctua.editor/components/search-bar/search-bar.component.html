@@ -1,6 +1,3 @@
-<div class="noctua-search-bar" [ngClass]="{'expanded':!collapsed}">
-  <button (click)="openAdvancedSearch()" #advancedSearchTrigger mat-stroked-button
-    class="noc-button-border noc-more-options-button p-0" aria-label="advanced search">
-    <mat-icon class="s-18 secondary-text">arrow_drop_down</mat-icon>
-  </button>
-</div>
+<button mat-icon-button (click)="openAdvancedSearch()" #advancedSearchTrigger class="noc-trigger-button">
+  <mat-icon class="s-12 secondary-text">edit</mat-icon>
+</button>

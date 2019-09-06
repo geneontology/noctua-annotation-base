@@ -48,7 +48,7 @@ export class SearchBarService {
         const dialogConfig = { ...DEFAULT_CONFIG, ...config };
 
         dialogConfig['positionStrategy'] = this._getPosition(elementToConnectTo);
-        dialogConfig['width'] = '400px';
+        dialogConfig['width'] = '450px';
         const originRect = elementToConnectTo.nativeElement;
         const overlayRef = this.createOverlay(dialogConfig);
         const dialogRef = new AdvancedSearchOverlayRef(overlayRef);
@@ -124,9 +124,9 @@ export class SearchBarService {
             .withFlexibleDimensions(true)
             .withPush(true)
             .withPositions([{
-                overlayX: 'start',
+                overlayX: 'center',
                 overlayY: 'top',
-                originX: 'start',
+                originX: 'center',
                 originY: 'bottom'
             }]);
         //.withOffsetY(1)
