@@ -1,5 +1,6 @@
 export {
     AnnotonNode,
+    AnnotonNodeType,
     AnnotonNodeDisplay,
 } from './annoton-node';
 export { AnnotonNodeClosure } from './annoton-node-closure';

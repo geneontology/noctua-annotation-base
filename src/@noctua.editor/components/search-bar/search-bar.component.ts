@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ElementRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ElementRef, ViewChild, Input } from '@angular/core';
 import { Overlay, OverlayConfig, OriginConnectionPosition, OverlayConnectionPosition } from '@angular/cdk/overlay';
 
 import { Subject } from 'rxjs';
@@ -7,6 +7,13 @@ import { takeUntil } from 'rxjs/operators';
 import { SearchBarService, AdvancedSearchDialogConfig } from './search-bar.service';
 
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
+import {
+    CamService,
+    NoctuaAnnotonEntityService,
+    AnnotonNode,
+    Annoton,
+    Cam
+} from './../../../@noctua.form';
 
 @Component({
     selector: 'noctua-search-bar',
@@ -17,17 +24,18 @@ export class NoctuaSearchBarComponent implements OnInit, OnDestroy {
     collapsed: boolean;
     noctuaConfig: any;
 
+    @Input() cam: Cam;
+    @Input() annoton: Annoton;
+    @Input() entity: AnnotonNode;
+
     @ViewChild('advancedSearchTrigger', { read: ElementRef, static: false })
     private advancedSearchTrigger: ElementRef;
 
-    @Output()
-    input: EventEmitter<any>;
-
     private _unsubscribeAll: Subject<any>;
 
-    constructor(private searchBarService: SearchBarService) {
-        this.input = new EventEmitter();
-        this.collapsed = true;
+    constructor(private searchBarService: SearchBarService,
+        private camService: CamService,
+        private noctuaAnnotonEntityService: NoctuaAnnotonEntityService) {
         this._unsubscribeAll = new Subject();
     }
 
@@ -35,9 +43,14 @@ export class NoctuaSearchBarComponent implements OnInit, OnDestroy {
 
     openAdvancedSearch() {
         const data = {
-            data: 'poo',
+            cam: this.cam,
+            annoton: this.annoton,
+            entity: this.entity
         };
-        this.searchBarService.open(this.advancedSearchTrigger, data);
+        // this.camService.onCamChanged.next(this.cam);
+
+        this.noctuaAnnotonEntityService.initializeForm(this.annoton, this.entity);
+        this.searchBarService.open(this.advancedSearchTrigger, { data });
     }
 
     ngOnDestroy(): void {
@@ -45,15 +58,4 @@ export class NoctuaSearchBarComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-    collapse(): void {
-        this.collapsed = true;
-    }
-
-    expand(): void {
-        this.collapsed = false;
-    }
-
-    search(event): void {
-        this.input.emit(event.target.value);
-    }
 }
