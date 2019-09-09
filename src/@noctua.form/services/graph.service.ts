@@ -79,8 +79,6 @@ export class NoctuaGraphService {
     this.modelInfo = {
       graphEditorUrl: ''
     };
-
-    console.log(window.location)
   }
 
   registerManager() {
@@ -92,7 +90,6 @@ export class NoctuaGraphService {
       this.minervaDefinitionName,
       this.noctuaUserService.baristaToken,
       engine, 'async');
-
 
     const managerError = (resp) => {
       console.log('There was a manager error (' +
@@ -515,6 +512,7 @@ export class NoctuaGraphService {
 
   saveModelGroup(cam: Cam, groupId) {
     cam.manager.use_groups([groupId]);
+    cam.groupId = groupId;
   }
 
   saveCamAnnotations(cam: Cam, annotations) {
@@ -538,7 +536,7 @@ export class NoctuaGraphService {
     cam.manager.request_with(reqs);
   }
 
-  saveAnnoton(cam, triples: Triple<AnnotonNode>[], title) {
+  saveAnnoton(cam: Cam, triples: Triple<AnnotonNode>[], title) {
     const self = this;
     const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
 
@@ -550,7 +548,7 @@ export class NoctuaGraphService {
     reqs.store_model(cam.modelId);
 
     if (self.userInfo.groups.length > 0) {
-      reqs.use_groups([self.userInfo.selectedGroup.id]);
+      reqs.use_groups([cam.groupId]);
     }
 
     return cam.manager.request_with(reqs);

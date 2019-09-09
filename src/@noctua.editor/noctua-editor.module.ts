@@ -4,13 +4,13 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NoctuaSharedModule } from '@noctua/shared.module';
-import { NoctuaSearchBarComponent } from './components/search-bar/search-bar.component';
-import { NoctuaAdvancedSearchComponent } from './components/search-bar/advanced-search/advanced-search.component';
+import { NoctuaInlineEditorComponent } from './components/inline-editor/inline-editor.component';
+import { NoctuaEditorDropdownComponent } from './components/inline-editor/editor-dropdown/editor-dropdown.component';
 
 @NgModule({
     declarations: [
-        NoctuaSearchBarComponent,
-        NoctuaAdvancedSearchComponent
+        NoctuaInlineEditorComponent,
+        NoctuaEditorDropdownComponent
     ],
     imports: [
         CommonModule,
@@ -20,10 +20,10 @@ import { NoctuaAdvancedSearchComponent } from './components/search-bar/advanced-
         NoctuaSharedModule
     ],
     exports: [
-        NoctuaSearchBarComponent
+        NoctuaInlineEditorComponent
     ],
     entryComponents: [
-        NoctuaAdvancedSearchComponent
+        NoctuaEditorDropdownComponent
     ]
 })
 export class NoctuaEditorModule {

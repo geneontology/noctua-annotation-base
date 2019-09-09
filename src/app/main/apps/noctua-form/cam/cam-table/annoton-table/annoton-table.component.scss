@@ -69,6 +69,7 @@ $accent: map-get($theme, accent);
       color: #000;
       border-right: #AAA solid 1px;
       position: relative;
+      word-break: break-all;
 
       .noc-edit-button {
         position: absolute;

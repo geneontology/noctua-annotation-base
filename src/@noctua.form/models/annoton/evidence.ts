@@ -13,7 +13,7 @@ export class Evidence {
   evidenceLookup: EntityLookup = new EntityLookup();
   reference: string;
   with: string;
-  assignedBy: Entity = new Entity('', '');;
+  assignedBy: Entity = new Entity('', '');
   classExpression
   uuid;
   evidenceRequired = false;

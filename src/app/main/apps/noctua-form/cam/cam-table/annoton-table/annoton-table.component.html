@@ -20,9 +20,9 @@
           <th mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row" fxLayoutAlign="start center">Term</th>
           <td mat-cell *matCellDef="let entity" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.term?.label}}</p>
-            <noctua-search-bar *ngIf="entity.term" [cam]="cam" [annoton]='annoton' [entity]="entity.node"
+            <noctua-inline-editor *ngIf="entity.term" [cam]="cam" [annoton]='annoton' [entity]="entity.node"
               [category]="EditorCategory.term" class="noc-edit-button">
-            </noctua-search-bar>
+            </noctua-inline-editor>
           </td>
         </ng-container>
         <ng-container matColumnDef="relationshipExt">
@@ -37,18 +37,18 @@
           </th>
           <td mat-cell *matCellDef="let entity" fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.extension?.label}}</p>
-            <noctua-search-bar *ngIf="entity.extension" [cam]="cam" [annoton]='annoton' [entity]="entity.node"
+            <noctua-inline-editor *ngIf="entity.extension" [cam]="cam" [annoton]='annoton' [entity]="entity.node"
               [category]="EditorCategory.term" class="noc-edit-button">
-            </noctua-search-bar>
+            </noctua-inline-editor>
           </td>
         </ng-container>
         <ng-container matColumnDef="evidence">
           <th mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row" fxLayoutAlign="start center">Evidence</th>
           <td mat-cell *matCellDef="let entity" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.evidence?.label}}</p>
-            <noctua-search-bar [cam]="cam" [annoton]='annoton' [entity]="entity.node"
+            <noctua-inline-editor [cam]="cam" [annoton]='annoton' [entity]="entity.node"
               [category]="EditorCategory.evidence" class="noc-edit-button">
-            </noctua-search-bar>
+            </noctua-inline-editor>
           </td>
         </ng-container>
         <ng-container matColumnDef="reference">
@@ -56,24 +56,24 @@
           </th>
           <td mat-cell *matCellDef="let entity" fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.reference}}</p>
-            <noctua-search-bar [cam]="cam" [annoton]='annoton' [entity]="entity.node"
+            <noctua-inline-editor [cam]="cam" [annoton]='annoton' [entity]="entity.node"
               [category]="EditorCategory.reference" class="noc-edit-button">
-            </noctua-search-bar>
+            </noctua-inline-editor>
           </td>
         </ng-container>
         <ng-container matColumnDef="with">
           <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">With</th>
           <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">
             <p class="">{{entity.with}}</p>
-            <noctua-search-bar [cam]="cam" [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.with"
-              class="noc-edit-button">
-            </noctua-search-bar>
+            <noctua-inline-editor [cam]="cam" [annoton]='annoton' [entity]="entity.node"
+              [category]="EditorCategory.with" class="noc-edit-button">
+            </noctua-inline-editor>
           </td>
         </ng-container>
         <ng-container matColumnDef="assignedBy">
-          <th mat-header-cell *matHeaderCellDef fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">Assigned By
+          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Assigned By
           </th>
-          <td mat-cell *matCellDef="let entity" fxFlex="150px">
+          <td mat-cell *matCellDef="let entity" fxFlex="120px">
             <a href="{{entity.assignedBy?.url}}" class="" target="_blank">{{entity.assignedBy?.label}}</a>
           </td>
         </ng-container>

@@ -258,7 +258,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       }
     });
 
-
     this._presentation = result;
 
     return this._presentation;
@@ -267,7 +266,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   resetPresentation() {
     this._presentation = null;
   }
-
 
   generateGrid() {
     const self = this;

@@ -21,7 +21,7 @@ export class Cam {
   state: any;
   groups: Group[] = [];
   contributors: Contributor[] = [];
-  group: any;
+  groupId: any;
 
   id: string;
   expanded?: boolean;

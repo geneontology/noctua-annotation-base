@@ -51,7 +51,6 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     ) {
         this._unsubscribeAll = new Subject();
         this.loginUrl = 'http://barista-dev.berkeleybop.org/login?return=' + window.location.origin;
-
         this.getUserInfo();
         this.router.events.pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
