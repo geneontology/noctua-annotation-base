@@ -271,7 +271,7 @@
                       rows="2"></textarea>
                     <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
                       class="noc-term-autocomplete">
-                      <mat-option *ngFor="let item of connectorAnnoton?.predicate?.evidence[i]?.evidenceLookup.results"
+                      <mat-option *ngFor="let item of connectorAnnoton?.predicate?.evidenceLookup.results"
                         [value]="item">
                         <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                           <div class="noc-term-label">

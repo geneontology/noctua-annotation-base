@@ -92,7 +92,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((contributors: Contributor[]) => {
         this.noctuaUserService.contributors = contributors;
-        this.noctuaGraphService.popuiateContributors(this.cam);
+        this.noctuaGraphService.populateContributors(this.cam);
       });
   }
 

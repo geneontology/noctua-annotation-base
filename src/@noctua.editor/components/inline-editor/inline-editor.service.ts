@@ -60,7 +60,7 @@ export class InlineEditorService {
     }
 
     close(data): void {
-        // this.overlayRef.dispose();
+        //  this.overlayRef.dispose();
     }
 
     private createInjector(config: EditorDropdownDialogConfig, dialogRef: EditorDropdownOverlayRef): PortalInjector {

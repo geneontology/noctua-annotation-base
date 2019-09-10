@@ -56,7 +56,6 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
         // this.camService.onCamChanged.next(this.cam);
         this.camService.onCamChanged.next(this.cam);
         this.camService.annoton = this.annoton;
-        this.noctuaAnnotonFormService.initializeForm(this.annoton);
         this.noctuaAnnotonEntityService.initializeForm(this.annoton, this.entity);
         this.inlineEditorService.open(this.editorDropdownTrigger, { data });
     }

@@ -189,7 +189,7 @@ export class NoctuaGraphService {
     cam.manager.get_model(modelId);
   }
 
-  popuiateContributors(cam: Cam) {
+  populateContributors(cam: Cam) {
     const self = this;
     const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
 
@@ -386,7 +386,6 @@ export class NoctuaGraphService {
     }
 
     return self.noctuaFormConfigService.createAnnotonModel(annotonType);
-
   }
 
   graphToAnnotons(cam: Cam): Annoton[] {

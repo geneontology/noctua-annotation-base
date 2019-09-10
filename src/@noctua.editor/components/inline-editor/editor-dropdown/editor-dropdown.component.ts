@@ -81,7 +81,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.evidenceDBForm = this._createEvidenceDBForm();
-    this.entityFormSub = this.noctuaAnnotonEntityService.annotonEntityFormGroup$
+    this.entityFormSub = this.noctuaAnnotonEntityService.entityFormGroup$
       .subscribe(entityFormGroup => {
         if (!entityFormGroup) {
           return;
@@ -99,6 +99,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     const self = this;
 
     self.noctuaAnnotonEntityService.saveAnnoton().then((data) => {
+      this.close();
       self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
     });
   }
@@ -235,6 +236,9 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     });
   }
 
+  close() {
+    this.dialogRef.close();
+  }
 
   ngOnDestroy(): void {
     this.unsubscribeAll.next();

@@ -41,10 +41,12 @@ export class AnnotonEntityForm {
       const evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
 
       self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(evidence.evidenceLookup)
+      evidenceForm.onValueChanges(entity.predicate.evidenceLookup);
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }
+
+
 
   populateAnnotonEntityForm(annotonNode: AnnotonNode) {
     const self = this;

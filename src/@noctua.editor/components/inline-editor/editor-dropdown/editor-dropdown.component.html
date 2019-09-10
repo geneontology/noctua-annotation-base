@@ -28,7 +28,7 @@
         <textarea type="text" matInput formControlName="evidence" [matAutocomplete]="evidenceAuto" rows="2"></textarea>
         <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
           class="noc-term-autocomplete">
-          <mat-option *ngFor="let item of entity?.predicate?.evidence[i]?.evidenceLookup.results" [value]="item">
+          <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
             <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
               <div class="noc-term-label">
                 {{ item.label }}
@@ -82,7 +82,7 @@
         Add Root Term Value
       </button>
     </mat-menu>
-    <button mat-icon-button (click)="cancel()">
+    <button mat-icon-button (click)="close()">
       <mat-icon>cancel</mat-icon>
     </button>
     <button mat-icon-button (click)="save()">

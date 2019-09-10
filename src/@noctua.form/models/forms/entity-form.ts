@@ -38,7 +38,7 @@ export class EntityForm {
             const evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
 
             self.evidenceForms.push(evidenceForm);
-            evidenceForm.onValueChanges(evidence.evidenceLookup);
+            evidenceForm.onValueChanges(entity.predicate.evidenceLookup);
             //  evidenceForm.setTermValidator(termValidator(this.term, entity));
             self.evidenceFormArray.push(self._fb.group(evidenceForm));
         });
@@ -61,6 +61,8 @@ export class EntityForm {
 
     private _onValueChanges(lookup: EntityLookup) {
         const self = this;
+
+        console.log(lookup)
 
         self.term.valueChanges.pipe(
             distinctUntilChanged(),

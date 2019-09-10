@@ -10,7 +10,6 @@ import { AnnotonNode } from './annoton-node';
 export class Evidence {
   edge: Entity;
   evidence: Entity = new Entity('', '');
-  evidenceLookup: EntityLookup = new EntityLookup();
   reference: string;
   with: string;
   assignedBy: Entity = new Entity('', '');
@@ -28,10 +27,6 @@ export class Evidence {
     const self = this;
 
     return self.evidence.id && self.reference;
-  }
-
-  setEvidenceLookup(value) {
-    this.evidenceLookup.requestParams = value;
   }
 
   setEvidenceOntologyClass(value) {
