@@ -86,7 +86,7 @@ export class AnnotonEntityFormComponent implements OnInit, OnDestroy {
         if (!annotonEntityFormGroup) return;
         this.annotonEntityFormGroup = annotonEntityFormGroup;
         this.annoton = this.noctuaAnnotonEntityService.annoton;
-        this.termNode = this.noctuaAnnotonEntityService.termNode;
+        this.termNode = this.noctuaAnnotonEntityService.entity;
 
         console.log(this.termNode)
       });

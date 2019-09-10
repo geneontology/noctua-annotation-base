@@ -20,24 +20,29 @@ import { AnnotonEntityForm } from './../models/forms/annoton-entity-form';
 import { EntityForm } from './../models/forms/entity-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { AnnotonNode, Annoton } from '../models';
+import { cloneDeep } from 'lodash';
+import { NoctuaGraphService } from './graph.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaAnnotonEntityService {
-  cam: Cam;
+  public cam: Cam;
+  public currentAnnoton: Annoton;
   public annoton: Annoton;
-  public termNode: AnnotonNode;
+  public entity: AnnotonNode;
   private annotonEntityForm: AnnotonEntityForm;
   private annotonEntityFormGroup: BehaviorSubject<FormGroup | undefined>;
   public annotonEntityFormGroup$: Observable<FormGroup>;
 
-  constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
+  constructor(private _fb: FormBuilder,
+    public noctuaFormConfigService: NoctuaFormConfigService,
+    private noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
     private noctuaLookupService: NoctuaLookupService) {
 
     this.annotonEntityFormGroup = new BehaviorSubject(null);
-    this.annotonEntityFormGroup$ = this.annotonEntityFormGroup.asObservable()
+    this.annotonEntityFormGroup$ = this.annotonEntityFormGroup.asObservable();
 
     this.camService.onCamChanged.subscribe((cam) => {
       if (!cam) return;
@@ -46,20 +51,21 @@ export class NoctuaAnnotonEntityService {
     });
   }
 
-  initializeForm(annoton: Annoton, termNode: AnnotonNode) {
-    this.annoton = annoton;
-    this.termNode = termNode;
-    this.annotonEntityForm = this.createAnnotonEntityForm(termNode);
+  initializeForm(annoton: Annoton, entity: AnnotonNode) {
+    this.currentAnnoton = annoton;
+    this.annoton = _.cloneDeep(annoton);
+    this.entity = this.annoton.getNode(entity.id);
+    this.annotonEntityForm = this.createAnnotonEntityForm(entity);
     this.annotonEntityFormGroup.next(this._fb.group(this.annotonEntityForm));
     this._onAnnotonFormChanges();
   }
 
-  createAnnotonEntityForm(termNode: AnnotonNode) {
+  createAnnotonEntityForm(entity: AnnotonNode) {
     const self = this;
-    let annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    let annotonEntityForm = new AnnotonEntityForm(annotonFormMetadata);
+    const annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
+    const annotonEntityForm = new AnnotonEntityForm(annotonFormMetadata);
 
-    annotonEntityForm.createAnnotonEntityForms(termNode);
+    annotonEntityForm.createAnnotonEntityForms(entity);
 
     return annotonEntityForm;
   }
@@ -67,15 +73,30 @@ export class NoctuaAnnotonEntityService {
   annotonEntityFormToAnnoton() {
     const self = this;
 
-    self.annotonEntityForm.populateAnnotonEntityForm(this.termNode);
+    self.annotonEntityForm.populateAnnotonEntityForm(this.entity);
   }
 
   private _onAnnotonFormChanges(): void {
     this.annotonEntityFormGroup.getValue().valueChanges.subscribe(value => {
       // this.errors = this.getAnnotonFormErrors();
-      this.annotonEntityFormToAnnoton();
-      this.annoton.enableSubmit();
-    })
+      //  this.annotonEntityFormToAnnoton();
+      // this.annoton.enableSubmit();
+    });
+  }
+
+  saveAnnoton() {
+    const self = this;
+
+    self.annotonEntityFormToAnnoton();
+    const saveData = self.annoton.createEdit(self.currentAnnoton);
+
+    return self.noctuaGraphService.editAnnoton(self.cam,
+      saveData.srcNodes,
+      saveData.destNodes,
+      saveData.srcTriples,
+      saveData.destTriples,
+      saveData.removeIds,
+      saveData.removeTriples);
   }
 
   clearForm() {

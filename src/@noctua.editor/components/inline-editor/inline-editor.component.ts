@@ -3,6 +3,7 @@ import { Overlay, OverlayConfig, OriginConnectionPosition, OverlayConnectionPosi
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { cloneDeep } from 'lodash';
 
 import { InlineEditorService, EditorDropdownDialogConfig } from './inline-editor.service';
 
@@ -12,7 +13,8 @@ import {
     NoctuaAnnotonEntityService,
     AnnotonNode,
     Annoton,
-    Cam
+    Cam,
+    NoctuaAnnotonFormService
 } from 'noctua-form-base';
 import { EditorCategory } from './../../models/editor-category';
 
@@ -37,6 +39,7 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
 
     constructor(private inlineEditorService: InlineEditorService,
         private camService: CamService,
+        public noctuaAnnotonFormService: NoctuaAnnotonFormService,
         private noctuaAnnotonEntityService: NoctuaAnnotonEntityService) {
         this._unsubscribeAll = new Subject();
     }
@@ -51,7 +54,9 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
             category: this.category
         };
         // this.camService.onCamChanged.next(this.cam);
-
+        this.camService.onCamChanged.next(this.cam);
+        this.camService.annoton = this.annoton;
+        this.noctuaAnnotonFormService.initializeForm(this.annoton);
         this.noctuaAnnotonEntityService.initializeForm(this.annoton, this.entity);
         this.inlineEditorService.open(this.editorDropdownTrigger, { data });
     }
@@ -60,5 +65,4 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }
-
 }

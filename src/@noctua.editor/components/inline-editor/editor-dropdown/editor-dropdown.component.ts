@@ -58,7 +58,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   private unsubscribeAll: Subject<any>;
 
-
   constructor(private route: ActivatedRoute,
     public dialogRef: EditorDropdownOverlayRef,
     @Inject(editorDropdownData) public data: any,
@@ -94,6 +93,14 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
         this.evidenceFormGroup = evidenceFormArray.at(0) as FormGroup;
         console.log(this.evidenceFormGroup);
       });
+  }
+
+  save() {
+    const self = this;
+
+    self.noctuaAnnotonEntityService.saveAnnoton().then((data) => {
+      self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+    });
   }
 
   addEvidence() {
