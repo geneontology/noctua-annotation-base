@@ -74,32 +74,25 @@ export class NoctuaLookupService {
 
   golrLookup(searchText, requestParams) {
     const self = this;
-
     requestParams.q = self.buildQ(searchText);
-
     const params = new HttpParams({
       fromObject: requestParams
-    })
-    // .set('callback', 'JSONP_CALLBACK')
-    //.set('jsonpCallbackParam', 'json.wrf')
-    // .set('params', requestParams);
-
-
+    });
     const url = this.golrURLBase + params.toString();
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
-      map(response => self._foo(response))
+      map(response => self.lookupMap(response))
     );
   }
 
-  _foo(response) {
+  lookupMap(response) {
     const data = response.response.docs;
     const result = data.map((item) => {
 
       return {
         id: item.annotation_class,
         label: item.annotation_class_label,
-        link: 'http://amigo.geneontology.org/amigo/term/' + item.annotation_class
+        link: environment.amigoTerm + item.annotation_class
       };
     });
     return result;

@@ -27,11 +27,8 @@
             </div>
             <span fxFlex></span>
             <div class="noc-term-id">
-              {{ item.id }}
-            </div>
-            <div flex="40px" class="">
-              <a mat-icon-button href="{{item.link}}" target="_blank">
-                <mat-icon>link</mat-icon>
+              <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
+                {{ item.id }}
               </a>
             </div>
           </div>
@@ -57,7 +54,9 @@
                   </div>
                   <span fxFlex></span>
                   <div class="noc-term-id">
-                    {{ item.id }}
+                    <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
+                      {{ item.id }}
+                    </a>
                   </div>
                 </div>
               </mat-option>

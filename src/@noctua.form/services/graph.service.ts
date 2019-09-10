@@ -262,7 +262,7 @@ export class NoctuaGraphService {
     const nodeInfo = self.getNodeInfo(node);
     const result = {
       uuid: objectId,
-      term: new Entity(nodeInfo.id, nodeInfo.label),
+      term: new Entity(nodeInfo.id, nodeInfo.label, environment.amigoTerm + nodeInfo.id),
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
       isComplement: self.getNodeIsComplement(node)
@@ -286,7 +286,7 @@ export class NoctuaGraphService {
       if (annotationNode) {
 
         const nodeInfo = self.getNodeInfo(annotationNode);
-        evidence.setEvidence(new Entity(nodeInfo.id, nodeInfo.label), nodeInfo.classExpression);
+        evidence.setEvidence(new Entity(nodeInfo.id, nodeInfo.label, environment.amigoTerm + nodeInfo.id), nodeInfo.classExpression);
 
         const sources = annotationNode.get_annotations_by_key('source');
         const withs = annotationNode.get_annotations_by_key('with');
