@@ -299,6 +299,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       reference: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].reference : {},
       with: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].with : {},
       assignedBy: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].assignedBy : {},
+      evidenceIndex: 0,
       node: node
     });
 
@@ -309,6 +310,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         reference: node.predicate.evidence[i].reference,
         with: node.predicate.evidence[i].with,
         assignedBy: node.predicate.evidence[i].assignedBy,
+        evidenceIndex: i,
         node: node,
       });
     }

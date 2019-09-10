@@ -31,6 +31,7 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
     @Input() annoton: Annoton;
     @Input() entity: AnnotonNode;
     @Input() category: EditorCategory;
+    @Input() evidenceIndex = 0;
 
     @ViewChild('editorDropdownTrigger', { read: ElementRef, static: false })
     private editorDropdownTrigger: ElementRef;
@@ -51,7 +52,8 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
             cam: this.cam,
             annoton: this.annoton,
             entity: this.entity,
-            category: this.category
+            category: this.category,
+            evidenceIndex: this.evidenceIndex
         };
         // this.camService.onCamChanged.next(this.cam);
         this.camService.onCamChanged.next(this.cam);

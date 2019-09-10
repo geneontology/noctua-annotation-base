@@ -50,6 +50,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   cam: Cam;
   entity: AnnotonNode;
   category: EditorCategory;
+  evidenceIndex: number;
   entityFormGroup: FormGroup;
   evidenceFormGroup: FormGroup;
   entityFormSub: Subscription;
@@ -77,6 +78,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     this.annoton = data.annoton;
     this.entity = data.entity;
     this.category = data.category;
+    this.evidenceIndex = data.evidenceIndex;
   }
 
   ngOnInit(): void {
@@ -90,7 +92,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
         const evidenceFormArray = entityFormGroup.get('evidenceFormArray') as FormArray;
 
         this.entityFormGroup = entityFormGroup;
-        this.evidenceFormGroup = evidenceFormArray.at(0) as FormGroup;
+        this.evidenceFormGroup = evidenceFormArray.at(this.evidenceIndex) as FormGroup;
         console.log(this.evidenceFormGroup);
       });
   }
