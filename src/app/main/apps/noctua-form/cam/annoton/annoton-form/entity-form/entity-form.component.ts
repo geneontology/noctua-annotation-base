@@ -77,11 +77,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
 
-    if (this.entity.type === AnnotonNodeType.GoMolecularEntity) {
-      console.log(this.entity.term);
-      console.log(this.entity.termLookup.results);
-    }
-
     this.evidenceDBForm = this._createEvidenceDBForm();
     this.insertMenuItems = this.noctuaFormConfigService.getInsertEntityMenuItems(this.entity.type);
   }

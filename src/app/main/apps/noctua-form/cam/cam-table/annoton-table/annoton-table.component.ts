@@ -13,8 +13,6 @@ import { takeUntil, startWith } from 'rxjs/internal/operators';
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 
-
-
 import { NoctuaFormService } from './../../../services/noctua-form.service';
 import { CamTableService } from './../services/cam-table.service';
 import { NoctuaFormDialogService } from './../../../services/dialog.service';
@@ -37,6 +35,7 @@ import {
 } from 'noctua-form-base';
 
 import { SparqlService } from './../../../../../../../@noctua.sparql/services/sparql/sparql.service';
+import { EditorCategory } from '@noctua.editor/models/editor-category';
 
 @Component({
   selector: 'noc-annoton-table',
@@ -45,6 +44,8 @@ import { SparqlService } from './../../../../../../../@noctua.sparql/services/sp
   animations: noctuaAnimations
 })
 export class AnnotonTableComponent implements OnInit, OnDestroy {
+  EditorCategory = EditorCategory;
+
   displayedColumns = [
     'relationship',
     'aspect',
@@ -54,7 +55,8 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     'evidence',
     'reference',
     'with',
-    'assignedBy'];
+    'assignedBy',
+    'actions'];
 
   grid: any[] = [];
 

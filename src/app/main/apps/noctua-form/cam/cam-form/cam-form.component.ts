@@ -67,8 +67,6 @@ export class CamFormComponent implements OnInit, OnDestroy {
           return;
         }
         this.camFormGroup = camFormGroup;
-
-        console.log(this.camFormGroup)
       });
 
     this.camService.onCamChanged.subscribe((cam) => {

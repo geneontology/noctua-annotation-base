@@ -31,7 +31,8 @@ import {
   CamService,
   Cam,
   Annoton,
-  EntityDefinition
+  EntityDefinition,
+  AnnotonType
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
@@ -49,6 +50,7 @@ import { trigger, state, transition, style, animate } from '@angular/animations'
   ],
 })
 export class CamTableComponent implements OnInit, OnDestroy {
+  AnnotonType = AnnotonType;
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;

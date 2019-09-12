@@ -1,5 +1,5 @@
 export interface Group {
-    url: string,
+    url: string;
     name?: string;
     cams?: number;
     contributors?;

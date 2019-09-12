@@ -36,14 +36,14 @@
           </mat-chip>
           <span fxFlex=""></span>
           <div class="" fxFlex="200px" fxLayout="row" fxLayoutAlign="end center">
+            <button *ngIf="annoton.annotonType !==AnnotonType.ccOnly" mat-stroked-button
+              (click)="openAnnotonConnector(annoton)" color="primary" class="noc-rounded-button noc-sm mr-8"
+              matTooltip="connect activity causal relation" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
+              <small>Connect</small>
+            </button>
             <button mat-stroked-button (click)="openAnnotonForm(annoton)" color="primary"
               class="noc-rounded-button noc-sm mr-8">
               <small>Edit</small>
-            </button>
-            <button mat-stroked-button (click)="openAnnotonConnector(annoton)" color="primary"
-              class="noc-rounded-button noc-sm mr-8" matTooltip="connect activity causal relation"
-              [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
-              <small>Connect</small>
             </button>
             <button mat-icon-button class="noc-rounded-button noc-sm" fxFlex="40px" color="primary"
               [matMenuTriggerFor]="connectionOptionMenu">

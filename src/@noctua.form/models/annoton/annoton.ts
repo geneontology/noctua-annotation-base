@@ -258,7 +258,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       }
     });
 
-
     this._presentation = result;
 
     return this._presentation;
@@ -267,7 +266,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   resetPresentation() {
     this._presentation = null;
   }
-
 
   generateGrid() {
     const self = this;
@@ -294,13 +292,14 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       gp: self.tableDisplayGp(node),
       relationship: node.isExtension ? '' : self.tableDisplayExtension(node),
       relationshipExt: node.isExtension ? node.relationship.label : '',
-      term: node.isExtension ? {} : term,
-      extension: node.isExtension ? term : {},
+      term: node.isExtension ? null : term,
+      extension: node.isExtension ? term : null,
       aspect: node.aspect,
       evidence: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].evidence : {},
       reference: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].reference : {},
       with: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].with : {},
       assignedBy: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].assignedBy : {},
+      evidenceIndex: 0,
       node: node
     });
 
@@ -311,6 +310,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         reference: node.predicate.evidence[i].reference,
         with: node.predicate.evidence[i].with,
         assignedBy: node.predicate.evidence[i].assignedBy,
+        evidenceIndex: i,
         node: node,
       });
     }

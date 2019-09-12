@@ -21,7 +21,7 @@ export class Cam {
   state: any;
   groups: Group[] = [];
   contributors: Contributor[] = [];
-  group: any;
+  groupId: any;
 
   id: string;
   expanded?: boolean;
@@ -71,8 +71,18 @@ export class Cam {
     return this._annotons.sort(this._compareMolecularFunction);
   }
 
-  set annotons(value: Annoton[]) {
-    this._annotons = value;
+  set annotons(srcAnnotons: Annoton[]) {
+    const prevAnnotons = this._annotons;
+
+    each(srcAnnotons, (annoton: Annoton) => {
+      const prevAnnoton = this.findAnnotonById(annoton.id);
+
+      if (prevAnnoton) {
+        annoton.expanded = prevAnnoton.expanded;
+      }
+    });
+
+    this._annotons = srcAnnotons;
   }
 
   getConnectorAnnoton(upstreamId: string, downstreamId: string): ConnectorAnnoton {

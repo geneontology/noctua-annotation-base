@@ -81,12 +81,12 @@ export class AnnotonEntityFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.annotonEntityFormSub = this.noctuaAnnotonEntityService.annotonEntityFormGroup$
+    this.annotonEntityFormSub = this.noctuaAnnotonEntityService.entityFormGroup$
       .subscribe(annotonEntityFormGroup => {
         if (!annotonEntityFormGroup) return;
         this.annotonEntityFormGroup = annotonEntityFormGroup;
         this.annoton = this.noctuaAnnotonEntityService.annoton;
-        this.termNode = this.noctuaAnnotonEntityService.termNode;
+        this.termNode = this.noctuaAnnotonEntityService.entity;
 
         console.log(this.termNode)
       });

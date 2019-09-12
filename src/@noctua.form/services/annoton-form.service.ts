@@ -188,7 +188,7 @@ export class NoctuaAnnotonFormService {
           node.term = Entity.createEntity(response[Math.floor(Math.random() * termsCount)]);
 
           each(node.predicate.evidence, (evidence: Evidence) => {
-            self.noctuaLookupService.golrLookup('a', Object.assign({}, evidence.evidenceLookup.requestParams, { rows: 100 })).subscribe(response => {
+            self.noctuaLookupService.golrLookup('a', Object.assign({}, node.predicate.evidenceLookup.requestParams, { rows: 100 })).subscribe(response => {
               if (response && response.length > 0) {
                 const evidenceCount = response.length;
                 console.log(evidenceCount);

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import { Entity } from './entity';
 import { Evidence } from './evidence';
 import { each } from 'lodash';
+import { EntityLookup } from './entity-lookup';
 declare const require: any;
 const uuid = require('uuid/v1');
 
@@ -9,6 +10,7 @@ export class Predicate {
   uuid: string;
   edge: Entity;
   evidence: Evidence[];
+  evidenceLookup: EntityLookup = new EntityLookup();
 
   _evidenceMeta = {
     lookupBase: '',
@@ -23,6 +25,7 @@ export class Predicate {
   setEvidenceMeta(ontologyClass, lookupBase) {
     this._evidenceMeta.lookupBase = lookupBase;
     this._evidenceMeta.ontologyClass = ontologyClass;
+    this.evidenceLookup.requestParams = JSON.parse(JSON.stringify(lookupBase));
     this.addEvidence();
   }
 
@@ -40,7 +43,6 @@ export class Predicate {
     const self = this;
     const evidence = srcEvidence ? _.cloneDeep(srcEvidence) : new Evidence();
 
-    evidence.setEvidenceLookup(JSON.parse(JSON.stringify(self._evidenceMeta.lookupBase)));
     evidence.setEvidenceOntologyClass(self._evidenceMeta.ontologyClass);
     self.evidence.push(evidence);
     return evidence;

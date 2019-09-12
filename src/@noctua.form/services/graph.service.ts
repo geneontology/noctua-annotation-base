@@ -79,8 +79,6 @@ export class NoctuaGraphService {
     this.modelInfo = {
       graphEditorUrl: ''
     };
-
-    console.log(window.location)
   }
 
   registerManager() {
@@ -92,7 +90,6 @@ export class NoctuaGraphService {
       this.minervaDefinitionName,
       this.noctuaUserService.baristaToken,
       engine, 'async');
-
 
     const managerError = (resp) => {
       console.log('There was a manager error (' +
@@ -192,7 +189,7 @@ export class NoctuaGraphService {
     cam.manager.get_model(modelId);
   }
 
-  popuiateContributors(cam: Cam) {
+  populateContributors(cam: Cam) {
     const self = this;
     const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
 
@@ -265,7 +262,7 @@ export class NoctuaGraphService {
     const nodeInfo = self.getNodeInfo(node);
     const result = {
       uuid: objectId,
-      term: new Entity(nodeInfo.id, nodeInfo.label),
+      term: new Entity(nodeInfo.id, nodeInfo.label, environment.amigoTerm + nodeInfo.id),
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
       isComplement: self.getNodeIsComplement(node)
@@ -289,7 +286,7 @@ export class NoctuaGraphService {
       if (annotationNode) {
 
         const nodeInfo = self.getNodeInfo(annotationNode);
-        evidence.setEvidence(new Entity(nodeInfo.id, nodeInfo.label), nodeInfo.classExpression);
+        evidence.setEvidence(new Entity(nodeInfo.id, nodeInfo.label, environment.amigoTerm + nodeInfo.id), nodeInfo.classExpression);
 
         const sources = annotationNode.get_annotations_by_key('source');
         const withs = annotationNode.get_annotations_by_key('with');
@@ -389,7 +386,6 @@ export class NoctuaGraphService {
     }
 
     return self.noctuaFormConfigService.createAnnotonModel(annotonType);
-
   }
 
   graphToAnnotons(cam: Cam): Annoton[] {
@@ -515,6 +511,7 @@ export class NoctuaGraphService {
 
   saveModelGroup(cam: Cam, groupId) {
     cam.manager.use_groups([groupId]);
+    cam.groupId = groupId;
   }
 
   saveCamAnnotations(cam: Cam, annotations) {
@@ -538,7 +535,7 @@ export class NoctuaGraphService {
     cam.manager.request_with(reqs);
   }
 
-  saveAnnoton(cam, triples: Triple<AnnotonNode>[], title) {
+  saveAnnoton(cam: Cam, triples: Triple<AnnotonNode>[], title) {
     const self = this;
     const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
 
@@ -550,7 +547,7 @@ export class NoctuaGraphService {
     reqs.store_model(cam.modelId);
 
     if (self.userInfo.groups.length > 0) {
-      reqs.use_groups([self.userInfo.selectedGroup.id]);
+      reqs.use_groups([cam.groupId]);
     }
 
     return cam.manager.request_with(reqs);
