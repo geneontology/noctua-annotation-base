@@ -26,6 +26,11 @@
               {{ item.label }}
             </div>
             <span fxFlex></span>
+            <div class="noc-term-id mr-8">
+              <strong>
+                {{ item.xref }}
+              </strong>
+            </div>
             <div class="noc-term-id">
               <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
                 {{ item.id }}
@@ -53,6 +58,11 @@
                     {{ item.label }}
                   </div>
                   <span fxFlex></span>
+                  <div class="noc-term-id mr-8">
+                    <strong>
+                      {{ item.xref }}
+                    </strong>
+                  </div>
                   <div class="noc-term-id">
                     <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
                       {{ item.id }}

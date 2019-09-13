@@ -89,10 +89,16 @@ export class NoctuaLookupService {
     const data = response.response.docs;
     const result = data.map((item) => {
 
+      let xref;
+      if (item.database_xref && item.database_xref.length > 0) {
+        xref = item.database_xref[0];
+      }
+
       return {
         id: item.annotation_class,
         label: item.annotation_class_label,
-        link: environment.amigoTerm + item.annotation_class
+        link: environment.amigoTerm + item.annotation_class,
+        xref: xref
       };
     });
     return result;
