@@ -2,5 +2,7 @@ export enum EditorCategory {
   term = 'term',
   evidence = 'evidence',
   reference = 'reference',
-  with = 'with'
+  with = 'with',
+  evidenceAll = 'evidenceAll',
+  all = 'all'
 }

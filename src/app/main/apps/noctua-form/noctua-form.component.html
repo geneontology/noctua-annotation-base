@@ -6,7 +6,7 @@
     </button>
     <button mat-flat-button fxFlex="35px" [matMenuTriggerFor]="createOptions" color="primary"
       class="noc-rounded-button noc-half-button noc-l noc-sm mr-8 p-0">
-      <mat-icon class=""> arrow_drop_down </mat-icon>
+      <mat-icon class="">arrow_drop_down </mat-icon>
     </button>
     <mat-menu #createOptions="matMenu" xPosition="before">
       <a mat-menu-item (click)="openAnnotonForm(AnnotonType.bpOnly)">
@@ -33,7 +33,8 @@
       </mat-chip-list>
     </div>
     <div class="" fxFlex="50px" fxLayout="row" fxLayoutAlign="end center">
-      <!--   <div [ngSwitch]="noctuaFormService.selectedMiddlePanel.id">
+      <!--
+      <div [ngSwitch]="noctuaFormService.selectedMiddlePanel.id">
         <button mat-button class="" *ngSwitchCase="noctuaFormService.panel.camTable.id"
           (click)="noctuaFormService.openMiddlePanel(noctuaFormService.panel.camPreview)" matTooltip="Search"
           [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500"
@@ -46,7 +47,8 @@
           [ngClass]="{'noc-active':noctuaFormService.selectedMiddlePanel.id===noctuaFormService.panel.camTable.id}">
           <mat-icon> table_chart </mat-icon>
         </button>
-      </div> -->
+      </div>
+      -->
       <button mat-icon-button (click)="openCamForm(annoton)" class="">
         <mat-icon class="">
           info

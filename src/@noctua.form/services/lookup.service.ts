@@ -88,7 +88,6 @@ export class NoctuaLookupService {
   lookupMap(response) {
     const data = response.response.docs;
     const result = data.map((item) => {
-
       let xref;
       if (item.database_xref && item.database_xref.length > 0) {
         xref = item.database_xref[0];

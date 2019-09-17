@@ -4,13 +4,15 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NoctuaSharedModule } from '@noctua/shared.module';
-import { NoctuaInlineEditorComponent } from './components/inline-editor/inline-editor.component';
-import { NoctuaEditorDropdownComponent } from './components/inline-editor/editor-dropdown/editor-dropdown.component';
+import { NoctuaInlineEditorComponent } from './inline-editor/inline-editor.component';
+import { NoctuaEditorDropdownComponent } from './inline-editor/editor-dropdown/editor-dropdown.component';
+import { AnnotonEditorDialogComponent } from './dialogs/annoton-editor/annoton-editor.component';
 
 @NgModule({
     declarations: [
         NoctuaInlineEditorComponent,
-        NoctuaEditorDropdownComponent
+        NoctuaEditorDropdownComponent,
+        AnnotonEditorDialogComponent
     ],
     imports: [
         CommonModule,
@@ -20,10 +22,12 @@ import { NoctuaEditorDropdownComponent } from './components/inline-editor/editor
         NoctuaSharedModule
     ],
     exports: [
-        NoctuaInlineEditorComponent
+        NoctuaInlineEditorComponent,
+        AnnotonEditorDialogComponent
     ],
     entryComponents: [
-        NoctuaEditorDropdownComponent
+        NoctuaEditorDropdownComponent,
+        AnnotonEditorDialogComponent
     ]
 })
 export class NoctuaEditorModule {

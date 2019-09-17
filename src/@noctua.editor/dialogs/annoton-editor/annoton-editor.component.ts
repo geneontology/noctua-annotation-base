@@ -1,49 +1,30 @@
-import { Component, Inject, Input, OnInit, ElementRef, OnDestroy, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { Component, OnInit, OnDestroy, ViewChild, Inject, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatMenuTrigger } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatSort, MatDrawer } from '@angular/material';
-import { DataSource } from '@angular/cdk/collections';
-import { merge, Observable, Subscription, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, take, distinctUntilChanged, map } from 'rxjs/operators';
-
-
+import { Subject, Subscription } from 'rxjs';
 import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
+import { Cam, NoctuaAnnotonEntityService, NoctuaAnnotonFormService, CamService, Annoton, AnnotonNode, noctuaFormConfig, Entity, Evidence, AnnotonNodeType } from 'noctua-form-base';
 
-import { noctuaAnimations } from './../../../../@noctua/animations';
-
-import {
-  NoctuaGraphService,
-  NoctuaFormConfigService,
-  NoctuaAnnotonFormService,
-  NoctuaLookupService,
-  NoctuaAnnotonEntityService,
-  CamService,
-  Entity,
-  AnnotonNodeType,
-  noctuaFormConfig
-} from 'noctua-form-base';
-
-import { Cam } from 'noctua-form-base';
-import { Annoton } from 'noctua-form-base';
-import { AnnotonNode } from 'noctua-form-base';
-import { Evidence } from 'noctua-form-base';
-
-import { editorDropdownData } from './editor-dropdown.tokens';
-import { EditorDropdownOverlayRef } from './editor-dropdown-ref';
-import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
-import { EditorCategory } from './../../../models/editor-category';
+import { NoctuaFormConfigService } from 'noctua-form-base';
+import { NoctuaGraphService } from 'noctua-form-base';
+import { NoctuaLookupService } from 'noctua-form-base';
+import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
+import { EditorCategory } from './../../models/editor-category';
 
 @Component({
-  selector: 'app-editor-dropdown',
-  templateUrl: './editor-dropdown.component.html',
-  styleUrls: ['./editor-dropdown.component.scss']
+  selector: 'noc-annoton-editor-dialog',
+  templateUrl: './annoton-editor.component.html',
+  styleUrls: ['./annoton-editor.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
+export class AnnotonEditorDialogComponent implements OnInit, OnDestroy {
+  private _unsubscribeAll: Subject<any>;
 
-export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
+
   EditorCategory = EditorCategory;
   evidenceDBForm: FormGroup;
   annoton: Annoton;
@@ -57,13 +38,19 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   termNode: AnnotonNode;
 
+  displaySection = {
+    term: false,
+    evidence: false,
+    reference: false,
+    with: false,
+  };
+
   private unsubscribeAll: Subject<any>;
 
-  constructor(private route: ActivatedRoute,
-    public dialogRef: EditorDropdownOverlayRef,
-    @Inject(editorDropdownData) public data: any,
+  constructor(
+    private _matDialogRef: MatDialogRef<AnnotonEditorDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private _data: any,
     private noctuaFormDialogService: NoctuaFormDialogService,
-    private ngZone: NgZone,
     private camService: CamService,
     private formBuilder: FormBuilder,
     private noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
@@ -72,16 +59,17 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
     private noctuaLookupService: NoctuaLookupService,
   ) {
-    this.unsubscribeAll = new Subject();
+    this._unsubscribeAll = new Subject();
 
-    this.cam = data.cam;
-    this.annoton = data.annoton;
-    this.entity = data.entity;
-    this.category = data.category;
-    this.evidenceIndex = data.evidenceIndex;
+    this.cam = _data.cam;
+    this.annoton = _data.annoton;
+    this.entity = _data.entity;
+    this.category = _data.category;
+    this.evidenceIndex = _data.evidenceIndex;
   }
 
   ngOnInit(): void {
+    this._displaySection(this.category);
     this.evidenceDBForm = this._createEvidenceDBForm();
     this.entityFormSub = this.noctuaAnnotonEntityService.entityFormGroup$
       .subscribe(entityFormGroup => {
@@ -238,8 +226,36 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     });
   }
 
+  private _displaySection(category: EditorCategory) {
+    switch (category) {
+      case EditorCategory.term:
+        this.displaySection.term = true;
+        break;
+      case EditorCategory.evidence:
+        this.displaySection.evidence = true;
+        break;
+      case EditorCategory.reference:
+        this.displaySection.reference = true;
+        break;
+      case EditorCategory.with:
+        this.displaySection.with = true;
+        break;
+      case EditorCategory.evidenceAll:
+        this.displaySection.evidence = true;
+        this.displaySection.reference = true;
+        this.displaySection.with = true;
+        break;
+      case EditorCategory.all:
+        this.displaySection.term = true;
+        this.displaySection.evidence = true;
+        this.displaySection.reference = true;
+        this.displaySection.with = true;
+        break;
+    }
+  }
+
   close() {
-    this.dialogRef.close();
+    this._matDialogRef.close();
   }
 
   ngOnDestroy(): void {
@@ -247,4 +263,3 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     this.unsubscribeAll.complete();
   }
 }
-

@@ -16,7 +16,7 @@ import {
     Cam,
     NoctuaAnnotonFormService
 } from 'noctua-form-base';
-import { EditorCategory } from './../../models/editor-category';
+import { EditorCategory } from './../models/editor-category';
 
 @Component({
     selector: 'noctua-inline-editor',
@@ -47,7 +47,9 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void { }
 
-    openEditorDropdown() {
+    openEditorDropdown(event) {
+
+        console.log(event)
         const data = {
             cam: this.cam,
             annoton: this.annoton,
@@ -59,7 +61,7 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
         this.camService.onCamChanged.next(this.cam);
         this.camService.annoton = this.annoton;
         this.noctuaAnnotonEntityService.initializeForm(this.annoton, this.entity);
-        this.inlineEditorService.open(this.editorDropdownTrigger, { data });
+        this.inlineEditorService.open(event.target, { data });
     }
 
     ngOnDestroy(): void {
