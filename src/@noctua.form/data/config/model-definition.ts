@@ -193,7 +193,7 @@ export const insertNodeDescription = {
         [AnnotonNodeType.GoChemicalEntityHasInput]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoChemicalEntity.category,
-                label: 'Has Input (Gene Product/Chemical)',
+                label: 'Has Input (GP/Chemical)',
                 relationship: noctuaFormConfig.edge.hasInput,
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
@@ -205,7 +205,7 @@ export const insertNodeDescription = {
         [AnnotonNodeType.GoChemicalEntityHasOutput]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoChemicalEntity.category,
-                label: 'Has Output (Gene Product/Chemical)',
+                label: 'Has Output (GP/Chemical)',
                 relationship: noctuaFormConfig.edge.hasOutput,
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
@@ -301,10 +301,10 @@ export const insertNodeDescription = {
 
 export const entityMenuItems = {
     [AnnotonNodeType.GoMolecularFunction]: [{
-        label: 'Add Has Input (Gene Product/Chemical)',
+        label: 'Add Has Input (GP/Chemical)',
         id: AnnotonNodeType.GoChemicalEntityHasInput
     }, {
-        label: 'Add Has Output (Gene Product/Chemical)',
+        label: 'Add Has Output (GP/Chemical)',
         id: AnnotonNodeType.GoChemicalEntityHasOutput
     }, {
         label: 'Add Happens During (Biological Phase)',
@@ -360,7 +360,7 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
     return annoton;
 };
 
-export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType) => {
+export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType): AnnotonNode => {
     const nodeDescription: InsertNodeDescription = insertNodeDescription[subjectNode.type][nodeType];
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
@@ -373,4 +373,6 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType:
     annoton.addEdgeById(subjectNode.id, objectNode.id, predicate);
 
     annoton.resetPresentation();
+
+    return objectNode;
 };

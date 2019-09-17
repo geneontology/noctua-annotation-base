@@ -192,7 +192,7 @@ export class NoctuaFormConfigService {
         }
       },
       'mf-1': {
-        'label': 'Has Input (Gene Product/Chemical)',
+        'label': 'Has Input (GP/Chemical)',
         'relationship': noctuaFormConfig.edge.hasInput,
         'displaySection': noctuaFormConfig.displaySection.fd,
         'displayGroup': noctuaFormConfig.displayGroup.mf,
@@ -1099,8 +1099,8 @@ export class NoctuaFormConfigService {
     }
   }
 
-  insertAnnotonNode(annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType) {
-    ModelDefinition.insertNode(annoton, subjectNode, nodeType);
+  insertAnnotonNode(annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType): AnnotonNode {
+    return ModelDefinition.insertNode(annoton, subjectNode, nodeType);
   }
 
   generateAnnotonNode(id?, overrides?): AnnotonNode {

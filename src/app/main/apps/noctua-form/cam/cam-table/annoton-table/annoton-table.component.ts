@@ -74,6 +74,7 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
   @Input('annoton')
   public annoton: Annoton
 
+  public currentMenuEvent: any = {};
 
   private unsubscribeAll: Subject<any>;
 
@@ -103,11 +104,10 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
 
   loadCam() {
     this.grid = this.annoton.grid;
-    console.log(this.grid)
+    this.addInsertMenuItems();
   }
 
-
-  addEvidence(event, entity: AnnotonNode) {
+  addEvidence(entity: AnnotonNode) {
     const self = this;
 
     entity.predicate.addEvidence();
@@ -122,8 +122,7 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     this.camService.onCamChanged.next(this.cam);
     this.camService.annoton = this.annoton;
     this.noctuaAnnotonEntityService.initializeForm(this.annoton, entity);
-    this.inlineEditorService.open(event.target, { data });
-
+    this.inlineEditorService.open(this.currentMenuEvent.target, { data });
 
     self.noctuaAnnotonFormService.initializeForm();
   }
@@ -164,7 +163,8 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
           }
           self.noctuaAnnotonFormService.initializeForm();
         }
-      }
+      };
+
       self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
     } else {
       const errors = [];
@@ -177,9 +177,30 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     }
   }
 
+  addInsertMenuItems() {
+    this.grid.map((entity) => {
+      entity.insertMenuItems = this.noctuaFormConfigService.getInsertEntityMenuItems(entity.node.type);
+    });
+  }
+
   insertEntity(entity: AnnotonNode, nodeType: AnnotonNodeType) {
-    this.noctuaFormConfigService.insertAnnotonNode(this.noctuaAnnotonFormService.annoton, entity, nodeType);
+    const self = this;
+    const insertedNode = this.noctuaFormConfigService.insertAnnotonNode(this.noctuaAnnotonFormService.annoton, entity, nodeType);
     this.noctuaAnnotonFormService.initializeForm();
+
+
+    const data = {
+      cam: this.cam,
+      annoton: this.annoton,
+      entity: insertedNode,
+      category: EditorCategory.all,
+      evidenceIndex: 0
+    };
+
+    this.camService.onCamChanged.next(this.cam);
+    this.camService.annoton = this.annoton;
+    this.noctuaAnnotonEntityService.initializeForm(this.annoton, insertedNode);
+    this.inlineEditorService.open(this.currentMenuEvent.target, { data });
   }
 
   addRootTerm(entity: AnnotonNode) {
@@ -229,6 +250,10 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     this.noctuaAnnotonEntityService.initializeForm(this.annoton, entity);
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonEntityForm);
 
+  }
+
+  updateCurrentMenuEvent(event) {
+    this.currentMenuEvent = event;
   }
 
   ngOnDestroy(): void {

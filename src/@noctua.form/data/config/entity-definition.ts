@@ -236,7 +236,7 @@ export const generateChemicalEntity = (override: Partial<AnnotonNodeDisplay> = {
     annotonNode.id = GoChemicalEntity.id;
     annotonNode.category = GoChemicalEntity.category;
 
-    annotonNode.label = 'Has Input (Gene Product/Chemical)';
+    annotonNode.label = 'Has Input (GP/Chemical)';
     annotonNode.relationship = noctuaFormConfig.edge.hasInput;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
