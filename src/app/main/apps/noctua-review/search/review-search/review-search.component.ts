@@ -63,6 +63,7 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
 
   createAnswerForm() {
     return new FormGroup({
+      title: new FormControl(),
       gp: new FormControl(),
       goterm: new FormControl(),
       pmid: new FormControl(),
@@ -145,6 +146,7 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
   }
 
   clear() {
+    this.searchForm.controls.title.setValue('');
     this.searchForm.controls.gp.setValue('');
     this.searchForm.controls.goterm.setValue('');
     this.searchForm.controls.pmid.setValue('');

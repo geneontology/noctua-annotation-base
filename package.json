@@ -1,6 +1,6 @@
 {
   "name": "noctua-form-base",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -89,6 +89,7 @@
     "minerva-requests": "0.0.17",
     "moment": "2.24.0",
     "ncu": "^0.2.1",
+    "ng-packagr": "^5.5.1",
     "ng2-charts": "2.3.0",
     "ngrx-store-freeze": "0.2.4",
     "ngx-build-plus": "^7.8.2",

@@ -39,6 +39,13 @@ const routes = [
     ReviewContributorsComponent,
     ReviewGroupsComponent,
     ReviewOrganismsComponent
+  ],
+  exports: [
+    ReviewFilterComponent,
+    ReviewSearchComponent,
+    ReviewContributorsComponent,
+    ReviewGroupsComponent,
+    ReviewOrganismsComponent
   ]
 })
 
