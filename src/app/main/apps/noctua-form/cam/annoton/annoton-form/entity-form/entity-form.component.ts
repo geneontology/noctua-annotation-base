@@ -74,7 +74,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
 
     this.evidenceDBForm = this._createEvidenceDBForm();
