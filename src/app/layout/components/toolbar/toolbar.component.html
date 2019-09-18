@@ -23,11 +23,11 @@
         Noctua
       </a>
       <a class="noc-sub-logo" target="_blank">
-        Form
+        Search
       </a>
     </div>
   </div>
-  <div *ngIf="cam" class="noc-title mr-12" fxLayout="row" fxLayoutAlign="start center">
+  <!--   <div *ngIf="cam" class="noc-title mr-12" fxLayout="row" fxLayoutAlign="start center">
     <div class="h-100-p mr-12" *ngIf="cam.title; else noCamTitle" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-section-label noc-cam-title">
         <div class="text-truncate" (click)="openCamForm()">
@@ -42,7 +42,7 @@
         </div>
       </div>
     </ng-template>
-  </div>
+  </div> -->
   <span fxFlex=""></span>
   <div *ngIf="!noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
     <a mat-button href="{{loginUrl}}">

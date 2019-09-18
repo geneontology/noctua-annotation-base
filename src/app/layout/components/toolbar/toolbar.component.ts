@@ -17,6 +17,7 @@ import { NoctuaConfigService } from '@noctua/services/config.service';
 import { NoctuaFormService } from 'app/main/apps/noctua-form/services/noctua-form.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { environment } from 'environments/environment';
 
 @Component({
     selector: 'noctua-toolbar',
@@ -34,8 +35,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     horizontalNav: boolean;
     noNav: boolean;
     navigation: any;
-
-    loginUrl;
+    loginUrl = '';
 
     private _unsubscribeAll: Subject<any>;
 
