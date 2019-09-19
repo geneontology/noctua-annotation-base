@@ -44,6 +44,7 @@ export class AnnotonForm {
 
       this.entityGroupForms.push(entityGroupForm);
       entityGroupForm.name = nodeKey;
+      entityGroupForm.isComplement = nodeGroup.isComplement;
       entityGroupForm.createEntityForms(nodeGroup.nodes);
       self.fd.push(self._fb.group(entityGroupForm));
     });

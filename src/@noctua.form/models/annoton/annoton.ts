@@ -226,11 +226,18 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     const mf = self.getNode(AnnotonNodeType.GoMolecularFunction);
     const gpText = gp ? gp.getTerm().label : '';
     const mfText = mf ? mf.getTerm().label : '';
+    let qualifier = '';
+    let title = '';
 
-    const title = self.annotonType === AnnotonType.ccOnly ?
-      `${gpText}` :
-      `enabled by ${gpText}`;
+    if (self.annotonType === AnnotonType.ccOnly) {
+      title = gpText;
+    } else {
+      qualifier = mf.isComplement ? 'NOT' : '';
+      title = `enabled by ${gpText}`;
+    }
+
     const result = {
+      qualifier: qualifier,
       title: title,
       gpText: gpText,
       mfText: mfText,
@@ -290,7 +297,8 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       displayEnabledBy: self.tableCanDisplayEnabledBy(node),
       treeLevel: node.treeLevel,
       gp: self.tableDisplayGp(node),
-      relationship: node.isExtension ? '' : self.tableDisplayExtension(node),
+      qualifier: node.isExtension ? '' : self.tableDisplayQualifier(node),
+      relationship: node.isExtension ? '' : self.tableDisplayRelationship(node),
       relationshipExt: node.isExtension ? node.relationship.label : '',
       term: node.isExtension ? null : term,
       extension: node.isExtension ? term : null,
@@ -336,16 +344,26 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   tableCanDisplayEnabledBy(node: AnnotonNode) {
     const self = this;
 
-    return node.relationship.id === noctuaFormConfig.edge.enabledBy.id
+    return node.relationship.id === noctuaFormConfig.edge.enabledBy.id;
   }
 
-  tableDisplayExtension(node: AnnotonNode) {
+  tableDisplayQualifier(node: AnnotonNode) {
     const self = this;
 
     if (node.id === AnnotonNodeType.GoMolecularFunction) {
       return '';
     } else if (node.isComplement) {
-      return 'NOT ' + node.relationship.label;
+      return 'NOT';
+    } else {
+      return '';
+    }
+  }
+
+  tableDisplayRelationship(node: AnnotonNode) {
+    const self = this;
+
+    if (node.id === AnnotonNodeType.GoMolecularFunction) {
+      return '';
     } else {
       return node.relationship.label;
     }

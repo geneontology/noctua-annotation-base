@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { Annoton } from './../annoton/annoton';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityForm } from './entity-form';
@@ -10,6 +10,7 @@ const each = require('lodash/forEach');
 
 export class EntityGroupForm {
     name = '';
+    isComplement = false;
     entityForms: EntityForm[] = [];
     entityGroup = new FormArray([]);
 

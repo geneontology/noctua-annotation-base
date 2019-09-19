@@ -33,7 +33,8 @@ import {
   Evidence,
   noctuaFormConfig,
   Entity,
-  EntityDefinition
+  EntityDefinition,
+  AnnotonError
 } from 'noctua-form-base';
 import { AnnotonNodeType } from '@noctua.form/models/annoton/annoton-node';
 
@@ -74,7 +75,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
 
     this.evidenceDBForm = this._createEvidenceDBForm();
@@ -101,9 +101,31 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   toggleIsComplement(entity: AnnotonNode) {
+    const self = this;
+    const errors = [];
+    let canToggle = true;
+
+    each(entity.nodeGroup.nodes, function (node: AnnotonNode) {
+      if (node.isExtension) {
+        canToggle = false;
+        const meta = {
+          aspect: node.label
+        };
+        const error = new AnnotonError('error',
+          1,
+          `Cannot add 'NOT Qualifier', Remove Extension'${node.label}'`, meta);
+        errors.push(error);
+      }
+    });
+
+    if (canToggle) {
+      entity.toggleIsComplement();
+      self.noctuaAnnotonFormService.initializeForm();
+    } else {
+      self.noctuaFormDialogService.openAnnotonErrorsDialog(errors);
+    }
 
   }
-
   openSearchDatabaseDialog(entity: AnnotonNode) {
     const self = this;
     const gpNode = this.noctuaAnnotonFormService.annoton.getGPNode();
@@ -189,9 +211,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmitEvidedenceDb(evidence: FormGroup, name: string) {
-    console.log(evidence);
-    console.log(this.evidenceDBForm.value);
-
     const DB = this.evidenceDBForm.value.db;
     const accession = this.evidenceDBForm.value.accession;
 
