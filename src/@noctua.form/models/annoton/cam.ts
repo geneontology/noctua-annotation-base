@@ -85,6 +85,14 @@ export class Cam {
     this._annotons = srcAnnotons;
   }
 
+  expandAllAnnotons(expand: boolean) {
+    const self = this;
+
+    each(self.annotons, function (annoton: Annoton) {
+      annoton.expanded = expand;
+    });
+  }
+
   getConnectorAnnoton(upstreamId: string, downstreamId: string): ConnectorAnnoton {
     const self = this;
 
