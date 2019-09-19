@@ -102,23 +102,19 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   toggleIsComplement(entity: AnnotonNode) {
     const self = this;
+    const errors = [];
     let canToggle = true;
-    let errors = [];
 
     each(entity.nodeGroup.nodes, function (node: AnnotonNode) {
-      if (node.treeLevel > 0) {
-        let nodeEmpty = !node.hasValue();
-        canToggle = canToggle && nodeEmpty
-        if (!nodeEmpty) {
-          let meta = {
-            aspect: node.label
-          }
-          let error = new AnnotonError('error',
-            1,
-            "Cannot add 'NOT', Remove '" + node.label +
-            "'  value (" + node.term.label + ")", meta)
-          errors.push(error);
-        }
+      if (node.isExtension) {
+        canToggle = false;
+        const meta = {
+          aspect: node.label
+        };
+        const error = new AnnotonError('error',
+          1,
+          `Cannot add 'NOT Qualifier', Remove Extension'${node.label}'`, meta);
+        errors.push(error);
       }
     });
 
@@ -215,9 +211,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmitEvidedenceDb(evidence: FormGroup, name: string) {
-    console.log(evidence);
-    console.log(this.evidenceDBForm.value);
-
     const DB = this.evidenceDBForm.value.db;
     const accession = this.evidenceDBForm.value.accession;
 

@@ -81,7 +81,6 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   constructor() {
   }
 
-
   getTerm() {
     return this.term;
   }
@@ -93,7 +92,6 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   set classExpression(classExpression) {
     this.term.classExpression = classExpression;
   }
-
 
   setTermOntologyClass(value) {
     this.ontologyClass = value;
