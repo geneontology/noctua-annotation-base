@@ -33,7 +33,8 @@ import {
   Evidence,
   noctuaFormConfig,
   Entity,
-  EntityDefinition
+  EntityDefinition,
+  AnnotonError
 } from 'noctua-form-base';
 import { AnnotonNodeType } from '@noctua.form/models/annoton/annoton-node';
 
@@ -100,9 +101,35 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   toggleIsComplement(entity: AnnotonNode) {
+    const self = this;
+    let canToggle = true;
+    let errors = [];
+
+    each(entity.nodeGroup.nodes, function (node: AnnotonNode) {
+      if (node.treeLevel > 0) {
+        let nodeEmpty = !node.hasValue();
+        canToggle = canToggle && nodeEmpty
+        if (!nodeEmpty) {
+          let meta = {
+            aspect: node.label
+          }
+          let error = new AnnotonError('error',
+            1,
+            "Cannot add 'NOT', Remove '" + node.label +
+            "'  value (" + node.term.label + ")", meta)
+          errors.push(error);
+        }
+      }
+    });
+
+    if (canToggle) {
+      entity.toggleIsComplement();
+      self.noctuaAnnotonFormService.initializeForm();
+    } else {
+      self.noctuaFormDialogService.openAnnotonErrorsDialog(errors);
+    }
 
   }
-
   openSearchDatabaseDialog(entity: AnnotonNode) {
     const self = this;
     const gpNode = this.noctuaAnnotonFormService.annoton.getGPNode();

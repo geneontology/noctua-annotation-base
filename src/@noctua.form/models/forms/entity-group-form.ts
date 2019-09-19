@@ -10,7 +10,7 @@ const each = require('lodash/forEach');
 
 export class EntityGroupForm {
     name = '';
-    isComplement = true;
+    isComplement = false;
     entityForms: EntityForm[] = [];
     entityGroup = new FormArray([]);
 
