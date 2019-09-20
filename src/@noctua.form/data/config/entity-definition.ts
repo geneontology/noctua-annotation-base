@@ -94,7 +94,7 @@ export class GoAnatomicalEntity {
 
 export class GoOrganism {
     public static readonly id = AnnotonNodeType.GoOrganism;
-    public static readonly category = 'NCBITaxon_1';
+    public static readonly category = 'NCBITaxon';
 }
 
 export class GoBiologicalPhase {
@@ -116,11 +116,15 @@ export const generateBaseTerm = (goType?: string, override: Partial<AnnotonNodeD
     annotonNode.predicate = predicate;
 
     if (goType) {
+        const fqCategory = (goType === GoOrganism.category)
+            ? `idspace:"${goType}"`
+            : `isa_closure:"${goType}"`;
+
         annotonNode.termLookup = new EntityLookup(null,
             Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
                 fq: [
                     'document_category:"ontology_class"',
-                    `isa_closure:"${goType}"`
+                    fqCategory
                 ],
             })
         );
@@ -130,6 +134,7 @@ export const generateBaseTerm = (goType?: string, override: Partial<AnnotonNodeD
 
     return annotonNode;
 };
+
 
 export const generateGoTerm = (): AnnotonNode => {
     const annotonNode = generateBaseTerm();
