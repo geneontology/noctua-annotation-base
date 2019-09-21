@@ -15,7 +15,6 @@ import {
   AnnotonParser,
   AnnotonError,
   Evidence,
-  SimpleAnnoton,
   Entity,
   ConnectorAnnoton,
   ConnectorType,
@@ -40,14 +39,8 @@ import { Contributor } from './../models/contributor';
 declare const require: any;
 
 const each = require('lodash/forEach');
-const forOwn = require('lodash/forOwn');
 const model = require('bbop-graph-noctua');
 const amigo = require('amigo2');
-const bbopx = require('bbopx');
-const golr_response = require('bbop-response-golr');
-const golr_manager = require('bbop-manager-golr');
-const golr_conf = require('golr-conf');
-const node_engine = require('bbop-rest-manager').node;
 const barista_response = require('bbop-response-barista');
 const minerva_requests = require('minerva-requests');
 const jquery_engine = require('bbop-rest-manager').jquery;
@@ -60,7 +53,6 @@ const minerva_manager = require('bbop-manager-minerva');
 export class NoctuaGraphService {
   baristaLocation = environment.globalBaristaLocation;
   minervaDefinitionName = environment.globalMinervaDefinitionName;
-  locationStore = new bbopx.noctua.location_store();
   baristaToken;
   linker;
   userInfo;
@@ -262,7 +254,7 @@ export class NoctuaGraphService {
     const nodeInfo = self.getNodeInfo(node);
     const result = {
       uuid: objectId,
-      term: new Entity(nodeInfo.id, nodeInfo.label, environment.amigoTerm + nodeInfo.id),
+      term: new Entity(nodeInfo.id, nodeInfo.label, self.linker.url(nodeInfo.id)),
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
       isComplement: self.getNodeIsComplement(node)
@@ -286,7 +278,7 @@ export class NoctuaGraphService {
       if (annotationNode) {
 
         const nodeInfo = self.getNodeInfo(annotationNode);
-        evidence.setEvidence(new Entity(nodeInfo.id, nodeInfo.label, environment.amigoTerm + nodeInfo.id), nodeInfo.classExpression);
+        evidence.setEvidence(new Entity(nodeInfo.id, nodeInfo.label, self.linker.url(nodeInfo.id)), nodeInfo.classExpression);
 
         const sources = annotationNode.get_annotations_by_key('source');
         const withs = annotationNode.get_annotations_by_key('with');

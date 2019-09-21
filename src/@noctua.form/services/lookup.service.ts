@@ -86,6 +86,7 @@ export class NoctuaLookupService {
   }
 
   lookupMap(response) {
+    const self = this;
     const data = response.response.docs;
     const result = data.map((item) => {
       let xref;
@@ -96,10 +97,11 @@ export class NoctuaLookupService {
       return {
         id: item.annotation_class,
         label: item.annotation_class_label,
-        link: environment.amigoTerm + item.annotation_class,
+        link: self.linker.url(item.annotation_class),
         xref: xref
       };
     });
+
     return result;
   }
 

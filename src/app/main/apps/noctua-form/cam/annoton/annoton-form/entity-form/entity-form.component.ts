@@ -37,6 +37,7 @@ import {
   AnnotonError
 } from 'noctua-form-base';
 import { AnnotonNodeType } from '@noctua.form/models/annoton/annoton-node';
+import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 
 
 @Component({
@@ -65,6 +66,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     private camService: CamService,
     private noctuaSearchService: NoctuaSearchService,
+    private inlineReferenceService: InlineReferenceService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
     private noctuaLookupService: NoctuaLookupService,
@@ -76,8 +78,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
-
-    this.evidenceDBForm = this._createEvidenceDBForm();
     this.insertMenuItems = this.noctuaFormConfigService.getInsertEntityMenuItems(this.entity.type);
   }
 
@@ -210,17 +210,16 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
-  onSubmitEvidedenceDb(evidence: FormGroup, name: string) {
-    const DB = this.evidenceDBForm.value.db;
-    const accession = this.evidenceDBForm.value.accession;
+  openAddReference(event, evidence: FormGroup, name: string) {
+    const self = this;
 
-    const control: FormControl = evidence.controls[name] as FormControl;
-    control.setValue(DB.name + ':' + accession);
+    const data = {
+      formControl: evidence.controls[name] as FormControl,
+    };
+    this.inlineReferenceService.open(event.target, { data });
+
   }
 
-  cancelEvidenceDb() {
-    this.evidenceDBForm.controls['accession'].setValue('');
-  }
 
   termDisplayFn(term): string | undefined {
     return term ? term.label : undefined;
@@ -228,12 +227,5 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   evidenceDisplayFn(evidence): string | undefined {
     return evidence ? evidence.label : undefined;
-  }
-
-  private _createEvidenceDBForm() {
-    return new FormGroup({
-      db: new FormControl(this.noctuaFormConfigService.evidenceDBs.selected),
-      accession: new FormControl()
-    });
   }
 }

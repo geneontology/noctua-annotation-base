@@ -255,6 +255,30 @@ export const insertNodeDescription = {
             },
             predicate: noctuaFormConfig.edge.partOf
         },
+        [AnnotonNodeType.GoAnatomicalEntity]: <InsertNodeDescription>{
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoAnatomicalEntity.category,
+                label: 'Part Of (Anatomy)',
+                relationship: noctuaFormConfig.edge.partOf,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 3,
+                isExtension: true,
+            },
+            predicate: noctuaFormConfig.edge.partOf
+        },
+        [AnnotonNodeType.GoOrganism]: <InsertNodeDescription>{
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoOrganism.category,
+                label: 'Part Of (Organism)',
+                relationship: noctuaFormConfig.edge.partOf,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 3,
+                isExtension: true,
+            },
+            predicate: noctuaFormConfig.edge.partOf
+        },
         [AnnotonNodeType.GoCellularComponent]: <InsertNodeDescription>{
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoCellularComponent.category,
@@ -274,6 +298,18 @@ export const insertNodeDescription = {
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoAnatomicalEntity.category,
                 label: 'Part Of (Anatomy)',
+                relationship: noctuaFormConfig.edge.partOf,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 4,
+                isExtension: true,
+            },
+            predicate: noctuaFormConfig.edge.partOf
+        },
+        [AnnotonNodeType.GoOrganism]: <InsertNodeDescription>{
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoOrganism.category,
+                label: 'Part Of (Organism)',
                 relationship: noctuaFormConfig.edge.partOf,
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -315,15 +351,24 @@ export const entityMenuItems = {
         id: AnnotonNodeType.GoBiologicalProcess
     }],
     [AnnotonNodeType.GoCellularComponent]: [{
-        label: 'Add Part Of (Cellular Component)',
-        id: AnnotonNodeType.GoCellularComponent
-    }, {
         label: 'Add Part Of (Cell Type)',
         id: AnnotonNodeType.GoCellTypeEntity
+    }, {
+        label: 'Add Part Of (Anatomy)',
+        id: AnnotonNodeType.GoAnatomicalEntity
+    }, {
+        label: 'Add Part Of (Organism)',
+        id: AnnotonNodeType.GoOrganism
+    }, {
+        label: 'Add Part Of (Cellular Component)',
+        id: AnnotonNodeType.GoCellularComponent
     }],
     [AnnotonNodeType.GoCellTypeEntity]: [{
         label: 'Add Part Of (Anatomy)',
         id: AnnotonNodeType.GoAnatomicalEntity
+    }, {
+        label: 'Add Part Of (Organism)',
+        id: AnnotonNodeType.GoOrganism
     }],
     [AnnotonNodeType.GoAnatomicalEntity]: [{
         label: 'Add Part Of (Organism)',
@@ -366,6 +411,32 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType:
 
     objectNode.id = `${nodeType}'@@'${getUuid()}`;
     objectNode.type = nodeType;
+
+    annoton.addNode(objectNode);
+
+    const predicate: Predicate = annoton.getNode(objectNode.id).predicate;
+    predicate.edge = Entity.createEntity(nodeDescription.predicate);
+    annoton.addEdgeById(subjectNode.id, objectNode.id, predicate);
+
+    annoton.resetPresentation();
+
+    return objectNode;
+};
+
+export const checkNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType): AnnotonNode => {
+    const nodeDescription: InsertNodeDescription = insertNodeDescription[subjectNode.type][nodeType];
+    const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
+
+    const edges = annoton.getEdges(subjectNode.id);
+
+    each(insertNodeDescription[subjectNode.type], (desc: InsertNodeDescription) => {
+
+    });
+
+
+    objectNode.id = `${nodeType}'@@'${getUuid()}`;
+    objectNode.type = nodeType;
+
     annoton.addNode(objectNode);
 
     const predicate: Predicate = annoton.getNode(objectNode.id).predicate;
