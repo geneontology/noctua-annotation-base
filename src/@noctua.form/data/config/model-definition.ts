@@ -351,6 +351,9 @@ export const entityMenuItems = {
         id: AnnotonNodeType.GoBiologicalProcess
     }],
     [AnnotonNodeType.GoCellularComponent]: [{
+        label: 'Add Part Of (Cellular Component)',
+        id: AnnotonNodeType.GoCellularComponent
+    }, {
         label: 'Add Part Of (Cell Type)',
         id: AnnotonNodeType.GoCellTypeEntity
     }, {
@@ -359,9 +362,6 @@ export const entityMenuItems = {
     }, {
         label: 'Add Part Of (Organism)',
         id: AnnotonNodeType.GoOrganism
-    }, {
-        label: 'Add Part Of (Cellular Component)',
-        id: AnnotonNodeType.GoCellularComponent
     }],
     [AnnotonNodeType.GoCellTypeEntity]: [{
         label: 'Add Part Of (Anatomy)',

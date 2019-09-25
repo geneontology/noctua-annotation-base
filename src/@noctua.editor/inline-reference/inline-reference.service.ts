@@ -164,4 +164,8 @@ export class InlineReferenceService {
         // .withFallbackPosition(origin.topCenter, overlay.bottomCenter)
         // .withFallbackPosition(origin.bottomCenter, overlay.topCenter)
     }
+
+    getLink() {
+
+    }
 }

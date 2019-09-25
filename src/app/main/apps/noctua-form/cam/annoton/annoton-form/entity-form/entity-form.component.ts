@@ -34,9 +34,9 @@ import {
   noctuaFormConfig,
   Entity,
   EntityDefinition,
-  AnnotonError
+  AnnotonError,
+  AnnotonNodeType
 } from 'noctua-form-base';
-import { AnnotonNodeType } from '@noctua.form/models/annoton/annoton-node';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 
 
