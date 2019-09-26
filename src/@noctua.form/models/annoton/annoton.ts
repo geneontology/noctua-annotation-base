@@ -72,7 +72,22 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     const self = this;
 
     each(self.nodes, (node: AnnotonNode) => {
-      node.canInsertNodes = InsertEntityDefinition.canInsertEntity[node.type] || null;
+      const canInsertNodes = InsertEntityDefinition.canInsertEntity[node.type] || [];
+      const exist = []
+
+      each(canInsertNodes, (nodeDescription: InsertEntityDefinition.InsertNodeDescription) => {
+        if (nodeDescription.cardinality === InsertEntityDefinition.CardinalityType.oneToOne) {
+          const edgeTypeExist = self.edgeTypeExist(node.id, nodeDescription.predicate.id, node.type, nodeDescription.node.type);
+
+          if (edgeTypeExist) {
+            exist.push(edgeTypeExist.object.type);
+          }
+        }
+      });
+
+      node.canInsertNodes = canInsertNodes.filter((nodeDescription: InsertEntityDefinition.InsertNodeDescription) => {
+        return !exist.includes(nodeDescription.node.type);
+      });
     });
   }
 

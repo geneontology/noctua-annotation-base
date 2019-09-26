@@ -317,8 +317,8 @@ export class NoctuaGraphService {
         const objectNode = graph.get_node(e.object_id());
         const objectTermNodeInfo = self.getNodeInfo(objectNode);
 
-        each(noctuaFormConfig.closures, (closure) => {
-          promises.push(self.isaClosurePreParse(objectTermNodeInfo.id, closure.id, node));
+        each(EntityDefinition.EntityCategories, (category) => {
+          promises.push(self.isaClosurePreParse(objectTermNodeInfo.id, category));
         });
 
       });
@@ -337,18 +337,19 @@ export class NoctuaGraphService {
       if (mfNode && mfNode.hasValue()) {
         promises.push(self.isaClosurePostParse(mfNode.getTerm().id, self.noctuaFormConfigService.closures.catalyticActivity.id, mfNode));
       }
-
     });
 
     return forkJoin(promises);
   }
 
-  isaClosurePreParse(a, b, node) {
+  isaClosurePreParse(a: string, category) {
     const self = this;
+    const b = category.category;
 
-    return self.noctuaLookupService.isaClosure(a, b)
+    return self.noctuaLookupService.isaClosure(a, b, category.categoryType)
       .pipe(
         map((response) => {
+          console.log(a, b, response)
           self.noctuaLookupService.addLocalClosure(a, b, response);
         })
       );
@@ -645,6 +646,8 @@ export class NoctuaGraphService {
       }
 
       this._insertNode(annoton, bbopPredicateId, subjectNode, objectNode);
+      annoton.updateEntityInsertMenu();
+
       const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
 
       each(triples, (triple: Triple<AnnotonNode>) => {
@@ -667,12 +670,13 @@ export class NoctuaGraphService {
 
   private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode, bbopObjectNode: any) {
     const self = this;
-    const edges: ModelDefinition.InsertNodeDescription = InsertEntityDefinition.canInsertEntity[subjectNode.type];
+    const nodeDescriptions: ModelDefinition.InsertNodeDescription = subjectNode.canInsertNodes;
 
-    each(edges, (edge: ModelDefinition.InsertNodeDescription, nodeType: AnnotonNodeType) => {
-      if (bbopPredicateId === edge.predicate.id) {
-        if (self.noctuaLookupService.getLocalClosure(bbopObjectNode.term.id, edge.node.category)) {
-          //  ModelDefinition.insertNode(annoton, subjectNode, nodeType);
+    each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
+      if (bbopPredicateId === nodeDescription.predicate.id) {
+        if (self.noctuaLookupService.getLocalClosure(bbopObjectNode.term.id, nodeDescription.node.category)) {
+          ModelDefinition.insertNode(annoton, subjectNode, nodeDescription);
+          return false;
         }
       }
     });

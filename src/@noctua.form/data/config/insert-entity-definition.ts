@@ -26,6 +26,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoChemicalEntity.category,
+                type: AnnotonNodeType.GoChemicalEntityHasInput,
                 label: 'Has Input (GP/Chemical)',
                 relationship: noctuaFormConfig.edge.hasInput,
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -41,6 +42,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoChemicalEntityHasOutput,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoChemicalEntity.category,
+                type: AnnotonNodeType.GoChemicalEntityHasOutput,
                 label: 'Has Output (GP/Chemical)',
                 relationship: noctuaFormConfig.edge.hasOutput,
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -56,6 +58,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoBiologicalPhase,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoBiologicalPhase.category,
+                type: AnnotonNodeType.GoBiologicalPhase,
                 label: 'Happens During (Temporal Phase)',
                 relationship: noctuaFormConfig.edge.happensDuring,
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -73,6 +76,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoBiologicalProcess,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoBiologicalProcess.category,
+                type: AnnotonNodeType.GoBiologicalProcess,
                 label: 'Part Of (Biological Process)',
                 aspect: 'P',
                 relationship: noctuaFormConfig.edge.partOf,
@@ -91,9 +95,10 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoCellularComponent,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoCellularComponent.category,
+                type: AnnotonNodeType.GoCellularComponent,
                 aspect: 'C',
                 label: 'Part Of Cellular Component',
-                relationship: noctuaFormConfig.edge.locatedIn,
+                relationship: noctuaFormConfig.edge.partOf,
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 3,
@@ -107,6 +112,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoCellTypeEntity,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoCellTypeEntity.category,
+                type: AnnotonNodeType.GoCellTypeEntity,
                 label: 'Part Of (Cell Type)',
                 relationship: noctuaFormConfig.edge.partOf,
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -122,6 +128,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoAnatomicalEntity,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoAnatomicalEntity.category,
+                type: AnnotonNodeType.GoAnatomicalEntity,
                 label: 'Part Of (Anatomy)',
                 relationship: noctuaFormConfig.edge.partOf,
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -137,6 +144,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoOrganism.category,
+                type: AnnotonNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 relationship: noctuaFormConfig.edge.partOf,
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -146,7 +154,7 @@ export const canInsertEntity = {
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
-        }    
+        }
     ],
     [AnnotonNodeType.GoCellTypeEntity]: [
         <InsertNodeDescription>{
@@ -154,6 +162,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoAnatomicalEntity,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoAnatomicalEntity.category,
+                type: AnnotonNodeType.GoAnatomicalEntity,
                 label: 'Part Of (Anatomy)',
                 relationship: noctuaFormConfig.edge.partOf,
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -169,6 +178,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoOrganism.category,
+                type: AnnotonNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 relationship: noctuaFormConfig.edge.partOf,
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -186,6 +196,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoOrganism.category,
+                type: AnnotonNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 relationship: noctuaFormConfig.edge.partOf,
                 displaySection: noctuaFormConfig.displaySection.fd,

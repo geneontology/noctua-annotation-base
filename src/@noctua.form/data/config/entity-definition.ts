@@ -95,12 +95,27 @@ export class GoAnatomicalEntity {
 export class GoOrganism {
     public static readonly id = AnnotonNodeType.GoOrganism;
     public static readonly category = 'NCBITaxon';
+    public static readonly categoryType = 'idspace';
 }
 
 export class GoBiologicalPhase {
     public static readonly id = AnnotonNodeType.GoBiologicalPhase;
     public static readonly category = 'GO:0044848';
 }
+
+export const EntityCategories = [
+    GoProteinContainingComplex,
+    GoCellularComponent,
+    GoBiologicalProcess,
+    GoMolecularFunction,
+    GoMolecularEntity,
+    GoChemicalEntity,
+    GoEvidence,
+    GoCellTypeEntity,
+    GoAnatomicalEntity,
+    GoOrganism,
+    GoBiologicalPhase
+];
 
 export const generateBaseTerm = (goType?: string, override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = new AnnotonNode();

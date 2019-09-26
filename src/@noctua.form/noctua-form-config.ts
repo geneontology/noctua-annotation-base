@@ -307,6 +307,9 @@ export const noctuaFormConfig = {
     ub: {
       'id': 'UBERON:0000061'
     },
+    taxon: {
+      'id': 'UBERON:0000061'
+    },
     catalyticActivity: {
       'id': 'GO:0003824'
     }

@@ -234,8 +234,12 @@ export class NoctuaLookupService {
       }));
   }
 
-  isaClosure(a, b) {
+  isaClosure(a: string, b: string, closureType?: string) {
     const self = this;
+
+    const fqCategory = closureType
+      ? `${closureType}:"${b}"`
+      : `isa_closure:"${b}"`;
 
     const requestParams = {
       q: self.buildQ(a),
@@ -261,27 +265,17 @@ export class NoctuaLookupService {
       ],
       fq: [
         'document_category:"ontology_class"',
-        'isa_closure:' + '"' + b + '"'
+        fqCategory
       ],
       qf: [
         'annotation_class^3',
-        //'annotation_class_label_searchable^5.5',
-        //'description_searchable^1',
-        //'comment_searchable^0.5',
-        //'synonym_searchable^1',
-        // 'alternate_id^1',
         'isa_closure^1',
-        //'regulates_closure_label_searchable^1'
-      ],
-      // _: Date.now()
+      ]
     };
+
     const params = new HttpParams({
       fromObject: requestParams
-    })
-    // .set('callback', 'JSONP_CALLBACK')
-    //.set('jsonpCallbackParam', 'json.wrf')
-    // .set('params', requestParams);
-
+    });
 
     const url = this.golrURLBase + params.toString();
 
@@ -291,7 +285,7 @@ export class NoctuaLookupService {
         let result = false;
 
         if (docs.length > 0) {
-          result = docs[0].annotation_class === a
+          result = docs[0].annotation_class === a;
         }
         return result;
       }))
@@ -312,7 +306,7 @@ export class NoctuaLookupService {
       term: term,
       closure: closure,
       isaClosure: isaClosure
-    }
+    };
 
     if (!self.localClosureExist(term, closure)) {
       self.localClosures.push(data);

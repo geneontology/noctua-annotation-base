@@ -1,11 +1,8 @@
-import * as _ from 'lodash';
 
-import { AnnotonNode } from './annoton-node';
+import { AnnotonNode, AnnotonNodeType } from './annoton-node';
 import { Triple } from './triple';
 import { Evidence } from './evidence';
 import { Predicate } from './predicate';
-declare const require: any;
-const each = require('lodash/forEach');
 
 import {
   Graph,
@@ -19,6 +16,7 @@ import {
   getNodes,
   getEdges,
 } from './noctua-form-graph';
+import { each, find } from 'lodash';
 
 export class SaeGraph<T extends AnnotonNode> {
   numberOfEdges: number;
@@ -120,6 +118,21 @@ export class SaeGraph<T extends AnnotonNode> {
     });
 
     return graph;
+  }
+
+  edgeTypeExist(
+    id: string,
+    edgeId: string,
+    subjectType: AnnotonNodeType,
+    objectType: AnnotonNodeType) {
+    const self = this;
+    const result = find(self.getEdges(id), (triple: Triple<T>) => {
+      return triple.predicate.edge.id === edgeId &&
+        triple.subject.type === subjectType &&
+        triple.object.type === objectType;
+    });
+
+    return result;
   }
 
   resetGraph() {
