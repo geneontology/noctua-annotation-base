@@ -52,6 +52,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   label: string;
   uuid: string;
   category: string;
+  categoryRange: [] = [];
   term: Entity = new Entity('', '');
   termLookup: EntityLookup = new EntityLookup();
   isExtension = false;

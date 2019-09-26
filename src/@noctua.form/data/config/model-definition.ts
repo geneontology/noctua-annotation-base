@@ -423,6 +423,24 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType:
     return objectNode;
 };
 
+export const removeNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType): AnnotonNode => {
+    const nodeDescription: InsertNodeDescription = insertNodeDescription[subjectNode.type][nodeType];
+    const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
+
+    objectNode.id = `${nodeType}'@@'${getUuid()}`;
+    objectNode.type = nodeType;
+
+    annoton.addNode(objectNode);
+
+    const predicate: Predicate = annoton.getNode(objectNode.id).predicate;
+    predicate.edge = Entity.createEntity(nodeDescription.predicate);
+    annoton.addEdgeById(subjectNode.id, objectNode.id, predicate);
+
+    annoton.resetPresentation();
+
+    return objectNode;
+};
+
 export const checkNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType): AnnotonNode => {
     const nodeDescription: InsertNodeDescription = insertNodeDescription[subjectNode.type][nodeType];
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);

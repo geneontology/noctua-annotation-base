@@ -326,16 +326,22 @@ export class NoctuaLookupService {
     return (_.find(self.localClosures, data));
   }
 
-  getLocalClosure(term, closure) {
+  getLocalClosure(term: string, closure: string) {
     const self = this;
     const data = self.localClosureExist(term, closure);
 
     if (data) {
       return data.isaClosure;
     } else {
-      //we4 don't know locally
+      // we don't know locally
       return undefined;
     }
+  }
+
+  getLocalClosures(term: string) {
+    const self = this;
+
+    return _.filter(self.localClosures, { term: term });
   }
 
   getLocalClosureRange(term, closureRange) {

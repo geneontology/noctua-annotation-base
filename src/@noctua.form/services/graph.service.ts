@@ -257,7 +257,8 @@ export class NoctuaGraphService {
       term: new Entity(nodeInfo.id, nodeInfo.label, self.linker.url(nodeInfo.id)),
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
-      isComplement: self.getNodeIsComplement(node)
+      isComplement: self.getNodeIsComplement(node),
+      categoryRange: self.noctuaLookupService.getLocalClosures(nodeInfo.id)
     };
 
     return result;
@@ -398,7 +399,7 @@ export class NoctuaGraphService {
         subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
         subjectAnnotonNode.uuid = bbopSubjectId;
 
-        self._graphToAnnatonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
+        self._graphToAnnotonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
 
         annoton.id = bbopSubjectId;
         annotons.push(annoton);
@@ -465,13 +466,13 @@ export class NoctuaGraphService {
     return connectorAnnotons;
   }
 
-  graphToAnnatonDFSError(annoton, annotonNode) {
+  graphToAnnotonDFSError(annoton, annotonNode) {
     const self = this;
     const edge = annoton.getEdges(annotonNode.id);
 
     each(edge.nodes, function (node) {
       node.object.status = 2;
-      self.graphToAnnatonDFSError(annoton, node.object);
+      self.graphToAnnotonDFSError(annoton, node.object);
     });
   }
 
@@ -623,7 +624,7 @@ export class NoctuaGraphService {
     return success();
   }
 
-  private _graphToAnnatonDFS(cam: Cam, annoton: Annoton, bbopEdges, subjectNode: AnnotonNode) {
+  private _graphToAnnotonDFS(cam: Cam, annoton: Annoton, bbopEdges, subjectNode: AnnotonNode) {
     const self = this;
 
     each(bbopEdges, (bbopEdge) => {
@@ -655,7 +656,7 @@ export class NoctuaGraphService {
 
           triple.predicate.evidence = evidence;
           triple.predicate.uuid = bbopEdge.id();
-          self._graphToAnnatonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
+          self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
         }
       });
     });
@@ -669,9 +670,9 @@ export class NoctuaGraphService {
 
     each(edges, (edge: ModelDefinition.InsertNodeDescription, nodeType: AnnotonNodeType) => {
       if (bbopPredicateId === edge.predicate.id) {
-        //  if (self.noctuaLookupService.getLocalClosure(bbopObjectNode.term.id, edge.node.category)) {
-        ModelDefinition.insertNode(annoton, subjectNode, nodeType);
-        //  }
+        if (self.noctuaLookupService.getLocalClosure(bbopObjectNode.term.id, edge.node.category)) {
+          ModelDefinition.insertNode(annoton, subjectNode, nodeType);
+        }
       }
     });
   }

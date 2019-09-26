@@ -4,12 +4,12 @@ declare const require: any;
 const each = require('lodash/forEach');
 
 export class AnnotonNodeClosure {
-  term
-  closure;
-  isaClosure: boolean
+  term: string;
+  closure: string;
+  isaClosure: boolean;
 
-  constructor(term, closure) {
+  constructor(term: string, closure: string) {
     this.term = term;
-    this.closure = closure
+    this.closure = closure;
   }
 }
