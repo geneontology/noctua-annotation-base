@@ -667,12 +667,12 @@ export class NoctuaGraphService {
 
   private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode, bbopObjectNode: any) {
     const self = this;
-    const edges: ModelDefinition.InsertNodeDescription = InsertEntityDefinition.insertNodeDescription[subjectNode.type];
+    const edges: ModelDefinition.InsertNodeDescription = InsertEntityDefinition.canInsertEntity[subjectNode.type];
 
     each(edges, (edge: ModelDefinition.InsertNodeDescription, nodeType: AnnotonNodeType) => {
       if (bbopPredicateId === edge.predicate.id) {
         if (self.noctuaLookupService.getLocalClosure(bbopObjectNode.term.id, edge.node.category)) {
-          ModelDefinition.insertNode(annoton, subjectNode, nodeType);
+          //  ModelDefinition.insertNode(annoton, subjectNode, nodeType);
         }
       }
     });

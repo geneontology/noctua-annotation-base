@@ -5,14 +5,25 @@ import { AnnotonNodeType } from './../../models/annoton/annoton-node';
 
 declare const require: any;
 
-export interface InsertNodeDescription {
-    node: AnnotonNodeDisplay;
-    predicate: Entity;
+export enum CardinalityType {
+    none = 'none',
+    oneToOne = 'oneToOne',
+    oneToMany = 'oneToMany',
 }
 
-export const insertNodeDescription = {
-    [AnnotonNodeType.GoMolecularFunction]: {
-        [AnnotonNodeType.GoChemicalEntityHasInput]: <InsertNodeDescription>{
+export interface InsertNodeDescription {
+    id: string;
+    label: string;
+    node: AnnotonNodeDisplay;
+    predicate: Entity;
+    cardinality: CardinalityType;
+}
+
+export const canInsertEntity = {
+    [AnnotonNodeType.GoMolecularFunction]: [
+        <InsertNodeDescription>{
+            label: 'Add Has Input (GP/Chemical)',
+            id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoChemicalEntity.category,
                 label: 'Has Input (GP/Chemical)',
@@ -23,8 +34,11 @@ export const insertNodeDescription = {
                 isExtension: true,
             },
             predicate: noctuaFormConfig.edge.hasInput,
+            cardinality: CardinalityType.oneToMany
         },
-        [AnnotonNodeType.GoChemicalEntityHasOutput]: <InsertNodeDescription>{
+        <InsertNodeDescription>{
+            label: 'Add Has Output (GP/Chemical)',
+            id: AnnotonNodeType.GoChemicalEntityHasOutput,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoChemicalEntity.category,
                 label: 'Has Output (GP/Chemical)',
@@ -34,9 +48,12 @@ export const insertNodeDescription = {
                 treeLevel: 2,
                 isExtension: true,
             },
-            predicate: noctuaFormConfig.edge.hasOutput
+            predicate: noctuaFormConfig.edge.hasOutput,
+            cardinality: CardinalityType.oneToMany
         },
-        [AnnotonNodeType.GoBiologicalPhase]: <InsertNodeDescription>{
+        <InsertNodeDescription>{
+            label: 'Add Happens During (Biological Phase)',
+            id: AnnotonNodeType.GoBiologicalPhase,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoBiologicalPhase.category,
                 label: 'Happens During (Temporal Phase)',
@@ -46,11 +63,14 @@ export const insertNodeDescription = {
                 treeLevel: 2,
                 isExtension: true,
             },
-            predicate: noctuaFormConfig.edge.happensDuring
+            predicate: noctuaFormConfig.edge.happensDuring,
+            cardinality: CardinalityType.oneToOne
         }
-    },
-    [AnnotonNodeType.GoBiologicalProcess]: {
-        [AnnotonNodeType.GoBiologicalProcess]: <InsertNodeDescription>{
+    ],
+    [AnnotonNodeType.GoBiologicalProcess]: [
+        <InsertNodeDescription>{
+            label: 'Add Part Of (Biological Process)',
+            id: AnnotonNodeType.GoBiologicalProcess,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoBiologicalProcess.category,
                 label: 'Part Of (Biological Process)',
@@ -61,47 +81,14 @@ export const insertNodeDescription = {
                 treeLevel: 3,
                 isExtension: true,
             },
-            predicate: noctuaFormConfig.edge.partOf
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
         },
-    },
-    [AnnotonNodeType.GoCellularComponent]: {
-        [AnnotonNodeType.GoCellTypeEntity]: <InsertNodeDescription>{
-            node: <AnnotonNodeDisplay>{
-                category: EntityDefinition.GoCellTypeEntity.category,
-                label: 'Part Of (Cell Type)',
-                relationship: noctuaFormConfig.edge.partOf,
-                displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
-                isExtension: true,
-            },
-            predicate: noctuaFormConfig.edge.partOf
-        },
-        [AnnotonNodeType.GoAnatomicalEntity]: <InsertNodeDescription>{
-            node: <AnnotonNodeDisplay>{
-                category: EntityDefinition.GoAnatomicalEntity.category,
-                label: 'Part Of (Anatomy)',
-                relationship: noctuaFormConfig.edge.partOf,
-                displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
-                isExtension: true,
-            },
-            predicate: noctuaFormConfig.edge.partOf
-        },
-        [AnnotonNodeType.GoOrganism]: <InsertNodeDescription>{
-            node: <AnnotonNodeDisplay>{
-                category: EntityDefinition.GoOrganism.category,
-                label: 'Part Of (Organism)',
-                relationship: noctuaFormConfig.edge.partOf,
-                displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
-                isExtension: true,
-            },
-            predicate: noctuaFormConfig.edge.partOf
-        },
-        [AnnotonNodeType.GoCellularComponent]: <InsertNodeDescription>{
+    ],
+    [AnnotonNodeType.GoCellularComponent]: [
+        <InsertNodeDescription>{
+            label: 'Add Part Of (Cellular Component)',
+            id: AnnotonNodeType.GoCellularComponent,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoCellularComponent.category,
                 aspect: 'C',
@@ -112,11 +99,59 @@ export const insertNodeDescription = {
                 treeLevel: 3,
                 isExtension: true,
             },
-            predicate: noctuaFormConfig.edge.partOf
-        }
-    },
-    [AnnotonNodeType.GoCellTypeEntity]: {
-        [AnnotonNodeType.GoAnatomicalEntity]: <InsertNodeDescription>{
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
+        },
+        <InsertNodeDescription>{
+            label: 'Add Part Of (Cell Type)',
+            id: AnnotonNodeType.GoCellTypeEntity,
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoCellTypeEntity.category,
+                label: 'Part Of (Cell Type)',
+                relationship: noctuaFormConfig.edge.partOf,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 3,
+                isExtension: true,
+            },
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
+        },
+        <InsertNodeDescription>{
+            label: 'Add Part Of (Anatomy)',
+            id: AnnotonNodeType.GoAnatomicalEntity,
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoAnatomicalEntity.category,
+                label: 'Part Of (Anatomy)',
+                relationship: noctuaFormConfig.edge.partOf,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 3,
+                isExtension: true,
+            },
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
+        },
+        <InsertNodeDescription>{
+            label: 'Add Part Of (Organism)',
+            id: AnnotonNodeType.GoOrganism,
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoOrganism.category,
+                label: 'Part Of (Organism)',
+                relationship: noctuaFormConfig.edge.partOf,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 3,
+                isExtension: true,
+            },
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
+        }    
+    ],
+    [AnnotonNodeType.GoCellTypeEntity]: [
+        <InsertNodeDescription>{
+            label: 'Add Part Of (Anatomy)',
+            id: AnnotonNodeType.GoAnatomicalEntity,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoAnatomicalEntity.category,
                 label: 'Part Of (Anatomy)',
@@ -126,9 +161,12 @@ export const insertNodeDescription = {
                 treeLevel: 4,
                 isExtension: true,
             },
-            predicate: noctuaFormConfig.edge.partOf
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
         },
-        [AnnotonNodeType.GoOrganism]: <InsertNodeDescription>{
+        <InsertNodeDescription>{
+            label: 'Add Part Of (Organism)',
+            id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoOrganism.category,
                 label: 'Part Of (Organism)',
@@ -138,11 +176,14 @@ export const insertNodeDescription = {
                 treeLevel: 4,
                 isExtension: true,
             },
-            predicate: noctuaFormConfig.edge.partOf
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
         }
-    },
-    [AnnotonNodeType.GoAnatomicalEntity]: {
-        [AnnotonNodeType.GoOrganism]: <InsertNodeDescription>{
+    ],
+    [AnnotonNodeType.GoAnatomicalEntity]: [
+        <InsertNodeDescription>{
+            label: 'Add Part Of (Organism)',
+            id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoOrganism.category,
                 label: 'Part Of (Organism)',
@@ -152,50 +193,10 @@ export const insertNodeDescription = {
                 treeLevel: 5,
                 isExtension: true,
             },
-            predicate: noctuaFormConfig.edge.partOf
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
         }
-    }
-};
-
-export const entityMenuItems = {
-    [AnnotonNodeType.GoMolecularFunction]: [{
-        label: 'Add Has Input (GP/Chemical)',
-        id: AnnotonNodeType.GoChemicalEntityHasInput
-    }, {
-        label: 'Add Has Output (GP/Chemical)',
-        id: AnnotonNodeType.GoChemicalEntityHasOutput
-    }, {
-        label: 'Add Happens During (Biological Phase)',
-        id: AnnotonNodeType.GoBiologicalPhase
-    }],
-    [AnnotonNodeType.GoBiologicalProcess]: [{
-        label: 'Add Part Of (Biological Process)',
-        id: AnnotonNodeType.GoBiologicalProcess
-    }],
-    [AnnotonNodeType.GoCellularComponent]: [{
-        label: 'Add Part Of (Cellular Component)',
-        id: AnnotonNodeType.GoCellularComponent
-    }, {
-        label: 'Add Part Of (Cell Type)',
-        id: AnnotonNodeType.GoCellTypeEntity
-    }, {
-        label: 'Add Part Of (Anatomy)',
-        id: AnnotonNodeType.GoAnatomicalEntity
-    }, {
-        label: 'Add Part Of (Organism)',
-        id: AnnotonNodeType.GoOrganism
-    }],
-    [AnnotonNodeType.GoCellTypeEntity]: [{
-        label: 'Add Part Of (Anatomy)',
-        id: AnnotonNodeType.GoAnatomicalEntity
-    }, {
-        label: 'Add Part Of (Organism)',
-        id: AnnotonNodeType.GoOrganism
-    }],
-    [AnnotonNodeType.GoAnatomicalEntity]: [{
-        label: 'Add Part Of (Organism)',
-        id: AnnotonNodeType.GoOrganism
-    }]
+    ]
 };
 
 

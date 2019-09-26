@@ -33,7 +33,7 @@ import {
   Evidence,
   noctuaFormConfig,
   Entity,
-  EntityDefinition,
+  InsertEntityDefinition,
   AnnotonError,
   AnnotonNodeType
 } from 'noctua-form-base';
@@ -162,8 +162,8 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  insertEntity(nodeType: AnnotonNodeType) {
-    this.noctuaFormConfigService.insertAnnotonNode(this.noctuaAnnotonFormService.annoton, this.entity, nodeType);
+  insertEntity(nodeDescription: InsertEntityDefinition.InsertNodeDescription) {
+    this.noctuaFormConfigService.insertAnnotonNode(this.noctuaAnnotonFormService.annoton, this.entity, nodeDescription);
     this.noctuaAnnotonFormService.initializeForm();
   }
 

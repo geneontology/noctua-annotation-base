@@ -220,12 +220,12 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
     return annoton;
 };
 
-export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType): AnnotonNode => {
-    const nodeDescription: InsertNodeDescription = InsertEntityDefinition.insertNodeDescription[subjectNode.type][nodeType];
+export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescription: InsertNodeDescription): AnnotonNode => {
+    //   const nodeDescription: InsertNodeDescription = InsertEntityDefinition.canInsertEntity[subjectNode.type][nodeType];
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
-    objectNode.id = `${nodeType}'@@'${getUuid()}`;
-    objectNode.type = nodeType;
+    objectNode.id = `${nodeDescription.node.type}'@@'${getUuid()}`;
+    objectNode.type = nodeDescription.node.type;
 
     annoton.addNode(objectNode);
 
@@ -239,7 +239,7 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType:
 };
 
 export const removeNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType): AnnotonNode => {
-    const nodeDescription: InsertNodeDescription = InsertEntityDefinition.insertNodeDescription[subjectNode.type][nodeType];
+    const nodeDescription: InsertNodeDescription = InsertEntityDefinition.canInsertEntity[subjectNode.type][nodeType];
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
     objectNode.id = `${nodeType}'@@'${getUuid()}`;
@@ -257,12 +257,12 @@ export const removeNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType:
 };
 
 export const checkNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType): AnnotonNode => {
-    const nodeDescription: InsertNodeDescription = InsertEntityDefinition.insertNodeDescription[subjectNode.type][nodeType];
+    const nodeDescription: InsertNodeDescription = InsertEntityDefinition.canInsertEntity[subjectNode.type][nodeType];
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
     const edges = annoton.getEdges(subjectNode.id);
 
-    each(InsertEntityDefinition.insertNodeDescription[subjectNode.type], (desc: InsertNodeDescription) => {
+    each(InsertEntityDefinition.canInsertEntity[subjectNode.type], (desc: InsertNodeDescription) => {
 
     });
 

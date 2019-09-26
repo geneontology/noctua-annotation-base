@@ -1096,8 +1096,10 @@ export class NoctuaFormConfigService {
     }
   }
 
-  insertAnnotonNode(annoton: Annoton, subjectNode: AnnotonNode, nodeType: AnnotonNodeType): AnnotonNode {
-    return ModelDefinition.insertNode(annoton, subjectNode, nodeType);
+  insertAnnotonNode(annoton: Annoton,
+    subjectNode: AnnotonNode,
+    nodeDescription: InsertEntityDefinition.InsertNodeDescription): AnnotonNode {
+    return ModelDefinition.insertNode(annoton, subjectNode, nodeDescription);
   }
 
   generateAnnotonNode(id?, overrides?): AnnotonNode {

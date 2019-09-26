@@ -106,15 +106,15 @@
               <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
                 NOT Qualifier
               </button>
-              <button mat-menu-item [matMenuTriggerFor]="addMenu">Add</button>
+              <button mat-menu-item *ngIf="entity.node.canInsertNodes" [matMenuTriggerFor]="addMenu">Add</button>
               <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
               <button mat-menu-item class="">
                 Delete
               </button>
             </mat-menu>
             <mat-menu #addMenu="matMenu">
-              <button mat-menu-item *ngFor="let insertMenuItem of entity.insertMenuItems" class=""
-                (click)="insertEntity(entity.node, insertMenuItem.id)">
+              <button mat-menu-item *ngFor="let insertMenuItem of entity.node.canInsertNodes" class=""
+                (click)="insertEntity(entity.node, insertMenuItem)">
                 {{insertMenuItem.label}}
               </button>
             </mat-menu>

@@ -72,7 +72,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     const self = this;
 
     each(self.nodes, (node: AnnotonNode) => {
-      node.canInsert = InsertEntityDefinition.entityMenuItems[node.type] || null;
+      node.canInsertNodes = InsertEntityDefinition.canInsertEntity[node.type] || null;
     });
   }
 
