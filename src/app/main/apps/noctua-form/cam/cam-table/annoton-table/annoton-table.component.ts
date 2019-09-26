@@ -104,7 +104,6 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
 
   loadCam() {
     this.grid = this.annoton.grid;
-    this.addInsertMenuItems();
   }
 
   addEvidence(entity: AnnotonNode) {
@@ -177,11 +176,6 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  addInsertMenuItems() {
-    this.grid.map((entity) => {
-      entity.insertMenuItems = this.noctuaFormConfigService.getInsertEntityMenuItems(entity.node.type);
-    });
-  }
 
   insertEntity(entity: AnnotonNode, nodeType: AnnotonNodeType) {
     const self = this;

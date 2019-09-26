@@ -68,6 +68,7 @@ export class NoctuaAnnotonFormService {
     self.annoton.resetPresentation();
     self.annotonForm = this.createAnnotonForm();
     self.annotonFormGroup.next(this._fb.group(this.annotonForm));
+    self.annoton.updateEntityInsertMenu();
     self.annoton.enableSubmit();
     self._onAnnotonFormChanges();
   }

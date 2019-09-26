@@ -15,6 +15,8 @@ import { Triple } from './triple';
 import { Entity } from './entity';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import { AnnotonParser } from './parser';
+
+import * as InsertEntityDefinition from './../../data/config/insert-entity-definition';
 export enum AnnotonState {
   creation = 1,
   editing
@@ -64,6 +66,14 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   get rootNode(): AnnotonNode {
     return this.getNode(this.rootNodeType);
+  }
+
+  updateEntityInsertMenu() {
+    const self = this;
+
+    each(self.nodes, (node: AnnotonNode) => {
+      node.canInsert = InsertEntityDefinition.entityMenuItems[node.type] || null;
+    });
   }
 
   getGPNode() {

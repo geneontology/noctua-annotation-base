@@ -95,7 +95,7 @@
           <button mat-menu-item *ngIf="true" class="" (click)="toggleIsComplement(entity)">
             NOT Qualifier
           </button>
-          <button mat-menu-item [matMenuTriggerFor]="addMenu">Add</button>
+          <button mat-menu-item *ngIf="entity.canInsert" [matMenuTriggerFor]="addMenu">Add</button>
           <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
           <button mat-menu-item [matMenuTriggerFor]="helpersMenu">Easy Fill</button>
           <button mat-menu-item class="" (click)="clearValues()">
@@ -103,7 +103,7 @@
           </button>
         </mat-menu>
         <mat-menu #addMenu="matMenu">
-          <button mat-menu-item *ngFor="let insertMenuItem of insertMenuItems" class=""
+          <button mat-menu-item *ngFor="let insertMenuItem of entity.canInsert" class=""
             (click)="insertEntity(insertMenuItem.id)">
             {{insertMenuItem.label}}
           </button>

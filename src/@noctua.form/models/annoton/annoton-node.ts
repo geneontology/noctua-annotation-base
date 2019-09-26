@@ -73,7 +73,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   required = false;
   termRequired = false;
   visible = true;
-  canInsert = [];
+  canInsert;
   skipEvidence = false;
   errors = [];
   warnings = [];

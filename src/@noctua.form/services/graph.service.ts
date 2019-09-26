@@ -24,6 +24,7 @@ import {
 
 import * as ModelDefinition from './../data/config/model-definition';
 import * as EntityDefinition from './../data/config/entity-definition';
+import * as InsertEntityDefinition from './../data/config/insert-entity-definition';
 
 import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
@@ -666,7 +667,7 @@ export class NoctuaGraphService {
 
   private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode, bbopObjectNode: any) {
     const self = this;
-    const edges: ModelDefinition.InsertNodeDescription = ModelDefinition.insertNodeDescription[subjectNode.type];
+    const edges: ModelDefinition.InsertNodeDescription = InsertEntityDefinition.insertNodeDescription[subjectNode.type];
 
     each(edges, (edge: ModelDefinition.InsertNodeDescription, nodeType: AnnotonNodeType) => {
       if (bbopPredicateId === edge.predicate.id) {

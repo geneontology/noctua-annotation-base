@@ -341,7 +341,7 @@ export class NoctuaLookupService {
   getLocalClosures(term: string) {
     const self = this;
 
-    return _.filter(self.localClosures, { term: term });
+    return _.filter(self.localClosures, { term: term, isaClosure: true });
   }
 
   getLocalClosureRange(term, closureRange) {

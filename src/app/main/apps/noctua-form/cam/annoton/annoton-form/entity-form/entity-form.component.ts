@@ -73,12 +73,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     private noctuaFormService: NoctuaFormService,
     private sparqlService: SparqlService, ) {
     this.unsubscribeAll = new Subject();
-
   }
 
   ngOnInit(): void {
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
-    this.insertMenuItems = this.noctuaFormConfigService.getInsertEntityMenuItems(this.entity.type);
   }
 
   ngOnDestroy(): void {

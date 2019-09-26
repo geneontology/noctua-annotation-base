@@ -5,6 +5,7 @@ import { noctuaFormExample } from './../..//noctua-form-examples';
 
 import * as ModelDefinition from './../../data/config/model-definition';
 import * as EntityDefinition from './../../data/config/entity-definition';
+import * as InsertEntityDefinition from './../../data/config/insert-entity-definition';
 
 import * as _ from 'lodash';
 
@@ -1082,10 +1083,6 @@ export class NoctuaFormConfigService {
     connectorAnnoton.hasInputNode = hasInputNode;
 
     return connectorAnnoton;
-  }
-
-  getInsertEntityMenuItems(annotonNodeType: AnnotonNodeType): [] {
-    return ModelDefinition.entityMenuItems[annotonNodeType] || [];
   }
 
   createAnnotonModel(modelType: AnnotonType, srcAnnoton?): Annoton {
