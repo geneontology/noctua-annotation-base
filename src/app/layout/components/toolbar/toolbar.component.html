@@ -27,7 +27,7 @@
       </a>
     </div>
   </div>
-  <!--   <div *ngIf="cam" class="noc-title mr-12" fxLayout="row" fxLayoutAlign="start center">
+  <div *ngIf="cam" class="noc-title mr-12" fxLayout="row" fxLayoutAlign="start center">
     <div class="h-100-p mr-12" *ngIf="cam.title; else noCamTitle" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-section-label noc-cam-title">
         <div class="text-truncate" (click)="openCamForm()">
@@ -42,26 +42,25 @@
         </div>
       </div>
     </ng-template>
-  </div> -->
-  <span fxFlex=""></span>
-  <div *ngIf="!noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
-    <a mat-button href="{{loginUrl}}">
-      Login
-    </a>
-  </div>
-  <div *ngIf="noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
-    <button mat-button class="noc-name-button">
-      <div fxLayout="row" fxLayoutAlign="start center">
-        <div class="noc-info" fxLayout="column" fxLayoutAlign="start start">
-          <div class="noc-name text-truncate">
-            {{noctuaUserService.user.name}}
+    <span fxFlex=""></span>
+    <div *ngIf="!noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
+      <a mat-button href="{{loginUrl}}">
+        Login
+      </a>
+    </div>
+    <div *ngIf="noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
+      <button mat-button class="noc-name-button">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-info" fxLayout="column" fxLayoutAlign="start start">
+            <div class="noc-name text-truncate">
+              {{noctuaUserService.user.name}}
+            </div>
+            <div class="noc-group-name text-truncate">
+              {{noctuaUserService.user?.group?.label}}
+            </div>
           </div>
-          <div class="noc-group-name text-truncate">
-            {{noctuaUserService.user?.group?.label}}
-          </div>
+          <b class="caret"></b>
         </div>
-        <b class="caret"></b>
-      </div>
-    </button>
-  </div>
+      </button>
+    </div>
 </mat-toolbar>
