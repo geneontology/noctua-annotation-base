@@ -42,25 +42,26 @@
         </div>
       </div>
     </ng-template>
-    <span fxFlex=""></span>
-    <div *ngIf="!noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
-      <a mat-button href="{{loginUrl}}">
-        Login
-      </a>
-    </div>
-    <div *ngIf="noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
-      <button mat-button class="noc-name-button">
-        <div fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-info" fxLayout="column" fxLayoutAlign="start start">
-            <div class="noc-name text-truncate">
-              {{noctuaUserService.user.name}}
-            </div>
-            <div class="noc-group-name text-truncate">
-              {{noctuaUserService.user?.group?.label}}
-            </div>
+  </div>
+  <span fxFlex=""></span>
+  <div *ngIf="!noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
+    <a mat-button href="{{loginUrl}}">
+      Login
+    </a>
+  </div>
+  <div *ngIf="noctuaUserService.user" fxLayout="row" fxLayoutAlign="end center" fxFlex="250px">
+    <button mat-button class="noc-name-button">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-info" fxLayout="column" fxLayoutAlign="start start">
+          <div class="noc-name text-truncate">
+            {{noctuaUserService.user.name}}
           </div>
-          <b class="caret"></b>
+          <div class="noc-group-name text-truncate">
+            {{noctuaUserService.user?.group?.label}}
+          </div>
         </div>
-      </button>
-    </div>
+        <b class="caret"></b>
+      </div>
+    </button>
+  </div>
 </mat-toolbar>
