@@ -45,8 +45,8 @@ export class Evidence {
     const self = this;
 
     self.setEvidence(new Entity('', ''));
-    self.reference = ''
-    self.with = ''
+    self.reference = '';
+    self.with = '';
     self.assignedBy = new Entity('', '');
   }
 

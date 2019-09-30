@@ -62,6 +62,7 @@ export class Predicate {
     const self = this;
 
     self.evidence = [self.evidence[0]];
+    self.evidence[0].clearValues();
   }
 
   getEvidenceById(id) {
@@ -69,6 +70,6 @@ export class Predicate {
 
     return _.find(self.evidence, (evidence: Evidence) => {
       return evidence.uuid === id;
-    })
+    });
   }
-} 
+}
