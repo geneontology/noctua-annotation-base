@@ -332,7 +332,7 @@ export const noctuaFormConfig = {
   connectorProcesses: [{
     id: 'GO:0006351',
     label: 'transcription, DNA templated',
-    edge: edge.positivelyRegulates
+    edge: edge.causallyUpstreamOfPositiveEffect
   }, {
     id: 'GO:0006511',
     label: 'ubiquitin-dependent protein catabolic process',

@@ -24,7 +24,7 @@ export class AnnotonConnectorForm {
   causalEffect = new FormControl();
   effectDependency = new FormControl();
   causalReactionProduct = new FormControl();
-  evidenceForms: EvidenceForm[] = []
+  evidenceForms: EvidenceForm[] = [];
   evidenceFormArray = new FormArray([]);
   process = new FormControl();
   hasInput = new FormControl();

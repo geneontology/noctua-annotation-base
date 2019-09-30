@@ -896,17 +896,17 @@ export class NoctuaFormConfigService {
     switch (edge.id) {
       case noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id:
         annotonsConsecutive = true;
-      case noctuaFormConfig.edge.directlyPositivelyRegulates.id:
+      case noctuaFormConfig.edge.positivelyRegulates.id:
         causalEffect = noctuaFormConfig.causalEffect.options.positive;
         break;
       case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
         annotonsConsecutive = true;
-      case noctuaFormConfig.edge.directlyNegativelyRegulates.id:
+      case noctuaFormConfig.edge.negativelyRegulates.id:
         causalEffect = noctuaFormConfig.causalEffect.options.negative;
         break;
       case noctuaFormConfig.edge.causallyUpstreamOf.id:
         annotonsConsecutive = true;
-      case noctuaFormConfig.edge.directlyRegulates.id:
+      case noctuaFormConfig.edge.regulates.id:
         causalEffect = noctuaFormConfig.causalEffect.options.neutral;
         break;
     }
@@ -939,45 +939,13 @@ export class NoctuaFormConfigService {
     } else {
       switch (causalEffect.name) {
         case noctuaFormConfig.causalEffect.options.positive.name:
-          result = noctuaFormConfig.edge.directlyPositivelyRegulates;
+          result = noctuaFormConfig.edge.positivelyRegulates;
           break;
         case noctuaFormConfig.causalEffect.options.negative.name:
-          result = noctuaFormConfig.edge.directlyNegativelyRegulates;
+          result = noctuaFormConfig.edge.negativelyRegulates;
           break;
         case noctuaFormConfig.causalEffect.options.neutral.name:
-          result = noctuaFormConfig.edge.directlyRegulates;
-          break;
-      }
-    }
-
-    return result;
-  }
-
-  getCausalAnnotonConnectorEdge2(causalEffect, annotonsConsecutive) {
-    let result;
-
-    if (annotonsConsecutive) {
-      switch (causalEffect.name) {
-        case noctuaFormConfig.causalEffect.options.positive.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
-          break;
-        case noctuaFormConfig.causalEffect.options.negative.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
-          break;
-        case noctuaFormConfig.causalEffect.options.neutral.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOf;
-          break;
-      }
-    } else {
-      switch (causalEffect.name) {
-        case noctuaFormConfig.causalEffect.options.positive.name:
-          result = noctuaFormConfig.edge.directlyPositivelyRegulates;
-          break;
-        case noctuaFormConfig.causalEffect.options.negative.name:
-          result = noctuaFormConfig.edge.directlyNegativelyRegulates;
-          break;
-        case noctuaFormConfig.causalEffect.options.neutral.name:
-          result = noctuaFormConfig.edge.directlyRegulates;
+          result = noctuaFormConfig.edge.regulates;
           break;
       }
     }

@@ -155,13 +155,13 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
       } else {
         switch (causalEffect.name) {
           case noctuaFormConfig.causalEffect.options.positive.name:
-            result = noctuaFormConfig.edge.directlyPositivelyRegulates;
+            result = noctuaFormConfig.edge.positivelyRegulates;
             break;
           case noctuaFormConfig.causalEffect.options.negative.name:
-            result = noctuaFormConfig.edge.directlyNegativelyRegulates;
+            result = noctuaFormConfig.edge.negativelyRegulates;
             break;
           case noctuaFormConfig.causalEffect.options.neutral.name:
-            result = noctuaFormConfig.edge.directlyRegulates;
+            result = noctuaFormConfig.edge.regulates;
             break;
         }
       }
