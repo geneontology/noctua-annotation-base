@@ -349,7 +349,6 @@ export class NoctuaGraphService {
     return self.noctuaLookupService.isaClosure(a, b, category.categoryType)
       .pipe(
         map((response) => {
-          console.log(a, b, response)
           self.noctuaLookupService.addLocalClosure(a, b, response);
         })
       );
@@ -584,8 +583,6 @@ export class NoctuaGraphService {
     each(removeIds, function (uuid: string) {
       reqs.remove_individual(uuid);
     });
-
-    console.dir(reqs._requests);
 
     reqs.store_model(cam.modelId);
 

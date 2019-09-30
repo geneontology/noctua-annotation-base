@@ -221,7 +221,6 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
 };
 
 export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescription: InsertNodeDescription): AnnotonNode => {
-    //   const nodeDescription: InsertNodeDescription = InsertEntityDefinition.canInsertEntity[subjectNode.type][nodeType];
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
     objectNode.id = `${nodeDescription.node.type}'@@'${getUuid()}`;
@@ -231,11 +230,12 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescr
 
     const predicate: Predicate = annoton.getNode(objectNode.id).predicate;
     predicate.edge = Entity.createEntity(nodeDescription.predicate);
-    annoton.addEdgeById(subjectNode.id, objectNode.id, predicate);
+
+    annoton.updateEdges(subjectNode, objectNode, predicate);
 
     annoton.resetPresentation();
-
     return objectNode;
 };
+
 
 

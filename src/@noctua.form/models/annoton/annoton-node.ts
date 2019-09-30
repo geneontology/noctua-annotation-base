@@ -122,6 +122,8 @@ export class AnnotonNode implements AnnotonNodeDisplay {
 
     self.term.id = null;
     self.term.label = null;
+
+    self.predicate.resetEvidence();
   }
 
   copyValues(node: AnnotonNode) {

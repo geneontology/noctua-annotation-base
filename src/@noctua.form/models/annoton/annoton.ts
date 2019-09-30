@@ -17,6 +17,7 @@ import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import { AnnotonParser } from './parser';
 
 import * as InsertEntityDefinition from './../../data/config/insert-entity-definition';
+import { Predicate } from './predicate';
 export enum AnnotonState {
   creation = 1,
   editing
@@ -73,7 +74,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
     each(self.nodes, (node: AnnotonNode) => {
       const canInsertNodes = InsertEntityDefinition.canInsertEntity[node.type] || [];
-      const exist = []
+      const exist = [];
 
       each(canInsertNodes, (nodeDescription: InsertEntityDefinition.InsertNodeDescription) => {
         if (nodeDescription.cardinality === InsertEntityDefinition.CardinalityType.oneToOne) {
@@ -89,6 +90,39 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         return !exist.includes(nodeDescription.node.type);
       });
     });
+
+    // remove the subject menu
+    each(self.edges, function (triple: Triple<AnnotonNode>) {
+      if (triple.subject.type === triple.object.type) {
+        triple.subject.canInsertNodes = [];
+      }
+    });
+  }
+
+  updateEdges(subjectNode: AnnotonNode, insertNode: AnnotonNode, predicate: Predicate) {
+    const self = this;
+    const canInsertSubjectNodes = InsertEntityDefinition.canInsertEntity[subjectNode.type] || [];
+    let updated = false;
+
+    each(canInsertSubjectNodes, (nodeDescription: InsertEntityDefinition.InsertNodeDescription) => {
+      if (nodeDescription.cardinality === InsertEntityDefinition.CardinalityType.oneToOne) {
+        const edgeTypeExist = self.edgeTypeExist(subjectNode.id, nodeDescription.predicate.id, subjectNode.type, nodeDescription.node.type);
+
+        if (edgeTypeExist) {
+          this.removeEdge(edgeTypeExist.subject, edgeTypeExist.object, edgeTypeExist.predicate);
+          this.addEdge(edgeTypeExist.subject, insertNode, edgeTypeExist.predicate);
+          this.addEdge(insertNode, edgeTypeExist.object, predicate);
+          updated = true;
+
+          return false;
+        }
+      }
+    });
+
+    if (!updated) {
+      self.addEdgeById(subjectNode.id, insertNode.id, predicate);
+    }
+
   }
 
   getGPNode() {

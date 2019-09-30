@@ -94,6 +94,7 @@ export class NoctuaLookupService {
         xref = item.database_xref[0];
       }
 
+      console.log(self.linker.url(item.annotation_class))
       return {
         id: item.annotation_class,
         label: item.annotation_class_label,

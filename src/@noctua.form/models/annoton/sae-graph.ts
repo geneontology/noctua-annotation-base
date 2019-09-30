@@ -78,7 +78,7 @@ export class SaeGraph<T extends AnnotonNode> {
   }
 
   getEdge(subjectId: string, objectId: string): Triple<T> {
-    const srcEdge: Edge<Triple<T>> = { subjectId: subjectId, objectId: objectId, metadata: null }
+    const srcEdge: Edge<Triple<T>> = { subjectId: subjectId, objectId: objectId, metadata: null };
     const destEdge = findEdge(this.graph, srcEdge);
 
     return destEdge ? destEdge.metadata : null;
@@ -92,18 +92,13 @@ export class SaeGraph<T extends AnnotonNode> {
     });
   }
 
-  removeEdge(source, object) {
-    // var objectNodes = this.edges[source.id]['nodes']
-    /*
-    if (objectNodes) {
-      _.remove(objectNodes, function (objectNode) {
-        return objectNode.id === object.id
-      });
-      this.numberOfEdges--;
-    }
-    */
-  }
+  removeEdge(subjectNode: T, objectNode: T, predicate: Predicate) {
 
+    const triple = new Triple(subjectNode, predicate, objectNode);
+    const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple };
+
+    removeEdge(this.graph, edge);
+  }
 
   getTrimmedGraph(startNodeId: string): Graph<T, Triple<T>> {
     const self = this;
