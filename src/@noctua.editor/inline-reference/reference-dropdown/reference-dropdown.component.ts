@@ -11,7 +11,6 @@ import {
   Article
 } from 'noctua-form-base';
 
-
 import { referenceDropdownData } from './reference-dropdown.tokens';
 import { ReferenceDropdownOverlayRef } from './reference-dropdown-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';

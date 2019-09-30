@@ -1,27 +1,15 @@
-import { Injector, Injectable } from '@angular/core';
-
-import { Observable, BehaviorSubject } from 'rxjs'
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
-
-//Config
-import { noctuaFormConfig } from './../noctua-form-config';
+import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { CamService } from './../services/cam.service';
-
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
-
 import { Cam } from './../models/annoton/cam';
-
-import { AnnotonEntityForm } from './../models/forms/annoton-entity-form';
-
 import { EntityForm } from './../models/forms/entity-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { AnnotonNode, Annoton } from '../models';
-import { cloneDeep } from 'lodash';
 import { NoctuaGraphService } from './graph.service';
+import { cloneDeep } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +40,7 @@ export class NoctuaAnnotonEntityService {
   }
 
   initializeForm(annoton: Annoton, entity: AnnotonNode) {
-    this.currentAnnoton = _.cloneDeep(annoton);
+    this.currentAnnoton = cloneDeep(annoton);
     this.annoton = annoton;
     this.entity = entity;
     this.entityForm = this.createAnnotonEntityForm(this.entity);
@@ -79,7 +67,7 @@ export class NoctuaAnnotonEntityService {
   }
 
   private _onAnnotonFormChanges(): void {
-    this.entityFormGroup.getValue().valueChanges.subscribe(value => {
+    this.entityFormGroup.getValue().valueChanges.subscribe(() => {
       // this.errors = this.getAnnotonFormErrors();
       //  this.annotonEntityFormToAnnoton();
       // this.annoton.enableSubmit();

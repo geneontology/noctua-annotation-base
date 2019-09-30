@@ -1,10 +1,8 @@
-import { Injectable, Inject, Injector, ElementRef, ComponentRef, ViewChild } from '@angular/core';
+import { Injectable, Injector, ElementRef, ComponentRef } from '@angular/core';
 import {
     Overlay,
     OverlayRef,
     OverlayConfig,
-    OriginConnectionPosition,
-    OverlayConnectionPosition,
     PositionStrategy
 } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
@@ -16,9 +14,6 @@ import { NoctuaEditorDropdownComponent } from './editor-dropdown/editor-dropdown
 import {
     CamService,
     NoctuaAnnotonEntityService,
-    AnnotonNode,
-    Annoton,
-    Cam,
     NoctuaAnnotonFormService
 } from 'noctua-form-base';
 
@@ -75,18 +70,15 @@ export class InlineEditorService {
         const dialogConfig = { ...DEFAULT_CONFIG, ...config };
 
         dialogConfig['positionStrategy'] = this._getPosition(elementToConnectTo);
-        // dialogConfig['width'] = '420px';
-        const originRect = elementToConnectTo.nativeElement;
         const overlayRef = this.createOverlay(dialogConfig);
         const dialogRef = new EditorDropdownOverlayRef(overlayRef);
-        const overlayComponent = this.attachDialogContainer(overlayRef, dialogConfig, dialogRef);
 
         overlayRef.backdropClick().subscribe(_ => dialogRef.close());
 
         return dialogRef;
     }
 
-    close(data): void {
+    close(): void {
         //  this.overlayRef.dispose();
     }
 
@@ -99,14 +91,6 @@ export class InlineEditorService {
         return new PortalInjector(this.injector, injectionTokens);
     }
 
-    private attachDialogContainer(overlayRef: OverlayRef, config: EditorDropdownDialogConfig, dialogRef: EditorDropdownOverlayRef) {
-        const injector = this.createInjector(config, dialogRef);
-
-        const containerPortal = new ComponentPortal(NoctuaEditorDropdownComponent, null, injector);
-        const containerRef: ComponentRef<NoctuaEditorDropdownComponent> = overlayRef.attach(containerPortal);
-
-        return containerRef.instance;
-    }
 
     private createOverlay(config: EditorDropdownDialogConfig) {
         const overlayConfig = this.getOverlayConfig(config);
@@ -128,23 +112,7 @@ export class InlineEditorService {
     }
 
     private _getPosition(elementToConnectTo: ElementRef) {
-        const origin = {
-            topLeft: { originX: 'start', originY: 'top' } as OriginConnectionPosition,
-            topRight: { originX: 'end', originY: 'top' } as OriginConnectionPosition,
-            bottomLeft: { originX: 'start', originY: 'bottom' } as OriginConnectionPosition,
-            bottomRight: { originX: 'end', originY: 'bottom' } as OriginConnectionPosition,
-            topCenter: { originX: 'center', originY: 'top' } as OriginConnectionPosition,
-            bottomCenter: { originX: 'center', originY: 'bottom' } as OriginConnectionPosition
-        };
 
-        const overlay = {
-            topLeft: { overlayX: 'start', overlayY: 'top' } as OverlayConnectionPosition,
-            topRight: { overlayX: 'end', overlayY: 'top' } as OverlayConnectionPosition,
-            bottomLeft: { overlayX: 'start', overlayY: 'bottom' } as OverlayConnectionPosition,
-            bottomRight: { overlayX: 'end', overlayY: 'bottom' } as OverlayConnectionPosition,
-            topCenter: { overlayX: 'center', overlayY: 'top' } as OverlayConnectionPosition,
-            bottomCenter: { overlayX: 'center', overlayY: 'bottom' } as OverlayConnectionPosition
-        };
 
         return this.overlay.position()
             .flexibleConnectedTo(elementToConnectTo)

@@ -29,6 +29,7 @@ import {
 } from 'noctua-form-base';
 import { NoctuaFormDialogService } from '../../../services/dialog.service';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'noc-annoton-connector',
@@ -52,7 +53,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   searchCriteria: any = {};
   evidenceFormArray: FormArray;
 
-  private unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
   constructor(private camService: CamService,
     private confirmDialogService: NoctuaConfirmDialogService,
@@ -63,11 +64,12 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
     public noctuaFormService: NoctuaFormService,
   ) {
-    this.unsubscribeAll = new Subject();
+    this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
     this.connectorFormSub = this.noctuaAnnotonConnectorService.connectorFormGroup$
+      .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(connectorFormGroup => {
         if (!connectorFormGroup) {
           return;
@@ -77,18 +79,22 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
         this.connectorAnnoton = this.noctuaAnnotonConnectorService.connectorAnnoton;
       });
 
-    this.camService.onCamChanged.subscribe((cam) => {
-      if (!cam) {
-        return;
-      }
+    this.camService.onCamChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((cam) => {
+        if (!cam) {
+          return;
+        }
 
-      this.cam = cam;
-    });
+        this.cam = cam;
+      });
 
-    this.noctuaAnnotonConnectorService.onAnnotonChanged.subscribe((annoton) => {
-      this.annoton = annoton;
-      this.noctuaAnnotonConnectorService.selectPanel(this.noctuaAnnotonConnectorService.panel.selectConnector);
-    });
+    this.noctuaAnnotonConnectorService.onAnnotonChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((annoton) => {
+        this.annoton = annoton;
+        this.noctuaAnnotonConnectorService.selectPanel(this.noctuaAnnotonConnectorService.panel.selectConnector);
+      });
 
     this.noctuaAnnotonConnectorService.selectPanel(this.noctuaAnnotonConnectorService.panel.selectConnector);
   }
@@ -202,7 +208,7 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }

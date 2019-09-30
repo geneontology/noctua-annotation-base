@@ -1,19 +1,8 @@
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { merge, Observable, Subscription, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
-
-import { Annoton } from './../annoton/annoton';
+import { FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
-import { EntityGroupForm } from './entity-group-form';
-
 import { EvidenceForm } from './evidence-form';
 
-import { EntityForm } from './entity-form';
-import { termValidator } from './validators/term-validator';
 import {
   Triple,
   Evidence,
@@ -52,10 +41,9 @@ export class TripleForm {
 
   populateAnnotonEntityForm(annotonNode: AnnotonNode) {
     const self = this;
-    const evidences: Evidence[] = [];
 
     annotonNode.term = new Entity(this.subject.value.id, this.subject.value.label);
-    self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
+    self.evidenceForms.forEach(() => {
       // const evidenceFound = annotonNode.getEvidenceById(evidenceForm.uuid);
       // const evidence = evidenceFound ? evidenceFound : new Evidence();
 

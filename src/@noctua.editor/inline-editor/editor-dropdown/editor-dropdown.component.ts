@@ -1,29 +1,15 @@
-import { Component, Inject, Input, OnInit, ElementRef, OnDestroy, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatSort, MatDrawer } from '@angular/material';
-import { DataSource } from '@angular/cdk/collections';
-import { merge, Observable, Subscription, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, take, distinctUntilChanged, map } from 'rxjs/operators';
-
-
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup, FormArray } from '@angular/forms';
+import { Subscription, Subject } from 'rxjs';
 import * as _ from 'lodash';
 declare const require: any;
-const each = require('lodash/forEach');
-
-import { noctuaAnimations } from './../../../@noctua/animations';
 
 import {
-  NoctuaGraphService,
   NoctuaFormConfigService,
   NoctuaAnnotonFormService,
-  NoctuaLookupService,
   NoctuaAnnotonEntityService,
   CamService,
   Entity,
-  AnnotonNodeType,
   noctuaFormConfig,
   InsertEntityDefinition
 } from 'noctua-form-base';
@@ -37,6 +23,7 @@ import { editorDropdownData } from './editor-dropdown.tokens';
 import { EditorDropdownOverlayRef } from './editor-dropdown-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { EditorCategory } from './../../models/editor-category';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'noc-editor-dropdown',
@@ -58,7 +45,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   termNode: AnnotonNode;
 
-  private unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
   displaySection = {
     term: false,
@@ -67,20 +54,15 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     with: false,
   };
 
-  constructor(private route: ActivatedRoute,
-    public dialogRef: EditorDropdownOverlayRef,
+  constructor(public dialogRef: EditorDropdownOverlayRef,
     @Inject(editorDropdownData) public data: any,
     private noctuaFormDialogService: NoctuaFormDialogService,
-    private ngZone: NgZone,
     private camService: CamService,
-    private formBuilder: FormBuilder,
     private noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
-    private noctuaGraphService: NoctuaGraphService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-    private noctuaLookupService: NoctuaLookupService,
   ) {
-    this.unsubscribeAll = new Subject();
+    this._unsubscribeAll = new Subject();
 
     this.cam = data.cam;
     this.annoton = data.annoton;
@@ -93,13 +75,12 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     this._displaySection(this.category);
     this.evidenceDBForm = this._createEvidenceDBForm();
     this.entityFormSub = this.noctuaAnnotonEntityService.entityFormGroup$
+      .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(entityFormGroup => {
         if (!entityFormGroup) {
           return;
         }
-
         const evidenceFormArray = entityFormGroup.get('evidenceFormArray') as FormArray;
-
         this.entityFormGroup = entityFormGroup;
         this.evidenceFormGroup = evidenceFormArray.at(this.evidenceIndex) as FormGroup;
         console.log(this.evidenceFormGroup);
@@ -109,7 +90,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   save() {
     const self = this;
 
-    self.noctuaAnnotonEntityService.saveAnnoton().then((data) => {
+    self.noctuaAnnotonEntityService.saveAnnoton().then(() => {
       this.close();
       self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
     });
@@ -129,7 +110,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     self.noctuaAnnotonFormService.initializeForm();
   }
 
-  toggleIsComplement(entity: AnnotonNode) {
+  toggleIsComplement() {
 
   }
 
@@ -161,10 +142,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
       }
       self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
     } else {
-      const errors = [];
-      const meta = {
-        aspect: gpNode ? gpNode.label : 'Gene Product'
-      }
       // const error = new AnnotonError('error', 1, "Please enter a gene product", meta)
       //errors.push(error);
       // self.dialogService.openAnnotonErrorsDialog(ev, entity, errors)
@@ -280,8 +257,8 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }
 

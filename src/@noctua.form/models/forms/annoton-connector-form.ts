@@ -1,20 +1,9 @@
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { merge, Observable, Subscription, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
-
-import { Annoton } from './../annoton/annoton';
+import { FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AnnotonNode } from './../annoton/annoton-node';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
-import { EntityGroupForm } from './entity-group-form';
-
 import { EvidenceForm } from './evidence-form';
-
 import { Evidence } from './../../models/annoton/evidence';
-import { EntityForm } from './entity-form';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Predicate } from '..';
 
@@ -43,7 +32,6 @@ export class AnnotonConnectorForm {
 
     predicate.evidence.forEach((evidence: Evidence) => {
       const evidenceForm = new EvidenceForm(self._metadata, null, evidence);
-
       self.evidenceForms.push(evidenceForm);
       evidenceForm.onValueChanges(predicate.evidenceLookup);
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
@@ -58,21 +46,18 @@ export class AnnotonConnectorForm {
 
     predicate.evidence.forEach((evidence: Evidence) => {
       const evidenceForm = new EvidenceForm(self._metadata, null, evidence);
-
       self.evidenceForms.push(evidenceForm);
       evidenceForm.onValueChanges(predicate.evidenceLookup);
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }
 
-  populateConnectorForm(annoton: Annoton, annotonNode: AnnotonNode) {
+  populateConnectorForm() {
     const self = this;
-
     const evidences: Evidence[] = [];
 
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
       const evidence = new Evidence();
-
       evidenceForm.populateEvidence(evidence);
       evidences.push(evidence);
     });

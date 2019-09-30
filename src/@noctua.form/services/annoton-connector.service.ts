@@ -1,33 +1,26 @@
 
-import { Injector, Injectable } from '@angular/core';
-
-import { Observable, BehaviorSubject } from 'rxjs'
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
-
-import { noctuaFormConfig } from './../noctua-form-config';
+import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { CamService } from './cam.service';
 import { NoctuaGraphService } from './graph.service';
 
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
 
 import {
   Cam,
   Annoton,
   AnnotonNode,
   ConnectorAnnoton,
-  Entity,
   ConnectorState
 } from './../models/annoton';
 
 
 import { AnnotonConnectorForm } from './../models/forms/annoton-connector-form';
 
-import { EntityForm } from './../models/forms/entity-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
+import { each } from 'lodash';
 
 @Injectable({
   providedIn: 'root'

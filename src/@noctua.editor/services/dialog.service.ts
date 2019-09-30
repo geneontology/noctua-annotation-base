@@ -1,10 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
-
-
+import { MatDialog, MatSnackBar } from '@angular/material';
 import 'rxjs/add/operator/map';
 import { NoctuaConfirmDialogComponent } from '@noctua/components/confirm-dialog/confirm-dialog.component';
 
