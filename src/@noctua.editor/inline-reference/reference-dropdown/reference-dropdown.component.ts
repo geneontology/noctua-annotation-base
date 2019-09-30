@@ -1,42 +1,21 @@
-import { Component, Inject, Input, OnInit, ElementRef, OnDestroy, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatSort, MatDrawer } from '@angular/material';
-import { DataSource } from '@angular/cdk/collections';
-import { merge, Observable, Subscription, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, take, distinctUntilChanged, map } from 'rxjs/operators';
-
-
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
-
-import { noctuaAnimations } from './../../../@noctua/animations';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 import {
-  NoctuaGraphService,
   NoctuaFormConfigService,
   NoctuaAnnotonFormService,
-  NoctuaLookupService,
-  NoctuaAnnotonEntityService,
-  CamService,
-  Entity,
-  AnnotonNodeType,
+  AnnotonError,
   noctuaFormConfig,
-  AnnotonError
+  Article
 } from 'noctua-form-base';
 
-import { Cam } from 'noctua-form-base';
-import { Annoton } from 'noctua-form-base';
-import { AnnotonNode } from 'noctua-form-base';
-import { Evidence } from 'noctua-form-base';
 
 import { referenceDropdownData } from './reference-dropdown.tokens';
 import { ReferenceDropdownOverlayRef } from './reference-dropdown-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
-import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
+import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
 @Component({
   selector: 'noc-reference-dropdown',
@@ -47,32 +26,28 @@ import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/co
 export class NoctuaReferenceDropdownComponent implements OnInit, OnDestroy {
   evidenceDBForm: FormGroup;
   formControl: FormControl;
+  articles: Article[] = [];
+  article: Article;
 
-  private unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
-  constructor(private route: ActivatedRoute,
-    public dialogRef: ReferenceDropdownOverlayRef,
+  constructor(public dialogRef: ReferenceDropdownOverlayRef,
     @Inject(referenceDropdownData) public data: any,
+    private sparqlService: SparqlService,
     private noctuaFormDialogService: NoctuaFormDialogService,
-    private confirmDialogService: NoctuaConfirmDialogService,
-    private formBuilder: FormBuilder,
-    private noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-    private noctuaLookupService: NoctuaLookupService,
   ) {
-    this.unsubscribeAll = new Subject();
+    this._unsubscribeAll = new Subject();
     this.formControl = data.formControl;
   }
 
   ngOnInit(): void {
     this.evidenceDBForm = this._createEvidenceDBForm();
+    this._onValueChange();
   }
 
-
-
   clearValues() {
-    const self = this;
 
   }
 
@@ -107,12 +82,40 @@ export class NoctuaReferenceDropdownComponent implements OnInit, OnDestroy {
     });
   }
 
+  private _onValueChange() {
+    const self = this;
+
+    self.evidenceDBForm.valueChanges.pipe(
+      takeUntil(this._unsubscribeAll),
+      distinctUntilChanged(),
+      debounceTime(400)
+    ).subscribe(data => {
+      console.log(data);
+      self._updateArticle(data);
+    });
+  }
+
   close() {
     this.dialogRef.close();
   }
 
+  private _updateArticle(value) {
+    const self = this;
+
+    if (value.db.name === noctuaFormConfig.evidenceDB.options.pmid.name && value.accession) {
+      this.sparqlService.getPubmedInfo(value.accession).pipe(
+        takeUntil(this._unsubscribeAll))
+        .subscribe((articles: Article[]) => {
+          self.articles = articles;
+          if (articles && articles.length > 0) {
+            self.article = articles[0];
+          }
+          console.log(articles);
+        });
+    }
+  }
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }
