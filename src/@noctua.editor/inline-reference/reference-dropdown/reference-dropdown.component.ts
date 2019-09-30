@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -66,7 +66,7 @@ export class NoctuaReferenceDropdownComponent implements OnInit, OnDestroy {
     }
 
     if (canSave) {
-      this.formControl.setValue(db.name + ':' + accession);
+      this.formControl.setValue(db.name + ':' + accession.trim());
       this.close();
     }
   }
@@ -78,7 +78,10 @@ export class NoctuaReferenceDropdownComponent implements OnInit, OnDestroy {
   private _createEvidenceDBForm() {
     return new FormGroup({
       db: new FormControl(this.noctuaFormConfigService.evidenceDBs.selected),
-      accession: new FormControl('')
+      accession: new FormControl('',
+        [
+          Validators.required,
+        ])
     });
   }
 
@@ -91,6 +94,8 @@ export class NoctuaReferenceDropdownComponent implements OnInit, OnDestroy {
       debounceTime(400)
     ).subscribe(data => {
       console.log(data);
+      self.article = null;
+      self.articles = [];
       self._updateArticle(data);
     });
   }

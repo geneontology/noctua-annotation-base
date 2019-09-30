@@ -4,6 +4,7 @@
 :host {
   padding-top: 8px;
   width: 100%;
+  @include deep-width(400px);
   @include mat-elevation(4);
 
   background-color: #fbf9de;

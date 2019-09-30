@@ -102,7 +102,7 @@ export class SparqlService {
     res.forEach((response) => {
       const article = new Article();
       article.title = response.title.value;
-      article.author = response.author.author;
+      article.author = response.author.value;
       article.link = self.linker.url(`${noctuaFormConfig.evidenceDB.options.pmid.name}:${pmid}`);
       if (response.date) {
         article.date = response.date.value
