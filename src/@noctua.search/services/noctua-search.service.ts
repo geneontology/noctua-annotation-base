@@ -1,29 +1,20 @@
 import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-import * as _ from 'lodash';
-import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
-import { map, filter, reduce, catchError, retry, tap, finalize } from 'rxjs/operators';
-
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, tap, finalize } from 'rxjs/operators';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 import {
     Cam,
     Contributor,
     Group,
-    Organism,
     NoctuaFormConfigService,
     NoctuaUserService,
-    Entity,
-    AnnotonNode,
-    CamRow
+    Entity
 } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
-
-
 import { saveAs } from 'file-saver';
-import { each, forOwn } from 'lodash';
+import { forOwn, find } from 'lodash';
 import { CurieService } from '@noctua.curie/services/curie.service';
 
 
@@ -107,7 +98,7 @@ export class NoctuaSearchService {
         this.updateSearch();
     }
 
-    removeFilter(filterType, filter) {
+    removeFilter(filterType) {
         this.searchCriteria[filterType] = null;
     }
 
@@ -191,7 +182,7 @@ export class NoctuaSearchService {
             });
 
             cam.groups = <Group[]>response.groups.map(function (url) {
-                let group = _.find(self.noctuaUserService.groups, (group: Group) => {
+                let group = find(self.noctuaUserService.groups, (group: Group) => {
                     return group.url === url
                 })
 
@@ -199,7 +190,7 @@ export class NoctuaSearchService {
             });
 
             cam.contributors = <Contributor[]>response.contributors.map((orcid) => {
-                let contributor = _.find(self.noctuaUserService.contributors, (contributor: Contributor) => {
+                let contributor = find(self.noctuaUserService.contributors, (contributor: Contributor) => {
                     return contributor.orcid === orcid
                 })
 

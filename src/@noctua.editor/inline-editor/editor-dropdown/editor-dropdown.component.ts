@@ -1,9 +1,6 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
-import * as _ from 'lodash';
-declare const require: any;
-
 import {
   NoctuaFormConfigService,
   NoctuaAnnotonFormService,
@@ -24,6 +21,7 @@ import { EditorDropdownOverlayRef } from './editor-dropdown-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { EditorCategory } from './../../models/editor-category';
 import { takeUntil } from 'rxjs/operators';
+import { find } from 'lodash';
 
 @Component({
   selector: 'noc-editor-dropdown',
@@ -156,7 +154,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   addRootTerm() {
     const self = this;
 
-    const term = _.find(noctuaFormConfig.rootNode, (rootNode) => {
+    const term = find(noctuaFormConfig.rootNode, (rootNode) => {
       return rootNode.aspect === self.entity.aspect;
     });
 

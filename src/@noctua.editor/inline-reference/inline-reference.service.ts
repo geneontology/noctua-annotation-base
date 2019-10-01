@@ -13,15 +13,6 @@ import { referenceDropdownData } from './reference-dropdown/reference-dropdown.t
 
 import { NoctuaReferenceDropdownComponent } from './reference-dropdown/reference-dropdown.component';
 
-import {
-    CamService,
-    NoctuaAnnotonEntityService,
-    AnnotonNode,
-    Annoton,
-    Cam,
-    NoctuaAnnotonFormService
-} from 'noctua-form-base';
-
 export interface SearchCriiteria {
     gp: string;
     url: string;
@@ -51,25 +42,8 @@ export class InlineReferenceService {
 
     constructor(
         private injector: Injector,
-        private overlay: Overlay,
-        private camService: CamService,
-        public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-        private noctuaAnnotonEntityService: NoctuaAnnotonEntityService) { }
+        private overlay: Overlay) { }
 
-    openReferenceDropdown(event, config) {
-        const data = {
-            cam: config.cam,
-            annoton: config.annoton,
-            entity: config.entity,
-            category: config.category,
-            evidenceIndex: config.evidenceIndex
-        };
-        // this.camService.onCamChanged.next(this.cam);
-        this.camService.onCamChanged.next(config.cam);
-        this.camService.annoton = config.annoton;
-        this.noctuaAnnotonEntityService.initializeForm(config.annoton, config.entity);
-        this.open(event.target, { data });
-    }
 
     open(elementToConnectTo: ElementRef, config: ReferenceDropdownDialogConfig = {}) {
         const dialogConfig = { ...DEFAULT_CONFIG, ...config };

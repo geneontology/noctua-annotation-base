@@ -1,31 +1,24 @@
 import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
-import { map, finalize, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, finalize, tap } from 'rxjs/operators';
 
 import {
-  Graph,
-  Optional,
   optional,
-  Prefix,
   prefix,
-  Triple,
   Query,
   triple,
-} from "sparql-query-builder/dist";
+} from 'sparql-query-builder/dist';
 
 import {
   NoctuaQuery
-} from "noctua-sparql-query-builder/dist";
+} from 'noctua-sparql-query-builder/dist';
 
 import { CurieService } from './../../../@noctua.curie/services/curie.service';
 import {
-  NoctuaGraphService,
-  AnnotonNode,
   NoctuaFormConfigService,
   Cam,
-  CamRow,
   Contributor,
   Group,
   NoctuaUserService,
@@ -33,13 +26,10 @@ import {
   Entity,
   Article,
   noctuaFormConfig
-} from 'noctua-form-base'
-
-import * as _ from 'lodash';
-import { v4 as uuid } from 'uuid';
+} from 'noctua-form-base';
 import { SearchCriteria } from '@noctua.search/models/search-criteria';
 import { SparqlMinervaService } from './sparql-minerva.service';
-import { each } from 'lodash';
+import { each, find } from 'lodash';
 declare const require: any;
 
 const amigo = require('amigo2');
@@ -242,7 +232,7 @@ export class SparqlService {
 
       if (response.groups && response.groups.value !== null) {
         cam.groups = <Group[]>response.groups.value.split(self.separator).map(function (url) {
-          const group = _.find(self.noctuaUserService.groups, (inGroup: Group) => {
+          const group = find(self.noctuaUserService.groups, (inGroup: Group) => {
             return inGroup.url === url;
           });
 
@@ -252,7 +242,7 @@ export class SparqlService {
 
       if (response.contributors && response.contributors.value !== "") {
         cam.contributors = <Contributor[]>response.contributors.value.split(self.separator).map((orcid) => {
-          const contributor = _.find(self.noctuaUserService.contributors, (contributor: Contributor) => {
+          const contributor = find(self.noctuaUserService.contributors, (contributor: Contributor) => {
             return contributor.orcid === orcid
           })
 
@@ -338,11 +328,10 @@ export class SparqlService {
   }
 
   addGroupContributors(groups, contributors) {
-    const self = this;
 
     each(groups, (group) => {
       each(group.contributors, (contributor) => {
-        const srcContributor = _.find(contributors, { orcid: contributor.orcid })
+        const srcContributor = find(contributors, { orcid: contributor.orcid })
         contributor.name = srcContributor['name'];
         contributor.cams = srcContributor['cams'];
       });

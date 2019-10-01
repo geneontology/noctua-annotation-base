@@ -1,6 +1,5 @@
-import * as _ from 'lodash';
+
 declare const require: any;
-const each = require('lodash/forEach');
 const uuid = require('uuid/v1');
 import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
 
@@ -13,6 +12,7 @@ import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
 import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
+import { each, find } from 'lodash';
 
 
 export class Cam {
@@ -96,7 +96,7 @@ export class Cam {
   getConnectorAnnoton(upstreamId: string, downstreamId: string): ConnectorAnnoton {
     const self = this;
 
-    return _.find(self.connectorAnnotons, (connectorAnnoton: ConnectorAnnoton) => {
+    return find(self.connectorAnnotons, (connectorAnnoton: ConnectorAnnoton) => {
       return connectorAnnoton.upstreamNode.uuid === upstreamId &&
         connectorAnnoton.downstreamNode.uuid === downstreamId;
     });
@@ -117,27 +117,9 @@ export class Cam {
   findAnnotonById(id) {
     const self = this;
 
-    return _.find(self.annotons, (annoton) => {
+    return find(self.annotons, (annoton) => {
       return annoton.id === id;
     })
-  }
-
-  findAnnotonNode() {
-    const self = this;
-    let result = [];
-
-    each(self.annotons, function (annotonData) {
-      each(annotonData.annoton.nodes, function (node) {
-        if (node.id === 'mf') {
-          result.push({
-            node: node,
-            annoton: annotonData.annoton
-          })
-        }
-      });
-    });
-
-    return result;
   }
 
 
@@ -166,7 +148,7 @@ export class Cam {
 
   getAnnotonByConnectionId(connectionId) {
     const self = this;
-    let result = _.find(self.annotons, (annoton: Annoton) => {
+    let result = find(self.annotons, (annoton: Annoton) => {
       return annoton.id === connectionId;
     })
 
@@ -198,7 +180,7 @@ export class Cam {
   evidenceExists(data, evidence) {
     const self = this;
 
-    return _.find(data, function (x) {
+    return find(data, function (x) {
       return x.isEvidenceEqual(evidence)
     })
   }
@@ -313,7 +295,7 @@ export class Cam {
     console.log(grid)
 
     return grid;
-    //return _.flattenDeep(grid);
+    //return flattenDeep(grid);
   }
 
 

@@ -1,8 +1,5 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
-
-
-
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, forkJoin, Observable, Subscriber } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -36,6 +33,7 @@ import * as _ from 'lodash';
 import { AnnotonType } from './../models/annoton/annoton';
 import { AnnotonNodeType } from './../models/annoton/annoton-node';
 import { Contributor } from './../models/contributor';
+import { find } from 'lodash';
 
 declare const require: any;
 
@@ -188,7 +186,7 @@ export class NoctuaGraphService {
 
     cam.contributors = <Contributor[]>contributorAnnotations.map((contributorAnnotation) => {
       const orcid = contributorAnnotation.value();
-      const contributor = _.find(self.noctuaUserService.contributors, (srcContributor: Contributor) => {
+      const contributor = find(self.noctuaUserService.contributors, (srcContributor: Contributor) => {
         return srcContributor.orcid === orcid;
       });
 
@@ -373,7 +371,7 @@ export class NoctuaGraphService {
       annotonType = AnnotonType.ccOnly;
     } else if (subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(bbopSubjectEdges, function (subjectEdge) {
-        if (_.find(noctuaFormConfig.causalEdges, { id: subjectEdge.predicate_id() })) {
+        if (find(noctuaFormConfig.causalEdges, { id: subjectEdge.predicate_id() })) {
           annotonType = AnnotonType.bpOnly;
         }
       });
@@ -421,7 +419,7 @@ export class NoctuaGraphService {
         const objectId = bbopEdge.object_id();
         const objectInfo = self.nodeToAnnotonNode(cam.graph, objectId);
 
-        const causalEdge = <Entity>_.find(noctuaFormConfig.causalEdges, {
+        const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
           id: predicateId
         });
 
@@ -560,7 +558,7 @@ export class NoctuaGraphService {
     const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
 
     each(destNodes, function (destNode: AnnotonNode) {
-      const srcNode = _.find(srcNodes, (node: AnnotonNode) => {
+      const srcNode = find(srcNodes, (node: AnnotonNode) => {
         return node.uuid === destNode.uuid;
       });
 
@@ -633,7 +631,7 @@ export class NoctuaGraphService {
       const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
 
       if (annoton.annotonType === AnnotonType.bpOnly) {
-        const causalEdge = _.find(noctuaFormConfig.causalEdges, {
+        const causalEdge = find(noctuaFormConfig.causalEdges, {
           id: bbopPredicateId
         });
 
@@ -688,7 +686,7 @@ export class NoctuaGraphService {
       const objectId = e.object_id();
       const objectInfo = self.nodeToAnnotonNode(cam.graph, objectId);
 
-      const causalEdge = <Entity>_.find(noctuaFormConfig.causalEdges, {
+      const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
         id: predicateId
       })
 
@@ -746,7 +744,7 @@ export class NoctuaGraphService {
 
     each(destTriples, (destTriple: Triple<AnnotonNode>) => {
 
-      const srcTriple = _.find(srcTriples, (triple: Triple<AnnotonNode>) => {
+      const srcTriple = find(srcTriples, (triple: Triple<AnnotonNode>) => {
         return triple.subject.uuid === destTriple.subject.uuid && triple.object.uuid === destTriple.object.uuid;
       });
 

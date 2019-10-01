@@ -1,7 +1,5 @@
-import * as _ from 'lodash';
+import { find, each } from 'lodash';
 declare const require: any;
-
-const each = require('lodash/forEach');
 const uuid = require('uuid/v1');
 
 export class NoctuaFormUtil {
@@ -29,7 +27,7 @@ export class NoctuaFormUtil {
         }
 
         function find(data, evidence) {
-            return _.find(data, function (x) {
+            return find(data, function (x) {
                 // console.log(x.isEvidenceEqual(evidence))
                 return x.isEvidenceEqual(evidence)
             })
@@ -51,7 +49,7 @@ export class NoctuaFormUtil {
     }
 
     static evidenceExists(data, evidence) {
-        return _.find(data, function (x) {
+        return find(data, function (x) {
             // console.log(x.isEvidenceEqual(evidence))
             return x.isEvidenceEqual(evidence)
         })

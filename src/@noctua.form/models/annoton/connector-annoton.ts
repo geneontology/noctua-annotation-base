@@ -1,9 +1,6 @@
-import * as _ from 'lodash';
 declare const require: any;
-const each = require('lodash/forEach');
-const map = require('lodash/map');
 const uuid = require('uuid/v1');
-import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
+import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
 import { getEdges, Edge, getNodes, subtractNodes, subtractEdges } from './noctua-form-graph';
@@ -15,6 +12,7 @@ import { Entity } from './entity';
 import { Triple } from './triple';
 import { Evidence } from './evidence';
 import { Predicate } from './predicate';
+import { cloneDeep } from 'lodash';
 
 export enum ConnectorState {
   creation = 1,
@@ -202,9 +200,9 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   copyValues(currentConnectorAnnoton: ConnectorAnnoton) {
     const self = this;
 
-    self.processNode.term = _.cloneDeep(currentConnectorAnnoton.processNode.term);
-    self.hasInputNode.term = _.cloneDeep(currentConnectorAnnoton.hasInputNode.term);
-    self.rule = _.cloneDeep(currentConnectorAnnoton.rule);
+    self.processNode.term = cloneDeep(currentConnectorAnnoton.processNode.term);
+    self.hasInputNode.term = cloneDeep(currentConnectorAnnoton.hasInputNode.term);
+    self.rule = cloneDeep(currentConnectorAnnoton.rule);
     self.type = currentConnectorAnnoton.type;
     self.state = currentConnectorAnnoton.state;
   }

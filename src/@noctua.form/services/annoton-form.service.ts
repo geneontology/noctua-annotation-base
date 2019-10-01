@@ -1,14 +1,8 @@
-import { Injector, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { noctuaFormConfig } from './../noctua-form-config';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
-
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
-
 import { Annoton, AnnotonState, AnnotonType } from './../models/annoton/annoton';
 import { AnnotonNode } from './../models/annoton/annoton-node';
 import { AnnotonForm } from './../models/forms/annoton-form';
@@ -17,6 +11,7 @@ import { NoctuaGraphService } from './graph.service';
 import { CamService } from './cam.service';
 import { Entity } from '../models/annoton/entity';
 import { Evidence } from '../models/annoton/evidence';
+import { cloneDeep, each } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +54,7 @@ export class NoctuaAnnotonFormService {
     if (annoton) {
       self.state = AnnotonState.editing;
       self.currentAnnoton = annoton;
-      self.annoton = _.cloneDeep(annoton);
+      self.annoton = cloneDeep(annoton);
     } else {
       self.state = AnnotonState.creation;
       self.currentAnnoton = null;
@@ -102,7 +97,7 @@ export class NoctuaAnnotonFormService {
   }
 
   private _onAnnotonFormChanges(): void {
-    this.annotonFormGroup.getValue().valueChanges.subscribe(value => {
+    this.annotonFormGroup.getValue().valueChanges.subscribe(() => {
       this.annotonFormToAnnoton();
       this.annoton.enableSubmit();
     });
@@ -203,16 +198,5 @@ export class NoctuaAnnotonFormService {
     });
   }
 
-  private _fakeTerm(term: Entity, lookupFunc, requestParams) {
-    const self = this;
-
-    lookupFunc('a', requestParams).subscribe(response => {
-      if (response && response.length > 0) {
-        const count = response.length;
-        console.log(count);
-        term = Entity.createEntity(response[Math.floor(Math.random() * count)]);
-      }
-    });
-  }
 }
 

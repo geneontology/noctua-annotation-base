@@ -1,7 +1,6 @@
-import * as _ from 'lodash';
 import { Entity } from './entity';
 import { Evidence } from './evidence';
-import { each } from 'lodash';
+import { each, find, cloneDeep } from 'lodash';
 import { EntityLookup } from './entity-lookup';
 declare const require: any;
 const uuid = require('uuid/v1');
@@ -41,7 +40,7 @@ export class Predicate {
 
   addEvidence(srcEvidence?: Evidence) {
     const self = this;
-    const evidence = srcEvidence ? _.cloneDeep(srcEvidence) : new Evidence();
+    const evidence = srcEvidence ? cloneDeep(srcEvidence) : new Evidence();
 
     evidence.setEvidenceOntologyClass(self._evidenceMeta.ontologyClass);
     self.evidence.push(evidence);
@@ -68,7 +67,7 @@ export class Predicate {
   getEvidenceById(id) {
     const self = this;
 
-    return _.find(self.evidence, (evidence: Evidence) => {
+    return find(self.evidence, (evidence: Evidence) => {
       return evidence.uuid === id;
     });
   }

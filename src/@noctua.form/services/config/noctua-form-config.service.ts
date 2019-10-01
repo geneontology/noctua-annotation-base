@@ -4,15 +4,11 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { noctuaFormExample } from './../..//noctua-form-examples';
 
 import * as ModelDefinition from './../../data/config/model-definition';
-import * as EntityDefinition from './../../data/config/entity-definition';
 import * as InsertEntityDefinition from './../../data/config/insert-entity-definition';
-
-import * as _ from 'lodash';
 
 declare const require: any;
 
 const each = require('lodash/forEach');
-const uuid = require('uuid/v1');
 import {
   AnnotonNode,
   Annoton,
@@ -22,7 +18,7 @@ import {
   Predicate
 } from './../../models';
 import { AnnotonType } from './../../models/annoton/annoton';
-import { AnnotonNodeType } from './../../models/annoton/annoton-node';
+import { find } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -791,7 +787,7 @@ export class NoctuaFormConfigService {
   findModelState(name) {
     const self = this;
 
-    return _.find(self.modelState.options, (modelState) => {
+    return find(self.modelState.options, (modelState) => {
       return modelState.name === name;
     });
   }
@@ -1053,7 +1049,7 @@ export class NoctuaFormConfigService {
     return connectorAnnoton;
   }
 
-  createAnnotonModel(modelType: AnnotonType, srcAnnoton?): Annoton {
+  createAnnotonModel(modelType: AnnotonType): Annoton {
     switch (modelType) {
       case AnnotonType.default:
         return ModelDefinition.createActivity(ModelDefinition.activityUnitDescription);
@@ -1126,13 +1122,12 @@ export class NoctuaFormConfigService {
 
 
   findEdge(predicateId) {
-    _.find(noctuaFormConfig.edge, {
+    find(noctuaFormConfig.edge, {
       id: predicateId
     })
   }
 
   createJoyrideSteps() {
-    const self = this;
 
     const steps = [{
       type: 'element',
@@ -1182,7 +1177,7 @@ export class NoctuaFormConfigService {
   }
 
   getAspect(id) {
-    const rootNode = _.find(noctuaFormConfig.rootNode, { id: id });
+    const rootNode = find(noctuaFormConfig.rootNode, { id: id });
 
     return rootNode ? rootNode.aspect : '';
   }

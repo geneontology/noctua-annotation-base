@@ -1,11 +1,9 @@
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
 //
 import { noctuaFormConfig } from './../../../noctua-form-config';
 
 import { AnnotonError } from './annoton-error';
 import { AnnotonNode } from '../annoton-node';
+import { each, includes, find } from 'lodash';
 
 export class AnnotonParser {
   rules;
@@ -32,8 +30,8 @@ export class AnnotonParser {
       const predicateId = edge.predicate_id();
       const predicateLabel = self.getPredicateLabel(predicateId);
 
-      if (_.includes(noctuaFormConfig.noDuplicateEdges, predicateId)) {
-        if (_.includes(edges, predicateId)) {
+      if (includes(noctuaFormConfig.noDuplicateEdges, predicateId)) {
+        if (includes(edges, predicateId)) {
           let meta = {
             aspect: node.label,
             subjectNode: {
@@ -64,7 +62,7 @@ export class AnnotonParser {
 
   getPredicateLabel(id) {
     const self = this;
-    let predicate = _.find(noctuaFormConfig.edge, function (val) {
+    let predicate = find(noctuaFormConfig.edge, function (val) {
       return val.id === id;
     });
     return predicate ? predicate.label : id;
@@ -75,7 +73,7 @@ export class AnnotonParser {
     let result = true;
     let error;
 
-    if (!_.includes(node.closures, node.category)) {
+    if (!includes(node.closures, node.category)) {
       let meta = {
         aspect: node.label,
         subjectNode: {
@@ -183,7 +181,7 @@ export class AnnotonParser {
 
   allowedEdge(predicateId) {
     const self = this;
-    return _.find(noctuaFormConfig.causalEdges, function (edge) {
+    return find(noctuaFormConfig.causalEdges, function (edge) {
       return edge.id === predicateId
     });
   }
@@ -201,7 +199,7 @@ export class AnnotonParser {
       let allowedEdge = self.allowedEdge(predicateId);
 
       if (!allowedEdge) {
-        if (_.includes(edges2, predicateId)) {
+        if (includes(edges2, predicateId)) {
           let meta = {
             aspect: node.label,
             subjectNode: {
@@ -220,7 +218,7 @@ export class AnnotonParser {
           result = false;
         }
 
-        let v = _.find(objectEdges, function (node) {
+        let v = find(objectEdges, function (node) {
           return node.edge.id === predicateId
         });
 
@@ -255,7 +253,7 @@ export class AnnotonParser {
 
   canDuplicateEdge(predicateId) {
     const self = this;
-    return _.find(noctuaFormConfig.canDuplicateEdges, function (edge) {
+    return find(noctuaFormConfig.canDuplicateEdges, function (edge) {
       return edge.id === predicateId
     });
   }

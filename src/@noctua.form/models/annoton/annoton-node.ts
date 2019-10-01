@@ -140,14 +140,12 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     this.termLookup.requestParams = value;
   }
 
-
   setDisplay(value) {
     if (value) {
       this.displaySection = value.displaySection;
       this.displayGroup = value.displayGroup;
     }
   }
-
 
   enableRow() {
     const self = this;

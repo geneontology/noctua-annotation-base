@@ -1,19 +1,13 @@
 import { environment } from './../../environments/environment';
-import { Injectable } from '@angular/core'
-
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
-import { map, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
-
-import * as _ from 'lodash';
+import { map } from 'rxjs/operators';
 import { AnnotonNode, AnnotonNodeClosure, Entity, Evidence, Predicate } from './../models/annoton/';
-
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
+import { find, filter, each } from 'lodash';
 
 declare const require: any;
 
-const each = require('lodash/forEach');
-const bbop = require('bbop-core');
 const amigo = require('amigo2');
 const golr_conf = require('golr-conf');
 const gconf = new golr_conf.conf(amigo.data.golr);
@@ -106,8 +100,7 @@ export class NoctuaLookupService {
     return result;
   }
 
-  golrLookupManager(searchText, requestParams) {
-    const self = this;
+  golrLookupManager(searchText) {
     const manager = new golr_manager(gserv, gconf, engine, 'async');
     // manager.jsonpCallbackParam: 'json.wrf'
 
@@ -136,7 +129,6 @@ export class NoctuaLookupService {
 
 
   companionLookup(gp, aspect, extraParams) {
-    const self = this;
     const golrUrl = environment.globalGolrCompanionServer + `select?`;
 
     const requestParams = {
@@ -216,7 +208,7 @@ export class NoctuaLookupService {
 
           evidence.assignedBy = new Entity(null, doc.assigned_by);
 
-          annotonNode = _.find(result, (srcAnnotonNode: AnnotonNode) => {
+          annotonNode = find(result, (srcAnnotonNode: AnnotonNode) => {
             return srcAnnotonNode.getTerm().id === doc.annotation_class;
           });
 
@@ -318,7 +310,7 @@ export class NoctuaLookupService {
     const self = this;
     const data = new AnnotonNodeClosure(term, closure);
 
-    return (_.find(self.localClosures, data));
+    return (find(self.localClosures, data));
   }
 
   getLocalClosure(term: string, closure: string) {
@@ -336,7 +328,7 @@ export class NoctuaLookupService {
   getLocalClosures(term: string) {
     const self = this;
 
-    return _.filter(self.localClosures, { term: term, isaClosure: true });
+    return filter(self.localClosures, { term: term, isaClosure: true });
   }
 
   getLocalClosureRange(term, closureRange) {
