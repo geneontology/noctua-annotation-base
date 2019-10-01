@@ -22,6 +22,7 @@ import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { EditorCategory } from './../../models/editor-category';
 import { takeUntil } from 'rxjs/operators';
 import { find } from 'lodash';
+import { InlineReferenceService } from './../../inline-reference/inline-reference.service';
 
 @Component({
   selector: 'noc-editor-dropdown',
@@ -31,7 +32,6 @@ import { find } from 'lodash';
 
 export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   EditorCategory = EditorCategory;
-  evidenceDBForm: FormGroup;
   annoton: Annoton;
   cam: Cam;
   entity: AnnotonNode;
@@ -57,6 +57,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     private camService: CamService,
     private noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
+    private inlineReferenceService: InlineReferenceService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
   ) {
@@ -71,7 +72,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._displaySection(this.category);
-    this.evidenceDBForm = this._createEvidenceDBForm();
     this.entityFormSub = this.noctuaAnnotonEntityService.entityFormGroup$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(entityFormGroup => {
@@ -83,6 +83,15 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
         this.evidenceFormGroup = evidenceFormArray.at(this.evidenceIndex) as FormGroup;
         console.log(this.evidenceFormGroup);
       });
+  }
+
+  openAddReference(event, name: string) {
+
+    const data = {
+      formControl: this.evidenceFormGroup.controls[name] as FormControl,
+    };
+    this.inlineReferenceService.open(event.target, { data });
+
   }
 
   save() {
@@ -192,20 +201,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
-  onSubmitEvidedenceDb(evidence: FormGroup, name: string) {
-    console.log(evidence);
-    console.log(this.evidenceDBForm.value);
-
-    const DB = this.evidenceDBForm.value.db;
-    const accession = this.evidenceDBForm.value.accession;
-
-    const control: FormControl = evidence.controls[name] as FormControl;
-    control.setValue(DB.name + ':' + accession);
-  }
-
-  cancelEvidenceDb() {
-    this.evidenceDBForm.controls['accession'].setValue('');
-  }
 
   termDisplayFn(term): string | undefined {
     return term ? term.label : undefined;
@@ -215,12 +210,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     return evidence ? evidence.label : undefined;
   }
 
-  private _createEvidenceDBForm() {
-    return new FormGroup({
-      db: new FormControl(this.noctuaFormConfigService.evidenceDBs.selected),
-      accession: new FormControl()
-    });
-  }
 
   private _displaySection(category: EditorCategory) {
     switch (category) {
