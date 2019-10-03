@@ -28,7 +28,7 @@ export class NoctuaFormConfigService {
   baseSpeciesRequestParam;
   requestParams;
   _annotonData;
-  _reviewSearchData;
+  _searchFormData;
   _modelRelationship;
   closureCheck;
   loggedIn = false;
@@ -359,7 +359,7 @@ export class NoctuaFormConfigService {
 
 
 
-    this._reviewSearchData = {
+    this._searchFormData = {
       "species": {
         'id': 'species',
         "label": 'Macromolecular Complex',
@@ -952,7 +952,7 @@ export class NoctuaFormConfigService {
   getRequestParams(id) {
     const self = this;
 
-    const nodeData = JSON.parse(JSON.stringify(self._reviewSearchData[id]));
+    const nodeData = JSON.parse(JSON.stringify(self._searchFormData[id]));
 
     return nodeData.termLookup.requestParams;
   }
@@ -968,14 +968,14 @@ export class NoctuaFormConfigService {
     modelInfo.owlUrl = environment.noctuaUrl + '/download/' + modelId + '/owl';
     modelInfo.gpadUrl = environment.noctuaUrl + '/download/' + modelId + '/gpad';
     modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + (self.baristaToken ? self._parameterize(baristaParams) : '');
-    modelInfo.saeUrl = environment.workbenchUrl + 'simple-annoton-editor?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : '');
-    // modelInfo.logoutUrl = self.baristaLocation + '/logout?' + self._parameterize(baristaParams) + '&amp;return=' + environment.workbenchUrl+'simple-annoton-editor?' + self._parameterize(baristaParams)
-    // modelInfo.loginUrl = self.baristaLocation + '/login?return=' + environment.workbenchUrl+'simple-annoton-editor';
+    modelInfo.saeUrl = environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : '');
+    // modelInfo.logoutUrl = self.baristaLocation + '/logout?' + self._parameterize(baristaParams) + '&amp;return=' + environment.workbenchUrl+'noctua-form?' + self._parameterize(baristaParams)
+    // modelInfo.loginUrl = self.baristaLocation + '/login?return=' + environment.workbenchUrl+'noctua-form';
 
     //Workbenches 
     modelInfo.workbenches = [{
       label: 'Noctua Form',
-      url: environment.workbenchUrl + 'simple-annoton-editor?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Graph Editor',
       url: modelInfo.graphEditorUrl
@@ -1002,7 +1002,7 @@ export class NoctuaFormConfigService {
       url: environment.workbenchUrl + 'pathwayview?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }, {
       label: 'Annotation Preview',
-      url: environment.workbenchUrl + 'simple-annoton-editor?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
+      url: environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
     }]
 
     return modelInfo;
@@ -1012,16 +1012,16 @@ export class NoctuaFormConfigService {
     const self = this;
     const baristaParams = { 'barista_token': self.baristaToken };
     const modelIdParams = { 'model_id': modelId };
-    const url = environment.workbenchUrl + 'simple-annoton-editor?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams)));
+    const url = environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams)));
 
     return url;
   }
 
 
-  createReviewSearchFormData() {
+  createSearchFormData() {
     const self = this;
 
-    return self._reviewSearchData;
+    return self._searchFormData;
 
   }
 

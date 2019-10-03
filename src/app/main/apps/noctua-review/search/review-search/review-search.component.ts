@@ -55,7 +55,7 @@ export class ReviewSearchComponent implements OnInit, OnDestroy {
 
     this.unsubscribeAll = new Subject();
 
-    this.searchFormData = this.noctuaFormConfigService.createReviewSearchFormData();
+    this.searchFormData = this.noctuaFormConfigService.createSearchFormData();
     this.onValueChanges();
   }
 

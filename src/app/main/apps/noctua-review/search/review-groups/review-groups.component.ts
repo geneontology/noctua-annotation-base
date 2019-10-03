@@ -49,7 +49,7 @@ export class ReviewGroupsComponent implements OnInit, OnDestroy {
     private sparqlService: SparqlService,
     private noctuaTranslationLoader: NoctuaTranslationLoaderService) {
     // this.groups = this.reviewService.groups;
-    this.searchFormData = this.noctuaFormConfigService.createReviewSearchFormData();
+    this.searchFormData = this.noctuaFormConfigService.createSearchFormData();
     this.unsubscribeAll = new Subject();
 
     this.groupsForm = this.formBuilder.group({
