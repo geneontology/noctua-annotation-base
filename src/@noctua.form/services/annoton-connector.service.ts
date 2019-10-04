@@ -7,7 +7,6 @@ import { NoctuaLookupService } from './lookup.service';
 import { CamService } from './cam.service';
 import { NoctuaGraphService } from './graph.service';
 
-
 import {
   Cam,
   Annoton,
@@ -16,9 +15,7 @@ import {
   ConnectorState
 } from './../models/annoton';
 
-
 import { AnnotonConnectorForm } from './../models/forms/annoton-connector-form';
-
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { each } from 'lodash';
 

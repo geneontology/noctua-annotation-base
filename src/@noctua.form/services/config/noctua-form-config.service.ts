@@ -1,8 +1,6 @@
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { noctuaFormExample } from './../..//noctua-form-examples';
-
 import * as ModelDefinition from './../../data/config/model-definition';
 import * as InsertEntityDefinition from './../../data/config/insert-entity-definition';
 
@@ -843,12 +841,12 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.camDisplayType.options.model,
       noctuaFormConfig.camDisplayType.options.triple,
       noctuaFormConfig.camDisplayType.options.entity
-    ]
+    ];
 
     return {
       options: options,
       selected: options[0]
-    }
+    };
   }
 
   get causalEffect() {
@@ -883,70 +881,6 @@ export class NoctuaFormConfigService {
       options: options,
       selected: options[0]
     };
-  }
-
-  getCausalEffectByEdge(edge) {
-    let causalEffect = noctuaFormConfig.causalEffect.options.positive;
-    let annotonsConsecutive = false;
-
-    switch (edge.id) {
-      case noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id:
-        annotonsConsecutive = true;
-      case noctuaFormConfig.edge.positivelyRegulates.id:
-        causalEffect = noctuaFormConfig.causalEffect.options.positive;
-        break;
-      case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
-        annotonsConsecutive = true;
-      case noctuaFormConfig.edge.negativelyRegulates.id:
-        causalEffect = noctuaFormConfig.causalEffect.options.negative;
-        break;
-      case noctuaFormConfig.edge.causallyUpstreamOf.id:
-        annotonsConsecutive = true;
-      case noctuaFormConfig.edge.regulates.id:
-        causalEffect = noctuaFormConfig.causalEffect.options.neutral;
-        break;
-    }
-
-    return {
-      causalEffect: causalEffect,
-      annotonsConsecutive: annotonsConsecutive
-    };
-  }
-
-  get noctuaFormExample() {
-    return noctuaFormExample;
-  }
-
-  getCausalAnnotonConnectorEdge(causalEffect, annotonsConsecutive) {
-    let result;
-
-    if (annotonsConsecutive) {
-      switch (causalEffect.name) {
-        case noctuaFormConfig.causalEffect.options.positive.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
-          break;
-        case noctuaFormConfig.causalEffect.options.negative.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
-          break;
-        case noctuaFormConfig.causalEffect.options.neutral.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOf;
-          break;
-      }
-    } else {
-      switch (causalEffect.name) {
-        case noctuaFormConfig.causalEffect.options.positive.name:
-          result = noctuaFormConfig.edge.positivelyRegulates;
-          break;
-        case noctuaFormConfig.causalEffect.options.negative.name:
-          result = noctuaFormConfig.edge.negativelyRegulates;
-          break;
-        case noctuaFormConfig.causalEffect.options.neutral.name:
-          result = noctuaFormConfig.edge.regulates;
-          break;
-      }
-    }
-
-    return result;
   }
 
   getRequestParams(id) {
@@ -1003,7 +937,7 @@ export class NoctuaFormConfigService {
     }, {
       label: 'Annotation Preview',
       url: environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }]
+    }];
 
     return modelInfo;
   }
@@ -1022,7 +956,6 @@ export class NoctuaFormConfigService {
     const self = this;
 
     return self._searchFormData;
-
   }
 
   createAnnotonConnectorModel(upstreamAnnoton: Annoton, downstreamAnnoton: Annoton, srcProcessNode?: AnnotonNode, srcHasInputNode?: AnnotonNode) {

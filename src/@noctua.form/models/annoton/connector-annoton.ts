@@ -102,13 +102,14 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     self.rule.r1Edge = this.getCausalConnectorEdge(
       value.causalEffect,
       value.annotonsConsecutive,
+      value.effectDependency,
       value.causalReactionProduct);
 
     self.setPreview();
   }
 
   getIsConsecutiveByEdge(edge) {
-    let result = edge.id === noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id ||
+    const result = edge.id === noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id ||
       edge.id === noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id ||
       edge.id === noctuaFormConfig.edge.causallyUpstreamOf.id;
 
@@ -121,10 +122,12 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     switch (edge.id) {
       case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
       case noctuaFormConfig.edge.directlyNegativelyRegulates.id:
+      case noctuaFormConfig.edge.negativelyRegulates.id:
         effectDirection = noctuaFormConfig.causalEffect.options.negative;
         break;
       case noctuaFormConfig.edge.causallyUpstreamOf.id:
       case noctuaFormConfig.edge.directlyRegulates.id:
+      case noctuaFormConfig.edge.regulates.id:
         effectDirection = noctuaFormConfig.causalEffect.options.neutral;
         break;
     }
@@ -132,37 +135,33 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     return effectDirection;
   }
 
-  getCausalConnectorEdge(causalEffect, annotonsConsecutive, causalReactionProduct) {
+  getCausalConnectorEdge(causalEffect, annotonsConsecutive, effectDependency, causalReactionProduct) {
+    const self = this;
     let result;
 
-    if (!annotonsConsecutive) {
-      switch (causalEffect.name) {
-        case noctuaFormConfig.causalEffect.options.positive.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
-          break;
-        case noctuaFormConfig.causalEffect.options.negative.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
-          break;
-        case noctuaFormConfig.causalEffect.options.neutral.name:
-          result = noctuaFormConfig.edge.causallyUpstreamOf;
-          break;
-      }
-    } else if (annotonsConsecutive) {
-      if (causalReactionProduct.name === noctuaFormConfig.causalReactionProduct.options.substrate.name) {
-        result = noctuaFormConfig.edge.directlyProvidesInput;
-      } else {
-        switch (causalEffect.name) {
-          case noctuaFormConfig.causalEffect.options.positive.name:
-            result = noctuaFormConfig.edge.positivelyRegulates;
-            break;
-          case noctuaFormConfig.causalEffect.options.negative.name:
-            result = noctuaFormConfig.edge.negativelyRegulates;
-            break;
-          case noctuaFormConfig.causalEffect.options.neutral.name:
-            result = noctuaFormConfig.edge.regulates;
-            break;
-        }
-      }
+    if (annotonsConsecutive && causalReactionProduct.name === noctuaFormConfig.causalReactionProduct.options.substrate.name) {
+      return noctuaFormConfig.edge.directlyProvidesInput;
+    }
+
+    switch (causalEffect.name) {
+      case noctuaFormConfig.causalEffect.options.positive.name:
+        result = annotonsConsecutive ?
+          effectDependency ? noctuaFormConfig.edge.positivelyRegulates :
+            noctuaFormConfig.edge.directlyPositivelyRegulates :
+          noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
+        break;
+      case noctuaFormConfig.causalEffect.options.negative.name:
+        result = annotonsConsecutive ?
+          effectDependency ? noctuaFormConfig.edge.negativelyRegulates :
+            noctuaFormConfig.edge.directlyNegativelyRegulates :
+          noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
+        break;
+      case noctuaFormConfig.causalEffect.options.neutral.name:
+        result = annotonsConsecutive ?
+          effectDependency ? noctuaFormConfig.edge.regulates :
+            noctuaFormConfig.edge.directlyRegulates :
+          noctuaFormConfig.edge.causallyUpstreamOf;
+        break;
     }
 
     return result;
