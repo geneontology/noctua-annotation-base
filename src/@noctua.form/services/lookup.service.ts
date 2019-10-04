@@ -85,7 +85,8 @@ export class NoctuaLookupService {
     const result = data.map((item) => {
       let xref;
       if (item.database_xref && item.database_xref.length > 0) {
-        xref = item.database_xref[0];
+        const xrefDB = item.database_xref[0].split(':');
+        xref = xrefDB.length > 1 ? xrefDB[1] : xrefDB[0];
       }
 
       console.log(self.linker.url(item.annotation_class))
