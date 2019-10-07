@@ -953,10 +953,11 @@ export class NoctuaFormConfigService {
 
   getUniversalWorkbenchUrl(workbenchName: string, extraParamString) {
     const self = this;
-    const baristaParams = { 'barista_token': self.baristaToken };
-    const url = environment.workbenchUrl + workbenchName + '?' +
+    const baristaParams = { 'barista_token': self.baristaToken }
+    const queryString =
       (self.baristaToken ? self._parameterize(Object.assign({}, baristaParams)) + '&' + extraParamString
         : extraParamString);
+    const url = environment.workbenchUrl + workbenchName + '?' + queryString;
 
     return url;
   }

@@ -140,7 +140,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     searchCriteria.goterms.push(this.entity.term);
 
-    const url = this.noctuaFormConfigService.getUniversalWorkbenchUrl('noctua-search', searchCriteria.build());
+    const url = this.noctuaFormConfigService.getUniversalWorkbenchUrl('noctua-search', searchCriteria.buildEncoded());
 
     console.log(url);
 
