@@ -144,6 +144,8 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     console.log(url);
 
+    window.open(url, '_blank');
+
   }
 
   insertEntity(nodeDescription: InsertEntityDefinition.InsertNodeDescription) {
