@@ -14,7 +14,7 @@ export class SearchCriteria {
     constructor() {
     }
 
-    build() {
+    query() {
         const self = this;
         let query = ['offset=0&limit=50'];
 
@@ -50,6 +50,10 @@ export class SearchCriteria {
             query.push(`state=${state.name}`);
         });
 
-        return query.join('&');
+        return query;
+    }
+
+    build() {
+        return this.query().join('&');
     }
 }

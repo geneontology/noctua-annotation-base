@@ -89,6 +89,13 @@ export class NoctuaAnnotonEntityService {
       saveData.removeTriples);
   }
 
+  searchModels() {
+    const self = this;
+
+    self.annotonEntityFormToAnnoton();
+    const saveData = self.annoton.createEdit(self.currentAnnoton);
+  }
+
   clearForm() {
   }
 }
