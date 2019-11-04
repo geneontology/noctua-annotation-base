@@ -89,11 +89,10 @@ export class NoctuaLookupService {
         xref = xrefDB.length > 1 ? xrefDB[1] : xrefDB[0];
       }
 
-      console.log(self.linker.url(item.annotation_class))
       return {
         id: item.annotation_class,
         label: item.annotation_class_label,
-        link: self.linker.url(item.annotation_class),
+        link: self.getTermURL(item.annotation_class),
         xref: xref
       };
     });
@@ -355,4 +354,15 @@ export class NoctuaLookupService {
 
     return self.localClosures;
   }
+
+  getTermURL(id: string) {
+    const self = this;
+
+    if (id.startsWith('ECO')) {
+      return 'http://www.evidenceontology.org/term/' + id;
+    } else {
+      return self.linker.url(id);
+    }
+  }
+
 }
