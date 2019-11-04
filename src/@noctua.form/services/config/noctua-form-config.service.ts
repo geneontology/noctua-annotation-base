@@ -514,8 +514,8 @@ export class NoctuaFormConfigService {
         overrides: {
           'cc': {
             id: 'cc',
-            label: 'GP located in Cellular Component',
-            relationship: noctuaFormConfig.edge.locatedIn
+            label: 'GP part of Cellular Component',
+            relationship: noctuaFormConfig.edge.partOf
           },
           'cc-1': {
             id: 'cc-1',
@@ -530,7 +530,7 @@ export class NoctuaFormConfigService {
         triples: [{
           subject: 'gp',
           object: 'cc',
-          edge: noctuaFormConfig.edge.locatedIn
+          edge: noctuaFormConfig.edge.partOf
         }, {
           subject: 'cc',
           object: 'cc-1',

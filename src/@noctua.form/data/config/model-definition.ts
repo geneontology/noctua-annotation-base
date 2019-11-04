@@ -175,8 +175,8 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             type: AnnotonNodeType.GoCellularComponent,
             category: EntityDefinition.GoCellularComponent.category,
             aspect: 'C',
-            label: 'Located In Cellular Component',
-            relationship: noctuaFormConfig.edge.locatedIn,
+            label: 'Part Of Cellular Component',
+            relationship: noctuaFormConfig.edge.partOf,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
             treeLevel: 2,
@@ -185,7 +185,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
     triples: [{
         subject: AnnotonNodeType.GoMolecularEntity,
         object: AnnotonNodeType.GoCellularComponent,
-        predicate: noctuaFormConfig.edge.locatedIn
+        predicate: noctuaFormConfig.edge.partOf
     }],
 };
 

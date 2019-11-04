@@ -310,16 +310,15 @@ export class NoctuaGraphService {
     each(graph.get_nodes(), function (node) {
       const termNodeInfo = self.getNodeInfo(node);
 
-      each(graph.get_edges_by_subject(node.id()), function (e) {
-        const predicateId = e.predicate_id();
-        const objectNode = graph.get_node(e.object_id());
-        const objectTermNodeInfo = self.getNodeInfo(objectNode);
+      //  each(graph.get_edges_by_subject(node.id()), function (e) {
+      //  const predicateId = e.predicate_id();
+      //   const objectNode = graph.get_node(e.object_id());
+      // const objectTermNodeInfo = self.getNodeInfo(objectNode);
 
-        each(EntityDefinition.EntityCategories, (category) => {
-          promises.push(self.isaClosurePreParse(objectTermNodeInfo.id, category));
-        });
-
+      each(EntityDefinition.EntityCategories, (category) => {
+        promises.push(self.isaClosurePreParse(termNodeInfo.id, category));
       });
+      // });
     });
 
     return forkJoin(promises);
@@ -347,6 +346,7 @@ export class NoctuaGraphService {
     return self.noctuaLookupService.isaClosure(a, b, category.categoryType)
       .pipe(
         map((response) => {
+          console.log(a, b, response)
           self.noctuaLookupService.addLocalClosure(a, b, response);
         })
       );
@@ -362,12 +362,12 @@ export class NoctuaGraphService {
       }));
   }
 
-
   getActivityPreset(subjectNode, predicateId, bbopSubjectEdges): Annoton {
     const self = this;
     let annotonType = AnnotonType.default;
 
-    if (predicateId === noctuaFormConfig.edge.locatedIn.id) {
+    if (predicateId === noctuaFormConfig.edge.partOf.id &&
+      self.noctuaLookupService.getLocalClosure(subjectNode.term.id, EntityDefinition.GoMolecularEntity.category)) {
       annotonType = AnnotonType.ccOnly;
     } else if (subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(bbopSubjectEdges, function (subjectEdge) {
@@ -385,10 +385,14 @@ export class NoctuaGraphService {
     const annotons: Annoton[] = [];
 
     each(cam.graph.all_edges(), (bbopEdge) => {
+      const bbopSubjectId = bbopEdge.subject_id();
+      const subjectNode = self.nodeToAnnotonNode(cam.graph, bbopSubjectId);
+      console.log(subjectNode.term.id, self.noctuaLookupService.getLocalClosure(subjectNode.term.id, EntityDefinition.GoMolecularEntity.category))
+
       if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
-        bbopEdge.predicate_id() === noctuaFormConfig.edge.locatedIn.id) {
-        const bbopSubjectId = bbopEdge.subject_id();
-        const subjectNode = self.nodeToAnnotonNode(cam.graph, bbopSubjectId);
+        (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
+          self.noctuaLookupService.getLocalClosure(subjectNode.term.id, EntityDefinition.GoMolecularEntity.category))) {
+
         const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
         const annoton: Annoton = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
         const subjectAnnotonNode = annoton.rootNode;
@@ -424,7 +428,7 @@ export class NoctuaGraphService {
         });
 
         if (causalEdge) {
-          if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.mf.id)) {
+          if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, EntityDefinition.GoMolecularFunction.category)) {
             const downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
             const connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, downstreamAnnoton);
 
@@ -435,7 +439,7 @@ export class NoctuaGraphService {
             connectorAnnoton.setRule();
             connectorAnnoton.createGraph();
             connectorAnnotons.push(connectorAnnoton);
-          } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.bp.id)) {
+          } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, EntityDefinition.GoBiologicalProcess.category)) {
             const processNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
             const processNode = self.noctuaFormConfigService.generateAnnotonNode('bp', { id: 'process' });
             const connectorAnnotonDTO = this._getConnectAnnotonIntermediate(cam, objectId);
@@ -691,7 +695,7 @@ export class NoctuaGraphService {
       })
 
       if (causalEdge) {
-        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.mf.id)) {
+        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, EntityDefinition.GoMolecularFunction.category)) {
           const downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
 
           connectorAnnoton.rule.r2Edge = new Entity(causalEdge.id, causalEdge.label);;

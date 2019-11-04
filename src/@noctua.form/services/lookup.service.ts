@@ -292,7 +292,7 @@ export class NoctuaLookupService {
     return curie.replace(/_/, ':');
   }
 
-  //Closures
+  // Closures
   addLocalClosure(term, closure, isaClosure) {
     const self = this;
     const data = {
