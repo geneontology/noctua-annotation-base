@@ -155,66 +155,27 @@ export class Cam {
     return result;
   }
 
-  getUniqueEvidences(result?) {
+  getEvidences(formAnnoton: Annoton) {
     const self = this;
+    const result = [];
 
-    if (!result) {
-      result = [];
+    if (formAnnoton && formAnnoton.nodes) {
+      each(formAnnoton.nodes, function (node: AnnotonNode) {
+        each(node.predicate.evidence, function (evidence: Evidence) {
+          if (evidence.hasValue()) {
+            result.push(evidence);
+          }
+        });
+      });
     }
 
     each(self.annotons, function (annoton: Annoton) {
       each(annoton.edges, function (triple: Triple<AnnotonNode>) {
         each(triple.predicate.evidence, function (evidence: Evidence) {
           if (evidence.hasValue()) {
-            if (!self.evidenceExists(result, evidence)) {
-              result.push(evidence);
-            }
-          }
-        });
-      });
-    });
-
-    return result;
-  }
-
-  evidenceExists(data, evidence) {
-    const self = this;
-
-    return find(data, function (x) {
-      return x.isEvidenceEqual(evidence)
-    })
-  }
-
-  addUniqueEvidences(existingEvidence, data) {
-    const self = this;
-    let result = [];
-
-    each(data, function (annotation) {
-      each(annotation.annotations, function (node) {
-        each(node.evidence, function (evidence) {
-          if (evidence.hasValue()) {
-            if (!self.evidenceExists(result, evidence)) {
-              result.push(evidence);
-            }
-          }
-        });
-      });
-    });
-
-    return result;
-  }
-
-  addUniqueEvidencesFromAnnoton(annoton: Annoton) {
-    const self = this;
-    const result = [];
-
-    each(annoton.nodes, function (node: AnnotonNode) {
-      each(node.predicate.evidence, function (evidence: Evidence) {
-        if (evidence.hasValue()) {
-          if (!self.evidenceExists(result, evidence)) {
             result.push(evidence);
           }
-        }
+        });
       });
     });
 

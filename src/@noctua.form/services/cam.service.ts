@@ -20,10 +20,12 @@ import { AnnotonNode } from './../models/annoton/annoton-node';
 
 import { CamForm } from './../models/forms/cam-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
+import { Evidence, compareEvidence } from './../models/annoton/evidence';
 
 import * as _ from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { Cam } from './../models/annoton/cam';
+import { uniqWith } from 'lodash';
 declare const require: any;
 const each = require('lodash/forEach');
 
@@ -148,11 +150,10 @@ export class CamService {
     return self.noctuaGraphService.deleteAnnoton(self.cam, deleteData.uuids, deleteData.triples);
   }
 
-  getUniqueEvidence(formAnnoton?: Annoton) {
+  getUniqueEvidence(formAnnoton?: Annoton): Evidence[] {
+    const evidences = this.cam.getEvidences(formAnnoton);
+    const result = uniqWith(evidences, compareEvidence);
 
-    const evidences = formAnnoton ?
-      this.cam.addUniqueEvidencesFromAnnoton(formAnnoton) :
-      [];
-    return this.cam.getUniqueEvidences(evidences);
+    return result;
   }
 }

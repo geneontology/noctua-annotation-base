@@ -97,3 +97,9 @@ export class Evidence {
     return result;
   }
 }
+
+export function compareEvidence(a: Evidence, b: Evidence) {
+  return a.evidence.id === b.evidence.id
+    && a.reference === b.reference
+    && a.with === b.with;
+}
