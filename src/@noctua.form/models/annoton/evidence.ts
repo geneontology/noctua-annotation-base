@@ -71,25 +71,30 @@ export class Evidence {
     const self = this;
     let result = true;
 
-    if (!self.evidence.id) {
+    if (self.evidence.id) {
+      self.evidenceRequired = false;
+    } else {
       self.evidenceRequired = true;
-      let meta = {
+      const meta = {
         aspect: node.label
-      }
-      let error = new AnnotonError('error', 1, "No evidence for '" + node.label + "': evidence(" + position + ")", meta)
+      };
+      const error = new AnnotonError('error', 1, `No evidence for "${node.label}": evidence(${position})`, meta);
+
       errors.push(error);
       result = false;
-    } else {
-      self.evidenceRequired = false;
     }
 
     if (self.evidence.id && !self.reference) {
-      self.referenceRequired = true;
-      let meta = {
+
+      const meta = {
         aspect: node.label
-      }
-      let error = new AnnotonError('error', 1, "You provided an evidence for '" + node.label + "' but no reference: evidence(" + position + ")", meta)
+      };
+      const error = new AnnotonError('error', 1,
+        `You provided an evidence for "${node.label}" but no reference: evidence(${position})`,
+        meta);
       errors.push(error);
+
+      self.referenceRequired = true;
       result = false;
     } else {
       self.referenceRequired = false;

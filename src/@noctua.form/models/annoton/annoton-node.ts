@@ -169,20 +169,18 @@ export class AnnotonNode implements AnnotonNodeDisplay {
       const meta = {
         aspect: self.label
       };
-      const error = new AnnotonError('error', 1, "A '" + self.label + "' is required", meta)
+      const error = new AnnotonError('error', 1, `A"${self.label}" is required`, meta);
       errors.push(error);
       result = false;
     } else {
       self.required = false;
     }
 
-    /*if (self.term.id && self.evidenceRequiredList.includes(self.id) &&
-       !self.evidenceNotRequiredList.includes(self.term.id)) {
-      each(self.evidence, (evidence: Evidence, key) => {
-        if (self.term.id)
-          result = evidence.enableSubmit(errors, self, key + 1) && result;
-      }) 
-    }*/
+    if (self.hasValue()) {
+      each(self.predicate.evidence, (evidence: Evidence, key) => {
+        result = evidence.enableSubmit(errors, self, key + 1) && result;
+      });
+    }
 
     return result;
   }

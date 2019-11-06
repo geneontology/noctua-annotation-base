@@ -166,6 +166,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             category: EntityDefinition.GoMolecularEntity.category,
             label: 'Gene Product',
             skipEvidence: true,
+            termRequired: true,
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
