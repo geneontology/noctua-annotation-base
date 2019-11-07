@@ -152,9 +152,9 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     let result = true;
 
     if (self.nodeGroup) {
-      if (self.nodeGroup.isComplement && self.treeLevel > 0) [
-        result = false
-      ]
+      if (self.nodeGroup.isComplement && self.treeLevel > 0) {
+        result = false;
+      }
     }
 
     return result;
@@ -169,14 +169,14 @@ export class AnnotonNode implements AnnotonNodeDisplay {
       const meta = {
         aspect: self.label
       };
-      const error = new AnnotonError('error', 1, `A"${self.label}" is required`, meta);
+      const error = new AnnotonError('error', 1, `"${self.label}" is required`, meta);
       errors.push(error);
       result = false;
     } else {
       self.required = false;
     }
 
-    if (self.hasValue()) {
+    if (!self.skipEvidence && self.hasValue()) {
       each(self.predicate.evidence, (evidence: Evidence, key) => {
         result = evidence.enableSubmit(errors, self, key + 1) && result;
       });
