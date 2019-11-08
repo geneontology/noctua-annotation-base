@@ -46,10 +46,6 @@
           <mat-chip class="noc-chip-xs" [ngClass]="annoton.annotonType">
             <span>{{annotonTypeOptions[annoton.annotonType]?.label}}</span>
           </mat-chip>
-          <mat-chip class="noc-chip-xs">
-            <mat-icon class="fa-rotate-90"> call_split </mat-icon>
-            <span>3</span>
-          </mat-chip>
           <span fxFlex=""></span>
           <div class="" fxFlex="200px" fxLayout="row" fxLayoutAlign="end center">
             <button *ngIf="annoton.annotonType !==AnnotonType.ccOnly" mat-stroked-button

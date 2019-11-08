@@ -39,37 +39,31 @@ const edge = {
   },
   causallyUpstreamOf: {
     id: 'RO:0002411',
-    actsId: 'RO:0002263',
     label: 'causally upstream of',
     actsLabel: 'acts upstream of'
   },
   causallyUpstreamOfOrWithin: {
     id: 'RO:0002418',
-    actsId: 'RO:0002264',
     label: 'causally upstream of or within',
     actsLabel: 'acts upstream of or within'
   },
   causallyUpstreamOfPositiveEffect: {
     id: 'RO:0002304',
-    actsId: 'RO:0004034',
     label: 'causally upstream of, positive effect',
     actsLabel: 'acts upstream of, positive effect'
   },
   causallyUpstreamOfNegativeEffect: {
     id: 'RO:0002305',
-    actsId: 'RO:0004035',
     label: 'causally upstream of, negative effect',
     actsLabel: 'acts upstream of, negative effect'
   },
   causallyUpstreamOfOrWithinPositiveEffect: {
-    id: 'RO:0002629',
-    actsId: 'RO:0004032',
+    id: 'RO:0004047',
     label: 'causally upstream of or within, positive effect',
     actsLabel: 'acts upstream of or within, positive effect'
   },
   causallyUpstreamOfOrWithinNegativeEffect: {
-    id: 'RO:0002630',
-    actsId: 'RO:0004033',
+    id: 'RO:0004046',
     label: 'causally upstream of or within, negative effect',
     actsLabel: 'acts upstream of or within, negative effect'
   },
