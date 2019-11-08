@@ -147,8 +147,11 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         const rootMF = noctuaFormConfig.rootNode.mf;
         const mfNode = self.getMFNode();
         const bpNode = self.getNode(AnnotonNodeType.GoBiologicalProcess);
+        const bpEdge = this.getEdge(mfNode.id, bpNode.id);
 
         mfNode.term = new Entity(rootMF.id, rootMF.label);
+        bpEdge.predicate.edge.id = this.bpOnlyEdge.id;
+        bpEdge.predicate.edge.label = this.bpOnlyEdge.label;
         break;
     }
   }

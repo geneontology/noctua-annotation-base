@@ -74,7 +74,6 @@ export class SaeGraph<T extends AnnotonNode> {
   editEdge(subjectId, objectId, srcEdge) {
     const destEdge = this.getEdge(subjectId, objectId);
 
-    // destEdge.edge = srcEdge;
   }
 
   getEdge(subjectId: string, objectId: string): Triple<T> {
