@@ -150,8 +150,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         const bpEdge = this.getEdge(mfNode.id, bpNode.id);
 
         mfNode.term = new Entity(rootMF.id, rootMF.label);
-        bpEdge.predicate.edge.id = this.bpOnlyEdge.id;
-        bpEdge.predicate.edge.label = this.bpOnlyEdge.label;
+
+        if (this.bpOnlyEdge) {
+          bpEdge.predicate.edge.id = bpNode.predicate.edge.id = this.bpOnlyEdge.id;
+          bpEdge.predicate.edge.label = bpNode.predicate.edge.label = this.bpOnlyEdge.label;
+          bpNode.relationship = this.bpOnlyEdge;
+        }
         break;
     }
   }

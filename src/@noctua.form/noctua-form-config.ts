@@ -314,6 +314,8 @@ export const noctuaFormConfig = {
     Entity.createEntity(edge.causallyUpstreamOf),
     Entity.createEntity(edge.causallyUpstreamOfNegativeEffect),
     Entity.createEntity(edge.causallyUpstreamOfPositiveEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithinPositiveEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithinNegativeEffect),
     Entity.createEntity(edge.directlyRegulates),
     Entity.createEntity(edge.directlyPositivelyRegulates),
     Entity.createEntity(edge.directlyNegativelyRegulates),
