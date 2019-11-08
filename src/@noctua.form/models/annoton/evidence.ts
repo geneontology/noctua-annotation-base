@@ -124,13 +124,14 @@ export class Evidence {
     const accession = DBAccession[1].trim().toLowerCase();
     const dbs = ['pmid', 'go_ref', 'doi'];
 
+    /*
     if (!dbs.includes(db)) {
       const error = new AnnotonError('error', 1,
         `Please enter either PMID, DOI or GO_REF for "${node.label}" on evidence(${position})`,
         meta);
       errors.push(error);
       return false;
-    }
+    } */
 
     if (accession === '') {
       const error = new AnnotonError('error', 1,
