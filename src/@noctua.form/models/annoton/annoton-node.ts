@@ -164,6 +164,8 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     const self = this;
     let result = true;
 
+    console.log(0);
+
     if (self.termRequired && !self.term.id) {
       self.required = true;
       const meta = {

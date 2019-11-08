@@ -57,7 +57,9 @@ export class AnnotonForm {
       entityGroupForm.populateAnnotonNodes(annoton);
     });
 
-    annoton.bpOnlyEdge = new Entity(this.bpOnlyEdge.value.id, this.bpOnlyEdge.value.label);
+    if (this.bpOnlyEdge.value) {
+      annoton.bpOnlyEdge = new Entity(this.bpOnlyEdge.value.id, this.bpOnlyEdge.value.label);
+    }
   }
 
   getErrors(error) {
