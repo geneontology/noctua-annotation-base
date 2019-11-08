@@ -83,17 +83,11 @@ export class NoctuaAnnotonFormService {
     annotonForm.createFunctionDescriptionForm(self.annoton.presentation.fd);
     annotonForm.createMolecularEntityForm(self.annoton.presentation.gp);
 
-    console.log(annotonForm);
-
     return annotonForm;
   }
 
   annotonFormToAnnoton() {
     this.annotonForm.populateAnnoton(this.annoton);
-
-    if (this.annoton.annotonType === AnnotonType.bpOnly) {
-      //const mfNode = this.annotonNode
-    }
   }
 
   private _onAnnotonFormChanges(): void {
@@ -136,7 +130,7 @@ export class NoctuaAnnotonFormService {
         if (destNode) {
           destNode.copyValues(srcNode);
         }
-      })
+      });
     } else {
       // this.annoton.copyValues(srcAnnoton);
     }

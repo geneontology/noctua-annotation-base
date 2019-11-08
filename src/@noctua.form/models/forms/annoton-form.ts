@@ -9,6 +9,7 @@ const each = require('lodash/forEach');
 import { Annoton } from './../annoton/annoton';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityGroupForm } from './entity-group-form';
+import { Entity } from './../../models/annoton/entity';
 
 export class AnnotonForm {
   entityGroupForms: EntityGroupForm[] = [];
@@ -51,9 +52,12 @@ export class AnnotonForm {
   }
 
   populateAnnoton(annoton: Annoton) {
+
     this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
       entityGroupForm.populateAnnotonNodes(annoton);
     });
+
+    annoton.bpOnlyEdge = new Entity(this.bpOnlyEdge.value.id, this.bpOnlyEdge.value.label);
   }
 
   getErrors(error) {

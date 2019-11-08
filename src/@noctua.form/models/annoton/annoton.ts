@@ -44,6 +44,8 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     nodes: [],
     edges: []
   };
+
+  bpOnlyEdge: Entity;
   private _presentation: any;
   private _grid: any[] = [];
 
@@ -184,6 +186,17 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     each(self.nodes, (node: AnnotonNode) => {
       result = node.enableSubmit(self.submitErrors) && result;
     });
+
+    if (self.annotonType === AnnotonType.bpOnly) {
+      if (!self.bpOnlyEdge) {
+        const meta = {
+          aspect: 'Molecular Function'
+        };
+        const error = new AnnotonError('error', 1, `Causal relation is required`, meta);
+        self.submitErrors.push(error);
+        result = false;
+      }
+    }
 
     return result;
   }
