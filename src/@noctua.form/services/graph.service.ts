@@ -52,10 +52,7 @@ const minerva_manager = require('bbop-manager-minerva');
 export class NoctuaGraphService {
   baristaLocation = environment.globalBaristaLocation;
   minervaDefinitionName = environment.globalMinervaDefinitionName;
-  baristaToken;
   linker;
-  userInfo;
-  modelInfo;
 
   constructor(
     private noctuaUserService: NoctuaUserService,
@@ -63,13 +60,6 @@ export class NoctuaGraphService {
     private httpClient: HttpClient,
     private noctuaLookupService: NoctuaLookupService) {
     this.linker = new amigo.linker();
-    this.userInfo = {
-      groups: [],
-      selectedGroup: {}
-    };
-    this.modelInfo = {
-      graphEditorUrl: ''
-    };
   }
 
   registerManager() {
@@ -482,8 +472,8 @@ export class NoctuaGraphService {
 
     if (assignedBy) {
       reqs.use_groups(['http://purl.obolibrary.org/go/groups/' + assignedBy]);
-    } else if (self.userInfo.groups.length > 0) {
-      reqs.use_groups([self.userInfo.selectedGroup.id]);
+    } else if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
     } else {
       reqs.use_groups([]);
     }
@@ -539,8 +529,8 @@ export class NoctuaGraphService {
     self.addFact(reqs, triples);
     reqs.store_model(cam.modelId);
 
-    if (self.userInfo.groups.length > 0) {
-      reqs.use_groups([cam.groupId]);
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
     return cam.manager.request_with(reqs);
@@ -585,8 +575,8 @@ export class NoctuaGraphService {
 
     reqs.store_model(cam.modelId);
 
-    if (self.userInfo.groups.length > 0) {
-      reqs.use_groups([self.userInfo.selectedGroup.id]);
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
     return cam.manager.request_with(reqs);
@@ -612,8 +602,8 @@ export class NoctuaGraphService {
 
       reqs.store_model(cam.modelId);
 
-      if (self.userInfo.groups.length > 0) {
-        reqs.use_groups([self.userInfo.selectedGroup.id]);
+      if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+        reqs.use_groups([self.noctuaUserService.user.group.id]);
       }
 
       return cam.manager.request_with(reqs);
