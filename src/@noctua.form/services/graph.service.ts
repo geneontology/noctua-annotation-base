@@ -479,19 +479,6 @@ export class NoctuaGraphService {
     }
   }
 
-  adjustBPOnly(annoton, srcEdge) {
-    const self = this;
-    const mfNode = annoton.getNode(AnnotonNodeType.GoMolecularFunction);
-    const bpNode = annoton.getNode('bp');
-
-    if (mfNode && bpNode && annoton.annotonType === AnnotonType.bpOnly) {
-      mfNode.displaySection = noctuaFormConfig.displaySection.fd;
-      mfNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-      annoton.editEdge(AnnotonNodeType.GoMolecularFunction, 'bp', srcEdge);
-      bpNode.relationship = annoton.getEdge(AnnotonNodeType.GoMolecularFunction, 'bp').edge;
-    }
-  }
-
   saveModelGroup(cam: Cam, groupId) {
     cam.manager.use_groups([groupId]);
     cam.groupId = groupId;
@@ -627,7 +614,6 @@ export class NoctuaGraphService {
         });
 
         if (annoton.bpOnlyEdge) {
-          console.log(annoton.bpOnlyEdge)
           annoton.adjustAnnoton();
         }
       }
