@@ -902,7 +902,7 @@ export class NoctuaFormConfigService {
     modelInfo.owlUrl = environment.noctuaUrl + '/download/' + modelId + '/owl';
     modelInfo.gpadUrl = environment.noctuaUrl + '/download/' + modelId + '/gpad';
     modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + (self.baristaToken ? self._parameterize(baristaParams) : '');
-    modelInfo.saeUrl = environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : '');
+    modelInfo.noctuaFormUrl = environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : '');
     // modelInfo.logoutUrl = self.baristaLocation + '/logout?' + self._parameterize(baristaParams) + '&amp;return=' + environment.workbenchUrl+'noctua-form?' + self._parameterize(baristaParams)
     // modelInfo.loginUrl = self.baristaLocation + '/login?return=' + environment.workbenchUrl+'noctua-form';
 

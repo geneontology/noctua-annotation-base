@@ -35,6 +35,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     horizontalNav: boolean;
     noNav: boolean;
     navigation: any;
+    noctuaFormUrl = '';
     loginUrl = '';
 
     private _unsubscribeAll: Subject<any>;
@@ -44,13 +45,14 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private camService: CamService,
         private noctuaConfig: NoctuaConfigService,
+        private noctuaFormConfigService: NoctuaFormConfigService,
         private noctuaGraphService: NoctuaGraphService,
         public noctuaUserService: NoctuaUserService,
         public noctuaAnnotonFormService: NoctuaAnnotonFormService,
         public noctuaFormService: NoctuaFormService,
     ) {
         this._unsubscribeAll = new Subject();
-        this.loginUrl = 'http://barista-dev.berkeleybop.org/login?return=' + window.location.origin;
+        //  this.loginUrl = 'http://barista-dev.berkeleybop.org/login?return=' + this.;
         this.getUserInfo();
         this.router.events.pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
@@ -85,11 +87,9 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         const self = this;
 
         self.noctuaUserService.onUserChanged.pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((response) => {
-                if (response) {
-                    self.user = new Contributor()
-                    self.user.name = response.nickname;
-                    self.user.groups = response.groups;
+            .subscribe((user: Contributor) => {
+                if (user) {
+                    self.user = user;
                 }
             });
     }

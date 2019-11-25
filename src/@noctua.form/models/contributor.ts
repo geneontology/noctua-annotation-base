@@ -4,7 +4,7 @@ export class Contributor {
     group?: any = {};
     cams?: number;
     _groups?: any = []
-
+    token?: null;
 
     set groups(groups) {
         this._groups = groups;
