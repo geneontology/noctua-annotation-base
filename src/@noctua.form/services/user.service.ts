@@ -9,10 +9,6 @@ import { NoctuaFormConfigService } from './../services/config/noctua-form-config
 import { Contributor } from '../models/contributor';
 import { Group } from '../models/group';
 
-import { Annoton } from './../models/annoton/annoton';
-
-
-
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +18,6 @@ export class NoctuaUserService {
   baristaUrl = environment.globalBaristaLocation;
   onUserChanged: BehaviorSubject<any>;
   user: Contributor;
-
-  public annoton: Annoton;
-  public camFormGroup$: Observable<FormGroup>;
-
   contributors: Contributor[] = [];
   groups: Group[] = [];
 
@@ -37,13 +29,7 @@ export class NoctuaUserService {
   getUser(): Observable<any> {
     const self = this;
 
-    return this.httpClient
-      .get(`${self.baristaUrl}/user_info_by_token/${self.baristaToken}`)
-      .pipe(
-        finalize(() => {
-          //self.loading = false;
-        })
-      );
+    return this.httpClient.get(`${self.baristaUrl}/user_info_by_token/${self.baristaToken}`);
   }
 
   filterContributors(value: string): any[] {
@@ -57,5 +43,4 @@ export class NoctuaUserService {
 
     return this.groups.filter((group: Group) => group.name.toLowerCase().indexOf(filterValue) === 0);
   }
-
 }

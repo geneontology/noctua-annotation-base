@@ -3,8 +3,8 @@ export class Contributor {
     name?: string;
     group?: any = {};
     cams?: number;
-    _groups?: any = []
-    token?: null;
+    _groups?: any = [];
+    token?: string;
 
     set groups(groups) {
         this._groups = groups;

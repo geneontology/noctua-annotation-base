@@ -184,7 +184,6 @@ export class NoctuaGraphService {
     });
   }
 
-
   createModel(cam: Cam) {
     cam.newModelManager.add_model();
   }

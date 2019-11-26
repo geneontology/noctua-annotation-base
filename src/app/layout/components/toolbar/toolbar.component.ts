@@ -52,8 +52,17 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         public noctuaFormService: NoctuaFormService,
     ) {
         this._unsubscribeAll = new Subject();
-        //  this.loginUrl = 'http://barista-dev.berkeleybop.org/login?return=' + this.;
         this.getUserInfo();
+
+        this.route
+            .queryParams
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(params => {
+                const modelId = params['model_id'] || null;
+                const noctuaFormUrl = `${environment.workbenchUrl}/workbench/noctua-form/?model_id=${modelId}`;
+                this.loginUrl = `${environment.globalBaristaLocation}/login?return='${noctuaFormUrl}`;
+            });
+
         this.router.events.pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 (event) => {
@@ -65,6 +74,9 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
                     }
                 });
 
+
+
+
     }
 
     ngOnInit(): void {
@@ -75,7 +87,9 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
                     return;
                 }
 
+
                 this.cam = cam;
+
             });
     }
 
@@ -86,15 +100,14 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     getUserInfo() {
         const self = this;
 
-        self.noctuaUserService.onUserChanged.pipe(takeUntil(this._unsubscribeAll))
+        self.noctuaUserService.onUserChanged.pipe(
+            takeUntil(this._unsubscribeAll))
             .subscribe((user: Contributor) => {
                 if (user) {
                     self.user = user;
                 }
             });
     }
-
-
 
     openCamForm() {
         this.camService.initializeForm(this.cam);
