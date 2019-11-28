@@ -72,8 +72,11 @@ $accent: map-get($theme, accent);
       bottom: 0;
       left: 0;
       right: 0;
-      opacity: 0.2;
+      background-color: rgba(#000, 0.1);
       z-index: 1;
+      color: rgb(104, 31, 31);
+      font-weight: bold;
+      font-size: 24px;
     }
   }
 
