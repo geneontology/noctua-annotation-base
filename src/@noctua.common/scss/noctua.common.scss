@@ -15,7 +15,6 @@ $accent: map-get($theme, accent);
 }
 
 
-
 .mat-row {
   &:hover {
     @include mat-elevation(1);
@@ -72,9 +71,9 @@ $accent: map-get($theme, accent);
       bottom: 0;
       left: 0;
       right: 0;
-      background-color: rgba(#000, 0.1);
+      background-color: rgba(#000, 0.3);
       z-index: 1;
-      color: rgb(104, 31, 31);
+      color: #8b2d2d;
       font-weight: bold;
       font-size: 24px;
     }

@@ -232,8 +232,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     });
 
     saveData.graph = graph;
-    console.log(graph);
-    console.log(saveData);
 
     return saveData;
   }
