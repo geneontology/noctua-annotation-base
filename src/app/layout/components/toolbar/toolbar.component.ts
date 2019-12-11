@@ -37,6 +37,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     navigation: any;
     noctuaFormUrl = '';
     loginUrl = '';
+    noctuaUrl = environment.noctuaUrl;
 
     private _unsubscribeAll: Subject<any>;
 
@@ -44,8 +45,6 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private camService: CamService,
-        private noctuaConfig: NoctuaConfigService,
-        private noctuaFormConfigService: NoctuaFormConfigService,
         private noctuaGraphService: NoctuaGraphService,
         public noctuaUserService: NoctuaUserService,
         public noctuaAnnotonFormService: NoctuaAnnotonFormService,
@@ -73,10 +72,6 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
                         this.showLoadingBar = false;
                     }
                 });
-
-
-
-
     }
 
     ngOnInit(): void {
@@ -87,9 +82,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-
                 this.cam = cam;
-
             });
     }
 
@@ -117,13 +110,6 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     openAnnotonForm(annotonType: AnnotonType) {
         this.noctuaAnnotonFormService.setAnnotonType(annotonType);
         this.noctuaFormService.openLeftDrawer(this.noctuaFormService.panel.annotonForm);
-    }
-
-
-
-
-    search(value): void {
-        console.log(value);
     }
 
     ngOnDestroy(): void {
