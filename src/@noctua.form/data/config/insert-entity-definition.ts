@@ -22,6 +22,38 @@ export interface InsertNodeDescription {
 export const canInsertEntity = {
     [AnnotonNodeType.GoMolecularFunction]: [
         <InsertNodeDescription>{
+            label: 'Add Biological Process',
+            id: AnnotonNodeType.GoBiologicalPhase,
+            node: <AnnotonNodeDisplay>{
+                type: AnnotonNodeType.GoBiologicalProcess,
+                category: EntityDefinition.GoBiologicalProcess.category,
+                label: 'MF part of Biological Process',
+                aspect: 'P',
+                relationship: noctuaFormConfig.edge.partOf,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.bp,
+                treeLevel: 2,
+            },
+            predicate: noctuaFormConfig.edge.happensDuring,
+            cardinality: CardinalityType.oneToOne
+        },
+        <InsertNodeDescription>{
+            label: 'Add occurs in (Cellular Component)',
+            id: AnnotonNodeType.GoBiologicalPhase,
+            node: <AnnotonNodeDisplay>{
+                type: AnnotonNodeType.GoCellularComponent,
+                category: EntityDefinition.GoCellularComponent.category,
+                label: 'MF occurs in Cellular Component',
+                aspect: 'C',
+                relationship: noctuaFormConfig.edge.occursIn,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 2,
+            },
+            predicate: noctuaFormConfig.edge.happensDuring,
+            cardinality: CardinalityType.oneToOne
+        },
+        <InsertNodeDescription>{
             label: 'Add Has Input (GP/Chemical)',
             id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
@@ -55,7 +87,7 @@ export const canInsertEntity = {
         },
         <InsertNodeDescription>{
             label: 'Add Happens During (Biological Phase)',
-            id: AnnotonNodeType.GoBiologicalPhase,
+            id: AnnotonNodeType.GoBiologicalProcess,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoBiologicalPhase.category,
                 type: AnnotonNodeType.GoBiologicalPhase,
@@ -66,7 +98,7 @@ export const canInsertEntity = {
                 treeLevel: 2,
                 isExtension: true,
             },
-            predicate: noctuaFormConfig.edge.happensDuring,
+            predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         }
     ],
