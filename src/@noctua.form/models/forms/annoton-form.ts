@@ -1,15 +1,10 @@
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { merge, Observable, Subscription, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
+import { FormControl, FormBuilder, FormArray } from '@angular/forms';
 
 import { Annoton } from './../annoton/annoton';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 import { EntityGroupForm } from './entity-group-form';
 import { Entity } from './../../models/annoton/entity';
+import { each } from 'lodash';
 
 export class AnnotonForm {
   entityGroupForms: EntityGroupForm[] = [];

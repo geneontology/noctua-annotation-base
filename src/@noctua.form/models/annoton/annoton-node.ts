@@ -1,8 +1,3 @@
-import * as _ from 'lodash';
-
-declare const require: any;
-const each = require('lodash/forEach');
-
 import { Evidence } from './evidence';
 import { AnnotonError } from './parser/annoton-error';
 import { Annoton } from './annoton';
@@ -10,6 +5,7 @@ import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { Predicate } from '.';
+import { each } from 'lodash';
 
 export enum AnnotonNodeType {
   GoProteinContainingComplex = 'GoProteinContainingComplex',
@@ -23,7 +19,7 @@ export enum AnnotonNodeType {
   GoAnatomicalEntity = 'GoAnatomicalEntity',
   GoOrganism = 'GoOrganism',
   GoBiologicalPhase = 'GoBiologicalPhase',
-  //extra internal use
+  // extra internal use
   GoChemicalEntityHasInput = 'GoChemicalEntityHasInput',
   GoChemicalEntityHasOutput = 'GoChemicalEntityHasOutput',
 }
@@ -100,35 +96,29 @@ export class AnnotonNode implements AnnotonNodeDisplay {
 
   toggleIsComplement() {
     const self = this;
-
     self.isComplement = !self.isComplement;
     self.nodeGroup.isComplement = self.isComplement;
   }
 
   setIsComplement(complement) {
     const self = this;
-
     self.isComplement = complement;
   }
 
   hasValue() {
     const self = this;
-
     return self.term.hasValue();
   }
 
   clearValues() {
     const self = this;
-
     self.term.id = null;
     self.term.label = null;
-
     self.predicate.resetEvidence();
   }
 
   copyValues(node: AnnotonNode) {
     const self = this;
-
     self.uuid = node.uuid;
     self.term = node.term;
     self.assignedBy = node.assignedBy;
@@ -150,7 +140,6 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   enableRow() {
     const self = this;
     let result = true;
-
     if (self.nodeGroup) {
       if (self.nodeGroup.isComplement && self.treeLevel > 0) {
         result = false;
@@ -163,8 +152,6 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   enableSubmit(errors) {
     const self = this;
     let result = true;
-
-    console.log(0);
 
     if (self.termRequired && !self.term.id) {
       self.required = true;

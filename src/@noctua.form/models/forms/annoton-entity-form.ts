@@ -1,19 +1,8 @@
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { merge, Observable, Subscription, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
-
-import { Annoton } from './../annoton/annoton';
+import { FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
-import { EntityGroupForm } from './entity-group-form'
-
 import { EvidenceForm } from './evidence-form';
-
-import { Evidence } from './../../models/annoton/evidence'
-import { EntityForm } from './entity-form';
+import { Evidence } from './../../models/annoton/evidence';
 import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
@@ -45,7 +34,6 @@ export class AnnotonEntityForm {
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }
-
 
 
   populateAnnotonEntityForm(annotonNode: AnnotonNode) {

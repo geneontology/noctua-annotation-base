@@ -1,10 +1,4 @@
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
-const map = require('lodash/map');
-const uuid = require('uuid/v1');
 import { noctuaFormConfig } from './../../../noctua-form-config';
-
 import { Entity } from '../entity';
 import { ConditionRule } from './condition-rule';
 import { DirectionRule } from './direction-rule';

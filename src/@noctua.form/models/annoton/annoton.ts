@@ -1,23 +1,21 @@
 import * as _ from 'lodash';
 declare const require: any;
-const each = require('lodash/forEach');
-const map = require('lodash/map');
 const uuid = require('uuid/v1');
-import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
+import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
-
 import { SaeGraph } from './sae-graph';
-import { AnnotonError } from "./parser/annoton-error";
-
+import { AnnotonError } from './parser/annoton-error';
 import { AnnotonNode, AnnotonNodeType } from './annoton-node';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
+import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import { AnnotonParser } from './parser';
-
 import * as InsertEntityDefinition from './../../data/config/insert-entity-definition';
-import { Predicate } from './predicate';
+
+import { each } from 'lodash';
+
 export enum AnnotonState {
   creation = 1,
   editing
@@ -421,13 +419,11 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   }
 
   tableCanDisplayEnabledBy(node: AnnotonNode) {
-    const self = this;
 
     return node.relationship.id === noctuaFormConfig.edge.enabledBy.id;
   }
 
   tableDisplayQualifier(node: AnnotonNode) {
-    const self = this;
 
     if (node.id === AnnotonNodeType.GoMolecularFunction) {
       return '';
@@ -439,7 +435,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   }
 
   tableDisplayRelationship(node: AnnotonNode) {
-    const self = this;
 
     if (node.id === AnnotonNodeType.GoMolecularFunction) {
       return '';

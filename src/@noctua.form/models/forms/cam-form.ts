@@ -1,15 +1,6 @@
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { merge, Observable, Subscription, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
-
-import { Cam } from './../annoton/cam'
+import { FormControl } from '@angular/forms';
+import { Cam } from './../annoton/cam';
 import { Contributor } from './../contributor';
-import { Annoton } from './../annoton/annoton';
-import { AnnotonNode } from './../annoton/annoton-node';
 import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
 
 export class CamForm {
@@ -18,8 +9,6 @@ export class CamForm {
   group = new FormControl();
 
   _metadata: AnnotonFormMetadata;
-
-  private _fb = new FormBuilder();
 
   constructor(metadata) {
     this._metadata = metadata;
@@ -35,7 +24,7 @@ export class CamForm {
     }
   }
 
-  getError(error) {
+  getError() {
 
   }
 
