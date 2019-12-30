@@ -8,9 +8,6 @@ import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from './../annoton/entity';
 import { AnnotonNode } from './../annoton/annoton-node';
 
-declare const require: any;
-const each = require('lodash/forEach');
-
 export class EntityForm {
     id: string;
     node: AnnotonNode;

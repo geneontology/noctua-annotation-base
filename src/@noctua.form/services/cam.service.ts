@@ -22,12 +22,9 @@ import { CamForm } from './../models/forms/cam-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { Evidence, compareEvidence } from './../models/annoton/evidence';
 
-import * as _ from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { Cam } from './../models/annoton/cam';
 import { uniqWith } from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
 
 @Injectable({
   providedIn: 'root'

@@ -1,6 +1,4 @@
 import { find, each } from 'lodash';
-declare const require: any;
-const uuid = require('uuid/v1');
 
 export class NoctuaFormUtil {
 

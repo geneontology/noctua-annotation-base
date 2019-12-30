@@ -5,9 +5,6 @@ import { EntityForm } from './entity-form';
 import { AnnotonNode } from '../annoton';
 
 
-declare const require: any;
-const each = require('lodash/forEach');
-
 export class EntityGroupForm {
     name = '';
     isComplement = false;
