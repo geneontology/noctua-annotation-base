@@ -102,41 +102,6 @@ export class CamService {
     return cam;
   }
 
-  getAnnotonLocation(id): Observable<any> {
-    const self = this;
-
-    return this.httpClient
-      .get(`${environment.locationStoreApi}?activity_id${id}`)
-      .pipe(
-        tap(res => {
-          console.log(res)
-        }),
-        finalize(() => {
-          //self.loading = false;
-        })
-      );
-  }
-
-  setAnnotonLocation(id, x, y): Observable<any> {
-    const self = this;
-
-    const params = new HttpParams()
-      .set('activity_id', id)
-      .set('x', x)
-      .set('y', y);
-
-    return this.httpClient
-      .post(environment.locationStoreApi + params.toString(), {})
-      .pipe(
-        tap(res => {
-          console.log(res)
-        }),
-        finalize(() => {
-          //self.loading = false;
-        })
-      );
-  }
-
   deleteAnnoton(annoton: Annoton) {
     const self = this;
     const deleteData = annoton.createDelete();
