@@ -81,7 +81,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     self.rule.annotonsConsecutive.condition = value.annotonsConsecutive;
     self.rule.displaySection.causalEffect = true;
     self.rule.displaySection.causalReactionProduct = false;
-    self.rule.displaySection.effectDependency = value.annotonsConsecutive;
+    self.rule.displaySection.effectDependency = !value.annotonsConsecutive;
     self.rule.displaySection.process = value.effectDependency;
     self.rule.effectDependency.condition = value.annotonsConsecutive && value.effectDependency;
     self.type = self.rule.effectDependency.condition ? ConnectorType.intermediate : ConnectorType.basic;
