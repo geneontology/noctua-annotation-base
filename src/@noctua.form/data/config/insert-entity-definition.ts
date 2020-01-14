@@ -34,7 +34,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.bp,
                 treeLevel: 2,
             },
-            predicate: noctuaFormConfig.edge.happensDuring,
+            predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         },
         <InsertNodeDescription>{
@@ -50,7 +50,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 2,
             },
-            predicate: noctuaFormConfig.edge.happensDuring,
+            predicate: noctuaFormConfig.edge.occursIn,
             cardinality: CardinalityType.oneToOne
         },
         <InsertNodeDescription>{
