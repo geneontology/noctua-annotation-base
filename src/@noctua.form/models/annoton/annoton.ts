@@ -109,16 +109,19 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     let updated = false;
 
     each(canInsertSubjectNodes, (nodeDescription: InsertEntityDefinition.InsertNodeDescription) => {
-      if (nodeDescription.cardinality === InsertEntityDefinition.CardinalityType.oneToOne) {
-        const edgeTypeExist = self.edgeTypeExist(subjectNode.id, nodeDescription.predicate.id, subjectNode.type, nodeDescription.node.type);
 
-        if (edgeTypeExist) {
-          self.removeEdge(edgeTypeExist.subject, edgeTypeExist.object, edgeTypeExist.predicate);
-          self.addEdge(edgeTypeExist.subject, insertNode, edgeTypeExist.predicate);
-          self.addEdge(insertNode, edgeTypeExist.object, predicate);
-          updated = true;
+      if (predicate.edge.id === nodeDescription.predicate.id) {
+        if (nodeDescription.cardinality === InsertEntityDefinition.CardinalityType.oneToOne) {
+          const edgeTypeExist = self.edgeTypeExist(subjectNode.id, nodeDescription.predicate.id, subjectNode.type, nodeDescription.node.type);
 
-          return false;
+          if (edgeTypeExist) {
+            self.removeEdge(edgeTypeExist.subject, edgeTypeExist.object, edgeTypeExist.predicate);
+            self.addEdge(edgeTypeExist.subject, insertNode, edgeTypeExist.predicate);
+            self.addEdge(insertNode, edgeTypeExist.object, predicate);
+            updated = true;
+
+            return false;
+          }
         }
       }
     });

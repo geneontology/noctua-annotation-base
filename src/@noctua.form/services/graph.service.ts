@@ -396,6 +396,8 @@ export class NoctuaGraphService {
       }
     });
 
+
+    console.log(annotons)
     return annotons;
   }
 
@@ -618,9 +620,16 @@ export class NoctuaGraphService {
       }
 
       this._insertNode(annoton, bbopPredicateId, subjectNode, objectNode);
-      annoton.updateEntityInsertMenu(true);
+
+      annoton.updateEntityInsertMenu();
 
       const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
+
+      if (bbopPredicateId === 'BFO:0000066') {
+        console.log(",--", triples)
+      }
+
+
 
       each(triples, (triple: Triple<AnnotonNode>) => {
         if (bbopPredicateId === triple.predicate.edge.id) {
@@ -645,6 +654,7 @@ export class NoctuaGraphService {
     const nodeDescriptions: ModelDefinition.InsertNodeDescription = subjectNode.canInsertNodes;
 
     each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
+      console.log(bbopPredicateId, nodeDescription.predicate.label)
       if (bbopPredicateId === nodeDescription.predicate.id) {
         if (self.noctuaLookupService.getLocalClosure(bbopObjectNode.term.id, nodeDescription.node.category)) {
           ModelDefinition.insertNode(annoton, subjectNode, nodeDescription);
