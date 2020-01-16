@@ -22,7 +22,7 @@ export interface InsertNodeDescription {
 export const canInsertEntity = {
     [AnnotonNodeType.GoMolecularFunction]: [
         <InsertNodeDescription>{
-            label: 'Add Biological Process',
+            label: 'Add Part Of (Biological Process',
             id: AnnotonNodeType.GoBiologicalPhase,
             node: <AnnotonNodeDisplay>{
                 type: AnnotonNodeType.GoBiologicalProcess,
@@ -38,7 +38,7 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToOne
         },
         <InsertNodeDescription>{
-            label: 'Add occurs in (Cellular Component)',
+            label: 'Add Occurs In (Cellular Component)',
             id: AnnotonNodeType.GoBiologicalPhase,
             node: <AnnotonNodeDisplay>{
                 type: AnnotonNodeType.GoCellularComponent,

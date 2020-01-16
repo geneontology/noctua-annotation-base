@@ -67,7 +67,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     return this.getNode(this.rootNodeType);
   }
 
-  updateEntityInsertMenu() {
+  updateEntityInsertMenu(strict?: boolean) {
     const self = this;
 
     each(self.nodes, (node: AnnotonNode) => {
@@ -79,7 +79,13 @@ export class Annoton extends SaeGraph<AnnotonNode> {
           const edgeTypeExist = self.edgeTypeExist(node.id, nodeDescription.predicate.id, node.type, nodeDescription.node.type);
 
           if (edgeTypeExist) {
-            exist.push(edgeTypeExist.object.type);
+            if (strict) {
+              if (edgeTypeExist.object.hasValue()) {
+                exist.push(edgeTypeExist.object.type);
+              }
+            } else {
+              exist.push(edgeTypeExist.object.type);
+            }
           }
         }
       });

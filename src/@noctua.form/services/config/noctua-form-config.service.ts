@@ -993,6 +993,17 @@ export class NoctuaFormConfigService {
     return connectorAnnoton;
   }
 
+  createAnnotonBaseModel(modelType: AnnotonType): Annoton {
+    switch (modelType) {
+      case AnnotonType.default:
+        return ModelDefinition.createActivity(ModelDefinition.activityUnitBaseDescription);
+      case AnnotonType.bpOnly:
+        return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationBaseDescription);
+      case AnnotonType.ccOnly:
+        return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationBaseDescription);
+    }
+  }
+
   createAnnotonModel(modelType: AnnotonType): Annoton {
     switch (modelType) {
       case AnnotonType.default:

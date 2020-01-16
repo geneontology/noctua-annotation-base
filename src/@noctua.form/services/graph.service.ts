@@ -365,7 +365,7 @@ export class NoctuaGraphService {
       });
     }
 
-    return self.noctuaFormConfigService.createAnnotonModel(annotonType);
+    return self.noctuaFormConfigService.createAnnotonBaseModel(annotonType);
   }
 
   graphToAnnotons(cam: Cam): Annoton[] {
@@ -618,7 +618,7 @@ export class NoctuaGraphService {
       }
 
       this._insertNode(annoton, bbopPredicateId, subjectNode, objectNode);
-      annoton.updateEntityInsertMenu();
+      annoton.updateEntityInsertMenu(true);
 
       const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
 
