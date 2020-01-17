@@ -87,7 +87,7 @@ export const canInsertEntity = {
         },
         <InsertNodeDescription>{
             label: 'Add Happens During (Biological Phase)',
-            id: AnnotonNodeType.GoBiologicalProcess,
+            id: AnnotonNodeType.GoBiologicalPhase,
             node: <AnnotonNodeDisplay>{
                 category: EntityDefinition.GoBiologicalPhase.category,
                 type: AnnotonNodeType.GoBiologicalPhase,
@@ -98,7 +98,7 @@ export const canInsertEntity = {
                 treeLevel: 2,
                 isExtension: true,
             },
-            predicate: noctuaFormConfig.edge.partOf,
+            predicate: noctuaFormConfig.edge.happensDuring,
             cardinality: CardinalityType.oneToOne
         }
     ],
