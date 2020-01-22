@@ -37,7 +37,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     navigation: any;
     noctuaFormUrl = '';
     loginUrl = '';
-    noctuaUrl = environment.noctuaUrl;
+    noctuaUrl = '';
 
     private _unsubscribeAll: Subject<any>;
 
@@ -50,6 +50,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         public noctuaAnnotonFormService: NoctuaAnnotonFormService,
         public noctuaFormService: NoctuaFormService,
     ) {
+        const self = this;
         this._unsubscribeAll = new Subject();
         this.getUserInfo();
 
@@ -57,9 +58,16 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
             .queryParams
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(params => {
+                const baristaToken = params['barista_token'] || null;
                 const modelId = params['model_id'] || null;
-                const noctuaFormUrl = `${environment.workbenchUrl}noctua-form/?model_id=${modelId}`;
-                this.loginUrl = `${environment.globalBaristaLocation}/login?return=${noctuaFormUrl}`;
+                const noctuaFormReturnUrl = `${environment.workbenchUrl}noctua-form/?model_id=${modelId}`;
+                const baristaParams = { 'barista_token': baristaToken };
+                const modelIdParams = { 'model_id': modelId };
+
+                this.loginUrl = `${environment.globalBaristaLocation}/login?return=${noctuaFormReturnUrl}`;
+                this.noctuaUrl = environment.noctuaUrl + '?' + (baristaToken ? self._parameterize(Object.assign({}, baristaParams)) : '');
+                this.noctuaFormUrl = environment.workbenchUrl + 'noctua-form?'
+                    + (baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : '');
             });
 
         this.router.events.pipe(takeUntil(this._unsubscribeAll))
@@ -115,5 +123,9 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
+    }
+
+    private _parameterize = (params) => {
+        return Object.keys(params).map(key => key + '=' + params[key]).join('&');
     }
 }

@@ -19,7 +19,7 @@ export const environment = {
   globalBaristaLocation: baristaLocation,
   //Workbench
   noctuaUrl: `${window.location.origin}`,
-  workbenchUrl: `${window.location.origin}/workbench/`, //'http://noctua-dev.berkeleybop.org/workbench/',
+  workbenchUrl: `${window.location.origin}/workbench/`,
 
   amigoTerm: 'http://amigo.geneontology.org/amigo/term/',
   wikidataSparqlUrl: 'https://query.wikidata.org/sparql',
