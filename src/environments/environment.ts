@@ -4,7 +4,6 @@
 
 
 declare var global_barista_location: any;
-
 const baristaLocation = typeof global_barista_location !== 'undefined' ? global_barista_location : 'http://barista-dev.berkeleybop.org';
 
 export const environment = {
