@@ -3,8 +3,8 @@
   </mat-progress-spinner>
 </div>
 <div class="cams-table" noctuaPerfectScrollbar>
-  <div class="w-100-p">
-    <div *ngFor="let cam of cams" class="mat-elevation-z1">
+  <cdk-virtual-scroll-viewport class="w-100-p h-100-p" itemSize="100">
+    <div *cdkVirtualFor="let cam of cams" class="mat-elevation-z1">
       <div class="noc-cam-table-heading" fxLayout="row" fxLayoutAlign="start center">
         <div fxFlex="50px" (click)="$event.stopPropagation()">
           <button mat-icon-button [matMenuTriggerFor]="appsMenu" class="">
@@ -54,9 +54,7 @@
           </button>
         </div>
       </div>
-      <noc-cam-table [cam]="cam" *ngIf="cam.expanded" class="noc-cam-table-body" fxLayout="row"
-        fxLayoutAlign="start center">
-      </noc-cam-table>
     </div>
-  </div>
+
+  </cdk-virtual-scroll-viewport>
 </div>
