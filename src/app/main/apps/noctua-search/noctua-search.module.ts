@@ -8,7 +8,6 @@ import { NoctuaFormModule } from './../noctua-form/noctua-form.module'
 import { CamService } from 'noctua-form-base';
 import { CamsTableComponent } from './cams/cams-table/cams-table.component';
 import { NoctuaSearchComponent } from './noctua-search.component';
-import { NoctuaReviewModule } from '../noctua-review/noctua-review.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const routes = [
@@ -26,7 +25,6 @@ const routes = [
     RouterModule.forChild(routes),
     ContextMenuModule.forRoot(),
     NoctuaFormModule,
-    NoctuaReviewModule
   ],
   declarations: [
     NoctuaSearchComponent,

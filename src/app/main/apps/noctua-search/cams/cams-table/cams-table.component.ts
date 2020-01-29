@@ -2,16 +2,14 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatPaginator, MatSort, MatDrawer } from '@angular/material';
-import { DataSource } from '@angular/cdk/collections';
-import { merge, Observable, BehaviorSubject, fromEvent, Subject } from 'rxjs';
+import { DataSource, CollectionViewer } from '@angular/cdk/collections';
+import { merge, Observable, BehaviorSubject, fromEvent, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 import { noctuaAnimations } from '@noctua/animations';
 
 import { takeUntil, startWith } from 'rxjs/internal/operators';
 
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
 
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
@@ -30,7 +28,7 @@ import {
   AnnotonNode
 } from 'noctua-form-base';
 import { NoctuaFormService } from './../../../noctua-form/services/noctua-form.service';
-import { ReviewService } from 'app/main/apps/noctua-review/services/review.service';
+import { SearchService } from 'app/main/apps/noctua-search/services/search.service';
 
 
 
@@ -53,18 +51,22 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   cams: any[] = [];
   searchResults = [];
+  dataSource: CamsDataSource;
 
   constructor(private route: ActivatedRoute,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaSearchService: NoctuaSearchService,
-    public reviewService: ReviewService,
+    public searchService: SearchService,
     private camService: CamService,
     private noctuaFormService: NoctuaFormService,
     private noctuaGraphService: NoctuaGraphService,
     public sparqlService: SparqlService) {
 
-    this.searchFormData = this.noctuaFormConfigService.createSearchFormData();
     this._unsubscribeAll = new Subject();
+
+    this.searchFormData = this.noctuaFormConfigService.createSearchFormData();
+
+    this.dataSource = new CamsDataSource(camService);
   }
 
   ngOnInit(): void {
@@ -78,7 +80,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   toggleLeftDrawer(panel) {
-    this.reviewService.toggleLeftDrawer(panel);
+    this.searchService.toggleLeftDrawer(panel);
   }
 
   search() {
@@ -129,5 +131,32 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
+  }
+}
+
+
+export class CamsDataSource extends DataSource<Cam | undefined> {
+  private cachedCams = Array.from<Cam>({ length: 0 });
+  private dataStream = new BehaviorSubject<(Cam | undefined)[]>(this.cachedCams);
+  private subscription = new Subscription();
+
+  constructor(private camService: CamService) {
+    super();
+  }
+
+  connect(collectionViewer: CollectionViewer): Observable<(Cam | undefined)[] | ReadonlyArray<Cam | undefined>> {
+    this.subscription.add(collectionViewer.viewChange.subscribe(range => {
+      // const currentPage = this._getPageForIndex(range.end);
+
+      //  if (currentPage > this.lastPage) {
+      //    this.lastPage = currentPage;
+      //    this._fetchFactPage();
+      // }
+    }));
+    return this.dataStream;
+  }
+
+  disconnect(collectionViewer: CollectionViewer): void {
+    this.subscription.unsubscribe();
   }
 }

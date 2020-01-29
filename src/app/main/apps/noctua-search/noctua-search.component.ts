@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDrawer } from '@angular/material';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 import { noctuaAnimations } from './../../../../@noctua/animations';
 
@@ -23,7 +23,7 @@ import { NoctuaSearchService } from '@noctua.search/services/noctua-search.servi
 
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 import { takeUntil } from 'rxjs/operators';
-import { ReviewService } from '../noctua-review/services/review.service';
+import { SearchService } from '../noctua-search/services/search.service';
 
 
 
@@ -45,21 +45,21 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
 
   public cam: Cam;
   public user: Contributor;
+
   searchResults = [];
   modelId: string = '';
   baristaToken: string = '';
   searchCriteria: any = {};
-  searchFormData: any = []
+  searchFormData: any = [];
   searchForm: FormGroup;
   loadingSpinner: any = {
     color: 'primary',
     mode: 'indeterminate'
-  }
-
+  };
   summary: any = {
     expanded: false,
     detail: {}
-  }
+  };
   cams: any[] = [];
 
   private _unsubscribeAll: Subject<any>;
@@ -73,9 +73,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     // private noctuaLookupService: NoctuaLookupService,
     private noctuaGraphService: NoctuaGraphService,
     private sparqlService: SparqlService,
-    public reviewService: ReviewService,
-
-
+    public searchService: SearchService,
   ) {
 
     this._unsubscribeAll = new Subject();
@@ -107,7 +105,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.reviewService.setLeftDrawer(this.leftDrawer);
+    this.searchService.setLeftDrawer(this.leftDrawer);
     this.noctuaFormService.setRightDrawer(this.rightDrawer);
 
     /*
@@ -122,8 +120,8 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     this.sparqlService.getAllContributors()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response: any) => {
-        this.reviewService.contributors = response;
-        this.reviewService.onContributorsChanged.next(response);
+        this.searchService.contributors = response;
+        this.searchService.onContributorsChanged.next(response);
         this.noctuaSearchService.searchCriteria.goterms.push(
           {
             "id": "GO:0042632",
@@ -136,8 +134,8 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     this.sparqlService.getAllGroups()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response: any) => {
-        this.reviewService.groups = response;
-        this.reviewService.onGroupsChanged.next(response);
+        this.searchService.groups = response;
+        this.searchService.onGroupsChanged.next(response);
       });
 
 
@@ -145,8 +143,8 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     this.sparqlService.getAllOrganisms()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response: any) => {
-        this.reviewService.organisms = response;
-        this.reviewService.onOrganismsChanged.next(response);
+        this.searchService.organisms = response;
+        this.searchService.onOrganismsChanged.next(response);
       });
 
     this.sparqlService.onCamsChanged
@@ -157,13 +155,13 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
         this.loadCams();
       });
 
-    this.reviewService.onContributorsChanged
+    this.searchService.onContributorsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(contributors => {
         this.noctuaUserService.contributors = contributors;
       });
 
-    this.reviewService.onGroupsChanged
+    this.searchService.onGroupsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(groups => {
         this.noctuaUserService.groups = groups;
@@ -172,7 +170,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
   }
 
   toggleLeftDrawer(panel) {
-    this.reviewService.toggleLeftDrawer(panel);
+    this.searchService.toggleLeftDrawer(panel);
   }
 
   search() {
