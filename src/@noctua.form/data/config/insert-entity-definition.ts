@@ -120,6 +120,23 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         },
+        <InsertNodeDescription>{
+            label: 'Add Occurs In (Cellular Component)',
+            id: AnnotonNodeType.GoCellularComponent,
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoCellularComponent.category,
+                type: AnnotonNodeType.GoCellularComponent,
+                aspect: 'C',
+                label: 'Occurs In Cellular Component',
+                relationship: noctuaFormConfig.edge.occursIn,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.bp,
+                treeLevel: 4,
+                isExtension: true,
+            },
+            predicate: noctuaFormConfig.edge.occursIn,
+            cardinality: CardinalityType.oneToOne
+        },
     ],
     [AnnotonNodeType.GoCellularComponent]: [
         <InsertNodeDescription>{

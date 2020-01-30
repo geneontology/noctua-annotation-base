@@ -29,7 +29,7 @@
   <mat-drawer-container class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start" autosize>
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start">
       <div [ngSwitch]="searchService.selectedLeftPanel?.id" class="h-100-p">
-        <noc-advanced-search *ngSwitchCase="searchService.leftPanel.search.id"></noc-advanced-search>
+        <noc-search-form *ngSwitchCase="searchService.leftPanel.search.id"></noc-search-form>
         <noc-search-filter *ngSwitchCase="searchService.leftPanel.filter.id"></noc-search-filter>
         <noc-search-groups *ngSwitchCase="searchService.leftPanel.group.id"></noc-search-groups>
         <noc-search-contributors *ngSwitchCase="searchService.leftPanel.contributor.id"></noc-search-contributors>
