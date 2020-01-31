@@ -1,22 +1,17 @@
 <div class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start">
   <div class="noc-sidemenu" fxLayout="column" fxLayoutAlign="start center">
     <button mat-icon-button color="primary" class="noc-rounded-button"
-      (click)="toggleLeftDrawer(searchService.leftPanel.search)" matTooltip="Search" [matTooltipPosition]="'after'"
+      (click)="toggleLeftDrawer(searchService.leftPanel.filter)" matTooltip="Filter" [matTooltipPosition]="'after'"
       [matTooltipShowDelay]="1500">
       <mat-icon> search </mat-icon>
     </button>
-    <button mat-icon-button color="primary" class="noc-rounded-button"
-      (click)="toggleLeftDrawer(searchService.leftPanel.filter)" matTooltip="Filter" [matTooltipPosition]="'after'"
-      [matTooltipShowDelay]="1500">
-      <mat-icon> filter_list </mat-icon>
-    </button>
     <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
-      toggleLeftDrawer(searchService.leftPanel.group)" matTooltip="Search by group" [matTooltipPosition]="'after'"
+      toggleLeftDrawer(searchService.leftPanel.group)" matTooltip="Browse by group" [matTooltipPosition]="'after'"
       [matTooltipShowDelay]="1000">
       <mat-icon> people_outline </mat-icon>
     </button>
     <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
-      toggleLeftDrawer(searchService.leftPanel.contributor)" matTooltip="Search by contributor"
+      toggleLeftDrawer(searchService.leftPanel.contributor)" matTooltip="Browse by contributor"
       [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
       <mat-icon>person_outline</mat-icon>
     </button>
@@ -27,7 +22,7 @@
     </button> -->
   </div>
   <mat-drawer-container class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start" autosize>
-    <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start">
+    <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>
       <div [ngSwitch]="searchService.selectedLeftPanel?.id" class="h-100-p">
         <noc-search-form *ngSwitchCase="searchService.leftPanel.search.id"></noc-search-form>
         <noc-search-filter *ngSwitchCase="searchService.leftPanel.filter.id"></noc-search-filter>
@@ -101,14 +96,6 @@
     </mat-drawer-content>
     <mat-drawer #rightDrawer class="noc-right-drawer" noctuaPerfectScrollbar mode="side" position="end">
       <div [ngSwitch]="noctuaFormService.selectedRightPanel?.id" class="h-100-p">
-        <noc-cam-form [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormService.panel.camForm.id">
-        </noc-cam-form>
-        <noc-annoton-form [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormService.panel.annotonForm.id">
-        </noc-annoton-form>
-        <noc-annoton-entity-form [panelDrawer]="rightDrawer"
-          *ngSwitchCase="noctuaFormService.panel.annotonEntityForm.id"></noc-annoton-entity-form>
-        <noc-annoton-connector [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormService.panel.connectorForm.id">
-        </noc-annoton-connector>
       </div>
     </mat-drawer>
   </mat-drawer-container>

@@ -113,8 +113,8 @@ export class NoctuaSearchService {
             }
 
             this.getCams(searchCriteria).subscribe((response: any) => {
-                this.sparqlService.cams = this.cams = response;
-                this.sparqlService.onCamsChanged.next(this.cams);
+                this.cams = this.cams = response;
+                this.onCamsChanged.next(this.cams);
             });
         });
     }
