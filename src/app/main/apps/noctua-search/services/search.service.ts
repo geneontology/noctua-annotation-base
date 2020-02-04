@@ -47,7 +47,7 @@ export class SearchService {
     this.onGroupsChanged = new BehaviorSubject([]);
     this.onOrganismsChanged = new BehaviorSubject([]);
 
-    this.selectedLeftPanel = this.leftPanel.search;
+    this.selectedLeftPanel = this.leftPanel.filter;
     this.states = this.noctuaFormConfigService.modelState.options;
   }
 
