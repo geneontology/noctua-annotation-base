@@ -34,7 +34,9 @@ import { SearchHistoryComponent } from './components/search-history/search-histo
         SearchFormComponent,
         SearchContributorsComponent,
         SearchGroupsComponent,
-        SearchOrganismsComponent
+        SearchOrganismsComponent,
+        SearchRelationComponent,
+        SearchHistoryComponent
     ]
 })
 export class NoctuaSearchBaseModule {

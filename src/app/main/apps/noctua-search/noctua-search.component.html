@@ -20,6 +20,16 @@
       [matTooltipShowDelay]="1000">
       <mat-icon> pets </mat-icon>
     </button>
+    <button mat-icon-button color="primary" class="noc-rounded-button"
+      (click)="toggleLeftDrawer(searchService.leftPanel.relation)" matTooltip="Relation Search"
+      [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
+      <mat-icon class="icon-rotate-relation"> linear_scale </mat-icon>
+    </button>
+    <button mat-icon-button color="primary" class="noc-rounded-button"
+      (click)="toggleLeftDrawer(searchService.leftPanel.history)" matTooltip="History" [matTooltipPosition]="'after'"
+      [matTooltipShowDelay]="1500">
+      <mat-icon> history </mat-icon>
+    </button>
   </div>
   <mat-drawer-container class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start" autosize>
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>

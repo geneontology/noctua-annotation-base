@@ -4,10 +4,22 @@
 $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
 
+$rotate-graph: 235deg;
+
 :host {
   padding: 0px;
   width: 100%;
   background-color: #F7F7F7;
+
+  .icon-rotate-graph {
+    -webkit-transform: rotate($rotate-graph);
+    -moz-transform: rotate($rotate-graph);
+    -ms-transform: rotate($rotate-graph);
+    -o-transform: rotate($rotate-graph);
+    transform: rotate($rotate-graph);
+  }
+
+
 
   .noc-search-table-header {
     position: absolute;
@@ -72,6 +84,12 @@ $accent: map-get($theme, accent);
     table {
       @include deep-width(100%);
     }
+
+    tr.mat-row {
+      height: auto;
+      // padding: 10px 5px;
+    }
+
 
     .mat-header-cell {
       padding: 0 10px;
