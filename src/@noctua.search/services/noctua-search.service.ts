@@ -92,19 +92,18 @@ export class NoctuaSearchService {
     constructor(private httpClient: HttpClient,
         public noctuaFormConfigService: NoctuaFormConfigService,
         public noctuaUserService: NoctuaUserService,
-        private sparqlService: SparqlService,
-        private curieService: CurieService,
-        private _router: Router) {
+        private curieService: CurieService) {
         this.onContributorsChanged = new BehaviorSubject([]);
         this.onGroupsChanged = new BehaviorSubject([]);
         this.onOrganismsChanged = new BehaviorSubject([]);
+        this.onCamsChanged = new BehaviorSubject([]);
+        this.onCamChanged = new BehaviorSubject([]);
 
         this.selectedLeftPanel = this.leftPanel.search;
         this.states = this.noctuaFormConfigService.modelState.options;
         this.searchCriteria = new SearchCriteria();
         this.onSearcCriteriaChanged = new BehaviorSubject(null);
-        this.onCamsChanged = new BehaviorSubject({});
-        this.onCamChanged = new BehaviorSubject({});
+
         this.curieUtil = this.curieService.getCurieUtil();
 
         this.onSearcCriteriaChanged.subscribe((searchCriteria: SearchCriteria) => {
@@ -293,7 +292,6 @@ export class NoctuaSearchService {
     }
 
     getPubmedInfo(pmid: string) {
-        const self = this;
         const url = environment.pubMedSummaryApi + pmid;
 
         return this.httpClient

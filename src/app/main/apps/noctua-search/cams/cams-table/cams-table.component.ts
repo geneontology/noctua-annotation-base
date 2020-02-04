@@ -30,8 +30,6 @@ import {
 import { NoctuaFormService } from './../../../noctua-form/services/noctua-form.service';
 import { SearchService } from 'app/main/apps/noctua-search/services/search.service';
 
-
-
 @Component({
   selector: 'noc-cams-table',
   templateUrl: './cams-table.component.html',
@@ -40,6 +38,13 @@ import { SearchService } from 'app/main/apps/noctua-search/services/search.servi
 })
 export class CamsTableComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
+
+  displayedColumns = [
+    'title',
+    'state',
+    'date',
+    'contributor',
+    'actions'];
 
   searchCriteria: any = {};
   searchFormData: any = [];
@@ -58,8 +63,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     public noctuaSearchService: NoctuaSearchService,
     public searchService: SearchService,
     private camService: CamService,
-    private noctuaFormService: NoctuaFormService,
-    private noctuaGraphService: NoctuaGraphService,
     public sparqlService: SparqlService) {
 
     this._unsubscribeAll = new Subject();
@@ -75,7 +78,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(cams => {
         this.cams = cams;
-        this.loadCams();
+        console.log(cams)
       });
   }
 
@@ -89,9 +92,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     this.noctuaSearchService.search(searchCriteria);
   }
 
-  loadCams() {
-    this.cams = this.sparqlService.cams;
-  }
+
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
