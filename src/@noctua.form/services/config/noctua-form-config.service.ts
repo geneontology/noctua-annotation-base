@@ -457,6 +457,57 @@ export class NoctuaFormConfigService {
         },
         'searchResults': []
       },
+      'subject': {
+        'id': 'subject',
+        "label": 'Molecular Function',
+        'aspect': 'F',
+        "lookupGroup": 'GO:0003674',
+        'treeLevel': 1,
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
+            ],
+          }),
+        },
+        'searchResults': []
+      },
+      'object': {
+        'id': 'subject',
+        "label": 'Molecular Function',
+        'aspect': 'F',
+        "lookupGroup": 'GO:0003674',
+        'treeLevel': 1,
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
+            ],
+          }),
+        },
+        'searchResults': []
+      },
+      'predicate': {
+        'id': 'predicate',
+        "label": 'Molecular Function',
+        'aspect': 'F',
+        "lookupGroup": 'GO:0003674',
+        'treeLevel': 1,
+        "ontologyClass": ['go'],
+        "termLookup": {
+          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
+            fq: [
+              'document_category:"ontology_class"',
+              'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
+            ],
+          }),
+        },
+        'searchResults': []
+      },
     };
 
 

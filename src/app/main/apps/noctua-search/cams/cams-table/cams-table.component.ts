@@ -44,7 +44,8 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     'state',
     'date',
     'contributor',
-    'actions'];
+    'edit',
+    'export'];
 
   searchCriteria: any = {};
   searchFormData: any = [];

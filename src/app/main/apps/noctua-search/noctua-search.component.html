@@ -15,20 +15,22 @@
       [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
       <mat-icon>person_outline</mat-icon>
     </button>
-    <!--    <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
+    <button mat-icon-button color="primary" class="noc-rounded-button" (click)="
       toggleLeftDrawer(searchService.leftPanel.species)" matTooltip="Search by species" [matTooltipPosition]="'after'"
       [matTooltipShowDelay]="1000">
       <mat-icon> pets </mat-icon>
-    </button> -->
+    </button>
   </div>
   <mat-drawer-container class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start" autosize>
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>
       <div [ngSwitch]="searchService.selectedLeftPanel?.id" class="h-100-p">
         <noc-search-form *ngSwitchCase="searchService.leftPanel.search.id"></noc-search-form>
         <noc-search-filter *ngSwitchCase="searchService.leftPanel.filter.id"></noc-search-filter>
+        <noc-search-relation *ngSwitchCase="searchService.leftPanel.relation.id"></noc-search-relation>
         <noc-search-groups *ngSwitchCase="searchService.leftPanel.group.id"></noc-search-groups>
         <noc-search-contributors *ngSwitchCase="searchService.leftPanel.contributor.id"></noc-search-contributors>
         <noc-search-organisms *ngSwitchCase="searchService.leftPanel.species.id"></noc-search-organisms>
+        <noc-search-history *ngSwitchCase="searchService.leftPanel.history.id"></noc-search-history>
       </div>
     </mat-drawer>
     <mat-drawer-content class="noc-section-body w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">

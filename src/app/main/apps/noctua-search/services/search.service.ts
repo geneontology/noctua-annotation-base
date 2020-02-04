@@ -19,12 +19,17 @@ export class SearchService {
       id: 1
     }, filter: {
       id: 2
-    }, group: {
+    }, relation: {
       id: 3
-    }, contributor: {
+    }, group: {
       id: 4
-    }, species: {
+    }, contributor: {
       id: 5
+    }, species: {
+      id: 6
+    },
+    history: {
+      id: 7
     }
   };
 
