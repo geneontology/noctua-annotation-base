@@ -623,10 +623,6 @@ export class NoctuaGraphService {
 
       const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
 
-
-
-
-
       each(triples, (triple: Triple<AnnotonNode>) => {
         if (bbopPredicateId === triple.predicate.edge.id) {
 

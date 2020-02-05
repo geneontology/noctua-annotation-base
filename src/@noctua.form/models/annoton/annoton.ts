@@ -330,7 +330,9 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       extra: []
     };
 
-    each(self.nodes, function (node: AnnotonNode) {
+    const sortedNodes = self.nodes.sort(self._compareNodeWeight);
+
+    each(sortedNodes, function (node: AnnotonNode) {
       if (node.displaySection && node.displayGroup) {
         if (!result[node.displaySection.id][node.displayGroup.id]) {
           result[node.displaySection.id][node.displayGroup.id] = {
@@ -425,6 +427,109 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     return display ? self.gp : '';
   }
 
+
+
+
+
+
+  /* 
+  
+  
+    graphToAnnotons(srcAnnoton: Annoton): Annoton {
+      const self = this;
+      const annoton = new Annoton();
+  
+      annoton.annotonType = srcAnnoton.annotonType;
+      const triples: Triple<AnnotonNode>[] = srcAnnoton.getEdges(srcAnnoton.id);
+  
+  
+      each(triples, (triple: Triple<AnnotonNode>) => {
+  
+        triple.object.uuid = objectNode.uuid;
+        triple.object.term = objectNode.term;
+        triple.object.classExpression = objectNode.classExpression;
+        triple.object.setIsComplement(objectNode.isComplement);
+  
+        triple.predicate.evidence = evidence;
+        triple.predicate.uuid = bbopEdge.id();
+        self._graphToAnnotonDFS(cam, srcAnnoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
+  
+  
+  
+        const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
+        const annoton: Annoton = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
+        const subjectAnnotonNode = annoton.rootNode;
+  
+        subjectAnnotonNode.term = subjectNode.term;
+        subjectAnnotonNode.classExpression = subjectNode.classExpression;
+        subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
+        subjectAnnotonNode.uuid = bbopSubjectId;
+  
+        self._graphToAnnotonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
+  
+        annoton.id = bbopSubjectId;
+        annotons.push(annoton);
+  
+  
+      });
+  
+  
+      return annotons;
+    }
+  
+  
+  
+  
+    _graphToAnnotonDFS(srcAnnoton: Annoton, bbopEdges, subjectNode: AnnotonNode) {
+      const self = this;
+  
+      const annoton = new Annoton();
+      annoton.annotonType = srcAnnoton.annotonType;
+  
+      const triples: Triple<AnnotonNode>[] = srcAnnoton.getEdges(subjectNode.id);
+  
+      each(triples, (triple: Triple<AnnotonNode>) => {
+        const bbopPredicateId = bbopEdge.predicate_id();
+        const bbopObjectId = bbopEdge.object_id();
+        const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
+        const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
+  
+        if (srcAnnoton.annotonType === AnnotonType.bpOnly) {
+          srcAnnoton.bpOnlyEdge = find(noctuaFormConfig.causalEdges, {
+            id: bbopPredicateId
+          });
+  
+          if (srcAnnoton.bpOnlyEdge) {
+            srcAnnoton.adjustAnnoton();
+          }
+        }
+  
+        this._insertNode(srcAnnoton, bbopPredicateId, subjectNode, objectNode);
+  
+        srcAnnoton.updateEntityInsertMenu();
+  
+        const triples: Triple<AnnotonNode>[] = srcAnnoton.getEdges(subjectNode.id);
+  
+        each(triples, (triple: Triple<AnnotonNode>) => {
+          if (bbopPredicateId === triple.predicate.edge.id) {
+  
+            triple.object.uuid = objectNode.uuid;
+            triple.object.term = objectNode.term;
+            triple.object.classExpression = objectNode.classExpression;
+            triple.object.setIsComplement(objectNode.isComplement);
+  
+            triple.predicate.evidence = evidence;
+            triple.predicate.uuid = bbopEdge.id();
+            self._graphToAnnotonDFS(cam, srcAnnoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
+          }
+        });
+      });
+  
+      return srcAnnoton;
+    }
+  
+   */
+
   tableCanDisplayEnabledBy(node: AnnotonNode) {
 
     return node.relationship.id === noctuaFormConfig.edge.enabledBy.id;
@@ -447,6 +552,14 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       return '';
     } else {
       return node.relationship.label;
+    }
+  }
+
+  private _compareNodeWeight(a: AnnotonNode, b: AnnotonNode): number {
+    if (a.weight < b.weight) {
+      return -1;
+    } else {
+      return 1;
     }
   }
 

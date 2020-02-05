@@ -33,6 +33,7 @@ export const canInsertEntity = {
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.bp,
                 treeLevel: 2,
+                weight: 10
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
@@ -49,6 +50,7 @@ export const canInsertEntity = {
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 2,
+                weight: 20
             },
             predicate: noctuaFormConfig.edge.occursIn,
             cardinality: CardinalityType.oneToOne
@@ -65,6 +67,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.mf,
                 treeLevel: 2,
                 isExtension: true,
+                weight: 4
             },
             predicate: noctuaFormConfig.edge.hasInput,
             cardinality: CardinalityType.oneToMany
@@ -81,6 +84,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.mf,
                 treeLevel: 2,
                 isExtension: true,
+                weight: 5
             },
             predicate: noctuaFormConfig.edge.hasOutput,
             cardinality: CardinalityType.oneToMany
@@ -97,6 +101,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.mf,
                 treeLevel: 2,
                 isExtension: true,
+                weight: 3
             },
             predicate: noctuaFormConfig.edge.happensDuring,
             cardinality: CardinalityType.oneToOne
@@ -116,6 +121,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.bp,
                 treeLevel: 3,
                 isExtension: true,
+                weight: 10
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
@@ -133,6 +139,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.bp,
                 treeLevel: 4,
                 isExtension: true,
+                weight: 20
             },
             predicate: noctuaFormConfig.edge.occursIn,
             cardinality: CardinalityType.oneToOne
@@ -152,6 +159,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 3,
                 isExtension: true,
+                weight: 20
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
@@ -168,6 +176,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 3,
                 isExtension: true,
+                weight: 30
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
@@ -184,6 +193,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 3,
                 isExtension: true,
+                weight: 40
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
@@ -200,6 +210,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 3,
                 isExtension: true,
+                weight: 50
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
@@ -218,6 +229,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 4,
                 isExtension: true,
+                weight: 40
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
@@ -234,6 +246,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 4,
                 isExtension: true,
+                weight: 50
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
@@ -252,6 +265,7 @@ export const canInsertEntity = {
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 treeLevel: 5,
                 isExtension: true,
+                weight: 50
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne

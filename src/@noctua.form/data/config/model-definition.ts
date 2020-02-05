@@ -1,9 +1,13 @@
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { AnnotonNode, EntityLookup, Predicate, Annoton, Entity, AnnotonType, AnnotonNodeDisplay } from './../../models/annoton';
+
 import * as EntityDefinition from './entity-definition';
 import * as InsertEntityDefinition from './insert-entity-definition';
-import { each } from 'lodash';
-import { AnnotonNodeType } from './../../models/annoton/annoton-node';
+import { each, find } from 'lodash';
+import { AnnotonNodeType, AnnotonNodeDisplay, AnnotonNode } from './../../models/annoton/annoton-node';
+import { Entity } from '../../models/annoton/entity';
+import { Predicate } from '../../models/annoton/predicate';
+import { AnnotonType, Annoton } from '../../models/annoton/annoton';
+import { Triple } from '../../models/annoton/triple';
 
 declare const require: any;
 const getUuid = require('uuid/v1');
@@ -32,7 +36,8 @@ export const activityUnitBaseDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
-            termRequired: true
+            termRequired: true,
+            weight: 1
         },
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
@@ -43,7 +48,8 @@ export const activityUnitBaseDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true
+            termRequired: true,
+            weight: 2
         }
     },
     triples: [{
@@ -65,7 +71,8 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
-            visible: false
+            visible: false,
+            weight: 1
         },
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
@@ -76,7 +83,8 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true
+            termRequired: true,
+            weight: 2
         },
 
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
@@ -89,7 +97,8 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
             treeLevel: 2,
-            termRequired: true
+            termRequired: true,
+            weight: 10
         },
     },
     triples: [{
@@ -125,6 +134,7 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 1
         },
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
@@ -158,7 +168,8 @@ export const activityUnitDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
-            termRequired: true
+            termRequired: true,
+            weight: 1
         },
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
@@ -169,7 +180,8 @@ export const activityUnitDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true
+            termRequired: true,
+            weight: 2
         },
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoBiologicalProcess.id,
@@ -181,6 +193,7 @@ export const activityUnitDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
             treeLevel: 2,
+            weight: 10
         },
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
@@ -192,6 +205,7 @@ export const activityUnitDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
             treeLevel: 2,
+            weight: 20
         }
     },
     triples: [{
@@ -221,7 +235,8 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
-            visible: false
+            visible: false,
+            weight: 1
         },
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
@@ -232,7 +247,8 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true
+            termRequired: true,
+            weight: 2
         },
 
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
@@ -245,7 +261,8 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
             treeLevel: 2,
-            termRequired: true
+            termRequired: true,
+            weight: 10
         },
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
@@ -257,6 +274,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
             treeLevel: 3,
+            weight: 20
         }
     },
     triples: [{
@@ -296,6 +314,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 1
         },
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
@@ -307,6 +326,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
             treeLevel: 2,
+            weight: 2
         }
     },
     triples: [{
@@ -346,6 +366,15 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
     return annoton;
 };
 
+
+
+
+
+
+
+
+
+
 export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescription: InsertNodeDescription): AnnotonNode => {
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
@@ -362,6 +391,4 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescr
     annoton.resetPresentation();
     return objectNode;
 };
-
-
 

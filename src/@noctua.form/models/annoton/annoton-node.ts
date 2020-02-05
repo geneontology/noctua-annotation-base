@@ -40,6 +40,7 @@ export interface AnnotonNodeDisplay {
   termRequired: boolean;
   visible: boolean;
   skipEvidence: boolean;
+  weight: number;
 }
 
 export class AnnotonNode implements AnnotonNodeDisplay {
@@ -74,6 +75,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   errors = [];
   warnings = [];
   status = '0';
+  weight: 0;
 
   constructor() {
   }

@@ -69,8 +69,6 @@ export class NoctuaAnnotonFormService {
   }
 
   initializeFormData() {
-    //  this.annoton = this.noctuaFormConfigService.createAnnotonModelFakeData(nodes);
-
     this.fakester(this.annoton);
     this.initializeForm();
   }
@@ -122,9 +120,6 @@ export class NoctuaAnnotonFormService {
 
     if (filterNodes) {
       each(filterNodes, function (srcNode) {
-
-        //this.complexAnnotonData.molecularEntitys = srcAnnoton.complexAnnotonData.molecularEntitys;
-        // this.complexAnnotonData.mcNode.copyValues(srcAnnoton.complexAnnotonData.mcNode);
 
         let destNode = this.annoton.getNode(srcNode.id);
         if (destNode) {
