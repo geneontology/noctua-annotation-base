@@ -56,6 +56,57 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToOne
         },
         <InsertNodeDescription>{
+            label: 'Add Occurs In (Cell Type)',
+            id: AnnotonNodeType.GoCellTypeEntity,
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoCellTypeEntity.category,
+                type: AnnotonNodeType.GoCellTypeEntity,
+                label: 'Occurs In (Cell Type)',
+                relationship: noctuaFormConfig.edge.occursIn,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 3,
+                isExtension: false,
+                weight: 30
+            },
+            predicate: noctuaFormConfig.edge.occursIn,
+            cardinality: CardinalityType.oneToOne
+        },
+        <InsertNodeDescription>{
+            label: 'Add Occurs In (Anatomy)',
+            id: AnnotonNodeType.GoAnatomicalEntity,
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoAnatomicalEntity.category,
+                type: AnnotonNodeType.GoAnatomicalEntity,
+                label: 'Occurs In (Anatomy)',
+                relationship: noctuaFormConfig.edge.occursIn,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 3,
+                isExtension: true,
+                weight: 40
+            },
+            predicate: noctuaFormConfig.edge.occursIn,
+            cardinality: CardinalityType.oneToOne
+        },
+        <InsertNodeDescription>{
+            label: 'Add Occurs In (Organism)',
+            id: AnnotonNodeType.GoOrganism,
+            node: <AnnotonNodeDisplay>{
+                category: EntityDefinition.GoOrganism.category,
+                type: AnnotonNodeType.GoOrganism,
+                label: 'Part Of (Organism)',
+                relationship: noctuaFormConfig.edge.occursIn,
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                treeLevel: 3,
+                isExtension: true,
+                weight: 50
+            },
+            predicate: noctuaFormConfig.edge.occursIn,
+            cardinality: CardinalityType.oneToOne
+        },
+        <InsertNodeDescription>{
             label: 'Add Has Input (GP/Chemical)',
             id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
