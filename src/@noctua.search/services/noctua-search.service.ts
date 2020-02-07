@@ -86,7 +86,8 @@ export class NoctuaSearchService {
         contributors: 'contributors',
         groups: 'groups',
         organisms: 'organisms',
-        states: 'states'
+        states: 'states',
+        dates: 'dates'
     };
 
     constructor(private httpClient: HttpClient,
@@ -130,6 +131,8 @@ export class NoctuaSearchService {
         searchCriteria.organism ? this.searchCriteria.organisms.push(searchCriteria.organism) : null;
         searchCriteria.state ? this.searchCriteria.states.push(searchCriteria.state) : null;
 
+        searchCriteria.date ? this.searchCriteria.dates.push(searchCriteria.date) : null;
+
         this.updateSearch();
     }
 
@@ -146,6 +149,8 @@ export class NoctuaSearchService {
             new Entity(param.gp, '')) : null;
         param.organism ? this.searchCriteria.organisms.push(param.organism) : null;
         param.state ? this.searchCriteria.states.push(param.state) : null;
+
+        param.date ? this.searchCriteria.dates.push(param.date) : null;
 
         this.updateSearch();
     }
@@ -204,6 +209,10 @@ export class NoctuaSearchService {
         }
         if (searchCriteria.states) {
             this.searchCriteria.states = searchCriteria.states;
+        }
+
+        if (searchCriteria.dates) {
+            this.searchCriteria.dates = searchCriteria.dates;
         }
 
         this.updateSearch();

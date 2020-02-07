@@ -231,6 +231,21 @@
             </mat-chip-list>
           </mat-form-field>
         </div>
+        <div class="noc-annoton-group-row" fxLayout="column">
+          <mat-form-field appearance="outline" class="noc-sm w-100-p">
+            <mat-label>Filter by Date</mat-label>
+            <mat-chip-list #dateChipList>
+              <mat-chip *ngFor="let date of noctuaSearchService.searchCriteria.dates" [selectable]="true"
+                [removable]="true" (removed)="remove(date, noctuaSearchService.filterType.dates)">
+                {{date}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input formControlName="dates" placeholder="Add PMID Filter" #dateInput [matChipInputFor]="dateChipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="false"
+                (matChipInputTokenEnd)="add($event, noctuaSearchService.filterType.dates)">
+            </mat-chip-list>
+          </mat-form-field>
+        </div>
         <div class="noc-annoton-state-row" fxLayout="column">
           <mat-form-field appearance="outline" class="noc-sm w-100-p">
             <mat-label>Filter by State</mat-label>

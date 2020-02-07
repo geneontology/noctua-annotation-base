@@ -63,7 +63,8 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       groups: new FormControl(),
       organisms: new FormControl(),
       titles: new FormControl(),
-      states: new FormControl()
+      states: new FormControl(),
+      dates: new FormControl()
     });
   }
 
