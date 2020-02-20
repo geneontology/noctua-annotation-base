@@ -1086,7 +1086,6 @@ export class NoctuaFormConfigService {
     annotonNode.aspect = nodeData.aspect;
     annotonNode.ontologyClass = nodeData.ontologyClass;
     annotonNode.label = nodeData.label;
-    annotonNode.relationship = nodeData.relationship;
     annotonNode.displaySection = (overrides && overrides.displaySection) ? overrides.displaySection : nodeData.displaySection;
     annotonNode.displayGroup = nodeData.displayGroup;
     annotonNode.category = nodeData.lookupGroup;

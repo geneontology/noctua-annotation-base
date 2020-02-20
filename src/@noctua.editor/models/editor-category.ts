@@ -1,5 +1,5 @@
 export enum EditorCategory {
-  relation = 'relation',
+  relationship = 'relationship',
   term = 'term',
   evidence = 'evidence',
   reference = 'reference',

@@ -41,13 +41,12 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   entityFormGroup: FormGroup;
   evidenceFormGroup: FormGroup;
   entityFormSub: Subscription;
-
   termNode: AnnotonNode;
 
   private _unsubscribeAll: Subject<any>;
 
   displaySection = {
-    relation: false,
+    relationship: false,
     term: false,
     evidence: false,
     reference: false,
@@ -207,11 +206,14 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     return evidence && evidence.id ? `${evidence.label} (${evidence.id})` : undefined;
   }
 
+  compareEntity(a: any, b: any) {
+    return (b.id === b.id);
+  }
 
   private _displaySection(category: EditorCategory) {
     switch (category) {
-      case EditorCategory.relation:
-        this.displaySection.relation = true;
+      case EditorCategory.relationship:
+        this.displaySection.relationship = true;
         break;
       case EditorCategory.term:
         this.displaySection.term = true;

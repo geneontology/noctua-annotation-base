@@ -175,7 +175,6 @@ export const generateProteinContainingComplex = (override: Partial<AnnotonNodeDi
     annotonNode.type = GoProteinContainingComplex.id;
     annotonNode.category = GoProteinContainingComplex.category;
     annotonNode.label = 'Macromolecular Complex';
-    annotonNode.relationship = noctuaFormConfig.edge.hasPart;
     annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mc;
 
@@ -190,7 +189,6 @@ export const generateMolecularEntity = (override: Partial<AnnotonNodeDisplay> = 
     annotonNode.type = GoMolecularEntity.id;
     annotonNode.category = GoMolecularEntity.category;
     annotonNode.label = 'Gene Product';
-    annotonNode.relationship = noctuaFormConfig.edge.enabledBy;
     annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.gp;
 
@@ -208,7 +206,6 @@ export const generateMolecularFunction = (override: Partial<AnnotonNodeDisplay> 
 
     annotonNode.label = 'Molecular Function';
     annotonNode.aspect = 'F';
-    annotonNode.relationship = noctuaFormConfig.edge.enabledBy;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
 
@@ -224,7 +221,6 @@ export const generateBiologicalProcess = (override: Partial<AnnotonNodeDisplay> 
 
     annotonNode.label = 'MF part of Biological Process';
     annotonNode.aspect = 'P';
-    annotonNode.relationship = noctuaFormConfig.edge.partOf;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.bp;
 
@@ -242,7 +238,6 @@ export const generateCellularComponent = (override: Partial<AnnotonNodeDisplay> 
 
     annotonNode.label = 'MF occurs in Cellular Component';
     annotonNode.aspect = 'C';
-    annotonNode.relationship = noctuaFormConfig.edge.occursIn;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
     annotonNode.treeLevel = 2;
@@ -257,7 +252,6 @@ export const generateChemicalEntity = (override: Partial<AnnotonNodeDisplay> = {
     annotonNode.category = GoChemicalEntity.category;
 
     annotonNode.label = 'Has Input (GP/Chemical)';
-    annotonNode.relationship = noctuaFormConfig.edge.hasInput;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
     annotonNode.treeLevel = 3;
@@ -274,7 +268,6 @@ export const generateBiologicalPhase = (override: Partial<AnnotonNodeDisplay> = 
     annotonNode.category = GoBiologicalPhase.category;
 
     annotonNode.label = 'Happens During (Temporal Phase)';
-    annotonNode.relationship = noctuaFormConfig.edge.happensDuring;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
     annotonNode.treeLevel = 2;
@@ -289,7 +282,6 @@ export const generateCellTypeEntity = (override: Partial<AnnotonNodeDisplay> = {
     annotonNode.id = GoCellTypeEntity.id;
     annotonNode.category = GoCellTypeEntity.category;
     annotonNode.label = 'Part Of (Cell Type)';
-    annotonNode.relationship = noctuaFormConfig.edge.partOf;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
     annotonNode.treeLevel = 3;
@@ -306,7 +298,6 @@ export const generateAnatomicalEntity = (override: Partial<AnnotonNodeDisplay> =
     annotonNode.category = GoAnatomicalEntity.category;
 
     annotonNode.label = 'Part Of (Anatomy)';
-    annotonNode.relationship = noctuaFormConfig.edge.partOf;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
     annotonNode.treeLevel = 4;
@@ -323,7 +314,6 @@ export const generateOrganism = (override: Partial<AnnotonNodeDisplay> = {}): An
     annotonNode.category = GoOrganism.category;
 
     annotonNode.label = 'Part Of (Organism)';
-    annotonNode.relationship = noctuaFormConfig.edge.partOf;
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
     annotonNode.treeLevel = 5;

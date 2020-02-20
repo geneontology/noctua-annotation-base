@@ -34,7 +34,6 @@ export interface AnnotonNodeDisplay {
   category: string;
   displaySection: any;
   displayGroup: any;
-  relationship: any;
   treeLevel: number;
   required: boolean;
   termRequired: boolean;
@@ -66,7 +65,6 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   displaySection: any;
   displayGroup: any;
   predicate: Predicate;
-  relationship: any;
   treeLevel = 1;
   required = false;
   termRequired = false;

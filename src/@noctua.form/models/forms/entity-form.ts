@@ -11,7 +11,7 @@ import { AnnotonNode } from './../annoton/annoton-node';
 export class EntityForm {
     id: string;
     node: AnnotonNode;
-    relation = new FormControl();
+    relationship = new FormControl();
     term = new FormControl();
     evidenceForms: EvidenceForm[] = [];
     evidenceFormArray = new FormArray([]);
@@ -24,6 +24,7 @@ export class EntityForm {
         this.node = entity;
 
         this.term.setValue(entity.getTerm());
+        this.relationship.setValue(entity.predicate.edge);
         this._onValueChanges(entity.termLookup);
     }
 

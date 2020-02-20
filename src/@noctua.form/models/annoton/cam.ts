@@ -270,7 +270,7 @@ export class Cam {
       displayEnabledBy: self.tableCanDisplayEnabledBy(node),
       treeLevel: node.treeLevel,
       relationship: node.isExtension ? '' : self.tableDisplayExtension(node),
-      relationshipExt: node.isExtension ? node.relationship.label : '',
+      relationshipExt: node.isExtension ? node.predicate.edge.label : '',
       term: node.isExtension ? {} : term,
       extension: node.isExtension ? term : {},
       aspect: node.aspect,
@@ -297,7 +297,7 @@ export class Cam {
   tableCanDisplayEnabledBy(node: AnnotonNode) {
     const self = this;
 
-    return node.relationship.id === noctuaFormConfig.edge.enabledBy.id
+    return node.predicate.edge.id === noctuaFormConfig.edge.enabledBy.id;
   }
 
   tableDisplayExtension(node: AnnotonNode) {
@@ -306,9 +306,9 @@ export class Cam {
     if (node.id === 'mf') {
       return '';
     } else if (node.isComplement) {
-      return 'NOT ' + node.relationship.label;
+      return 'NOT ' + node.predicate.edge.label;
     } else {
-      return node.relationship.label;
+      return node.predicate.edge.label;
     }
   }
 

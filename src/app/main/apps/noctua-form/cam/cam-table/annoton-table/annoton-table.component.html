@@ -11,7 +11,8 @@
               {{entity.relationship}}
             </p>
             <noctua-inline-editor *ngIf="noctuaUserService.user && entity.relationEditable" [cam]="cam"
-              [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.relation" class="noc-edit-button">
+              [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.relationship"
+              class="noc-edit-button">
             </noctua-inline-editor>
           </td>
         </ng-container>

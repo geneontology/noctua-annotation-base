@@ -160,7 +160,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         if (this.bpOnlyEdge) {
           bpEdge.predicate.edge.id = bpNode.predicate.edge.id = this.bpOnlyEdge.id;
           bpEdge.predicate.edge.label = bpNode.predicate.edge.label = this.bpOnlyEdge.label;
-          bpNode.relationship = this.bpOnlyEdge;
         }
 
         break;
@@ -385,7 +384,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       gp: self.tableDisplayGp(node),
       qualifier: node.isExtension ? '' : self.tableDisplayQualifier(node),
       relationship: node.isExtension ? '' : self.tableDisplayRelationship(node),
-      relationshipExt: node.isExtension ? node.relationship.label : '',
+      relationshipExt: node.isExtension ? node.predicate.edge.label : '',
       term: node.isExtension ? null : term,
       extension: node.isExtension ? term : null,
       aspect: node.aspect,
@@ -430,7 +429,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   tableCanDisplayEnabledBy(node: AnnotonNode) {
 
-    return node.relationship.id === noctuaFormConfig.edge.enabledBy.id;
+    return node.predicate.edge.id === noctuaFormConfig.edge.enabledBy.id;
   }
 
   tableDisplayQualifier(node: AnnotonNode) {
@@ -445,11 +444,10 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   }
 
   tableDisplayRelationship(node: AnnotonNode) {
-
     if (node.id === AnnotonNodeType.GoMolecularFunction) {
       return '';
     } else {
-      return node.relationship.label;
+      return node.predicate.edge.label;
     }
   }
 
