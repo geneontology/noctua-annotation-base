@@ -25,6 +25,8 @@ export class EntityForm {
 
         this.term.setValue(entity.getTerm());
         this.relationship.setValue(entity.predicate.edge);
+
+        console.log(entity.predicate)
         this._onValueChanges(entity.termLookup);
     }
 
@@ -46,8 +48,12 @@ export class EntityForm {
     populateTerm() {
         const self = this;
 
-        if (this.term.value && this.term.value) {
-            self.node.term = new Entity(this.term.value.id, this.term.value.label);
+        if (self.relationship.value && self.node.relationEditable) {
+            self.node.predicate.edge = self.relationship.value;
+        }
+
+        if (self.term.value && self.term.value.id) {
+            self.node.term = new Entity(self.term.value.id, self.term.value.label);
 
             self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
                 const evidence: Evidence = self.node.predicate.evidence[index];
@@ -82,8 +88,8 @@ export class EntityForm {
     getErrors(error) {
         const self = this;
 
-        if (this.term.errors) {
-            error.push(this.term.errors);
+        if (self.term.errors) {
+            error.push(self.term.errors);
         }
 
         self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {

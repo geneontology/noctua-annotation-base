@@ -207,7 +207,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   }
 
   compareEntity(a: any, b: any) {
-    return (b.id === b.id);
+    return (a.id === b.id);
   }
 
   private _displaySection(category: EditorCategory) {
