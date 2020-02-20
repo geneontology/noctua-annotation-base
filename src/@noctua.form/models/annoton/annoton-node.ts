@@ -41,6 +41,7 @@ export interface AnnotonNodeDisplay {
   visible: boolean;
   skipEvidence: boolean;
   weight: number;
+  relationEditable: boolean;
 }
 
 export class AnnotonNode implements AnnotonNodeDisplay {
@@ -76,6 +77,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   warnings = [];
   status = '0';
   weight: 0;
+  relationEditable = false;
 
   constructor() {
   }

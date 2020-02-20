@@ -15,7 +15,7 @@ export class AnnotonForm {
   private _metadata: AnnotonFormMetadata;
   private _fb = new FormBuilder();
 
-  constructor(metadata, ) {
+  constructor(metadata) {
     this._metadata = metadata;
   }
 

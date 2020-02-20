@@ -47,6 +47,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   displaySection = {
+    relation: false,
     term: false,
     evidence: false,
     reference: false,
@@ -83,7 +84,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
         const evidenceFormArray = entityFormGroup.get('evidenceFormArray') as FormArray;
         this.entityFormGroup = entityFormGroup;
         this.evidenceFormGroup = evidenceFormArray.at(this.evidenceIndex) as FormGroup;
-        console.log(this.evidenceFormGroup);
       });
   }
 
@@ -210,6 +210,9 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   private _displaySection(category: EditorCategory) {
     switch (category) {
+      case EditorCategory.relation:
+        this.displaySection.relation = true;
+        break;
       case EditorCategory.term:
         this.displaySection.term = true;
         break;

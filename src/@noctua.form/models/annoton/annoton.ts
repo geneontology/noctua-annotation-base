@@ -394,6 +394,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       with: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].with : {},
       assignedBy: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].assignedBy : {},
       evidenceIndex: 0,
+      relationEditable: node.relationEditable,
       node: node
     });
 

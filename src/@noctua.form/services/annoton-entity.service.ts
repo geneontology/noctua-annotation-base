@@ -31,9 +31,10 @@ export class NoctuaAnnotonEntityService {
 
     this.entityFormGroup = new BehaviorSubject(null);
     this.entityFormGroup$ = this.entityFormGroup.asObservable();
-
     this.camService.onCamChanged.subscribe((cam) => {
-      if (!cam) return;
+      if (!cam) {
+        return;
+      }
 
       this.cam = cam;
     });

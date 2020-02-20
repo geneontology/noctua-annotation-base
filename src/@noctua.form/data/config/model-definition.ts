@@ -98,6 +98,7 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
             displayGroup: noctuaFormConfig.displayGroup.bp,
             treeLevel: 2,
             termRequired: true,
+            relationEditable: true,
             weight: 10
         },
     },
@@ -366,15 +367,6 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
     return annoton;
 };
 
-
-
-
-
-
-
-
-
-
 export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescription: InsertNodeDescription): AnnotonNode => {
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
@@ -391,4 +383,3 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescr
     annoton.resetPresentation();
     return objectNode;
 };
-

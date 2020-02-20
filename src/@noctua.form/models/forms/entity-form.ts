@@ -11,6 +11,7 @@ import { AnnotonNode } from './../annoton/annoton-node';
 export class EntityForm {
     id: string;
     node: AnnotonNode;
+    relation = new FormControl();
     term = new FormControl();
     evidenceForms: EvidenceForm[] = [];
     evidenceFormArray = new FormArray([]);
