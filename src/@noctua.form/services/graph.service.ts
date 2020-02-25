@@ -617,8 +617,7 @@ export class NoctuaGraphService {
         });
 
         if (causalEdge) {
-          annoton.bpOnlyEdge = causalEdge;
-          annoton.updateBPCausalEdge();
+          annoton.updateBPCausalEdge(causalEdge);
         }
       }
 

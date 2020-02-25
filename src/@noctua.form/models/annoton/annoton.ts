@@ -167,16 +167,14 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     }
   }
 
-  updateBPCausalEdge() {
+  updateBPCausalEdge(causalEdge) {
     const self = this;
     const mfNode = self.getMFNode();
     const bpNode = self.getNode(AnnotonNodeType.GoBiologicalProcess);
     const bpEdge = this.getEdge(mfNode.id, bpNode.id);
 
-    if (this.bpOnlyEdge) {
-      bpEdge.predicate.edge.id = bpNode.predicate.edge.id = this.bpOnlyEdge.id;
-      bpEdge.predicate.edge.label = bpNode.predicate.edge.label = this.bpOnlyEdge.label;
-    }
+    bpEdge.predicate.edge.id = bpNode.predicate.edge.id = causalEdge.id;
+    bpEdge.predicate.edge.label = bpNode.predicate.edge.label = causalEdge.label;
   }
 
   copyValues(srcAnnoton) {
