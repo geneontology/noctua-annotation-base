@@ -36,6 +36,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   submitErrors;
   expanded = false;
   visible = true;
+  rootTriple: Triple<AnnotonNode>;
   graphPreview = {
     nodes: [],
     edges: []
@@ -163,6 +164,18 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         }
 
         break;
+    }
+  }
+
+  updateBPCausalEdge() {
+    const self = this;
+    const mfNode = self.getMFNode();
+    const bpNode = self.getNode(AnnotonNodeType.GoBiologicalProcess);
+    const bpEdge = this.getEdge(mfNode.id, bpNode.id);
+
+    if (this.bpOnlyEdge) {
+      bpEdge.predicate.edge.id = bpNode.predicate.edge.id = this.bpOnlyEdge.id;
+      bpEdge.predicate.edge.label = bpNode.predicate.edge.label = this.bpOnlyEdge.label;
     }
   }
 

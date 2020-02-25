@@ -11,7 +11,7 @@ declare const require: any;
 const amigo = require('amigo2');
 const golr_conf = require('golr-conf');
 const gconf = new golr_conf.conf(amigo.data.golr);
-const gserv = "http://golr.berkeleybop.org/";
+const gserv = environment.globalGolrCompanionServer; // "http://golr.berkeleybop.org/";
 const impl_engine = require('bbop-rest-manager').jquery;
 const golr_manager = require('bbop-manager-golr');
 const golr_response = require('bbop-response-golr');
@@ -189,7 +189,7 @@ export class NoctuaLookupService {
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
       map(response => {
-        const docs = response["response"].docs;
+        const docs = response['response'].docs;
         const result = [];
 
         each(docs, function (doc) {
@@ -274,14 +274,14 @@ export class NoctuaLookupService {
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
       map(response => {
-        const docs = response["response"].docs;
+        const docs = response['response'].docs;
         let result = false;
 
         if (docs.length > 0) {
           result = docs[0].annotation_class === a;
         }
         return result;
-      }))
+      }));
   }
 
   ensureUnderscores(curie) {

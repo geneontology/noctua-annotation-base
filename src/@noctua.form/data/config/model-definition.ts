@@ -338,12 +338,13 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
         annoton.addEdgeById(triple.subject, triple.object, predicate);
     });
 
-    const startNode = annoton.getNode(activityDescription.triples[0].subject);
-    const startTriple = annoton.getEdge(
+    const rootNode = annoton.getNode(activityDescription.triples[0].subject);
+    const rootTriple = annoton.getEdge(
         activityDescription.triples[0].subject,
         activityDescription.triples[0].object);
 
-    startNode.predicate = startTriple.predicate;
+    rootNode.predicate = rootTriple.predicate;
+    annoton.rootTriple = rootTriple;
 
     annoton.updateEntityInsertMenu();
     annoton.enableSubmit();

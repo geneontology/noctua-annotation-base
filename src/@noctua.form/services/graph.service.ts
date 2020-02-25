@@ -392,6 +392,10 @@ export class NoctuaGraphService {
         self._graphToAnnotonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
 
         annoton.id = bbopSubjectId;
+
+
+        annoton.rootNode.predicate = annoton.rootTriple.predicate;
+
         annotons.push(annoton);
       }
     });
@@ -608,12 +612,13 @@ export class NoctuaGraphService {
       const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
 
       if (annoton.annotonType === AnnotonType.bpOnly) {
-        annoton.bpOnlyEdge = find(noctuaFormConfig.causalEdges, {
+        const causalEdge = find(noctuaFormConfig.causalEdges, {
           id: bbopPredicateId
         });
 
-        if (annoton.bpOnlyEdge) {
-          annoton.adjustAnnoton();
+        if (causalEdge) {
+          annoton.bpOnlyEdge = causalEdge;
+          annoton.updateBPCausalEdge();
         }
       }
 
