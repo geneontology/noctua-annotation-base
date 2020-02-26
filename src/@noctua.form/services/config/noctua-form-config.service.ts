@@ -283,7 +283,7 @@ export class NoctuaFormConfigService {
         "relationship": noctuaFormConfig.edge.partOf,
         "displaySection": noctuaFormConfig.displaySection.fd,
         "displayGroup": noctuaFormConfig.displayGroup.cc,
-        "lookupGroup": 'UBERON:0000061',
+        "lookupGroup": 'CARO:0000000',
         'treeLevel': 5,
         'isExtension': true,
         "ontologyClass": ['uberon'],
@@ -291,7 +291,7 @@ export class NoctuaFormConfigService {
           "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
             fq: [
               'document_category:"ontology_class"',
-              'isa_closure:"UBERON:0000061"'
+              'isa_closure:"CARO:0000000"'
             ],
           }),
         }

@@ -89,7 +89,7 @@ export class GoCellTypeEntity {
 
 export class GoAnatomicalEntity {
     public static readonly id = AnnotonNodeType.GoAnatomicalEntity;
-    public static readonly category = 'UBERON:0000061';
+    public static readonly category = 'CARO:0000000';
 }
 
 export class GoOrganism {

@@ -299,10 +299,10 @@ export const noctuaFormConfig = {
       'id': 'CL:0000003'
     },
     ub: {
-      'id': 'UBERON:0000061'
+      'id': 'CARO:0000000'
     },
     taxon: {
-      'id': 'UBERON:0000061'
+      'id': 'CARO:0000000'
     },
     catalyticActivity: {
       'id': 'GO:0003824'
