@@ -67,15 +67,12 @@ export class EntityForm {
     private _onValueChanges(lookup: EntityLookup) {
         const self = this;
 
-        console.log(lookup)
-
         self.term.valueChanges.pipe(
             distinctUntilChanged(),
             debounceTime(400)
         ).subscribe(data => {
             self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
                 lookup.results = response;
-                console.log(lookup.results);
             });
         });
     }

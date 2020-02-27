@@ -20,6 +20,7 @@ export enum AnnotonNodeType {
   GoOrganism = 'GoOrganism',
   GoBiologicalPhase = 'GoBiologicalPhase',
   // extra internal use
+  GoCatalyticActivity = 'GoCatalyticActivity',
   GoChemicalEntityHasInput = 'GoChemicalEntityHasInput',
   GoChemicalEntityHasOutput = 'GoChemicalEntityHasOutput',
 }
@@ -31,7 +32,7 @@ export interface AnnotonNodeDisplay {
   uuid: string;
   isExtension: boolean;
   aspect: string;
-  category: string;
+  category: string[];
   displaySection: any;
   displayGroup: any;
   treeLevel: number;
@@ -48,7 +49,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   type: AnnotonNodeType;
   label: string;
   uuid: string;
-  category: string;
+  category: string[];
   categoryRange: [] = [];
   term: Entity = new Entity('', '');
   termLookup: EntityLookup = new EntityLookup();

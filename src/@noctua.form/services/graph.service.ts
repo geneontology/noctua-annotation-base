@@ -298,16 +298,9 @@ export class NoctuaGraphService {
 
     each(graph.get_nodes(), function (node) {
       const termNodeInfo = self.getNodeInfo(node);
-
-      //  each(graph.get_edges_by_subject(node.id()), function (e) {
-      //  const predicateId = e.predicate_id();
-      //   const objectNode = graph.get_node(e.object_id());
-      // const objectTermNodeInfo = self.getNodeInfo(objectNode);
-
       each(EntityDefinition.EntityCategories, (category) => {
         promises.push(self.isaClosurePreParse(termNodeInfo.id, category));
       });
-      // });
     });
 
     return forkJoin(promises);
@@ -321,29 +314,30 @@ export class NoctuaGraphService {
       const mfNode = annoton.getMFNode();
 
       if (mfNode && mfNode.hasValue()) {
-        promises.push(self.isaClosurePostParse(mfNode.getTerm().id, self.noctuaFormConfigService.closures.catalyticActivity.id, mfNode));
+        promises.push(self.isaClosurePostParse(mfNode.getTerm().id, [EntityDefinition.GoCatalyticActivity.category], mfNode));
       }
     });
 
     return forkJoin(promises);
   }
 
-  isaClosurePreParse(a: string, category) {
+  isaClosurePreParse(a: string, b: string[]) {
     const self = this;
-    const b = category.category;
+    const closure = self.noctuaLookupService.categoryToClosure(b);
 
-    return self.noctuaLookupService.isaClosure(a, b, category.categoryType)
+    return self.noctuaLookupService.isaClosure(a, closure)
       .pipe(
         map((response) => {
-          self.noctuaLookupService.addLocalClosure(a, b, response);
+          self.noctuaLookupService.addLocalClosure(a, closure, response);
         })
       );
   }
 
-  isaClosurePostParse(a, b, node: AnnotonNode) {
+  isaClosurePostParse(a: string, b: string[], node: AnnotonNode) {
     const self = this;
+    const closure = self.noctuaLookupService.categoryToClosure(b);
 
-    return self.noctuaLookupService.isaClosure(a, b).pipe(
+    return self.noctuaLookupService.isaClosure(a, closure).pipe(
       map(result => {
         node.isCatalyticActivity = result;
         return result;
@@ -355,7 +349,7 @@ export class NoctuaGraphService {
     let annotonType = AnnotonType.default;
 
     if (predicateId === noctuaFormConfig.edge.partOf.id &&
-      self.noctuaLookupService.getLocalClosure(subjectNode.term.id, EntityDefinition.GoMolecularEntity.category)) {
+      self.noctuaLookupService.getLocalClosure(subjectNode.term.id, [EntityDefinition.GoMolecularEntity.category])) {
       annotonType = AnnotonType.ccOnly;
     } else if (subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(bbopSubjectEdges, function (subjectEdge) {
@@ -378,7 +372,7 @@ export class NoctuaGraphService {
 
       if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
         (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
-          self.noctuaLookupService.getLocalClosure(subjectNode.term.id, EntityDefinition.GoMolecularEntity.category))) {
+          self.noctuaLookupService.getLocalClosure(subjectNode.term.id, [EntityDefinition.GoMolecularEntity.category]))) {
 
         const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
         const annoton: Annoton = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
@@ -419,7 +413,7 @@ export class NoctuaGraphService {
         });
 
         if (causalEdge) {
-          if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, EntityDefinition.GoMolecularFunction.category)) {
+          if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoMolecularFunction.category])) {
             const downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
             const connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, downstreamAnnoton);
 
@@ -430,7 +424,7 @@ export class NoctuaGraphService {
             connectorAnnoton.setRule();
             connectorAnnoton.createGraph();
             connectorAnnotons.push(connectorAnnoton);
-          } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, EntityDefinition.GoBiologicalProcess.category)) {
+          } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoBiologicalProcess.category])) {
             const processNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
             const processNode = self.noctuaFormConfigService.generateAnnotonNode('bp', { id: 'process' });
             const connectorAnnotonDTO = this._getConnectAnnotonIntermediate(cam, objectId);
@@ -670,10 +664,10 @@ export class NoctuaGraphService {
 
       const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
         id: predicateId
-      })
+      });
 
       if (causalEdge) {
-        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, EntityDefinition.GoMolecularFunction.category)) {
+        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoMolecularFunction.category])) {
           const downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
 
           connectorAnnoton.rule.r2Edge = new Entity(causalEdge.id, causalEdge.label);;
@@ -682,7 +676,7 @@ export class NoctuaGraphService {
       }
 
       if (e.predicate_id() === noctuaFormConfig.edge.hasInput.id) {
-        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, noctuaFormConfig.closures.gpHasInput.id)) {
+        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoChemicalEntity.category])) {
           const hasInputNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
           const hasInputNode = self.noctuaFormConfigService.generateAnnotonNode('mf-1', { id: 'has-input' });
 

@@ -227,12 +227,15 @@ export class NoctuaLookupService {
       }));
   }
 
-  isaClosure(a: string, b: string, closureType?: string) {
+  categoryToClosure(categories) {
+    return categories.map((category) => {
+      return `${category.categoryType}:${category.category}`;
+    }).join(' OR ');
+  }
+
+  isaClosure(a: string, b: string) {
     const self = this;
 
-    const fqCategory = closureType
-      ? `${closureType}:"${b}"`
-      : `isa_closure:"${b}"`;
 
     const requestParams = {
       q: self.buildQ(a),
@@ -258,7 +261,7 @@ export class NoctuaLookupService {
       ],
       fq: [
         'document_category:"ontology_class"',
-        fqCategory
+        b
       ],
       qf: [
         'annotation_class^3',
@@ -313,7 +316,7 @@ export class NoctuaLookupService {
     return (find(self.localClosures, data));
   }
 
-  getLocalClosure(term: string, closure: string) {
+  getLocalClosure(term: string, closure: string[]) {
     const self = this;
     const data = self.localClosureExist(term, closure);
 

@@ -841,10 +841,6 @@ export class NoctuaFormConfigService {
     });
   }
 
-  get closures() {
-    return noctuaFormConfig.closures;
-  }
-
   get evidenceDBs() {
     const options = [
       noctuaFormConfig.evidenceDB.options.pmid,
