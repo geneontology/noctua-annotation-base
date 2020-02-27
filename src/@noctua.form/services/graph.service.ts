@@ -314,14 +314,14 @@ export class NoctuaGraphService {
       const mfNode = annoton.getMFNode();
 
       if (mfNode && mfNode.hasValue()) {
-        promises.push(self.isaClosurePostParse(mfNode.getTerm().id, [EntityDefinition.GoCatalyticActivity.category], mfNode));
+        promises.push(self.isaClosurePostParse(mfNode.getTerm().id, [EntityDefinition.GoCatalyticActivity], mfNode));
       }
     });
 
     return forkJoin(promises);
   }
 
-  isaClosurePreParse(a: string, b: string[]) {
+  isaClosurePreParse(a: string, b: any[]) {
     const self = this;
     const closure = self.noctuaLookupService.categoryToClosure(b);
 
@@ -333,7 +333,7 @@ export class NoctuaGraphService {
       );
   }
 
-  isaClosurePostParse(a: string, b: string[], node: AnnotonNode) {
+  isaClosurePostParse(a: string, b: any[], node: AnnotonNode) {
     const self = this;
     const closure = self.noctuaLookupService.categoryToClosure(b);
 

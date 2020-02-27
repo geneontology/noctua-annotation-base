@@ -229,7 +229,7 @@ export class NoctuaLookupService {
 
   categoryToClosure(categories) {
     return categories.map((category) => {
-      return `${category.categoryType}:${category.category}`;
+      return `${category.categoryType}:"${category.category}"`;
     }).join(' OR ');
   }
 
