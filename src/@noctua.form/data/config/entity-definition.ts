@@ -142,7 +142,7 @@ export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<
     const annotonNode = new AnnotonNode();
     const predicate = new Predicate(null);
     const fqTermCategory = categoryToClosure(goCategories);
-    const fqEvidenceCategory = categoryToClosure([GoEvidence.category]);
+    const fqEvidenceCategory = categoryToClosure([GoEvidence]);
 
     predicate.setEvidenceMeta('eco', Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
         fq: [
