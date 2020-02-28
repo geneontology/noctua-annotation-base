@@ -46,77 +46,84 @@ const baseRequestParams = {
     _: Date.now()
 };
 
-export class GoProteinContainingComplex {
-    public static readonly id = AnnotonNodeType.GoProteinContainingComplex;
-    public static readonly category = 'GO:0032991';
-    public static readonly categoryType = 'isa_closure';
+export interface GoCategory {
+    id: AnnotonNodeType;
+    category: string;
+    categoryType: string;
 }
 
-export class GoCellularComponent {
-    public static readonly id = AnnotonNodeType.GoCellularComponent;
-    public static readonly category = 'GO:0005575';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoProteinContainingComplex = {
+    id: AnnotonNodeType.GoProteinContainingComplex,
+    category: 'GO:0032991',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoBiologicalProcess {
-    public static readonly id = AnnotonNodeType.GoBiologicalProcess;
-    public static readonly category = 'GO:0008150';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoCellularComponent = {
+    id: AnnotonNodeType.GoCellularComponent,
+    category: 'GO:0005575',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoMolecularFunction {
-    public static readonly id = AnnotonNodeType.GoMolecularFunction;
-    public static readonly category = 'GO:0003674';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoBiologicalProcess = {
+    id: AnnotonNodeType.GoBiologicalProcess,
+    category: 'GO:0008150',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoMolecularEntity {
-    public static readonly id = AnnotonNodeType.GoMolecularEntity;
-    public static readonly category = 'CHEBI:23367';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoMolecularFunction = {
+    id: AnnotonNodeType.GoMolecularFunction,
+    category: 'GO:0003674',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoChemicalEntity {
-    public static readonly id = AnnotonNodeType.GoChemicalEntity;
-    public static readonly category = 'CHEBI:24431';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoMolecularEntity = {
+    id: AnnotonNodeType.GoMolecularEntity,
+    category: 'CHEBI:23367',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoEvidence {
-    public static readonly id = AnnotonNodeType.GoEvidence;
-    public static readonly category = 'ECO:0000352';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoChemicalEntity = {
+    id: AnnotonNodeType.GoChemicalEntity,
+    category: 'CHEBI:24431',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoCellTypeEntity {
-    public static readonly id = AnnotonNodeType.GoCellTypeEntity;
-    public static readonly category = 'CL:0000003';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoEvidence = {
+    id: AnnotonNodeType.GoEvidence,
+    category: 'ECO:0000352',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoAnatomicalEntity {
-    public static readonly id = AnnotonNodeType.GoAnatomicalEntity;
-    public static readonly category = 'CARO:0000000';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoCellTypeEntity = {
+    id: AnnotonNodeType.GoCellTypeEntity,
+    category: 'CL:0000003',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoOrganism {
-    public static readonly id = AnnotonNodeType.GoOrganism;
-    public static readonly category = 'NCBITaxon';
-    public static readonly categoryType = 'idspace';
-}
+export const GoAnatomicalEntity = {
+    id: AnnotonNodeType.GoAnatomicalEntity,
+    category: 'CARO:0000000',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoBiologicalPhase {
-    public static readonly id = AnnotonNodeType.GoBiologicalPhase;
-    public static readonly category = 'GO:0044848';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoOrganism = {
+    id: AnnotonNodeType.GoOrganism,
+    category: 'NCBITaxon',
+    categoryType: 'idspace',
+} as GoCategory;
 
-export class GoCatalyticActivity {
-    public static readonly id = AnnotonNodeType.GoCatalyticActivity;
-    public static readonly category = 'GO:0003824';
-    public static readonly categoryType = 'isa_closure';
-}
+export const GoBiologicalPhase = {
+    id: AnnotonNodeType.GoBiologicalPhase,
+    category: 'GO:0044848',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
+export const GoCatalyticActivity = {
+    id: AnnotonNodeType.GoCatalyticActivity,
+    category: 'GO:0003824',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
 
 export const EntityCategories = [
     [GoProteinContainingComplex],

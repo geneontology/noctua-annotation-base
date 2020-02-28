@@ -78,8 +78,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   weight: 0;
   relationEditable = false;
 
-  constructor() {
-  }
+  constructor() { }
 
   getTerm() {
     return this.term;

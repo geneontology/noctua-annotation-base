@@ -41,11 +41,6 @@ export class NoctuaLookupService {
 
   }
 
-  goLookup() {
-
-  }
-
-
   escapeGolrValue(str) {
     var pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g;
     return str.replace(pattern, "\\$1");
@@ -316,8 +311,9 @@ export class NoctuaLookupService {
     return (find(self.localClosures, data));
   }
 
-  getLocalClosure(term: string, closure: string[]) {
+  getLocalClosure(term: string, categories: any[]) {
     const self = this;
+    const closure = self.categoryToClosure(categories)
     const data = self.localClosureExist(term, closure);
 
     if (data) {
