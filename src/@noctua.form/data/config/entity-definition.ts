@@ -122,7 +122,6 @@ export const GoCatalyticActivity = {
     categoryType: 'isa_closure',
 } as GoCategory;
 
-
 export const EntityCategories = [
     [GoProteinContainingComplex],
     [GoCellularComponent],
@@ -135,6 +134,8 @@ export const EntityCategories = [
     [GoAnatomicalEntity],
     [GoOrganism],
     [GoBiologicalPhase],
+    [GoChemicalEntity, GoProteinContainingComplex],
+    [GoChemicalEntity, GoAnatomicalEntity, GoProteinContainingComplex]
     // [GoCatalyticActivity]
 ];
 
