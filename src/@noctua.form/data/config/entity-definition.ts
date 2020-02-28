@@ -6,7 +6,9 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import {
     AnnotonNode,
     AnnotonNodeType,
-    AnnotonNodeDisplay
+    AnnotonNodeDisplay,
+    GoCategory,
+    categoryToClosure
 } from './../../models/annoton/annoton-node';
 import { EntityLookup } from './../..//models/annoton/entity-lookup';
 import { Predicate } from './../../models/annoton/predicate';
@@ -46,11 +48,7 @@ const baseRequestParams = {
     _: Date.now()
 };
 
-export interface GoCategory {
-    id: AnnotonNodeType;
-    category: string;
-    categoryType: string;
-}
+
 
 export const GoProteinContainingComplex = {
     id: AnnotonNodeType.GoProteinContainingComplex,
@@ -140,29 +138,27 @@ export const EntityCategories = [
     // [GoCatalyticActivity]
 ];
 
-export const generateBaseTerm = (goType?: string[], override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
+export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
     const annotonNode = new AnnotonNode();
     const predicate = new Predicate(null);
+    const fqTermCategory = categoryToClosure(goCategories);
+    const fqEvidenceCategory = categoryToClosure([GoEvidence.category]);
 
     predicate.setEvidenceMeta('eco', Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
         fq: [
             'document_category:"ontology_class"',
-            `isa_closure:"${GoEvidence.category}"`
+            fqEvidenceCategory
         ],
     }));
 
     annotonNode.predicate = predicate;
 
-    if (goType && goType.length > 0) {
-        const fqCategory = (goType[0] === GoOrganism.category)
-            ? `idspace:"${goType}"`
-            : `isa_closure:"${goType}"`;
-
+    if (goCategories && goCategories.length > 0) {
         annotonNode.termLookup = new EntityLookup(null,
             Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
                 fq: [
                     'document_category:"ontology_class"',
-                    fqCategory
+                    fqTermCategory
                 ],
             })
         );
@@ -192,11 +188,11 @@ export const generateGoTerm = (): AnnotonNode => {
 };
 
 export const generateProteinContainingComplex = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoProteinContainingComplex.category]);
+    const annotonNode = generateBaseTerm([GoProteinContainingComplex]);
 
     annotonNode.id = GoProteinContainingComplex.id;
     annotonNode.type = GoProteinContainingComplex.id;
-    annotonNode.category = [GoProteinContainingComplex.category];
+    annotonNode.category = [GoProteinContainingComplex];
     annotonNode.label = 'Macromolecular Complex';
     annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mc;
@@ -206,11 +202,11 @@ export const generateProteinContainingComplex = (override: Partial<AnnotonNodeDi
 };
 
 export const generateMolecularEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoMolecularEntity.category]);
+    const annotonNode = generateBaseTerm([GoMolecularEntity]);
 
     annotonNode.id = GoMolecularEntity.id;
     annotonNode.type = GoMolecularEntity.id;
-    annotonNode.category = [GoMolecularEntity.category];
+    annotonNode.category = [GoMolecularEntity];
     annotonNode.label = 'Gene Product';
     annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.gp;
@@ -220,10 +216,10 @@ export const generateMolecularEntity = (override: Partial<AnnotonNodeDisplay> = 
 };
 
 export const generateMolecularFunction = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoMolecularFunction.category]);
+    const annotonNode = generateBaseTerm([GoMolecularFunction]);
 
     annotonNode.id = GoMolecularFunction.id;
-    annotonNode.category = [GoMolecularFunction.category];
+    annotonNode.category = [GoMolecularFunction];
     annotonNode.label = 'Molecular Function';
     annotonNode.aspect = 'F';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
@@ -234,10 +230,10 @@ export const generateMolecularFunction = (override: Partial<AnnotonNodeDisplay> 
 };
 
 export const generateBiologicalProcess = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoBiologicalProcess.category]);
+    const annotonNode = generateBaseTerm([GoBiologicalProcess]);
 
     annotonNode.id = GoBiologicalProcess.id;
-    annotonNode.category = [GoBiologicalProcess.category];
+    annotonNode.category = [GoBiologicalProcess];
     annotonNode.label = 'MF part of Biological Process';
     annotonNode.aspect = 'P';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
@@ -248,10 +244,10 @@ export const generateBiologicalProcess = (override: Partial<AnnotonNodeDisplay> 
 };
 
 export const generateCellularComponent = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoCellularComponent.category]);
+    const annotonNode = generateBaseTerm([GoCellularComponent]);
 
     annotonNode.id = GoCellularComponent.id;
-    annotonNode.category = [GoCellularComponent.category];
+    annotonNode.category = [GoCellularComponent];
     annotonNode.label = 'MF occurs in Cellular Component';
     annotonNode.aspect = 'C';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
@@ -262,9 +258,9 @@ export const generateCellularComponent = (override: Partial<AnnotonNodeDisplay> 
 };
 
 export const generateChemicalEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoChemicalEntity.category]);
+    const annotonNode = generateBaseTerm([GoChemicalEntity]);
     annotonNode.id = GoChemicalEntity.id;
-    annotonNode.category = [GoChemicalEntity.category];
+    annotonNode.category = [GoChemicalEntity];
     annotonNode.label = 'Has Input (GP/Chemical)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
@@ -276,10 +272,10 @@ export const generateChemicalEntity = (override: Partial<AnnotonNodeDisplay> = {
 };
 
 export const generateBiologicalPhase = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoBiologicalPhase.category]);
+    const annotonNode = generateBaseTerm([GoBiologicalPhase]);
 
     annotonNode.id = GoBiologicalPhase.id;
-    annotonNode.category = [GoBiologicalPhase.category];
+    annotonNode.category = [GoBiologicalPhase];
     annotonNode.label = 'Happens During (Temporal Phase)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
@@ -290,9 +286,9 @@ export const generateBiologicalPhase = (override: Partial<AnnotonNodeDisplay> = 
 };
 
 export const generateCellTypeEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoCellTypeEntity.category]);
+    const annotonNode = generateBaseTerm([GoCellTypeEntity]);
     annotonNode.id = GoCellTypeEntity.id;
-    annotonNode.category = [GoCellTypeEntity.category];
+    annotonNode.category = [GoCellTypeEntity];
     annotonNode.label = 'Part Of (Cell Type)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
@@ -304,10 +300,10 @@ export const generateCellTypeEntity = (override: Partial<AnnotonNodeDisplay> = {
 };
 
 export const generateAnatomicalEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoAnatomicalEntity.category]);
+    const annotonNode = generateBaseTerm([GoAnatomicalEntity]);
 
     annotonNode.id = GoAnatomicalEntity.id;
-    annotonNode.category = [GoAnatomicalEntity.category];
+    annotonNode.category = [GoAnatomicalEntity];
     annotonNode.label = 'Part Of (Anatomy)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
@@ -318,10 +314,10 @@ export const generateAnatomicalEntity = (override: Partial<AnnotonNodeDisplay> =
 };
 
 export const generateOrganism = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm([GoOrganism.category]);
+    const annotonNode = generateBaseTerm([GoOrganism]);
 
     annotonNode.id = GoOrganism.id;
-    annotonNode.category = [GoOrganism.category];
+    annotonNode.category = [GoOrganism];
     annotonNode.label = 'Part Of (Organism)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;

@@ -7,6 +7,12 @@ import { Contributor } from './../contributor';
 import { Predicate } from '.';
 import { each } from 'lodash';
 
+export interface GoCategory {
+  id: AnnotonNodeType;
+  category: string;
+  categoryType: string;
+}
+
 export enum AnnotonNodeType {
   GoProteinContainingComplex = 'GoProteinContainingComplex',
   GoCellularComponent = 'GoCellularComponent',
@@ -32,7 +38,7 @@ export interface AnnotonNodeDisplay {
   uuid: string;
   isExtension: boolean;
   aspect: string;
-  category: string[];
+  category: GoCategory[];
   displaySection: any;
   displayGroup: any;
   treeLevel: number;
@@ -49,7 +55,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   type: AnnotonNodeType;
   label: string;
   uuid: string;
-  category: string[];
+  category: GoCategory[];
   categoryRange: [] = [];
   term: Entity = new Entity('', '');
   termLookup: EntityLookup = new EntityLookup();
@@ -180,3 +186,10 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     Object.assign(this, override);
   }
 }
+
+export function categoryToClosure(categories) {
+  return categories.map((category) => {
+    return `${category.categoryType}:"${category.category}"`;
+  }).join(' OR ');
+}
+

@@ -26,7 +26,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoBiologicalPhase,
             node: <AnnotonNodeDisplay>{
                 type: AnnotonNodeType.GoBiologicalProcess,
-                category: [EntityDefinition.GoBiologicalProcess.category],
+                category: [EntityDefinition.GoBiologicalProcess],
                 label: 'MF part of Biological Process',
                 aspect: 'P',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -42,7 +42,7 @@ export const canInsertEntity = {
             id: AnnotonNodeType.GoBiologicalPhase,
             node: <AnnotonNodeDisplay>{
                 type: AnnotonNodeType.GoCellularComponent,
-                category: [EntityDefinition.GoCellularComponent.category],
+                category: [EntityDefinition.GoCellularComponent],
                 label: 'MF occurs in Cellular Component',
                 aspect: 'C',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -57,7 +57,7 @@ export const canInsertEntity = {
             label: 'Add Occurs In (Cell Type)',
             id: AnnotonNodeType.GoCellTypeEntity,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoCellTypeEntity.category],
+                category: [EntityDefinition.GoCellTypeEntity],
                 type: AnnotonNodeType.GoCellTypeEntity,
                 label: 'Occurs In (Cell Type)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -73,7 +73,7 @@ export const canInsertEntity = {
             label: 'Add Occurs In (Anatomy)',
             id: AnnotonNodeType.GoAnatomicalEntity,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoAnatomicalEntity.category],
+                category: [EntityDefinition.GoAnatomicalEntity],
                 type: AnnotonNodeType.GoAnatomicalEntity,
                 label: 'Occurs In (Anatomy)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -89,7 +89,7 @@ export const canInsertEntity = {
             label: 'Add Occurs In (Organism)',
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoOrganism.category],
+                category: [EntityDefinition.GoOrganism],
                 type: AnnotonNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -105,7 +105,7 @@ export const canInsertEntity = {
             label: 'Add Has Input (Chemical/Protein Containing Complex)',
             id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoChemicalEntity.category, EntityDefinition.GoProteinContainingComplex.category],
+                category: [EntityDefinition.GoChemicalEntity.category, EntityDefinition.GoProteinContainingComplex],
                 type: AnnotonNodeType.GoChemicalEntityHasInput,
                 label: 'Has Input (GP/Chemical)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -121,7 +121,7 @@ export const canInsertEntity = {
             label: 'Add Has Output (GP/Chemical)',
             id: AnnotonNodeType.GoChemicalEntityHasOutput,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoChemicalEntity.category],
+                category: [EntityDefinition.GoChemicalEntity],
                 type: AnnotonNodeType.GoChemicalEntityHasOutput,
                 label: 'Has Output (GP/Chemical)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -137,7 +137,7 @@ export const canInsertEntity = {
             label: 'Add Happens During (Biological Phase)',
             id: AnnotonNodeType.GoBiologicalPhase,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoBiologicalPhase.category],
+                category: [EntityDefinition.GoBiologicalPhase],
                 type: AnnotonNodeType.GoBiologicalPhase,
                 label: 'Happens During (Temporal Phase)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -155,7 +155,7 @@ export const canInsertEntity = {
             label: 'Add Part Of (Biological Process)',
             id: AnnotonNodeType.GoBiologicalProcess,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoBiologicalProcess.category],
+                category: [EntityDefinition.GoBiologicalProcess],
                 type: AnnotonNodeType.GoBiologicalProcess,
                 label: 'Part Of (Biological Process)',
                 aspect: 'P',
@@ -172,7 +172,7 @@ export const canInsertEntity = {
             label: 'Add Occurs In (Cellular Component)',
             id: AnnotonNodeType.GoCellularComponent,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoCellularComponent.category],
+                category: [EntityDefinition.GoCellularComponent],
                 type: AnnotonNodeType.GoCellularComponent,
                 aspect: 'C',
                 label: 'Occurs In Cellular Component',
@@ -191,7 +191,7 @@ export const canInsertEntity = {
             label: 'Add Part Of (Cellular Component)',
             id: AnnotonNodeType.GoCellularComponent,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoCellularComponent.category],
+                category: [EntityDefinition.GoCellularComponent],
                 type: AnnotonNodeType.GoCellularComponent,
                 aspect: 'C',
                 label: 'Part Of Cellular Component',
@@ -208,7 +208,7 @@ export const canInsertEntity = {
             label: 'Add Part Of (Cell Type)',
             id: AnnotonNodeType.GoCellTypeEntity,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoCellTypeEntity.category],
+                category: [EntityDefinition.GoCellTypeEntity],
                 type: AnnotonNodeType.GoCellTypeEntity,
                 label: 'Part Of (Cell Type)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -224,7 +224,7 @@ export const canInsertEntity = {
             label: 'Add Part Of (Anatomy)',
             id: AnnotonNodeType.GoAnatomicalEntity,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoAnatomicalEntity.category],
+                category: [EntityDefinition.GoAnatomicalEntity],
                 type: AnnotonNodeType.GoAnatomicalEntity,
                 label: 'Part Of (Anatomy)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -240,7 +240,7 @@ export const canInsertEntity = {
             label: 'Add Part Of (Organism)',
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoOrganism.category],
+                category: [EntityDefinition.GoOrganism],
                 type: AnnotonNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -258,7 +258,7 @@ export const canInsertEntity = {
             label: 'Add Part Of (Anatomy)',
             id: AnnotonNodeType.GoAnatomicalEntity,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoAnatomicalEntity.category],
+                category: [EntityDefinition.GoAnatomicalEntity],
                 type: AnnotonNodeType.GoAnatomicalEntity,
                 label: 'Part Of (Anatomy)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -274,7 +274,7 @@ export const canInsertEntity = {
             label: 'Add Part Of (Organism)',
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoOrganism.category],
+                category: [EntityDefinition.GoOrganism],
                 type: AnnotonNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -292,7 +292,7 @@ export const canInsertEntity = {
             label: 'Add Part Of (Organism)',
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
-                category: [EntityDefinition.GoOrganism.category],
+                category: [EntityDefinition.GoOrganism],
                 type: AnnotonNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,

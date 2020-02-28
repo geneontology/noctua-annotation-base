@@ -30,7 +30,7 @@ export const activityUnitBaseDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularFunction]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularFunction.id,
             type: AnnotonNodeType.GoMolecularFunction,
-            category: [EntityDefinition.GoMolecularFunction.category],
+            category: [EntityDefinition.GoMolecularFunction],
             label: 'Molecular Function',
             aspect: 'F',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -41,7 +41,7 @@ export const activityUnitBaseDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity.category],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
@@ -63,7 +63,7 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularFunction]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularFunction.id,
             type: AnnotonNodeType.GoMolecularFunction,
-            category: [EntityDefinition.GoMolecularFunction.category],
+            category: [EntityDefinition.GoMolecularFunction],
             label: 'Molecular Function',
             aspect: 'F',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -74,7 +74,7 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity.category],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
@@ -86,7 +86,7 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoBiologicalProcess.id,
             type: AnnotonNodeType.GoBiologicalProcess,
-            category: [EntityDefinition.GoBiologicalProcess.category],
+            category: [EntityDefinition.GoBiologicalProcess],
             label: 'Biological Process',
             aspect: 'P',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -123,7 +123,7 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity.category],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             termRequired: true,
@@ -134,7 +134,7 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
             type: AnnotonNodeType.GoCellularComponent,
-            category: [EntityDefinition.GoCellularComponent.category],
+            category: [EntityDefinition.GoCellularComponent],
             aspect: 'C',
             label: 'Part Of Cellular Component',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -156,7 +156,7 @@ export const activityUnitDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularFunction]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularFunction.id,
             type: AnnotonNodeType.GoMolecularFunction,
-            category: [EntityDefinition.GoMolecularFunction.category],
+            category: [EntityDefinition.GoMolecularFunction],
             label: 'Molecular Function',
             aspect: 'F',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -167,7 +167,7 @@ export const activityUnitDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity.category],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
@@ -178,7 +178,7 @@ export const activityUnitDescription: ActivityDescription = {
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoBiologicalProcess.id,
             type: AnnotonNodeType.GoBiologicalProcess,
-            category: [EntityDefinition.GoBiologicalProcess.category],
+            category: [EntityDefinition.GoBiologicalProcess],
             label: 'MF part of Biological Process',
             aspect: 'P',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -189,7 +189,7 @@ export const activityUnitDescription: ActivityDescription = {
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
             type: AnnotonNodeType.GoCellularComponent,
-            category: [EntityDefinition.GoCellularComponent.category],
+            category: [EntityDefinition.GoCellularComponent],
             label: 'MF occurs in Cellular Component',
             aspect: 'C',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -219,7 +219,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularFunction]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularFunction.id,
             type: AnnotonNodeType.GoMolecularFunction,
-            category: [EntityDefinition.GoMolecularFunction.category],
+            category: [EntityDefinition.GoMolecularFunction],
             label: 'Molecular Function',
             aspect: 'F',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -230,7 +230,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity.category],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
@@ -242,7 +242,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoBiologicalProcess.id,
             type: AnnotonNodeType.GoBiologicalProcess,
-            category: [EntityDefinition.GoBiologicalProcess.category],
+            category: [EntityDefinition.GoBiologicalProcess],
             label: 'Biological Process',
             aspect: 'P',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -254,7 +254,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
             type: AnnotonNodeType.GoCellularComponent,
-            category: [EntityDefinition.GoCellularComponent.category],
+            category: [EntityDefinition.GoCellularComponent],
             label: 'occurs in Cellular Component',
             aspect: 'C',
             displaySection: noctuaFormConfig.displaySection.fd,
@@ -293,7 +293,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity.category],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             termRequired: true,
@@ -304,7 +304,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
             type: AnnotonNodeType.GoCellularComponent,
-            category: [EntityDefinition.GoCellularComponent.category],
+            category: [EntityDefinition.GoCellularComponent],
             aspect: 'C',
             label: 'Part Of Cellular Component',
             displaySection: noctuaFormConfig.displaySection.fd,

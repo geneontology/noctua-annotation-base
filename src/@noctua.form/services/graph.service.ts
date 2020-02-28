@@ -349,7 +349,7 @@ export class NoctuaGraphService {
     let annotonType = AnnotonType.default;
 
     if (predicateId === noctuaFormConfig.edge.partOf.id &&
-      self.noctuaLookupService.getLocalClosure(subjectNode.term.id, [EntityDefinition.GoMolecularEntity.category])) {
+      self.noctuaLookupService.getLocalClosure(subjectNode.term.id, [EntityDefinition.GoMolecularEntity])) {
       annotonType = AnnotonType.ccOnly;
     } else if (subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(bbopSubjectEdges, function (subjectEdge) {
@@ -372,7 +372,7 @@ export class NoctuaGraphService {
 
       if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
         (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
-          self.noctuaLookupService.getLocalClosure(subjectNode.term.id, [EntityDefinition.GoMolecularEntity.category]))) {
+          self.noctuaLookupService.getLocalClosure(subjectNode.term.id, [EntityDefinition.GoMolecularEntity]))) {
 
         const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
         const annoton: Annoton = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
@@ -413,7 +413,7 @@ export class NoctuaGraphService {
         });
 
         if (causalEdge) {
-          if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoMolecularFunction.category])) {
+          if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoMolecularFunction])) {
             const downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
             const connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, downstreamAnnoton);
 
@@ -424,7 +424,7 @@ export class NoctuaGraphService {
             connectorAnnoton.setRule();
             connectorAnnoton.createGraph();
             connectorAnnotons.push(connectorAnnoton);
-          } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoBiologicalProcess.category])) {
+          } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoBiologicalProcess])) {
             const processNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
             const processNode = self.noctuaFormConfigService.generateAnnotonNode('bp', { id: 'process' });
             const connectorAnnotonDTO = this._getConnectAnnotonIntermediate(cam, objectId);
@@ -667,7 +667,7 @@ export class NoctuaGraphService {
       });
 
       if (causalEdge) {
-        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoMolecularFunction.category])) {
+        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoMolecularFunction])) {
           const downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
 
           connectorAnnoton.rule.r2Edge = new Entity(causalEdge.id, causalEdge.label);;
@@ -676,7 +676,7 @@ export class NoctuaGraphService {
       }
 
       if (e.predicate_id() === noctuaFormConfig.edge.hasInput.id) {
-        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoChemicalEntity.category])) {
+        if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoChemicalEntity])) {
           const hasInputNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
           const hasInputNode = self.noctuaFormConfigService.generateAnnotonNode('mf-1', { id: 'has-input' });
 
