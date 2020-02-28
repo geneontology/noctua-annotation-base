@@ -91,7 +91,7 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
             aspect: 'P',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
-            treeLevel: 2,
+
             termRequired: true,
             relationEditable: true,
             weight: 10
@@ -109,10 +109,9 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
     overrides: {
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             label: 'Biological Process',
-            treeLevel: 2
         },
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
-            treeLevel: 3
+
         }
     }
 };
@@ -139,7 +138,7 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
             label: 'Part Of Cellular Component',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
-            treeLevel: 2,
+
         }
     },
     triples: [{
@@ -183,7 +182,7 @@ export const activityUnitDescription: ActivityDescription = {
             aspect: 'P',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
-            treeLevel: 2,
+
             weight: 10
         },
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
@@ -194,7 +193,7 @@ export const activityUnitDescription: ActivityDescription = {
             aspect: 'C',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
-            treeLevel: 2,
+
             weight: 20
         }
     },
@@ -247,7 +246,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             aspect: 'P',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
-            treeLevel: 2,
+
             termRequired: true,
             weight: 10
         },
@@ -259,7 +258,6 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             aspect: 'C',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
-            treeLevel: 3,
             weight: 20
         }
     },
@@ -279,10 +277,10 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
     overrides: {
         [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             label: 'Biological Process',
-            treeLevel: 2
+
         },
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
-            treeLevel: 3
+
         }
     }
 };
@@ -309,7 +307,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             label: 'Part Of Cellular Component',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
-            treeLevel: 2,
+
             weight: 2
         }
     },
@@ -328,13 +326,16 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
 
     each(activityDescription.nodes, (node: AnnotonNodeDisplay) => {
         const annotonNode = EntityDefinition.generateBaseTerm(node.category, node);
+
         annoton.addNode(annotonNode);
     });
 
     each(activityDescription.triples, (triple) => {
-        const predicate: Predicate = annoton.getNode(triple.object).predicate;
+        const objectNode = annoton.getNode(triple.object);
+        const predicate: Predicate = objectNode.predicate;
 
         predicate.edge = Entity.createEntity(triple.predicate);
+        objectNode.treeLevel++;
         annoton.addEdgeById(triple.subject, triple.object, predicate);
     });
 
@@ -358,12 +359,12 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescr
     objectNode.type = nodeDescription.node.type;
 
     annoton.addNode(objectNode);
+    objectNode.treeLevel = subjectNode.treeLevel + 1;
 
     const predicate: Predicate = annoton.getNode(objectNode.id).predicate;
     predicate.edge = Entity.createEntity(nodeDescription.predicate);
 
     annoton.updateEdges(subjectNode, objectNode, predicate);
-
     annoton.resetPresentation();
     return objectNode;
 };

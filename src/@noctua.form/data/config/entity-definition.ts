@@ -239,7 +239,7 @@ export const generateBiologicalProcess = (override: Partial<AnnotonNodeDisplay> 
     annotonNode.aspect = 'P';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.bp;
-    annotonNode.treeLevel = 2;
+
     annotonNode.overrideValues(override);
     return annotonNode;
 };
@@ -253,7 +253,7 @@ export const generateCellularComponent = (override: Partial<AnnotonNodeDisplay> 
     annotonNode.aspect = 'C';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-    annotonNode.treeLevel = 2;
+
     annotonNode.overrideValues(override);
     return annotonNode;
 };
@@ -265,7 +265,7 @@ export const generateChemicalEntity = (override: Partial<AnnotonNodeDisplay> = {
     annotonNode.label = 'Has Input (GP/Chemical)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-    annotonNode.treeLevel = 3;
+
     annotonNode.isExtension = true;
 
     annotonNode.overrideValues(override);
@@ -280,7 +280,7 @@ export const generateBiologicalPhase = (override: Partial<AnnotonNodeDisplay> = 
     annotonNode.label = 'Happens During (Temporal Phase)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-    annotonNode.treeLevel = 2;
+
     annotonNode.isExtension = true;
     annotonNode.overrideValues(override);
     return annotonNode;
@@ -293,7 +293,7 @@ export const generateCellTypeEntity = (override: Partial<AnnotonNodeDisplay> = {
     annotonNode.label = 'Part Of (Cell Type)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-    annotonNode.treeLevel = 3;
+
     annotonNode.isExtension = true;
 
     annotonNode.overrideValues(override);
@@ -308,7 +308,7 @@ export const generateAnatomicalEntity = (override: Partial<AnnotonNodeDisplay> =
     annotonNode.label = 'Part Of (Anatomy)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-    annotonNode.treeLevel = 4;
+
     annotonNode.isExtension = true;
     annotonNode.overrideValues(override);
     return annotonNode;

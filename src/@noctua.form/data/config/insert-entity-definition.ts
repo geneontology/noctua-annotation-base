@@ -31,7 +31,6 @@ export const canInsertEntity = {
                 aspect: 'P',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.bp,
-                treeLevel: 2,
                 weight: 10,
             },
             predicate: noctuaFormConfig.edge.partOf,
@@ -47,7 +46,6 @@ export const canInsertEntity = {
                 aspect: 'C',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 2,
                 weight: 20
             },
             predicate: noctuaFormConfig.edge.occursIn,
@@ -62,7 +60,6 @@ export const canInsertEntity = {
                 label: 'Occurs In (Cell Type)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
                 isExtension: false,
                 weight: 30
             },
@@ -78,7 +75,6 @@ export const canInsertEntity = {
                 label: 'Occurs In (Anatomy)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
                 isExtension: true,
                 weight: 40
             },
@@ -94,7 +90,6 @@ export const canInsertEntity = {
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
                 isExtension: true,
                 weight: 50
             },
@@ -110,7 +105,6 @@ export const canInsertEntity = {
                 label: 'Has Input (GP/Chemical)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
-                treeLevel: 2,
                 isExtension: true,
                 weight: 4
             },
@@ -126,7 +120,6 @@ export const canInsertEntity = {
                 label: 'Has Output (GP/Chemical)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
-                treeLevel: 2,
                 isExtension: true,
                 weight: 5
             },
@@ -142,7 +135,6 @@ export const canInsertEntity = {
                 label: 'Happens During (Temporal Phase)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
-                treeLevel: 2,
                 isExtension: true,
                 weight: 3
             },
@@ -161,7 +153,6 @@ export const canInsertEntity = {
                 aspect: 'P',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.bp,
-                treeLevel: 3,
                 isExtension: true,
                 weight: 10
             },
@@ -178,7 +169,6 @@ export const canInsertEntity = {
                 label: 'Occurs In Cellular Component',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.bp,
-                treeLevel: 4,
                 isExtension: true,
                 weight: 20
             },
@@ -198,7 +188,6 @@ export const canInsertEntity = {
                 label: 'Has Input (GP/Chemical)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
-                treeLevel: 3,
                 isExtension: true,
                 weight: 14
             },
@@ -218,7 +207,6 @@ export const canInsertEntity = {
                 label: 'Has Output (GP/Chemical)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
-                treeLevel: 3,
                 isExtension: true,
                 weight: 14
             },
@@ -237,7 +225,6 @@ export const canInsertEntity = {
                 label: 'Part Of Cellular Component',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
                 isExtension: true,
                 weight: 20
             },
@@ -253,7 +240,6 @@ export const canInsertEntity = {
                 label: 'Part Of (Cell Type)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
                 isExtension: true,
                 weight: 30
             },
@@ -269,7 +255,6 @@ export const canInsertEntity = {
                 label: 'Part Of (Anatomy)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
                 isExtension: true,
                 weight: 40
             },
@@ -285,7 +270,6 @@ export const canInsertEntity = {
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 3,
                 isExtension: true,
                 weight: 50
             },
@@ -303,7 +287,6 @@ export const canInsertEntity = {
                 label: 'Part Of (Anatomy)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 4,
                 isExtension: true,
                 weight: 40
             },
@@ -319,7 +302,6 @@ export const canInsertEntity = {
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 4,
                 isExtension: true,
                 weight: 50
             },
@@ -337,7 +319,6 @@ export const canInsertEntity = {
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
-                treeLevel: 5,
                 isExtension: true,
                 weight: 50
             },

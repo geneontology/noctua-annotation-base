@@ -116,6 +116,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
           const edgeTypeExist = self.edgeTypeExist(subjectNode.id, nodeDescription.predicate.id, subjectNode.type, nodeDescription.node.type);
 
           if (edgeTypeExist) {
+            edgeTypeExist.object.treeLevel++;
             self.removeEdge(edgeTypeExist.subject, edgeTypeExist.object, edgeTypeExist.predicate);
             self.addEdge(edgeTypeExist.subject, insertNode, edgeTypeExist.predicate);
             self.addEdge(insertNode, edgeTypeExist.object, predicate);
@@ -360,6 +361,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         }
       }
     });
+
 
     this._presentation = result;
 

@@ -390,18 +390,17 @@ export const bpOnlyAnnotation: ActivityDescription = {
         },
         [EntityDefinition.annotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
             label: 'Biological Process',
-            treeLevel: 2
+
         },
         [EntityDefinition.annotonNodeType.GoCellTypeEntity]: <AnnotonNodeDisplay>{
             label: 'occurs in (Cell Type)',
             relationship: noctuaFormConfig.edge.occursIn,
-            treeLevel: 3
+
         },
         [EntityDefinition.annotonNodeType.GoAnatomicalEntity]: <AnnotonNodeDisplay>{
-            treeLevel: 4
+
         },
         [EntityDefinition.annotonNodeType.GoOrganism]: <AnnotonNodeDisplay>{
-            treeLevel: 5
         }
     }
 };
@@ -436,17 +435,16 @@ export const ccOnlyAnnotation: ActivityDescription = {
         [EntityDefinition.annotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
             label: 'GP located in Cellular Component',
             relationship: noctuaFormConfig.edge.locatedIn,
-            treeLevel: 2
+
         },
         [EntityDefinition.annotonNodeType.GoCellTypeEntity]: <AnnotonNodeDisplay>{
             relationship: noctuaFormConfig.edge.occursIn,
-            treeLevel: 3
+
         },
         [EntityDefinition.annotonNodeType.GoAnatomicalEntity]: <AnnotonNodeDisplay>{
-            treeLevel: 4
+
         },
         [EntityDefinition.annotonNodeType.GoOrganism]: <AnnotonNodeDisplay>{
-            treeLevel: 5
         }
     }
 };

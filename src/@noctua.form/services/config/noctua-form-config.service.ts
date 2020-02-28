@@ -575,7 +575,7 @@ export class NoctuaFormConfigService {
           'cc-1-1': {
             id: 'cc-1-1',
             relationship: noctuaFormConfig.edge.partOf,
-            treeLevel: 4
+
           }
         },
         triples: [{
@@ -621,7 +621,7 @@ export class NoctuaFormConfigService {
               displaySection: noctuaFormConfig.displaySection.fd,
               displayGroup: noctuaFormConfig.displayGroup.bp,
             },
-            treeLevel: 3
+
           },
           'cc-1-1-1': {
             id: 'cc-1-1-1',
@@ -631,7 +631,7 @@ export class NoctuaFormConfigService {
               displayGroup: noctuaFormConfig.displayGroup.bp,
             },
             label: 'part Of (Anatomy)',
-            treeLevel: 4
+
           },
         },
         triples: [{
