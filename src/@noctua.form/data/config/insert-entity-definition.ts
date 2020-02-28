@@ -102,7 +102,7 @@ export const canInsertEntity = {
             node: <AnnotonNodeDisplay>{
                 category: [EntityDefinition.GoChemicalEntity, EntityDefinition.GoProteinContainingComplex],
                 type: AnnotonNodeType.GoChemicalEntityHasInput,
-                label: 'Has Input (GP/Chemical)',
+                label: 'Has Input (Chemical/Protein Containing Complex)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
                 isExtension: true,
@@ -112,12 +112,12 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToMany
         },
         <InsertNodeDescription>{
-            label: 'Add Has Output (GP/Chemical)',
+            label: 'Add Has Output (Chemical/Protein Containing Complex)',
             id: AnnotonNodeType.GoChemicalEntityHasOutput,
             node: <AnnotonNodeDisplay>{
                 category: [EntityDefinition.GoChemicalEntity, EntityDefinition.GoProteinContainingComplex],
                 type: AnnotonNodeType.GoChemicalEntityHasOutput,
-                label: 'Has Output (GP/Chemical)',
+                label: 'Has Output (Chemical/Protein Containing Complex)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
                 isExtension: true,
@@ -132,7 +132,7 @@ export const canInsertEntity = {
             node: <AnnotonNodeDisplay>{
                 category: [EntityDefinition.GoBiologicalPhase],
                 type: AnnotonNodeType.GoBiologicalPhase,
-                label: 'Happens During (Temporal Phase)',
+                label: 'Happens During (Biological Phase)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
                 isExtension: true,
@@ -176,7 +176,7 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToOne
         },
         <InsertNodeDescription>{
-            label: 'Add Has Input (Chemical/Protein Containing Complex)',
+            label: 'Add Has Input (Chemical/Anatomical Entity/Protein Containing Complex)',
             id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
                 category: [
@@ -185,9 +185,9 @@ export const canInsertEntity = {
                     EntityDefinition.GoProteinContainingComplex
                 ],
                 type: AnnotonNodeType.GoChemicalEntityHasInput,
-                label: 'Has Input (GP/Chemical)',
+                label: 'Has Input (Chemical/Anatomical Entity/Protein Containing Complex)',
                 displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.mf,
+                displayGroup: noctuaFormConfig.displayGroup.bp,
                 isExtension: true,
                 weight: 14
             },
@@ -195,7 +195,7 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToMany
         },
         <InsertNodeDescription>{
-            label: 'Add Has Output (Chemical/Protein Containing Complex)',
+            label: 'Add Has Output (Chemical/Anatomical Entity/Protein Containing Complex)',
             id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
                 category: [
@@ -204,9 +204,9 @@ export const canInsertEntity = {
                     EntityDefinition.GoProteinContainingComplex
                 ],
                 type: AnnotonNodeType.GoChemicalEntityHasOutput,
-                label: 'Has Output (GP/Chemical)',
+                label: 'Has Output (Chemical/Anatomical Entity/Protein Containing Complex)',
                 displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.mf,
+                displayGroup: noctuaFormConfig.displayGroup.bp,
                 isExtension: true,
                 weight: 14
             },
