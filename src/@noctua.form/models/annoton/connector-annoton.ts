@@ -253,7 +253,6 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
       removeTriples: <Triple<AnnotonNode>[]>subtractEdges(srcSaveData.graph, destSaveData.graph)
     };
 
-    console.log(saveData);
     return saveData;
   }
 

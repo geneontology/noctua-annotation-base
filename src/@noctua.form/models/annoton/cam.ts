@@ -235,7 +235,6 @@ export class Cam {
       }
     });
 
-    console.log(self.graphPreview.nodes);
     /*
         self.graphPreview.edges = <NgxEdge[]>triples.map((triple: Triple<AnnotonNode>) => {
           return {
@@ -250,10 +249,6 @@ export class Cam {
     let grid = [...this.triples.map((triple) => {
       return triple.grid;
     })]
-
-
-
-    console.log(grid)
 
     return grid;
     //return flattenDeep(grid);

@@ -329,7 +329,6 @@ export class NoctuaGraphService {
       .pipe(
         map((response) => {
           self.noctuaLookupService.addLocalClosure(a, closure, response);
-          console.log(closure)
         })
       );
   }

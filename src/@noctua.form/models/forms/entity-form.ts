@@ -25,8 +25,6 @@ export class EntityForm {
 
         this.term.setValue(entity.getTerm());
         this.relationship.setValue(entity.predicate.edge);
-
-        console.log(entity.predicate)
         this._onValueChanges(entity.termLookup);
     }
 

@@ -65,7 +65,6 @@ export class Evidence {
     result = result && isEqual(self.reference, evidence.reference);
     result = result && isEqual(self.with, evidence.with);
 
-    // console.log(result, '-', self.evidence, evidence.evidence)
     return result;
   }
 

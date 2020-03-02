@@ -316,8 +316,6 @@ export class NoctuaLookupService {
     const closure = self.categoryToClosure(categories);
     const data = self.localClosureExist(term, closure);
 
-    console.log(self.localClosures);
-
     if (data) {
       return data.isaClosure;
     } else {

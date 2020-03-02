@@ -491,7 +491,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       });
     });
 
-    console.log(result, JSON.stringify(result))
     return result;
   }
 }

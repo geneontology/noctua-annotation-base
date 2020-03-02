@@ -52,7 +52,6 @@ export class EvidenceForm {
             debounceTime(400)
         ).subscribe(data => {
             self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
-                console.log(response);
                 lookup.results = response;
             });
         });

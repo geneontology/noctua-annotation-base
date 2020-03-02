@@ -169,14 +169,12 @@ export class NoctuaAnnotonFormService {
       self.noctuaLookupService.golrLookup('a', Object.assign({}, node.termLookup.requestParams, { rows: 100 })).subscribe(response => {
         if (response && response.length > 0) {
           const termsCount = response.length;
-          console.log(termsCount)
           node.term = Entity.createEntity(response[Math.floor(Math.random() * termsCount)]);
 
           each(node.predicate.evidence, (evidence: Evidence) => {
             self.noctuaLookupService.golrLookup('a', Object.assign({}, node.predicate.evidenceLookup.requestParams, { rows: 100 })).subscribe(response => {
               if (response && response.length > 0) {
                 const evidenceCount = response.length;
-                console.log(evidenceCount);
                 evidence.evidence = Entity.createEntity(response[Math.floor(Math.random() * evidenceCount)]);
                 evidence.reference = `PMID:${Math.floor(Math.random() * 1000000) + 1000}`;
               }

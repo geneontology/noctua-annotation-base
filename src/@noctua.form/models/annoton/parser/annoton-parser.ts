@@ -176,7 +176,6 @@ export class AnnotonParser {
 
   printErrors() {
     const self = this;
-    console.log(self.errors);
   }
 
   allowedEdge(predicateId) {
