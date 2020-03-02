@@ -5,7 +5,8 @@ import { DirectionRule } from './direction-rule';
 import { ReactionRule } from './reaction-rule';
 
 export class ConnectorRule {
-  annotonsConsecutive = new ConditionRule('annotonsConsecutive', 'Activities are consecutive?');
+  annotonsConsecutive = new ConditionRule('annotonsConsecutive',
+    'Do you know the mechanism for how the upstream activity affects the downstream activity?');
   effectDependency = new ConditionRule('effectDependency', 'Causal effect yes dependency?');
   effectDirection = new DirectionRule('effectDirection', 'Direction of Effect?');
   effectReactionProduct = new ReactionRule('effectReactionProduct', 'Causal Reaction Product?');

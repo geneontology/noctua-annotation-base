@@ -267,7 +267,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       removeTriples: []
     };
 
-    console.log(saveData);
     return saveData;
   }
 
