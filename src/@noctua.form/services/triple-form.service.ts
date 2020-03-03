@@ -58,8 +58,8 @@ export class NoctuaTripleFormService {
 
   createTripleForm(triple: Triple<AnnotonNode>) {
     const self = this;
-    let annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    let tripleForm = new TripleForm(annotonFormMetadata);
+    const annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
+    const tripleForm = new TripleForm(annotonFormMetadata);
 
     tripleForm.createTripleForm(triple);
 
