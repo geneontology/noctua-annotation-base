@@ -197,7 +197,6 @@ export const generateProteinContainingComplex = (override: Partial<AnnotonNodeDi
     annotonNode.label = 'Macromolecular Complex';
     annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mc;
-
     annotonNode.overrideValues(override);
     return annotonNode;
 };
@@ -225,7 +224,6 @@ export const generateMolecularFunction = (override: Partial<AnnotonNodeDisplay> 
     annotonNode.aspect = 'F';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-
     annotonNode.overrideValues(override);
     return annotonNode;
 };
@@ -239,7 +237,6 @@ export const generateBiologicalProcess = (override: Partial<AnnotonNodeDisplay> 
     annotonNode.aspect = 'P';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.bp;
-
     annotonNode.overrideValues(override);
     return annotonNode;
 };
@@ -253,7 +250,6 @@ export const generateCellularComponent = (override: Partial<AnnotonNodeDisplay> 
     annotonNode.aspect = 'C';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-
     annotonNode.overrideValues(override);
     return annotonNode;
 };
@@ -265,9 +261,7 @@ export const generateChemicalEntity = (override: Partial<AnnotonNodeDisplay> = {
     annotonNode.label = 'Has Input (GP/Chemical)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-
     annotonNode.isExtension = true;
-
     annotonNode.overrideValues(override);
     return annotonNode;
 };
@@ -280,7 +274,6 @@ export const generateBiologicalPhase = (override: Partial<AnnotonNodeDisplay> = 
     annotonNode.label = 'Happens During (Temporal Phase)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-
     annotonNode.isExtension = true;
     annotonNode.overrideValues(override);
     return annotonNode;
@@ -293,9 +286,7 @@ export const generateCellTypeEntity = (override: Partial<AnnotonNodeDisplay> = {
     annotonNode.label = 'Part Of (Cell Type)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-
     annotonNode.isExtension = true;
-
     annotonNode.overrideValues(override);
     return annotonNode;
 };
@@ -308,7 +299,6 @@ export const generateAnatomicalEntity = (override: Partial<AnnotonNodeDisplay> =
     annotonNode.label = 'Part Of (Anatomy)';
     annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
     annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-
     annotonNode.isExtension = true;
     annotonNode.overrideValues(override);
     return annotonNode;

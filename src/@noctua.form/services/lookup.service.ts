@@ -231,7 +231,6 @@ export class NoctuaLookupService {
   isaClosure(a: string, b: string) {
     const self = this;
 
-
     const requestParams = {
       q: self.buildQ(a),
       defType: 'edismax',
