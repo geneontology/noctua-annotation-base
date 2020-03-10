@@ -91,7 +91,6 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
             aspect: 'P',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
-
             termRequired: true,
             relationEditable: true,
             weight: 10
@@ -182,7 +181,6 @@ export const activityUnitDescription: ActivityDescription = {
             aspect: 'P',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
-
             weight: 10
         },
         [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
@@ -193,7 +191,6 @@ export const activityUnitDescription: ActivityDescription = {
             aspect: 'C',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
-
             weight: 20
         }
     },
@@ -246,7 +243,6 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             aspect: 'P',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
-
             termRequired: true,
             weight: 10
         },
@@ -304,6 +300,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             type: AnnotonNodeType.GoCellularComponent,
             category: [EntityDefinition.GoCellularComponent],
             aspect: 'C',
+            termRequired: true,
             label: 'Part Of Cellular Component',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,

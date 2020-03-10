@@ -603,7 +603,7 @@ export class NoctuaGraphService {
       const bbopPredicateId = bbopEdge.predicate_id();
       const bbopObjectId = bbopEdge.object_id();
       const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
-      const objectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
+      const partialObjectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
 
       if (annoton.annotonType === AnnotonType.bpOnly) {
         const causalEdge = find(noctuaFormConfig.causalEdges, {
@@ -615,47 +615,46 @@ export class NoctuaGraphService {
         }
       }
 
-      this._insertNode(annoton, bbopPredicateId, subjectNode, objectNode);
+      const objectNode = this._insertNode(annoton, bbopPredicateId, subjectNode, partialObjectNode);
 
       annoton.updateEntityInsertMenu();
 
-      const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
+      const triple: Triple<AnnotonNode> = annoton.getEdge(subjectNode.id, objectNode.id);
 
-      each(triples, (triple: Triple<AnnotonNode>) => {
-        if (bbopPredicateId === triple.predicate.edge.id) {
-
-          triple.object.uuid = objectNode.uuid;
-          triple.object.term = objectNode.term;
-          triple.object.classExpression = objectNode.classExpression;
-          triple.object.setIsComplement(objectNode.isComplement);
-
-          triple.predicate.evidence = evidence;
-          triple.predicate.uuid = bbopEdge.id();
-          self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
-        }
-      });
+      if (triple) {
+        triple.object.uuid = partialObjectNode.uuid;
+        triple.object.term = partialObjectNode.term;
+        triple.object.classExpression = partialObjectNode.classExpression;
+        triple.object.setIsComplement(partialObjectNode.isComplement);
+        triple.predicate.evidence = evidence;
+        triple.predicate.uuid = bbopEdge.id();
+        self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
+      }
     });
 
     return annoton;
   }
 
-  private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode, bbopObjectNode: any) {
+  private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode, partialObjectNode: any): AnnotonNode {
     const self = this;
     const nodeDescriptions: ModelDefinition.InsertNodeDescription = subjectNode.canInsertNodes;
+    let objectNode;
 
     each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
       if (bbopPredicateId === nodeDescription.predicate.id) {
-        if (self.noctuaLookupService.getLocalClosure(bbopObjectNode.term.id, nodeDescription.node.category)) {
-          ModelDefinition.insertNode(annoton, subjectNode, nodeDescription);
+        if (self.noctuaLookupService.getLocalClosure(partialObjectNode.term.id, nodeDescription.node.category)) {
+          objectNode = ModelDefinition.insertNode(annoton, subjectNode, nodeDescription);
           return false;
         }
       }
     });
+
+    return objectNode;
   }
 
   private _getConnectAnnotonIntermediate(cam: Cam, bpSubjectId: string): ConnectorAnnoton {
     const self = this;
-    const connectorAnnoton = new ConnectorAnnoton()
+    const connectorAnnoton = new ConnectorAnnoton();
 
     each(cam.graph.get_edges_by_subject(bpSubjectId), (e) => {
       const predicateId = e.predicate_id();
