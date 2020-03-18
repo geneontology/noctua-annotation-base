@@ -377,7 +377,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
     each(self.presentation.fd, function (nodeGroup) {
       each(nodeGroup.nodes, function (node: AnnotonNode) {
-        let term = node.getTerm();
+        const term = node.getTerm();
 
         if (node.id !== AnnotonNodeType.GoMolecularEntity && term.id) {
           self.generateGridRow(node);
