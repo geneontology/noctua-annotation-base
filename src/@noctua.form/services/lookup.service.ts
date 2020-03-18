@@ -358,6 +358,14 @@ export class NoctuaLookupService {
 
     if (id.startsWith('ECO')) {
       return 'http://www.evidenceontology.org/term/' + id;
+    } else if (id.startsWith('PMID')) {
+      const idAccession = id.split(':');
+      if (idAccession.length > 1) {
+        return 'https://www.ncbi.nlm.nih.gov/pubmed/' + idAccession[1].trim();
+      } else {
+        return null;
+      }
+
     } else {
       return self.linker.url(id);
     }

@@ -9,6 +9,7 @@ export class Evidence {
   edge: Entity;
   evidence: Entity = new Entity('', '');
   reference: string;
+  referenceUrl: string;
   with: string;
   assignedBy: Entity = new Entity('', '');
   classExpression;

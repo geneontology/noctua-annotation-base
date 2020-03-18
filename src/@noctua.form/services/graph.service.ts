@@ -276,6 +276,7 @@ export class NoctuaGraphService {
         const assignedBys = annotationNode.get_annotations_by_key('providedBy');
         if (sources.length > 0) {
           evidence.reference = sources[0].value();
+          evidence.referenceUrl = self.noctuaLookupService.getTermURL(evidence.reference);
         }
         if (withs.length > 0) {
           if (withs[0].value().startsWith('gomodel')) {
