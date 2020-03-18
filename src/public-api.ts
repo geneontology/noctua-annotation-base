@@ -1,1 +1,1 @@
-export * from './@noctua.form/noctua.form.module'
+export * from './@noctua.form/noctua.form.module';
