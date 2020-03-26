@@ -146,6 +146,23 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     return self.getNode(AnnotonNodeType.GoMolecularFunction);
   }
 
+  adjustCC() {
+    const self = this;
+    const ccNode = self.getNode(AnnotonNodeType.GoCellularComponent);
+
+    if (ccNode && !ccNode.hasValue()) {
+      const ccEdges: Triple<AnnotonNode>[] = this.getEdges(ccNode.id);
+
+      if (ccEdges.length > 0) {
+        const firstEdge = ccEdges[0];
+        const rootCC = noctuaFormConfig.rootNode.cc;
+        ccNode.term = new Entity(rootCC.id, rootCC.label);
+        ccNode.predicate.evidence = firstEdge.predicate.evidence;
+
+      }
+    }
+  }
+
   adjustAnnoton() {
     const self = this;
 
@@ -235,6 +252,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       graph: null
     };
 
+    self.adjustCC();
     self.adjustAnnoton();
 
     const graph = self.getTrimmedGraph(this.rootNodeType);
