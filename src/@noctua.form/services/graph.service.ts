@@ -618,7 +618,7 @@ export class NoctuaGraphService {
         }
       }
 
-      // const objectNode = this._insertNode(annoton, bbopPredicateId, subjectNode, partialObjectNode);
+      const objectNode = this._insertNode(annoton, bbopPredicateId, subjectNode, partialObjectNode);
 
       annoton.updateEntityInsertMenu();
 

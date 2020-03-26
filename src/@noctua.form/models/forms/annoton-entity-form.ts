@@ -38,12 +38,12 @@ export class AnnotonEntityForm {
 
   populateAnnotonEntityForm(annotonNode: AnnotonNode) {
     const self = this;
-    let evidences: Evidence[] = [];
+    const evidences: Evidence[] = [];
 
     annotonNode.term = new Entity(this.term.value.id, this.term.value.label);
     self.evidenceForms.forEach((evidenceForm: EvidenceForm) => {
       let evidenceFound //nnotonNode.getEvidenceById(evidenceForm.uuid);
-      let evidence = evidenceFound ? evidenceFound : new Evidence();
+      const evidence = evidenceFound ? evidenceFound : new Evidence();
 
       evidenceForm.populateEvidence(evidence);
       evidences.push(evidence);
