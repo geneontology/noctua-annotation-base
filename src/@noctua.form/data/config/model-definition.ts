@@ -1,13 +1,12 @@
 import { noctuaFormConfig } from './../../noctua-form-config';
 
 import * as EntityDefinition from './entity-definition';
-import * as InsertEntityDefinition from './insert-entity-definition';
+import * as ShapeDescription from './shape-definition';
 import { each, find } from 'lodash';
 import { AnnotonNodeType, AnnotonNodeDisplay, AnnotonNode } from './../../models/annoton/annoton-node';
 import { Entity } from '../../models/annoton/entity';
 import { Predicate } from '../../models/annoton/predicate';
 import { AnnotonType, Annoton } from '../../models/annoton/annoton';
-import { Triple } from '../../models/annoton/triple';
 
 declare const require: any;
 const getUuid = require('uuid/v1');

@@ -11,7 +11,7 @@ export enum CardinalityType {
     oneToMany = 'oneToMany',
 }
 
-export interface InsertNodeDescription {
+export interface ShapeDescription {
     id: string;
     label: string;
     node: AnnotonNodeDisplay;
@@ -21,7 +21,7 @@ export interface InsertNodeDescription {
 
 export const canInsertEntity = {
     [AnnotonNodeType.GoMolecularFunction]: [
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Part Of (Biological Process)',
             id: AnnotonNodeType.GoBiologicalProcess,
             node: <AnnotonNodeDisplay>{
@@ -36,7 +36,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Occurs In (Cellular Component)',
             id: AnnotonNodeType.GoCellularComponent,
             node: <AnnotonNodeDisplay>{
@@ -51,7 +51,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.occursIn,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Occurs In (Cell Type)',
             id: AnnotonNodeType.GoCellTypeEntity,
             node: <AnnotonNodeDisplay>{
@@ -66,7 +66,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.occursIn,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Occurs In (Anatomy)',
             id: AnnotonNodeType.GoAnatomicalEntity,
             node: <AnnotonNodeDisplay>{
@@ -81,7 +81,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.occursIn,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Occurs In (Organism)',
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
@@ -96,7 +96,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.occursIn,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Has Input (Chemical/Protein Containing Complex)',
             id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
@@ -111,7 +111,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.hasInput,
             cardinality: CardinalityType.oneToMany
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Has Output (Chemical/Protein Containing Complex)',
             id: AnnotonNodeType.GoChemicalEntityHasOutput,
             node: <AnnotonNodeDisplay>{
@@ -126,7 +126,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.hasOutput,
             cardinality: CardinalityType.oneToMany
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Happens During (Biological Phase)',
             id: AnnotonNodeType.GoBiologicalPhase,
             node: <AnnotonNodeDisplay>{
@@ -143,7 +143,7 @@ export const canInsertEntity = {
         }
     ],
     [AnnotonNodeType.GoBiologicalProcess]: [
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Part Of (Biological Process)',
             id: AnnotonNodeType.GoBiologicalProcess,
             node: <AnnotonNodeDisplay>{
@@ -159,7 +159,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Occurs In (Cellular Component)',
             id: AnnotonNodeType.GoCellularComponent,
             node: <AnnotonNodeDisplay>{
@@ -175,7 +175,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.occursIn,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Has Input (Chemical/Anatomical Entity/Protein Containing Complex)',
             id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
@@ -194,7 +194,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.hasInput,
             cardinality: CardinalityType.oneToMany
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Has Output (Chemical/Anatomical Entity/Protein Containing Complex)',
             id: AnnotonNodeType.GoChemicalEntityHasInput,
             node: <AnnotonNodeDisplay>{
@@ -215,7 +215,7 @@ export const canInsertEntity = {
         },
     ],
     [AnnotonNodeType.GoCellularComponent]: [
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Part Of (Cellular Component)',
             id: AnnotonNodeType.GoCellularComponent,
             node: <AnnotonNodeDisplay>{
@@ -231,7 +231,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Part Of (Cell Type)',
             id: AnnotonNodeType.GoCellTypeEntity,
             node: <AnnotonNodeDisplay>{
@@ -246,7 +246,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Part Of (Anatomy)',
             id: AnnotonNodeType.GoAnatomicalEntity,
             node: <AnnotonNodeDisplay>{
@@ -261,7 +261,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Part Of (Organism)',
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
@@ -278,7 +278,7 @@ export const canInsertEntity = {
         }
     ],
     [AnnotonNodeType.GoCellTypeEntity]: [
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Part Of (Anatomy)',
             id: AnnotonNodeType.GoAnatomicalEntity,
             node: <AnnotonNodeDisplay>{
@@ -293,7 +293,7 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         },
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Part Of (Organism)',
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{
@@ -310,7 +310,7 @@ export const canInsertEntity = {
         }
     ],
     [AnnotonNodeType.GoAnatomicalEntity]: [
-        <InsertNodeDescription>{
+        <ShapeDescription>{
             label: 'Add Part Of (Organism)',
             id: AnnotonNodeType.GoOrganism,
             node: <AnnotonNodeDisplay>{

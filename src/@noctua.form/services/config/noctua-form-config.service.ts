@@ -2,7 +2,7 @@ import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import * as ModelDefinition from './../../data/config/model-definition';
-import * as InsertEntityDefinition from './../../data/config/insert-entity-definition';
+import * as ShapeDescription from './../../data/config/shape-definition';
 
 declare const require: any;
 
@@ -1064,7 +1064,7 @@ export class NoctuaFormConfigService {
 
   insertAnnotonNode(annoton: Annoton,
     subjectNode: AnnotonNode,
-    nodeDescription: InsertEntityDefinition.InsertNodeDescription): AnnotonNode {
+    nodeDescription: ShapeDescription.ShapeDescription): AnnotonNode {
     return ModelDefinition.insertNode(annoton, subjectNode, nodeDescription);
   }
 

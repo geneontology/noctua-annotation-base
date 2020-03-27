@@ -10,7 +10,7 @@ import { Entity } from './entity';
 import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import { AnnotonParser } from './parser';
-import * as InsertEntityDefinition from './../../data/config/insert-entity-definition';
+import * as ShapeDescription from './../../data/config/shape-definition';
 
 import { each } from 'lodash';
 
@@ -72,11 +72,11 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     const self = this;
 
     each(self.nodes, (node: AnnotonNode) => {
-      const canInsertNodes = InsertEntityDefinition.canInsertEntity[node.type] || [];
+      const canInsertNodes = ShapeDescription.canInsertEntity[node.type] || [];
       const exist = [];
 
-      each(canInsertNodes, (nodeDescription: InsertEntityDefinition.InsertNodeDescription) => {
-        if (nodeDescription.cardinality === InsertEntityDefinition.CardinalityType.oneToOne) {
+      each(canInsertNodes, (nodeDescription: ShapeDescription.ShapeDescription) => {
+        if (nodeDescription.cardinality === ShapeDescription.CardinalityType.oneToOne) {
           const edgeTypeExist = self.edgeTypeExist(node.id, nodeDescription.predicate.id, node.type, nodeDescription.node.type);
 
           if (edgeTypeExist) {
@@ -91,7 +91,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         }
       });
 
-      node.canInsertNodes = canInsertNodes.filter((nodeDescription: InsertEntityDefinition.InsertNodeDescription) => {
+      node.canInsertNodes = canInsertNodes.filter((nodeDescription: ShapeDescription.ShapeDescription) => {
         return !exist.includes(nodeDescription.node.type);
       });
     });
@@ -106,13 +106,13 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   updateEdges(subjectNode: AnnotonNode, insertNode: AnnotonNode, predicate: Predicate) {
     const self = this;
-    const canInsertSubjectNodes = InsertEntityDefinition.canInsertEntity[subjectNode.type] || [];
+    const canInsertSubjectNodes = ShapeDescription.canInsertEntity[subjectNode.type] || [];
     let updated = false;
 
-    each(canInsertSubjectNodes, (nodeDescription: InsertEntityDefinition.InsertNodeDescription) => {
+    each(canInsertSubjectNodes, (nodeDescription: ShapeDescription.ShapeDescription) => {
 
       if (predicate.edge.id === nodeDescription.predicate.id) {
-        if (nodeDescription.cardinality === InsertEntityDefinition.CardinalityType.oneToOne) {
+        if (nodeDescription.cardinality === ShapeDescription.CardinalityType.oneToOne) {
           const edgeTypeExist = self.edgeTypeExist(subjectNode.id, nodeDescription.predicate.id, subjectNode.type, nodeDescription.node.type);
 
           if (edgeTypeExist) {

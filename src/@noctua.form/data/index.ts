@@ -1,6 +1,5 @@
 import * as EntityDefinition from './config/entity-definition';
-import * as InsertEntityDefinition from './config/insert-entity-definition';
+import * as ShapeDefinition from './config/shape-definition';
 
 export { EntityDefinition };
-export { InsertEntityDefinition };
-//export *  from './config/entity-definition';
+export { ShapeDefinition }; 

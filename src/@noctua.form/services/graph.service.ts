@@ -21,7 +21,7 @@ import {
 
 import * as ModelDefinition from './../data/config/model-definition';
 import * as EntityDefinition from './../data/config/entity-definition';
-import * as InsertEntityDefinition from './../data/config/insert-entity-definition';
+import * as ShapeDescription from './../data/config/shape-definition';
 
 import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
