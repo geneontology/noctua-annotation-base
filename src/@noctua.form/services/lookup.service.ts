@@ -5,6 +5,8 @@ import { map } from 'rxjs/operators';
 import { AnnotonNode, AnnotonNodeClosure, Entity, Evidence, Predicate } from './../models/annoton/';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each } from 'lodash';
+import { noctuaFormConfig } from './../noctua-form-config';
+import { Article } from './../models/article';
 
 declare const require: any;
 
@@ -51,14 +53,6 @@ export class NoctuaLookupService {
 
     manager.set_comfy_query(str);
     return manager.get_query(str);
-  }
-
-  golrTermLookup(searchText, id) {
-    const self = this;
-
-    const requestParams = self.noctuaFormConfigService.getRequestParams(id);
-
-    return self.golrLookup(searchText, requestParams);
   }
 
   golrLookup(searchText, requestParams) {
@@ -371,4 +365,35 @@ export class NoctuaLookupService {
     }
   }
 
+
+  getPubmedInfo(pmid: string) {
+    const url = environment.pubMedSummaryApi + pmid;
+
+    return this.httpClient
+      .get(url)
+      .pipe(
+        map(res => res['result']),
+        map(res => res[pmid]),
+        map(res => this._addArticles(res, pmid)),
+      );
+  }
+
+  private _addArticles(res, pmid: string) {
+    const self = this;
+    if (!res) {
+      return;
+    }
+
+    const article = new Article();
+    article.title = res.title;
+    article.link = self.linker.url(`${noctuaFormConfig.evidenceDB.options.pmid.name}:${pmid}`);
+    article.date = res.pubdate;
+    if (res.authors && Array.isArray(res.authors)) {
+      article.author = res.authors.map(author => {
+        return author.name;
+      }).join(', ');
+    }
+
+    return article;
+  }
 }

@@ -16,7 +16,6 @@ import {
 } from 'noctua-form-base';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 import { each, find } from 'lodash';
-import { SearchCriteria } from '@noctua.search/models/search-criteria';
 
 @Component({
   selector: 'noc-entity-form',

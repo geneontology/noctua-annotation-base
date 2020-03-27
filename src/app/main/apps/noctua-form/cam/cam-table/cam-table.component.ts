@@ -1,37 +1,23 @@
 
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatSort, MatDrawer } from '@angular/material';
-import { DataSource } from '@angular/cdk/collections';
-import { merge, Observable, BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
 
-import { noctuaAnimations } from './../../../../../../@noctua/animations';
-
-import { takeUntil, startWith } from 'rxjs/internal/operators';
-
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 import { NoctuaFormService } from './../../services/noctua-form.service';
 import { CamTableService } from './services/cam-table.service';
 import { NoctuaFormDialogService } from './../../services/dialog.service';
-import { NoctuaSearchService } from './../../../../../../@noctua.search/services/noctua-search.service';
 
 import {
   noctuaFormConfig,
   NoctuaAnnotonConnectorService,
-  NoctuaGraphService,
   NoctuaFormConfigService,
   NoctuaAnnotonFormService,
-  NoctuaLookupService,
-  NoctuaAnnotonEntityService,
   CamService,
   Cam,
   Annoton,
-  EntityDefinition,
   AnnotonType,
   NoctuaUserService
 } from 'noctua-form-base';
@@ -67,20 +53,16 @@ export class CamTableComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private route: ActivatedRoute,
-    public camService: CamService,
+  constructor(public camService: CamService,
     public noctuaFormService: NoctuaFormService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private confirmDialogService: NoctuaConfirmDialogService,
-    private noctuaSearchService: NoctuaSearchService,
     private noctuaAnnotonConnectorService: NoctuaAnnotonConnectorService,
     //  public noctuaFormService: NoctuaFormService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
     public camTableService: CamTableService,
     private noctuaFormDialogService: NoctuaFormDialogService,
-    private noctuaLookupService: NoctuaLookupService,
-    private noctuaGraphService: NoctuaGraphService,
   ) {
 
     this.searchFormData = this.noctuaFormConfigService.createSearchFormData();
@@ -104,7 +86,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   search() {
     let searchCriteria = this.searchForm.value;
     console.dir(searchCriteria)
-    this.noctuaSearchService.search(searchCriteria);
+    // this.noctuaSearchService.search(searchCriteria);
   }
 
   expandAll(expand: boolean) {
@@ -113,10 +95,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
 
   toggleExpand(annoton: Annoton) {
     annoton.expanded = !annoton.expanded;
-  }
-
-  openCamEdit(cam) {
-    this.noctuaFormDialogService.openCamRowEdit(cam);
   }
 
   openAnnotonConnector(annoton: Annoton) {

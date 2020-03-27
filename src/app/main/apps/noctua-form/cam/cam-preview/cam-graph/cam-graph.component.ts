@@ -192,10 +192,6 @@ export class CamGraphComponent implements OnInit, OnDestroy {
     this.noctuaFormService.openRightDrawer(this.noctuaFormService.panel.annotonForm);
   }
 
-  openCamEdit(cam) {
-    this.noctuaFormDialogService.openCamRowEdit(cam);
-  }
-
   openAnnotonConnectorList(annoton: Annoton) {
     this.camService.onCamChanged.next(this.cam);
     this.camService.annoton = annoton;
