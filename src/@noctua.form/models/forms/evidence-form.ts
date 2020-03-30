@@ -3,7 +3,7 @@ import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
 
 import { Evidence } from './../annoton/evidence';
 import { AnnotonNode } from './../annoton/annoton-node';
-import * as _ from 'lodash';
+
 declare const require: any;
 const each = require('lodash/forEach');
 

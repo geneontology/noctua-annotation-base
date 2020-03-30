@@ -49,7 +49,6 @@ export class CamPreviewComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
   ) {
 
-    this.searchFormData = this.noctuaFormConfigService.createSearchFormData();
     this.unsubscribeAll = new Subject();
   }
 

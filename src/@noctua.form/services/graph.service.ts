@@ -29,7 +29,7 @@ import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
 
 import 'rxjs/add/observable/forkJoin';
-import * as _ from 'lodash';
+
 import { AnnotonType } from './../models/annoton/annoton';
 import { AnnotonNodeType } from './../models/annoton/annoton-node';
 import { Contributor } from './../models/contributor';

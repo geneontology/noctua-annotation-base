@@ -25,7 +25,6 @@ export class BeforeSaveDialogComponent implements OnInit, OnDestroy {
     public noctuaFormConfigService: NoctuaFormConfigService) {
     this._unsubscribeAll = new Subject();
 
-    this.searchFormData = this.noctuaFormConfigService.createSearchFormData();
     this.cam = this._data.cam
     this.searchForm = this.createAnswerForm();
   }

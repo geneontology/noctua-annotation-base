@@ -4,7 +4,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 
 
-import * as _ from 'lodash';
+
 declare const require: any;
 
 

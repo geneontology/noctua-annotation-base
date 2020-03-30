@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+
 import { EntityLookup } from './entity-lookup';
 declare const require: any;
 const uuid = require('uuid/v1');

@@ -847,13 +847,6 @@ export class NoctuaFormConfigService {
     return url;
   }
 
-
-  createSearchFormData() {
-    const self = this;
-
-    return self._searchFormData;
-  }
-
   createAnnotonConnectorModel(upstreamAnnoton: Annoton, downstreamAnnoton: Annoton, srcProcessNode?: AnnotonNode, srcHasInputNode?: AnnotonNode) {
     const self = this;
     const srcUpstreamNode = upstreamAnnoton.getMFNode();

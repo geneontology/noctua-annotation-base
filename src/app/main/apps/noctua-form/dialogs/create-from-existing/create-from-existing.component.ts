@@ -23,8 +23,6 @@ export class CreateFromExistingDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) private _data: any,
     public noctuaFormConfigService: NoctuaFormConfigService) {
     this._unsubscribeAll = new Subject();
-
-    this.searchFormData = this.noctuaFormConfigService.createSearchFormData();
     this.cam = this._data.cam
     this.searchForm = this.createAnswerForm();
   }

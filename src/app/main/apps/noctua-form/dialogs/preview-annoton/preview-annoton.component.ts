@@ -4,7 +4,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef } from '@angular/material';
 import { Subject } from 'rxjs';
-import * as _ from 'lodash';
+
 import {
   AnnotonNode,
   Evidence,

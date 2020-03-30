@@ -49,7 +49,11 @@ export class CamTableComponent implements OnInit, OnDestroy {
 
 
   searchResults = [];
-  modelId: string = '';
+  modelId: '';
+  loadingSpinner: any = {
+    color: 'primary',
+    mode: 'indeterminate'
+  };
 
   private _unsubscribeAll: Subject<any>;
 
@@ -65,7 +69,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
   ) {
 
-    this.searchFormData = this.noctuaFormConfigService.createSearchFormData();
     this._unsubscribeAll = new Subject();
   }
 

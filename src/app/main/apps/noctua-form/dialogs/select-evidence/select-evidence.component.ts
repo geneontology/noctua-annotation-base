@@ -5,7 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import * as _ from 'lodash';
+
 import {
   Evidence,
   NoctuaFormConfigService,

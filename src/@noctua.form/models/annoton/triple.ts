@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+
 declare const require: any;
 const uuid = require('uuid/v1');
 

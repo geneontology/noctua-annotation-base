@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource } from '@angular/material';
 import { Subject } from 'rxjs';
-import * as _ from 'lodash';
+
 import {
   AnnotonNode,
   Evidence,

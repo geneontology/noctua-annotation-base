@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+
 import { Rule } from './rule';
 
 export class DirectionRule extends Rule {

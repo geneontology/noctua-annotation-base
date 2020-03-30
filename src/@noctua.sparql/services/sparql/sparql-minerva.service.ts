@@ -9,7 +9,7 @@ import {
   NoctuaUserService
 } from 'noctua-form-base'
 
-import * as _ from 'lodash';
+
 declare const require: any;
 
 const barista_response = require('bbop-response-barista');

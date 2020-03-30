@@ -133,15 +133,15 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   openSearchModels() {
     const self = this;
     const gpNode = this.noctuaAnnotonFormService.annoton.getGPNode();
-    const searchCriteria = new SearchCriteria();
+    // const searchCriteria = new SearchCriteria();
 
-    searchCriteria.goterms.push(this.entity.term);
+    //searchCriteria.goterms.push(this.entity.term);
 
-    const url = this.noctuaFormConfigService.getUniversalWorkbenchUrl('noctua-search', searchCriteria.buildEncoded());
+    // const url = this.noctuaFormConfigService.getUniversalWorkbenchUrl('noctua-search', searchCriteria.buildEncoded());
 
-    console.log(url);
+    // console.log(url);
 
-    window.open(url, '_blank');
+    // window.open(url, '_blank');
 
   }
 
