@@ -76,7 +76,7 @@ export const GoMolecularFunction = {
 
 export const GoMolecularEntity = {
     id: AnnotonNodeType.GoMolecularEntity,
-    category: 'CHEBI:23367',
+    category: 'CHEBI:33695',
     categoryType: 'isa_closure',
 } as GoCategory;
 
