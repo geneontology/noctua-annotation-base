@@ -61,6 +61,7 @@ export class Cam {
     edges: []
   };
 
+  loading = false;
   private _annotons: Annoton[] = [];
 
   constructor() {

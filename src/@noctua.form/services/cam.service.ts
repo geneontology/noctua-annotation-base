@@ -84,8 +84,9 @@ export class CamService {
 
   getCam(modelId): Cam {
     const self = this;
-
     const cam: Cam = new Cam();
+
+    cam.loading = true;
 
     cam.id = uuid();
     cam.graph = null;
