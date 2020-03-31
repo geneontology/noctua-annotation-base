@@ -164,7 +164,7 @@ export const activityUnitDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
             skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
@@ -225,7 +225,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
             skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
@@ -286,7 +286,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
             skipEvidence: true,
             termRequired: true,
