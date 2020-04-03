@@ -22,6 +22,24 @@ export interface ShapeDescription {
 export const canInsertEntity = {
     [AnnotonNodeType.GoMolecularFunction]: [
         <ShapeDescription>{
+            label: 'Add Enabled by GP',
+            id: AnnotonNodeType.GoMolecularEntity,
+            node: <AnnotonNodeDisplay>{
+                id: EntityDefinition.GoMolecularEntity.id,
+                type: AnnotonNodeType.GoMolecularEntity,
+                category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+                label: 'Gene Product',
+                skipEvidence: true,
+                displaySection: noctuaFormConfig.displaySection.gp,
+                displayGroup: noctuaFormConfig.displayGroup.gp,
+                termRequired: true,
+                weight: 2,
+                isKey: true
+            },
+            predicate: noctuaFormConfig.edge.enabledBy,
+            cardinality: CardinalityType.oneToOne
+        },
+        <ShapeDescription>{
             label: 'Add Part Of (Biological Process)',
             id: AnnotonNodeType.GoBiologicalProcess,
             node: <AnnotonNodeDisplay>{

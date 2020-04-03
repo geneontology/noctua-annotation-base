@@ -46,6 +46,7 @@ export interface AnnotonNodeDisplay {
   termRequired: boolean;
   visible: boolean;
   skipEvidence: boolean;
+  isKey: boolean;
   weight: number;
   relationEditable: boolean;
 }
@@ -69,6 +70,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   assignedBy: boolean = null;
   contributor: Contributor = null;
   isCatalyticActivity = false;
+  isKey = false;
   displaySection: any;
   displayGroup: any;
   predicate: Predicate;

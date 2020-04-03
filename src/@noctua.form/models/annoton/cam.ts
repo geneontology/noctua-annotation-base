@@ -293,7 +293,7 @@ export class Cam {
   tableCanDisplayEnabledBy(node: AnnotonNode) {
     const self = this;
 
-    return node.predicate.edge.id === noctuaFormConfig.edge.enabledBy.id;
+    return node.predicate.edge && node.predicate.edge.id === noctuaFormConfig.edge.enabledBy.id;
   }
 
   tableDisplayExtension(node: AnnotonNode) {

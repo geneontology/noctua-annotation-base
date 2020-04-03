@@ -37,23 +37,8 @@ export const activityUnitBaseDescription: ActivityDescription = {
             termRequired: true,
             weight: 1
         },
-        [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
-            id: EntityDefinition.GoMolecularEntity.id,
-            type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
-            label: 'Gene Product',
-            skipEvidence: true,
-            displaySection: noctuaFormConfig.displaySection.gp,
-            displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true,
-            weight: 2
-        }
     },
-    triples: [{
-        subject: AnnotonNodeType.GoMolecularFunction,
-        object: AnnotonNodeType.GoMolecularEntity,
-        predicate: noctuaFormConfig.edge.enabledBy
-    }],
+    triples: [],
 };
 
 export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
@@ -225,7 +210,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
@@ -335,13 +320,13 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
         annoton.addEdgeById(triple.subject, triple.object, predicate);
     });
 
-    const rootNode = annoton.getNode(activityDescription.triples[0].subject);
-    const rootTriple = annoton.getEdge(
-        activityDescription.triples[0].subject,
-        activityDescription.triples[0].object);
+    //  const rootNode = annoton.getNode(activityDescription.triples[0].subject);
+    //   const rootTriple = annoton.getEdge(
+    //       activityDescription.triples[0].subject,
+    //      activityDescription.triples[0].object);
 
-    rootNode.predicate = rootTriple.predicate;
-    annoton.rootTriple = rootTriple;
+    // rootNode.predicate = rootTriple.predicate;
+    // annoton.rootTriple = rootTriple;
 
     annoton.updateEntityInsertMenu();
     annoton.enableSubmit();
@@ -351,9 +336,11 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
 export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescription: InsertNodeDescription): AnnotonNode => {
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
-    objectNode.id = `${nodeDescription.node.type}'@@'${getUuid()}`;
-    objectNode.type = nodeDescription.node.type;
+    objectNode.id = nodeDescription.node.isKey ?
+        nodeDescription.node.type :
+        `${nodeDescription.node.type}'@@'${getUuid()}`;
 
+    objectNode.type = nodeDescription.node.type;
     annoton.addNode(objectNode);
     objectNode.treeLevel = subjectNode.treeLevel + 1;
 

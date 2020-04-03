@@ -389,7 +389,7 @@ export class NoctuaGraphService {
         annoton.id = bbopSubjectId;
 
 
-        annoton.rootNode.predicate = annoton.rootTriple.predicate;
+        //  annoton.rootNode.predicate = annoton.rootTriple.predicate;
 
         annotons.push(annoton);
       }
@@ -425,7 +425,7 @@ export class NoctuaGraphService {
         annoton.id = bbopSubjectId;
 
 
-        annoton.rootNode.predicate = annoton.rootTriple.predicate;
+        annoton.foo();
 
         annotons.push(annoton);
       }
@@ -656,36 +656,36 @@ export class NoctuaGraphService {
 
       annoton.updateEntityInsertMenu();
 
-      // if (objectNode) {
-      // const triple: Triple<AnnotonNode> = annoton.getEdge(subjectNode.id, objectNode.id);
-      const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
+      if (objectNode) {
+        const triple: Triple<AnnotonNode> = annoton.getEdge(subjectNode.id, objectNode.id);
+        //const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
 
-      each(triples, (triple: Triple<AnnotonNode>) => {
-        if (bbopPredicateId === triple.predicate.edge.id) {
+        /*   each(triples, (triple: Triple<AnnotonNode>) => {
+            if (bbopPredicateId === triple.predicate.edge.id) {
+    
+              triple.object.uuid = partialObjectNode.uuid;
+              triple.object.term = partialObjectNode.term;
+              triple.object.classExpression = partialObjectNode.classExpression;
+              triple.object.setIsComplement(partialObjectNode.isComplement);
+    
+              triple.predicate.evidence = evidence;
+              triple.predicate.uuid = bbopEdge.id();
+              self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
+            }
+          }); */
+        //  }
 
+
+        if (triple) {
           triple.object.uuid = partialObjectNode.uuid;
           triple.object.term = partialObjectNode.term;
           triple.object.classExpression = partialObjectNode.classExpression;
           triple.object.setIsComplement(partialObjectNode.isComplement);
-
           triple.predicate.evidence = evidence;
           triple.predicate.uuid = bbopEdge.id();
           self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
         }
-      });
-      //  }
-
-
-      /*      if (triple) {
-             triple.object.uuid = partialObjectNode.uuid;
-             triple.object.term = partialObjectNode.term;
-             triple.object.classExpression = partialObjectNode.classExpression;
-             triple.object.setIsComplement(partialObjectNode.isComplement);
-             triple.predicate.evidence = evidence;
-             triple.predicate.uuid = bbopEdge.id();
-             self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
-           }
-         } */
+      }
 
 
       /*   this._insertNode(annoton, bbopPredicateId, subjectNode, objectNode);

@@ -36,11 +36,15 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   submitErrors;
   expanded = false;
   visible = true;
-  rootTriple: Triple<AnnotonNode>;
+  // rootTriple: Triple<AnnotonNode>;
   graphPreview = {
     nodes: [],
     edges: []
   };
+
+  molecularEntityNode: AnnotonNode;
+  molecularFunctionNode: AnnotonNode;
+
 
   bpOnlyEdge: Entity;
   private _presentation: any;
@@ -62,6 +66,17 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     return this.annotonType === AnnotonType.ccOnly ?
       AnnotonNodeType.GoMolecularEntity :
       AnnotonNodeType.GoMolecularFunction;
+  }
+
+  foo() {
+    if (this.annotonType !== AnnotonType.ccOnly) {
+      const edge = this.getEdge(AnnotonNodeType.GoMolecularFunction, AnnotonNodeType.GoMolecularEntity);
+      const mfNode = this.getMFNode();
+
+      if (mfNode && edge) {
+        mfNode.predicate = edge.predicate;
+      }
+    }
   }
 
   get rootNode(): AnnotonNode {
@@ -409,7 +424,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     const term = node.getTerm();
 
     self._grid.push({
-      displayEnabledBy: self.tableCanDisplayEnabledBy(node),
       treeLevel: node.treeLevel,
       gp: self.tableDisplayGp(node),
       qualifier: node.isExtension ? '' : self.tableDisplayQualifier(node),
@@ -461,7 +475,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   tableCanDisplayEnabledBy(node: AnnotonNode) {
 
-    return node.predicate.edge.id === noctuaFormConfig.edge.enabledBy.id;
+    return node.predicate.edge && node.predicate.edge.id === noctuaFormConfig.edge.enabledBy.id;
   }
 
   tableDisplayQualifier(node: AnnotonNode) {
