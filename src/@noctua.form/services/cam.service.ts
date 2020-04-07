@@ -86,7 +86,8 @@ export class CamService {
     const self = this;
     const cam: Cam = new Cam();
 
-    cam.loading = true;
+    cam.loading.status = true;
+    cam.loading.message = 'Sending Request...';
 
     cam.id = uuid();
     cam.graph = null;

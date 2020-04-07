@@ -1,16 +1,13 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, forkJoin, Observable, Subscriber } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin } from 'rxjs';
+import { map, finalize } from 'rxjs/operators';
 
 import {
   Cam,
   Annoton,
   Triple,
   AnnotonNode,
-  AnnotonParser,
-  AnnotonError,
   Evidence,
   Entity,
   ConnectorAnnoton,
@@ -21,17 +18,12 @@ import {
 
 import * as ModelDefinition from './../data/config/model-definition';
 import * as EntityDefinition from './../data/config/entity-definition';
-import * as ShapeDescription from './../data/config/shape-definition';
 
 import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
-
-import 'rxjs/add/observable/forkJoin';
-
 import { AnnotonType } from './../models/annoton/annoton';
-import { AnnotonNodeType } from './../models/annoton/annoton-node';
 import { Contributor } from './../models/contributor';
 import { find } from 'lodash';
 
@@ -52,14 +44,12 @@ const minerva_manager = require('bbop-manager-minerva');
 export class NoctuaGraphService {
   baristaLocation = environment.globalBaristaLocation;
   minervaDefinitionName = environment.globalMinervaDefinitionName;
-  linker;
+  linker = new amigo.linker();
 
   constructor(
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    private httpClient: HttpClient,
     private noctuaLookupService: NoctuaLookupService) {
-    this.linker = new amigo.linker();
   }
 
   registerManager() {
@@ -124,6 +114,9 @@ export class NoctuaGraphService {
     const rebuild = (resp) => {
       const noctua_graph = model.graph;
 
+      cam.loading.status = true;
+      cam.loading.message = 'Loading Model Entities Metadata...';
+
       cam.graph = new noctua_graph();
       cam.modelId = resp.data().id;
       cam.graph.load_data_basic(resp.data());
@@ -143,12 +136,16 @@ export class NoctuaGraphService {
         cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
       }
 
-      self.graphPreParse(cam.graph).subscribe((data) => {
+      self.graphPreParse(cam.graph).pipe(
+        finalize(() => {
+          cam.loading.status = false;
+          cam.loading.message = '';
+        })
+      ).subscribe((data) => {
         cam.annotons = self.graphToAnnotons(cam);
         cam.connectorAnnotons = self.getConnectorAnnotons(cam);
         cam.setPreview();
         self.graphPostParse(cam, cam.graph).subscribe((data) => {
-          cam.loading = false;
           cam.onGraphChanged.next(cam.annotons);
         });
       });
@@ -366,42 +363,11 @@ export class NoctuaGraphService {
     return self.noctuaFormConfigService.createAnnotonBaseModel(annotonType);
   }
 
-  graphToAnnotonsMFS(cam: Cam): Annoton[] {
-    const self = this;
-    const annotons: Annoton[] = [];
-
-    each(cam.graph.all_edges(), (bbopEdge) => {
-
-      if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id) {
-        const bbopSubjectId = bbopEdge.subject_id();
-        const subjectNode = self.nodeToAnnotonNode(cam.graph, bbopSubjectId);
-        const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
-        const annoton: Annoton = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
-        const subjectAnnotonNode = annoton.rootNode;
-
-        subjectAnnotonNode.term = subjectNode.term;
-        subjectAnnotonNode.classExpression = subjectNode.classExpression;
-        subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
-        subjectAnnotonNode.uuid = bbopSubjectId;
-
-        self._graphToAnnotonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
-
-        annoton.id = bbopSubjectId;
-
-
-        //  annoton.rootNode.predicate = annoton.rootTriple.predicate;
-
-        annotons.push(annoton);
-      }
-    });
-
-    return annotons;
-  }
-
-
   graphToAnnotons(cam: Cam): Annoton[] {
     const self = this;
     const annotons: Annoton[] = [];
+
+    cam.loading.message = 'Generating activities...';
 
     each(cam.graph.all_edges(), (bbopEdge) => {
       const bbopSubjectId = bbopEdge.subject_id();

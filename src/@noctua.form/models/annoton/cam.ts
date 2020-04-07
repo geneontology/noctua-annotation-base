@@ -61,7 +61,11 @@ export class Cam {
     edges: []
   };
 
-  loading = false;
+  loading = {
+    status: false,
+    message: ''
+  };
+
   private _annotons: Annoton[] = [];
 
   constructor() {
