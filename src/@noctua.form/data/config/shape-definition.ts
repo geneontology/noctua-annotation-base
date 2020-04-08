@@ -2,8 +2,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { Entity, AnnotonNodeDisplay } from './../../models/annoton';
 import * as EntityDefinition from './entity-definition';
 import { AnnotonNodeType } from './../../models/annoton/annoton-node';
-
-declare const require: any;
+import { each } from 'lodash';
 
 export enum CardinalityType {
     none = 'none',
@@ -19,7 +18,49 @@ export interface ShapeDescription {
     cardinality: CardinalityType;
 }
 
+const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
+    const causalShapeDescriptions: ShapeDescription[] = [];
+
+    each(edges, (edge: Entity) => {
+        causalShapeDescriptions.push({
+            id: AnnotonNodeType.GoBiologicalProcess,
+            node: <AnnotonNodeDisplay>{
+                type: AnnotonNodeType.GoBiologicalProcess,
+                category: [EntityDefinition.GoBiologicalProcess],
+                aspect: 'P',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.bp,
+                isKey: true,
+                relationEditable: true,
+                weight: 10,
+            },
+            predicate: edge,
+            cardinality: CardinalityType.oneToOne
+        } as ShapeDescription);
+    });
+
+    return causalShapeDescriptions;
+};
+
 export const canInsertEntity = {
+    [AnnotonNodeType.GoMolecularEntity]: [
+        <ShapeDescription>{
+            label: 'Add Part Of (Cellular Component)',
+            id: AnnotonNodeType.GoCellularComponent,
+            node: <AnnotonNodeDisplay>{
+                type: AnnotonNodeType.GoCellularComponent,
+                category: [EntityDefinition.GoCellularComponent],
+                label: 'MF part of Cellular Component',
+                aspect: 'C',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                weight: 10,
+                isKey: true
+            },
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
+        },
+    ],
     [AnnotonNodeType.GoMolecularFunction]: [
         <ShapeDescription>{
             label: 'Add Enabled by GP',
@@ -52,21 +93,6 @@ export const canInsertEntity = {
                 weight: 10,
             },
             predicate: noctuaFormConfig.edge.partOf,
-            cardinality: CardinalityType.oneToOne
-        },
-        <ShapeDescription>{
-            label: 'Add Causal Of (Biological Process)',
-            id: AnnotonNodeType.GoBiologicalProcess,
-            node: <AnnotonNodeDisplay>{
-                type: AnnotonNodeType.GoBiologicalProcess,
-                category: [EntityDefinition.GoBiologicalProcess],
-                label: 'MF part of Biological Process',
-                aspect: 'P',
-                displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.bp,
-                weight: 10,
-            },
-            predicate: noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect,
             cardinality: CardinalityType.oneToOne
         },
         <ShapeDescription>{
@@ -173,7 +199,17 @@ export const canInsertEntity = {
             },
             predicate: noctuaFormConfig.edge.happensDuring,
             cardinality: CardinalityType.oneToOne
-        }
+        },
+
+        // Causal Edges
+        ...addCausalEdges([
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfOrWithin),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOf),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfOrWithinPositiveEffect),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfOrWithinNegativeEffect),
+        ])
     ],
     [AnnotonNodeType.GoBiologicalProcess]: [
         <ShapeDescription>{
@@ -360,5 +396,7 @@ export const canInsertEntity = {
         }
     ]
 };
+
+
 
 
