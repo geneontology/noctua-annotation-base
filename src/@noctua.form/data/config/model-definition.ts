@@ -54,49 +54,9 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
             displayGroup: noctuaFormConfig.displayGroup.mf,
             visible: false,
             weight: 1
-        },
-        [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
-            id: EntityDefinition.GoMolecularEntity.id,
-            type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
-            label: 'Gene Product',
-            skipEvidence: true,
-            displaySection: noctuaFormConfig.displaySection.gp,
-            displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true,
-            weight: 2
-        },
-
-        [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
-            id: EntityDefinition.GoBiologicalProcess.id,
-            type: AnnotonNodeType.GoBiologicalProcess,
-            category: [EntityDefinition.GoBiologicalProcess],
-            label: 'Biological Process',
-            aspect: 'P',
-            displaySection: noctuaFormConfig.displaySection.fd,
-            displayGroup: noctuaFormConfig.displayGroup.bp,
-            termRequired: true,
-            relationEditable: true,
-            weight: 10
-        },
-    },
-    triples: [{
-        subject: AnnotonNodeType.GoMolecularFunction,
-        object: AnnotonNodeType.GoMolecularEntity,
-        predicate: noctuaFormConfig.edge.enabledBy
-    }, {
-        subject: AnnotonNodeType.GoMolecularFunction,
-        object: AnnotonNodeType.GoBiologicalProcess,
-        predicate: noctuaFormConfig.edge.causallyUpstreamOfOrWithin
-    }],
-    overrides: {
-        [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
-            label: 'Biological Process',
-        },
-        [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
-
         }
-    }
+    },
+    triples: []
 };
 
 export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
@@ -105,30 +65,16 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             termRequired: true,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             weight: 1
-        },
-        [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
-            id: EntityDefinition.GoCellularComponent.id,
-            type: AnnotonNodeType.GoCellularComponent,
-            category: [EntityDefinition.GoCellularComponent],
-            aspect: 'C',
-            label: 'Part Of Cellular Component',
-            displaySection: noctuaFormConfig.displaySection.fd,
-            displayGroup: noctuaFormConfig.displayGroup.cc,
-
         }
     },
-    triples: [{
-        subject: AnnotonNodeType.GoMolecularEntity,
-        object: AnnotonNodeType.GoCellularComponent,
-        predicate: noctuaFormConfig.edge.partOf
-    }],
+    triples: [],
 };
 
 
@@ -149,7 +95,7 @@ export const activityUnitDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
@@ -271,7 +217,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
         [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: AnnotonNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+            category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
             skipEvidence: true,
             termRequired: true,

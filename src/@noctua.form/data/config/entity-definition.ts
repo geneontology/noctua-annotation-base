@@ -127,7 +127,7 @@ export const EntityCategories = [
     [GoCellularComponent],
     [GoBiologicalProcess],
     [GoMolecularFunction],
-    [GoMolecularEntity, GoProteinContainingComplex],
+    [GoMolecularEntity],
     [GoChemicalEntity],
     [GoEvidence],
     [GoCellTypeEntity],

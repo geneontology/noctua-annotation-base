@@ -68,10 +68,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       AnnotonNodeType.GoMolecularFunction;
   }
 
-  foo() {
+  postRunUpdate() {
+    const self = this;
+
     if (this.annotonType !== AnnotonType.ccOnly) {
-      const edge = this.getEdge(AnnotonNodeType.GoMolecularFunction, AnnotonNodeType.GoMolecularEntity);
-      const mfNode = this.getMFNode();
+      const mfNode = self.getMFNode();
+      const edge = self.getEdge(AnnotonNodeType.GoMolecularFunction, AnnotonNodeType.GoMolecularEntity);
 
       if (mfNode && edge) {
         mfNode.predicate = edge.predicate;
@@ -200,15 +202,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     }
   }
 
-  updateBPCausalEdge(causalEdge) {
-    const self = this;
-    const mfNode = self.getMFNode();
-    const bpNode = self.getNode(AnnotonNodeType.GoBiologicalProcess);
-    const bpEdge = this.getEdge(mfNode.id, bpNode.id);
-
-    bpEdge.predicate.edge.id = bpNode.predicate.edge.id = causalEdge.id;
-    bpEdge.predicate.edge.label = bpNode.predicate.edge.label = causalEdge.label;
-  }
 
   copyValues(srcAnnoton) {
     const self = this;

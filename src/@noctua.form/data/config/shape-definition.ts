@@ -27,7 +27,7 @@ export const canInsertEntity = {
             node: <AnnotonNodeDisplay>{
                 id: EntityDefinition.GoMolecularEntity.id,
                 type: AnnotonNodeType.GoMolecularEntity,
-                category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+                category: [EntityDefinition.GoMolecularEntity],
                 label: 'Gene Product',
                 skipEvidence: true,
                 displaySection: noctuaFormConfig.displaySection.gp,
@@ -52,6 +52,21 @@ export const canInsertEntity = {
                 weight: 10,
             },
             predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
+        },
+        <ShapeDescription>{
+            label: 'Add Causal Of (Biological Process)',
+            id: AnnotonNodeType.GoBiologicalProcess,
+            node: <AnnotonNodeDisplay>{
+                type: AnnotonNodeType.GoBiologicalProcess,
+                category: [EntityDefinition.GoBiologicalProcess],
+                label: 'MF part of Biological Process',
+                aspect: 'P',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.bp,
+                weight: 10,
+            },
+            predicate: noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect,
             cardinality: CardinalityType.oneToOne
         },
         <ShapeDescription>{

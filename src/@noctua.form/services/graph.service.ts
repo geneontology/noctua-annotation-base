@@ -391,7 +391,7 @@ export class NoctuaGraphService {
         annoton.id = bbopSubjectId;
 
 
-        annoton.foo();
+        annoton.postRunUpdate();
 
         annotons.push(annoton);
       }
@@ -614,7 +614,7 @@ export class NoctuaGraphService {
         });
 
         if (causalEdge) {
-          annoton.updateBPCausalEdge(causalEdge);
+          // annoton.bbOn  causalEdge);
         }
       }
 
