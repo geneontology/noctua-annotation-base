@@ -5,9 +5,14 @@
 
 declare var global_barista_location: any;
 declare var global_minerva_definition_name: any;
+declare var global_workbenches_universal: any;
+declare var global_workbenches_model: any;
 
 const baristaLocation = typeof global_barista_location !== 'undefined' ? global_barista_location : 'http://barista-dev.berkeleybop.org';
 const minervaDefinitionName = typeof global_minerva_definition_name !== 'undefined' ? global_minerva_definition_name : 'minerva_public_dev';
+const globalWorkbenchesModel = typeof global_workbenches_model !== 'undefined' ? global_workbenches_model : [];
+const globalWorkbenchesUniversal = typeof global_workbenches_universal !== 'undefined' ? global_workbenches_universal : [];
+
 
 export const environment = {
   production: false,
@@ -20,6 +25,9 @@ export const environment = {
   globalGolrNeoServer: 'http://noctua-golr.berkeleybop.org/',
   globalMinervaDefinitionName: minervaDefinitionName,
   globalBaristaLocation: baristaLocation,
+  globalWorkbenchesModel: globalWorkbenchesModel,
+  globalWorkbenchesUniversal: globalWorkbenchesUniversal,
+
   //Workbench
   noctuaUrl: `${window.location.origin}`,
   workbenchUrl: `${window.location.origin}/workbench/`,

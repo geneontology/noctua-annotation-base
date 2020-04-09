@@ -17,6 +17,7 @@ import {
 } from './../../models';
 import { AnnotonType } from './../../models/annoton/annoton';
 import { find } from 'lodash';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -779,50 +780,40 @@ export class NoctuaFormConfigService {
   getModelUrls(modelId) {
     const self = this;
     const modelInfo: any = {};
-    const baristaParams = { 'barista_token': self.baristaToken };
-    const modelIdParams = { 'model_id': modelId };
+
+    let params = new HttpParams();
+    if (modelId) {
+      params = params.append('model_id', modelId);
+    }
+    if (self.baristaToken) {
+      params = params.append('barista_token', self.baristaToken);
+    }
+
+    const paramsString = params.toString()
+
+
+
+    console.log(params)
 
     modelInfo.goUrl = 'http://www.geneontology.org/';
-    modelInfo.noctuaUrl = environment.noctuaUrl + '?' + (self.baristaToken ? self._parameterize(baristaParams) : '');
+    modelInfo.noctuaUrl = environment.noctuaUrl + '?' + paramsString;
     modelInfo.owlUrl = environment.noctuaUrl + '/download/' + modelId + '/owl';
     modelInfo.gpadUrl = environment.noctuaUrl + '/download/' + modelId + '/gpad';
-    modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + (self.baristaToken ? self._parameterize(baristaParams) : '');
-    modelInfo.noctuaFormUrl = environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : '');
-    // modelInfo.logoutUrl = self.baristaLocation + '/logout?' + self._parameterize(baristaParams) + '&amp;return=' + environment.workbenchUrl+'noctua-form?' + self._parameterize(baristaParams)
-    // modelInfo.loginUrl = self.baristaLocation + '/login?return=' + environment.workbenchUrl+'noctua-form';
+    modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + paramsString;
+    modelInfo.noctuaFormUrl = environment.workbenchUrl + 'noctua-form?' + paramsString;
+
+
+
+
+
 
     //Workbenches 
-    modelInfo.workbenches = [{
-      label: 'Noctua Form',
-      url: environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }, {
-      label: 'Graph Editor',
-      url: modelInfo.graphEditorUrl
-    }, {
-      label: 'Annotation Preview',
-      url: environment.workbenchUrl + 'annpreview?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }, {
-      label: 'Function Companion',
-      url: environment.workbenchUrl + 'companion?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }, {
-      label: 'Cytoscape Layout Tool',
-      url: environment.workbenchUrl + 'cytoview?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }, {
-      label: 'Gosling (Noctua\'s little GOOSE) ',
-      url: environment.workbenchUrl + 'gosling-model?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }, {
-      label: 'Inference Explanations',
-      url: environment.workbenchUrl + 'inferredrelations?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }, {
-      label: 'Macromolecular Complex Creator',
-      url: environment.workbenchUrl + 'mmcc?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }, {
-      label: 'Pathway View',
-      url: environment.workbenchUrl + 'pathwayview?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }, {
-      label: 'Annotation Preview',
-      url: environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams))),
-    }];
+    modelInfo.workbenches = environment.globalWorkbenchesModel.map(workbench => {
+      return {
+        label: workbench['menu-name'],
+        url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
+      };
+    });
 
     return modelInfo;
   }
