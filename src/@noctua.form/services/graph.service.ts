@@ -429,7 +429,8 @@ export class NoctuaGraphService {
             connectorAnnotons.push(connectorAnnoton);
           } else if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoBiologicalProcess])) {
             const processNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
-            const processNode = self.noctuaFormConfigService.generateAnnotonNode('bp', { id: 'process' });
+
+            const processNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoBiologicalProcess], { id: 'process', isKey: true });
             const connectorAnnotonDTO = this._getConnectAnnotonIntermediate(cam, objectId);
 
             if (connectorAnnotonDTO.downstreamAnnoton) {
@@ -720,7 +721,7 @@ export class NoctuaGraphService {
       if (e.predicate_id() === noctuaFormConfig.edge.hasInput.id) {
         if (self.noctuaLookupService.getLocalClosure(objectInfo.term.id, [EntityDefinition.GoChemicalEntity])) {
           const hasInputNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
-          const hasInputNode = self.noctuaFormConfigService.generateAnnotonNode('mf-1', { id: 'has-input' });
+          const hasInputNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoChemicalEntity], { id: 'has-input', isKey: true });
 
           hasInputNode.uuid = objectId;
           hasInputNode.term = hasInputNodeInfo.term;

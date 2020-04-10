@@ -12,7 +12,8 @@ import {
   Annoton,
   AnnotonNode,
   ConnectorAnnoton,
-  ConnectorState
+  ConnectorState,
+  AnnotonType
 } from './../models/annoton';
 
 import { AnnotonConnectorForm } from './../models/forms/annoton-connector-form';
@@ -73,7 +74,7 @@ export class NoctuaAnnotonConnectorService {
     const connectors = [];
 
     each(this.cam.annotons, (annoton: Annoton) => {
-      if (self.annoton.id !== annoton.id) {
+      if (self.annoton.id !== annoton.id && annoton.annotonType !== AnnotonType.ccOnly) {
         connectors.push(
           Object.assign({
             annoton: annoton,

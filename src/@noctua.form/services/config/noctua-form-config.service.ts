@@ -18,6 +18,7 @@ import {
 import { AnnotonType } from './../../models/annoton/annoton';
 import { find } from 'lodash';
 import { HttpParams } from '@angular/common/http';
+import * as EntityDefinition from './../../data/config/entity-definition';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +28,6 @@ export class NoctuaFormConfigService {
   baseSpeciesRequestParam;
   requestParams;
   _annotonData;
-  _searchFormData;
-  _modelRelationship;
-  closureCheck;
   loggedIn = false;
 
   private _baristaToken;
@@ -356,300 +354,7 @@ export class NoctuaFormConfigService {
       },
     }
 
-
-
-    this._modelRelationship = {
-      default: {
-        nodes: [
-          'mf', 'gp', 'mf-1', 'mf-2', 'bp', 'bp-1', 'bp-1-1', 'cc', 'cc-1', 'cc-1-1', 'cc-1-1-1'
-        ],
-        triples: [{
-          subject: 'mf',
-          object: 'gp',
-          edge: noctuaFormConfig.edge.enabledBy
-        }, {
-          subject: 'mf',
-          object: 'bp',
-          edge: noctuaFormConfig.edge.partOf
-        }, {
-          subject: 'mf',
-          object: 'cc',
-          edge: noctuaFormConfig.edge.occursIn
-        }, {
-          subject: 'mf',
-          object: 'mf-1',
-          edge: noctuaFormConfig.edge.hasInput
-        }, {
-          subject: 'mf',
-          object: 'mf-2',
-          edge: noctuaFormConfig.edge.happensDuring
-        }, {
-          subject: 'bp',
-          object: 'bp-1',
-          edge: noctuaFormConfig.edge.partOf
-        }, {
-          subject: 'bp-1',
-          object: 'bp-1-1',
-          edge: noctuaFormConfig.edge.partOf
-        }, {
-          subject: 'cc',
-          object: 'cc-1',
-          edge: noctuaFormConfig.edge.partOf
-        }, {
-          subject: 'cc-1',
-          object: 'cc-1-1',
-          edge: noctuaFormConfig.edge.partOf
-        }, {
-          subject: 'cc-1-1',
-          object: 'cc-1-1-1',
-          edge: noctuaFormConfig.edge.partOf
-        }],
-      },
-      ccOnly: {
-        nodes: [
-          'gp', 'cc', 'cc-1', 'cc-1-1', 'cc-1-1-1'
-        ],
-        overrides: {
-          'cc': {
-            id: 'cc',
-            label: 'GP part of Cellular Component',
-            relationship: noctuaFormConfig.edge.partOf
-          },
-          'cc-1': {
-            id: 'cc-1',
-            relationship: noctuaFormConfig.edge.partOf
-          },
-          'cc-1-1': {
-            id: 'cc-1-1',
-            relationship: noctuaFormConfig.edge.partOf,
-
-          }
-        },
-        triples: [{
-          subject: 'gp',
-          object: 'cc',
-          edge: noctuaFormConfig.edge.partOf
-        }, {
-          subject: 'cc',
-          object: 'cc-1',
-          edge: noctuaFormConfig.edge.partOf
-        }, {
-          subject: 'cc-1',
-          object: 'cc-1-1',
-          edge: noctuaFormConfig.edge.partOf,
-        }, {
-          subject: 'cc-1-1',
-          object: 'cc-1-1-1',
-          edge: noctuaFormConfig.edge.partOf
-        }]
-      },
-      bpOnly: {
-        nodes: [
-          'mf', 'gp', 'bp', 'cc-1-1', 'cc-1-1-1'
-        ],
-        overrides: {
-          mf: {
-            termRequiredList: [],
-            id: 'mf',
-            display: {
-              displaySection: '',
-              displayGroup: '',
-            },
-          },
-          'bp': {
-            id: 'bp',
-            label: 'Biological Process',
-          },
-          'cc-1-1': {
-            id: 'cc-1-1',
-            label: 'occurs in (Cell Type)',
-            relationship: noctuaFormConfig.edge.occursIn,
-            display: {
-              displaySection: noctuaFormConfig.displaySection.fd,
-              displayGroup: noctuaFormConfig.displayGroup.bp,
-            },
-
-          },
-          'cc-1-1-1': {
-            id: 'cc-1-1-1',
-            relationship: noctuaFormConfig.edge.partOf,
-            display: {
-              displaySection: noctuaFormConfig.displaySection.fd,
-              displayGroup: noctuaFormConfig.displayGroup.bp,
-            },
-            label: 'part Of (Anatomy)',
-
-          },
-        },
-        triples: [{
-          subject: 'mf',
-          object: 'gp',
-          edge: noctuaFormConfig.edge.enabledBy
-        }, {
-          subject: 'bp',
-          object: 'cc-1-1',
-          edge: noctuaFormConfig.edge.occursIn
-        }, {
-          subject: 'cc-1-1',
-          object: 'cc-1-1-1',
-          edge: noctuaFormConfig.edge.partOf
-        }, {
-          subject: 'mf',
-          object: 'bp',
-          edge: noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
-          edgeOption: {
-            selected: noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
-            options: [
-              noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
-              noctuaFormConfig.edge.causallyUpstreamOf,
-              noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect,
-              noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect,
-              noctuaFormConfig.edge.causallyUpstreamOfOrWithinPositiveEffect,
-              noctuaFormConfig.edge.causallyUpstreamOfOrWithinNegativeEffect,
-            ]
-          }
-        }]
-      },
-      connector: {
-        nodes: [
-          'mf', 'mf'
-        ],
-        overrides: {
-          mf: {
-            termRequiredList: [],
-            id: 'mf',
-            display: {
-              displaySection: '',
-              displayGroup: '',
-            }
-          }
-        },
-        triples: [{
-          subject: 'mf',
-          object: 'mf',
-          edge: noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
-          edgeOption: {
-            selected: noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
-            options: [
-              noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
-              noctuaFormConfig.edge.causallyUpstreamOf,
-              noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect,
-              noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect,
-              noctuaFormConfig.edge.causallyUpstreamOfOrWithinPositiveEffect,
-              noctuaFormConfig.edge.causallyUpstreamOfOrWithinNegativeEffect,
-            ]
-          }
-        }],
-      },
-    };
-
-
-
-    this.closureCheck = {};
-
-    this.closureCheck[noctuaFormConfig.edge.enabledBy.id] = {
-      edge: noctuaFormConfig.edge.enabledBy,
-      closures: [{
-        subject: noctuaFormConfig.closures.mf
-      }, {
-        object: noctuaFormConfig.closures.gp
-      }, {
-        object: noctuaFormConfig.closures.mc
-      }]
-    };
-
-    this.closureCheck[noctuaFormConfig.edge.partOf.id] = {
-      edge: noctuaFormConfig.edge.partOf,
-      closures: [{
-        subject: noctuaFormConfig.closures.bp
-      }, {
-        subject: noctuaFormConfig.closures.cl
-      }, {
-        subject: noctuaFormConfig.closures.ub
-      }, {
-        subject: noctuaFormConfig.closures.gp
-      }, {
-        object: noctuaFormConfig.closures.bp
-      }, {
-        object: noctuaFormConfig.closures.cl
-      }, {
-        object: noctuaFormConfig.closures.ub
-      }, {
-        object: noctuaFormConfig.closures.cc
-      }]
-    };
-
-    this.closureCheck[noctuaFormConfig.edge.occursIn.id] = {
-      edge: noctuaFormConfig.edge.occursIn,
-      closures: [{
-        object: noctuaFormConfig.closures.cc
-      }, {
-        object: noctuaFormConfig.closures.cl
-      }, {
-        object: noctuaFormConfig.closures.ub
-      }, {
-        subject: noctuaFormConfig.closures.bp
-      }, {
-        subject: noctuaFormConfig.closures.cl
-      }, {
-        subject: noctuaFormConfig.closures.ub
-      }, {
-        subject: noctuaFormConfig.closures.cc
-      }, {
-        subject: noctuaFormConfig.closures.mf
-      }]
-    };
-
-    this.closureCheck[noctuaFormConfig.edge.hasInput.id] = {
-      edge: noctuaFormConfig.edge.hasInput,
-      closures: [{
-        object: noctuaFormConfig.closures.gpHasInput
-      }, {
-        subject: noctuaFormConfig.closures.gpHasInput
-      }, {
-        subject: noctuaFormConfig.closures.mf
-      }, {
-        object: noctuaFormConfig.closures.mc
-      }]
-    };
-
-    this.closureCheck[noctuaFormConfig.edge.happensDuring.id] = {
-      edge: noctuaFormConfig.edge.happensDuring,
-      closures: [{
-        subject: noctuaFormConfig.closures.mf
-      }, {
-        object: noctuaFormConfig.closures.tp
-      }]
-    };
-
-    this.closureCheck[noctuaFormConfig.edge.hasPart.id] = {
-      edge: noctuaFormConfig.edge.hasPart,
-      closures: [{
-        subject: noctuaFormConfig.closures.mc
-      }, {
-        object: noctuaFormConfig.closures.gp
-      }]
-    };
-
-    this.closureCheck[noctuaFormConfig.edge.causallyUpstreamOf.id] = {
-      edge: noctuaFormConfig.edge.causallyUpstreamOf,
-      closures: [{
-        object: noctuaFormConfig.closures.bp
-      }, {
-        subject: noctuaFormConfig.closures.mf
-      }]
-    };
-
-    this.closureCheck[noctuaFormConfig.edge.causallyUpstreamOfOrWithin.id] = {
-      edge: noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
-      closures: [{
-        object: noctuaFormConfig.closures.bp
-      }, {
-        subject: noctuaFormConfig.closures.mf
-      }]
-    };
   }
-
 
 
   set baristaToken(value) {
@@ -672,12 +377,12 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.modelState.options.review,
       noctuaFormConfig.modelState.options.closed,
       noctuaFormConfig.modelState.options.delete
-    ]
+    ];
 
     return {
       options: options,
       selected: options[0]
-    }
+    };
   }
 
   findModelState(name) {
@@ -789,11 +494,7 @@ export class NoctuaFormConfigService {
       params = params.append('barista_token', self.baristaToken);
     }
 
-    const paramsString = params.toString()
-
-
-
-    console.log(params)
+    const paramsString = params.toString();
 
     modelInfo.goUrl = 'http://www.geneontology.org/';
     modelInfo.noctuaUrl = environment.noctuaUrl + '?' + paramsString;
@@ -802,12 +503,6 @@ export class NoctuaFormConfigService {
     modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + paramsString;
     modelInfo.noctuaFormUrl = environment.workbenchUrl + 'noctua-form?' + paramsString;
 
-
-
-
-
-
-    //Workbenches 
     modelInfo.workbenches = environment.globalWorkbenchesModel.map(workbench => {
       return {
         label: workbench['menu-name'],
@@ -842,10 +537,15 @@ export class NoctuaFormConfigService {
     const self = this;
     const srcUpstreamNode = upstreamAnnoton.getMFNode();
     const srcDownstreamNode = downstreamAnnoton.getMFNode();
-    const upstreamNode = self.generateAnnotonNode(srcUpstreamNode.id, { id: 'upstream' });
-    const downstreamNode = self.generateAnnotonNode(srcDownstreamNode.id, { id: 'downstream' });
-    const processNode = srcProcessNode ? srcProcessNode : self.generateAnnotonNode('bp', { id: 'process' });
-    const hasInputNode = srcHasInputNode ? srcHasInputNode : self.generateAnnotonNode('mf-1', { id: 'has-input' });
+    const upstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
+    const downstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
+    const processNode = srcProcessNode ?
+      srcProcessNode :
+      EntityDefinition.generateBaseTerm([EntityDefinition.GoBiologicalProcess], { id: 'process', isKey: true });
+    const hasInputNode = srcHasInputNode ?
+      srcHasInputNode :
+      EntityDefinition.generateBaseTerm([EntityDefinition.GoChemicalEntity], { id: 'has-input', isKey: true });
+
 
     upstreamNode.copyValues(srcUpstreamNode);
     downstreamNode.copyValues(srcDownstreamNode);
