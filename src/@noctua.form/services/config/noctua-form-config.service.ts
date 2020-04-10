@@ -24,338 +24,12 @@ import * as EntityDefinition from './../../data/config/entity-definition';
   providedIn: 'root'
 })
 export class NoctuaFormConfigService {
-  baseRequestParams;
-  baseSpeciesRequestParam;
-  requestParams;
-  _annotonData;
-  loggedIn = false;
 
   private _baristaToken;
 
   constructor() {
 
-    this.baseRequestParams = {
-      defType: 'edismax',
-      indent: 'on',
-      qt: 'standard',
-      wt: 'json',
-      rows: '10',
-      start: '0',
-      fl: '*,score',
-      'facet': true,
-      'facet.mincount': 1,
-      'facet.sort': 'count',
-      'facet.limit': '25',
-      'json.nl': 'arrarr',
-      packet: '1',
-      callback_type: 'search',
-      'facet.field': [
-        'source',
-        'subset',
-        'isa_closure_label',
-        'is_obsolete'
-      ],
-      qf: [
-        'annotation_class^3',
-        'annotation_class_label_searchable^5.5',
-        'description_searchable^1',
-        'comment_searchable^0.5',
-        'synonym_searchable^1',
-        'alternate_id^1',
-        'isa_closure^1',
-        'isa_closure_label_searchable^1'
-      ],
-      _: Date.now()
-    };
-
-    this.baseSpeciesRequestParam = {
-      defType: 'edismax',
-      qt: 'standard',
-      indent: 'on',
-      wt: 'json',
-      rows: '10',
-      start: '0',
-      fl: 'bioentity,bioentity_name,qualifier,annotation_class,annotation_extension_json,assigned_by,taxon,evidence_type,evidence_with,panther_family,type,bioentity_isoform,reference,date,bioentity_label,annotation_class_label,taxon_label,panther_family_label,score,id',
-      ' facet': true,
-      'facet.mincount': 1,
-      'facet.sort': 'count',
-      ' json.nl': 'arrarr',
-      'facet.limit': 0,
-      //   hl: true
-      ////    hl.simple.pre: <em class="hilite">
-      //   hl.snippets: 1000
-      'f.taxon_subset_closure_label.facet.limit': -1,
-      'fq': 'document_category:"annotation"',
-      'facet.field': ['aspect'
-        , 'taxon_subset_closure_label'
-        , 'type'
-        , 'evidence_subset_closure_label'
-        , 'regulates_closure_label'
-        , 'annotation_class_label'
-        , 'qualifier'
-        , 'annotation_extension_class_closure_label'
-        , 'assigned_by'
-        , 'panther_family_label'],
-      //  q: *:*
-      packet: 3,
-      callback_type: 'search',
-    };
-
-    this.requestParams = {
-      'evidence': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-        fq: [
-          'document_category:"ontology_class"',
-          'isa_closure:"ECO:0000352"'
-        ],
-      })
-    };
-
-    this._annotonData = {
-      'term': {
-        'id': 'goterm',
-        'label': 'Molecular Function',
-        'aspect': 'F',
-        'lookupGroup': 'GO:0003674',
-        'treeLevel': 1,
-        'ontologyClass': ['go'],
-        'termLookup': {
-          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
-            ],
-          }),
-        },
-        'searchResults': []
-      },
-      'mc': {
-        'id': 'mc',
-        'label': 'Macromolecular Complex',
-        'relationship': noctuaFormConfig.edge.hasPart,
-        'displaySection': noctuaFormConfig.displaySection.gp,
-        'displayGroup': noctuaFormConfig.displayGroup.mc,
-        'lookupGroup': 'GO:0032991',
-        'treeLevel': 1,
-        'isExtension': false,
-        'ontologyClass': [],
-        'termLookup': {
-          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"GO:0032991"'
-            ],
-          }),
-        }
-      },
-      'gp': {
-        'label': 'Gene Product',
-        'relationship': noctuaFormConfig.edge.enabledBy,
-        'displaySection': noctuaFormConfig.displaySection.gp,
-        'displayGroup': noctuaFormConfig.displayGroup.gp,
-        'lookupGroup': 'CHEBI:33695',
-        'treeLevel': 1,
-        'isExtension': false,
-        'ontologyClass': [],
-        'termLookup': {
-          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"CHEBI:33695"'
-              //'isa_closure:"CHEBI:23367"'
-            ],
-          }),
-        }
-      },
-      'mf': {
-        'label': 'Molecular Function',
-        'aspect': 'F',
-        'relationship': noctuaFormConfig.edge.enabledBy,
-        'displaySection': noctuaFormConfig.displaySection.fd,
-        'displayGroup': noctuaFormConfig.displayGroup.mf,
-        'lookupGroup': 'GO:0003674',
-        'treeLevel': 1,
-        'isExtension': false,
-        'ontologyClass': ['go'],
-        'termLookup': {
-          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"GO:0003674"'
-            ],
-          }),
-        }
-      },
-      'mf-1': {
-        'label': 'Has Input (GP/Chemical)',
-        'relationship': noctuaFormConfig.edge.hasInput,
-        'displaySection': noctuaFormConfig.displaySection.fd,
-        'displayGroup': noctuaFormConfig.displayGroup.mf,
-        'lookupGroup': 'CHEBI:23367',
-        'treeLevel': 2,
-        'isExtension': true,
-        'ontologyClass': [],
-        'termLookup': {
-          'requestParams': Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"CHEBI:23367"' //Generic Molecule + GP
-            ],
-          }),
-        }
-      },
-      'mf-2': {
-        "label": 'Happens During (Temporal Phase)',
-        "relationship": noctuaFormConfig.edge.happensDuring,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.mf,
-        "lookupGroup": 'GO:0044848',
-        'treeLevel': 2,
-        'isExtension': true,
-        "ontologyClass": ['go'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"GO:0044848"'
-            ],
-          }),
-        }
-      },
-      'cc': {
-        "label": 'MF occurs in Cellular Component',
-        'aspect': 'C',
-        "relationship": noctuaFormConfig.edge.occursIn,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.cc,
-        "lookupGroup": 'GO:0005575',
-        'treeLevel': 2,
-        'isExtension': false,
-        "ontologyClass": ['go'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"GO:0005575"'
-            ],
-          }),
-        }
-      },
-      'cc-1': {
-        "label": 'Part Of (CC)',
-        'aspect': 'C',
-        "relationship": noctuaFormConfig.edge.partOf,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.cc,
-        "lookupGroup": 'GO:0005575',
-        'treeLevel': 3,
-        'isExtension': true,
-        "ontologyClass": ['go'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"GO:0005575"'
-            ],
-          }),
-        }
-      },
-      'cc-1-1': {
-        "label": 'Part Of (Cell Type)',
-        "relationship": noctuaFormConfig.edge.partOf,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.cc,
-        "lookupGroup": 'CL:0000003',
-        'treeLevel': 4,
-        'isExtension': true,
-        "ontologyClass": ['cl'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"CL:0000003"'
-            ],
-          }),
-        }
-      },
-      'cc-1-1-1': {
-        "label": 'Part Of (Anatomy)',
-        "relationship": noctuaFormConfig.edge.partOf,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.cc,
-        "lookupGroup": 'CARO:0000000',
-        'treeLevel': 5,
-        'isExtension': true,
-        "ontologyClass": ['uberon'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"CARO:0000000"'
-            ],
-          }),
-        }
-      },
-      'bp': {
-        "label": 'MF part of Biological Process',
-        'aspect': 'P',
-        "relationship": noctuaFormConfig.edge.partOf,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.bp,
-        "lookupGroup": 'GO:0008150',
-        'treeLevel': 2,
-        'isExtension': false,
-        "ontologyClass": ['go'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"GO:0008150"'
-            ],
-          }),
-        }
-      },
-      'bp-1': {
-        "label": 'Part Of (BP)',
-        'aspect': 'P',
-        "relationship": noctuaFormConfig.edge.partOf,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.bp,
-        "lookupGroup": 'GO:0008150',
-        'treeLevel': 3,
-        'isExtension': true,
-        "ontologyClass": ['go'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"GO:0008150"'
-            ],
-          }),
-        }
-      },
-      'bp-1-1': {
-        "label": 'Part Of (BP)',
-        'aspect': 'P',
-        "relationship": noctuaFormConfig.edge.partOf,
-        "displaySection": noctuaFormConfig.displaySection.fd,
-        "displayGroup": noctuaFormConfig.displayGroup.bp,
-        "lookupGroup": 'GO:0008150',
-        'treeLevel': 4,
-        'isExtension': true,
-        "ontologyClass": ['go'],
-        "termLookup": {
-          "requestParams": Object.assign({}, JSON.parse(JSON.stringify(this.baseRequestParams)), {
-            fq: [
-              'document_category:"ontology_class"',
-              'isa_closure:"GO:0008150"'
-            ],
-          }),
-        }
-      },
-    }
-
   }
-
 
   set baristaToken(value) {
     this._baristaToken = value;
@@ -416,7 +90,7 @@ export class NoctuaFormConfigService {
     return {
       options: options,
       selected: options[0]
-    }
+    };
   }
 
   get bpOnlyEdges() {
@@ -453,12 +127,12 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.causalEffect.options.positive,
       noctuaFormConfig.causalEffect.options.negative,
       noctuaFormConfig.causalEffect.options.neutral
-    ]
+    ];
 
     return {
       options: options,
       selected: options[0]
-    }
+    };
   }
 
   get connectorProcess() {
@@ -467,7 +141,7 @@ export class NoctuaFormConfigService {
     return {
       options: options,
       selected: options[0]
-    }
+    };
   }
 
   get causalReactionProduct() {
@@ -524,7 +198,7 @@ export class NoctuaFormConfigService {
 
   getUniversalWorkbenchUrl(workbenchName: string, extraParamString) {
     const self = this;
-    const baristaParams = { 'barista_token': self.baristaToken }
+    const baristaParams = { 'barista_token': self.baristaToken };
     const queryString =
       (self.baristaToken ? self._parameterize(Object.assign({}, baristaParams)) + '&' + extraParamString
         : extraParamString);
@@ -552,7 +226,6 @@ export class NoctuaFormConfigService {
 
     const connectorAnnoton = new ConnectorAnnoton(upstreamNode, downstreamNode);
     connectorAnnoton.predicate = new Predicate(null);
-    connectorAnnoton.predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
     connectorAnnoton.predicate.setEvidence(srcUpstreamNode.predicate.evidence);
     connectorAnnoton.upstreamAnnoton = upstreamAnnoton;
     connectorAnnoton.downstreamAnnoton = downstreamAnnoton;
@@ -590,32 +263,6 @@ export class NoctuaFormConfigService {
     return ModelDefinition.insertNode(annoton, subjectNode, nodeDescription);
   }
 
-  generateAnnotonNode(id?, overrides?): AnnotonNode {
-    const self = this;
-    const nodeDataObject = self._annotonData[id];
-    const annotonNode = new AnnotonNode();
-    const nodeData = nodeDataObject ?
-      JSON.parse(JSON.stringify(nodeDataObject)) :
-      JSON.parse(JSON.stringify(self._annotonData['term']));
-    const predicate = new Predicate(null);
-
-    predicate.setEvidenceMeta('eco', self.requestParams['evidence']);
-    annotonNode.id = (overrides && overrides.id) ? overrides.id : id;
-    annotonNode.aspect = nodeData.aspect;
-    annotonNode.ontologyClass = nodeData.ontologyClass;
-    annotonNode.label = nodeData.label;
-    annotonNode.displaySection = (overrides && overrides.displaySection) ? overrides.displaySection : nodeData.displaySection;
-    annotonNode.displayGroup = nodeData.displayGroup;
-    annotonNode.category = nodeData.lookupGroup;
-    annotonNode.treeLevel = nodeData.treeLevel;
-    annotonNode.isExtension = nodeData.isExtension;
-    annotonNode.setTermLookup(nodeData.termLookup.requestParams);
-    annotonNode.setTermOntologyClass(nodeData.ontologyClass);
-    annotonNode.predicate = predicate;
-
-    return annotonNode;
-  }
-
   createAnnotonModelFakeData(nodes) {
     const self = this;
     const annoton = self.createAnnotonModel(AnnotonType.default);
@@ -647,7 +294,7 @@ export class NoctuaFormConfigService {
   findEdge(predicateId) {
     find(noctuaFormConfig.edge, {
       id: predicateId
-    })
+    });
   }
 
   createJoyrideSteps() {
@@ -706,11 +353,11 @@ export class NoctuaFormConfigService {
   }
 
   getModelId(url: string) {
-    return 'gomodel:' + url.substr(url.lastIndexOf('/') + 1)
+    return 'gomodel:' + url.substr(url.lastIndexOf('/') + 1);
   }
 
   getIndividalId(url: string) {
-    return 'gomodel:' + url.substr(url.lastIndexOf('/') + 2)
+    return 'gomodel:' + url.substr(url.lastIndexOf('/') + 2);
   }
 
   private _parameterize = (params) => {
