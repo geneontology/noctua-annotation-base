@@ -32,6 +32,32 @@ export class NoctuaUserService {
     return this.httpClient.get(`${self.baristaUrl}/user_info_by_token/${self.baristaToken}`);
   }
 
+  getUsers(): Observable<any> {
+    const self = this;
+
+    return this.httpClient.get(`${self.baristaUrl}/users`);
+  }
+
+  getUserInfo(uri: string): Observable<any> {
+    const self = this;
+
+    const encodedUrl = encodeURIComponent(uri);
+    return this.httpClient.get(`${self.baristaUrl}/user_info_by_id/${encodedUrl}`);
+  }
+
+  getGroups(): Observable<any> {
+    const self = this;
+
+    return this.httpClient.get(`${self.baristaUrl}/groups`);
+  }
+
+  getGroupInfo(uri: string): Observable<any> {
+    const self = this;
+
+    const encodedUrl = encodeURIComponent(uri);
+    return this.httpClient.get(`${self.baristaUrl}/group_info_by_id/${encodedUrl}`);
+  }
+
   filterContributors(value: string): any[] {
     const filterValue = value.toLowerCase();
 
