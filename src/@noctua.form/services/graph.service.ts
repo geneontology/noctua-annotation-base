@@ -503,6 +503,7 @@ export class NoctuaGraphService {
     reqs.add_annotation_to_model('title', annotations.title);
     reqs.add_annotation_to_model('state', annotations.state);
 
+    reqs.store_model(cam.modelId);
     cam.manager.request_with(reqs);
   }
 
@@ -515,12 +516,12 @@ export class NoctuaGraphService {
     }
 
     self.addFact(reqs, triples);
-    reqs.store_model(cam.modelId);
 
     if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
+    reqs.store_model(cam.modelId);
     return cam.manager.request_with(reqs);
 
   }
@@ -561,12 +562,11 @@ export class NoctuaGraphService {
       reqs.remove_individual(uuid);
     });
 
-    reqs.store_model(cam.modelId);
-
     if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
+    reqs.store_model(cam.modelId);
     return cam.manager.request_with(reqs);
   }
 
