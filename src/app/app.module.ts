@@ -15,6 +15,17 @@ import { LayoutModule } from 'app/layout/layout.module';
 
 import { PagesModule } from './main/pages/pages.module';
 import { AppsModule } from './main/apps/apps.module';
+import {
+    faPen,
+    faSitemap,
+    faUser,
+    faUsers,
+    faCalendarDay,
+    faCalendarWeek,
+    faTasks,
+} from '@fortawesome/free-solid-svg-icons';
+import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 const appRoutes: Routes = [
     {
@@ -43,6 +54,9 @@ const appRoutes: Routes = [
         MatSidenavModule,
         NoctuaProgressBarModule,
 
+        //Material 
+        MatSidenavModule,
+
         //Noctua App
         PagesModule,
         AppsModule
@@ -51,5 +65,20 @@ const appRoutes: Routes = [
         AppComponent
     ]
 })
+
 export class AppModule {
+    constructor(library: FaIconLibrary) {
+        library.addIcons(
+            faCalendarDay,
+            faCalendarWeek,
+            faFacebook,
+            faGithub,
+            faPen,
+            faSitemap,
+            faTasks,
+            faTwitter,
+            faUser,
+            faUsers,
+        );
+    }
 }
