@@ -1,7 +1,7 @@
 <div id="noctua-main">
   <mat-sidenav-container>
-    <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
-      <p><button mat-button (click)="close('toggle button')">Toggle</button></p>
+    <mat-sidenav #leftSidenav (keydown.escape)="close('escape')" disableClose>
+      <noc-noctua-apps></noc-noctua-apps>
     </mat-sidenav>
     <div id="noctua-main-content">
       <ng-container>

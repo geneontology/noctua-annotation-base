@@ -1,0 +1,91 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" class="noc-cam-form noc-drawer h-100-p">
+  <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
+    <span class="noc-drawer-header-title">
+      Workbenches</span>
+    <span fxFlex></span>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close dialog">
+      <mat-icon>close</mat-icon> Close
+    </button>
+  </div>
+  <div class="noc-drawer-body w-100-p" noctuaPerfectScrollbar>
+    <div *ngIf="cam" class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Edit In
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body p-8" fxLayout="row" fxLayoutAlign="start center">
+        <div class="" fxFlex="50">
+          <a class="noc-chip-label w-100-p h-100-p" [href]='cam?.model?.modelInfo?.noctuaFormUrl' target="_blank">
+            <mat-chip class="noc-table-chip" fxLayout="row" fxLayoutAlign="start center">
+              <fa-icon [icon]="['fas', 'list-alt']"></fa-icon>
+              Noctua Form
+            </mat-chip>
+          </a>
+        </div>
+        <div class="" fxFlex="50">
+          <a mat-icon-button [href]='cam?.model?.modelInfo?.graphEditorUrl' target="_blank"
+            class="noc-edit-button noc-rounded-button noc-sm noc-half-button noc-l">
+            <fa-icon [icon]="['fas', 'sitemap']"></fa-icon>
+            Graph Editor
+          </a>
+        </div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div *ngIf="cam" class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Export As
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body p-8" fxLayout="row" fxLayoutAlign="start center">
+        <div class="" fxFlex="50">
+          <a mat-icon-button [href]='cam?.model?.modelInfo?.gpadUrl' target="_blank" class="noc-rounded-button">
+            GPAD
+          </a>
+        </div>
+        <div class="" fxFlex="50">
+          <a mat-icon-button [href]='cam?.model?.modelInfo?.owlUrl' target="_blank" class="noc-rounded-button">
+            OWL
+          </a>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="cam" class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Other Workbenches
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body p-8" fxLayout="column" fxLayoutAlign="start start">
+        <div class="w-100-p">
+          <a *ngFor="let workbench of cam?.model?.modelInfo?.modelWorkbenches" href="{{workbench.url}}" target="_blank">
+            {{workbench.label}}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="cam" class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Universal Workbenches
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body p-8" fxLayout="column" fxLayoutAlign="start start">
+        <div class="w-100-p">
+          <a *ngFor="let workbench of cam?.model?.modelInfo?.universalWorkbenches" href="{{workbench.url}}"
+            target="_blank">
+            {{workbench.label}}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

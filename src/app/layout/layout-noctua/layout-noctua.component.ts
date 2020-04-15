@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NoctuaConfigService } from '@noctua/services/config.service';
 import { MatSidenav } from '@angular/material/sidenav';
+import { NoctuaFormMenuService } from 'noctua-form-base';
 
 @Component({
     selector: 'layout-noctua',
@@ -18,7 +19,8 @@ import { MatSidenav } from '@angular/material/sidenav';
     leftSidenav: MatSidenav;
     private _unsubscribeAll: Subject<any>;
 
-    constructor(private _noctuaConfigService: NoctuaConfigService) {
+    constructor(private _noctuaConfigService: NoctuaConfigService,
+        public noctuaFormMenuService: NoctuaFormMenuService) {
         this._unsubscribeAll = new Subject();
     }
 
@@ -28,6 +30,7 @@ import { MatSidenav } from '@angular/material/sidenav';
             .subscribe((config) => {
                 this.noctuaConfig = config;
             });
+        this.noctuaFormMenuService.setLeftSidenav(this.leftSidenav);
     }
     ngOnDestroy(): void {
         this._unsubscribeAll.next();

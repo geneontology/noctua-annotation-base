@@ -8,19 +8,10 @@
     </div>
   </div>
   <div class="noc-logo pl-0 h-100-p" fxLayout="row" fxLayoutAlign="start center" fxFlex="180px">
-    <button mat-icon-button [matMenuTriggerFor]="changeView" class="noc-br noc-apps-button"
+    <button mat-icon-button (click)="noctuaFormMenuService.openLeftSidenav()" class="noc-br noc-apps-button"
       matTooltip="Open Workbenches Menu" [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
       <mat-icon class="">apps</mat-icon>
     </button>
-    <mat-menu #changeView="matMenu">
-      <button class="noc-create-button" (click)="createModel()" mat-menu-item>
-        Create New Model
-      </button>
-      <a *ngFor="let workbench of cam?.model?.modelInfo?.workbenches" href="{{workbench.url}}" target="_blank"
-        mat-menu-item>
-        {{workbench.label}}
-      </a>
-    </mat-menu>
     <a class="noc-main-logo" href="{{noctuaUrl}}" target="_blank">
       Noctua
     </a>

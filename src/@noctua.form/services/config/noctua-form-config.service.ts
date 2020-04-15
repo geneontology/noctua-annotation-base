@@ -4,9 +4,6 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import * as ModelDefinition from './../../data/config/model-definition';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
-declare const require: any;
-
-const each = require('lodash/forEach');
 import {
   AnnotonNode,
   Annoton,
@@ -16,7 +13,7 @@ import {
   Predicate
 } from './../../models';
 import { AnnotonType } from './../../models/annoton/annoton';
-import { find } from 'lodash';
+import { find, filter, each } from 'lodash';
 import { HttpParams } from '@angular/common/http';
 import * as EntityDefinition from './../../data/config/entity-definition';
 
@@ -177,7 +174,18 @@ export class NoctuaFormConfigService {
     modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + paramsString;
     modelInfo.noctuaFormUrl = environment.workbenchUrl + 'noctua-form?' + paramsString;
 
-    modelInfo.workbenches = environment.globalWorkbenchesModel.map(workbench => {
+    modelInfo.modelWorkbenches = environment.globalWorkbenchesModel.map(workbench => {
+      return {
+        label: workbench['menu-name'],
+        url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
+      };
+    });
+
+    modelInfo.modelWorkbenchesMenu = filter(modelInfo.modelWorkbenches, (workbench) => {
+      return workbench.label !== 'noctua-form';
+    });
+
+    modelInfo.universalWorkbenches = environment.globalWorkbenchesUniversal.map(workbench => {
       return {
         label: workbench['menu-name'],
         url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
