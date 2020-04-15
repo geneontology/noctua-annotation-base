@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
-declare const require: any;
-const organisms = require('@noctua.common/data/organisms.json');
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaDataService {
+  onContributorsChanged: BehaviorSubject<any>;
+  onGroupsChanged: BehaviorSubject<any>;
+  onOrganismsChanged: BehaviorSubject<any>;
 
-  constructor(private httpClient: HttpClient) {
+  constructor() {
+    this.onContributorsChanged = new BehaviorSubject([]);
+    this.onGroupsChanged = new BehaviorSubject([]);
+    this.onOrganismsChanged = new BehaviorSubject([]);
   }
 
-  get organisms() {
-    return organisms;
-  }
 }

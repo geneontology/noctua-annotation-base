@@ -14,7 +14,7 @@ declare const require: any;
 const each = require('lodash/forEach');
 
 import { noctuaAnimations } from './../../../../../../@noctua/animations';
-import { NoctuaFormService } from '../../services/noctua-form.service';
+
 
 import { CamDiagramService } from './../cam-diagram/services/cam-diagram.service';
 import { CamTableService } from './../cam-table/services/cam-table.service';
@@ -27,7 +27,8 @@ import {
   NoctuaGraphService,
   NoctuaAnnotonFormService,
   CamService,
-  Entity
+  Entity,
+  NoctuaFormMenuService
 } from 'noctua-form-base';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
@@ -55,7 +56,7 @@ export class CamFormComponent implements OnInit, OnDestroy {
     public camTableService: CamTableService,
     private noctuaGraphService: NoctuaGraphService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaFormService: NoctuaFormService
+    public noctuaFormMenuService: NoctuaFormMenuService
   ) {
     this._unsubscribeAll = new Subject();
     // this.annoton = self.noctuaCamFormService.annoton;

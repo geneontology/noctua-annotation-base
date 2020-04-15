@@ -10,10 +10,9 @@ import {
     NoctuaGraphService,
     NoctuaAnnotonFormService,
     AnnotonType,
+    NoctuaFormMenuService,
 } from 'noctua-form-base';
 
-import { NoctuaConfigService } from '@noctua/services/config.service';
-import { NoctuaFormService } from 'app/main/apps/noctua-form/services/noctua-form.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from 'environments/environment';
@@ -48,7 +47,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         private noctuaGraphService: NoctuaGraphService,
         public noctuaUserService: NoctuaUserService,
         public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-        public noctuaFormService: NoctuaFormService,
+        public noctuaFormMenuService: NoctuaFormMenuService,
     ) {
         const self = this;
         this._unsubscribeAll = new Subject();
@@ -116,12 +115,12 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
 
     openCamForm() {
         this.camService.initializeForm(this.cam);
-        this.noctuaFormService.openLeftDrawer(this.noctuaFormService.panel.camForm);
+        this.noctuaFormMenuService.openLeftDrawer(this.noctuaFormMenuService.panel.camForm);
     }
 
     openAnnotonForm(annotonType: AnnotonType) {
         this.noctuaAnnotonFormService.setAnnotonType(annotonType);
-        this.noctuaFormService.openLeftDrawer(this.noctuaFormService.panel.annotonForm);
+        this.noctuaFormMenuService.openLeftDrawer(this.noctuaFormMenuService.panel.annotonForm);
     }
 
     ngOnDestroy(): void {

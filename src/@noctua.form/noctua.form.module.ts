@@ -1,9 +1,4 @@
 import { NgModule } from '@angular/core';
-import {
-  NoctuaAnnotonConnectorService,
-  NoctuaAnnotonFormService,
-  CamService
-} from './services';
 
 export * from './'
 
