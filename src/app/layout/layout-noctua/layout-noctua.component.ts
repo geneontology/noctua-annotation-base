@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NoctuaConfigService } from '@noctua/services/config.service';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
     selector: 'layout-noctua',
@@ -13,6 +14,8 @@ import { NoctuaConfigService } from '@noctua/services/config.service';
 ) export class LayoutNoctuaComponent implements OnInit, OnDestroy {
     noctuaConfig: any;
     navigation: any;
+    @ViewChild('leftSidenav', { static: true })
+    leftSidenav: MatSidenav;
     private _unsubscribeAll: Subject<any>;
 
     constructor(private _noctuaConfigService: NoctuaConfigService) {
