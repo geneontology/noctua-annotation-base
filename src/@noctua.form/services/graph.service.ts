@@ -135,6 +135,8 @@ export class NoctuaGraphService {
         cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
       }
 
+      self.populateContributors(cam);
+
       self.graphPreParse(cam.graph).pipe(
         finalize(() => {
           cam.loading.status = false;
@@ -156,20 +158,20 @@ export class NoctuaGraphService {
 
     cam.manager.get_model(modelId);
   }
-  /* 
-    populateContributors(cam: Cam) {
-      const self = this;
-      const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
-  
-      cam.contributors = <Contributor[]>contributorAnnotations.map((contributorAnnotation) => {
-        const orcid = contributorAnnotation.value();
-        const contributor = find(self.noctuaUserService.contributors, (srcContributor: Contributor) => {
-          return srcContributor.orcid === orcid;
-        });
-  
-        return contributor ? contributor : { orcid: orcid };
+
+  populateContributors(cam: Cam) {
+    const self = this;
+    const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
+
+    cam.contributors = <Contributor[]>contributorAnnotations.map((contributorAnnotation) => {
+      const orcid = contributorAnnotation.value();
+      const contributor = find(self.noctuaUserService.contributors, (srcContributor: Contributor) => {
+        return srcContributor.orcid === orcid;
       });
-    } */
+
+      return contributor ? contributor : { orcid: orcid };
+    });
+  }
 
   getNodeInfo(node) {
     const result: any = {};

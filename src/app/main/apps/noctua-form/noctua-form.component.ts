@@ -55,12 +55,11 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
       public noctuaUserService: NoctuaUserService,
       public noctuaFormConfigService: NoctuaFormConfigService,
       public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-      public noctuaFormMenuService: NoctuaFormMenuService,
-      private sparqlService: SparqlService,
-      private noctuaGraphService: NoctuaGraphService, ) {
+      public noctuaFormMenuService: NoctuaFormMenuService) {
 
     this._unsubscribeAll = new Subject();
 
+    this.noctuaDataService.loadContributors();
     this.route
       .queryParams
       .pipe(takeUntil(this._unsubscribeAll))
@@ -78,7 +77,6 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   getUserInfo() {
     const self = this;
 
-    self.noctuaDataService.loadContributors();
     this.noctuaUserService.getUser()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response) => {
@@ -103,17 +101,18 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
     self.noctuaFormMenuService.setLeftDrawer(self.leftDrawer);
     self.noctuaFormMenuService.setRightDrawer(self.rightDrawer);
+  }
+
+
+  loadCam(modelId) {
+    const self = this;
 
     self.noctuaDataService.onContributorsChanged.pipe(
       takeUntil(this._unsubscribeAll))
       .subscribe((contributors: Contributor[]) => {
         self.noctuaUserService.contributors = contributors;
+        this.cam = this.camService.getCam(modelId);
       });
-  }
-
-
-  loadCam(modelId) {
-    this.cam = this.camService.getCam(modelId);
   }
 
   openCamForm() {
