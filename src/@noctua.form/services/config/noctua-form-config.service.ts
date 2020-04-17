@@ -16,26 +16,17 @@ import { AnnotonType } from './../../models/annoton/annoton';
 import { find, filter, each } from 'lodash';
 import { HttpParams } from '@angular/common/http';
 import * as EntityDefinition from './../../data/config/entity-definition';
+import { NoctuaUserService } from '../user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaFormConfigService {
 
-  private _baristaToken;
   globalUrl: any = {};
 
-  constructor() {
+  constructor(private noctuaUserService: NoctuaUserService) {
 
-  }
-
-  set baristaToken(value) {
-    this._baristaToken = value;
-    localStorage.setItem('barista_token', value);
-  }
-
-  get baristaToken() {
-    return this._baristaToken;
   }
 
   get edges() {
@@ -160,8 +151,8 @@ export class NoctuaFormConfigService {
     self.globalUrl = {};
     let params = new HttpParams();
 
-    if (self.baristaToken) {
-      params = params.append('barista_token', self.baristaToken);
+    if (self.noctuaUserService.baristaToken) {
+      params = params.append('barista_token', self.noctuaUserService.baristaToken);
     }
 
     const paramsString = params.toString();
@@ -185,8 +176,8 @@ export class NoctuaFormConfigService {
     if (modelId) {
       params = params.append('model_id', modelId);
     }
-    if (self.baristaToken) {
-      params = params.append('barista_token', self.baristaToken);
+    if (self.noctuaUserService.baristaToken) {
+      params = params.append('barista_token', self.noctuaUserService.baristaToken);
     }
 
     const paramsString = params.toString();

@@ -2,10 +2,6 @@ import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
-import { FormGroup } from '@angular/forms'
-
-import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
 import { Contributor } from '../models/contributor';
 import { Group } from '../models/group';
 
@@ -14,16 +10,25 @@ import { Group } from '../models/group';
   providedIn: 'root'
 })
 export class NoctuaUserService {
-  baristaToken;
+  private _baristaToken: string;
   baristaUrl = environment.globalBaristaLocation;
   onUserChanged: BehaviorSubject<any>;
   user: Contributor;
   contributors: Contributor[] = [];
   groups: Group[] = [];
 
-  constructor(public noctuaFormConfigService: NoctuaFormConfigService,
+  constructor(
     private httpClient: HttpClient) {
     this.onUserChanged = new BehaviorSubject(null);
+  }
+
+  set baristaToken(value) {
+    this._baristaToken = value;
+    localStorage.setItem('barista_token', value);
+  }
+
+  get baristaToken() {
+    return this._baristaToken;
   }
 
   getUser(): Observable<any> {
