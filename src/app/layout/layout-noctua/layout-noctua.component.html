@@ -1,7 +1,7 @@
 <div id="noctua-main">
   <mat-sidenav-container>
-    <mat-sidenav #leftSidenav (keydown.escape)="close('escape')" disableClose>
-      <noc-noctua-apps></noc-noctua-apps>
+    <mat-sidenav #leftSidenav>
+      <noc-noctua-apps [sidenav]="leftSidenav"></noc-noctua-apps>
     </mat-sidenav>
     <div id="noctua-main-content">
       <ng-container>

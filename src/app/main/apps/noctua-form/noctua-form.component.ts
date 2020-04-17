@@ -20,6 +20,7 @@ import {
 
 import { takeUntil } from 'rxjs/operators';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
+import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 
 @Component({
   selector: 'app-noctua-form',
@@ -47,14 +48,16 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private route: ActivatedRoute,
-    private camService: CamService,
-    public noctuaUserService: NoctuaUserService,
-    public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
-    private sparqlService: SparqlService,
-    private noctuaGraphService: NoctuaGraphService, ) {
+  constructor
+    (private route: ActivatedRoute,
+      private camService: CamService,
+      private noctuaDataService: NoctuaDataService,
+      public noctuaUserService: NoctuaUserService,
+      public noctuaFormConfigService: NoctuaFormConfigService,
+      public noctuaAnnotonFormService: NoctuaAnnotonFormService,
+      public noctuaFormMenuService: NoctuaFormMenuService,
+      private sparqlService: SparqlService,
+      private noctuaGraphService: NoctuaGraphService, ) {
 
     this._unsubscribeAll = new Subject();
 
@@ -66,6 +69,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         this.baristaToken = params['barista_token'] || null;
         this.noctuaUserService.baristaToken = this.baristaToken;
         this.noctuaFormConfigService.baristaToken = this.baristaToken;
+        this.noctuaFormConfigService.setUniversalUrls();
         this.getUserInfo();
         this.loadCam(this.modelId);
       });
@@ -74,6 +78,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   getUserInfo() {
     const self = this;
 
+    self.noctuaDataService.loadContributors();
     this.noctuaUserService.getUser()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response) => {
@@ -94,13 +99,15 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.noctuaFormMenuService.setLeftDrawer(this.leftDrawer);
-    this.noctuaFormMenuService.setRightDrawer(this.rightDrawer);
-    this.sparqlService.getAllContributors()
-      .pipe(takeUntil(this._unsubscribeAll))
+    const self = this;
+
+    self.noctuaFormMenuService.setLeftDrawer(self.leftDrawer);
+    self.noctuaFormMenuService.setRightDrawer(self.rightDrawer);
+
+    self.noctuaDataService.onContributorsChanged.pipe(
+      takeUntil(this._unsubscribeAll))
       .subscribe((contributors: Contributor[]) => {
-        this.noctuaUserService.contributors = contributors;
-        this.noctuaGraphService.populateContributors(this.cam);
+        self.noctuaUserService.contributors = contributors;
       });
   }
 

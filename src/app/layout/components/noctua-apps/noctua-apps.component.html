@@ -9,6 +9,26 @@
     </button>
   </div>
   <div class="noc-drawer-body w-100-p" noctuaPerfectScrollbar>
+    <div *ngIf="noctuaUserService.user" class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Create Model In
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body p-8" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-create w-100-p" fxLayout="row" fxLayoutAlign="start center">
+          <button mat-raised-button (click)="createModel('noctua-form')" fxFlex="50"
+            class="noc-rounded-button mr-4 noc-half-button noc-r">
+            NOCTUA FORM
+          </button>
+          <button mat-raised-button (click)="createModel('graph-editor')" fxFlex="50"
+            class="noc-rounded-button noc-half-button noc-l">
+            GRAPH EDITOR
+          </button>
+        </div>
+      </div>
+    </div>
     <div *ngIf="cam" class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
@@ -17,19 +37,28 @@
         <span fxFlex></span>
       </div>
       <div class="noc-section-body p-8" fxLayout="row" fxLayoutAlign="start center">
-        <div class="" fxFlex="50">
-          <a class="noc-chip-label w-100-p h-100-p" [href]='cam?.model?.modelInfo?.noctuaFormUrl' target="_blank">
+        <div class="p-8" fxFlex="50">
+          <a class="w-100-p" [href]='cam?.model?.modelInfo?.noctuaFormUrl' target="_blank">
             <mat-chip class="noc-table-chip" fxLayout="row" fxLayoutAlign="start center">
-              <fa-icon [icon]="['fas', 'list-alt']"></fa-icon>
-              Noctua Form
+              <div class="noc-icon">
+                <fa-icon [icon]="['fas', 'list-alt']"></fa-icon>
+              </div>
+              <div fxFlex="" class="noc-chip-label">
+                Noctua Form
+              </div>
             </mat-chip>
           </a>
         </div>
-        <div class="" fxFlex="50">
-          <a mat-icon-button [href]='cam?.model?.modelInfo?.graphEditorUrl' target="_blank"
-            class="noc-edit-button noc-rounded-button noc-sm noc-half-button noc-l">
-            <fa-icon [icon]="['fas', 'sitemap']"></fa-icon>
-            Graph Editor
+        <div class="p-8" fxFlex="50">
+          <a class="w-100-p" [href]='cam?.model?.modelInfo?.graphEditorUrl' target="_blank">
+            <mat-chip class="noc-table-chip" fxLayout="row" fxLayoutAlign="start center">
+              <div class="noc-icon">
+                <fa-icon [icon]="['fas', 'sitemap']"></fa-icon>
+              </div>
+              <div fxFlex="" class="noc-chip-label">
+                Graph Editor
+              </div>
+            </mat-chip>
           </a>
         </div>
       </div>
@@ -43,14 +72,22 @@
         <span fxFlex></span>
       </div>
       <div class="noc-section-body p-8" fxLayout="row" fxLayoutAlign="start center">
-        <div class="" fxFlex="50">
-          <a mat-icon-button [href]='cam?.model?.modelInfo?.gpadUrl' target="_blank" class="noc-rounded-button">
-            GPAD
+        <div class="p-4" fxFlex="50">
+          <a class="w-100-p" [href]='cam?.model?.modelInfo?.gpadUrl' target="_blank">
+            <mat-chip class="noc-table-chip" fxLayout="row" fxLayoutAlign="start center">
+              <div fxFlex="" class="noc-chip-label">
+                GPAD
+              </div>
+            </mat-chip>
           </a>
         </div>
-        <div class="" fxFlex="50">
-          <a mat-icon-button [href]='cam?.model?.modelInfo?.owlUrl' target="_blank" class="noc-rounded-button">
-            OWL
+        <div class="p-4" fxFlex="50">
+          <a class="w-100-p" [href]='cam?.model?.modelInfo?.owlUrl' target="_blank">
+            <mat-chip class="noc-table-chip" fxLayout="row" fxLayoutAlign="start center">
+              <div fxFlex="" class="noc-chip-label">
+                OWL
+              </div>
+            </mat-chip>
           </a>
         </div>
       </div>
@@ -58,31 +95,37 @@
     <div *ngIf="cam" class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
-          Other Workbenches
+          Model Workbenches
         </div>
         <span fxFlex></span>
       </div>
       <div class="noc-section-body p-8" fxLayout="column" fxLayoutAlign="start start">
-        <div class="w-100-p">
-          <a *ngFor="let workbench of cam?.model?.modelInfo?.modelWorkbenches" href="{{workbench.url}}" target="_blank">
-            {{workbench.label}}
+        <div class="w-100-p p-4" *ngFor="let workbench of cam?.model?.modelInfo?.modelWorkbenches">
+          <a class="w-100-p" href="{{workbench.url}}" target="_blank">
+            <mat-chip class="noc-table-chip" fxLayout="row" fxLayoutAlign="start center">
+              <div fxFlex="" class="noc-chip-label">
+                {{workbench.label}}
+              </div>
+            </mat-chip>
           </a>
         </div>
       </div>
     </div>
-
-    <div *ngIf="cam" class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+    <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
-          Universal Workbenches
+          Global Workbenches
         </div>
         <span fxFlex></span>
       </div>
       <div class="noc-section-body p-8" fxLayout="column" fxLayoutAlign="start start">
-        <div class="w-100-p">
-          <a *ngFor="let workbench of cam?.model?.modelInfo?.universalWorkbenches" href="{{workbench.url}}"
-            target="_blank">
-            {{workbench.label}}
+        <div class="w-100-p p-4" *ngFor="let workbench of noctuaConfigService.globalUrl?.universalWorkbenches">
+          <a class="w-100-p" href="{{workbench.url}}" target="_blank">
+            <mat-chip class="noc-table-chip" fxLayout="row" fxLayoutAlign="start center">
+              <div fxFlex="" class="noc-chip-label">
+                {{workbench.label}}
+              </div>
+            </mat-chip>
           </a>
         </div>
       </div>

@@ -16,6 +16,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from 'environments/environment';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 
 @Component({
     selector: 'noctua-toolbar',
@@ -44,7 +45,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private camService: CamService,
-        private noctuaGraphService: NoctuaGraphService,
+        private noctuaCommonMenuService: NoctuaCommonMenuService,
         public noctuaUserService: NoctuaUserService,
         public noctuaAnnotonFormService: NoctuaAnnotonFormService,
         public noctuaFormMenuService: NoctuaFormMenuService,
@@ -97,10 +98,6 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
             });
     }
 
-    createModel() {
-        this.noctuaGraphService.createModel(this.cam);
-    }
-
     getUserInfo() {
         const self = this;
 
@@ -111,6 +108,10 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
                     self.user = user;
                 }
             });
+    }
+
+    openApps() {
+        this.noctuaCommonMenuService.openLeftSidenav();
     }
 
     openCamForm() {

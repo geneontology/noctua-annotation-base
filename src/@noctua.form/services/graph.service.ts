@@ -109,7 +109,6 @@ export class NoctuaGraphService {
     cam.manager = this.registerManager();
     cam.individualManager = this.registerManager();
     cam.groupManager = this.registerManager();
-    cam.newModelManager = this.registerManager();
 
     const rebuild = (resp) => {
       const noctua_graph = model.graph;
@@ -151,40 +150,26 @@ export class NoctuaGraphService {
       });
     };
 
-    const startNewModel = (resp) => {
-      const url = self.noctuaFormConfigService.getNewModelUrl(resp.data().id);
-
-      window.open(url, '_blank');
-    };
-
     cam.manager.register('rebuild', function (resp) {
       rebuild(resp);
     }, 10);
 
-    cam.newModelManager.register('rebuild', function (resp) {
-      startNewModel(resp);
-    }, 10);
-
     cam.manager.get_model(modelId);
   }
-
-  populateContributors(cam: Cam) {
-    const self = this;
-    const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
-
-    cam.contributors = <Contributor[]>contributorAnnotations.map((contributorAnnotation) => {
-      const orcid = contributorAnnotation.value();
-      const contributor = find(self.noctuaUserService.contributors, (srcContributor: Contributor) => {
-        return srcContributor.orcid === orcid;
+  /* 
+    populateContributors(cam: Cam) {
+      const self = this;
+      const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
+  
+      cam.contributors = <Contributor[]>contributorAnnotations.map((contributorAnnotation) => {
+        const orcid = contributorAnnotation.value();
+        const contributor = find(self.noctuaUserService.contributors, (srcContributor: Contributor) => {
+          return srcContributor.orcid === orcid;
+        });
+  
+        return contributor ? contributor : { orcid: orcid };
       });
-
-      return contributor ? contributor : { orcid: orcid };
-    });
-  }
-
-  createModel(cam: Cam) {
-    cam.newModelManager.add_model();
-  }
+    } */
 
   getNodeInfo(node) {
     const result: any = {};

@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NoctuaConfigService } from '@noctua/services/config.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import { NoctuaFormMenuService } from 'noctua-form-base';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 
 @Component({
     selector: 'layout-noctua',
@@ -20,7 +20,7 @@ import { NoctuaFormMenuService } from 'noctua-form-base';
     private _unsubscribeAll: Subject<any>;
 
     constructor(private _noctuaConfigService: NoctuaConfigService,
-        public noctuaFormMenuService: NoctuaFormMenuService) {
+        public noctuaCommonMenuService: NoctuaCommonMenuService) {
         this._unsubscribeAll = new Subject();
     }
 
@@ -30,7 +30,7 @@ import { NoctuaFormMenuService } from 'noctua-form-base';
             .subscribe((config) => {
                 this.noctuaConfig = config;
             });
-        this.noctuaFormMenuService.setLeftSidenav(this.leftSidenav);
+        this.noctuaCommonMenuService.setLeftSidenav(this.leftSidenav);
     }
     ngOnDestroy(): void {
         this._unsubscribeAll.next();

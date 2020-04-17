@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
-
-
-declare const require: any;
-const each = require('lodash/forEach');
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +32,6 @@ export class NoctuaFormMenuService {
 
   private leftDrawer: MatDrawer;
   private rightDrawer: MatDrawer;
-  private leftSidenav: MatSidenav;
 
   constructor() {
     // this.selectedLeftPanel = this.panel.annotonForm;
@@ -62,10 +55,6 @@ export class NoctuaFormMenuService {
     this.leftDrawer = leftDrawer;
   }
 
-  public setLeftSidenav(leftSidenav: MatSidenav) {
-    this.leftSidenav = leftSidenav;
-  }
-
   public closeLeftDrawer() {
     return this.leftDrawer.close();
   }
@@ -77,10 +66,6 @@ export class NoctuaFormMenuService {
 
   public openMiddlePanel(panel) {
     this.selectMiddlePanel(panel);
-  }
-
-  public openLeftSidenav() {
-    return this.leftSidenav.open();
   }
 
   public openLeftDrawer(panel) {

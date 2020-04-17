@@ -39,7 +39,6 @@ export class Cam {
   manager;
   individualManager;
   groupManager;
-  newModelManager;
   graph;
   date;
   modelId;

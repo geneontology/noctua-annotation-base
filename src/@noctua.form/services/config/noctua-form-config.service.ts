@@ -23,6 +23,7 @@ import * as EntityDefinition from './../../data/config/entity-definition';
 export class NoctuaFormConfigService {
 
   private _baristaToken;
+  globalUrl: any = {};
 
   constructor() {
 
@@ -153,7 +154,30 @@ export class NoctuaFormConfigService {
     };
   }
 
-  getModelUrls(modelId) {
+
+  setUniversalUrls() {
+    const self = this;
+    self.globalUrl = {};
+    let params = new HttpParams();
+
+    if (self.baristaToken) {
+      params = params.append('barista_token', self.baristaToken);
+    }
+
+    const paramsString = params.toString();
+    self.globalUrl.goUrl = 'http://www.geneontology.org/';
+    self.globalUrl.noctuaUrl = environment.noctuaUrl + '?' + paramsString;
+    self.globalUrl.universalWorkbenches = environment.globalWorkbenchesUniversal.map(workbench => {
+      return {
+        label: workbench['menu-name'],
+        url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
+      };
+    });
+
+    return self.globalUrl;
+  }
+
+  getModelUrls(modelId: string) {
     const self = this;
     const modelInfo: any = {};
 
@@ -167,8 +191,6 @@ export class NoctuaFormConfigService {
 
     const paramsString = params.toString();
 
-    modelInfo.goUrl = 'http://www.geneontology.org/';
-    modelInfo.noctuaUrl = environment.noctuaUrl + '?' + paramsString;
     modelInfo.owlUrl = environment.noctuaUrl + '/download/' + modelId + '/owl';
     modelInfo.gpadUrl = environment.noctuaUrl + '/download/' + modelId + '/gpad';
     modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + paramsString;
@@ -181,38 +203,7 @@ export class NoctuaFormConfigService {
       };
     });
 
-    modelInfo.modelWorkbenchesMenu = filter(modelInfo.modelWorkbenches, (workbench) => {
-      return workbench.label !== 'noctua-form';
-    });
-
-    modelInfo.universalWorkbenches = environment.globalWorkbenchesUniversal.map(workbench => {
-      return {
-        label: workbench['menu-name'],
-        url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
-      };
-    });
-
     return modelInfo;
-  }
-
-  getNewModelUrl(modelId) {
-    const self = this;
-    const baristaParams = { 'barista_token': self.baristaToken };
-    const modelIdParams = { 'model_id': modelId };
-    const url = environment.workbenchUrl + 'noctua-form?' + (self.baristaToken ? self._parameterize(Object.assign({}, modelIdParams, baristaParams)) : self._parameterize(Object.assign({}, modelIdParams)));
-
-    return url;
-  }
-
-  getUniversalWorkbenchUrl(workbenchName: string, extraParamString) {
-    const self = this;
-    const baristaParams = { 'barista_token': self.baristaToken };
-    const queryString =
-      (self.baristaToken ? self._parameterize(Object.assign({}, baristaParams)) + '&' + extraParamString
-        : extraParamString);
-    const url = environment.workbenchUrl + workbenchName + '?' + queryString;
-
-    return url;
   }
 
   createAnnotonConnectorModel(upstreamAnnoton: Annoton, downstreamAnnoton: Annoton, srcProcessNode?: AnnotonNode, srcHasInputNode?: AnnotonNode) {
@@ -298,60 +289,10 @@ export class NoctuaFormConfigService {
     return annoton;
   }
 
-
   findEdge(predicateId) {
     find(noctuaFormConfig.edge, {
       id: predicateId
     });
-  }
-
-  createJoyrideSteps() {
-
-    const steps = [{
-      type: 'element',
-      selector: '#noc-model-section',
-      title: 'Model Creation',
-      content: `Define model's title and state. <a target="_blank" href="http://wiki.geneontology.org/index.php/Noctua#Starting_a_new_model">more</a>`,
-      placement: 'bottom'
-    }, {
-      type: 'element',
-      selector: '#noc-gp-section',
-      title: 'Enter gene product',
-      content: `Enter gene product or macromolecular complex to be annotated <a target="_blank" href="http://wiki.geneontology.org/index.php/Noctua#Starting_a_new_model">more</a>`,
-      placement: 'bottom'
-    }, {
-      type: 'element',
-      selector: '#noc-gp-toggle-button',
-      title: 'Select',
-      content: `Toggle between gene product or macromolecular complex <a target="_blank" href="http://wiki.geneontology.org/index.php/Noctua#Starting_a_new_model">more</a>`,
-      placement: 'left'
-    }, {
-      type: 'element',
-      selector: "#noc-fd-section",
-      title: "Enter Molecular Function",
-      content: `Enter the molecular function, evidence, and reference. Then enter other optional fields <a target="_blank" href="http://wiki.geneontology.org/index.php/Noctua#Starting_a_new_model">more</a>`,
-      placement: 'top'
-    }, {
-      type: 'element',
-      selector: "#noc-submit-row",
-      title: "Create The Activity",
-      content: 'Check if there are any errors (create button not greyed out). Add the new activity to a model. <a href="http://wiki.geneontology.org/index.php/Noctua#Starting_a_new_model">more</a>',
-      placement: 'top'
-    }, {
-      type: 'element',
-      selector: "#noc-start-model-button",
-      title: "Model Creation",
-      content: `You can also start a new model <a target="_blank" href="http://wiki.geneontology.org/index.php/Noctua#Starting_a_new_model">more</a>`,
-      placement: 'left'
-    }, {
-      type: 'element',
-      selector: "#noc-molecular-activities",
-      title: "Molecular Activities in the Model",
-      content: 'This is where all the molecular activities in this model appear.',
-      placement: 'top'
-    }];
-
-    return steps;
   }
 
   getAspect(id) {
@@ -366,10 +307,6 @@ export class NoctuaFormConfigService {
 
   getIndividalId(url: string) {
     return 'gomodel:' + url.substr(url.lastIndexOf('/') + 2);
-  }
-
-  private _parameterize = (params) => {
-    return Object.keys(params).map(key => key + '=' + params[key]).join('&');
   }
 
 }
