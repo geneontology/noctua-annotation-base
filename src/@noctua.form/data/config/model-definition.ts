@@ -274,6 +274,7 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
     // rootNode.predicate = rootTriple.predicate;
     // annoton.rootTriple = rootTriple;
 
+    annoton.postRunUpdate();
     annoton.updateEntityInsertMenu();
     annoton.enableSubmit();
     return annoton;

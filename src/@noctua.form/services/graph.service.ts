@@ -165,8 +165,8 @@ export class NoctuaGraphService {
 
     cam.contributors = <Contributor[]>contributorAnnotations.map((contributorAnnotation) => {
       const orcid = contributorAnnotation.value();
-      const contributor = find(self.noctuaUserService.contributors, (srcContributor: Contributor) => {
-        return srcContributor.orcid === orcid;
+      const contributor = find(self.noctuaUserService.contributors, (user: Contributor) => {
+        return user.orcid === orcid;
       });
 
       return contributor ? contributor : { orcid: orcid };
@@ -372,14 +372,9 @@ export class NoctuaGraphService {
         subjectAnnotonNode.classExpression = subjectNode.classExpression;
         subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
         subjectAnnotonNode.uuid = bbopSubjectId;
-
         self._graphToAnnotonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
-
         annoton.id = bbopSubjectId;
-
-
         annoton.postRunUpdate();
-
         annotons.push(annoton);
       }
     });
