@@ -590,41 +590,12 @@ export class NoctuaGraphService {
       const bbopObjectId = bbopEdge.object_id();
       const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
       const partialObjectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
-
-      if (annoton.annotonType === AnnotonType.bpOnly) {
-        const causalEdge = find(noctuaFormConfig.causalEdges, {
-          id: bbopPredicateId
-        });
-
-        if (causalEdge) {
-          // annoton.bbOn  causalEdge);
-        }
-      }
-
       const objectNode = this._insertNode(annoton, bbopPredicateId, subjectNode, partialObjectNode);
 
       annoton.updateEntityInsertMenu();
 
       if (objectNode) {
         const triple: Triple<AnnotonNode> = annoton.getEdge(subjectNode.id, objectNode.id);
-        //const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
-
-        /*   each(triples, (triple: Triple<AnnotonNode>) => {
-            if (bbopPredicateId === triple.predicate.edge.id) {
-    
-              triple.object.uuid = partialObjectNode.uuid;
-              triple.object.term = partialObjectNode.term;
-              triple.object.classExpression = partialObjectNode.classExpression;
-              triple.object.setIsComplement(partialObjectNode.isComplement);
-    
-              triple.predicate.evidence = evidence;
-              triple.predicate.uuid = bbopEdge.id();
-              self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
-            }
-          }); */
-        //  }
-
-
         if (triple) {
           triple.object.uuid = partialObjectNode.uuid;
           triple.object.term = partialObjectNode.term;
@@ -635,27 +606,6 @@ export class NoctuaGraphService {
           self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
         }
       }
-
-
-      /*   this._insertNode(annoton, bbopPredicateId, subjectNode, objectNode);
-   
-        annoton.updateEntityInsertMenu();
-   
-        const triples: Triple<AnnotonNode>[] = annoton.getEdges(subjectNode.id);
-   
-        each(triples, (triple: Triple<AnnotonNode>) => {
-          if (bbopPredicateId === triple.predicate.edge.id) {
-   
-            triple.object.uuid = objectNode.uuid;
-            triple.object.term = objectNode.term;
-            triple.object.classExpression = objectNode.classExpression;
-            triple.object.setIsComplement(objectNode.isComplement);
-   
-            triple.predicate.evidence = evidence;
-            triple.predicate.uuid = bbopEdge.id();
-            self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
-          }
-        }); */
     });
 
     return annoton;

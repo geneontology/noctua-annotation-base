@@ -84,32 +84,28 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     return this.getNode(this.rootNodeType);
   }
 
-  updateEntityInsertMenu(strict?: boolean) {
+  updateEntityInsertMenu() {
     const self = this;
 
     each(self.nodes, (node: AnnotonNode) => {
       const canInsertNodes = ShapeDescription.canInsertEntity[node.type] || [];
-      const exist = [];
+      const insertNodes = [];
 
       each(canInsertNodes, (nodeDescription: ShapeDescription.ShapeDescription) => {
-        if (nodeDescription.cardinality === ShapeDescription.CardinalityType.oneToOne) {
-          const edgeTypeExist = self.edgeTypeExist(node.id, nodeDescription.predicate.id, node.type, nodeDescription.node.type);
+        if (nodeDescription.node.showInMenu) {
+          if (nodeDescription.cardinality === ShapeDescription.CardinalityType.oneToOne) {
+            const edgeTypeExist = self.edgeTypeExist(node.id, nodeDescription.predicate.id, node.type, nodeDescription.node.type);
 
-          if (edgeTypeExist) {
-            if (strict) {
-              if (edgeTypeExist.object.hasValue()) {
-                exist.push(edgeTypeExist.object.type);
-              }
-            } else {
-              exist.push(edgeTypeExist.object.type);
+            if (!edgeTypeExist) {
+              insertNodes.push(nodeDescription);
             }
+          } else {
+            insertNodes.push(nodeDescription);
           }
         }
       });
 
-      node.canInsertNodes = canInsertNodes.filter((nodeDescription: ShapeDescription.ShapeDescription) => {
-        return !exist.includes(nodeDescription.node.type);
-      });
+      node.canInsertNodes = insertNodes;
     });
 
     // remove the subject menu
