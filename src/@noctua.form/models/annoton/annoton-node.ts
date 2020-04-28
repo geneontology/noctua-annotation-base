@@ -49,6 +49,7 @@ export interface AnnotonNodeDisplay {
   isKey: boolean;
   weight: number;
   relationEditable: boolean;
+  showInMenu: boolean;
 }
 
 export class AnnotonNode implements AnnotonNodeDisplay {
@@ -85,6 +86,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   status = '0';
   weight: 0;
   relationEditable = false;
+  showInMenu = true;
 
   constructor() { }
 

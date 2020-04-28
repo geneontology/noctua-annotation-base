@@ -266,14 +266,6 @@ export const createActivity = (activityDescription: ActivityDescription): Annoto
         annoton.addEdgeById(triple.subject, triple.object, predicate);
     });
 
-    //  const rootNode = annoton.getNode(activityDescription.triples[0].subject);
-    //   const rootTriple = annoton.getEdge(
-    //       activityDescription.triples[0].subject,
-    //      activityDescription.triples[0].object);
-
-    // rootNode.predicate = rootTriple.predicate;
-    // annoton.rootTriple = rootTriple;
-
     annoton.postRunUpdate();
     annoton.updateEntityInsertMenu();
     annoton.enableSubmit();
