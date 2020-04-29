@@ -87,6 +87,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   weight: 0;
   relationEditable = false;
   showInMenu = false;
+  insertMenuNodes = [];
 
   constructor() { }
 

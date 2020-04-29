@@ -12,7 +12,7 @@ import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import { AnnotonParser } from './parser';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
-import { each } from 'lodash';
+import { each, filter } from 'lodash';
 
 export enum AnnotonState {
   creation = 1,
@@ -89,29 +89,31 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
     each(self.nodes, (node: AnnotonNode) => {
       const canInsertNodes = ShapeDescription.canInsertEntity[node.type] || [];
-      const insertNodes = [];
+      const insertNodes: ShapeDescription.ShapeDescription[] = [];
 
       each(canInsertNodes, (nodeDescription: ShapeDescription.ShapeDescription) => {
-        if (nodeDescription.node.showInMenu) {
-          if (nodeDescription.cardinality === ShapeDescription.CardinalityType.oneToOne) {
-            const edgeTypeExist = self.edgeTypeExist(node.id, nodeDescription.predicate.id, node.type, nodeDescription.node.type);
+        if (nodeDescription.cardinality === ShapeDescription.CardinalityType.oneToOne) {
+          const edgeTypeExist = self.edgeTypeExist(node.id, nodeDescription.predicate.id, node.type, nodeDescription.node.type);
 
-            if (!edgeTypeExist) {
-              insertNodes.push(nodeDescription);
-            }
-          } else {
+          if (!edgeTypeExist) {
             insertNodes.push(nodeDescription);
           }
+        } else {
+          insertNodes.push(nodeDescription);
         }
       });
 
       node.canInsertNodes = insertNodes;
+      node.insertMenuNodes = filter(insertNodes, (insertNode: ShapeDescription.ShapeDescription) => {
+        return insertNode.node.showInMenu;
+      });
     });
 
     // remove the subject menu
     each(self.edges, function (triple: Triple<AnnotonNode>) {
       if (triple.subject.type === triple.object.type) {
         triple.subject.canInsertNodes = [];
+        triple.subject.insertMenuNodes = [];
       }
     });
   }

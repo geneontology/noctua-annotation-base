@@ -18,3 +18,11 @@ export class Contributor {
         return this._groups;
     }
 }
+
+export function compareContributor(a: Contributor, b: Contributor): number {
+    if (a.name < b.name) {
+        return -1;
+    } else {
+        return 1;
+    }
+}
