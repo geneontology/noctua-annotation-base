@@ -1,6 +1,8 @@
 export class Contributor {
     orcid: string;
     name?: string;
+    initials?: string;
+    color?: string;
     group?: any = {};
     cams?: number;
     _groups?: any = [];
