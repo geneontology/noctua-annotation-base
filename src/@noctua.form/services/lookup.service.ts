@@ -13,7 +13,7 @@ declare const require: any;
 const amigo = require('amigo2');
 const golr_conf = require('golr-conf');
 const gconf = new golr_conf.conf(amigo.data.golr);
-const gserv = environment.globalGolrCompanionServer; // "http://golr.berkeleybop.org/";
+const gserv = environment.globalGolrServer; // "http://golr.berkeleybop.org/";
 const impl_engine = require('bbop-rest-manager').jquery;
 const golr_manager = require('bbop-manager-golr');
 const golr_response = require('bbop-response-golr');
@@ -34,7 +34,7 @@ export class NoctuaLookupService {
     public noctuaFormConfigService: NoctuaFormConfigService) {
     this.name = 'DefaultLookupName';
     this.linker = new amigo.linker();
-    this.golrURLBase = environment.globalGolrServer + `select?`;
+    this.golrURLBase = environment.globalGolrNeoServer + `select?`;
     // this.trusted = this.$sce.trustAsResourceUrl(this.golrURLBase);
 
     this.localClosures = [];
@@ -118,7 +118,7 @@ export class NoctuaLookupService {
 
 
   companionLookup(gp, aspect, extraParams) {
-    const golrUrl = environment.globalGolrCompanionServer + `select?`;
+    const golrUrl = environment.globalGolrServer + `select?`;
 
     const requestParams = {
       defType: 'edismax',
