@@ -34,22 +34,29 @@ export class NoctuaUserService {
   getUser() {
     const self = this;
 
-    return this.httpClient.get(`${self.baristaUrl}/user_info_by_token/${self.baristaToken}`)
-      .subscribe((response: any) => {
-        if (response && response.token) {
-          this.user = new Contributor();
-          this.user.name = response.nickname;
-          this.user.groups = response.groups;
-          // user.manager.use_groups([self.userInfo.selectedGroup.id]);
-          this.user.token = response.token;
-          this.user = this.user;
-          this.onUserChanged.next(this.user);
-        } else {
-          this.user = null;
-          this.user = this.user;
-          this.onUserChanged.next(this.user);
-        }
-      });
+    if (!self.baristaToken) {
+      this.user = null;
+      this.onUserChanged.next(this.user);
+    } else {
+      return this.httpClient.get(`${self.baristaUrl}/user_info_by_token/${self.baristaToken}`)
+        .subscribe((response: any) => {
+          if (response) {
+            if (response.token) {
+              this.user = new Contributor();
+              this.user.name = response.nickname;
+              this.user.groups = response.groups;
+              this.user.token = response.token;
+              this.onUserChanged.next(this.user);
+            } else {
+              this.user = null;
+              const url = new URL(window.location.href);
+              url.searchParams.delete('barista_token');
+              window.history.replaceState(null, null, url.href);
+              this.onUserChanged.next(this.user);
+            }
+          }
+        });
+    }
   }
 
 

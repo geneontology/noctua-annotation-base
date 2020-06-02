@@ -46,8 +46,6 @@ export class AppComponent implements OnInit, OnDestroy {
         }
 
         this._unsubscribeAll = new Subject();
-
-        this.noctuaUserService.getUser();
     }
 
     ngOnInit(): void {

@@ -66,6 +66,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         this.modelId = params['model_id'] || null;
         this.baristaToken = params['barista_token'] || null;
         this.noctuaUserService.baristaToken = this.baristaToken;
+        this.noctuaUserService.getUser();
         this.noctuaFormConfigService.setUniversalUrls();
         this.loadCam(this.modelId);
       });

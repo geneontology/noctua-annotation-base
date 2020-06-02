@@ -1,6 +1,6 @@
 {
   "name": "noctua-form-base",
-  "version": "0.7.72",
+  "version": "0.7.73",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
