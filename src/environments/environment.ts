@@ -40,6 +40,7 @@ export const environment = {
   globalBaristaLocation: baristaLocation,
   globalWorkbenchesModel: globalWorkbenchesModel,
   globalWorkbenchesUniversal: globalWorkbenchesUniversal,
+  searchApi: `${baristaLocation}/search/`,
 
   //Workbench
   noctuaUrl: `${window.location.origin}`,

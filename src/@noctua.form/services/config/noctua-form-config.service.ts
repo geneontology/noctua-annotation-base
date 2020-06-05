@@ -17,6 +17,7 @@ import { find, filter, each } from 'lodash';
 import { HttpParams } from '@angular/common/http';
 import * as EntityDefinition from './../../data/config/entity-definition';
 import { NoctuaUserService } from '../user.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +25,14 @@ import { NoctuaUserService } from '../user.service';
 export class NoctuaFormConfigService {
 
   globalUrl: any = {};
+  loginUrl: string;
+  logoutUrl: string;
+  noctuaUrl: string;
+  homeUrl: string;
+  onSetupReady: BehaviorSubject<any>;
 
   constructor(private noctuaUserService: NoctuaUserService) {
-
+    this.onSetupReady = new BehaviorSubject(null);
   }
 
   get edges() {
@@ -145,6 +151,24 @@ export class NoctuaFormConfigService {
     };
   }
 
+  setupUrls() {
+    const self = this;
+    const baristaToken = self.noctuaUserService.baristaToken;
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete('barista_token');
+
+    const returnUrl = url.href;
+    const baristaParams = { 'barista_token': baristaToken };
+    const returnUrlParams = { 'return': returnUrl };
+
+    this.loginUrl = environment.globalBaristaLocation + '/login?' +
+      self._parameterize(Object.assign({}, returnUrlParams));
+    this.logoutUrl = environment.globalBaristaLocation + '/logout?' +
+      self._parameterize(Object.assign({}, baristaParams, returnUrlParams));
+    this.noctuaUrl = environment.noctuaUrl + '?' + (baristaToken ? self._parameterize(Object.assign({}, baristaParams)) : '');
+    this.homeUrl = window.location.href;
+  }
 
   setUniversalUrls() {
     const self = this;
@@ -298,6 +322,10 @@ export class NoctuaFormConfigService {
 
   getIndividalId(url: string) {
     return 'gomodel:' + url.substr(url.lastIndexOf('/') + 2);
+  }
+
+  private _parameterize = (params) => {
+    return Object.keys(params).map(key => key + '=' + params[key]).join('&');
   }
 
 }

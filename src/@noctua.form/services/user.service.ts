@@ -24,36 +24,40 @@ export class NoctuaUserService {
 
   set baristaToken(value) {
     this._baristaToken = value;
-    localStorage.setItem('barista_token', value);
   }
 
   get baristaToken() {
     return this._baristaToken;
   }
 
-  getUser() {
+  getUser(baristaTokenParam?: string) {
     const self = this;
+    const baristaToken = baristaTokenParam ? baristaTokenParam : localStorage.getItem('barista_token');
 
-    if (!self.baristaToken) {
+    if (!baristaToken) {
       this.user = null;
       this.onUserChanged.next(this.user);
     } else {
-      return this.httpClient.get(`${self.baristaUrl}/user_info_by_token/${self.baristaToken}`)
+      return this.httpClient.get(`${self.baristaUrl}/user_info_by_token/${baristaToken}`)
         .subscribe((response: any) => {
           if (response) {
             if (response.token) {
               this.user = new Contributor();
               this.user.name = response.nickname;
               this.user.groups = response.groups;
-              this.user.token = response.token;
+              this.user.token = this.baristaToken = response.token;
+              localStorage.setItem('barista_token', this.baristaToken);
               this.onUserChanged.next(this.user);
             } else {
               this.user = null;
-              const url = new URL(window.location.href);
-              url.searchParams.delete('barista_token');
-              window.history.replaceState(null, null, url.href);
+
+              this.baristaToken = null;
+              localStorage.removeItem('barista_token');
               this.onUserChanged.next(this.user);
             }
+            const url = new URL(window.location.href);
+            url.searchParams.delete('barista_token');
+            window.history.replaceState(null, null, url.href);
           }
         });
     }
