@@ -304,7 +304,7 @@ export class NoctuaLookupService {
     return (find(self.localClosures, data));
   }
 
-  getLocalClosure(term: string, categories: any[]) {
+  getLocalClosurex(term: string, categories: any[]) {
     const self = this;
     const closure = self.categoryToClosure(categories);
     const data = self.localClosureExist(term, closure);

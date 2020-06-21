@@ -5,7 +5,7 @@ import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { Predicate } from '.';
-import { each } from 'lodash';
+import { each, find, some } from 'lodash';
 
 export interface GoCategory {
   id: AnnotonNodeType;
@@ -33,6 +33,7 @@ export enum AnnotonNodeType {
 
 export interface AnnotonNodeDisplay {
   id: string;
+  rootTypes: Entity[];
   type: AnnotonNodeType;
   label: string;
   uuid: string;
@@ -58,7 +59,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   label: string;
   uuid: string;
   category: GoCategory[];
-  categoryRange: [] = [];
+  rootTypes: Entity[] = [];
   term: Entity = new Entity('', '');
   termLookup: EntityLookup = new EntityLookup();
   isExtension = false;
@@ -89,7 +90,11 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   showInMenu = false;
   insertMenuNodes = [];
 
-  constructor() { }
+  constructor(annotonNode?: Partial<AnnotonNodeDisplay>) {
+    if (annotonNode) {
+      this.overrideValues(annotonNode);
+    }
+  }
 
   getTerm() {
     return this.term;
@@ -121,6 +126,26 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   hasValue() {
     const self = this;
     return self.term.hasValue();
+  }
+
+  hasRootType(inRootType: { id: string }) {
+    return find(this.rootTypes, (rootType: Entity) => {
+      return rootType.id === inRootType.id;
+    });
+  }
+
+  hasRootTypes(inRootTypes: { id: string }[]) {
+    let found = false;
+    for (let i = 0; i < this.rootTypes.length; i++) {
+      for (let j = 0; j < inRootTypes.length; j++) {
+        if (this.rootTypes[i].id === inRootTypes[j].id) {
+          found = true;
+          break;
+        }
+      }
+    }
+
+    return found;
   }
 
   clearValues() {
