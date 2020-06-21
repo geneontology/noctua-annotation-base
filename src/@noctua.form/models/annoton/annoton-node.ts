@@ -128,17 +128,17 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     return self.term.hasValue();
   }
 
-  hasRootType(inRootType: { id: string }) {
+  hasRootType(inRootType: GoCategory) {
     return find(this.rootTypes, (rootType: Entity) => {
-      return rootType.id === inRootType.id;
+      return rootType.id === inRootType.category;
     });
   }
 
-  hasRootTypes(inRootTypes: { id: string }[]) {
+  hasRootTypes(inRootTypes: GoCategory[]) {
     let found = false;
     for (let i = 0; i < this.rootTypes.length; i++) {
       for (let j = 0; j < inRootTypes.length; j++) {
-        if (this.rootTypes[i].id === inRootTypes[j].id) {
+        if (this.rootTypes[i].id === inRootTypes[j].category) {
           found = true;
           break;
         }
