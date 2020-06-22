@@ -16,7 +16,8 @@ import {
 } from 'noctua-form-base';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 import { each, find } from 'lodash';
-import { InlineWithService } from '@noctua.editor/inline-with/with-reference.service';
+import { InlineWithService } from '@noctua.editor/inline-with/inline-with.service';
+import { InlineDetailService } from '@noctua.editor/inline-detail/inline-detail.service';
 
 @Component({
   selector: 'noc-entity-form',
@@ -35,6 +36,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   evidenceFormArray: FormArray;
   entity: AnnotonNode;
   insertMenuItems = [];
+  selectedItemDisplay;
 
   private unsubscribeAll: Subject<any>;
 
@@ -42,6 +44,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     private camService: CamService,
     private inlineReferenceService: InlineReferenceService,
+    private inlineDetailService: InlineDetailService,
     private inlineWithService: InlineWithService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService) {
@@ -207,6 +210,19 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     this.inlineWithService.open(event.target, { data });
   }
 
+  unselectItemDisplay() {
+    this.selectedItemDisplay = null;
+  }
+
+  openTermDetails(event, item) {
+    event.stopPropagation();
+
+    const data = {
+      termDetail: item,
+      formControl: this.entityFormGroup.controls['term'] as FormControl,
+    };
+    this.inlineDetailService.open(event.target, { data });
+  }
 
   termDisplayFn(term): string | undefined {
     return term && term.id ? `${term.label} (${term.id})` : undefined;

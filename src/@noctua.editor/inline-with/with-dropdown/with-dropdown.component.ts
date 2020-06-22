@@ -9,7 +9,8 @@ import {
   AnnotonError,
   noctuaFormConfig,
   Article,
-  NoctuaLookupService
+  NoctuaLookupService,
+  withfrom
 } from 'noctua-form-base';
 
 import { withDropdownData } from './with-dropdown.tokens';
@@ -27,7 +28,6 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   evidenceDBForm: FormGroup;
   formControl: FormControl;
-  article: Article;
 
   weeks = [];
   connectedTo = [];
@@ -39,10 +39,9 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   indata = {
     companies: [
       {
-        company: "example comany",
         projects: [
           {
-            projectName: "example project",
+            projectName: "WB:145787",
           }
         ]
       }
@@ -50,7 +49,7 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   }
 
 
-  options: string[] = ['One', 'Two', 'Three'];
+  options: string[] = withfrom;
   filteredOptions: Observable<string[]>;
 
 
@@ -121,8 +120,8 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     control.removeAt(index)
   }
 
-  addNewProject(control) {
-    const projectName = new FormControl()
+  addNewProject(control, value?) {
+    const projectName = new FormControl(value);
     control.push(this.fb.group({ projectName: projectName }));
 
     this._onValueChange(projectName)
@@ -136,18 +135,15 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     let control = <FormArray>this.myForm.controls.companies;
     this.indata.companies.forEach(x => {
       control.push(this.fb.group({
-        company: x.company,
         projects: this.setProjects(x)
-      }))
+      }));
     })
   }
 
   setProjects(x) {
     let arr = new FormArray([])
     x.projects.forEach(y => {
-      arr.push(this.fb.group({
-        projectName: y.projectName
-      }))
+      this.addNewProject(arr, y.projectName)
     })
     return arr;
   }
@@ -183,7 +179,7 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   }
 
   save2() {
-    console.log(this.weeks);
+    console.log(this.myForm.value);
   }
 
   save() {
@@ -223,7 +219,6 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   private _onValueChange(formControl: FormControl) {
     const self = this;
 
-
     this.filteredOptions = formControl.valueChanges
       .pipe(
         takeUntil(this._unsubscribeAll),
@@ -238,22 +233,6 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  private _updateArticle(value) {
-    const self = this;
-
-    if (value.db.name === noctuaFormConfig.evidenceDB.options.pmid.name && value.accession) {
-      const pmid = value.accession.trim();
-
-      if (pmid === '') {
-        return;
-      }
-      this.noctuaLookupService.getPubmedInfo(pmid).pipe(
-        takeUntil(this._unsubscribeAll))
-        .subscribe((article: Article) => {
-          self.article = article;
-        });
-    }
-  }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();

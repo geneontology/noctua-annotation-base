@@ -42,7 +42,6 @@
               <mat-form-field appearance="outline" fxFlex="" class="noc-sm w-100-p">
                 <input matInput formControlName="projectName" type="text" placeholder="Accession" autocomplete="off"
                   [matAutocomplete]="withAuto">
-
               </mat-form-field>
               <button mat-icon-button (click)="addNewProject(comp.controls.projects)">
                 <mat-icon>add</mat-icon>
@@ -53,9 +52,9 @@
             </div>
           </div>
           <div *ngIf="comp.get('projects').controls.length===0">
-            <button mat-button (click)="addNewProject(comp.controls.projects)">
+            <a (click)="addNewProject(comp.controls.projects)">
               Add With/From
-            </button>
+            </a>
           </div>
         </div>
       </div>

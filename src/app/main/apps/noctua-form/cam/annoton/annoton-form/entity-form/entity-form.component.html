@@ -33,6 +33,9 @@
               <span *ngIf="!item.link">
                 {{ item.id }}
               </span>
+              <button mat-icon-button (click)="openTermDetails($event, item)" class="noc-term-detail-trigger">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
             </div>
           </div>
         </mat-option>

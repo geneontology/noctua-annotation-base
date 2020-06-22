@@ -44,7 +44,7 @@ export class NoctuaLookupService {
   }
 
   escapeGolrValue(str) {
-    var pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g;
+    const pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g;
     return str.replace(pattern, "\\$1");
   }
 
@@ -82,11 +82,23 @@ export class NoctuaLookupService {
         id: item.annotation_class,
         label: item.annotation_class_label,
         link: self.getTermURL(item.annotation_class),
+        description: item.description,
+        isObsolete: item.is_obsolete,
+        rootTypes: self.makeEntitiesArray(item.isa_closure, item.isa_closure_label),
         xref: xref
       };
     });
 
     return result;
+  }
+
+  makeEntitiesArray(ids: string[], labels: string[]) {
+    let result = []
+    if (ids.length === labels.length) {
+      result = ids.map((id, key) => {
+        return new Entity(id, labels[key]);
+      })
+    }
   }
 
   golrLookupManager(searchText) {
@@ -98,13 +110,13 @@ export class NoctuaLookupService {
     manager.add_query_filter('document_category', 'ontology_class', ['*']);
     manager.add_query_filter('isa_closure', 'CHEBI:33695');
 
-    var promise = manager.search();
+    let promise = manager.search();
     promise.then(function (response) {
 
       // Process our response instance using bbop-response-golr.
       if (response.success()) {
-        var data = response.documents();
-        var result = data.map(function (item) {
+        let data = response.documents();
+        let result = data.map(function (item) {
           return {
             id: item.annotation_class,
             label: item.annotation_class_label

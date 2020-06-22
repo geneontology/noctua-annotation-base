@@ -1,0 +1,46 @@
+<div class="noc-item-details noc-drawer w-100-p h-100-p">
+  <div class="noc-drawer-header w-100-p">
+    <div class="noc-drawer-header-title">
+      <div class="text-truncate">
+        {{termDetail.label}}
+      </div>
+    </div>
+    <span fxFlex></span>
+    <button mat-stroked-button (click)="unselectItemDisplay()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close Selected Item">
+      <mat-icon>close</mat-icon> Close
+    </button>
+  </div>
+  <div class="noc-drawer-body w-100-p" noctuaPerfectScrollbar>
+    <div class="noc-section-row">
+      <div class="noc-title">
+        Term
+      </div>
+      <div class="noc-description">
+        {{termDetail.label}} <small>({{termDetail.id}})</small>
+      </div>
+    </div>
+    <div class="noc-section-row">
+      <div class="noc-title">
+        Definition
+      </div>
+      <div class="noc-description">
+        {{termDetail.description}}
+      </div>
+    </div>
+    <div class="noc-section-row">
+      <div class="noc-title">
+        Is A Type Of
+      </div>
+      <div class="noc-description">
+        <div *ngIf="let rootType of termDetail.rootTypes">
+          {{rootType.label}}<small>{{rootType.id}}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="noc-drawer-footer w-100-p">
+    <span fxFlex></span>
+    <button class="noc-rounded-button" mat-raised-button color="primary">Use</button>
+  </div>
+</div>
