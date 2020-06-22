@@ -104,6 +104,13 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
+  ngOnInit(): void {
+    this.evidenceDBForm = this._createEvidenceDBForm();
+  }
+
+  clearValues() {
+
+  }
 
   addNewCompany() {
     let control = <FormArray>this.myForm.controls.companies;
@@ -148,25 +155,6 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     return arr;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-  ngOnInit(): void {
-    this.evidenceDBForm = this._createEvidenceDBForm();
-  }
-
-  clearValues() {
-
-  }
-
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -179,7 +167,16 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   }
 
   save2() {
-    console.log(this.myForm.value);
+    const withs = this.myForm.value.companies.map((project) => {
+      return project.projects.map((item) => {
+        return item.projectName;
+      }).join(',');
+    });
+
+
+    console.log(withs);
+
+
   }
 
   save() {

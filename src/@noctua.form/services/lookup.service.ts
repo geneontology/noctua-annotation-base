@@ -89,16 +89,19 @@ export class NoctuaLookupService {
       };
     });
 
+    console.log(result)
     return result;
   }
 
-  makeEntitiesArray(ids: string[], labels: string[]) {
+  makeEntitiesArray(ids: string[], labels: string[]): Entity[] {
     let result = []
     if (ids.length === labels.length) {
       result = ids.map((id, key) => {
         return new Entity(id, labels[key]);
-      })
+      });
     }
+
+    return result;
   }
 
   golrLookupManager(searchText) {

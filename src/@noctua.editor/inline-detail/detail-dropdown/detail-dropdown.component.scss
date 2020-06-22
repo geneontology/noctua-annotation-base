@@ -10,40 +10,40 @@
   background-color: #fbf9de;
 
   .noc-item-details {
+    max-height: 500px;
+    min-height: 400px;
     padding: 10px 8px;
     background-color: rgba(#000, 0.20);
 
+    .noc-header {
+      padding: 0 12px;
+      @include deep-height(40px);
+      background-color: transparent;
+      @include mat-elevation(1);
+      z-index: 10001;
+
+      .noc-header-title {
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+
+    .noc-body {
+      height: 400px;
+    }
+
+    .noc-footer {
+      padding: 0 12px;
+      @include deep-height(50px);
+      background-color: transparent;
+      border-top: 1px solid #CCC;
+      z-index: 10002;
+      box-shadow: none;
+    }
 
     .noc-section-row {
       padding: 10px 0;
 
-      .noc-drawer {
-        .noc-drawer-header {
-          padding: 0 12px;
-          @include deep-height(40px);
-          background-color: transparent;
-          @include mat-elevation(1);
-          z-index: 10001;
-
-          .noc-drawer-header-title {
-            font-size: 14px;
-            font-weight: bold;
-          }
-        }
-
-        .noc-drawer-body {
-          min-height: calc(100% - 90px);
-        }
-
-        .noc-drawer-footer {
-          padding: 0 12px;
-          @include deep-height(50px);
-          background-color: transparent;
-          border-top: 1px solid #CCC;
-          z-index: 10002;
-          box-shadow: none;
-        }
-      }
 
       .noc-title {
         padding-bottom: 8px;

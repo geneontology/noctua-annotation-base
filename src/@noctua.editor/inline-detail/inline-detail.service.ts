@@ -28,7 +28,7 @@ export interface DetailDropdownDialogConfig {
 }
 
 const DEFAULT_CONFIG: DetailDropdownDialogConfig = {
-    hasBackdrop: true,
+    hasBackdrop: false,
     backdropClass: 'dark-backdrop',
     panelClass: 'tm-file-preview-dialog-panel',
     // width: '600px',

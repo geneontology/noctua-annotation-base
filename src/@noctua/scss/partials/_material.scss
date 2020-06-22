@@ -72,6 +72,11 @@ mat-radio-button {
         //margin-right: 
       }
 
+      .noc-term-detail-trigger {
+        @include deep-height(100%);
+        @include deep-width(40px);
+      }
+
     }
   }
 }
