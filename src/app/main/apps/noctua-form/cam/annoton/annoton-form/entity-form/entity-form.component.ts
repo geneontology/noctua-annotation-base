@@ -16,6 +16,7 @@ import {
 } from 'noctua-form-base';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 import { each, find } from 'lodash';
+import { InlineWithService } from '@noctua.editor/inline-with/with-reference.service';
 
 @Component({
   selector: 'noc-entity-form',
@@ -41,6 +42,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     private camService: CamService,
     private inlineReferenceService: InlineReferenceService,
+    private inlineWithService: InlineWithService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService) {
     this.unsubscribeAll = new Subject();
@@ -192,12 +194,17 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   openAddReference(event, evidence: FormGroup, name: string) {
-
     const data = {
       formControl: evidence.controls[name] as FormControl,
     };
     this.inlineReferenceService.open(event.target, { data });
+  }
 
+  openAddWith(event, evidence: FormGroup, name: string) {
+    const data = {
+      formControl: evidence.controls[name] as FormControl,
+    };
+    this.inlineWithService.open(event.target, { data });
   }
 
 

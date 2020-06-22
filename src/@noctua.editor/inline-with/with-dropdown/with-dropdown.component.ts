@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -16,6 +16,7 @@ import { withDropdownData } from './with-dropdown.tokens';
 import { WithDropdownOverlayRef } from './with-dropdown-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'noc-with-dropdown',
@@ -28,9 +29,28 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   formControl: FormControl;
   article: Article;
 
+  weeks = [];
+  connectedTo = [];
+
+  myForm: FormGroup;
+
   private _unsubscribeAll: Subject<any>;
 
-  constructor(public dialogRef: WithDropdownOverlayRef,
+  indata = {
+    companies: [
+      {
+        company: "example comany",
+        projects: [
+          {
+            projectName: "example project",
+          }
+        ]
+      }
+    ]
+  }
+
+
+  constructor(private fb: FormBuilder, public dialogRef: WithDropdownOverlayRef,
     @Inject(withDropdownData) public data: any,
     private noctuaLookupService: NoctuaLookupService,
     private noctuaFormDialogService: NoctuaFormDialogService,
@@ -39,7 +59,98 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   ) {
     this._unsubscribeAll = new Subject();
     this.formControl = data.formControl;
+
+    this.myForm = this.fb.group({
+      companies: this.fb.array([])
+    })
+
+    this.setCompanies();
+
+
+
+    this.weeks = [
+      {
+        id: 'week-1',
+        weeklist: [
+          "item 1",
+          "item 2",
+          "item 3",
+          "item 4",
+          "item 5"
+        ]
+      }, {
+        id: 'week-2',
+        weeklist: [
+          "item 1",
+          "item 2",
+          "item 3",
+          "item 4",
+          "item 5"
+        ]
+      }
+    ];
+    for (let week of this.weeks) {
+      this.connectedTo.push(week.id);
+    };
   }
+
+
+  addNewCompany() {
+    let control = <FormArray>this.myForm.controls.companies;
+    control.push(
+      this.fb.group({
+        company: [''],
+        projects: this.fb.array([])
+      })
+    )
+  }
+
+  deleteCompany(index) {
+    let control = <FormArray>this.myForm.controls.companies;
+    control.removeAt(index)
+  }
+
+  addNewProject(control) {
+    control.push(
+      this.fb.group({
+        projectName: ['']
+      }))
+  }
+
+  deleteProject(control, index) {
+    control.removeAt(index)
+  }
+
+  setCompanies() {
+    let control = <FormArray>this.myForm.controls.companies;
+    this.indata.companies.forEach(x => {
+      control.push(this.fb.group({
+        company: x.company,
+        projects: this.setProjects(x)
+      }))
+    })
+  }
+
+  setProjects(x) {
+    let arr = new FormArray([])
+    x.projects.forEach(y => {
+      arr.push(this.fb.group({
+        projectName: y.projectName
+      }))
+    })
+    return arr;
+  }
+
+
+
+
+
+
+
+
+
+
+
 
   ngOnInit(): void {
     this.evidenceDBForm = this._createEvidenceDBForm();
@@ -48,6 +159,21 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
 
   clearValues() {
 
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
+  }
+
+  save2() {
+    console.log(this.weeks);
   }
 
   save() {

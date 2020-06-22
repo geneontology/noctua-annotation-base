@@ -87,7 +87,8 @@
         <div class="p-4" fxFlex fxFlex="20">
           <mat-form-field appearance="outline" class="noc-sm w-100-p">
             <mat-label>With</mat-label>
-            <textarea matInput formControlName="with" rows="2"></textarea>
+            <textarea matInput formControlName="with" rows="2"
+              (click)="openAddWith($event, evidence, 'with')"></textarea>
           </mat-form-field>
         </div>
         <span fxFlex=""></span>

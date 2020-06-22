@@ -1,35 +1,76 @@
-<form [formGroup]="evidenceDBForm" novalidate class="pl-8 pr-8 w-100-p" fxLayout="column" fxLayoutAlign="start stretch">
-  <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-    <mat-form-field appearance="outline" fxFlex="100px" class="noc-sm  mr-12">
-      <mat-select placeholder="" formControlName="db">
-        <mat-option *ngFor="let evidenceDB of noctuaFormConfigService.evidenceDBs.options" [value]="evidenceDB">
-          {{evidenceDB.label}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="" class="noc-sm w-100-p">
-      <input matInput formControlName="accession" type="text" placeholder="Accession" autocomplete="off">
-    </mat-form-field>
-    <button mat-icon-button (click)="close()">
-      <mat-icon>cancel</mat-icon>
-    </button>
-    <button mat-icon-button (click)="save()">
-      <mat-icon>check_circle</mat-icon>
-    </button>
-  </div>
-  <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-    <div *ngIf="article" class="noc-article-info" fxLayout="column" fxLayoutAlign="start stretch">
-      <div class="noc-article-title w-100-p">
-        <a (click)="$event.stopPropagation()" href="{{article.link}}" target="_blank">
-          {{article.title}}
-        </a>
-      </div>
-      <div class="noc-article-author w-100-p">
-        <mat-icon class="s-16 mr-4">person</mat-icon> <span>{{article.author}}</span>
-      </div>
-      <div class="noc-article-date w-100-p">
-        <mat-icon class="s-16 mr-4">date_range</mat-icon> <span>{{article.date}}</span>
-      </div>
+<form [formGroup]="myForm" novalidate class="pl-8 pr-8 w-100-p" fxLayout="column" fxLayoutAlign="start stretch">
+  <div class="noc-form-secion w-100-p" fxLayout="column" fxLayoutAlign="start center" noctuaPerfectScrollbar>
+    <!--     <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <mat-form-field appearance="outline" fxFlex="100px" class="noc-sm  mr-12">
+        <mat-select placeholder="" formControlName="db">
+          <mat-option *ngFor="let evidenceDB of noctuaFormConfigService.evidenceDBs.options" [value]="evidenceDB">
+            {{evidenceDB.label}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="" class="noc-sm w-100-p">
+        <input matInput formControlName="accession" type="text" placeholder="Accession" autocomplete="off">
+      </mat-form-field>
+      <button mat-icon-button (click)="add()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-icon-button (click)="remove()">
+        <mat-icon>check_circle</mat-icon>
+      </button>
     </div>
+    <div class="w-100-p" ngFor="let item of myForm.get('items').controls; let i=index;">
+      <div class="drag-container">
+        <div class="section-heading">Week {{week.id}}</div>
+        <div cdkDropList id="{{week.id}}" [cdkDropListData]="week.weeklist" [cdkDropListConnectedTo]="connectedTo"
+          class="item-list" (cdkDropListDropped)="drop($event)">
+          <div class="item-box" *ngFor="let weekItem of week.weeklist" cdkDrag>
+            <mat-form-field appearance="outline" fxFlex="" class="noc-sm w-100-p">
+              <input matInput type="text" [value]="weekItem" (ngModel)="weekItem" placeholder="Accession"
+                autocomplete="off">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div formArrayName="companies">
+      <div class="noc-with-group" *ngFor="let comp of myForm.get('companies').controls; let i=index">
+        <div [formGroupName]="i">
+          <div formArrayName="projects">
+            <div *ngFor="let project of comp.get('projects').controls; let j=index">
+              <div [formGroupName]="j">
+                <mat-form-field appearance="outline" fxFlex="" class="noc-sm w-100-p">
+                  <input matInput formControlName="projectName" type="text" placeholder="Accession" autocomplete="off">
+                </mat-form-field>
+                <button mat-icon-button (click)="addNewProject(comp.controls.projects)">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteProject(comp.controls.projects, j)">
+                  <mat-icon>delete_forever</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div *ngIf="comp.get('projects').controls.length===0">
+              <button mat-button (click)="addNewProject(comp.controls.projects)">
+                Add With/From
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button mat-button (click)="addNewCompany()">Add Group</button><br><br>
+
+
+
+      <!--   <pre>{{myForm.value | json}}</pre> -->
+    </div>
+  </div>
+  <div class="w-100-p" fxLayout="row" fxLayoutAlign="end center">
+    <button mat-icon-button (click)="close()">
+      Cancel
+    </button>
+    <button mat-icon-button color="primary" (click)="save2()">
+      Ok
+    </button>
   </div>
 </form>
