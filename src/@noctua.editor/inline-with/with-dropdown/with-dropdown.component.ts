@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil, startWith, map } from 'rxjs/operators';
 
 import {
   NoctuaFormConfigService,
@@ -50,6 +50,11 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   }
 
 
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<string[]>;
+
+
+
   constructor(private fb: FormBuilder, public dialogRef: WithDropdownOverlayRef,
     @Inject(withDropdownData) public data: any,
     private noctuaLookupService: NoctuaLookupService,
@@ -94,6 +99,12 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     };
   }
 
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
 
   addNewCompany() {
     let control = <FormArray>this.myForm.controls.companies;
@@ -111,10 +122,10 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   }
 
   addNewProject(control) {
-    control.push(
-      this.fb.group({
-        projectName: ['']
-      }))
+    const projectName = new FormControl()
+    control.push(this.fb.group({ projectName: projectName }));
+
+    this._onValueChange(projectName)
   }
 
   deleteProject(control, index) {
@@ -154,7 +165,6 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.evidenceDBForm = this._createEvidenceDBForm();
-    this._onValueChange();
   }
 
   clearValues() {
@@ -210,17 +220,18 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _onValueChange() {
+  private _onValueChange(formControl: FormControl) {
     const self = this;
 
-    self.evidenceDBForm.valueChanges.pipe(
-      takeUntil(this._unsubscribeAll),
-      distinctUntilChanged(),
-      debounceTime(400)
-    ).subscribe(data => {
-      self.article = null;
-      self._updateArticle(data);
-    });
+
+    this.filteredOptions = formControl.valueChanges
+      .pipe(
+        takeUntil(this._unsubscribeAll),
+        distinctUntilChanged(),
+        debounceTime(400),
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 
   close() {
