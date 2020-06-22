@@ -66,9 +66,9 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
 
     this.myForm = this.fb.group({
       companies: this.fb.array([])
-    })
+    });
 
-    this.setCompanies();
+    //this.setCompanies();
 
 
 
@@ -148,10 +148,10 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
   }
 
   setProjects(x) {
-    let arr = new FormArray([])
+    let arr = new FormArray([]);
     x.projects.forEach(y => {
-      this.addNewProject(arr, y.projectName)
-    })
+      this.addNewProject(arr, y.projectName);
+    });
     return arr;
   }
 
@@ -166,36 +166,36 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     }
   }
 
-  save2() {
-    const withs = this.myForm.value.companies.map((project) => {
-      return project.projects.map((item) => {
-        return item.projectName;
-      }).join(',');
-    });
-
-
-    console.log(withs);
-
-
-  }
-
   save() {
     const self = this;
-    const db = this.evidenceDBForm.value.db;
-    const accession = this.evidenceDBForm.value.accession;
     const errors = [];
     let canSave = true;
 
-    if (accession.trim() === '') {
-      const error = new AnnotonError('error', 1, `${db.name} accession is required`);
-      errors.push(error);
-      self.noctuaFormDialogService.openAnnotonErrorsDialog(errors);
-      canSave = false;
-    }
+    const withs = this.myForm.value.companies.map((project) => {
+      return project.projects.map((item) => {
+        if (!item.projectName.includes(':')) {
+          const error = new AnnotonError('error', 1, `${item.projectName} wrong format, Did you forget ':'`);
+          errors.push(error);
+          canSave = false;
+        }
+        return item.projectName;
+      }).join('|');
+    }).join(',');
+
+    console.log(withs);
+
+    /*   if (accession.trim() === '') {
+        const error = new AnnotonError('error', 1, `${db.name} accession is required`);
+        errors.push(error);
+        self.noctuaFormDialogService.openAnnotonErrorsDialog(errors);
+        canSave = false;
+      } */
 
     if (canSave) {
-      this.formControl.setValue(db.name + ':' + accession.trim());
+      this.formControl.setValue(withs);
       this.close();
+    } else {
+      self.noctuaFormDialogService.openAnnotonErrorsDialog(errors);
     }
   }
 

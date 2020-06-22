@@ -6,8 +6,8 @@
       </div>
     </div>
     <span fxFlex></span>
-    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
-      aria-label="Close Selected Item">
+    <button mat-stroked-button (click)="$event.stopPropagation(); close()" class="noc-rounded-button noc-sm"
+      color="primary" aria-label="Close Selected Item">
       <mat-icon>close</mat-icon> Close
     </button>
   </div>
@@ -30,33 +30,20 @@
     </div>
     <div class="noc-section-row">
       <div class="noc-title">
-        Definition
-      </div>
-      <div class="noc-description">
-        {{termDetail.description}}
-      </div>
-    </div>
-    <div class="noc-section-row">
-      <div class="noc-title">
-        Definition
-      </div>
-      <div class="noc-description">
-        {{termDetail.description}}
-      </div>
-    </div>
-    <div class="noc-section-row">
-      <div class="noc-title">
         Is A Type Of
       </div>
       <div class="noc-description">
         <div *ngFor="let rootType of termDetail.rootTypes">
-          {{rootType.label}}<small>{{rootType.id}}</small>
+          {{rootType.label}}<small>({{rootType.id}})</small>
+          <a (click)="useTerm(rootType)">
+            Use
+          </a>
         </div>
       </div>
     </div>
   </div>
   <div class="noc-footer w-100-p">
     <span fxFlex></span>
-    <button class="noc-rounded-button" mat-raised-button color="primary">Use</button>
+    <!-- <button class="noc-rounded-button" mat-raised-button color="primary">Use</button> -->
   </div>
 </div>

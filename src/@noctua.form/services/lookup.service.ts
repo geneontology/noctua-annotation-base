@@ -101,7 +101,9 @@ export class NoctuaLookupService {
       });
     }
 
-    return result;
+    return filter(result, (item: Entity) => {
+      return !item.id.startsWith('BFO');
+    });
   }
 
   golrLookupManager(searchText) {

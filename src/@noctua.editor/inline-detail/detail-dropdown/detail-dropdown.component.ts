@@ -7,6 +7,7 @@ import {
   NoctuaFormConfigService,
   NoctuaAnnotonFormService,
   noctuaFormConfig,
+  Entity,
 } from 'noctua-form-base';
 
 import { detailDropdownData } from './detail-dropdown.tokens';
@@ -62,6 +63,10 @@ export class NoctuaDetailDropdownComponent implements OnInit, OnDestroy {
       this.formControl.setValue(db.name + ':' + accession.trim());
       this.close();
     }
+  }
+
+  useTerm(term: Entity) {
+    this.formControl.setValue(term);
   }
 
   cancelEvidenceDb() {

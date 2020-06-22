@@ -51,8 +51,8 @@
               </button>
             </div>
           </div>
-          <div *ngIf="comp.get('projects').controls.length===0">
-            <a class="p-16" (click)="addNewProject(comp.controls.projects)">
+          <div class="p-16" *ngIf="comp.get('projects').controls.length===0">
+            <a (click)="addNewProject(comp.controls.projects)">
               Add With/From
             </a>
           </div>
@@ -74,7 +74,7 @@
     <button mat-icon-button (click)="close()">
       Cancel
     </button>
-    <button mat-icon-button color="primary" (click)="save2()">
+    <button mat-icon-button color="primary" (click)="save()">
       Ok
     </button>
   </div>
