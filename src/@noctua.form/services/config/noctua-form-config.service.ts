@@ -197,18 +197,21 @@ export class NoctuaFormConfigService {
     const modelInfo: any = {};
 
     let params = new HttpParams();
-    if (modelId) {
-      params = params.append('model_id', modelId);
-    }
+
     if (self.noctuaUserService.baristaToken) {
       params = params.append('barista_token', self.noctuaUserService.baristaToken);
+    }
+
+    modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + params.toString();
+
+    if (modelId) {
+      params = params.append('model_id', modelId);
     }
 
     const paramsString = params.toString();
 
     modelInfo.owlUrl = environment.noctuaUrl + '/download/' + modelId + '/owl';
     modelInfo.gpadUrl = environment.noctuaUrl + '/download/' + modelId + '/gpad';
-    modelInfo.graphEditorUrl = environment.noctuaUrl + '/editor/graph/' + modelId + '?' + paramsString;
     modelInfo.noctuaFormUrl = environment.workbenchUrl + 'noctua-form?' + paramsString;
 
     modelInfo.modelWorkbenches = environment.globalWorkbenchesModel.map(workbench => {
