@@ -43,11 +43,16 @@ export class InlineDetailService {
     constructor(
         private injector: Injector,
         private overlay: Overlay) { }
+    private dialogRef: DetailDropdownOverlayRef;
 
 
     open(elementToConnectTo: ElementRef, config: DetailDropdownDialogConfig = {}) {
         const dialogConfig = { ...DEFAULT_CONFIG, ...config };
 
+
+        if (this.dialogRef) {
+            this.dialogRef.close();
+        }
         dialogConfig['positionStrategy'] = this._getPosition(elementToConnectTo);
         // dialogConfig['width'] = '420px';
         const originRect = elementToConnectTo.nativeElement;
@@ -57,6 +62,7 @@ export class InlineDetailService {
 
         overlayRef.backdropClick().subscribe(_ => dialogRef.close());
 
+        this.dialogRef = dialogRef;
         return dialogRef;
     }
 
@@ -112,8 +118,7 @@ export class InlineDetailService {
                 originY: 'center',
                 overlayX: 'start',
                 overlayY: 'center',
-            }]);
-        //.withOffsetY(1)
+            }])
         //.withDirection('ltr')
         //.withFallbackPosition(origin.bottomRight, overlay.topRight)
         //.withFallbackPosition(origin.topLeft, overlay.bottomLeft)

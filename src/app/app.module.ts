@@ -24,6 +24,7 @@ import {
     faCalendarWeek,
     faTasks,
     faListAlt,
+    faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -72,6 +73,7 @@ export class AppModule {
         library.addIcons(
             faCalendarDay,
             faCalendarWeek,
+            faChevronRight,
             faFacebook,
             faGithub,
             faListAlt,

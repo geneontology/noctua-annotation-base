@@ -2,7 +2,6 @@
 @import "src/@noctua.common/scss/noctua.common";
 
 :host {
-  padding-top: 8px;
   width: 100%;
   @include deep-width(400px);
   @include mat-elevation(4);
@@ -12,7 +11,6 @@
   .noc-item-details {
     max-height: 500px;
     min-height: 400px;
-    padding: 10px 8px;
     background-color: #faf9e9;
 
     .noc-header {
@@ -23,13 +21,14 @@
       z-index: 10001;
 
       .noc-header-title {
-        max-width: 300px;
+        max-width: 200px;
         font-size: 14px;
         font-weight: bold;
       }
     }
 
     .noc-body {
+      padding: 10px 8px;
       height: 400px;
     }
 
