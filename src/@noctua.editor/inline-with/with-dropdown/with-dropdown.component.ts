@@ -67,6 +67,15 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     this.myForm = this.fb.group({
       companies: this.fb.array([])
     });
+    const withfroms = this.formControl.value;
+    if (withfroms) {
+      const groups = withfroms.split(',');
+      const items = groups.map((group) => {
+        return group.split('|');
+      })
+      console.log(items);
+
+    }
 
     //this.setCompanies();
 
