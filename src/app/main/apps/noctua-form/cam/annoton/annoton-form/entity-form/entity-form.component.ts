@@ -98,7 +98,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     } else {
       self.noctuaFormDialogService.openAnnotonErrorsDialog(errors);
     }
-
   }
 
   openSearchDatabaseDialog(entity: AnnotonNode) {

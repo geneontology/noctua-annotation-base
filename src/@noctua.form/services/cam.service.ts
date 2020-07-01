@@ -74,8 +74,8 @@ export class CamService {
   createCamForm() {
     const self = this;
 
-    const camFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    const camForm = new CamForm(camFormMetadata);
+    const formMetadata = new AnnotonFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
+    const camForm = new CamForm(formMetadata);
 
     camForm.createCamForm(this.cam, this.noctuaUserService.user);
 

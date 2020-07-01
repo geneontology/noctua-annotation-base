@@ -20,9 +20,8 @@ import {
 } from './../models/annoton';
 import { } from './../models/annoton/annoton-node';
 
-import { AnnotonEntityForm } from './../models/forms/annoton-entity-form';
 
-import { EntityForm, TripleForm } from './../models/forms';
+import { TripleForm } from './../models/forms';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 
 @Injectable({
@@ -58,8 +57,9 @@ export class NoctuaTripleFormService {
 
   createTripleForm(triple: Triple<AnnotonNode>) {
     const self = this;
-    const annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    const tripleForm = new TripleForm(annotonFormMetadata);
+    const formMetadata = new AnnotonFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
+
+    const tripleForm = new TripleForm(formMetadata);
 
     tripleForm.createTripleForm(triple);
 

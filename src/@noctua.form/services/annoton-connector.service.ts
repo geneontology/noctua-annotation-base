@@ -118,8 +118,8 @@ export class NoctuaAnnotonConnectorService {
 
   createConnectorForm() {
     const self = this;
-    const connectorFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    const connectorForm = new AnnotonConnectorForm(connectorFormMetadata);
+    const formMetadata = new AnnotonFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
+    const connectorForm = new AnnotonConnectorForm(formMetadata);
 
     connectorForm.createEntityForms(self.connectorAnnoton.predicate, self.connectorAnnoton.hasInputNode);
     connectorForm.onValueChanges(self.connectorAnnoton.hasInputNode.termLookup);

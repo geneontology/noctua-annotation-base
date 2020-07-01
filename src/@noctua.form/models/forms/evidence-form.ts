@@ -51,7 +51,16 @@ export class EvidenceForm {
             distinctUntilChanged(),
             debounceTime(400)
         ).subscribe(data => {
-            self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
+            self._metadata.lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
+                lookup.results = response;
+            });
+        });
+
+        self.reference.valueChanges.pipe(
+            distinctUntilChanged(),
+            debounceTime(400)
+        ).subscribe(data => {
+            self._metadata.lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
                 lookup.results = response;
             });
         });

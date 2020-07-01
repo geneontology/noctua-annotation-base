@@ -43,6 +43,12 @@ export class NoctuaLookupService {
 
   }
 
+  lookupFunc() {
+    return {
+      termLookup: this.golrLookup.bind(this),
+    }
+  }
+
   escapeGolrValue(str) {
     const pattern = /([\!\*\+\-\=\<\>\&\|\(\)\[\]\{\}\^\~\?\:\\/"])/g;
     return str.replace(pattern, "\\$1");
@@ -105,34 +111,6 @@ export class NoctuaLookupService {
       return !item.id.startsWith('BFO');
     });
   }
-
-  golrLookupManager(searchText) {
-    const manager = new golr_manager(gserv, gconf, engine, 'async');
-    // manager.jsonpCallbackParam: 'json.wrf'
-
-    manager.set_query(searchText);
-    manager.set_personality('annotation');
-    manager.add_query_filter('document_category', 'ontology_class', ['*']);
-    manager.add_query_filter('isa_closure', 'CHEBI:33695');
-
-    let promise = manager.search();
-    promise.then(function (response) {
-
-      // Process our response instance using bbop-response-golr.
-      if (response.success()) {
-        let data = response.documents();
-        let result = data.map(function (item) {
-          return {
-            id: item.annotation_class,
-            label: item.annotation_class_label
-          };
-        });
-
-        return result;
-      }
-    });
-  }
-
 
   companionLookup(gp, aspect, extraParams) {
     const golrUrl = environment.globalGolrServer + `select?`;

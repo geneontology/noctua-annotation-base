@@ -51,8 +51,8 @@ export class NoctuaAnnotonEntityService {
 
   createAnnotonEntityForm(entity: AnnotonNode) {
     const self = this;
-    const annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    const entityForm = new EntityForm(annotonFormMetadata, entity);
+    const formMetadata = new AnnotonFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
+    const entityForm = new EntityForm(formMetadata, entity);
 
     if (!entity.skipEvidence) {
       entityForm.createEvidenceForms(entity);

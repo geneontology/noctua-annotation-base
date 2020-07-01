@@ -75,8 +75,9 @@ export class NoctuaAnnotonFormService {
 
   createAnnotonForm() {
     const self = this;
-    const annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    const annotonForm = new AnnotonForm(annotonFormMetadata);
+    const formMetadata = new AnnotonFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
+
+    const annotonForm = new AnnotonForm(formMetadata);
 
     annotonForm.createFunctionDescriptionForm(self.annoton.presentation.fd);
     annotonForm.createMolecularEntityForm(self.annoton.presentation.gp);

@@ -6,7 +6,7 @@ export class AnnotonFormMetadata {
   }
 
   get lookupFunc() {
-    return this._lookupFunc;
+    return this._lookupFunc();
   }
 
 }
