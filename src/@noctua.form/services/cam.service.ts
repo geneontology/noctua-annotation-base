@@ -1,23 +1,14 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
-import { map, finalize, filter, reduce, catchError, retry, tap } from 'rxjs/operators';
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
-
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
-
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './user.service';
-import { CamRow } from '../models/cam-row';
-import { Contributor } from '../models/contributor';
-import { Group } from '../models/group';
-
 import { Annoton } from './../models/annoton/annoton';
-import { AnnotonNode } from './../models/annoton/annoton-node';
-
 import { CamForm } from './../models/forms/cam-form';
 import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { Evidence, compareEvidence } from './../models/annoton/evidence';
@@ -47,7 +38,6 @@ export class CamService {
 
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
     private _fb: FormBuilder,
-    private httpClient: HttpClient,
     private noctuaUserService: NoctuaUserService,
     private noctuaGraphService: NoctuaGraphService,
     private noctuaLookupService: NoctuaLookupService,
@@ -83,7 +73,6 @@ export class CamService {
   }
 
   getCam(modelId): Cam {
-    const self = this;
     const cam: Cam = new Cam();
 
     cam.loading.status = true;
@@ -109,6 +98,13 @@ export class CamService {
     const deleteData = annoton.createDelete();
 
     return self.noctuaGraphService.deleteAnnoton(self.cam, deleteData.uuids, deleteData.triples);
+  }
+
+  updateEvidenceList(formAnnoton?: Annoton) {
+    const evidenceList: Evidence[] = this.getUniqueEvidence(formAnnoton);
+    this.noctuaLookupService.evidenceList = evidenceList;
+
+    console.log(this.noctuaLookupService.evidenceList)
   }
 
   getUniqueEvidence(formAnnoton?: Annoton): Evidence[] {

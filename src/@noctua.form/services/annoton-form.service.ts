@@ -167,13 +167,13 @@ export class NoctuaAnnotonFormService {
     const self = this;
 
     each(annoton.nodes, (node: AnnotonNode) => {
-      self.noctuaLookupService.golrLookup('a', Object.assign({}, node.termLookup.requestParams, { rows: 100 })).subscribe(response => {
+      self.noctuaLookupService.termLookup('a', Object.assign({}, node.termLookup.requestParams, { rows: 100 })).subscribe(response => {
         if (response && response.length > 0) {
           const termsCount = response.length;
           node.term = Entity.createEntity(response[Math.floor(Math.random() * termsCount)]);
 
           each(node.predicate.evidence, (evidence: Evidence) => {
-            self.noctuaLookupService.golrLookup('a', Object.assign({}, node.predicate.evidenceLookup.requestParams, { rows: 100 })).subscribe(response => {
+            self.noctuaLookupService.termLookup('a', Object.assign({}, node.predicate.evidenceLookup.requestParams, { rows: 100 })).subscribe(response => {
               if (response && response.length > 0) {
                 const evidenceCount = response.length;
                 evidence.evidence = Entity.createEntity(response[Math.floor(Math.random() * evidenceCount)]);

@@ -239,7 +239,6 @@ export class NoctuaWithDropdownComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();

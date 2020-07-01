@@ -81,8 +81,8 @@
         <div class="p-4" fxFlex="25">
           <mat-form-field appearance="outline" class="noc-sm w-100-p">
             <mat-label>Reference</mat-label>
-            <textarea matInput formControlName="reference" [matAutocomplete]="referenceAuto" rows="2"
-              autocomplete="off"></textarea>
+            <textarea matInput formControlName="reference" [matAutocomplete]="referenceAuto" rows="2" autocomplete="off"
+              (focus)="updateEvidenceList()"></textarea>
             <button mat-icon-button matSuffix (click)="openAddReference($event, evidence, 'reference')"
               class="noc-evidence-db-trigger">
               <mat-icon>playlist_add</mat-icon>

@@ -2,11 +2,13 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { AnnotonNode, AnnotonNodeClosure, Entity, Evidence, Predicate } from './../models/annoton/';
+import { AnnotonNode, AnnotonNodeClosure, Entity, Evidence, Predicate, Annoton, Cam } from './../models/annoton/';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
-import { find, filter, each } from 'lodash';
+import { find, filter, each, uniqWith } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
+import { compareEvidence } from './../models/annoton/evidence';
+import { BehaviorSubject } from 'rxjs';
 
 declare const require: any;
 
@@ -25,6 +27,7 @@ engine.use_jsonp(true)
   providedIn: 'root'
 })
 export class NoctuaLookupService {
+  evidenceList: Evidence[] = [];
   name;
   linker;
   golrURLBase;
@@ -45,8 +48,9 @@ export class NoctuaLookupService {
 
   lookupFunc() {
     return {
-      termLookup: this.golrLookup.bind(this),
-    }
+      termLookup: this.termLookup.bind(this),
+      referenceLookup: this.referenceLookup.bind(this)
+    };
   }
 
   escapeGolrValue(str) {
@@ -61,7 +65,7 @@ export class NoctuaLookupService {
     return manager.get_query(str);
   }
 
-  golrLookup(searchText, requestParams) {
+  termLookup(searchText, requestParams) {
     const self = this;
     requestParams.q = self.buildQ(searchText);
     const params = new HttpParams({
@@ -70,47 +74,17 @@ export class NoctuaLookupService {
     const url = this.golrURLBase + params.toString();
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
-      map(response => self.lookupMap(response))
+      map(response => self._lookupMap(response))
     );
   }
 
-  lookupMap(response) {
+
+  referenceLookup(searchText, cam: Cam, formAnnoton?: Annoton) {
     const self = this;
-    const data = response.response.docs;
-    const result = data.map((item) => {
-      let xref;
-      if (item.database_xref && item.database_xref.length > 0) {
-        const xrefDB = item.database_xref[0].split(':');
-        xref = xrefDB.length > 1 ? xrefDB[1] : xrefDB[0];
-      }
 
-      return {
-        id: item.annotation_class,
-        label: item.annotation_class_label,
-        link: self.getTermURL(item.annotation_class),
-        description: item.description,
-        isObsolete: item.is_obsolete,
-        rootTypes: self.makeEntitiesArray(item.isa_closure, item.isa_closure_label),
-        xref: xref
-      };
-    });
-
-    console.log(result)
-    return result;
+    return this.getUniqueEvidence(cam, formAnnoton);
   }
 
-  makeEntitiesArray(ids: string[], labels: string[]): Entity[] {
-    let result = []
-    if (ids.length === labels.length) {
-      result = ids.map((id, key) => {
-        return new Entity(id, labels[key]);
-      });
-    }
-
-    return filter(result, (item: Entity) => {
-      return !item.id.startsWith('BFO');
-    });
-  }
 
   companionLookup(gp, aspect, extraParams) {
     const golrUrl = environment.globalGolrServer + `select?`;
@@ -270,14 +244,6 @@ export class NoctuaLookupService {
       }));
   }
 
-  ensureUnderscores(curie) {
-    return curie.replace(/:/, '_');
-  }
-
-  ensureColons(curie) {
-    return curie.replace(/_/, ':');
-  }
-
   // Closures
   addLocalClosure(term, closure, isaClosure) {
     const self = this;
@@ -316,30 +282,6 @@ export class NoctuaLookupService {
     const self = this;
 
     return filter(self.localClosures, { term: term, isaClosure: true });
-  }
-
-  getLocalClosureRange(term, closureRange) {
-    const self = this;
-    let result;
-
-    if (closureRange) {
-      each(closureRange.closures, function (closure) {
-        if (closure.object) {
-          const data = self.localClosureExist(term, closure.object.id);
-          if (data && data.isaClosure) {
-            result = data;
-          }
-        }
-      });
-    }
-
-    return result;
-  }
-
-  getAllLocalClosures() {
-    const self = this;
-
-    return self.localClosures;
   }
 
   getTermURL(id: string) {
@@ -391,4 +333,50 @@ export class NoctuaLookupService {
 
     return article;
   }
+
+  private _lookupMap(response) {
+    const self = this;
+    const data = response.response.docs;
+    const result = data.map((item) => {
+      let xref;
+      if (item.database_xref && item.database_xref.length > 0) {
+        const xrefDB = item.database_xref[0].split(':');
+        xref = xrefDB.length > 1 ? xrefDB[1] : xrefDB[0];
+      }
+
+      return {
+        id: item.annotation_class,
+        label: item.annotation_class_label,
+        link: self.getTermURL(item.annotation_class),
+        description: item.description,
+        isObsolete: item.is_obsolete,
+        rootTypes: self._makeEntitiesArray(item.isa_closure, item.isa_closure_label),
+        xref: xref
+      };
+    });
+
+    console.log(result)
+    return result;
+  }
+
+  private _makeEntitiesArray(ids: string[], labels: string[]): Entity[] {
+    let result = []
+    if (ids.length === labels.length) {
+      result = ids.map((id, key) => {
+        return new Entity(id, labels[key]);
+      });
+    }
+
+    return filter(result, (item: Entity) => {
+      return !item.id.startsWith('BFO');
+    });
+  }
+
+  getUniqueEvidence(cam: Cam, formAnnoton: Annoton): Evidence[] {
+    const evidences = cam.getEvidences(formAnnoton);
+    const result = uniqWith(evidences, compareEvidence);
+
+    return result;
+  }
+
 }
