@@ -60,9 +60,7 @@ export class EvidenceForm {
             distinctUntilChanged(),
             debounceTime(400)
         ).subscribe(data => {
-            self._metadata.lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
-                lookup.results = response;
-            });
+            lookup.results = self._metadata.lookupFunc.evidenceLookup(data, 'reference');
         });
     }
 

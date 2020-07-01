@@ -49,7 +49,7 @@ export class NoctuaLookupService {
   lookupFunc() {
     return {
       termLookup: this.termLookup.bind(this),
-      referenceLookup: this.referenceLookup.bind(this)
+      evidenceLookup: this.evidenceLookup.bind(this)
     };
   }
 
@@ -79,10 +79,10 @@ export class NoctuaLookupService {
   }
 
 
-  referenceLookup(searchText, cam: Cam, formAnnoton?: Annoton) {
+  evidenceLookup(searchText: string, category: 'reference' | 'evidence'): Evidence[] {
     const self = this;
 
-    return this.getUniqueEvidence(cam, formAnnoton);
+    return self.evidenceList;
   }
 
 
@@ -370,13 +370,6 @@ export class NoctuaLookupService {
     return filter(result, (item: Entity) => {
       return !item.id.startsWith('BFO');
     });
-  }
-
-  getUniqueEvidence(cam: Cam, formAnnoton: Annoton): Evidence[] {
-    const evidences = cam.getEvidences(formAnnoton);
-    const result = uniqWith(evidences, compareEvidence);
-
-    return result;
   }
 
 }

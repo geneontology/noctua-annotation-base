@@ -87,9 +87,28 @@
               class="noc-evidence-db-trigger">
               <mat-icon>playlist_add</mat-icon>
             </button>
-            <mat-autocomplete #referenceAuto="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                {{option}}
+            <mat-autocomplete #referenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
+              class="noc-term-autocomplete">
+              <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.reference }}
+                  </div>
+                  <span fxFlex></span>
+                  <div class="noc-term-id mr-8">
+                    <strong>
+                      {{ item.xref }}
+                    </strong>
+                  </div>
+                  <div class="noc-term-id">
+                    <a *ngIf="item.link" (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
+                      {{ item.reference }}
+                    </a>
+                    <span *ngIf="!item.link">
+                      {{ item.id }}
+                    </span>
+                  </div>
+                </div>
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
