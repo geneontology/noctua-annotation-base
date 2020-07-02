@@ -236,7 +236,11 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     return evidence && evidence.id ? `${evidence.label} (${evidence.id})` : undefined;
   }
 
-  referenceDisplayFn(evidence: Evidence): string | undefined {
+  referenceDisplayFn(evidence: Evidence | string): string | undefined {
+    if (typeof evidence === 'string') {
+      return evidence;
+    }
+
     return evidence && evidence.reference ? evidence.reference : undefined;
   }
 }

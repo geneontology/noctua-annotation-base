@@ -81,10 +81,14 @@ export class NoctuaLookupService {
 
   evidenceLookup(searchText: string, category: 'reference' | 'evidence'): Evidence[] {
     const self = this;
-    const filterValue = searchText.toLowerCase();
-    const filteredResults = self.evidenceList.filter(option => option.reference.toLowerCase().includes(filterValue));
 
-    return filteredResults;
+    if (typeof searchText === 'string') {
+      const filterValue = searchText.toLowerCase();
+      const filteredResults = self.evidenceList.filter(option => option.reference.toLowerCase().includes(filterValue));
+
+      return filteredResults;
+    }
+    return [];
   }
 
 
