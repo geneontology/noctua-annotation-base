@@ -87,7 +87,7 @@
               class="noc-evidence-db-trigger">
               <mat-icon>playlist_add</mat-icon>
             </button>
-            <mat-autocomplete #referenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
+            <mat-autocomplete #referenceAuto="matAutocomplete" [displayWith]="referenceDisplayFn"
               class="noc-term-autocomplete">
               <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
