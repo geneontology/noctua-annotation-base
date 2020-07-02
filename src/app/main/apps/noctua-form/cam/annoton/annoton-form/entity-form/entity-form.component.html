@@ -18,7 +18,10 @@
     <mat-form-field class="noc-sm w-100-p" appearance="outline">
       <mat-label>{{entity.label}}</mat-label>
       <textarea type="text" matInput formControlName="term" [matAutocomplete]="termAuto" row="2">
-    </textarea>
+      </textarea>
+      <button mat-icon-button matSuffix class="noc-evidence-db-trigger" [matMenuTriggerFor]="entityTermMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
       <mat-autocomplete #termAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
         <mat-option *ngFor="let item of entity?.termLookup.results" [value]="item">
           <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
@@ -52,6 +55,9 @@
             <mat-label>Evidence</mat-label>
             <textarea type="text" matInput formControlName="evidence" [matAutocomplete]="evidenceAuto"
               rows="2"></textarea>
+            <button mat-icon-button matSuffix class="noc-evidence-db-trigger" [matMenuTriggerFor]="evidenceMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
             <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
               class="noc-term-autocomplete">
               <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
@@ -124,45 +130,70 @@
         <button mat-icon-button class="noc-action-button" fxFlex="40px" [matMenuTriggerFor]="entityMenu">
           <mat-icon>more_vert</mat-icon>
         </button>
-        <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
-          <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
-            Search Annotations
-          </button>
-          <!--   <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchModels()">
-            Search Models
-          </button> -->
-          <button mat-menu-item *ngIf="true" class="" (click)="toggleIsComplement(entity)">
-            NOT Qualifier
-          </button>
-          <button mat-menu-item *ngIf="entity.insertMenuNodes?.length>0" [matMenuTriggerFor]="addMenu">
-            Add an Extension
-          </button>
-          <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
-          <button mat-menu-item *ngIf="entity.aspect" class="" (click)="addRootTerm()">
-            Add Root Term
-          </button>
-          <button mat-menu-item class="" (click)="clearValues()">
-            Clear Values
-          </button>
-        </mat-menu>
-        <mat-menu #addMenu="matMenu">
-          <button mat-menu-item *ngFor="let insertMenuItem of entity.insertMenuNodes" class=""
-            (click)="insertEntity(insertMenuItem)">
-            {{insertMenuItem.label}}
-          </button>
-        </mat-menu>
-        <mat-menu #evidenceMenu="matMenu">
-          <button mat-menu-item class="" (click)="addEvidence()">
-            Add Evidence
-          </button>
-          <button (click)="removeEvidence(i)" mat-menu-item>
-            Remove Evidence
-          </button>
-          <button mat-menu-item class="" (click)="openSelectEvidenceDialog(evidence)">
-            Clone Evidence
-          </button>
-        </mat-menu>
+
       </div>
     </div>
   </div>
+  <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
+    <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
+      Search Annotations
+    </button>
+    <!--   <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchModels()">
+      Search Models
+    </button> -->
+    <button mat-menu-item *ngIf="true" class="" (click)="toggleIsComplement(entity)">
+      NOT Qualifier
+    </button>
+    <button mat-menu-item *ngIf="entity.insertMenuNodes?.length>0" [matMenuTriggerFor]="addMenu">
+      Add an Extension
+    </button>
+    <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
+    <button mat-menu-item *ngIf="entity.aspect" class="" (click)="addRootTerm()">
+      Add Root Term
+    </button>
+    <button mat-menu-item class="" (click)="clearValues()">
+      Clear Values
+    </button>
+  </mat-menu>
+  <mat-menu #addMenu="matMenu">
+    <button mat-menu-item *ngFor="let insertMenuItem of entity.insertMenuNodes" class=""
+      (click)="insertEntity(insertMenuItem)">
+      {{insertMenuItem.label}}
+    </button>
+  </mat-menu>
+  <mat-menu #evidenceMenu="matMenu">
+    <button mat-menu-item class="" (click)="addEvidence()">
+      Add Evidence
+    </button>
+    <button (click)="removeEvidence(i)" mat-menu-item>
+      Remove Evidence
+    </button>
+    <button mat-menu-item class="" (click)="openSelectEvidenceDialog(evidence)">
+      Clone Evidence
+    </button>
+  </mat-menu>
+
+  <!-- Term -->
+  <mat-menu #entityTermMenu="matMenu" class="noc-dropdown-menu">
+    <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
+      Search Annotations
+    </button>
+    <!--   <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchModels()">
+      Search Models
+    </button> -->
+    <button mat-menu-item *ngIf="true" class="" (click)="toggleIsComplement(entity)">
+      NOT Qualifier
+    </button>
+    <button mat-menu-item *ngIf="entity.aspect" class="" (click)="addRootTerm()">
+      Add Root Term
+    </button>
+    <button mat-menu-item class="" (click)="clearValues()">
+      Clear Values
+    </button>
+    Add an Extension
+    <button mat-menu-item *ngFor="let insertMenuItem of entity.insertMenuNodes" class=""
+      (click)="insertEntity(insertMenuItem)">
+      {{insertMenuItem.label}}
+    </button>
+  </mat-menu>
 </div>
