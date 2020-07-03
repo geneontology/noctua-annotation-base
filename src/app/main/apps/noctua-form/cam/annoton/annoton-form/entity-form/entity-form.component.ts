@@ -243,4 +243,12 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     return evidence && evidence.reference ? evidence.reference : undefined;
   }
+
+  withDisplayFn(evidence: Evidence | string): string | undefined {
+    if (typeof evidence === 'string') {
+      return evidence;
+    }
+
+    return evidence && evidence.with ? evidence.with : undefined;
+  }
 }
