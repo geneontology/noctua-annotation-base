@@ -60,16 +60,14 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   setRule() {
     const self = this;
 
-    self.rule.annotonsConsecutive.condition = self.getIsConsecutiveByEdge(self.rule.r1Edge);
+    self.rule.mechanism.condition = self.getIsConsecutiveByEdge(self.rule.r1Edge);
     self.rule.effectDirection.direction = self.getEffectDirectionByEdge(self.rule.r1Edge);
 
     if (self.type === ConnectorType.basic) {
-      self.rule.effectDependency.condition = false;
       self.rule.displaySection.causalReactionProduct = false;
       self.rule.displaySection.effectDependency = false;
       self.rule.displaySection.process = false;
     } else if (self.type === ConnectorType.intermediate) {
-      self.rule.effectDependency.condition = true;
       self.rule.displaySection.effectDependency = true;
       self.rule.displaySection.process = true;
     }
@@ -78,30 +76,21 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   checkConnection(value: any) {
     const self = this;
 
-    self.rule.annotonsConsecutive.condition = value.annotonsConsecutive;
+    self.rule.mechanism.condition = value.mechanism;
     self.rule.displaySection.causalEffect = true;
     self.rule.displaySection.causalReactionProduct = false;
 
 
-    if (value.annotonsConsecutive) {
+    if (value.mechanism) {
       self.rule.displaySection.effectDependency = false;
       self.rule.displaySection.process = false;
-      self.rule.effectDependency.condition = false;
       self.type = ConnectorType.basic;
     } else {
-      self.rule.displaySection.effectDependency = !value.annotonsConsecutive;
+      self.rule.displaySection.effectDependency = !value.mechanism;
       self.rule.displaySection.process = value.effectDependency;
-      self.rule.effectDependency.condition = value.effectDependency;
-      self.type = self.rule.effectDependency.condition ? ConnectorType.intermediate : ConnectorType.basic;
     }
 
-    if (!self.rule.effectDependency.condition) {
-      if (self.rule.subjectMFCatalyticActivity.condition && self.rule.objectMFCatalyticActivity.condition) {
-        self.rule.displaySection.causalReactionProduct = true;
-      } else {
-        self.rule.displaySection.causalReactionProduct = false;
-      }
-    }
+
 
     if (value.process) {
       self.processNode.term = new Entity(value.process.id, value.process.label);
@@ -110,7 +99,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
 
     self.rule.r1Edge = this.getCausalConnectorEdge(
       value.causalEffect,
-      value.annotonsConsecutive,
+      value.mechanism,
       value.effectDependency,
       value.causalReactionProduct);
 
@@ -144,29 +133,29 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     return effectDirection;
   }
 
-  getCausalConnectorEdge(causalEffect, annotonsConsecutive, effectDependency, causalReactionProduct) {
+  getCausalConnectorEdge(causalEffect, mechanism, effectDependency, causalReactionProduct) {
     const self = this;
     let result;
 
-    if (!annotonsConsecutive && causalReactionProduct.name === noctuaFormConfig.causalReactionProduct.options.substrate.name) {
+    if (!mechanism && causalReactionProduct.name === noctuaFormConfig.causalReactionProduct.options.substrate.name) {
       return noctuaFormConfig.edge.directlyProvidesInput;
     }
 
     switch (causalEffect.name) {
       case noctuaFormConfig.causalEffect.options.positive.name:
-        result = annotonsConsecutive ?
+        result = mechanism ?
           effectDependency ? noctuaFormConfig.edge.positivelyRegulates :
             noctuaFormConfig.edge.directlyPositivelyRegulates :
           noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
         break;
       case noctuaFormConfig.causalEffect.options.negative.name:
-        result = annotonsConsecutive ?
+        result = mechanism ?
           effectDependency ? noctuaFormConfig.edge.negativelyRegulates :
             noctuaFormConfig.edge.directlyNegativelyRegulates :
           noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
         break;
       case noctuaFormConfig.causalEffect.options.neutral.name:
-        result = annotonsConsecutive ?
+        result = mechanism ?
           effectDependency ? noctuaFormConfig.edge.regulates :
             noctuaFormConfig.edge.directlyRegulates :
           noctuaFormConfig.edge.causallyUpstreamOf;

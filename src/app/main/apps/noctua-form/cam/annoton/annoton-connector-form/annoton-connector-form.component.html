@@ -168,13 +168,12 @@
               </mat-radio-button>
             </mat-radio-group>
           </div>
-          <div *ngIf="connectorAnnoton?.rule.displaySection.annotonsConsecutive" class="px-8 noc-group-row"
-            fxLayout="row" fxLayoutAlign="start center">
+          <div *ngIf="connectorAnnoton?.rule.displaySection.mechanism" class="px-8 noc-group-row" fxLayout="row"
+            fxLayoutAlign="start center">
             <div fxFlex="180px" class="pr-8 text-sm">
               <p> Do you know the mechanism for how the upstream activity affects the downstream activity? </p>
             </div>
-            <mat-radio-group fxFlex="" formControlName="annotonsConsecutive" fxLayout="row"
-              fxLayoutAlign="start center">
+            <mat-radio-group fxFlex="" formControlName="mechanism" fxLayout="row" fxLayoutAlign="start center">
               <mat-radio-button class="noc-radio-button-rounded mr-12" [value]="true"> Yes</mat-radio-button>
               <mat-radio-button class="noc-radio-button-rounded mr-12" [value]="false"> No/unknown</mat-radio-button>
             </mat-radio-group>

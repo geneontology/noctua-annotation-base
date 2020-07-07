@@ -9,10 +9,8 @@ import { Predicate } from '..';
 
 export class AnnotonConnectorForm {
   edge = new FormControl();
-  annotonsConsecutive = new FormControl();
+  mechanism = new FormControl();
   causalEffect = new FormControl();
-  effectDependency = new FormControl();
-  causalReactionProduct = new FormControl();
   evidenceForms: EvidenceForm[] = [];
   evidenceFormArray = new FormArray([]);
   process = new FormControl();
