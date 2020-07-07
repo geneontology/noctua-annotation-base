@@ -160,7 +160,7 @@
             <div fxFlex="180px">
               <p> Direction of Effect </p>
             </div>
-            <mat-radio-group fxFlex="" formControlName="causalEffect" fxLayout="row" fxLayoutAlign="start center">
+            <mat-radio-group fxFlex="" formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start center">
               <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
                 class="noc-radio-button-rounded mr-12" [value]="causalEffect"
                 [checked]="causalEffect.name === connectorAnnoton?.rule.effectDirection.direction.name">
@@ -170,12 +170,18 @@
           </div>
           <div *ngIf="connectorAnnoton?.rule.displaySection.mechanism" class="px-8 noc-group-row" fxLayout="row"
             fxLayoutAlign="start center">
-            <div fxFlex="180px" class="pr-8 text-sm">
-              <p> Do you know the mechanism for how the upstream activity affects the downstream activity? </p>
+            <div fxFlex="180px" class="pr-8">
+              <p>Mechanism </p>
+              <mat-icon
+                matTooltip="Do you know the mechanism for how the upstream activity affects the downstream activity?"
+                [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">help</mat-icon>
             </div>
             <mat-radio-group fxFlex="" formControlName="mechanism" fxLayout="row" fxLayoutAlign="start center">
-              <mat-radio-button class="noc-radio-button-rounded mr-12" [value]="true"> Yes</mat-radio-button>
-              <mat-radio-button class="noc-radio-button-rounded mr-12" [value]="false"> No/unknown</mat-radio-button>
+              <mat-radio-button *ngFor="let mechanism of noctuaFormConfigService.mechanism.options"
+                class="noc-radio-button-rounded mr-12" [value]="mechanism"
+                [checked]="mechanism.name === connectorAnnoton?.rule.effectDirection.direction.name">
+                {{mechanism.label}}
+              </mat-radio-button>
             </mat-radio-group>
           </div>
           <div *ngIf="connectorAnnoton?.rule.displaySection.effectDependency" class="px-8 noc-group-row"

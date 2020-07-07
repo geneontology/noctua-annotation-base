@@ -130,6 +130,18 @@ export class NoctuaFormConfigService {
     };
   }
 
+  get mechanism() {
+    const options = [
+      noctuaFormConfig.mechanism.options.direct,
+      noctuaFormConfig.mechanism.options.known,
+      noctuaFormConfig.mechanism.options.unknown
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
   get connectorProcess() {
     const options = noctuaFormConfig.connectorProcesses;
 
@@ -139,17 +151,7 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get causalReactionProduct() {
-    const options = [
-      noctuaFormConfig.causalReactionProduct.options.regulate,
-      noctuaFormConfig.causalReactionProduct.options.substrate,
-    ];
 
-    return {
-      options: options,
-      selected: options[0]
-    };
-  }
 
   setupUrls() {
     const self = this;

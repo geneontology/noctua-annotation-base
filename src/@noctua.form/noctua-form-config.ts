@@ -180,15 +180,19 @@ export const noctuaFormConfig = {
       }
     }
   },
-  'causalReactionProduct': {
+  'mechanism': {
     'options': {
-      'regulate': {
-        'name': 'regulate',
-        'label': 'Regulate',
+      'direct': {
+        'name': 'direct',
+        'label': 'direct (via direct binding or catalysis)'
       },
-      'substrate': {
-        'name': 'substrate',
-        'label': 'Substrate',
+      'known': {
+        'name': 'known',
+        'label': 'via known regulatory process (e.g. transcription)'
+      },
+      'unknown': {
+        'name': 'unknown',
+        'label': 'Unknown/neutral'
       }
     }
   },
