@@ -127,7 +127,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     const self = this;
     let result;
 
-    const index = causalEffect.scalar + (mechanism.scalar * 3);
+    const index = causalEffect.scalar + (mechanism.scalar * 3) - 1;
 
     result = noctuaFormConfig.causalEdges[index];
     return result;

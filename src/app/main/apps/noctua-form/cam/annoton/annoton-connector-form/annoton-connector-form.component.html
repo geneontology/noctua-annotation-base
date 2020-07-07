@@ -180,7 +180,7 @@
             <mat-radio-group fxFlex="" formControlName="mechanism" fxLayout="column" fxLayoutAlign="start start">
               <mat-radio-button *ngFor="let mechanism of noctuaFormConfigService.mechanism.options"
                 class="noc-radio-button-rounded mb-8" [value]="mechanism"
-                [checked]="mechanism.name === connectorAnnoton?.rule.effectDirection.direction.name">
+                [checked]="mechanism.name === connectorAnnoton?.rule.mechanism.mechanism.name">
                 {{mechanism.label}}
               </mat-radio-button>
             </mat-radio-group>
