@@ -123,7 +123,7 @@
           <mat-form-field appearance="outline" class="noc-sm w-100-p">
             <mat-label>With</mat-label>
             <textarea matInput formControlName="with" [matAutocomplete]="withAuto" rows="2"
-              autocomplete="off"></textarea>
+              (focus)="updateEvidenceList()" autocomplete="off"></textarea>
             <button mat-icon-button matSuffix (click)="openAddWith($event, evidence, 'with')"
               class="noc-evidence-db-trigger">
               <mat-icon>playlist_add</mat-icon>

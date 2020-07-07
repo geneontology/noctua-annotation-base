@@ -62,6 +62,13 @@ export class EvidenceForm {
         ).subscribe(data => {
             lookup.results = self._metadata.lookupFunc.evidenceLookup(data, 'reference');
         });
+
+        self.with.valueChanges.pipe(
+            distinctUntilChanged(),
+            debounceTime(400)
+        ).subscribe(data => {
+            lookup.results = self._metadata.lookupFunc.evidenceLookup(data, 'with');
+        });
     }
 
     setEvidenceValidator() {

@@ -7,8 +7,6 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each, uniqWith } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
-import { compareEvidence } from './../models/annoton/evidence';
-import { BehaviorSubject } from 'rxjs';
 
 declare const require: any;
 
@@ -79,12 +77,28 @@ export class NoctuaLookupService {
   }
 
 
-  evidenceLookup(searchText: string, category: 'reference' | 'evidence'): Evidence[] {
+  evidenceLookup(searchText: string, category: 'reference' | 'with'): Evidence[] {
     const self = this;
+    if (searchText.length < 1) {
+      return [];
+    }
 
     if (typeof searchText === 'string') {
       const filterValue = searchText.toLowerCase();
-      const filteredResults = self.evidenceList.filter(option => option.reference.toLowerCase().includes(filterValue));
+      let filteredResults: Evidence[] = [];
+
+      switch (category) {
+        case 'reference':
+          filteredResults = self.evidenceList.filter(
+            option => option.reference ? option.reference.toLowerCase().includes(filterValue) : false
+          );
+          break;
+        case 'with':
+          filteredResults = self.evidenceList.filter(
+            option => option.with ? option.with.toLowerCase().includes(filterValue) : false
+          );
+          break;
+      }
 
       return filteredResults;
     }
