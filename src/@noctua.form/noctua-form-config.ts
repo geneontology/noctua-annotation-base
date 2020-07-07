@@ -168,31 +168,38 @@ export const noctuaFormConfig = {
     'options': {
       'positive': {
         'name': 'positive',
-        'label': 'Positive'
-      },
-      'negative': {
-        'name': 'negative',
-        'label': 'Negative'
+        'label': 'Positive',
+        'scalar': 0
       },
       'neutral': {
         'name': 'neutral',
-        'label': 'Unknown/neutral'
-      }
+        'label': 'Unknown/neutral',
+        'scalar': -1
+      },
+      'negative': {
+        'name': 'negative',
+        'label': 'Negative',
+        'scalar': -2
+      },
+
     }
   },
   'mechanism': {
     'options': {
       'direct': {
         'name': 'direct',
-        'label': 'direct (via direct binding or catalysis)'
+        'label': 'direct (via direct binding or catalysis)',
+        'scalar': 1
       },
       'known': {
         'name': 'known',
-        'label': 'via known regulatory process (e.g. transcription)'
+        'label': 'via known regulatory process (e.g. transcription)',
+        'scalar': 2
       },
       'unknown': {
         'name': 'unknown',
-        'label': 'Unknown/neutral'
+        'label': 'Unknown/neutral',
+        'scalar': 3
       }
     }
   },
@@ -307,20 +314,21 @@ export const noctuaFormConfig = {
     }
   },
 
+  // This array is arrange for matrice decison tree for causal edge 0-8 index, don't rearrange
   causalEdges: [
-    Entity.createEntity(edge.causallyUpstreamOfOrWithin),
-    Entity.createEntity(edge.causallyUpstreamOf),
-    Entity.createEntity(edge.causallyUpstreamOfNegativeEffect),
-    Entity.createEntity(edge.causallyUpstreamOfPositiveEffect),
-    Entity.createEntity(edge.causallyUpstreamOfOrWithinPositiveEffect),
-    Entity.createEntity(edge.causallyUpstreamOfOrWithinNegativeEffect),
+    Entity.createEntity(edge.directlyNegativelyRegulates),
     Entity.createEntity(edge.directlyRegulates),
     Entity.createEntity(edge.directlyPositivelyRegulates),
-    Entity.createEntity(edge.directlyNegativelyRegulates),
-    Entity.createEntity(edge.directlyProvidesInput),
-    Entity.createEntity(edge.positivelyRegulates),
     Entity.createEntity(edge.negativelyRegulates),
-    Entity.createEntity(edge.regulates)
+    Entity.createEntity(edge.regulates),
+    Entity.createEntity(edge.positivelyRegulates),
+    Entity.createEntity(edge.causallyUpstreamOfNegativeEffect),
+    Entity.createEntity(edge.causallyUpstreamOf),
+    Entity.createEntity(edge.causallyUpstreamOfPositiveEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithinNegativeEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithinPositiveEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithin),
+    Entity.createEntity(edge.directlyProvidesInput),
   ],
 
   connectorProcesses: [{

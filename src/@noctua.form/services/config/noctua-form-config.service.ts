@@ -151,8 +151,6 @@ export class NoctuaFormConfigService {
     };
   }
 
-
-
   setupUrls() {
     const self = this;
     const baristaToken = self.noctuaUserService.baristaToken;

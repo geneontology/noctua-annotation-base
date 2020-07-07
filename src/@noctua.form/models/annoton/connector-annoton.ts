@@ -60,15 +60,12 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   setRule() {
     const self = this;
 
-    self.rule.mechanism.condition = self.getIsConsecutiveByEdge(self.rule.r1Edge);
+    self.rule.mechanism.mechanism = self.getIsConsecutiveByEdge(self.rule.r1Edge);
     self.rule.effectDirection.direction = self.getEffectDirectionByEdge(self.rule.r1Edge);
 
     if (self.type === ConnectorType.basic) {
-      self.rule.displaySection.causalReactionProduct = false;
-      self.rule.displaySection.effectDependency = false;
       self.rule.displaySection.process = false;
     } else if (self.type === ConnectorType.intermediate) {
-      self.rule.displaySection.effectDependency = true;
       self.rule.displaySection.process = true;
     }
   }
@@ -76,21 +73,16 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   checkConnection(value: any) {
     const self = this;
 
-    self.rule.mechanism.condition = value.mechanism;
+    self.rule.mechanism.mechanism = value.mechanism;
     self.rule.displaySection.causalEffect = true;
-    self.rule.displaySection.causalReactionProduct = false;
 
-
-    if (value.mechanism) {
-      self.rule.displaySection.effectDependency = false;
+    if (value.mechanism === noctuaFormConfig.mechanism.options.known) {
+      self.rule.displaySection.process = true;
+      self.type = ConnectorType.intermediate;
+    } else {
       self.rule.displaySection.process = false;
       self.type = ConnectorType.basic;
-    } else {
-      self.rule.displaySection.effectDependency = !value.mechanism;
-      self.rule.displaySection.process = value.effectDependency;
     }
-
-
 
     if (value.process) {
       self.processNode.term = new Entity(value.process.id, value.process.label);
@@ -99,9 +91,7 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
 
     self.rule.r1Edge = this.getCausalConnectorEdge(
       value.causalEffect,
-      value.mechanism,
-      value.effectDependency,
-      value.causalReactionProduct);
+      value.mechanism);
 
     self.setPreview();
   }
@@ -133,35 +123,13 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     return effectDirection;
   }
 
-  getCausalConnectorEdge(causalEffect, mechanism, effectDependency, causalReactionProduct) {
+  getCausalConnectorEdge(causalEffect, mechanism) {
     const self = this;
     let result;
 
-    if (!mechanism && causalReactionProduct.name === noctuaFormConfig.causalReactionProduct.options.substrate.name) {
-      return noctuaFormConfig.edge.directlyProvidesInput;
-    }
+    const index = causalEffect.scalar + (mechanism.scalar * 3);
 
-    switch (causalEffect.name) {
-      case noctuaFormConfig.causalEffect.options.positive.name:
-        result = mechanism ?
-          effectDependency ? noctuaFormConfig.edge.positivelyRegulates :
-            noctuaFormConfig.edge.directlyPositivelyRegulates :
-          noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
-        break;
-      case noctuaFormConfig.causalEffect.options.negative.name:
-        result = mechanism ?
-          effectDependency ? noctuaFormConfig.edge.negativelyRegulates :
-            noctuaFormConfig.edge.directlyNegativelyRegulates :
-          noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
-        break;
-      case noctuaFormConfig.causalEffect.options.neutral.name:
-        result = mechanism ?
-          effectDependency ? noctuaFormConfig.edge.regulates :
-            noctuaFormConfig.edge.directlyRegulates :
-          noctuaFormConfig.edge.causallyUpstreamOf;
-        break;
-    }
-
+    result = noctuaFormConfig.causalEdges[index];
     return result;
   }
 

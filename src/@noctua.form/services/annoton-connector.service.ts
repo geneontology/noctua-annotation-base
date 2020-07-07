@@ -102,8 +102,9 @@ export class NoctuaAnnotonConnectorService {
     this.connectorForm = this.createConnectorForm();
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
     this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
-    this.connectorForm.mechanism.setValue(this.connectorAnnoton.rule.mechanism.condition);
+    this.connectorForm.mechanism.setValue(this.connectorAnnoton.rule.mechanism.mechanism);
     this._onAnnotonFormChanges();
+
     // just to trigger the on Changes event
     this.connectorForm.causalEffect.setValue(this.connectorAnnoton.rule.effectDirection.direction);
     this.selectPanel(this.panel.annotonConnectorForm);

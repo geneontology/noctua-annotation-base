@@ -2,9 +2,10 @@ import { noctuaFormConfig } from './../../../noctua-form-config';
 import { Entity } from '../entity';
 import { ConditionRule } from './condition-rule';
 import { DirectionRule } from './direction-rule';
+import { MechanismRule } from './mechanism-rule';
 
 export class ConnectorRule {
-  mechanism = new ConditionRule('mechanism',
+  mechanism = new MechanismRule('mechanism',
     'Do you know the mechanism for how the upstream activity affects the downstream activity?');
   effectDirection = new DirectionRule('effectDirection', 'Direction of Effect?');
   subjectMFCatalyticActivity = new ConditionRule('subjectMFCatalyticActivity', 'Is upstream MF a Catalytic Activity');
@@ -24,13 +25,11 @@ export class ConnectorRule {
   displaySection = {
     mechanism: true,
     causalEffect: true,
-    effectDependency: false,
-    causalReactionProduct: false,
     process: false,
   };
 
   constructor() {
-    this.mechanism.condition = true;
+    this.mechanism.mechanism = noctuaFormConfig.mechanism.options.direct;
     this.effectDirection.direction = noctuaFormConfig.causalEffect.options.positive;
   }
 }
