@@ -41,7 +41,7 @@ export class NoctuaSearchMenuService {
             id: 5
         }, camsSelection: {
             id: 6
-        }, history: {
+        }, camsReplace: {
             id: 7
         }
     };

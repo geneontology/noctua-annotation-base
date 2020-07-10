@@ -127,6 +127,10 @@ $accent: map-get($theme, accent);
       min-width: 0;
       display: flex;
       align-items: center;
+
+      &.noc-highlight-match {
+        background-color: #ccc9fb;
+      }
     }
 
     .mat-column-id {

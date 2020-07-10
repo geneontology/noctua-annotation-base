@@ -14,6 +14,7 @@ export class Entity implements EntityBase {
   label: string;
   url: string;
   classExpression: any;
+  highlight: boolean;
 
   constructor(id: string, label: string, url?: string) {
     this.id = id;

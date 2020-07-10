@@ -45,6 +45,7 @@ export class Cam {
   summaryExpanded = false;
 
   ///
+  matchedCount = 0;
   filter = {
     contributor: null,
     uuids: [],
@@ -139,6 +140,7 @@ export class Cam {
 
     if (self.filter && self.filter.terms.length > 0) {
       self._filteredAnnotons = [];
+      self.matchedCount = 0;
       this.displayType = noctuaFormConfig.camDisplayType.options.entity;
 
       each(self._annotons, (annoton: Annoton) => {
@@ -151,6 +153,8 @@ export class Cam {
             //  })
 
             if (node.term.id === term.id) {
+              node.term.highlight = true;
+              self.matchedCount += 1;
               match = true;
             }
           });

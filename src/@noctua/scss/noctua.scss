@@ -73,6 +73,11 @@ mat-chip {
   }
 }
 
+.noc-cams-replace-dialog {
+  @include deep-width(95%);
+  @include deep-height(95%);
+}
+
 textarea {
   resize: none !important;
   overflow: hidden;

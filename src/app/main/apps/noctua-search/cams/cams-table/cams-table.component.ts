@@ -15,6 +15,7 @@ import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.ser
 import { SelectionModel } from '@angular/cdk/collections';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
+import { NoctuaSearchDialogService } from '../../services/dialog.service';
 
 export function CustomPaginator() {
   const customPaginatorIntl = new MatPaginatorIntl();
@@ -70,6 +71,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaUserService: NoctuaUserService,
+    private noctuaSearchDialogService: NoctuaSearchDialogService,
     public noctuaSearchService: NoctuaSearchService) {
     this._unsubscribeAll = new Subject();
   }
@@ -145,9 +147,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  openReplace() {
-    // this.loadModel(this.selectCam)
-
+  openFind() {
     console.log(this.selection,
       this.noctuaSearchService.searchCriteria.terms)
 
@@ -158,10 +158,23 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     this.camsService.loadCams(filter);
     this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsSelection);
   }
+
+  openReplace() {
+    const filter = {
+      terms: this.noctuaSearchService.searchCriteria.terms
+    };
+    const success = () => { };
+    this.camsService.initializeForm(this.selection.selected);
+    this.camsService.loadCams(filter);
+    this.noctuaSearchDialogService.openCamReplaceDialog(success);
+    //this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsReplace);
+  }
+
   openLeftDrawer(panel) {
     this.noctuaSearchMenuService.selectLeftPanel(panel);
     this.noctuaSearchMenuService.openLeftDrawer();
   }
+
   openRightDrawer(panel) {
     this.noctuaSearchMenuService.selectRightPanel(panel);
     this.noctuaSearchMenuService.openRightDrawer();

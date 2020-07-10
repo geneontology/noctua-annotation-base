@@ -85,7 +85,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       EntityDefinition.GoCellTypeEntity
     ]);
     this.unsubscribeAll = new Subject();
-    this.filterForm = this.createAnswerForm();
+    this.filterForm = this.createFilterForm();
     this._onValueChanges();
   }
 
@@ -93,7 +93,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   }
 
-  createAnswerForm() {
+  createFilterForm() {
     return new FormGroup({
       gps: new FormControl(),
       terms: new FormControl(),

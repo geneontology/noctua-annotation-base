@@ -47,6 +47,9 @@ export class CamTableComponent implements OnInit, OnDestroy {
   @Input('cam')
   public cam: Cam;
 
+  @Input('options')
+  public options: any = {};
+
   searchResults = [];
   modelId: '';
   loadingSpinner: any = {

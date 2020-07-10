@@ -147,10 +147,11 @@
         <noc-annoton-connector [panelDrawer]="rightDrawer"
           *ngSwitchCase="noctuaSearchMenuService.rightPanel.connectorForm.id">
         </noc-annoton-connector>
-        <noc-cam-table *ngSwitchCase="noctuaSearchMenuService.rightPanel.camTable.id" [cam]="cam"></noc-cam-table>
-        <noc-cams-selection *ngSwitchCase="noctuaSearchMenuService.rightPanel.camsSelection.id">
-
+        <noc-cams-selection [panelDrawer]="rightDrawer"
+          *ngSwitchCase="noctuaSearchMenuService.rightPanel.camsSelection.id">
         </noc-cams-selection>
+        <noc-cams-replace [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaSearchMenuService.rightPanel.camsReplace.id">
+        </noc-cams-replace>
       </div>
     </mat-drawer>
   </mat-drawer-container>

@@ -8,6 +8,10 @@
       [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
     </mat-checkbox>
     <ng-container *ngIf="selection.hasValue()">
+      <button mat-stroked-button (click)="openFind()" class="noc-rounded-button" color="primary"
+        matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
+        Find
+      </button>
       <button mat-stroked-button (click)="openReplace()" class="noc-rounded-button" color="primary"
         matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
         Replace

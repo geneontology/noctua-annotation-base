@@ -25,12 +25,12 @@ import { NoctuaSearchService } from '@noctua.search/services/noctua-search.servi
 import { noctuaAnimations } from '@noctua/animations';
 
 @Component({
-  selector: 'noc-cams-selection',
-  templateUrl: './cams-selection.component.html',
-  styleUrls: ['./cams-selection.component.scss'],
+  selector: 'noc-cams-replace',
+  templateUrl: './cams-replace.component.html',
+  styleUrls: ['./cams-replace.component.scss'],
   animations: noctuaAnimations,
 })
-export class CamsSelectionComponent implements OnInit, OnDestroy {
+export class CamsReplaceComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
 
   @Input('panelDrawer')
