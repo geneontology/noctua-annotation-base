@@ -12,7 +12,7 @@ import { Entity } from './entity';
 import { Triple } from './triple';
 import { Evidence } from './evidence';
 import { Predicate } from './predicate';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, findIndex, find } from 'lodash';
 
 export enum ConnectorState {
   creation = 1,
@@ -60,8 +60,10 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
   setRule() {
     const self = this;
 
-    self.rule.mechanism.mechanism = self.getIsConsecutiveByEdge(self.rule.r1Edge);
-    self.rule.effectDirection.direction = self.getEffectDirectionByEdge(self.rule.r1Edge);
+    const question = self.getEffectDirectionByEdge(self.rule.r1Edge);
+
+    self.rule.effectDirection.direction = question.effectDirection;
+    self.rule.mechanism.mechanism = question.mechanism;
 
     if (self.type === ConnectorType.basic) {
       self.rule.displaySection.process = false;
@@ -96,31 +98,20 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
     self.setPreview();
   }
 
-  getIsConsecutiveByEdge(edge) {
-    const result = edge.id === noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id ||
-      edge.id === noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id ||
-      edge.id === noctuaFormConfig.edge.causallyUpstreamOf.id;
-
-    return !result;
-  }
-
   getEffectDirectionByEdge(edge) {
-    let effectDirection = noctuaFormConfig.causalEffect.options.positive;
+    let effectDirection = null;
+    let mechanism = null;
 
-    switch (edge.id) {
-      case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
-      case noctuaFormConfig.edge.directlyNegativelyRegulates.id:
-      case noctuaFormConfig.edge.negativelyRegulates.id:
-        effectDirection = noctuaFormConfig.causalEffect.options.negative;
-        break;
-      case noctuaFormConfig.edge.causallyUpstreamOf.id:
-      case noctuaFormConfig.edge.directlyRegulates.id:
-      case noctuaFormConfig.edge.regulates.id:
-        effectDirection = noctuaFormConfig.causalEffect.options.neutral;
-        break;
+    const index = findIndex(noctuaFormConfig.causalEdges, { id: edge.id }) + 1;
+
+    if (index < 10 && index > 0) {
+      const x = (index % 3) - 3;
+      const y = (index - x) / 3;
+      effectDirection = find(noctuaFormConfig.causalEffect.options, { scalar: x });
+      mechanism = find(noctuaFormConfig.mechanism.options, { scalar: y });
     }
 
-    return effectDirection;
+    return { effectDirection, mechanism };
   }
 
   getCausalConnectorEdge(causalEffect, mechanism) {
@@ -287,21 +278,19 @@ export class ConnectorAnnoton extends SaeGraph<AnnotonNode> {
         {
           source: 'upstream',
           target: 'downstream',
-          label: self.rule.r1Edge.label
-        }
-      ]
+          label: self.rule.r1Edge ? self.rule.r1Edge.label : ''
+        }];
     } else if (self.type === ConnectorType.intermediate) {
       edges = <NgxEdge[]>[
         {
           source: 'upstream',
           target: 'process',
-          label: self.rule.r1Edge.label
+          label: self.rule.r1Edge ? self.rule.r1Edge.label : ''
         }, {
           source: 'process',
           target: 'downstream',
           label: self.rule.r2Edge ? self.rule.r2Edge.label : ''
-        },
-      ]
+        }];
       if (this.hasInputNode.hasValue()) {
         edges.push({
           source: 'process',
