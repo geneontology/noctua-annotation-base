@@ -137,20 +137,7 @@ export class NoctuaGraphService {
 
       self.populateContributors(cam);
 
-      // self.graphPreParse(cam.graph).pipe(
-      // finalize(() => {
-      //    cam.loading.status = false;
-      //     cam.loading.message = '';
-      //   })
-      // ).subscribe((data) => {
-      cam.annotons = self.graphToAnnotons(cam);
-      cam.onGraphChanged.next(cam.annotons);
-      cam.connectorAnnotons = self.getConnectorAnnotons(cam);
-      cam.setPreview();
-      // self.graphPostParse(cam, cam.graph).subscribe((data) => {
-      //   cam.onGraphChanged.next(cam.annotons);
-      //  });
-      //  });
+      self.loadCam(cam);
       cam.loading.status = false;
       cam.loading.message = '';
     };
@@ -160,6 +147,16 @@ export class NoctuaGraphService {
     }, 10);
 
     cam.manager.get_model(modelId);
+  }
+
+  loadCam(cam: Cam) {
+    const self = this;
+
+    cam.annotons = self.graphToAnnotons(cam);
+    cam.applyFilter();
+    cam.onGraphChanged.next(cam.annotons);
+    cam.connectorAnnotons = self.getConnectorAnnotons(cam);
+    cam.setPreview();
   }
 
   populateContributors(cam: Cam) {

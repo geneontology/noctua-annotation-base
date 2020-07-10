@@ -72,7 +72,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
+    console.log(this.cam)
   }
 
   addAnnoton() {

@@ -16,14 +16,8 @@
       </button>
     </mat-menu>
   </div>
-  <ng-container [ngSwitch]="cam?.displayType.name">
-    <noc-annoton-entity-table *ngSwitchCase="camDisplayTypeOptions.entity.name" [cam]="cam" class="noc-cam-table-body"
-      fxLayout="row" fxLayoutAlign="start center">
-    </noc-annoton-entity-table>
-    <noc-triple-table *ngSwitchCase="camDisplayTypeOptions.triple.name" [cam]="cam" class="noc-cam-table-body"
-      fxLayout="row" fxLayoutAlign="start center">
-    </noc-triple-table>
-    <ng-container *ngSwitchDefault>
+  <ng-container>
+    <ng-container>
       <div *ngIf="cam?.loading.status" class="noc-loading-container" fxLayout="column" fxLayoutAlign="center center">
         <mat-progress-spinner class="example-margin" [color]="loadingSpinner.color" [mode]="loadingSpinner.mode">
         </mat-progress-spinner>

@@ -148,9 +148,14 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   openReplace() {
     // this.loadModel(this.selectCam)
 
-    console.log(this.selection)
+    console.log(this.selection,
+      this.noctuaSearchService.searchCriteria.terms)
+
+    const filter = {
+      terms: this.noctuaSearchService.searchCriteria.terms
+    };
     this.camsService.initializeForm(this.selection.selected);
-    this.camsService.loadCams();
+    this.camsService.loadCams(filter);
     this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsSelection);
   }
   openLeftDrawer(panel) {

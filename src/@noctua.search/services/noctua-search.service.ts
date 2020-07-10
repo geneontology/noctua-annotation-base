@@ -123,6 +123,10 @@ export class NoctuaSearchService {
         self.noctuaDataService.onContributorsChanged
             .subscribe(contributors => {
                 this.noctuaUserService.contributors = contributors;
+                this.searchCriteria.terms = [{
+                    id: "GO:0006869",
+                    label: "lipid transport"
+                }];
                 this.updateSearch();
             });
 

@@ -97,8 +97,6 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
 
     this.rightDrawer.open();
 
-
-
     this.noctuaSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(cams => {

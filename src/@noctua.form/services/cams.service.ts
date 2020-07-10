@@ -69,10 +69,10 @@ export class CamsService {
     return camForm;
   }
 
-  loadCams() {
+  loadCams(filter?: any) {
     const self = this;
     each(this.cams, (cam: Cam) => {
-      self.camService.loadCam(cam);
+      self.camService.loadCam(cam, filter);
     });
 
     self.onCamsChanged.next(this.cams);

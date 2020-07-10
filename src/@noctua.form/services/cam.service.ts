@@ -91,7 +91,7 @@ export class CamService {
     return cam;
   }
 
-  loadCam(cam: Cam) {
+  loadCam(cam: Cam, filter?: any) {
 
     cam.loading.status = true;
     cam.loading.message = 'Sending Request...';
@@ -102,6 +102,10 @@ export class CamService {
       title: '',
       modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
     });
+
+    if (filter) {
+      cam.filter = filter;
+    }
     cam.expanded = true;
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
     this.cam = cam;
