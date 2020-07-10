@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/internal/operators';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 
 import {
-  NoctuaFormConfigService, NoctuaUserService, CamService, Contributor,
+  NoctuaFormConfigService, NoctuaUserService, CamService, Contributor, CamsService, Cam,
 } from 'noctua-form-base';
 
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
@@ -60,10 +60,11 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   cams: any[] = [];
   camPage: CamPage;
 
-  selection = new SelectionModel<any>(true, []);
+  selection = new SelectionModel<Cam>(true, []);
 
   constructor(
     private camService: CamService,
+    private camsService: CamsService,
     private noctuaDataService: NoctuaDataService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
@@ -146,6 +147,10 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   openReplace() {
     // this.loadModel(this.selectCam)
+
+    console.log(this.selection)
+    this.camsService.initializeForm(this.selection.selected);
+    this.camsService.loadCams();
     this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsSelection);
   }
   openLeftDrawer(panel) {

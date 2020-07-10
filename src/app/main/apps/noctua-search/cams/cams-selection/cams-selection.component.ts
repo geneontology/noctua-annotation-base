@@ -15,7 +15,8 @@ import {
   NoctuaFormMenuService,
   NoctuaAnnotonFormService,
   CamService,
-  noctuaFormConfig
+  noctuaFormConfig,
+  CamsService
 } from 'noctua-form-base';
 
 import { takeUntil } from 'rxjs/operators';
@@ -46,7 +47,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
 
   constructor
     (private route: ActivatedRoute,
-      private camService: CamService,
+      private camsService: CamsService,
       private noctuaDataService: NoctuaDataService,
       public noctuaSearchService: NoctuaSearchService,
       public noctuaUserService: NoctuaUserService,
@@ -56,7 +57,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
 
     this._unsubscribeAll = new Subject();
 
-    this.noctuaSearchService.onCamsChanged
+    this.camsService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(cams => {
         if (!cams) {

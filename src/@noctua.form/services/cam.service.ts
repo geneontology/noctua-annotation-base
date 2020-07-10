@@ -25,7 +25,6 @@ export class CamService {
   curieUtil: any;
   loading = false;
   cam: Cam;
-  onCamsChanged: BehaviorSubject<any>;
   onCamChanged: BehaviorSubject<any>;
   onCamTermsChanged: BehaviorSubject<any>;
 
@@ -42,7 +41,6 @@ export class CamService {
     private noctuaGraphService: NoctuaGraphService,
     private noctuaLookupService: NoctuaLookupService,
     private curieService: CurieService) {
-    this.onCamsChanged = new BehaviorSubject(null);
     this.onCamChanged = new BehaviorSubject(null);
     this.onCamTermsChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
@@ -91,6 +89,24 @@ export class CamService {
     this.onCamChanged.next(cam);
 
     return cam;
+  }
+
+  loadCam(cam: Cam) {
+
+    cam.loading.status = true;
+    cam.loading.message = 'Sending Request...';
+
+    cam.graph = null;
+    cam.model = Object.assign({}, {
+      id: cam.id,
+      title: '',
+      modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
+    });
+    cam.expanded = true;
+    this.noctuaGraphService.getGraphInfo(cam, cam.id);
+    this.cam = cam;
+    //  this.onCamChanged.next(cam);
+
   }
 
   deleteAnnoton(annoton: Annoton) {
