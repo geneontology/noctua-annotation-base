@@ -72,9 +72,6 @@
         </div>
       </div>
       <div class="noc-summary-filter-bar" fxLayout="row" fxLayoutAlign="start center">
-        <button mat-stroked-button (click)="edit()" color="" class="noc-rounded-button">
-          Edit
-        </button>
         <small class="mr-12">Filtered By: </small>
         <mat-chip *ngIf="noctuaSearchService?.searchCriteria?.filtersCount>0" (click)="reset()"
           class="noc-clearall-chip">
@@ -151,7 +148,9 @@
           *ngSwitchCase="noctuaSearchMenuService.rightPanel.connectorForm.id">
         </noc-annoton-connector>
         <noc-cam-table *ngSwitchCase="noctuaSearchMenuService.rightPanel.camTable.id" [cam]="cam"></noc-cam-table>
+        <noc-cams-selection *ngSwitchCase="noctuaSearchMenuService.rightPanel.camsSelection.id" [cams]="selection">
 
+        </noc-cams-selection>
       </div>
     </mat-drawer>
   </mat-drawer-container>

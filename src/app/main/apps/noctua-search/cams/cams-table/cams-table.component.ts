@@ -6,13 +6,15 @@ import { takeUntil } from 'rxjs/internal/operators';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 
 import {
-  NoctuaFormConfigService, NoctuaUserService,
+  NoctuaFormConfigService, NoctuaUserService, CamService, Contributor,
 } from 'noctua-form-base';
 
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { CamPage } from '@noctua.search/models/cam-page';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { SelectionModel } from '@angular/cdk/collections';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 
 export function CustomPaginator() {
   const customPaginatorIntl = new MatPaginatorIntl();
@@ -61,8 +63,11 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<any>(true, []);
 
   constructor(
-    public noctuaSearchMenuService: NoctuaSearchMenuService,
+    private camService: CamService,
+    private noctuaDataService: NoctuaDataService,
     public noctuaFormConfigService: NoctuaFormConfigService,
+    public noctuaCommonMenuService: NoctuaCommonMenuService,
+    public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaSearchService: NoctuaSearchService) {
     this._unsubscribeAll = new Subject();
@@ -88,12 +93,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       });
   }
 
-  edit() {
-    console.log(this.selection)
-    // this.loadModel(this.selectCam)
-    //  this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camForm);
-  }
-
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.cams.length;
@@ -105,6 +104,8 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     this.isAllSelected() ?
       this.selection.clear() :
       this.cams.forEach(row => this.selection.select(row));
+
+    console.log(this.selection)
   }
 
   /** The label for the checkbox on the passed row */
@@ -142,6 +143,20 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       this.noctuaSearchService.getPage(pageIndex, $event.pageSize);
     }
   }
+
+  openReplace() {
+    // this.loadModel(this.selectCam)
+    this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsSelection);
+  }
+  openLeftDrawer(panel) {
+    this.noctuaSearchMenuService.selectLeftPanel(panel);
+    this.noctuaSearchMenuService.openLeftDrawer();
+  }
+  openRightDrawer(panel) {
+    this.noctuaSearchMenuService.selectRightPanel(panel);
+    this.noctuaSearchMenuService.openRightDrawer();
+  }
+
   refresh() {
     this.noctuaSearchService.updateSearch();
   }

@@ -4,6 +4,16 @@
 </div>
 <div class="noc-cams-table noc-drawer-body" fxLayout="column" fxLayoutAlign="start stretch">
   <div class="noc-summary-results-bar" fxLayout="row" fxLayoutAlign="start center">
+    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+      [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+    </mat-checkbox>
+    <ng-container *ngIf="selection.hasValue()">
+      <button mat-stroked-button (click)="openReplace()" class="noc-rounded-button" color="primary"
+        matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
+        Replace
+      </button>
+    </ng-container>
+
     <small>Results:</small>
     <div class="ml-8 mr-16" fxLayout="row" fxLayoutAlign="start center">
       <button mat-stroked-button color="" class="noc-rounded-button mr-4 noc-half-button noc-sm noc-r">
@@ -25,9 +35,7 @@
   <table fxFlex="1 1 auto" mat-table class="" [dataSource]="cams" [@animateStagger]="{value:'50'}">
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-        </mat-checkbox>
+
       </th>
       <td mat-cell *matCellDef="let row">
         <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"

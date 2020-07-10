@@ -39,10 +39,9 @@ export class NoctuaSearchMenuService {
             id: 4
         }, camTable: {
             id: 5
-        }, organism: {
+        }, camsSelection: {
             id: 6
-        },
-        history: {
+        }, history: {
             id: 7
         }
     };

@@ -16,15 +16,18 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { PagesModule } from './main/pages/pages.module';
 import { AppsModule } from './main/apps/apps.module';
 import {
+    faPaw,
     faPen,
     faSitemap,
     faUser,
     faUsers,
     faCalendarDay,
     faCalendarWeek,
+    faSearch,
     faTasks,
     faListAlt,
     faChevronRight,
+    faHistory,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -75,9 +78,12 @@ export class AppModule {
             faCalendarWeek,
             faChevronRight,
             faFacebook,
+            faHistory,
             faGithub,
             faListAlt,
+            faPaw,
             faPen,
+            faSearch,
             faSitemap,
             faTasks,
             faTwitter,

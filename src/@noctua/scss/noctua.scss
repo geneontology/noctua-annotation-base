@@ -112,11 +112,22 @@ textarea {
 
 .noc-paginator {
   overflow: hidden;
-  @include deep-height(40px);
-  background-color: #DDD;
+  @include deep-height(50px);
+
+  display: flex;
+  justify-content: left;
+  align-items: center;
+
+  .mat-paginator-page-size {
+    align-items: center;
+  }
+
+  .mat-paginator-page-size-select {
+    margin-top: -15px;
+  }
 
   .mat-paginator-container {
-    @include deep-height(40px !important);
+    @include deep-height(50px !important);
   }
 }
 

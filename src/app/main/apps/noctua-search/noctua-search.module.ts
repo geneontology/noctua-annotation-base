@@ -9,6 +9,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NoctuaSearchBaseModule } from '@noctua.search';
 import { NoctuaFooterModule } from 'app/layout/components/footer/footer.module';
 import { NoctuaFormModule } from '../noctua-form';
+import { CamsSelectionComponent } from './cams/cams-selection/cams-selection.component';
 
 const routes = [
   {
@@ -30,7 +31,8 @@ const routes = [
   ],
   declarations: [
     NoctuaSearchComponent,
-    CamsTableComponent
+    CamsTableComponent,
+    CamsSelectionComponent
   ]
 })
 

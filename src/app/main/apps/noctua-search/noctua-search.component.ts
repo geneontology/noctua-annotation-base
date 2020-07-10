@@ -82,6 +82,13 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
         }
         this.camPage = camPage;
       });
+
+    this.noctuaUserService.onUserChanged.pipe(
+      takeUntil(this._unsubscribeAll))
+      .subscribe((user: Contributor) => {
+        this.noctuaFormConfigService.setupUrls();
+        this.noctuaFormConfigService.setUniversalUrls();
+      });
   }
 
   ngOnInit(): void {
@@ -90,12 +97,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
 
     this.rightDrawer.open();
 
-    this.noctuaUserService.onUserChanged.pipe(
-      takeUntil(this._unsubscribeAll))
-      .subscribe((user: Contributor) => {
-        this.noctuaFormConfigService.setupUrls();
-        this.noctuaFormConfigService.setUniversalUrls();
-      });
+
 
     this.noctuaSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))

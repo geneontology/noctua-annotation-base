@@ -1,9 +1,10 @@
+
+
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
 
-import { noctuaAnimations } from './../../../../@noctua/animations';
 
 import {
   Cam,
@@ -18,18 +19,15 @@ import {
 } from 'noctua-form-base';
 
 import { takeUntil } from 'rxjs/operators';
-import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { environment } from 'environments/environment';
+import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 
 @Component({
-  selector: 'app-noctua-form',
-  templateUrl: './noctua-form.component.html',
-  styleUrls: ['./noctua-form.component.scss'],
-  //encapsulation: ViewEncapsulation.None,
-  animations: noctuaAnimations
+  selector: 'noc-cams-selection',
+  templateUrl: './cams-selection.component.html',
+  styleUrls: ['./cams-selection.component.scss']
 })
-export class NoctuaFormComponent implements OnInit, OnDestroy {
+export class CamsSelectionComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
 
   @ViewChild('leftDrawer', { static: true })
@@ -38,7 +36,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   @ViewChild('rightDrawer', { static: true })
   rightDrawer: MatDrawer;
 
-  public cam: Cam;
+  cams: Cam[] = [];
   searchResults = [];
   modelId = '';
 
@@ -50,6 +48,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     (private route: ActivatedRoute,
       private camService: CamService,
       private noctuaDataService: NoctuaDataService,
+      public noctuaSearchService: NoctuaSearchService,
       public noctuaUserService: NoctuaUserService,
       public noctuaFormConfigService: NoctuaFormConfigService,
       public noctuaAnnotonFormService: NoctuaAnnotonFormService,
@@ -57,32 +56,23 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
     this._unsubscribeAll = new Subject();
 
-    this.noctuaDataService.loadContributors();
-    this.route
-      .queryParams
+    this.noctuaSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(params => {
-        this.modelId = params['model_id'] || null;
-        const baristaToken = params['barista_token'] || null;
-        this.noctuaUserService.getUser(baristaToken);
-
-        this.loadCam(this.modelId);
+      .subscribe(cams => {
+        if (!cams) {
+          return;
+        }
+        this.cams = cams;
       });
 
-    this.noctuaUserService.onUserChanged.pipe(
-      takeUntil(this._unsubscribeAll))
-      .subscribe((user: Contributor) => {
-        this.noctuaFormConfigService.setupUrls();
-        this.noctuaFormConfigService.setUniversalUrls();
-      });
+
   }
 
   ngOnInit(): void {
     const self = this;
 
 
-    self.noctuaFormMenuService.setLeftDrawer(self.leftDrawer);
-    self.noctuaFormMenuService.setRightDrawer(self.rightDrawer);
+
   }
 
   loadCam(modelId) {
@@ -92,18 +82,8 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
       takeUntil(this._unsubscribeAll))
       .subscribe((contributors: Contributor[]) => {
         self.noctuaUserService.contributors = contributors;
-        this.cam = this.camService.getCam(modelId);
+        //   this.cam = this.camService.getCam(modelId);
       });
-  }
-
-  openCamForm() {
-    this.camService.initializeForm(this.cam);
-    this.noctuaFormMenuService.openLeftDrawer(this.noctuaFormMenuService.panel.camForm);
-  }
-
-  openAnnotonForm(annotonType: AnnotonType) {
-    this.noctuaAnnotonFormService.setAnnotonType(annotonType);
-    this.noctuaFormMenuService.openLeftDrawer(this.noctuaFormMenuService.panel.annotonForm);
   }
 
   ngOnDestroy(): void {
@@ -111,4 +91,5 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 }
+
 
