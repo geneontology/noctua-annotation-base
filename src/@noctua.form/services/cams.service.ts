@@ -25,8 +25,8 @@ export class CamsService {
   curieUtil: any;
   loading = false;
   cams: Cam[];
+  foundMatchCount = 0;
   onCamsChanged: BehaviorSubject<any>;
-
 
   public annoton: Annoton;
   private camForm: CamForm;
@@ -71,10 +71,20 @@ export class CamsService {
 
   loadCams(filter?: any) {
     const self = this;
+    self.foundMatchCount = 0;
     each(this.cams, (cam: Cam) => {
       self.camService.loadCam(cam, filter);
     });
 
     self.onCamsChanged.next(this.cams);
+  }
+
+  calculateMatchedCount(): number {
+    const matchCount = this.cams.reduce((total, currentValue, i) => {
+      total += currentValue.matchedCount;
+      return total;
+    }, 0);
+
+    return matchCount;
   }
 }

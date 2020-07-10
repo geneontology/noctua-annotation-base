@@ -37,7 +37,17 @@ $accent: map-get($theme, accent);
   }
 
   .noc-section-header {
+    padding: 8px 8px;
     @include deep-height(100px);
+  }
+
+  .noc-matched-count {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
+    padding: 0 10px;
+    height: 100%;
   }
 
   .noc-cam-replace {

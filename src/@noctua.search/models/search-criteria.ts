@@ -167,6 +167,15 @@ export class SearchCriteria {
         this.enddates = [];
     }
 
+    getSearchableTerms(): any[] {
+        return [
+            ...this.terms,
+            ...this.gps,
+            ...this.pmids,
+            ...this.states,
+        ]
+    }
+
     private buildEncoded() {
         return this.queryEncoded().join('&');
     }

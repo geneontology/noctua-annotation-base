@@ -13,15 +13,15 @@
     <div class="noc-section-header w-100-p">
       <form fxLayout="row" fxLayoutAlign="start center" name="filterForm" [formGroup]="filterForm"
         class="w-100-p h-100-p">
-        <mat-form-field appearance="outline" class="noc-sm" fxFlex="300px">
+        <mat-form-field appearance="outline" class="noc-sm mr-4" fxFlex="300px">
           <mat-label>Find What</mat-label>
-          <mat-select placeholder="" formControlName="findWhat">
-            <mat-option *ngFor="let term of terms" [value]="evidenceDB">
-              {{term}}
+          <mat-select placeholder="" formControlName="findWhat" [compareWith]="compareEntity">
+            <mat-option *ngFor="let term of terms" [value]="term">
+              {{term.label}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="outline" class="noc-sm" fxFlex="200px">
+        <mat-form-field appearance="outline" class="noc-sm mr-8" fxFlex="200px">
           <mat-label>Replace With</mat-label>
           <input matInput formControlName="terms" placeholder="Enter term to replace Term" [matAutocomplete]="termAuto">
           <mat-autocomplete #termAuto="matAutocomplete"
@@ -40,13 +40,16 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <div>
-
+        <div class="noc-matched-count">
+          <span>
+            1 of <strong> {{matchedCount}}
+            </strong>
+          </span>
         </div>
-        <button type="button" mat-stroke-button color="" class="noc-rounded-button mr-8">
+        <button type="button" mat-stroked-button color="mr-8" class="noc-rounded-button mr-8">
           Replace Next
         </button>
-        <button type="button" mat-stroke-button color="" class="noc-rounded-button mr-8">
+        <button type="button" mat-stroked-button color="" class="noc-rounded-button mr-8">
           Replace All
         </button>
       </form>
@@ -104,11 +107,27 @@
                   </mat-chip>
                 </mat-chip-list>
               </div>
+              <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #activityOptionMenu="matMenu" class="noc-dropdown-menu">
+                <button mat-menu-item class="" (click)="viewAsModel(cam)">
+                  View Whole Model
+                </button>
+                <button mat-menu-item class="" (click)="viewAsActivities(cam)">
+                  Only Matched Activities
+                </button>
+                <button mat-menu-item class="" (click)="cam.expandAllAnnotons(true)">
+                  Expand All
+                </button>
+                <button mat-menu-item class="" (click)="cam.expandAllAnnotons(false)">
+                  Collapse All
+                </button>
+              </mat-menu>
             </div>
             <noc-cam-table [cam]="cam" [options]="tableOptions"></noc-cam-table>
 
           </div>
-
           <div class="noc-right-compare" fxLayout="column" fxLayoutAlign="start stretch">
             <div class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
               [@animateStagger]="{value:'50'}">
@@ -159,6 +178,23 @@
                   </mat-chip>
                 </mat-chip-list>
               </div>
+              <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #activityOptionMenu="matMenu" class="noc-dropdown-menu">
+                <button mat-menu-item class="" (click)="viewAsModel(cam)">
+                  View Whole Model
+                </button>
+                <button mat-menu-item class="" (click)="viewAsActivities(cam)">
+                  Only Matched Activities
+                </button>
+                <button mat-menu-item class="" (click)="cam.expandAllAnnotons(true)">
+                  Expand All
+                </button>
+                <button mat-menu-item class="" (click)="cam.expandAllAnnotons(false)">
+                  Collapse All
+                </button>
+              </mat-menu>
             </div>
             <noc-cam-table [cam]="cam" [options]="tableOptions"></noc-cam-table>
 

@@ -4,19 +4,20 @@
 </div>
 <div class="noc-cams-table noc-drawer-body" fxLayout="column" fxLayoutAlign="start stretch">
   <div class="noc-summary-results-bar" fxLayout="row" fxLayoutAlign="start center">
-    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-      [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+    <mat-checkbox class="mr-16" (change)="$event ? masterToggle() : null"
+      [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()"
+      [aria-label]="checkboxLabel()">
     </mat-checkbox>
-    <ng-container *ngIf="selection.hasValue()">
-      <button mat-stroked-button (click)="openFind()" class="noc-rounded-button" color="primary"
+    <div class="noc-art-tools" *ngIf="selection.hasValue()">
+      <button mat-stroked-button (click)="openFind()" class="noc-rounded-button noc-sm mr-8" color="primary"
         matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
         Find
       </button>
-      <button mat-stroked-button (click)="openReplace()" class="noc-rounded-button" color="primary"
+      <button mat-stroked-button (click)="openReplace()" class="noc-rounded-button noc-sm" color="primary"
         matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
         Replace
       </button>
-    </ng-container>
+    </div>
 
     <small>Results:</small>
     <div class="ml-8 mr-16" fxLayout="row" fxLayoutAlign="start center">

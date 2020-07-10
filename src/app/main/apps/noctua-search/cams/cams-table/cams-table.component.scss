@@ -16,7 +16,7 @@ $rotate-graph: 235deg;
     position: sticky;
     top: 31px;
     margin-bottom: 4px;
-    padding: 0 10px;
+    padding: 0 10px 0 20px;
     @include deep-height(40px);
     //  min-height: 40px; //min-height: 35px;
     background-color: #FFF;
@@ -25,6 +25,12 @@ $rotate-graph: 235deg;
     z-index: 10;
 
     @include mat-elevation(2);
+
+
+    .noc-art-tools {
+      //background-color: ;
+      margin-right: 16px;
+    }
 
     .noc-pagesize-select {
       width: 50px;

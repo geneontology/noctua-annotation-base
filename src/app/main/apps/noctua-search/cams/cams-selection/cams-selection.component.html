@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-cams noc-drawer h-100-p">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-drawer-header-title">
-      Edit</span>
+      Find</span>
     <span fxFlex></span>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
       aria-label="Close dialog">
@@ -11,6 +11,25 @@
   <div class="noc-drawer-body w-100-p" noctuaPerfectScrollbar>
     <div *ngIf="!noctuaUserService.user" class="noc-draw-body-disabled" fxLayoutAlign="center center">
       Log in to Continue
+    </div>
+    <div class="noc-section-header w-100-p">
+      <form fxLayout="row" fxLayoutAlign="start center" name="filterForm" [formGroup]="filterForm"
+        class="w-100-p h-100-p">
+        <mat-form-field appearance="outline" class="noc-sm" fxFlex="300px">
+          <mat-label>Find What</mat-label>
+          <mat-select placeholder="" formControlName="findWhat" [compareWith]="compareEntity">
+            <mat-option *ngFor="let term of terms" [value]="term">
+              {{term.label}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="noc-matched-count">
+          1 of {{matchedCount}}
+        </div>
+        <button type="button" mat-stroked-button color="" class="noc-rounded-button mr-8">
+          Find Next
+        </button>
+      </form>
     </div>
     <div *ngFor="let cam of cams" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
@@ -62,6 +81,23 @@
             </mat-chip>
           </mat-chip-list>
         </div>
+        <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #activityOptionMenu="matMenu" class="noc-dropdown-menu">
+          <button mat-menu-item class="" (click)="viewAsModel(cam)">
+            View Whole Model
+          </button>
+          <button mat-menu-item class="" (click)="viewAsActivities(cam)">
+            Only Matched Activities
+          </button>
+          <button mat-menu-item class="" (click)="cam.expandAllAnnotons(true)">
+            Expand All
+          </button>
+          <button mat-menu-item class="" (click)="cam.expandAllAnnotons(false)">
+            Collapse All
+          </button>
+        </mat-menu>
       </div>
       <noc-cam-table [cam]="cam" [options]="tableOptions"></noc-cam-table>
     </div>

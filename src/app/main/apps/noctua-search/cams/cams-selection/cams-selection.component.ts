@@ -23,6 +23,7 @@ import { takeUntil } from 'rxjs/operators';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 import { noctuaAnimations } from '@noctua/animations';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'noc-cams-selection',
@@ -37,13 +38,17 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
   panelDrawer: MatDrawer;
 
   cams: Cam[] = [];
+  terms: any[];
   searchResults = [];
   modelId = '';
+
+  matchedCount = 0;
 
   tableOptions = {
     hideHeader: true,
 
   }
+
 
   noctuaFormConfig = noctuaFormConfig;
 
@@ -60,6 +65,9 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
       public noctuaFormMenuService: NoctuaFormMenuService) {
 
     this._unsubscribeAll = new Subject();
+
+    this.matchedCount = this.camsService.calculateMatchedCount();
+    this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
 
     this.camsService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -82,6 +90,15 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
+
+  viewAsModel(cam: Cam) {
+    cam.displayType = noctuaFormConfig.camDisplayType.options.model;
+  }
+
+  viewAsActivities(cam: Cam) {
+    cam.displayType = noctuaFormConfig.camDisplayType.options.entity;
+  }
+
   loadCam(modelId) {
     const self = this;
 
@@ -93,7 +110,15 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
       });
   }
 
+  createFilterForm() {
+    return new FormGroup({
+      findWhat: new FormControl(),
+    });
+  }
 
+  compareEntity(a: any, b: any) {
+    return (a.id === b.id);
+  }
 
   close() {
     this.panelDrawer.close();

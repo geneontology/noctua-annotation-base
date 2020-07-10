@@ -36,11 +36,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
 
-  @Input('panelDrawer')
-  panelDrawer: MatDrawer;
-
   cams: Cam[] = [];
   terms: any[];
+  matchedCount = 0;
   searchResults = [];
 
   filterForm: FormGroup;
@@ -69,7 +67,8 @@ export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
       public noctuaAnnotonFormService: NoctuaAnnotonFormService,
       public noctuaFormMenuService: NoctuaFormMenuService) {
     this._unsubscribeAll = new Subject();
-    this.terms = this.noctuaSearchService.searchCriteria.terms;
+    this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
+
     this.camsService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(cams => {
@@ -79,6 +78,9 @@ export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
         this.cams = cams;
       });
 
+    this.matchedCount = this.camsService.calculateMatchedCount();
+
+    console.log(this.matchedCount)
     this.gpNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity]);
     this.termNode = EntityDefinition.generateBaseTerm([
       EntityDefinition.GoMolecularFunction,
@@ -141,10 +143,20 @@ export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
 
   }
 
+  viewAsModel(cam: Cam) {
+    cam.displayType = noctuaFormConfig.camDisplayType.options.model;
+  }
 
+  viewAsActivities(cam: Cam) {
+    cam.displayType = noctuaFormConfig.camDisplayType.options.entity;
+  }
+
+  compareEntity(a: any, b: any) {
+    return (a.id === b.id);
+  }
 
   close() {
-    this.panelDrawer.close();
+    this._matDialogRef.close();
   }
 }
 
