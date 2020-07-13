@@ -55,7 +55,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 const routes = [
   {
-    path: 'art',
+    path: '',
     component: NoctuaFormComponent
   }
 ];

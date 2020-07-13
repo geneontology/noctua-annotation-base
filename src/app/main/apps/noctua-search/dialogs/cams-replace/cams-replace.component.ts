@@ -67,7 +67,6 @@ export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
       public noctuaAnnotonFormService: NoctuaAnnotonFormService,
       public noctuaFormMenuService: NoctuaFormMenuService) {
     this._unsubscribeAll = new Subject();
-    this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
 
     this.camsService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -76,9 +75,11 @@ export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
           return;
         }
         this.cams = cams;
+        this.matchedCount = this.camsService.calculateMatchedCount();
       });
 
-    this.matchedCount = this.camsService.calculateMatchedCount();
+    this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
+
 
     console.log(this.matchedCount)
     this.gpNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity]);

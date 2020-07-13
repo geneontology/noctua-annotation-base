@@ -9,6 +9,20 @@
     @include deep-width(1000px);
   }
 
+  .noc-section-header {
+    padding: 8px 12px;
+    @include deep-height(80px);
+  }
+
+  .noc-matched-count {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
+    padding: 0 10px;
+    height: 100%;
+  }
+
   .noc-cam-heading {
     margin-bottom: 4px;
     padding: 0 10px;

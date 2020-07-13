@@ -37,6 +37,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
+  filterForm: FormGroup;
   cams: Cam[] = [];
   terms: any[];
   searchResults = [];
@@ -66,8 +67,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
 
     this._unsubscribeAll = new Subject();
 
-    this.matchedCount = this.camsService.calculateMatchedCount();
-    this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
+
 
     this.camsService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -76,9 +76,11 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
           return;
         }
         this.cams = cams;
+        this.matchedCount = this.camsService.calculateMatchedCount();
       });
 
-
+    this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
+    this.filterForm = this.createFilterForm();
   }
 
   ngOnInit(): void {
