@@ -16,6 +16,7 @@ import { Evidence, compareEvidence } from './../models/annoton/evidence';
 import { v4 as uuid } from 'uuid';
 import { Cam } from './../models/annoton/cam';
 import { uniqWith } from 'lodash';
+import { AnnotonNodeType } from './../models/annoton';
 
 @Injectable({
   providedIn: 'root'
@@ -125,6 +126,10 @@ export class CamService {
     this.noctuaLookupService.evidenceList = evidenceList;
 
     console.log(this.noctuaLookupService.evidenceList)
+  }
+
+  getNodesByType(annotonType: AnnotonNodeType): any[] {
+    return this.cam.getNodesByType(annotonType);
   }
 
   getUniqueEvidence(formAnnoton?: Annoton): Evidence[] {

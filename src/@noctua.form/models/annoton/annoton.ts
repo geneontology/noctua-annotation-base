@@ -342,6 +342,21 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     });
   }
 
+  get title() {
+    const self = this;
+    const gp = self.getNode(AnnotonNodeType.GoMolecularEntity);
+    const gpText = gp ? gp.getTerm().label : '';
+    let title = '';
+
+    if (self.annotonType === AnnotonType.ccOnly) {
+      title = gpText;
+    } else {
+      title = `enabled by ${gpText}`;
+    }
+
+    return title;
+  }
+
   get presentation() {
     const self = this;
 

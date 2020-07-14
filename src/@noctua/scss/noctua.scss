@@ -55,6 +55,14 @@ mat-chip {
   }
 }
 
+.noc-link-to-existing-dialog {
+  @include deep-width(1100px);
+
+  @include media-breakpoint('lt-lg') {
+    @include deep-width(90%);
+  }
+}
+
 .noc-search-database-dialog {
   @include deep-height(90%);
   @include deep-width(1100px);

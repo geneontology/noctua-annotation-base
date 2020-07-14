@@ -197,12 +197,15 @@ export class Cam {
     return result;
   }
 
-  getNodesByAspect(type: AnnotonNodeType): AnnotonNode[] {
+  getNodesByType(type: AnnotonNodeType): any[] {
     const self = this;
     const result = [];
 
     each(self.annotons, function (annoton: Annoton) {
-      result.push(...annoton.getNodesByType(type));
+      result.push({
+        title: annoton.title,
+        annotonNodes: annoton.getNodesByType(type)
+      });
     });
 
     return result;
