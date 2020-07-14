@@ -161,6 +161,9 @@
     <!--   <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchModels()">
       Search Models
     </button> -->
+    <button mat-menu-item *ngIf="entity.aspect==='P'" class="" (click)="openLinkToNodeDialog(entity)">
+      Choose From an Existing Process
+    </button>
     <button mat-menu-item *ngIf="true" class="" (click)="toggleIsComplement(entity)">
       NOT Qualifier
     </button>

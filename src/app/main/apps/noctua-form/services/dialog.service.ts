@@ -96,16 +96,16 @@ export class NoctuaFormDialogService {
             });
     }
 
-    openLinkToExistingDialogComponent(cam): void {
+    openLinkToExistingDialogComponent(entity, success): void {
         this.dialogRef = this._matDialog.open(LinkToExistingDialogComponent, {
             panelClass: 'link-to-existing-dialog',
             data: {
-                cam: cam
+                entity
             }
         });
         this.dialogRef.afterClosed()
             .subscribe(response => {
-
+                success(response);
             });
     }
 

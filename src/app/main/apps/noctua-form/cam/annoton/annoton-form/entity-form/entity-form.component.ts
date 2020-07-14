@@ -134,6 +134,30 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  openLinkToNodeDialog(entity: AnnotonNode) {
+    const self = this;
+
+    const evidences: Evidence[] = this.camService.getUniqueEvidence(self.noctuaAnnotonFormService.annoton);
+
+
+    const data = {
+      entity: entity,
+    };
+
+    const success = function (selected) {
+      if (selected.term) {
+        entity.term = new Entity(selected.term.term.id, selected.term.term.label);
+
+        if (selected.evidences && selected.evidences.length > 0) {
+          entity.predicate.setEvidence(selected.evidences);
+        }
+        self.noctuaAnnotonFormService.initializeForm();
+      }
+    };
+    self.noctuaFormDialogService.openLinkToExistingDialogComponent(data, success);
+
+  }
+
   openSearchModels() {
     const self = this;
     const gpNode = this.noctuaAnnotonFormService.annoton.getGPNode();

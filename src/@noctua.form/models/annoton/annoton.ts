@@ -148,6 +148,16 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   }
 
+
+  getNodesByType(type: AnnotonNodeType): AnnotonNode[] {
+    const self = this;
+    const result = filter(self.nodes, (annotonNode: AnnotonNode) => {
+      return annotonNode.type === type;
+    });
+
+    return result;
+  }
+
   getGPNode() {
     const self = this;
 

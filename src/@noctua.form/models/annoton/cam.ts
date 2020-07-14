@@ -5,7 +5,7 @@ import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } 
 
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { Annoton } from './annoton'
-import { AnnotonNode } from './annoton-node'
+import { AnnotonNode, AnnotonNodeType } from './annoton-node'
 import { Group } from '../group';
 import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
@@ -193,6 +193,17 @@ export class Cam {
     let result = find(self.annotons, (annoton: Annoton) => {
       return annoton.id === connectionId;
     })
+
+    return result;
+  }
+
+  getNodesByAspect(type: AnnotonNodeType): AnnotonNode[] {
+    const self = this;
+    const result = [];
+
+    each(self.annotons, function (annoton: Annoton) {
+      result.push(...annoton.getNodesByType(type));
+    });
 
     return result;
   }
