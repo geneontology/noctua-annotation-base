@@ -35,6 +35,7 @@ export class NoctuaUserService {
     const baristaToken = baristaTokenParam ? baristaTokenParam : localStorage.getItem('barista_token');
 
     if (!baristaToken) {
+      this.baristaToken = null;
       this.user = null;
       this.onUserChanged.next(this.user);
     } else {
@@ -50,11 +51,11 @@ export class NoctuaUserService {
               this.onUserChanged.next(this.user);
             } else {
               this.user = null;
-
               this.baristaToken = null;
               localStorage.removeItem('barista_token');
               this.onUserChanged.next(this.user);
             }
+
             const url = new URL(window.location.href);
             url.searchParams.delete('barista_token');
             window.history.replaceState(null, null, url.href);
@@ -62,7 +63,6 @@ export class NoctuaUserService {
         });
     }
   }
-
 
 
   getUsers(): Observable<any> {
@@ -101,5 +101,13 @@ export class NoctuaUserService {
     const filterValue = value.toLowerCase();
 
     return this.groups.filter((group: Group) => group.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  distinctUser(prev, curr) {
+    if (prev && curr) {
+      return prev.token === curr.token;
+    } else {
+      return prev === curr;
+    }
   }
 }

@@ -89,6 +89,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   relationEditable = false;
   showInMenu = false;
   insertMenuNodes = [];
+  linkedNode = false;
 
   constructor(annotonNode?: Partial<AnnotonNodeDisplay>) {
     if (annotonNode) {

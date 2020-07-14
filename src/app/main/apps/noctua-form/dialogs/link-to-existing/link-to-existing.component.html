@@ -16,12 +16,12 @@
       </div>
     </div>
     <div class="noc-section-body w-100-p" noctuaPerfectScrollbar>
-
-      <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
-        [(ngModel)]="favoriteSeason">
-        <div *ngFor="let node of nodes">
+      <mat-radio-group fxLayout="column" fxLayoutAlign="start stretch" class="w-100-p"
+        [(ngModel)]="selectedAnnotonNode">
+        <div *ngFor="let node of nodes" fxLayout="column" fxLayoutAlign="start stretch" class="w-100-p">
           {{node.title}}
-          <mat-radio-button class="example-radio-button" *ngFor="let annotonNode of node.annotonNodes" [value]="season">
+          <mat-radio-button class="example-radio-button" *ngFor="let annotonNode of node.annotonNodes"
+            [value]="annotonNode">
             {{annotonNode.term?.label}}
           </mat-radio-button>
         </div>

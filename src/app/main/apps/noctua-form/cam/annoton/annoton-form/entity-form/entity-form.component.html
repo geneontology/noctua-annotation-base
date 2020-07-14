@@ -17,7 +17,8 @@
   <div class="p-4" fxFlex fxLayout="row" fxLayoutAlign="start stretch">
     <mat-form-field class="noc-sm w-100-p" appearance="outline">
       <mat-label>{{entity.label}}</mat-label>
-      <textarea type="text" matInput formControlName="term" [matAutocomplete]="termAuto" row="2">
+      <textarea [readonly]="entity.linkedNode" type="text" matInput formControlName="term" [matAutocomplete]="termAuto"
+        row="2">
       </textarea>
       <mat-autocomplete #termAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
         <mat-option *ngFor="let item of entity?.termLookup.results" [value]="item">
@@ -161,8 +162,12 @@
     <!--   <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchModels()">
       Search Models
     </button> -->
-    <button mat-menu-item *ngIf="entity.aspect==='P'" class="" (click)="openLinkToNodeDialog(entity)">
+    <button mat-menu-item *ngIf="entity.aspect==='P' && !entity.linkedNode" class=""
+      (click)="openLinkToNodeDialog(entity)">
       Choose From an Existing Process
+    </button>
+    <button mat-menu-item *ngIf="entity.linkedNode" class="" (click)="openLinkToNodeDialog(entity)">
+      Unlink Node
     </button>
     <button mat-menu-item *ngIf="true" class="" (click)="toggleIsComplement(entity)">
       NOT Qualifier

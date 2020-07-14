@@ -17,13 +17,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class LinkToExistingDialogComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
   nodes: any[]
-  displayedColumns: string[] = [
-    'select',
-    'term',
-    'evidence',
-    'reference',
-    'with'];
-  dataSource;
+  selectedAnnotonNode;
 
   constructor(
     private _matDialogRef: MatDialogRef<LinkToExistingDialogComponent>,
@@ -42,7 +36,7 @@ export class LinkToExistingDialogComponent implements OnInit, OnDestroy {
 
   save() {
     this._matDialogRef.close({
-      // evidences: <Evidence[]>this.selection.selected
+      annotonNode: this.selectedAnnotonNode
     });
   }
 
@@ -51,7 +45,6 @@ export class LinkToExistingDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }

@@ -17,7 +17,7 @@ import {
   noctuaFormConfig
 } from 'noctua-form-base';
 
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { environment } from 'environments/environment';
@@ -46,14 +46,14 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor
-    (private route: ActivatedRoute,
-      private camService: CamService,
-      private noctuaDataService: NoctuaDataService,
-      public noctuaUserService: NoctuaUserService,
-      public noctuaFormConfigService: NoctuaFormConfigService,
-      public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-      public noctuaFormMenuService: NoctuaFormMenuService) {
+  constructor(
+    private route: ActivatedRoute,
+    private camService: CamService,
+    private noctuaDataService: NoctuaDataService,
+    public noctuaUserService: NoctuaUserService,
+    public noctuaFormConfigService: NoctuaFormConfigService,
+    public noctuaAnnotonFormService: NoctuaAnnotonFormService,
+    public noctuaFormMenuService: NoctuaFormMenuService) {
 
     this._unsubscribeAll = new Subject();
 
@@ -65,21 +65,20 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         this.modelId = params['model_id'] || null;
         const baristaToken = params['barista_token'] || null;
         this.noctuaUserService.getUser(baristaToken);
-
-        this.loadCam(this.modelId);
       });
 
     this.noctuaUserService.onUserChanged.pipe(
+      distinctUntilChanged(this.noctuaUserService.distinctUser),
       takeUntil(this._unsubscribeAll))
       .subscribe((user: Contributor) => {
         this.noctuaFormConfigService.setupUrls();
         this.noctuaFormConfigService.setUniversalUrls();
+        this.loadCam(this.modelId);
       });
   }
 
   ngOnInit(): void {
     const self = this;
-
 
     self.noctuaFormMenuService.setLeftDrawer(self.leftDrawer);
     self.noctuaFormMenuService.setRightDrawer(self.rightDrawer);

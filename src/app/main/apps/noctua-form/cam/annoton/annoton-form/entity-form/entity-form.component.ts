@@ -143,7 +143,12 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     };
 
     const success = function (selected) {
-
+      if (selected.annotonNode) {
+        entity.uuid = selected.annotonNode.uuid;
+        entity.term = selected.annotonNode.term;
+        entity.linkedNode = true;
+        self.noctuaAnnotonFormService.initializeForm();
+      }
     };
     self.noctuaFormDialogService.openLinkToExistingDialogComponent(data, success);
 
