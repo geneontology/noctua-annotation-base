@@ -134,7 +134,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  openLinkToNodeDialog(entity: AnnotonNode) {
+  linkNode(entity: AnnotonNode) {
     const self = this;
     const nodes = this.camService.getNodesByType(entity.type);
     const data = {
@@ -152,6 +152,11 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     };
     self.noctuaFormDialogService.openLinkToExistingDialogComponent(data, success);
 
+  }
+
+  unlinkNode(entity: AnnotonNode) {
+    entity.linkedNode = false;
+    entity.uuid = null;
   }
 
   openSearchModels() {

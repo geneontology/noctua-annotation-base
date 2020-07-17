@@ -18,11 +18,17 @@
     <div class="noc-section-body w-100-p" noctuaPerfectScrollbar>
       <mat-radio-group fxLayout="column" fxLayoutAlign="start stretch" class="w-100-p"
         [(ngModel)]="selectedAnnotonNode">
-        <div *ngFor="let node of nodes" fxLayout="column" fxLayoutAlign="start stretch" class="w-100-p">
-          {{node.title}}
-          <mat-radio-button class="example-radio-button" *ngFor="let annotonNode of node.annotonNodes"
-            [value]="annotonNode">
-            {{annotonNode.term?.label}}
+        <div *ngFor="let node of nodes" class="noc-radio-group-section" fxLayout="column" fxLayoutAlign="start stretch">
+          <div class="noc-title">
+            {{node.title}}
+          </div>
+          <mat-radio-button class="mb-8" *ngFor="let annotonNode of node.annotonNodes" [value]="annotonNode">
+            <div class="h4">
+              {{annotonNode.term?.label}}
+            </div>
+            <div class="">
+              <small>{{annotonNode.term?.id}}</small>
+            </div>
           </mat-radio-button>
         </div>
       </mat-radio-group>

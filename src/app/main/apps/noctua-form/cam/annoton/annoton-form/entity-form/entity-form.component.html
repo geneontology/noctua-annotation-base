@@ -90,7 +90,7 @@
             </button>
             <mat-autocomplete #referenceAuto="matAutocomplete" [displayWith]="referenceDisplayFn"
               class="noc-term-autocomplete">
-              <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
+              <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item.reference">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.reference }}
@@ -162,11 +162,10 @@
     <!--   <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchModels()">
       Search Models
     </button> -->
-    <button mat-menu-item *ngIf="entity.aspect==='P' && !entity.linkedNode" class=""
-      (click)="openLinkToNodeDialog(entity)">
+    <button mat-menu-item *ngIf="entity.aspect==='P' && !entity.linkedNode" class="" (click)="linkNode(entity)">
       Choose From an Existing Process
     </button>
-    <button mat-menu-item *ngIf="entity.linkedNode" class="" (click)="openLinkToNodeDialog(entity)">
+    <button mat-menu-item *ngIf="entity.linkedNode" class="" (click)="unlinkNode(entity)">
       Unlink Node
     </button>
     <button mat-menu-item *ngIf="true" class="" (click)="toggleIsComplement(entity)">
