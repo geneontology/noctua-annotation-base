@@ -25,45 +25,24 @@
         <div class="noc-annoton-group-row" fxLayout="column">
           <mat-form-field appearance="outline" class="noc-sm">
             <mat-label>Find What</mat-label>
-            <textarea type="text" matInput formControlName="subject" [matAutocomplete]="subjectAuto" rows="2"
+            <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="termsAuto" rows="2"
               placeholder="e.g. lipid transport activity"></textarea>
-            <mat-autocomplete #subjectAuto="matAutocomplete" [displayWith]="termDisplayFn"
-              class="noc-term-autocomplete">
-              <mat-option class="noc-term-autocomplete" *ngFor="let item of searchFormData['subject']?.searchResults"
-                [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                  <div class="noc-term-label">
-                    {{ item.label }}
-                  </div>
-                  <span fxFlex></span>
-                  <div class="noc-term-id">
-                    {{ item.id }}
-                  </div>
-                </div>
-              </mat-option>
-            </mat-autocomplete>
           </mat-form-field>
         </div>
         <div class="noc-annoton-group-row" fxLayout="column">
           <mat-form-field appearance="outline" class="noc-sm">
             <mat-label>Replace WIth</mat-label>
-            <textarea type="text" matInput formControlName="object" [matAutocomplete]="objectAuto"
+            <textarea type="text" matInput formControlName="replaceWith" [matAutocomplete]="termsAuto"
               placeholder="e.g., lipid binding" rows="2"></textarea>
-            <mat-autocomplete #objectAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
-              <mat-option class="noc-term-autocomplete" *ngFor="let item of searchFormData['object']?.searchResults"
-                [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                  <div class="noc-term-label">
-                    {{ item.label }}
-                  </div>
-                  <span fxFlex></span>
-                  <div class="noc-term-id">
-                    {{ item.id }}
-                  </div>
-                </div>
-              </mat-option>
-            </mat-autocomplete>
           </mat-form-field>
+        </div>
+        <div class="noc-annoton-group-row" fxLayout="column">
+          <button (click)="findWhat()" mat-stroked-button color="mr-8" class="noc-rounded-button mr-8">
+            Find
+          </button>
+          <button mat-stroked-button color="" class="noc-rounded-button mr-8">
+            Replace All
+          </button>
         </div>
       </div>
     </div>
@@ -77,3 +56,17 @@
     <button (click)="search()" type="button" mat-raised-button color="primary">Search</button>
   </div>
 </form>
+
+<mat-autocomplete #termsAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
+  <mat-option class="noc-term-autocomplete" *ngFor="let item of termNode.termLookup.results" [value]="item">
+    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <div class="noc-term-label">
+        {{ item.label }}
+      </div>
+      <span fxFlex></span>
+      <div class="noc-term-id">
+        {{ item.id }}
+      </div>
+    </div>
+  </mat-option>
+</mat-autocomplete>

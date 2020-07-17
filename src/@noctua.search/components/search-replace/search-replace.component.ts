@@ -1,9 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
-import { NoctuaFormConfigService, NoctuaUserService, NoctuaLookupService } from 'noctua-form-base';
-import { NoctuaSearchService } from './../..//services/noctua-search.service';
-import { startWith, map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import {
+  NoctuaFormConfigService,
+  NoctuaUserService, NoctuaLookupService,
+  AnnotonNode, EntityDefinition,
+  EntityLookup,
+  CamService,
+  CamsService
+} from 'noctua-form-base';
+import { NoctuaSearchService } from './../../services/noctua-search.service';
+import { startWith, map, distinctUntilChanged, debounceTime, takeUntil } from 'rxjs/operators';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 
 @Component({
@@ -19,20 +26,44 @@ export class SearchReplaceComponent implements OnInit, OnDestroy {
   cams: any[] = [];
   categories: any;
 
+  gpNode: AnnotonNode;
+  termNode: AnnotonNode;
+
 
   private unsubscribeAll: Subject<any>;
 
   constructor(public noctuaUserService: NoctuaUserService,
+    private camService: CamService,
+    private camsService: CamsService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaFormConfigService: NoctuaFormConfigService,
+    private noctuaLookupService: NoctuaLookupService,
     private noctuaSearchService: NoctuaSearchService) {
-    this.searchForm = this.createAnswerForm();
+
 
     this.unsubscribeAll = new Subject();
 
     this.categories = this.noctuaFormConfigService.findReplaceCategories;
 
+    this.gpNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity]);
+    this.termNode = EntityDefinition.generateBaseTerm([
+      EntityDefinition.GoMolecularFunction,
+      EntityDefinition.GoBiologicalProcess,
+      EntityDefinition.GoCellularComponent,
+      EntityDefinition.GoBiologicalPhase,
+      EntityDefinition.GoAnatomicalEntity,
+      EntityDefinition.GoCellTypeEntity
+    ]);
+
+    this.searchForm = this.createAnswerForm(this.categories.selected);
+
     this.onValueChanges();
+
+    this.noctuaSearchService.onCamsChanged
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe(cams => {
+        this.cams = cams;
+      });
   }
 
   ngOnInit(): void { }
@@ -42,22 +73,38 @@ export class SearchReplaceComponent implements OnInit, OnDestroy {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
   }
-  createAnswerForm() {
+
+  findWhat() {
+    const value = this.searchForm.get('findWhat').value;
+
+    const filter = {
+      terms: this.noctuaSearchService.searchCriteria.terms
+    };
+    this.camsService.initializeForm(this.cams);
+    this.camsService.loadCams(filter);
+
+  }
+
+  createAnswerForm(selectedCategory) {
     return new FormGroup({
       findWhat: new FormControl(),
       replaceWith: new FormControl(),
-      category: new FormControl(),
+      category: new FormControl(selectedCategory),
     });
   }
 
   onValueChanges() {
     const self = this;
+    const lookupFunc = self.noctuaLookupService.lookupFunc()
 
     this.searchForm.get('findWhat').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(400)
     ).subscribe(data => {
-
+      const lookup: EntityLookup = self.termNode.termLookup;
+      lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
+        lookup.results = response;
+      });
     });
 
     this.searchForm.get('replaceWith').valueChanges.pipe(
@@ -92,6 +139,9 @@ export class SearchReplaceComponent implements OnInit, OnDestroy {
 
 
   compareCategory(a: any, b: any) {
-    return (a.name === b.name);
+    if (a && b) {
+      return (a.name === b.name);
+    }
+    return false;
   }
 }

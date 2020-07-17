@@ -25,7 +25,7 @@ export class NoctuaSearchMenuService {
         }, history: {
             id: 7
         }, replace: {
-            id: 7
+            id: 8
         }
     };
 
