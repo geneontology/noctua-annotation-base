@@ -99,6 +99,21 @@ export class SaeGraph<T extends AnnotonNode> {
     removeEdge(this.graph, edge);
   }
 
+  getSubGraph(startNodeId: string): Graph<T, Triple<T>> {
+    const self = this;
+    const graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
+    const startingEdges = self.getEdges(startNodeId);
+    const startingNode = self.getNode(startNodeId);
+
+    addNode(graph, startingNode, startingNode.id);
+
+    each(startingEdges, (triple: Triple<T>) => {
+      self._trimGraphDFS(graph, triple.subject, triple.object, triple.predicate, triple.predicate);
+    });
+
+    return graph;
+  }
+
   getTrimmedGraph(startNodeId: string): Graph<T, Triple<T>> {
     const self = this;
     const graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
@@ -132,6 +147,7 @@ export class SaeGraph<T extends AnnotonNode> {
   resetGraph() {
     this.graph = this.graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
   }
+
 
   private _trimGraphDFS(graph: Graph<T, Triple<T>>,
     subjectNode: T,

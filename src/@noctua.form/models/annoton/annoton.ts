@@ -342,6 +342,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     });
   }
 
+  getPath(s) {
+    const self = this;
+
+
+  }
+
   get title() {
     const self = this;
     const gp = self.getNode(AnnotonNodeType.GoMolecularEntity);

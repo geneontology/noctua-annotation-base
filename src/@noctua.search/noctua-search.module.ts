@@ -12,6 +12,7 @@ import { SearchFilterComponent } from './components/search-filter/search-filter.
 import { SearchRelationComponent } from './components/search-relation/search-relation.component';
 import { SearchHistoryComponent } from './components/search-history/search-history.component';
 import { NoctuaEditorModule } from '@noctua.editor';
+import { SearchReplaceComponent } from './components/search-replace/search-replace.component';
 
 @NgModule({
     declarations: [
@@ -21,6 +22,7 @@ import { NoctuaEditorModule } from '@noctua.editor';
         SearchGroupsComponent,
         SearchOrganismsComponent,
         SearchRelationComponent,
+        SearchReplaceComponent,
         SearchHistoryComponent
     ],
     imports: [
@@ -38,6 +40,7 @@ import { NoctuaEditorModule } from '@noctua.editor';
         SearchGroupsComponent,
         SearchOrganismsComponent,
         SearchRelationComponent,
+        SearchReplaceComponent,
         SearchHistoryComponent
     ]
 })

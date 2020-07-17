@@ -130,6 +130,21 @@ export class NoctuaFormConfigService {
     };
   }
 
+  get findReplaceCategories() {
+    const options = [
+      noctuaFormConfig.findReplaceCategory.options.goterm,
+      noctuaFormConfig.findReplaceCategory.options.gp,
+      noctuaFormConfig.findReplaceCategory.options.evidence,
+      noctuaFormConfig.findReplaceCategory.options.reference,
+      noctuaFormConfig.findReplaceCategory.options.withfrom,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
   get mechanism() {
     const options = [
       noctuaFormConfig.mechanism.options.direct,
