@@ -198,6 +198,18 @@ $rotate-graph: 235deg;
       align-items: center;
       padding-top: 6px;
       padding-bottom: 6px;
+
+      &.noc-checkbox-cell {
+        padding-left: 16px;
+        border-right: $noc-primary-color-light solid 1px;
+      }
+
+      &.noc-expand-cell {}
+    }
+
+    .noc-cam-table-container {
+      width: 100%;
+      padding-left: 75px;
     }
 
     .mat-column-id {
@@ -210,7 +222,7 @@ $rotate-graph: 235deg;
 
     .noc-title {
       font-size: 12px;
-      padding-left: 10px;
+      padding-left: 0px;
       padding-right: 10px;
     }
 

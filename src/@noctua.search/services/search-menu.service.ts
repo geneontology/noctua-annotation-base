@@ -22,8 +22,9 @@ export class NoctuaSearchMenuService {
             id: 5
         }, organism: {
             id: 6
-        },
-        history: {
+        }, history: {
+            id: 7
+        }, replace: {
             id: 7
         }
     };

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { noctuaAnimations } from '@noctua/animations';
@@ -16,6 +16,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { NoctuaSearchDialogService } from '../../services/dialog.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 export function CustomPaginator() {
   const customPaginatorIntl = new MatPaginatorIntl();
@@ -29,7 +30,14 @@ export function CustomPaginator() {
   selector: 'noc-cams-table',
   templateUrl: './cams-table.component.html',
   styleUrls: ['./cams-table.component.scss'],
-  animations: noctuaAnimations,
+  animations: [
+    noctuaAnimations,
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
   providers: [
     { provide: MatPaginatorIntl, useValue: CustomPaginator() }
   ]
@@ -42,13 +50,14 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   displayedColumns = [
     'select',
+    'expand',
     'title',
     'state',
     'date',
     'contributor',
     'edit',
     'export',
-    'expand'];
+  ];
 
   searchCriteria: any = {};
   searchFormData: any = [];
@@ -61,9 +70,15 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   cams: any[] = [];
   camPage: CamPage;
 
+  tableOptions = {
+    hideHeader: true,
+    color: 'transparent'
+  }
+
   selection = new SelectionModel<Cam>(true, []);
 
   constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private camService: CamService,
     private camsService: CamsService,
     private noctuaDataService: NoctuaDataService,
@@ -145,6 +160,20 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       }
       this.noctuaSearchService.getPage(pageIndex, $event.pageSize);
     }
+  }
+
+  isExpansionDetailRow(i: number, cam: Cam) {
+    return cam.expanded;
+  }
+
+  toggleCamExpand(cam: Cam) {
+    if (!cam.expanded) {
+      this.camService.loadCam(cam);
+    } else {
+      cam.expanded = false;
+    }
+    //  this._changeDetectorRef.markForCheck();
+
   }
 
   openFind() {

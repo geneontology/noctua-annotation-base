@@ -35,6 +35,18 @@
       matTooltip="History" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'history']"></fa-icon>
     </button>
+    <button mat-icon-button color="" class="noc-rounded-button"
+      (click)="toggleLeftDrawer(noctuaSearchMenuService.leftPanel.replace)"
+      [ngClass]="{'noc-active': noctuaSearchMenuService.selectedLeftPanel?.id === noctuaSearchMenuService.leftPanel.replace.id}"
+      matTooltip="Find and Replace" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
+
+      <fa-stack>
+        <fa-icon [icon]="['fas', 'search']" stackItemSize="1x"></fa-icon>
+        <fa-icon [icon]="['fas', 'copy']" stackItemSize="1x"></fa-icon>
+      </fa-stack>
+    </button>
+
+
   </div>
   <mat-drawer-container class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start" autosize>
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>
@@ -46,6 +58,7 @@
         <noc-search-contributors *ngSwitchCase="noctuaSearchMenuService.leftPanel.contributor.id">
         </noc-search-contributors>
         <noc-search-organisms *ngSwitchCase="noctuaSearchMenuService.leftPanel.organism.id"></noc-search-organisms>
+        <noc-search-replace *ngSwitchCase="noctuaSearchMenuService.leftPanel.replace.id"></noc-search-replace>
         <noc-search-history *ngSwitchCase="noctuaSearchMenuService.leftPanel.history.id"></noc-search-history>
       </div>
     </mat-drawer>

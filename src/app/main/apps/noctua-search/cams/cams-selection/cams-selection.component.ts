@@ -47,9 +47,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
 
   tableOptions = {
     hideHeader: true,
-
   }
-
 
   noctuaFormConfig = noctuaFormConfig;
 
@@ -66,8 +64,6 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
       public noctuaFormMenuService: NoctuaFormMenuService) {
 
     this._unsubscribeAll = new Subject();
-
-
 
     this.camsService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))

@@ -28,6 +28,7 @@ import {
     faListAlt,
     faChevronRight,
     faHistory,
+    faCopy,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -77,6 +78,7 @@ export class AppModule {
             faCalendarDay,
             faCalendarWeek,
             faChevronRight,
+            faCopy,
             faFacebook,
             faHistory,
             faGithub,

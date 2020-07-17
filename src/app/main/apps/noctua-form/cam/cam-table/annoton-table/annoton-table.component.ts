@@ -57,6 +57,9 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
   @Input('annoton')
   public annoton: Annoton
 
+  @Input('options')
+  public options: any = {};
+
   public currentMenuEvent: any = {};
 
   private unsubscribeAll: Subject<any>;

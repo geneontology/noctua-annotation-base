@@ -28,13 +28,13 @@
       <div *ngFor="let annoton of cam.annotons" class="w-100-p"
         [ngClass]="{'noc-annoton-selected': annoton.id=== camService.annoton?.id}">
         <div class="noc-annoton-table-heading" fxLayout="row" fxLayoutAlign="start center">
-          <div fxFlex="50px" (click)="$event.stopPropagation()">
+          <div fxFlex="40px" (click)="$event.stopPropagation()">
             <button mat-icon-button (click)="toggleExpand(annoton)" color="primary" class="">
               <mat-icon *ngIf="!annoton.expanded" class="">
-                keyboard_arrow_down
+                keyboard_arrow_right
               </mat-icon>
               <mat-icon *ngIf="annoton.expanded" class="">
-                keyboard_arrow_up
+                keyboard_arrow_down
               </mat-icon>
             </button>
           </div>

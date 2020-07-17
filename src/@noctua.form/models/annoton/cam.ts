@@ -24,7 +24,7 @@ export class Cam {
   groupId: any;
 
   id: string;
-  expanded?: boolean;
+  expanded = false;
   model: any;
   annotatedEntity?: {};
   camRow?: any;
