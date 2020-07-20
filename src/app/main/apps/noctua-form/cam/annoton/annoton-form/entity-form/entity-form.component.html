@@ -17,23 +17,18 @@
   <div flex="" fxLayout="column" fxLayoutAlign="start stretch">
     <div class="noc-form-chip-row" flex="" fxLayout="column" fxLayoutAlign="start stretch">
       <mat-chip-list class="w-100-p">
-        <mat-chip class="noc-form-chip" *ngFor="let friendNode of friendNodesFlat" fxLayout="row"
-          fxLayoutAlign="start center" matTooltip="Term: {{friendNode.term?.label}} ({{friendNode.term?.id}})"
-          [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
+        <mat-chip class="noc-form-chip noc-node-chip" *ngFor="let friendNode of friendNodesFlat" [ngClass]="{'noc-mf': friendNode.type === annotonNodeType.GoMolecularFunction,
+          'noc-bp': friendNode.type === annotonNodeType.GoBiologicalProcess,
+          'noc-cc': friendNode.type === annotonNodeType.GoCellularComponent}" (click)="useTerm(friendNode)"
+          fxLayout="row" fxLayoutAlign="start center"
+          matTooltip="Term: {{friendNode.term?.label}} ({{friendNode.term?.id}})" [matTooltipPosition]="'below'"
+          [matTooltipShowDelay]="1000">
           <div fxFlex="" class="noc-chip-label">
             {{friendNode.term?.label}}
           </div>
-        </mat-chip>
-
-        <mat-chip class="noc-form-chip noc-node-chip" *ngFor="let friendNode of friendNodesFlat" [ngClass]="{'noc-mf': friendNode.annotonNodeType === annotonNodeType.MolecularFunction,
-          'noc-bp': friendNode.annotonNodeType === annotonNodeType.BiologicalProcess,
-          'noc-cc': friendNode.annotonNodeType === annotonNodeType.CellularComponent}" fxLayout="row"
-          fxLayoutAlign="start center" matTooltip="Term: {{friendNode.term?.label}} ({{friendNode.term?.id}})"
-          [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
-          <div fxFlex="" class="noc-chip-label">
-            {{friendNode.term?.label}}
-          </div>
-          <div class="noc-icon-action" (click)="openCamForm()">
+          <div
+            *ngIf="friendNode.type === annotonNodeType.GoBiologicalProcess || friendNode.type === annotonNodeType.GoCellularComponent"
+            class="noc-icon-action" (click)="$event.stopPropagation();useTerm(friendNode)">
             <fa-icon [icon]="['fas', 'plus']"></fa-icon>
           </div>
         </mat-chip>

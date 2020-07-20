@@ -74,6 +74,20 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     self.noctuaAnnotonFormService.initializeForm();
   }
 
+  useTerm(node: AnnotonNode) {
+    const self = this;
+
+    self.entity.term = node.term;
+    switch (self.entity.type) {
+      case AnnotonNodeType.GoBiologicalProcess:
+      case AnnotonNodeType.GoCellularComponent:
+        self.entity.linkedNode = true;
+        self.entity.uuid = node.uuid;
+    }
+
+    self.noctuaAnnotonFormService.initializeForm();
+  }
+
   removeEvidence(index: number) {
     const self = this;
 

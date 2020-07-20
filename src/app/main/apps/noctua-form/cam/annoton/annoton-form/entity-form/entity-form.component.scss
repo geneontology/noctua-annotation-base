@@ -62,7 +62,7 @@
     }
 
     &.noc-form-chip {
-      padding: 0;
+      padding: 0 0 0 8px;
       @include deep-height(25px);
       font-size: 10px;
 
@@ -94,17 +94,17 @@
 
       &.noc-node-chip {
         &.noc-mf {
-          @include noc-chip-color(#f4c89c);
-          // border: #d59f80 solid 1px;/
-        }
-
-        &.noc-bp {
           @include noc-chip-color(#b6f1cc);
           // border: #d59f80 solid 1px;/
         }
 
+        &.noc-bp {
+          @include noc-chip-color(#f4c89c);
+          // border: #d59f80 solid 1px;/
+        }
+
         &.noc-cc {
-          @include noc-chip-color(#d8f6a3);
+          @include noc-chip-color(rgba(#d3b5f5, 0.8));
           // border: #d59f80 solid 1px;/
         }
       }
