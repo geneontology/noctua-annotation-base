@@ -78,7 +78,7 @@ export class SearchReplaceComponent implements OnInit, OnDestroy {
     const value = this.searchForm.get('findWhat').value;
 
     const filter = {
-      terms: this.noctuaSearchService.searchCriteria.terms
+      terms: [value]
     };
     this.camsService.initializeForm(this.cams);
     this.camsService.loadCams(filter);

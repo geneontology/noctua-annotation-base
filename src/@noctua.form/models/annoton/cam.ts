@@ -211,6 +211,17 @@ export class Cam {
     return result;
   }
 
+  getNodesByTypeFlat(type: AnnotonNodeType): AnnotonNode[] {
+    const self = this;
+    const result = [];
+
+    each(self.annotons, function (annoton: Annoton) {
+      result.push(...annoton.getNodesByType(type));
+    });
+
+    return result;
+  }
+
   getEvidences(formAnnoton: Annoton) {
     const self = this;
     const result = [];

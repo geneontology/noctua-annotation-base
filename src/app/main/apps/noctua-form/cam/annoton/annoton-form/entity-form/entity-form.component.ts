@@ -12,10 +12,11 @@ import {
   noctuaFormConfig,
   Entity,
   ShapeDefinition,
-  AnnotonError
+  AnnotonError,
+  AnnotonNodeType
 } from 'noctua-form-base';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
-import { each, find } from 'lodash';
+import { each, find, flatten } from 'lodash';
 import { InlineWithService } from '@noctua.editor/inline-with/inline-with.service';
 import { InlineDetailService } from '@noctua.editor/inline-detail/inline-detail.service';
 
@@ -37,6 +38,10 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   entity: AnnotonNode;
   insertMenuItems = [];
   selectedItemDisplay;
+  friendNodes;
+  friendNodesFlat;
+
+  annotonNodeType = AnnotonNodeType;
 
   private unsubscribeAll: Subject<any>;
 
@@ -53,6 +58,8 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
+    this.friendNodes = this.camService.getNodesByType(this.entity.type);
+    this.friendNodesFlat = this.camService.getNodesByTypeFlat(this.entity.type);
   }
 
   ngOnDestroy(): void {

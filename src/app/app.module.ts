@@ -29,6 +29,7 @@ import {
     faChevronRight,
     faHistory,
     faCopy,
+    faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -85,6 +86,7 @@ export class AppModule {
             faListAlt,
             faPaw,
             faPen,
+            faPlus,
             faSearch,
             faSitemap,
             faTasks,
