@@ -155,6 +155,40 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  openSearchEvidenceDialog(entity: AnnotonNode) {
+    const self = this;
+    const gpNode = this.noctuaAnnotonFormService.annoton.getGPNode();
+
+    if (gpNode) {
+      const data = {
+        readonly: false,
+        gpNode: gpNode.term,
+        aspect: entity.aspect,
+        entity: entity,
+        params: {
+          term: '',
+          evidence: ''
+        }
+      };
+
+      const success = function (selected) {
+        if (selected.term) {
+          entity.term = new Entity(selected.term.term.id, selected.term.term.label);
+
+          if (selected.evidences && selected.evidences.length > 0) {
+            entity.predicate.setEvidence(selected.evidences);
+          }
+          self.noctuaAnnotonFormService.initializeForm();
+        }
+      };
+      self.noctuaFormDialogService.openSearchEvidenceDialog(data, success);
+    } else {
+      // const error = new AnnotonError('error', 1, "Please enter a gene product", meta)
+      //errors.push(error);
+      // self.dialogService.openAnnotonErrorsDialog(ev, entity, errors)
+    }
+  }
+
   linkNode(entity: AnnotonNode) {
     const self = this;
     const nodes = this.camService.getNodesByType(entity.type);

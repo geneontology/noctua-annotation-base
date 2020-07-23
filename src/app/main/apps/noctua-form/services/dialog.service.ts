@@ -19,6 +19,7 @@ import {
 import 'rxjs/add/operator/map';
 import { NoctuaConfirmDialogComponent } from '@noctua/components/confirm-dialog/confirm-dialog.component';
 import { PreviewAnnotonDialogComponent } from '../dialogs/preview-annoton/preview-annoton.component';
+import { SearchEvidenceDialogComponent } from '../dialogs/search-evidence/search-evidence.component';
 
 
 @Injectable({
@@ -125,6 +126,22 @@ export class NoctuaFormDialogService {
     openSearchDatabaseDialog(searchCriteria, success): void {
         this.dialogRef = this._matDialog.open(SearchDatabaseDialogComponent, {
             panelClass: 'noc-search-database-dialog',
+            data: {
+                searchCriteria: searchCriteria
+            },
+            width: '600px',
+        });
+        this.dialogRef.afterClosed()
+            .subscribe(response => {
+                if (response) {
+                    success(response);
+                }
+            });
+    }
+
+    openSearchEvidenceDialog(searchCriteria, success): void {
+        this.dialogRef = this._matDialog.open(SearchEvidenceDialogComponent, {
+            panelClass: 'noc-search-evidence-dialog',
             data: {
                 searchCriteria: searchCriteria
             },

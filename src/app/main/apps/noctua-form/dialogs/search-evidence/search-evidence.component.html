@@ -1,0 +1,34 @@
+<div class="dialog-content-wrapper noc-dialog" fxLayout="column" fxLayoutAlign="start stretch">
+  <div class="m-0 noc-dialog-header" fxLayout="row" fxLayoutAlign="start center">
+    <span class="noc-dialog-header-title">
+      Search Evidence</span>
+    <span fxFlex></span>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" aria-label="Close dialog">
+      <mat-icon>close</mat-icon> Close
+    </button>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start start" class="noc-dialog-body">
+    <div class="h-100-p noc-form-section" fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header  w-100-p" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Selected Evidence
+          <small></small>
+        </div>
+      </div>
+      <div class="noc-section-body w-100-p" noctuaPerfectScrollbar>
+        <div *ngFor="let annotonNode of annotonNodes" fxLayout="column" fxLayoutAlign="start stretch">
+          <div class="noc-term-box" (click)="selectAnnotonNode(annotonNode)" fxLayoutAlign="start center">
+            {{annotonNode.getTerm().label}}
+          </div>
+          <noc-select-evidence [evidence]="annotonNode.predicate.evidence">
+          </noc-select-evidence>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="m-0 p-16 noc-dialog-footer" fxLayout="row" fxLayoutAlign="space-between center">
+    <span fxFlex></span>
+    <button (click)='close()' type="button" mat-raised-button color="" class="mr-8">Cancel</button>
+    <button (click)="save()" type="button" mat-raised-button color="primary">Done</button>
+  </div>
+</div>

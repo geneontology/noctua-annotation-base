@@ -243,6 +243,10 @@ export class NoctuaGraphService {
       isComplement: self.getNodeIsComplement(node),
     };
 
+    //if (result.uuid === 'gomodel:R-HSA-9679509/R-COV-9686310_R-HSA-9686174') {
+    //  console.log(result.term.label, result.rootTypes, result.uuid)
+    //}
+
     return new AnnotonNode(result);
   }
 

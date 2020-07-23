@@ -242,7 +242,7 @@ export class NoctuaFormConfigService {
   createAnnotonConnectorModel(upstreamAnnoton: Annoton, downstreamAnnoton: Annoton, srcProcessNode?: AnnotonNode, srcHasInputNode?: AnnotonNode) {
     const self = this;
     const srcUpstreamNode = upstreamAnnoton.getMFNode();
-    const srcDownstreamNode = downstreamAnnoton.getMFNode();
+    const srcDownstreamNode = downstreamAnnoton ? downstreamAnnoton.getMFNode() : new AnnotonNode();
     const upstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
     const downstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
     const processNode = srcProcessNode ?

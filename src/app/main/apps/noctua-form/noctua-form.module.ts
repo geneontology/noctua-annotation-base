@@ -52,6 +52,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { SearchEvidenceDialogComponent } from './dialogs/search-evidence/search-evidence.component';
+import { SelectEvidenceComponent } from './components/select-evidence/select-evidence.component';
 
 const routes = [
   {
@@ -104,6 +106,7 @@ const routes = [
     LinkToExistingDialogComponent,
     SelectEvidenceDialogComponent,
     SearchDatabaseDialogComponent,
+    SearchEvidenceDialogComponent,
     PreviewAnnotonDialogComponent,
     CamDiagramComponent,
     CamFormComponent,
@@ -135,6 +138,7 @@ const routes = [
     LinkToExistingDialogComponent,
     SelectEvidenceDialogComponent,
     SearchDatabaseDialogComponent,
+    SearchEvidenceDialogComponent,
     CamDiagramComponent,
     CamFormComponent,
     NodeComponent,
@@ -147,6 +151,7 @@ const routes = [
     GraphPreviewComponent,
     CamPreviewComponent,
     CamGraphComponent,
+    SelectEvidenceComponent,
   ],
   entryComponents: [
     AddEvidenceDialogComponent,
@@ -156,6 +161,7 @@ const routes = [
     LinkToExistingDialogComponent,
     SelectEvidenceDialogComponent,
     SearchDatabaseDialogComponent,
+    SearchEvidenceDialogComponent,
     PreviewAnnotonDialogComponent
     //  NodeComponent,
     // NodesContainerComponent
