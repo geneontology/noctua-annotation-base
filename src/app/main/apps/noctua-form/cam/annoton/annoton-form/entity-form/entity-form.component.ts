@@ -13,7 +13,8 @@ import {
   Entity,
   ShapeDefinition,
   AnnotonError,
-  AnnotonNodeType
+  AnnotonNodeType,
+  Annoton
 } from 'noctua-form-base';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 import { each, find, flatten } from 'lodash';
@@ -59,7 +60,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.entity = this.noctuaAnnotonFormService.annoton.getNode(this.entityFormGroup.get('id').value);
     this.friendNodes = this.camService.getNodesByType(this.entity.type);
-    this.friendNodesFlat = this.camService.getNodesByTypeFlat(this.entity.type);
+    //  this.friendNodesFlat = this.camService.getNodesByTypeFlat(this.entity.type);
   }
 
   ngOnDestroy(): void {
@@ -74,7 +75,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     self.noctuaAnnotonFormService.initializeForm();
   }
 
-  useTerm(node: AnnotonNode) {
+  useTerm(node: AnnotonNode, annoton: Annoton) {
     const self = this;
 
     self.entity.term = node.term;
@@ -83,6 +84,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       case AnnotonNodeType.GoCellularComponent:
         self.entity.linkedNode = true;
         self.entity.uuid = node.uuid;
+        self.noctuaAnnotonFormService.annoton.insertSubgraph(annoton, node.id);
     }
 
     self.noctuaAnnotonFormService.initializeForm();
@@ -199,9 +201,13 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     const success = function (selected) {
       if (selected.annotonNode) {
-        entity.uuid = selected.annotonNode.uuid;
-        entity.term = selected.annotonNode.term;
+        const selectedAnnotonNode = selected.annotonNode as AnnotonNode;
+        entity.uuid = selectedAnnotonNode.uuid;
+        entity.term = selectedAnnotonNode.term;
+
         entity.linkedNode = true;
+        console.log(1)
+        self.noctuaAnnotonFormService.annoton.insertSubgraph(selected.annoton, entity.id);
         self.noctuaAnnotonFormService.initializeForm();
       }
     };

@@ -30,6 +30,7 @@ import {
     faHistory,
     faCopy,
     faPlus,
+    faLink,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -83,6 +84,7 @@ export class AppModule {
             faFacebook,
             faHistory,
             faGithub,
+            faLink,
             faListAlt,
             faPaw,
             faPen,

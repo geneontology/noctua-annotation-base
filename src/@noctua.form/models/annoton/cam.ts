@@ -203,6 +203,7 @@ export class Cam {
 
     each(self.annotons, function (annoton: Annoton) {
       result.push({
+        annoton,
         title: annoton.title,
         annotonNodes: annoton.getNodesByType(type)
       });

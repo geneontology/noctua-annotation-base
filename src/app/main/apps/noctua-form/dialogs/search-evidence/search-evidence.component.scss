@@ -5,8 +5,6 @@ $accent: map-get($theme, accent);
 
 :host {
 
-
-
   @include media-breakpoint('xs') {
     width: 100%;
   }
@@ -15,7 +13,24 @@ $accent: map-get($theme, accent);
     width: 600px;
   }
 
-  .noc-evidence-table {
+  .noc-section-body {
+    background-color: #EEE;
+  }
+
+  .noc-term-box {
+    width: 100%;
+    margin-bottom: 12px;
+
+    @include mat-elevation(2);
+
+    .noc-term-row {
+      padding: 12px 8px;
+    }
+  }
+
+  noc-select-evidence {
+    width: 100%;
+
     .mat-cell {
       padding: 0 10px;
       font-size: 12px !important;
@@ -84,40 +99,6 @@ $accent: map-get($theme, accent);
         line-height: 15px;
       }
     }
-  }
-
-  .noc-left-panel {
-    // min-height: 800px;
-    // padding: 12px 8px;
-    background-color: #EEE;
-    border-right: rgba(map-get($primary, default), 0.6) solid 1px;
-
-
-    .noc-term-box {
-      font-size: 10px;
-      color: #555;
-      padding: 10px 0;
-      border-bottom: rgba(map-get($primary, default), 0.2) solid 1px;
-
-      mat-icon {
-        @include noc-icon-size(12px);
-        display: none;
-      }
-
-      &.noc-term-selected {
-        // background-color: 
-        color: #000;
-        font-weight: bold;
-
-        mat-icon {
-          display: initial;
-        }
-      }
-    }
-  }
-
-  .noc-right-panel {
-    // padding: 12px 8px 16px 12px;
   }
 
   .noc-dialog-body {

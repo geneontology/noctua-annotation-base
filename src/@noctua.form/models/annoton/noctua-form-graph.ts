@@ -92,6 +92,26 @@ export function compareTriple<EdgeMetadata>(a: Edge<EdgeMetadata>, b: Edge<EdgeM
     return a.subjectId === b.subjectId && a.objectId === b.objectId;
 }
 
+
+export function addGraph<Node, EdgeMetadata>(
+    graph1: Graph<Node, EdgeMetadata>,
+    graph2: Graph<Node, EdgeMetadata>
+) {
+    const keys1 = Object.keys(getNodes(graph1));
+    const nodes2 = getNodes(graph2);
+    const edges1 = getEdges(graph1);
+    const edges2 = getEdges(graph2);
+
+    each(nodes2, (node: Node, key: string) => {
+        // const node = findNode(graph1, nodeId);
+        addNode(graph1, node, key);
+    });
+
+    each(edges2, (edge: Edge<EdgeMetadata>) => {
+        addEdge(graph1, edge);
+    });
+}
+
 export function subtractNodes<Node extends AnnotonNode, EdgeMetadata>(
     graph1: Graph<Node, EdgeMetadata>,
     graph2: Graph<Node, EdgeMetadata>

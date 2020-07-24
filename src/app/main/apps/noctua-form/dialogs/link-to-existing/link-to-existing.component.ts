@@ -27,12 +27,10 @@ export class LinkToExistingDialogComponent implements OnInit, OnDestroy {
     this._unsubscribeAll = new Subject();
 
     this.nodes = this._data.nodes;
-
   }
 
   ngOnInit() {
   }
-
 
   save() {
     this._matDialogRef.close({

@@ -13,7 +13,7 @@ import { SelectEvidenceDialogComponent } from './../dialogs/select-evidence/sele
 import { SearchDatabaseDialogComponent } from './../dialogs/search-database/search-database.component';
 
 import {
-    Evidence
+    Evidence, AnnotonNode
 } from 'noctua-form-base';
 
 import 'rxjs/add/operator/map';
@@ -103,7 +103,7 @@ export class NoctuaFormDialogService {
             data
         });
         this.dialogRef.afterClosed()
-            .subscribe(response => {
+            .subscribe((response) => {
                 success(response);
             });
     }

@@ -24,7 +24,7 @@ export class SelectEvidenceComponent implements OnInit, OnDestroy {
 
   @Input('evidence') evidence: Evidence[];
 
-  displayedColumns: string[] = ['select', 'evidence', 'reference', 'with'];
+  displayedColumns: string[] = ['select', 'evidence', 'reference', 'with', 'assignedBy'];
   dataSource;
   selection = new SelectionModel<Evidence>(true, []);
 

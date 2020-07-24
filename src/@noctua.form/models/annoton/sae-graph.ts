@@ -15,6 +15,7 @@ import {
   findNode,
   getNodes,
   getEdges,
+  addGraph,
 } from './noctua-form-graph';
 import { each, find } from 'lodash';
 
@@ -99,19 +100,11 @@ export class SaeGraph<T extends AnnotonNode> {
     removeEdge(this.graph, edge);
   }
 
-  getSubGraph(startNodeId: string): Graph<T, Triple<T>> {
+  addSubGraph(graph: Graph<T, Triple<T>>): Graph<T, Triple<T>> {
     const self = this;
-    const graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
-    const startingEdges = self.getEdges(startNodeId);
-    const startingNode = self.getNode(startNodeId);
 
-    addNode(graph, startingNode, startingNode.id);
-
-    each(startingEdges, (triple: Triple<T>) => {
-      self._trimGraphDFS(graph, triple.subject, triple.object, triple.predicate, triple.predicate);
-    });
-
-    return graph;
+    addGraph(self.graph, graph);
+    return self.graph;
   }
 
   getTrimmedGraph(startNodeId: string): Graph<T, Triple<T>> {
@@ -147,7 +140,6 @@ export class SaeGraph<T extends AnnotonNode> {
   resetGraph() {
     this.graph = this.graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
   }
-
 
   private _trimGraphDFS(graph: Graph<T, Triple<T>>,
     subjectNode: T,

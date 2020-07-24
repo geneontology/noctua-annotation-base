@@ -148,7 +148,6 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   }
 
-
   getNodesByType(type: AnnotonNodeType): AnnotonNode[] {
     const self = this;
     const result = filter(self.nodes, (annotonNode: AnnotonNode) => {
@@ -342,11 +341,14 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     });
   }
 
-  getPath(s) {
+  insertSubgraph(annoton: Annoton, startNodeId: string) {
     const self = this;
 
+    const graph = annoton.getTrimmedGraph(startNodeId);
 
+    self.addSubGraph(graph);
   }
+
 
   get title() {
     const self = this;
