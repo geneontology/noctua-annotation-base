@@ -57,7 +57,7 @@ import { SelectEvidenceComponent } from './components/select-evidence/select-evi
 
 const routes = [
   {
-    path: '',
+    path: 'f',
     component: NoctuaFormComponent
   }
 ];

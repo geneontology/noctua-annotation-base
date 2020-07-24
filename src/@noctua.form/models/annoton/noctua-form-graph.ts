@@ -103,7 +103,7 @@ export function addGraph<Node, EdgeMetadata>(
     const edges2 = getEdges(graph2);
 
     each(nodes2, (node: Node, key: string) => {
-        // const node = findNode(graph1, nodeId);
+        //   const node = findNode(graph1, key);
         addNode(graph1, node, key);
     });
 

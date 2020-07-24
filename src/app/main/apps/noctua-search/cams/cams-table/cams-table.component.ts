@@ -177,8 +177,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   openFind() {
-    console.log(this.selection,
-      this.noctuaSearchService.searchCriteria.terms)
+    console.log(this.selection, this.noctuaSearchService.searchCriteria.terms)
 
     const filter = {
       terms: this.noctuaSearchService.searchCriteria.terms

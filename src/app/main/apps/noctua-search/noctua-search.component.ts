@@ -135,6 +135,10 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     this.noctuaCommonMenuService.createModel(type);
   }
 
+  reviewModel() {
+
+  }
+
   search() {
     const searchCriteria = this.searchForm.value;
     this.noctuaSearchService.search(searchCriteria);
