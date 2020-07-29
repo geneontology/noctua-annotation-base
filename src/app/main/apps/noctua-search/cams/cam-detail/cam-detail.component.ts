@@ -16,32 +16,29 @@ import {
   NoctuaAnnotonFormService,
   CamService,
   noctuaFormConfig,
-  CamsService,
-  AnnotonNode,
-  EntityLookup,
-  NoctuaLookupService
+  CamsService
 } from 'noctua-form-base';
 
-import { takeUntil, distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 import { noctuaAnimations } from '@noctua/animations';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'noc-cams-selection',
-  templateUrl: './cams-selection.component.html',
-  styleUrls: ['./cams-selection.component.scss'],
+  selector: 'noc-cam-detail',
+  templateUrl: './cam-detail.component.html',
+  styleUrls: ['./cam-detail.component.scss'],
   animations: noctuaAnimations,
 })
-export class CamsSelectionComponent implements OnInit, OnDestroy {
+export class CamDetailComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
 
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
   filterForm: FormGroup;
-  cams: Cam[] = [];
+  cam: Cam;
   terms: any[];
   searchResults = [];
   modelId = '';
@@ -55,42 +52,28 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
 
   noctuaFormConfig = noctuaFormConfig;
 
-
-  searchCriteria: any = {};
-  searchForm: FormGroup;
-  selectedOrganism = {};
-  searchFormData: any = [];
-  categories: any;
-
-  gpNode: AnnotonNode;
-  termNode: AnnotonNode;
-
   private _unsubscribeAll: Subject<any>;
 
   constructor
     (private route: ActivatedRoute,
-      private camsService: CamsService,
+      private camService: CamService,
       private noctuaDataService: NoctuaDataService,
       public noctuaSearchService: NoctuaSearchService,
       public noctuaUserService: NoctuaUserService,
-      private noctuaLookupService: NoctuaLookupService,
       public noctuaFormConfigService: NoctuaFormConfigService,
       public noctuaAnnotonFormService: NoctuaAnnotonFormService,
       public noctuaFormMenuService: NoctuaFormMenuService) {
 
     this._unsubscribeAll = new Subject();
 
-    this.categories = this.noctuaFormConfigService.findReplaceCategories;
-    this.searchForm = this.createAnswerForm(this.categories.selected);
-
-    this.camsService.onCamsChanged
+    console.log(1)
+    this.camService.onCamChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(cams => {
-        if (!cams) {
+      .subscribe(cam => {
+        if (!cam) {
           return;
         }
-        this.cams = cams;
-        this.matchedCount = this.camsService.calculateMatchedCount();
+        this.cam = cam;
       });
 
     this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
@@ -136,42 +119,8 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
     });
   }
 
-  createAnswerForm(selectedCategory) {
-    return new FormGroup({
-      findWhat: new FormControl(),
-      replaceWith: new FormControl(),
-      category: new FormControl(selectedCategory),
-    });
-  }
-
-
-  onValueChanges() {
-    const self = this;
-    const lookupFunc = self.noctuaLookupService.lookupFunc()
-
-    this.searchForm.get('findWhat').valueChanges.pipe(
-      distinctUntilChanged(),
-      debounceTime(400)
-    ).subscribe(data => {
-      const lookup: EntityLookup = self.termNode.termLookup;
-      lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
-        lookup.results = response;
-      });
-    });
-
-    this.searchForm.get('replaceWith').valueChanges.pipe(
-      distinctUntilChanged(),
-      debounceTime(400)
-    ).subscribe(data => {
-
-    });
-  }
-
-  compareCategory(a: any, b: any) {
-    if (a && b) {
-      return (a.name === b.name);
-    }
-    return false;
+  compareEntity(a: any, b: any) {
+    return (a.id === b.id);
   }
 
   close() {

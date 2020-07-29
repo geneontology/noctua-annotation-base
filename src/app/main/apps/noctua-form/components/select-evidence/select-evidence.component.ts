@@ -1,5 +1,5 @@
 
-import { Component, OnInit, OnDestroy, Inject, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, Input, Output, EventEmitter } from '@angular/core';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -24,6 +24,9 @@ export class SelectEvidenceComponent implements OnInit, OnDestroy {
 
   @Input('evidence') evidence: Evidence[];
 
+  @Output()
+  onSelectionChanged: EventEmitter<any> = new EventEmitter<any>();
+
   displayedColumns: string[] = ['select', 'evidence', 'reference', 'with', 'assignedBy'];
   dataSource;
   selection = new SelectionModel<Evidence>(true, []);
@@ -35,7 +38,6 @@ export class SelectEvidenceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(this.evidence)
     this.dataSource = new MatTableDataSource<Evidence>(this.evidence);
   }
   /** Whether the number of selected elements matches the total number of rows. */

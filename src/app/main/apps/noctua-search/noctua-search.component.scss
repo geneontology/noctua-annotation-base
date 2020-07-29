@@ -12,6 +12,10 @@ $accent: map-get($theme, accent);
     padding: 10px;
   }
 
+  .noc-section-body {
+    //scroll
+  }
+
   .header {
     padding-bottom: 10px;
     background-image: linear-gradient(to right, #00174f, rgba(#00174f, 0.8), rgba(#00174f, 0.5)), url("~assets/images/gene.jpeg");
@@ -22,12 +26,14 @@ $accent: map-get($theme, accent);
     position: relative;
     flex: 1 0 auto;
     height: 280px;
+    min-width: 800px;
     max-height: 280px;
     text-align: center;
     overflow: hidden;
 
     @include media-breakpoint('lt-md') {
       height: 200px;
+      min-width: 600px;
     }
 
     h1 {

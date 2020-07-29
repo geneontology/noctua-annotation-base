@@ -3,6 +3,12 @@
 $noc-primary-color: #039be5;
 $noc-secondary-color: #995014;
 
+.ps__rail-x {
+  top: 3px;
+  top: initial !important;
+  bottom: 0 !important;
+}
+
 @mixin deep-width($number) {
   width: $number;
   min-width: $number;

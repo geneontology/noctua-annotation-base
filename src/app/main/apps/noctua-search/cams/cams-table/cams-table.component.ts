@@ -50,13 +50,13 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   displayedColumns = [
     'select',
-    'expand',
     'title',
     'state',
     'date',
     'contributor',
     'edit',
     'export',
+    'expand',
   ];
 
   searchCriteria: any = {};
@@ -185,6 +185,19 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     this.camsService.initializeForm(this.selection.selected);
     this.camsService.loadCams(filter);
     this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsSelection);
+  }
+
+  openDetails(cam: Cam) {
+    console.log(this.selection, this.noctuaSearchService.searchCriteria.terms)
+
+    /*  const filter = {
+       terms: this.noctuaSearchService.searchCriteria.terms
+     }; */
+    // this.camService.initializeForm(cam);
+    this.camService.loadCam(cam);
+    this.camService.cam = cam;
+    this.camService.onCamChanged.next(cam);
+    this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camDetail);
   }
 
   openReplace() {

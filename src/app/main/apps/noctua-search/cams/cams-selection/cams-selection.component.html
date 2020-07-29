@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-cams noc-drawer h-100-p">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-drawer-header-title">
-      Find</span>
+      Annotation Review Tool</span>
     <span fxFlex></span>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
       aria-label="Close dialog">
@@ -9,29 +9,63 @@
     </button>
   </div>
   <div class="noc-drawer-body w-100-p" noctuaPerfectScrollbar>
+
     <div *ngIf="!noctuaUserService.user" class="noc-draw-body-disabled" fxLayoutAlign="center center">
       Log in to Continue
     </div>
-    <div class="noc-section-header w-100-p">
-      <form fxLayout="row" fxLayoutAlign="start center" name="filterForm" [formGroup]="filterForm"
-        class="w-100-p h-100-p">
-        <mat-form-field appearance="outline" class="noc-sm" fxFlex="300px">
-          <mat-label>Find What</mat-label>
-          <mat-select placeholder="" formControlName="findWhat" [compareWith]="compareEntity">
-            <mat-option *ngFor="let term of terms" [value]="term">
-              {{term.label}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <div class="noc-matched-count">
-          1 of {{matchedCount}}
+    <ng-container [ngSwitch]="searchFormType">
+      <div *ngSwitchCase="'quick'">
+        <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+          <div class="noc-section-body pt-8" fxLayout="row" fxLayoutAlign="start stretch">
+            <div class="noc-annoton-group-row" fxLayout="column">
+              <mat-form-field appearance="outline" class="noc-sm">
+                <mat-label>Category</mat-label>
+                <mat-select placeholder="" [compareWith]="compareCategory">
+                  <mat-option *ngFor="let category of categories.options" [value]="category">
+                    {{category.label}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="noc-annoton-group-row" fxLayout="column">
+              <mat-form-field appearance="outline" class="noc-sm">
+                <mat-label>Find What</mat-label>
+                <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="termsAuto" rows="2"
+                  placeholder="e.g. lipid transport activity"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="noc-annoton-group-row" fxLayout="column">
+              <mat-form-field appearance="outline" class="noc-sm">
+                <mat-label>Replace WIth</mat-label>
+                <textarea type="text" matInput formControlName="replaceWith" [matAutocomplete]="termsAuto"
+                  placeholder="e.g., lipid binding" rows="2"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="noc-annoton-group-row" fxLayout="column">
+              <button (click)="findWhat()" mat-stroked-button color="mr-8" class="noc-rounded-button mr-8">
+                Find Next
+              </button>
+              <button mat-stroked-button color="" class="noc-rounded-button mr-8">
+                Replace All
+              </button>
+            </div>
+          </div>
         </div>
-        <button type="button" mat-stroked-button color="" class="noc-rounded-button mr-8">
-          Find Next
+        <button mat-menu-item class="" (click)="selectSearchFormType('advanced')">
+          Advanced Search
         </button>
-      </form>
-    </div>
-    <noc-annoton-search-form></noc-annoton-search-form>
+      </div>
+      <div *ngSwitchCase="'advanced'">
+        <button mat-menu-item class="" (click)="selectSearchFormType('quick')">
+          Quick Search
+        </button>
+        <noc-annoton-search-form></noc-annoton-search-form>
+        <h2>
+          Replace With
+        </h2>
+        <noc-annoton-search-form></noc-annoton-search-form>
+      </div>
+    </ng-container>
     <div *ngFor="let cam of cams" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
         [@animateStagger]="{value:'50'}">
@@ -43,45 +77,7 @@
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </div>
         </div>
-        <div *ngIf="cam.state" class="noc-model-state" fxLayout="row" fxLayoutAlign="start center">
-          <mat-chip class="noc-table-chip noc-state-chip" [ngClass]="{'noc-development': cam.state.name === 'development',
-        'noc-production': cam.state.name === 'production',
-        'noc-review': cam.state.name === 'review'}" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-icon">
-              <fa-icon [icon]="['fas', 'tasks']"></fa-icon>
-            </div>
-            <div fxFlex="" class="noc-chip-label">
-              {{cam.state.label}}
-            </div>
-            <div class="noc-icon-action" (click)="openCamForm()">
-              <fa-icon [icon]="['fas', 'pen']"></fa-icon>
-            </div>
-          </mat-chip>
-        </div>
-        <div *ngIf="cam.date" class="noc-date" fxFlex="100px" fxLayout="row" fxLayoutAlign="start center">
-          <mat-chip class="noc-table-chip noc-date-chip" fxLayout="row" fxLayoutAlign="start center"
-            (click)="openCamForm()">
-            <div class="noc-icon">
-              <fa-icon [icon]="['fas', 'calendar-day']"></fa-icon>
-            </div>
-            <div fxFlex="" class="noc-chip-label">
-              {{cam.date}}
-            </div>
-          </mat-chip>
-        </div>
-        <div fxFlex="" fxLayout="row" fxLayoutAlign="start center">
-          <mat-chip-list>
-            <mat-chip class="noc-table-chip noc-user-chip" fxLayout="row" fxLayoutAlign="start center"
-              *ngFor="let contributor of cam.contributors" (click)="openCamForm()">
-              <div class="noc-icon">
-                <fa-icon [icon]="['fas', 'user']"></fa-icon>
-              </div>
-              <div fxFlex="" class="noc-chip-label">
-                {{contributor.name}}
-              </div>
-            </mat-chip>
-          </mat-chip-list>
-        </div>
+        <div fxFlex></div>
         <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
           <mat-icon>more_vert</mat-icon>
         </button>

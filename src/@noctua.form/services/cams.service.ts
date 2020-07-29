@@ -71,8 +71,8 @@ export class CamsService {
 
   loadCams(filter?: any) {
     const self = this;
-    self.foundMatchCount = 0;
     each(this.cams, (cam: Cam) => {
+      cam.expanded = true;
       self.camService.loadCam(cam, filter);
     });
 

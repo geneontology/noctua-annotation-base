@@ -15,10 +15,11 @@ import { CamsReplaceDialogComponent } from './dialogs/cams-replace/cams-replace.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AnnotonSearchFormComponent } from './cams/annoton-search-form/annoton-search-form.component';
 import { EntitySearchFormComponent } from './cams/annoton-search-form/entity-search-form/entity-search-form.component';
+import { CamDetailComponent } from './cams/cam-detail/cam-detail.component';
 
 const routes = [
   {
-    path: '',
+    path: 's',
     component: NoctuaSearchComponent
   }
 ];
@@ -43,7 +44,8 @@ const routes = [
     CamsSelectionComponent,
     CamsReplaceComponent,
     AnnotonSearchFormComponent,
-    EntitySearchFormComponent
+    EntitySearchFormComponent,
+    CamDetailComponent,
   ]
 })
 

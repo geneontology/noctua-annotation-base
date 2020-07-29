@@ -202,9 +202,14 @@ export const noctuaFormConfig = {
         'name': 'reference',
         'label': 'Reference',
       },
+
       'withfrom': {
         'name': 'withfrom',
         'label': 'With From ',
+      },
+      'state': {
+        'name': 'state',
+        'label': 'Model State',
       },
     }
   },

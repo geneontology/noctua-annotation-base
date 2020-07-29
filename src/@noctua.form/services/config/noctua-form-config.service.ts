@@ -137,6 +137,7 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.findReplaceCategory.options.evidence,
       noctuaFormConfig.findReplaceCategory.options.reference,
       noctuaFormConfig.findReplaceCategory.options.withfrom,
+      noctuaFormConfig.findReplaceCategory.options.state,
     ];
 
     return {
