@@ -100,10 +100,17 @@ export class SaeGraph<T extends AnnotonNode> {
     removeEdge(this.graph, edge);
   }
 
-  addSubGraph(graph: Graph<T, Triple<T>>): Graph<T, Triple<T>> {
+  addSubGraph(graph: Graph<T, Triple<T>>, toNodeId: string, fromNodeId: string): Graph<T, Triple<T>> {
     const self = this;
 
-    addGraph(self.graph, graph);
+    const fromEdges = self.getEdges(fromNodeId);
+    const fromNode = self.getNode(fromNodeId);
+    const startingEdges = self.getEdges(toNodeId);
+
+    each(startingEdges, (triple: Triple<T>) => {
+      self._subgraphGraphDFS(self.graph, triple.subject, triple.object, triple.predicate, triple.predicate);
+    });
+
     return self.graph;
   }
 
@@ -158,6 +165,30 @@ export class SaeGraph<T extends AnnotonNode> {
 
     each(self.getEdges(objectNode.id), (triple: Triple<T>) => {
       self._trimGraphDFS(graph,
+        objectNode.hasValue() ? objectNode : subjectNode,
+        triple.object,
+        objectNode.hasValue() ? triple.predicate : subjectPredicate,
+        triple.predicate);
+    });
+  }
+
+  private _subgraphGraphDFS(graph: Graph<T, Triple<T>>,
+    subjectNode: T,
+    objectNode: T,
+    subjectPredicate: Predicate,
+    objectPredicate: Predicate) {
+    const self = this;
+    if (objectNode.hasValue()) {
+      const destPredicate = new Predicate(subjectPredicate.edge, objectPredicate.evidence);
+      const triple = new Triple(subjectNode, destPredicate, objectNode);
+      const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple };
+
+      addNode(graph, objectNode, objectNode.id);
+      addEdge(graph, edge);
+    }
+
+    each(self.getEdges(objectNode.id), (triple: Triple<T>) => {
+      self._subgraphGraphDFS(graph,
         objectNode.hasValue() ? objectNode : subjectNode,
         triple.object,
         objectNode.hasValue() ? triple.predicate : subjectPredicate,

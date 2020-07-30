@@ -80,7 +80,7 @@ mat-chip {
 
 .noc-search-evidence-dialog {
   @include deep-height(90%);
-  @include deep-width(900px);
+  @include deep-width(1000px);
 
   @include media-breakpoint('lt-lg') {
     @include deep-width(90%);

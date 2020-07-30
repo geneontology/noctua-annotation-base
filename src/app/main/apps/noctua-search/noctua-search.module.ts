@@ -19,7 +19,7 @@ import { CamDetailComponent } from './cams/cam-detail/cam-detail.component';
 
 const routes = [
   {
-    path: 's',
+    path: '',
     component: NoctuaSearchComponent
   }
 ];

@@ -341,12 +341,20 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     });
   }
 
-  insertSubgraph(annoton: Annoton, startNodeId: string) {
+  insertSubgraph(annoton: Annoton, toNode: AnnotonNode, fromNode: AnnotonNode) {
+    const self = this;
+
+    const graph = annoton.getTrimmedGraph(fromNode.id);
+
+    // self.addSubGraph(graph, toNode.id, fromNode.id);
+  }
+
+  insertSubgraph2(annoton: Annoton, startNodeId: string) {
     const self = this;
 
     const graph = annoton.getTrimmedGraph(startNodeId);
 
-    self.addSubGraph(graph);
+    // self.addSubGraph(graph);
   }
 
 

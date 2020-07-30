@@ -75,7 +75,7 @@ export class EntitySearchFormComponent implements OnInit, OnDestroy {
       case AnnotonNodeType.GoCellularComponent:
         self.entity.linkedNode = true;
         self.entity.uuid = node.uuid;
-        self.noctuaAnnotonFormService.annoton.insertSubgraph(annoton, node.id);
+        self.noctuaAnnotonFormService.annoton.insertSubgraph(annoton, self.entity, node);
     }
 
     self.noctuaAnnotonFormService.initializeForm();

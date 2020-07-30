@@ -58,7 +58,7 @@ import { MatTreeModule } from '@angular/material/tree';
 
 const routes = [
   {
-    path: '',
+    path: 's',
     component: NoctuaFormComponent
   }
 ];

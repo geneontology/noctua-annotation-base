@@ -84,7 +84,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       case AnnotonNodeType.GoCellularComponent:
         self.entity.linkedNode = true;
         self.entity.uuid = node.uuid;
-        self.noctuaAnnotonFormService.annoton.insertSubgraph(annoton, node.id);
+        self.noctuaAnnotonFormService.annoton.insertSubgraph(annoton, self.entity, node);
     }
 
     self.noctuaAnnotonFormService.initializeForm();
@@ -174,12 +174,8 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       };
 
       const success = function (selected) {
-        if (selected.term) {
-          entity.term = new Entity(selected.term.term.id, selected.term.term.label);
-
-          if (selected.evidences && selected.evidences.length > 0) {
-            entity.predicate.setEvidence(selected.evidences);
-          }
+        if (selected && selected.evidences) {
+          entity.predicate.setEvidence(selected.evidences);
           self.noctuaAnnotonFormService.initializeForm();
         }
       };
@@ -207,7 +203,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
         entity.linkedNode = true;
         console.log(1)
-        self.noctuaAnnotonFormService.annoton.insertSubgraph(selected.annoton, entity.id);
+        //  self.noctuaAnnotonFormService.annoton.insertSubgraph(selected.annoton, entity.id);
         self.noctuaAnnotonFormService.initializeForm();
       }
     };

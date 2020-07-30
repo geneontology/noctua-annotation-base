@@ -95,7 +95,9 @@ export function compareTriple<EdgeMetadata>(a: Edge<EdgeMetadata>, b: Edge<EdgeM
 
 export function addGraph<Node, EdgeMetadata>(
     graph1: Graph<Node, EdgeMetadata>,
-    graph2: Graph<Node, EdgeMetadata>
+    graph2: Graph<Node, EdgeMetadata>,
+    toNodeId: string,
+    fromNodeId: string
 ) {
     const keys1 = Object.keys(getNodes(graph1));
     const nodes2 = getNodes(graph2);
@@ -103,11 +105,14 @@ export function addGraph<Node, EdgeMetadata>(
     const edges2 = getEdges(graph2);
 
     each(nodes2, (node: Node, key: string) => {
-        //   const node = findNode(graph1, key);
+        //   const node = findNode(graph1, key);        
         addNode(graph1, node, key);
     });
 
     each(edges2, (edge: Edge<EdgeMetadata>) => {
+        if (edge.objectId === toNodeId) {
+
+        }
         addEdge(graph1, edge);
     });
 }

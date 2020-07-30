@@ -11,49 +11,50 @@
     <div class="h-100-p noc-form-section" fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-header  w-100-p" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
-          Selected Evidence
+          Selected Evidence : {{checklistSelection.selected.length}}
           <small></small>
         </div>
       </div>
-      <div class="noc-section-body w-100-p" noctuaPerfectScrollbar>
-
-        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-          <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
-            <button mat-icon-button disabled></button>
-            <mat-checkbox class="checklist-leaf-node" [checked]="checklistSelection.isSelected(node)"
-              (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+      <div *ngIf="dataSource.data" class="noc-section-body w-100-p" noctuaPerfectScrollbar>
+        <mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <mat-tree-node class="ann-tree-node" *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding
+            matTreeNodePaddingIndent="10" [ngClass]="{ 'background-highlight': activeAnnotation === node.short_name }">
+            <div class="w-100-p" fxLayout="row" fxLayoutAlign="start start">
+              <button mat-icon-button disabled class="ann-icon-button"></button>
+              <mat-checkbox class="checklist-leaf-node mr-8" [checked]="checklistSelection.isSelected(node)"
+                (change)="evidenceLeafItemSelectionToggle(node)"></mat-checkbox>
+              <div fxFlex="30%">
+                {{node.evidence?.evidence?.label}}
+              </div>
+              <div fxFlex="20%">
+                {{node.evidence?.reference}}
+              </div>
+              <div fxFlex="20%">
+                {{node.evidence?.with}}
+              </div>
+              <div fxFlex>
+                {{node.evidence?.assignedBy?.label}}
+              </div>
+            </div>
           </mat-tree-node>
-
-          <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
-            <button mat-icon-button disabled></button>
-            <mat-form-field>
-              <mat-label>New item...</mat-label>
-              <input matInput #itemValue placeholder="Ex. Lettuce">
-            </mat-form-field>
-            <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
-          </mat-tree-node>
-
-          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
-              <mat-icon class="mat-icon-rtl-mirror">
-                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-              </mat-icon>
+          <mat-tree-node fxLayout="row" class="ann-tree-node text-truncate" *matTreeNodeDef="let node;when: hasChild"
+            matTreeNodePadding matTreeNodePaddingIndent="10"
+            [ngClass]="{ 'background-highlight': activeAnnotation === node.short_name }">
+            <button mat-icon-button matTreeNodeToggle class="">
+              <fa-icon *ngIf="!treeControl.isExpanded(node)" [icon]="['fas', 'chevron-right']"></fa-icon>
+              <fa-icon *ngIf="treeControl.isExpanded(node)" [icon]="['fas', 'chevron-down']"></fa-icon>
             </button>
-            <mat-checkbox [checked]="descendantsAllSelected(node)" [indeterminate]="descendantsPartiallySelected(node)"
-              (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
-            <button mat-icon-button (click)="addNewItem(node)">
-              <mat-icon>add</mat-icon>
-            </button>
+            <!--  <mat-checkbox class="mr-8" [checked]="descendantsAllSelected(node)"
+              [indeterminate]="descendantsPartiallySelected(node)" (change)="evidenceItemSelectionToggle(node)">
+            </mat-checkbox> -->
+            {{node.annotonNode?.term?.label}}
+            (<small>{{node.annotonNode?.term?.id}}</small>)
+            <span fxFlex></span>
+            <div class="" fxFlex="100px">
+              {{node.count}}
+            </div>
           </mat-tree-node>
         </mat-tree>
-        <div class="noc-term-box" *ngFor="let annotonNode of annotonNodes" fxLayout="column"
-          fxLayoutAlign="start stretch">
-          <div class="noc-term-row" (click)="selectAnnotonNode(annotonNode)" fxLayoutAlign="start center">
-            {{annotonNode.getTerm().label}}
-          </div>
-          <noc-select-evidence [evidence]="annotonNode.predicate.evidence">
-          </noc-select-evidence>
-        </div>
       </div>
     </div>
   </div>
