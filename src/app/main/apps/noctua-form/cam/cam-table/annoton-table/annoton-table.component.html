@@ -47,7 +47,8 @@
         <ng-container matColumnDef="extension">
           <th mat-header-cell *matHeaderCellDef fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">Extension
           </th>
-          <td mat-cell *matCellDef="let entity" fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">
+          <td mat-cell *matCellDef="let entity" fxFlex="150px" fxLayout="row" fxLayoutAlign="start center"
+            [ngClass]="{'noc-highlight-match': entity.term?.highlight}">
             <p class="">{{entity.extension?.label}}
               <a (click)="$event.stopPropagation()" href="{{entity.extension?.url}}" target="_blank">
                 {{ entity.extension?.id }}

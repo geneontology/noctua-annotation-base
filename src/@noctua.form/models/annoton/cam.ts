@@ -146,6 +146,7 @@ export class Cam {
       each(self._annotons, (annoton: Annoton) => {
         let match = false;
         each(annoton.nodes, (node: AnnotonNode) => {
+          node.term.highlight = false;
           each(self.filter.terms, (term) => {
 
             // each(node.evidence, (evidence: Evidence) => {
@@ -153,6 +154,7 @@ export class Cam {
             //  })
 
             if (node.term.id === term.id) {
+              console.log(node)
               node.term.highlight = true;
               self.matchedCount += 1;
               match = true;

@@ -149,6 +149,7 @@ export class NoctuaSearchService {
         searchCriteria.group ? this.searchCriteria.groups.push(searchCriteria.group) : null;
         searchCriteria.pmid ? this.searchCriteria.pmids.push(searchCriteria.pmid) : null;
         searchCriteria.term ? this.searchCriteria.terms.push(searchCriteria.term) : null;
+        searchCriteria.id ? this.searchCriteria.ids.push(searchCriteria.id) : null;
         searchCriteria.gp ? this.searchCriteria.gps.push(searchCriteria.gp) : null;
         searchCriteria.organism ? this.searchCriteria.organisms.push(searchCriteria.organism) : null;
         searchCriteria.state ? this.searchCriteria.states.push(searchCriteria.state) : null;
@@ -170,6 +171,7 @@ export class NoctuaSearchService {
         this.searchCriteria = new SearchCriteria();
 
         param.title ? this.searchCriteria.titles.push(param.title) : null;
+        param.id ? this.searchCriteria.ids.push(param.id) : null;
         param.contributor ? this.searchCriteria.contributors.push(param.contributor) : null;
         param.group ? this.searchCriteria.groups.push(param.group) : null;
         param.pmid ? this.searchCriteria.pmids.push(param.pmid) : null;
@@ -236,6 +238,9 @@ export class NoctuaSearchService {
 
         if (searchCriteria.titles) {
             this.searchCriteria.titles = searchCriteria.titles;
+        }
+        if (searchCriteria.ids) {
+            this.searchCriteria.ids = searchCriteria.ids;
         }
         if (searchCriteria.contributors) {
             this.searchCriteria.contributors = searchCriteria.contributors;

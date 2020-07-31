@@ -37,7 +37,6 @@ export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
 
   cams: Cam[] = [];
-  terms: any[];
   matchedCount = 0;
   searchResults = [];
 
@@ -78,7 +77,6 @@ export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
         this.matchedCount = this.camsService.calculateMatchedCount();
       });
 
-    this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
 
 
     console.log(this.matchedCount)

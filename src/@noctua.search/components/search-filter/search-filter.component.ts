@@ -85,7 +85,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       EntityDefinition.GoCellTypeEntity
     ]);
     this.unsubscribeAll = new Subject();
-    this.filterForm = this.createFilterForm();
+    this.filterForm = this.createAnswerForm();
     this._onValueChanges();
   }
 
@@ -93,8 +93,9 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   }
 
-  createFilterForm() {
+  createAnswerForm() {
     return new FormGroup({
+      ids: new FormControl(),
       gps: new FormControl(),
       terms: new FormControl(),
       pmids: new FormControl(),
@@ -204,6 +205,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   private _onValueChanges() {
     const self = this;
+
     const lookupFunc = self.noctuaLookupService.lookupFunc()
 
     this.filterForm.get('terms').valueChanges.pipe(

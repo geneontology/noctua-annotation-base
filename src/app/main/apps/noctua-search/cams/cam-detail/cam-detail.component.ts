@@ -39,7 +39,6 @@ export class CamDetailComponent implements OnInit, OnDestroy {
 
   filterForm: FormGroup;
   cam: Cam;
-  terms: any[];
   searchResults = [];
   modelId = '';
 
@@ -76,7 +75,6 @@ export class CamDetailComponent implements OnInit, OnDestroy {
         this.cam = cam;
       });
 
-    this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
     this.filterForm = this.createFilterForm();
   }
 

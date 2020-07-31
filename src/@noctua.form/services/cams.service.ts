@@ -86,7 +86,7 @@ export class CamsService {
       if (filter) {
         cam.filter = filter;
       }
-      self.noctuaGraphService.loadCam(cam);
+      cam.applyFilter();
     });
 
     self.onCamsChanged.next(this.cams);

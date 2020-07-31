@@ -52,10 +52,9 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
 
   tableOptions = {
     hideHeader: true,
-  }
+  };
 
   noctuaFormConfig = noctuaFormConfig;
-
 
   searchCriteria: any = {};
   categories: any;
@@ -91,7 +90,6 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
         this.matchedCount = this.camsService.calculateMatchedCount();
       });
 
-    this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
 
     this.gpNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity]);
     this.termNode = EntityDefinition.generateBaseTerm([
