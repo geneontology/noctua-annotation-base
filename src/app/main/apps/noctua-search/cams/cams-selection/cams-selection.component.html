@@ -13,8 +13,8 @@
       Log in to Continue
     </div>
     <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
-      <form class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch" name="replaceForm"
-        [formGroup]="replaceForm" class="w-100-p h-100-p">
+      <form *ngIf="searchForm" class="noc-section-body noc-replace-form pt-8" fxLayout="column"
+        fxLayoutAlign="start stretch" name="searchForm" [formGroup]="searchForm" class="w-100-p h-100-p">
         <div class="noc-annoton-group-row" fxLayout="row" fxLayoutAlign="start center">
           <mat-form-field appearance="outline" fxFlex="150px" class="noc-sm">
             <mat-label>Category</mat-label>
@@ -26,7 +26,7 @@
           </mat-form-field>
           <mat-form-field appearance="outline" fxFlex class="noc-sm">
             <mat-label>Find What</mat-label>
-            <input type="text" matInput formControlName="findWhat" [matAutocomplete]="termsAuto" rows="2"
+            <input type="text" matInput formControlName="findWhat" [matAutocomplete]="termAuto" rows="2"
               placeholder="e.g. lipid transport activity" />
           </mat-form-field>
           <div class="noc-matched-count">
@@ -54,8 +54,8 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline" fxFlex class="noc-sm">
-            <mat-label>Replace WIth</mat-label>
-            <input type="text" matInput formControlName="replaceWith" [matAutocomplete]="termsAuto"
+            <mat-label>Replace With</mat-label>
+            <input type="text" matInput formControlName="replaceWith" [matAutocomplete]="termAuto"
               placeholder="e.g., lipid binding" />
           </mat-form-field>
           <button (click)="findWhat()" mat-stroked-button color="mr-8" class="noc-rounded-button mr-8">
@@ -105,3 +105,18 @@
     <button (click)="save()" type="submit" class="noc-rounded-button" mat-raised-button color="primary">Save</button>
   </div>
 </div>
+
+<mat-autocomplete #termAuto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="termDisplayFn"
+  class="noc-term-autocomplete">
+  <mat-option class="noc-term-autocomplete" *ngFor="let item of termNode?.termLookup.results" [value]="item">
+    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <div class="noc-term-label">
+        {{ item.label }}
+      </div>
+      <span fxFlex></span>
+      <div class="noc-term-id">
+        {{ item.id }}
+      </div>
+    </div>
+  </mat-option>
+</mat-autocomplete>

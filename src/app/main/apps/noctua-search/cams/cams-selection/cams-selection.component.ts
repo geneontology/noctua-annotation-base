@@ -19,7 +19,8 @@ import {
   CamsService,
   AnnotonNode,
   EntityLookup,
-  NoctuaLookupService
+  NoctuaLookupService,
+  EntityDefinition
 } from 'noctua-form-base';
 
 import { takeUntil, distinctUntilChanged, debounceTime } from 'rxjs/operators';
@@ -40,7 +41,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
-  replaceForm: FormGroup;
+  searchForm: FormGroup;
   cams: Cam[] = [];
   terms: any[];
   searchResults = [];
@@ -57,9 +58,6 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
 
 
   searchCriteria: any = {};
-  searchForm: FormGroup;
-  selectedOrganism = {};
-  searchFormData: any = [];
   categories: any;
 
   gpNode: AnnotonNode;
@@ -81,7 +79,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
     this._unsubscribeAll = new Subject();
 
     this.categories = this.noctuaFormConfigService.findReplaceCategories;
-    this.searchForm = this.createReplaceForm(this.categories.selected);
+
 
     this.camsService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -94,11 +92,24 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
       });
 
     this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
-    this.replaceForm = this.createFilterForm();
+
+    this.gpNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity]);
+    this.termNode = EntityDefinition.generateBaseTerm([
+      EntityDefinition.GoMolecularFunction,
+      EntityDefinition.GoBiologicalProcess,
+      EntityDefinition.GoCellularComponent,
+      EntityDefinition.GoBiologicalPhase,
+      EntityDefinition.GoAnatomicalEntity,
+      EntityDefinition.GoCellTypeEntity
+    ]);
+
   }
 
   ngOnInit(): void {
     const self = this;
+
+    this.searchForm = this.createSearchForm(this.categories.selected);
+    this.onValueChanges();
   }
 
   ngOnDestroy(): void {
@@ -129,13 +140,8 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
       });
   }
 
-  createFilterForm() {
-    return new FormGroup({
-      findWhat: new FormControl(),
-    });
-  }
 
-  createReplaceForm(selectedCategory) {
+  createSearchForm(selectedCategory) {
     return new FormGroup({
       findWhat: new FormControl(),
       replaceWith: new FormControl(),
@@ -144,10 +150,10 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    const value = this.replaceForm.value;
-    const findWhat = value.findWhat.value;
+    const value = this.searchForm.value;
+    const findWhat = value.findWhat;
     const filter = {
-      terms: findWhat
+      terms: [findWhat]
     };
     this.camsService.findInCams(filter);
   }
@@ -166,6 +172,13 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
 
   }
 
+  selected(e) {
+    console.log(e)
+  }
+
+  termDisplayFn(term): string | undefined {
+    return term ? term.label : undefined;
+  }
 
   onValueChanges() {
     const self = this;
