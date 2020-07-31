@@ -8,13 +8,13 @@
       <mat-icon>close</mat-icon> Close
     </button>
   </div>
-  <div class="noc-drawer-body w-100-p" noctuaPerfectScrollbar>
+  <div id="noc-review-results" class="noc-drawer-body w-100-p" noctuaPerfectScrollbar>
     <div *ngIf="!noctuaUserService.user" class="noc-draw-body-disabled" fxLayoutAlign="center center">
       Log in to Continue
     </div>
-    <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
-      <form *ngIf="searchForm" class="noc-section-body noc-replace-form pt-8" fxLayout="column"
-        fxLayoutAlign="start stretch" name="searchForm" [formGroup]="searchForm" class="w-100-p h-100-p">
+    <div class="noc-search-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <form *ngIf="searchForm" class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch"
+        name="searchForm" [formGroup]="searchForm" class="w-100-p h-100-p">
         <div class="noc-annoton-group-row" fxLayout="row" fxLayoutAlign="start center">
           <mat-form-field appearance="outline" fxFlex="150px" class="noc-sm">
             <mat-label>Category</mat-label>
@@ -28,20 +28,21 @@
             <mat-label>Find What</mat-label>
             <input type="text" matInput formControlName="findWhat" [matAutocomplete]="termAuto" rows="2"
               placeholder="e.g. lipid transport activity" />
-          </mat-form-field>
-          <div class="noc-matched-count">
-            24 of 50
-          </div>
-          <div class="noc-find-buttons">
-            <button mat-stroked-button (click)="search()" class="noc-rounded-button noc-sm" color="primary">
+            <button mat-icon-button matSuffix (click)="search()" class="noc-rounded-button noc-sm" color="primary">
               <fa-icon [icon]="['fas', 'search']"></fa-icon>
             </button>
+          </mat-form-field>
+          <div *ngIf="noctuaReviewSearchService.matchedCount>0" class="noc-matched-count">
+            {{noctuaReviewSearchService.matchedCountCursor +1}} of {{noctuaReviewSearchService.matchedCount}}
             <button mat-stroked-button (click)="findPrevious()" class="noc-rounded-button noc-sm" color="primary">
               <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
             </button>
             <button mat-stroked-button (click)="findNext()" class="noc-rounded-button noc-sm" color="primary">
               <fa-icon [icon]="['fas', 'level-down-alt']"></fa-icon>
             </button>
+          </div>
+          <div *ngIf="noctuaReviewSearchService.matchedCount===0" class="noc-matched-count">
+            No Results
           </div>
         </div>
         <div class="noc-annoton-group-row" fxLayout="row" fxLayoutAlign="start center">
@@ -67,38 +68,38 @@
         </div>
       </form>
     </div>
-    <div *ngFor="let cam of cams" fxLayout="column" fxLayoutAlign="start stretch">
-      <div class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
-        [@animateStagger]="{value:'50'}">
-        <div *ngIf="cam.title" class="noc-title" fxLayout="row" fxLayoutAlign="start center">
-          <div class="text-truncate pr-8">
-            <strong>Title: </strong>{{cam.title }}
+    <div class="noc-cams-results">
+      <div *ngFor="let cam of cams" fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
+          [@animateStagger]="{value:'50'}">
+          <div *ngIf="cam.title" class="noc-title" fxLayout="row" fxLayoutAlign="start center">
+            <div class="text-truncate pr-8">
+              <strong>Title: </strong>{{cam.title }}
+            </div>
           </div>
-          <div class="noc-icon-action" (click)="openCamForm()">
-            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
-          </div>
+          <div fxFlex></div>
+          <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #activityOptionMenu="matMenu" class="noc-dropdown-menu">
+            <button mat-menu-item class="" (click)="viewAsModel(cam)">
+              View Whole Model
+            </button>
+            <button mat-menu-item class="" (click)="viewAsActivities(cam)">
+              Only Matched Activities
+            </button>
+            <button mat-menu-item class="" (click)="cam.expandAllAnnotons(true)">
+              Expand All
+            </button>
+            <button mat-menu-item class="" (click)="cam.expandAllAnnotons(false)">
+              Collapse All
+            </button>
+          </mat-menu>
         </div>
-        <div fxFlex></div>
-        <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #activityOptionMenu="matMenu" class="noc-dropdown-menu">
-          <button mat-menu-item class="" (click)="viewAsModel(cam)">
-            View Whole Model
-          </button>
-          <button mat-menu-item class="" (click)="viewAsActivities(cam)">
-            Only Matched Activities
-          </button>
-          <button mat-menu-item class="" (click)="cam.expandAllAnnotons(true)">
-            Expand All
-          </button>
-          <button mat-menu-item class="" (click)="cam.expandAllAnnotons(false)">
-            Collapse All
-          </button>
-        </mat-menu>
+        <noc-cam-table [cam]="cam" [options]="tableOptions"></noc-cam-table>
       </div>
-      <noc-cam-table [cam]="cam" [options]="tableOptions"></noc-cam-table>
     </div>
+
   </div>
   <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
     <span fxFlex></span>

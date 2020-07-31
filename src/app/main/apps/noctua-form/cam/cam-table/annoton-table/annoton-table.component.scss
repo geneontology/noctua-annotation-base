@@ -131,6 +131,10 @@ $accent: map-get($theme, accent);
       &.noc-highlight-match {
         background-color: #ccc9fb;
       }
+
+      &.noc-highlight-match-current {
+        border: #3d388f solid 5px;
+      }
     }
 
     .mat-column-id {

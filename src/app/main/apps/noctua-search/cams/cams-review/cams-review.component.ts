@@ -49,7 +49,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   modelId = '';
 
   searchFormType = 'replace';
-  matchedCount = 0;
 
   tableOptions = {
     hideHeader: true,
@@ -81,20 +80,13 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this.categories = this.noctuaFormConfigService.findReplaceCategories;
 
 
-    this.camsService.onCamsChanged
+    this.noctuaReviewSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(cams => {
         if (!cams) {
           return;
         }
         this.cams = cams;
-        const ids = cams.map((cam: Cam) => {
-          return cam.modelId;
-        });
-
-        console.log(ids)
-        this.noctuaReviewSearchService.searchCriteria['ids'] = ids;
-        this.matchedCount = this.camsService.calculateMatchedCount();
       });
 
 
@@ -116,14 +108,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this.searchForm = this.createSearchForm(this.categories.selected);
     this.onValueChanges();
 
-    this.noctuaReviewSearchService.onCamsChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(cams => {
-        if (!cams) {
-          return;
-        }
-        // this.cams = cams;
-      });
   }
 
   ngOnDestroy(): void {
@@ -163,7 +147,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     const filter = {
       terms: [findWhat]
     };
-    this.camsService.findInCams(filter);
+    // this.camsService.findInCams(filter);
   }
 
   replace() {
@@ -172,16 +156,17 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   replaceAll() {
 
   }
-  findNext() {
 
+  findNext() {
+    this.noctuaReviewSearchService.findNext();
   }
 
   findPrevious() {
-
+    this.noctuaReviewSearchService.findPrevious();
   }
 
   selected(e) {
-    console.log(e)
+    this.search();
   }
 
   termDisplayFn(term): string | undefined {

@@ -15,6 +15,12 @@ import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
 import { each, find } from 'lodash';
 
 
+
+export class CamQueryMatch {
+  terms?: Entity[] = [];
+  reference?: Entity[] = [];
+}
+
 export class Cam {
 
   title: string;
@@ -66,6 +72,8 @@ export class Cam {
     status: false,
     message: ''
   };
+
+  queryMatch: CamQueryMatch = new CamQueryMatch();
 
   private _filteredAnnotons: Annoton[] = [];
   private _annotons: Annoton[] = [];
@@ -135,7 +143,7 @@ export class Cam {
     })
   }
 
-  applyFilter() {
+  applyFilterTemp() {
     const self = this;
 
     if (self.filter && self.filter.terms.length > 0) {
@@ -188,7 +196,58 @@ export class Cam {
      } */
   }
 
+  applyFilter() {
+    const self = this;
 
+    if (self.queryMatch && self.queryMatch.terms.length > 0) {
+      self._filteredAnnotons = [];
+      self.matchedCount = 0;
+      this.displayType = noctuaFormConfig.camDisplayType.options.entity;
+
+      each(self._annotons, (annoton: Annoton) => {
+        let match = false;
+        each(annoton.nodes, (node: AnnotonNode) => {
+          node.term.highlight = false;
+          each(self.queryMatch.terms, (term) => {
+
+            // each(node.evidence, (evidence: Evidence) => {
+            //    match = match || (evidence.uuid === uuid);
+            //  })
+
+            if (node.term.uuid === term.uuid) {
+              console.log(node)
+              node.term.highlight = true;
+              self.matchedCount += 1;
+              match = true;
+            }
+          });
+        });
+
+        if (match) {
+          self._filteredAnnotons.push(annoton);
+        }
+      });
+    }
+
+    /*  if (self.filter.uuids.length > 0) {
+       self.grid = [];
+ 
+       each(self.annotons, (annoton: Annoton) => {
+         each(annoton.nodes, (node: AnnotonNode) => {
+           each(self.filter.uuids, (uuid) => {
+             let match = false
+             // each(node.evidence, (evidence: Evidence) => {
+             //    match = match || (evidence.uuid === uuid);
+             //  })
+             match = match || (node.uuid === uuid);
+             if (match) {
+               self.generateGridRow(annoton, node);
+             }
+           });
+         });
+       });
+     } */
+  }
 
   getAnnotonByConnectionId(connectionId) {
     const self = this;

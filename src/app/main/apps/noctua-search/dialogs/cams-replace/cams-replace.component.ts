@@ -37,7 +37,6 @@ export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
 
   cams: Cam[] = [];
-  matchedCount = 0;
   searchResults = [];
 
   filterForm: FormGroup;
@@ -74,12 +73,8 @@ export class CamsReplaceDialogComponent implements OnInit, OnDestroy {
           return;
         }
         this.cams = cams;
-        this.matchedCount = this.camsService.calculateMatchedCount();
       });
 
-
-
-    console.log(this.matchedCount)
     this.gpNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity]);
     this.termNode = EntityDefinition.generateBaseTerm([
       EntityDefinition.GoMolecularFunction,

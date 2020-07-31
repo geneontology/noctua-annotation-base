@@ -27,6 +27,7 @@ export class CamsService {
   cams: Cam[];
   foundMatchCount = 0;
   onCamsChanged: BehaviorSubject<any>;
+  currentHighlightedUuid;
 
   public annoton: Annoton;
   private camForm: CamForm;
@@ -86,18 +87,9 @@ export class CamsService {
       if (filter) {
         cam.filter = filter;
       }
-      cam.applyFilter();
     });
 
     self.onCamsChanged.next(this.cams);
   }
 
-  calculateMatchedCount(): number {
-    const matchCount = this.cams.reduce((total, currentValue, i) => {
-      total += currentValue.matchedCount;
-      return total;
-    }, 0);
-
-    return matchCount;
-  }
 }

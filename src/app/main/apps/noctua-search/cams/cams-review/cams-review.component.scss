@@ -14,9 +14,21 @@
     @include deep-height(80px);
   }
 
-  .noc-replace-form {
-    background-color: #D2D2D2;
+  .noc-search-form {
+    padding: 12px;
+    margin-bottom: 12px;
+    @include deep-height(120px);
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #F2F2F2;
     border-bottom: #BBB solid 1px;
+    @include mat-elevation(3);
+  }
+
+  .noc-cams-results {
+    padding: 12px;
   }
 
   .noc-matched-count {
@@ -24,7 +36,7 @@
     flex-direction: row;
     justify-items: center;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 12px;
     height: 100%;
   }
 

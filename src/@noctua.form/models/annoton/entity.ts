@@ -16,10 +16,11 @@ export class Entity implements EntityBase {
   classExpression: any;
   highlight: boolean;
 
-  constructor(id: string, label: string, url?: string) {
-    this.id = id;
-    this.label = label;
-    this.url = url;
+  constructor(_id: string, _label: string, _url?: string, _uuid?: string) {
+    this.id = _id;
+    this.label = _label;
+    this.url = _url;
+    this.uuid = _uuid;
   }
 
   static createEntity(value: Partial<EntityBase>) {

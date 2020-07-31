@@ -10,6 +10,8 @@ import {
     NoctuaFormConfigService,
     NoctuaUserService,
     Entity,
+    CamsService,
+    CamQueryMatch,
 } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 import { saveAs } from 'file-saver';
@@ -18,6 +20,7 @@ import { CurieService } from '@noctua.curie/services/curie.service';
 import { CamPage } from './../models/cam-page';
 import { SearchHistory } from './../models/search-history';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
+import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 
 declare const require: any;
 
@@ -46,6 +49,11 @@ export class NoctuaReviewSearchService {
     onCamChanged: BehaviorSubject<any>;
     searchSummary: any = {};
 
+    matchedEntities: Entity[] = [];
+    matchedCountCursor = 0;
+    matchedCount = 0;
+    currentMatchedEnity: Entity;
+
     filterType = {
         gps: 'gps',
         terms: 'terms',
@@ -54,9 +62,7 @@ export class NoctuaReviewSearchService {
 
     constructor(
         private httpClient: HttpClient,
-        private noctuaDataService: NoctuaDataService,
-        public noctuaFormConfigService: NoctuaFormConfigService,
-        public noctuaUserService: NoctuaUserService,
+        private camsService: CamsService,
         private curieService: CurieService) {
         this.onCamsChanged = new BehaviorSubject([]);
         this.onCamsReviewChanged = new BehaviorSubject([]);
@@ -76,22 +82,41 @@ export class NoctuaReviewSearchService {
             this.getCams(searchCriteria).subscribe((response: any) => {
                 this.cams = response;
                 this.onCamsChanged.next(this.cams);
+                this.matchedCountCursor = 0;
+                this.calculateMatched();
+                this.findNext();
             });
 
-            this.getCamsCount(searchCriteria).subscribe((response: any) => {
-                this.camPage = new CamPage();
-                this.camPage.total = response.n;
-                this.onCamsPageChanged.next(this.camPage);
-            });
-
-            const element = document.querySelector('#noc-results');
+            const element = document.querySelector('#noc-review-results');
 
             if (element) {
                 element.scrollTop = 0;
             }
         });
+
+        this.camsService.onCamsChanged
+            .subscribe(cams => {
+                if (!cams) {
+                    return;
+                }
+                this.cams = cams;
+
+                const ids = cams.map((cam: Cam) => {
+                    cam.expanded = true;
+                    return cam.modelId;
+                });
+                this.onCamsChanged.next(this.cams);
+                this.searchCriteria['ids'] = ids;
+
+            });
     }
 
+    scroll(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.scrollIntoView();
+        }
+    }
 
     search(searchCriteria) {
         this.searchCriteria = new SearchCriteria();
@@ -105,12 +130,37 @@ export class NoctuaReviewSearchService {
 
     }
 
+    findNext() {
+        if (this.matchedCount === 0) {
+            return;
+        }
+        // so it circulates
+        this.matchedCountCursor = (this.matchedCountCursor + 1) % this.matchedCount;
+        this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
+        this.scroll(NoctuaUtils.cleanID(this.currentMatchedEnity.uuid));
+        this.camsService.currentHighlightedUuid = this.currentMatchedEnity.uuid;
+        return this.currentMatchedEnity;
+    }
+
+    findPrevious() {
+        if (this.matchedCount === 0) {
+            return;
+        }
+        this.matchedCountCursor = this.matchedCountCursor - 1;
+        if (this.matchedCountCursor < 0) {
+            this.matchedCountCursor = this.matchedCount - 1;
+        }
+        this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
+        this.scroll(NoctuaUtils.cleanID(this.currentMatchedEnity.uuid));
+        this.camsService.currentHighlightedUuid = this.currentMatchedEnity.uuid;
+        return this.currentMatchedEnity;
+    }
+
     getPage(pageNumber: number, pageSize: number) {
         this.searchCriteria.camPage.pageNumber = pageNumber;
         this.searchCriteria.camPage.size = pageSize;
         this.updateSearch();
     }
-
 
     updateSearch(save: boolean = true) {
         this.searchCriteria.updateFiltersCount();
@@ -193,34 +243,36 @@ export class NoctuaReviewSearchService {
             );
     }
 
-    getCamsCount(searchCriteria: SearchCriteria): Observable<any> {
-        const self = this;
-        const query = searchCriteria.build();
-        const url = `${this.searchApi}/models?${query}&count`;
-
-        return this.httpClient
-            .get(url)
-            .pipe();
-    }
 
     addCam(res) {
         const self = this;
         const result: Array<Cam> = [];
 
         res.models.forEach((response) => {
+
             const modelId = response.id;
-            const cam = new Cam();
-
-            cam.graph = null;
-            cam.id = modelId;
-            cam.state = self.noctuaFormConfigService.findModelState(response.state);
-            cam.title = response.title;
-            cam.date = response.date;
-
-            cam.model = Object.assign({}, {
-                modelInfo: this.noctuaFormConfigService.getModelUrls(modelId)
+            const cam: Cam = find(self.cams, (inCam: Cam) => {
+                return inCam.modelId === modelId;
             });
 
+            if (cam) {
+                cam.queryMatch = new CamQueryMatch();
+                each(response.query_match, (queryMatch, key) => {
+                    cam.queryMatch.terms.push(
+                        ...queryMatch.map(v1 => {
+                            return new Entity(
+                                self.curieUtil.getCurie(key),
+                                '',
+                                null,
+                                self.curieUtil.getCurie(v1),
+                            );
+                        }));
+                });
+
+
+                cam.applyFilter();
+                console.log(cam.queryMatch)
+            }
 
             result.push(cam);
         });
@@ -242,6 +294,31 @@ export class NoctuaReviewSearchService {
         });
 
         return result;
+    }
+
+    calculateMatchedCountNumber(): number {
+        const matchCount = this.cams.reduce((total, currentValue, i) => {
+            total += currentValue.matchedCount;
+            return total;
+        }, 0);
+
+
+
+        return matchCount;
+    }
+
+
+    calculateMatched() {
+        this.matchedEntities = this.cams.reduce((total: Entity[], currentValue: Cam, i) => {
+            if (currentValue.queryMatch && currentValue.queryMatch.terms) {
+                total.push(...currentValue.queryMatch.terms);
+            }
+
+            return total;
+        }, []);
+
+        this.matchedCount = this.matchedEntities.length;
+        this.matchedCountCursor = 0;
     }
 
 }

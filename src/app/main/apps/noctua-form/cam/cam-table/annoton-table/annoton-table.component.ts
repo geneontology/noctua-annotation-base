@@ -14,7 +14,8 @@ import {
   Entity,
   noctuaFormConfig,
   NoctuaUserService,
-  NoctuaFormMenuService
+  NoctuaFormMenuService,
+  CamsService
 } from 'noctua-form-base';
 
 import {
@@ -27,6 +28,7 @@ import {
 import { EditorCategory } from '@noctua.editor/models/editor-category';
 import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
+import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 
 @Component({
   selector: 'noc-annoton-table',
@@ -65,6 +67,7 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
   private unsubscribeAll: Subject<any>;
 
   constructor(private camService: CamService,
+    public camsService: CamsService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -227,6 +230,10 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
+  }
+
+  cleanId(dirtyId: string) {
+    return NoctuaUtils.cleanID(dirtyId);
   }
 }
 
