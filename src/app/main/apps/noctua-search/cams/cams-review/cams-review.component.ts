@@ -31,12 +31,12 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 
 @Component({
-  selector: 'noc-cams-selection',
-  templateUrl: './cams-selection.component.html',
-  styleUrls: ['./cams-selection.component.scss'],
+  selector: 'noc-cams-review',
+  templateUrl: './cams-review.component.html',
+  styleUrls: ['./cams-review.component.scss'],
   animations: noctuaAnimations,
 })
-export class CamsSelectionComponent implements OnInit, OnDestroy {
+export class CamsReviewComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
 
   @Input('panelDrawer')

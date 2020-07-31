@@ -40,7 +40,7 @@ export class NoctuaSearchMenuService {
             id: 4
         }, camTable: {
             id: 5
-        }, camsSelection: {
+        }, camsReview: {
             id: 6
         }, camsReplace: {
             id: 7

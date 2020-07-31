@@ -41,7 +41,7 @@ export class NoctuaReviewSearchService {
     separator = '@@';
     loading = false;
     onCamsChanged: BehaviorSubject<any>;
-    onCamsSelectionChanged: BehaviorSubject<any>;
+    onCamsReviewChanged: BehaviorSubject<any>;
     onCamsPageChanged: BehaviorSubject<any>;
     onCamChanged: BehaviorSubject<any>;
     searchSummary: any = {};
@@ -59,7 +59,7 @@ export class NoctuaReviewSearchService {
         public noctuaUserService: NoctuaUserService,
         private curieService: CurieService) {
         this.onCamsChanged = new BehaviorSubject([]);
-        this.onCamsSelectionChanged = new BehaviorSubject([]);
+        this.onCamsReviewChanged = new BehaviorSubject([]);
         this.onCamsPageChanged = new BehaviorSubject(null);
         this.onCamChanged = new BehaviorSubject([]);
         this.onSearchHistoryChanged = new BehaviorSubject(null);

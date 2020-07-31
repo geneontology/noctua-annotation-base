@@ -9,12 +9,9 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NoctuaSearchBaseModule } from '@noctua.search';
 import { NoctuaFooterModule } from 'app/layout/components/footer/footer.module';
 import { NoctuaFormModule } from '../noctua-form';
-import { CamsSelectionComponent } from './cams/cams-selection/cams-selection.component';
-import { CamsReplaceComponent } from './cams/cams-replace/cams-replace.component';
+import { CamsReviewComponent } from './cams/cams-review/cams-review.component';
 import { CamsReplaceDialogComponent } from './dialogs/cams-replace/cams-replace.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AnnotonSearchFormComponent } from './cams/annoton-search-form/annoton-search-form.component';
-import { EntitySearchFormComponent } from './cams/annoton-search-form/entity-search-form/entity-search-form.component';
 import { CamDetailComponent } from './cams/cam-detail/cam-detail.component';
 
 const routes = [
@@ -41,10 +38,7 @@ const routes = [
     CamsReplaceDialogComponent,
     NoctuaSearchComponent,
     CamsTableComponent,
-    CamsSelectionComponent,
-    CamsReplaceComponent,
-    AnnotonSearchFormComponent,
-    EntitySearchFormComponent,
+    CamsReviewComponent,
     CamDetailComponent,
   ]
 })
