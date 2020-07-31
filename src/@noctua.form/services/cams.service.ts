@@ -79,6 +79,19 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
+  findInCams(filter?: any) {
+    const self = this;
+    each(this.cams, (cam: Cam) => {
+      cam.expanded = true;
+      if (filter) {
+        cam.filter = filter;
+      }
+      self.noctuaGraphService.loadCam(cam);
+    });
+
+    self.onCamsChanged.next(this.cams);
+  }
+
   calculateMatchedCount(): number {
     const matchCount = this.cams.reduce((total, currentValue, i) => {
       total += currentValue.matchedCount;

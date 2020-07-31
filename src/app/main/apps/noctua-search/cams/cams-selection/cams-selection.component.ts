@@ -40,13 +40,13 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
-  filterForm: FormGroup;
+  replaceForm: FormGroup;
   cams: Cam[] = [];
   terms: any[];
   searchResults = [];
   modelId = '';
 
-  searchFormType = 'advanced';
+  searchFormType = 'replace';
   matchedCount = 0;
 
   tableOptions = {
@@ -81,7 +81,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
     this._unsubscribeAll = new Subject();
 
     this.categories = this.noctuaFormConfigService.findReplaceCategories;
-    this.searchForm = this.createAnswerForm(this.categories.selected);
+    this.searchForm = this.createReplaceForm(this.categories.selected);
 
     this.camsService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -94,7 +94,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
       });
 
     this.terms = this.noctuaSearchService.searchCriteria.getSearchableTerms();
-    this.filterForm = this.createFilterForm();
+    this.replaceForm = this.createFilterForm();
   }
 
   ngOnInit(): void {
@@ -105,7 +105,6 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
-
 
   selectSearchFormType(searchFormType) {
     this.searchFormType = searchFormType;
@@ -136,12 +135,35 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
     });
   }
 
-  createAnswerForm(selectedCategory) {
+  createReplaceForm(selectedCategory) {
     return new FormGroup({
       findWhat: new FormControl(),
       replaceWith: new FormControl(),
       category: new FormControl(selectedCategory),
     });
+  }
+
+  search() {
+    const value = this.replaceForm.value;
+    const findWhat = value.findWhat.value;
+    const filter = {
+      terms: findWhat
+    };
+    this.camsService.findInCams(filter);
+  }
+
+  replace() {
+
+  }
+  replaceAll() {
+
+  }
+  findNext() {
+
+  }
+
+  findPrevious() {
+
   }
 
 
@@ -178,5 +200,3 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
     this.panelDrawer.close();
   }
 }
-
-

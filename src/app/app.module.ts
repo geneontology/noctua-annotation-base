@@ -32,6 +32,8 @@ import {
     faPlus,
     faLink,
     faChevronDown,
+    faLevelDownAlt,
+    faLevelUpAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -86,6 +88,8 @@ export class AppModule {
             faFacebook,
             faHistory,
             faGithub,
+            faLevelDownAlt,
+            faLevelUpAlt,
             faLink,
             faListAlt,
             faPaw,
