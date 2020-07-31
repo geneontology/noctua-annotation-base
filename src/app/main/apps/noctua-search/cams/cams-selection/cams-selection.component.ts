@@ -28,6 +28,7 @@ import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 import { noctuaAnimations } from '@noctua/animations';
 import { FormGroup, FormControl } from '@angular/forms';
+import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 
 @Component({
   selector: 'noc-cams-selection',
@@ -68,7 +69,7 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
     (private route: ActivatedRoute,
       private camsService: CamsService,
       private noctuaDataService: NoctuaDataService,
-      public noctuaSearchService: NoctuaSearchService,
+      public noctuaReviewSearchService: NoctuaReviewSearchService,
       public noctuaUserService: NoctuaUserService,
       private noctuaLookupService: NoctuaLookupService,
       public noctuaFormConfigService: NoctuaFormConfigService,
@@ -87,6 +88,12 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
           return;
         }
         this.cams = cams;
+        const ids = cams.map((cam: Cam) => {
+          return cam.modelId;
+        });
+
+        console.log(ids)
+        this.noctuaReviewSearchService.searchCriteria['ids'] = ids;
         this.matchedCount = this.camsService.calculateMatchedCount();
       });
 
@@ -108,6 +115,15 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
 
     this.searchForm = this.createSearchForm(this.categories.selected);
     this.onValueChanges();
+
+    this.noctuaReviewSearchService.onCamsChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(cams => {
+        if (!cams) {
+          return;
+        }
+        // this.cams = cams;
+      });
   }
 
   ngOnDestroy(): void {
@@ -127,17 +143,6 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
     cam.displayType = noctuaFormConfig.camDisplayType.options.entity;
   }
 
-  loadCam(modelId) {
-    const self = this;
-
-    self.noctuaDataService.onContributorsChanged.pipe(
-      takeUntil(this._unsubscribeAll))
-      .subscribe((contributors: Contributor[]) => {
-        self.noctuaUserService.contributors = contributors;
-        //   this.cam = this.camService.getCam(modelId);
-      });
-  }
-
 
   createSearchForm(selectedCategory) {
     return new FormGroup({
@@ -150,6 +155,11 @@ export class CamsSelectionComponent implements OnInit, OnDestroy {
   search() {
     const value = this.searchForm.value;
     const findWhat = value.findWhat;
+    const filterType = 'terms';
+
+    this.noctuaReviewSearchService.searchCriteria[filterType] = [findWhat];
+    this.noctuaReviewSearchService.updateSearch();
+
     const filter = {
       terms: [findWhat]
     };
