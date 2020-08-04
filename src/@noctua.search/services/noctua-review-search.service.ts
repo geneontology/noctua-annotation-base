@@ -106,6 +106,7 @@ export class NoctuaReviewSearchService {
                     return cam.modelId;
                 });
                 this.onCamsChanged.next(this.cams);
+                // this.updateSearch();
                 this.searchCriteria['ids'] = ids;
 
             });

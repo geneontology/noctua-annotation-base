@@ -28,16 +28,13 @@
             <mat-label>Find What</mat-label>
             <input type="text" matInput formControlName="findWhat" [matAutocomplete]="termAuto" rows="2"
               placeholder="e.g. lipid transport activity" />
-            <button mat-icon-button matSuffix (click)="search()" class="noc-rounded-button noc-sm" color="primary">
-              <fa-icon [icon]="['fas', 'search']"></fa-icon>
-            </button>
           </mat-form-field>
           <div *ngIf="noctuaReviewSearchService.matchedCount>0" class="noc-matched-count">
             {{noctuaReviewSearchService.matchedCountCursor +1}} of {{noctuaReviewSearchService.matchedCount}}
-            <button mat-stroked-button (click)="findPrevious()" class="noc-rounded-button noc-sm" color="primary">
+            <button mat-icon-button (click)="findPrevious()" class="" color="primary">
               <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
             </button>
-            <button mat-stroked-button (click)="findNext()" class="noc-rounded-button noc-sm" color="primary">
+            <button mat-icon-button (click)="findNext()" class="" color="primary">
               <fa-icon [icon]="['fas', 'level-down-alt']"></fa-icon>
             </button>
           </div>
@@ -46,23 +43,17 @@
           </div>
         </div>
         <div class="noc-annoton-group-row" fxLayout="row" fxLayoutAlign="start center">
-          <mat-form-field appearance="outline" fxFlex="150px" class="noc-sm">
-            <mat-label>Category</mat-label>
-            <mat-select placeholder="" [compareWith]="compareCategory">
-              <mat-option *ngFor="let category of categories.options" [value]="category">
-                {{category.label}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <div fxFlex="150px" class="noc-sm">
+          </div>
           <mat-form-field appearance="outline" fxFlex class="noc-sm">
             <mat-label>Replace With</mat-label>
             <input type="text" matInput formControlName="replaceWith" [matAutocomplete]="termAuto"
               placeholder="e.g., lipid binding" />
           </mat-form-field>
-          <button (click)="findWhat()" mat-stroked-button color="mr-8" class="noc-rounded-button mr-8">
+          <button (click)="findWhat()" mat-button color="mr-8" class="">
             Replace
           </button>
-          <button mat-stroked-button color="" class="noc-rounded-button mr-8">
+          <button mat-button color="" class="">
             Replace All
           </button>
         </div>
@@ -72,9 +63,9 @@
       <div *ngFor="let cam of cams" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
           [@animateStagger]="{value:'50'}">
-          <div *ngIf="cam.title" class="noc-title" fxLayout="row" fxLayoutAlign="start center">
+          <div *ngIf="cam?.title" class="noc-title" fxLayout="row" fxLayoutAlign="start center">
             <div class="text-truncate pr-8">
-              <strong>Title: </strong>{{cam.title }}
+              <strong>Title: </strong>{{cam?.title }}
             </div>
           </div>
           <div fxFlex></div>
@@ -99,14 +90,10 @@
         <noc-cam-table [cam]="cam" [options]="tableOptions"></noc-cam-table>
       </div>
     </div>
-
   </div>
   <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
-    <span fxFlex></span>
-    <button (click)="save()" type="submit" class="noc-rounded-button" mat-raised-button color="primary">Save</button>
   </div>
 </div>
-
 <mat-autocomplete #termAuto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="termDisplayFn"
   class="noc-term-autocomplete">
   <mat-option class="noc-term-autocomplete" *ngFor="let item of termNode?.termLookup.results" [value]="item">
