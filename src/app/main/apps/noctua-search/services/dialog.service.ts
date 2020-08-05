@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { NoctuaConfirmDialogComponent } from '@noctua/components/confirm-dialog/confirm-dialog.component';
-import { CamsReplaceDialogComponent } from '../dialogs/cams-replace/cams-replace.component';
-4
+import { CamsReplaceConfirmDialogComponent } from '../dialogs/cams-replace-confirm/cams-replace-confirm.component';
 
 @Injectable({
     providedIn: 'root'
@@ -42,9 +41,9 @@ export class NoctuaSearchDialogService {
     }
 
 
-    openCamReplaceDialog(success): void {
-        this.dialogRef = this._matDialog.open(CamsReplaceDialogComponent, {
-            panelClass: 'noc-cams-replace-dialog',
+    openCamReplaceConfirmDialog(success): void {
+        this.dialogRef = this._matDialog.open(CamsReplaceConfirmDialogComponent, {
+            panelClass: 'noc-cams-replace-confirm-dialog',
             data: {
                 // searchCriteria: searchCriteria
             },

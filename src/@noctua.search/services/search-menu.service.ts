@@ -8,7 +8,6 @@ import { HttpParams } from '@angular/common/http';
     providedIn: 'root'
 })
 export class NoctuaSearchMenuService {
-    private _newModelBbopManager = this._noctuaGraphService.registerManager();;
     leftPanel = {
         search: {
             id: 1
@@ -55,7 +54,7 @@ export class NoctuaSearchMenuService {
     private leftDrawer: MatDrawer;
     private rightDrawer: MatDrawer;
 
-    constructor(private _noctuaGraphService: NoctuaGraphService) {
+    constructor() {
         const self = this;
         this.selectedLeftPanel = this.leftPanel.filter;
         this.selectedRightPanel = this.rightPanel.annotonEntityForm;

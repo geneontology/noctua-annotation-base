@@ -10,9 +10,9 @@ import { NoctuaSearchBaseModule } from '@noctua.search';
 import { NoctuaFooterModule } from 'app/layout/components/footer/footer.module';
 import { NoctuaFormModule } from '../noctua-form';
 import { CamsReviewComponent } from './cams/cams-review/cams-review.component';
-import { CamsReplaceDialogComponent } from './dialogs/cams-replace/cams-replace.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CamDetailComponent } from './cams/cam-detail/cam-detail.component';
+import { CamsReplaceConfirmDialogComponent } from './dialogs/cams-replace-confirm/cams-replace-confirm.component';
 
 const routes = [
   {
@@ -35,7 +35,7 @@ const routes = [
     NoctuaFormModule,
   ],
   declarations: [
-    CamsReplaceDialogComponent,
+    CamsReplaceConfirmDialogComponent,
     NoctuaSearchComponent,
     CamsTableComponent,
     CamsReviewComponent,

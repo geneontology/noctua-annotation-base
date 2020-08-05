@@ -7,19 +7,16 @@ import { map, finalize } from 'rxjs/operators';
 
 import {
     Cam,
-    NoctuaFormConfigService,
-    NoctuaUserService,
     Entity,
     CamsService,
     CamQueryMatch,
 } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 import { saveAs } from 'file-saver';
-import { forOwn, each, find, groupBy } from 'lodash';
+import { each, find } from 'lodash';
 import { CurieService } from '@noctua.curie/services/curie.service';
 import { CamPage } from './../models/cam-page';
 import { SearchHistory } from './../models/search-history';
-import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 
 declare const require: any;
@@ -157,6 +154,10 @@ export class NoctuaReviewSearchService {
         return this.currentMatchedEnity;
     }
 
+    replaceAll(replaceWith) {
+        this.camsService.replace(this.matchedEntities, replaceWith);
+    }
+
     getPage(pageNumber: number, pageSize: number) {
         this.searchCriteria.camPage.pageNumber = pageNumber;
         this.searchCriteria.camPage.size = pageSize;
@@ -266,6 +267,7 @@ export class NoctuaReviewSearchService {
                                 '',
                                 null,
                                 self.curieUtil.getCurie(v1),
+                                cam.modelId
                             );
                         }));
                 });
@@ -298,19 +300,17 @@ export class NoctuaReviewSearchService {
     }
 
     calculateMatchedCountNumber(): number {
-        const matchCount = this.cams.reduce((total, currentValue, i) => {
+        const matchCount = this.cams.reduce((total, currentValue) => {
             total += currentValue.matchedCount;
             return total;
         }, 0);
-
-
 
         return matchCount;
     }
 
 
     calculateMatched() {
-        this.matchedEntities = this.cams.reduce((total: Entity[], currentValue: Cam, i) => {
+        this.matchedEntities = this.cams.reduce((total: Entity[], currentValue: Cam) => {
             if (currentValue.queryMatch && currentValue.queryMatch.terms) {
                 total.push(...currentValue.queryMatch.terms);
             }

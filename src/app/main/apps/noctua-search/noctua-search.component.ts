@@ -8,7 +8,8 @@ import {
   Contributor,
   NoctuaUserService,
   NoctuaFormConfigService,
-  CamService
+  CamService,
+  CamsService
 } from 'noctua-form-base';
 
 import { FormGroup } from '@angular/forms';
@@ -58,6 +59,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private camService: CamService,
+    private camsService: CamsService,
     private noctuaDataService: NoctuaDataService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
@@ -88,6 +90,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
       .subscribe((user: Contributor) => {
         this.noctuaFormConfigService.setupUrls();
         this.noctuaFormConfigService.setUniversalUrls();
+        this.camsService.setup();
       });
   }
 

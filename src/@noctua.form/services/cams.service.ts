@@ -1,7 +1,7 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
@@ -15,8 +15,9 @@ import { Evidence, compareEvidence } from './../models/annoton/evidence';
 
 import { v4 as uuid } from 'uuid';
 import { Cam } from './../models/annoton/cam';
-import { uniqWith, each } from 'lodash';
+import { uniqWith, each, map, groupBy, find } from 'lodash';
 import { CamService } from './cam.service';
+import { Entity } from './../models/annoton/entity';
 
 @Injectable({
   providedIn: 'root'
@@ -33,12 +34,12 @@ export class CamsService {
   private camForm: CamForm;
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
-
+  private _replaceBbopManager;
 
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
     private _fb: FormBuilder,
     private noctuaUserService: NoctuaUserService,
-    private noctuaGraphService: NoctuaGraphService,
+    private _noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
     private noctuaLookupService: NoctuaLookupService,
     private curieService: CurieService) {
@@ -46,6 +47,10 @@ export class CamsService {
     this.curieUtil = this.curieService.getCurieUtil();
     this.camFormGroup = new BehaviorSubject(null);
     this.camFormGroup$ = this.camFormGroup.asObservable();
+  }
+
+  setup() {
+    this._replaceBbopManager = this._noctuaGraphService.registerManager();
   }
 
   initializeForm(cams?: Cam[]) {
@@ -90,6 +95,30 @@ export class CamsService {
     });
 
     self.onCamsChanged.next(this.cams);
+  }
+
+  replace(entities: Entity[], replaceWithTerm: Entity) {
+    const self = this;
+
+    const groupedEntities = groupBy(entities, 'modelId') as { string: Entity[] };
+
+    const promises = [];
+
+    each(groupedEntities, (values: Entity[], key) => {
+      const cam: Cam = find(this.cams, { modelId: key });
+
+      promises.push(self._noctuaGraphService.replaceAnnoton(
+        cam.manager,
+        key,
+        values,
+        replaceWithTerm
+      ));
+    });
+
+    return forkJoin(promises).subscribe(results => {
+      console.log(results);
+    });
+
   }
 
 }

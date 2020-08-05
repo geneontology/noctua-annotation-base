@@ -17,6 +17,7 @@ import { each, find } from 'lodash';
 
 
 export class CamQueryMatch {
+  modelId?: string;
   terms?: Entity[] = [];
   reference?: Entity[] = [];
 }
@@ -215,7 +216,6 @@ export class Cam {
             //  })
 
             if (node.term.uuid === term.uuid) {
-              console.log(node)
               node.term.highlight = true;
               self.matchedCount += 1;
               match = true;

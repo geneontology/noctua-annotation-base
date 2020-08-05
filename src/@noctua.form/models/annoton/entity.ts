@@ -13,14 +13,16 @@ export class Entity implements EntityBase {
   id: string;
   label: string;
   url: string;
+  modelId: string;
   classExpression: any;
   highlight: boolean;
 
-  constructor(_id: string, _label: string, _url?: string, _uuid?: string) {
+  constructor(_id: string, _label: string, _url?: string, _uuid?: string, _modelId?: string) {
     this.id = _id;
     this.label = _label;
     this.url = _url;
     this.uuid = _uuid;
+    this.modelId = _modelId;
   }
 
   static createEntity(value: Partial<EntityBase>) {

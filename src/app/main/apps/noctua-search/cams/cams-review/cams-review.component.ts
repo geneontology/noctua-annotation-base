@@ -1,6 +1,6 @@
 
 
-import { Component, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
@@ -9,12 +9,10 @@ import { Subject } from 'rxjs';
 import {
   Cam,
   AnnotonType,
-  Contributor,
   NoctuaUserService,
   NoctuaFormConfigService,
   NoctuaFormMenuService,
   NoctuaAnnotonFormService,
-  CamService,
   noctuaFormConfig,
   CamsService,
   AnnotonNode,
@@ -25,10 +23,10 @@ import {
 
 import { takeUntil, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 import { noctuaAnimations } from '@noctua/animations';
 import { FormGroup, FormControl } from '@angular/forms';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
+import { NoctuaSearchDialogService } from '../../services/dialog.service';
 
 @Component({
   selector: 'noc-cams-review',
@@ -64,21 +62,18 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor
-    (private route: ActivatedRoute,
-      private camsService: CamsService,
-      private noctuaDataService: NoctuaDataService,
-      public noctuaReviewSearchService: NoctuaReviewSearchService,
-      public noctuaUserService: NoctuaUserService,
-      private noctuaLookupService: NoctuaLookupService,
-      public noctuaFormConfigService: NoctuaFormConfigService,
-      public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-      public noctuaFormMenuService: NoctuaFormMenuService) {
+  constructor(
+    public noctuaReviewSearchService: NoctuaReviewSearchService,
+    public noctuaUserService: NoctuaUserService,
+    private noctuaSearchDialogService: NoctuaSearchDialogService,
+    private noctuaLookupService: NoctuaLookupService,
+    public noctuaFormConfigService: NoctuaFormConfigService,
+    public noctuaAnnotonFormService: NoctuaAnnotonFormService,
+    public noctuaFormMenuService: NoctuaFormMenuService) {
 
     this._unsubscribeAll = new Subject();
 
     this.categories = this.noctuaFormConfigService.findReplaceCategories;
-
 
     this.noctuaReviewSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -103,7 +98,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const self = this;
 
     this.searchForm = this.createSearchForm(this.categories.selected);
     this.onValueChanges();
@@ -144,9 +138,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this.noctuaReviewSearchService.searchCriteria[filterType] = [findWhat];
     this.noctuaReviewSearchService.updateSearch();
 
-    const filter = {
-      terms: [findWhat]
-    };
     // this.camsService.findInCams(filter);
   }
 
@@ -154,7 +145,16 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
   }
   replaceAll() {
+    const value = this.searchForm.value;
+    const replaceWith = value.replaceWith;
 
+    const success = (replace) => {
+      if (replace) {
+        this.noctuaReviewSearchService.replaceAll(replaceWith);
+      }
+    }
+
+    this.noctuaSearchDialogService.openCamReplaceConfirmDialog(success);
   }
 
   findNext() {
@@ -165,7 +165,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this.noctuaReviewSearchService.findPrevious();
   }
 
-  selected(e) {
+  selected() {
     this.search();
   }
 
@@ -191,7 +191,10 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       debounceTime(400)
     ).subscribe(data => {
-
+      const lookup: EntityLookup = self.termNode.termLookup;
+      lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
+        lookup.results = response;
+      });
     });
   }
 

@@ -56,10 +56,10 @@
               placeholder="e.g., lipid binding" />
           </mat-form-field>
           <div class="noc-review-actions" fxLayout="row" fxLayoutAlign="space-between center">
-            <button (click)="findWhat()" mat-raised-button color="warn" class="noc-review-btn" fxFlex="48">
+            <button (click)="replace()" mat-raised-button color="warn" class="noc-review-btn" fxFlex="48">
               Replace
             </button>
-            <button mat-raised-button color="warn" class="noc-review-btn" fxFlex="48">
+            <button (click)="replaceAll()" mat-raised-button color="warn" class="noc-review-btn" fxFlex="48">
               Replace All
             </button>
           </div>
@@ -67,7 +67,7 @@
       </form>
     </div>
     <div class="noc-cams-results">
-      <div *ngFor="let cam of cams" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-cam-container" *ngFor="let cam of cams" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
           [@animateStagger]="{value:'50'}">
           <div *ngIf="cam?.title" class="noc-title" fxLayout="row" fxLayoutAlign="start center">

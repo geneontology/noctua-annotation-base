@@ -123,10 +123,19 @@ export class NoctuaSearchService {
         self.noctuaDataService.onContributorsChanged
             .subscribe(contributors => {
                 this.noctuaUserService.contributors = contributors;
-                this.searchCriteria.terms = [{
-                    id: "GO:0006869",
-                    label: "lipid transport"
-                }];
+                /*   this.searchCriteria.terms = [{
+                      id: 'GO:0006869',
+                      label: 'lipid transport'
+                  }]; */
+
+                const contributor =
+                    {
+                        'name': 'Tremayne Mushayahama',
+                        'orcid': 'http://orcid.org/0000-0002-2874-6934',
+                        'initials': 'TM',
+                        'color': '#e1bee7'
+                    } as Contributor;
+                this.searchCriteria.contributors = [contributor];
                 this.updateSearch();
             });
 
