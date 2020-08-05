@@ -34,6 +34,8 @@ import {
     faChevronDown,
     faLevelDownAlt,
     faLevelUpAlt,
+    faArrowUp,
+    faArrowDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -80,6 +82,8 @@ const appRoutes: Routes = [
 export class AppModule {
     constructor(library: FaIconLibrary) {
         library.addIcons(
+            faArrowUp,
+            faArrowDown,
             faCalendarDay,
             faCalendarWeek,
             faChevronDown,

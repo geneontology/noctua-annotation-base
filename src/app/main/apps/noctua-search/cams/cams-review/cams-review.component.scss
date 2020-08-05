@@ -17,18 +17,28 @@
   .noc-search-form {
     padding: 12px;
     margin-bottom: 12px;
-    @include deep-height(120px);
+    @include deep-height(128px);
     position: sticky;
     position: -webkit-sticky;
     top: 0;
     z-index: 1000;
-    background-color: #F2F2F2;
+    background-color: $noc-primary-color-lighter;
     border-bottom: #BBB solid 1px;
     @include mat-elevation(3);
   }
 
   .noc-cams-results {
     padding: 12px;
+  }
+
+  .noc-review-actions {
+    @include deep-width(250px);
+
+    .noc-review-btn {
+      height: 45px;
+    }
+
+    .noc-disabled {}
   }
 
   .noc-matched-count {

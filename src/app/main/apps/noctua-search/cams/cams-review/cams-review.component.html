@@ -15,7 +15,7 @@
     <div class="noc-search-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <form *ngIf="searchForm" class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch"
         name="searchForm" [formGroup]="searchForm" class="w-100-p h-100-p">
-        <div class="noc-annoton-group-row" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-annoton-group-row mb-8" fxLayout="row" fxLayoutAlign="start center">
           <mat-form-field appearance="outline" fxFlex="150px" class="noc-sm">
             <mat-label>Category</mat-label>
             <mat-select placeholder="" [compareWith]="compareCategory">
@@ -24,38 +24,45 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="outline" fxFlex class="noc-sm">
+          <mat-form-field appearance="outline" fxFlex class="noc-sm mr-12">
             <mat-label>Find What</mat-label>
             <input type="text" matInput formControlName="findWhat" [matAutocomplete]="termAuto" rows="2"
               placeholder="e.g. lipid transport activity" />
           </mat-form-field>
-          <div *ngIf="noctuaReviewSearchService.matchedCount>0" class="noc-matched-count">
-            {{noctuaReviewSearchService.matchedCountCursor +1}} of {{noctuaReviewSearchService.matchedCount}}
-            <button mat-icon-button (click)="findPrevious()" class="" color="primary">
-              <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
-            </button>
-            <button mat-icon-button (click)="findNext()" class="" color="primary">
-              <fa-icon [icon]="['fas', 'level-down-alt']"></fa-icon>
-            </button>
-          </div>
-          <div *ngIf="noctuaReviewSearchService.matchedCount===0" class="noc-matched-count">
-            No Results
+          <div class="noc-review-actions" fxLayout="row" fxLayoutAlign="start center">
+            <div *ngIf="noctuaReviewSearchService.matchedCount===0" class="noc-matched-count">
+              No Results
+            </div>
+            <div *ngIf="noctuaReviewSearchService.matchedCount>0" class="noc-matched-count">
+              {{noctuaReviewSearchService.matchedCountCursor +1}} of {{noctuaReviewSearchService.matchedCount}}
+            </div>
+            <span fxFlex></span>
+            <div [ngClass]="{'noc-disabled':noctuaReviewSearchService.matchedCount===0}">
+              <button mat-icon-button (click)="findPrevious()" class="" color="primary">
+                <fa-icon [icon]="['fas', 'arrow-up']"></fa-icon>
+              </button>
+              <button mat-icon-button (click)="findNext()" class="" color="primary">
+                <fa-icon [icon]="['fas', 'arrow-down']"></fa-icon>
+              </button>
+            </div>
           </div>
         </div>
         <div class="noc-annoton-group-row" fxLayout="row" fxLayoutAlign="start center">
           <div fxFlex="150px" class="noc-sm">
           </div>
-          <mat-form-field appearance="outline" fxFlex class="noc-sm">
+          <mat-form-field appearance="outline" fxFlex class="noc-sm mr-12">
             <mat-label>Replace With</mat-label>
             <input type="text" matInput formControlName="replaceWith" [matAutocomplete]="termAuto"
               placeholder="e.g., lipid binding" />
           </mat-form-field>
-          <button (click)="findWhat()" mat-button color="mr-8" class="">
-            Replace
-          </button>
-          <button mat-button color="" class="">
-            Replace All
-          </button>
+          <div class="noc-review-actions" fxLayout="row" fxLayoutAlign="space-between center">
+            <button (click)="findWhat()" mat-raised-button color="warn" class="noc-review-btn" fxFlex="48">
+              Replace
+            </button>
+            <button mat-raised-button color="warn" class="noc-review-btn" fxFlex="48">
+              Replace All
+            </button>
+          </div>
         </div>
       </form>
     </div>
