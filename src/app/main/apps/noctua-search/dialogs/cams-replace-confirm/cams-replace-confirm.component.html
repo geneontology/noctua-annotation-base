@@ -2,7 +2,7 @@
   <mat-toolbar class="mat-primary m-0">
     <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="start center">
       <span class="title dialog-title">
-        Cam Replace</span>
+        Replace Confirmation </span>
       <span fxFlex></span>
       <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" aria-label="Close dialog">
         <mat-icon>close</mat-icon> Close
@@ -10,6 +10,7 @@
     </mat-toolbar-row>
   </mat-toolbar>
   <div class="noc-dialog-body  noc-form-section">
+    A really good summary
     Replace {{occurrences}} occurrences across {{models}} models
 
     <div>
@@ -24,6 +25,6 @@
   <div class="m-0 p-16 noc-dialog-footer" fxLayout="row" fxLayoutAlign="space-between center">
     <span fxFlex></span>
     <button (click)='close()' type="button" mat-raised-button color="" class="mr-8">Cancel</button>
-    <button (click)="save()" type="button" mat-raised-button color="primary">Done</button>
+    <button (click)="save()" type="button" mat-raised-button color="primary">Replace</button>
   </div>
 </div>
