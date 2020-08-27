@@ -16,14 +16,13 @@
   </div>
   <div flex="" fxLayout="column" fxLayoutAlign="start stretch">
     <div class="noc-form-chip-row" flex="" fxLayout="column" fxLayoutAlign="start stretch">
-      <mat-chip-list class="w-100-p">
+      <!--  <mat-chip-list class="w-100-p">
         <ng-container *ngFor="let friendNode of friendNodes">
           <mat-chip class="noc-form-chip noc-node-chip" *ngFor="let annotonNode of friendNode.annotonNodes" [ngClass]="{'noc-mf': annotonNode.type === annotonNodeType.GoMolecularFunction,
           'noc-bp': annotonNode.type === annotonNodeType.GoBiologicalProcess,
-          'noc-cc': annotonNode.type === annotonNodeType.GoCellularComponent}"
-            (click)="useTerm(annotonNode, friendNode.annoton)" fxLayout="row" fxLayoutAlign="start center"
-            matTooltip="Term: {{annotonNode.term?.label}} ({{annotonNode.term?.id}})" [matTooltipPosition]="'below'"
-            [matTooltipShowDelay]="1000">
+          'noc-cc': annotonNode.type === annotonNodeType.GoCellularComponent}" fxLayout="row"
+            fxLayoutAlign="start center" matTooltip="Term: {{annotonNode.term?.label}} ({{annotonNode.term?.id}})"
+            [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
             <div fxFlex="" class="noc-chip-label">
               {{annotonNode.term?.label}}
             </div>
@@ -34,7 +33,7 @@
             </div>
           </mat-chip>
         </ng-container>
-      </mat-chip-list>
+      </mat-chip-list> -->
     </div>
     <div flex="" fxLayout="row" fxLayoutAlign="start stretch">
       <div class="p-4" fxFlex fxLayout="row" fxLayoutAlign="start stretch">
@@ -188,13 +187,14 @@
         </button>
         <!--   <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchModels()">
       Search Models
-    </button> -->
+       </button> 
         <button mat-menu-item *ngIf="entity.aspect==='P' && !entity.linkedNode" class="" (click)="linkNode(entity)">
           Choose From an Existing Process
         </button>
         <button mat-menu-item *ngIf="entity.linkedNode" class="" (click)="unlinkNode(entity)">
           Unlink Node
         </button>
+      -->
         <button mat-menu-item *ngIf="true" class="" (click)="toggleIsComplement(entity)">
           NOT Qualifier
         </button>
