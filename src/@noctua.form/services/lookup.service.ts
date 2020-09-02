@@ -26,6 +26,7 @@ engine.use_jsonp(true)
 })
 export class NoctuaLookupService {
   evidenceList: Evidence[] = [];
+  termList: AnnotonNode[] = [];
   name;
   linker;
   golrURLBase;

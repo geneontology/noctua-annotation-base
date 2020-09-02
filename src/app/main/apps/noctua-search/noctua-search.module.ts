@@ -16,7 +16,7 @@ import { CamsReplaceConfirmDialogComponent } from './dialogs/cams-replace-confir
 
 const routes = [
   {
-    path: '',
+    path: 's',
     component: NoctuaSearchComponent
   }
 ];

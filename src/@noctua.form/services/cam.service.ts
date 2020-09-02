@@ -16,7 +16,8 @@ import { Evidence, compareEvidence } from './../models/annoton/evidence';
 import { v4 as uuid } from 'uuid';
 import { Cam } from './../models/annoton/cam';
 import { uniqWith } from 'lodash';
-import { AnnotonNodeType, AnnotonNode } from './../models/annoton';
+import { AnnotonNodeType, AnnotonNode, Entity } from './../models/annoton';
+import { compareTerm } from '@noctua.form/models/annoton/annoton-node';
 
 @Injectable({
   providedIn: 'root'
@@ -121,6 +122,11 @@ export class CamService {
     return self.noctuaGraphService.deleteAnnoton(self.cam, deleteData.uuids, deleteData.triples);
   }
 
+  updateTermList(formAnnoton?: Annoton) {
+    const termList: AnnotonNode[] = this.getUniqueTerms(formAnnoton);
+    this.noctuaLookupService.termList = termList;
+  }
+
   updateEvidenceList(formAnnoton?: Annoton) {
     const evidenceList: Evidence[] = this.getUniqueEvidence(formAnnoton);
     this.noctuaLookupService.evidenceList = evidenceList;
@@ -132,6 +138,13 @@ export class CamService {
 
   getNodesByTypeFlat(annotonType: AnnotonNodeType): AnnotonNode[] {
     return this.cam.getNodesByTypeFlat(annotonType);
+  }
+
+  getUniqueTerms(formAnnoton?: Annoton): AnnotonNode[] {
+    const annotonNodes = this.cam.getTerms(formAnnoton);
+    const result = uniqWith(annotonNodes, compareTerm);
+
+    return result;
   }
 
   getUniqueEvidence(formAnnoton?: Annoton): Evidence[] {

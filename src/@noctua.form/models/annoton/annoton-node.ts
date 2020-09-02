@@ -225,3 +225,6 @@ export function categoryToClosure(categories) {
   }).join(' OR ');
 }
 
+export function compareTerm(a: AnnotonNode, b: AnnotonNode) {
+  return a.term.id === b.term.id;
+}

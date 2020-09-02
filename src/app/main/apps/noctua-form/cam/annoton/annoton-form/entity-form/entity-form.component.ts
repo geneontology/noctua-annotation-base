@@ -277,6 +277,11 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
+  updateTermList() {
+    const self = this;
+    this.camService.updateTermList(self.noctuaAnnotonFormService.annoton);
+  }
+
   updateEvidenceList() {
     const self = this;
     this.camService.updateEvidenceList(self.noctuaAnnotonFormService.annoton);

@@ -109,7 +109,7 @@ export class Cam {
   expandAllAnnotons(expand: boolean) {
     const self = this;
 
-    each(self.annotons, function (annoton: Annoton) {
+    each(self.annotons, (annoton: Annoton) => {
       annoton.expanded = expand;
     });
   }
@@ -129,7 +129,6 @@ export class Cam {
     }
   }
 
-
   resetFilter() {
     this.filter.contributor = null;
     this.filter.uuids = [];
@@ -141,60 +140,7 @@ export class Cam {
 
     return find(self.annotons, (annoton) => {
       return annoton.id === id;
-    })
-  }
-
-  applyFilterTemp() {
-    const self = this;
-
-    if (self.filter && self.filter.terms.length > 0) {
-      self._filteredAnnotons = [];
-      self.matchedCount = 0;
-      this.displayType = noctuaFormConfig.camDisplayType.options.entity;
-
-      each(self._annotons, (annoton: Annoton) => {
-        let match = false;
-        each(annoton.nodes, (node: AnnotonNode) => {
-          node.term.highlight = false;
-          each(self.filter.terms, (term) => {
-
-            // each(node.evidence, (evidence: Evidence) => {
-            //    match = match || (evidence.uuid === uuid);
-            //  })
-
-            if (node.term.id === term.id) {
-              console.log(node)
-              node.term.highlight = true;
-              self.matchedCount += 1;
-              match = true;
-            }
-          });
-        });
-
-        if (match) {
-          self._filteredAnnotons.push(annoton);
-        }
-      });
-    }
-
-    /*  if (self.filter.uuids.length > 0) {
-       self.grid = [];
- 
-       each(self.annotons, (annoton: Annoton) => {
-         each(annoton.nodes, (node: AnnotonNode) => {
-           each(self.filter.uuids, (uuid) => {
-             let match = false
-             // each(node.evidence, (evidence: Evidence) => {
-             //    match = match || (evidence.uuid === uuid);
-             //  })
-             match = match || (node.uuid === uuid);
-             if (match) {
-               self.generateGridRow(annoton, node);
-             }
-           });
-         });
-       });
-     } */
+    });
   }
 
   applyFilter() {
@@ -262,7 +208,7 @@ export class Cam {
     const self = this;
     const result = [];
 
-    each(self.annotons, function (annoton: Annoton) {
+    each(self.annotons, (annoton: Annoton) => {
       result.push({
         annoton,
         title: annoton.title,
@@ -277,8 +223,27 @@ export class Cam {
     const self = this;
     const result = [];
 
-    each(self.annotons, function (annoton: Annoton) {
+    each(self.annotons, (annoton: Annoton) => {
       result.push(...annoton.getNodesByType(type));
+    });
+
+    return result;
+  }
+
+  getTerms(formAnnoton: Annoton) {
+    const self = this;
+    const result = [];
+
+    if (formAnnoton && formAnnoton.nodes) {
+      each(formAnnoton.nodes, (node: AnnotonNode) => {
+        result.push(node);
+      });
+    }
+
+    each(self.annotons, (annoton: Annoton) => {
+      each(annoton.nodes, (node: AnnotonNode) => {
+        result.push(node);
+      });
     });
 
     return result;
@@ -289,8 +254,8 @@ export class Cam {
     const result = [];
 
     if (formAnnoton && formAnnoton.nodes) {
-      each(formAnnoton.nodes, function (node: AnnotonNode) {
-        each(node.predicate.evidence, function (evidence: Evidence) {
+      each(formAnnoton.nodes, (node: AnnotonNode) => {
+        each(node.predicate.evidence, (evidence: Evidence) => {
           if (evidence.hasValue()) {
             result.push(evidence);
           }
@@ -298,9 +263,9 @@ export class Cam {
       });
     }
 
-    each(self.annotons, function (annoton: Annoton) {
-      each(annoton.edges, function (triple: Triple<AnnotonNode>) {
-        each(triple.predicate.evidence, function (evidence: Evidence) {
+    each(self.annotons, (annoton: Annoton) => {
+      each(annoton.edges, (triple: Triple<AnnotonNode>) => {
+        each(triple.predicate.evidence, (evidence: Evidence) => {
           if (evidence.hasValue()) {
             result.push(evidence);
           }
@@ -382,8 +347,6 @@ export class Cam {
     return grid;
     //return flattenDeep(grid);
   }
-
-
 
   generateGridRow(annoton: Annoton, node: AnnotonNode) {
     const self = this;

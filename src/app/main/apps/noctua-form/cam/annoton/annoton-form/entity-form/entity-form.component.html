@@ -39,8 +39,8 @@
       <div class="p-4" fxFlex fxLayout="row" fxLayoutAlign="start stretch">
         <mat-form-field class="noc-sm w-100-p" appearance="outline">
           <mat-label>{{entity.label}}</mat-label>
-          <textarea [readonly]="entity.linkedNode" type="text" matInput formControlName="term"
-            [matAutocomplete]="termAuto" row="2">
+          <textarea type="text" matInput formControlName="term" (focus)="updateTermList()" [matAutocomplete]="termAuto"
+            row="2">
       </textarea>
           <mat-autocomplete #termAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
             <mat-option *ngFor="let item of entity?.termLookup.results" [value]="item">
@@ -73,8 +73,8 @@
             <div class="p-4" fxFlex="55">
               <mat-form-field appearance="outline" class="noc-sm w-100-p">
                 <mat-label>Evidence</mat-label>
-                <textarea type="text" matInput formControlName="evidence" [matAutocomplete]="evidenceAuto"
-                  rows="2"></textarea>
+                <textarea type="text" matInput formControlName="evidence" (focus)="updateEvidenceList()"
+                  [matAutocomplete]="evidenceAuto" rows="2"></textarea>
                 <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
                   class="noc-term-autocomplete">
                   <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
@@ -141,10 +141,10 @@
                 <mat-label>With</mat-label>
                 <textarea matInput formControlName="with" [matAutocomplete]="withAuto" rows="2"
                   (focus)="updateEvidenceList()" autocomplete="off"></textarea>
-                <button mat-icon-button matSuffix (click)="openAddWith($event, evidence, 'with')"
+                <!--  <button mat-icon-button matSuffix (click)="openAddWith($event, evidence, 'with')"
                   class="noc-evidence-db-trigger">
                   <mat-icon>playlist_add</mat-icon>
-                </button>
+                </button> -->
                 <mat-autocomplete #withAuto="matAutocomplete" [displayWith]="withDisplayFn"
                   class="noc-term-autocomplete">
                   <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
@@ -182,10 +182,10 @@
         <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchDatabaseDialog(entity)">
           Search Annotations
         </button>
-        <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchEvidenceDialog(entity)">
+        <!--  <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchEvidenceDialog(entity)">
           Search Evidence
         </button>
-        <!--   <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchModels()">
+         <button mat-menu-item *ngIf="entity.aspect" class="" (click)="openSearchModels()">
       Search Models
        </button> 
         <button mat-menu-item *ngIf="entity.aspect==='P' && !entity.linkedNode" class="" (click)="linkNode(entity)">
