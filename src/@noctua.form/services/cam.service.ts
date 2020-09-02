@@ -134,12 +134,12 @@ export class CamService {
 
   updateReferenceList(formAnnoton: Annoton, entity: AnnotonNode) {
     this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formAnnoton);
-    entity.predicate.evidenceLookup.results = this.noctuaLookupService.referencePreLookup();
+    entity.predicate.referenceLookup.results = this.noctuaLookupService.referencePreLookup();
   }
 
   updateWithList(formAnnoton: Annoton, entity: AnnotonNode) {
     this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formAnnoton);
-    entity.predicate.evidenceLookup.results = this.noctuaLookupService.withPreLookup();
+    entity.predicate.withLookup.results = this.noctuaLookupService.withPreLookup();
   }
 
   getNodesByType(annotonType: AnnotonNodeType): any[] {

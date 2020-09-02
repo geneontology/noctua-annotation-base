@@ -34,7 +34,7 @@ export class TripleForm {
       const evidenceForm = new EvidenceForm(self._metadata, triple.subject, evidence);
 
       self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(triple.predicate.evidenceLookup);
+      evidenceForm.onValueChanges(triple.predicate);
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }

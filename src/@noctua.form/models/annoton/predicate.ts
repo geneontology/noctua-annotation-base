@@ -9,7 +9,10 @@ export class Predicate {
   uuid: string;
   edge: Entity;
   evidence: Evidence[];
+  // Because there is one predicate and multiple evidence
   evidenceLookup: EntityLookup = new EntityLookup();
+  referenceLookup: EntityLookup = new EntityLookup();
+  withLookup: EntityLookup = new EntityLookup();
 
   _evidenceMeta = {
     lookupBase: '',

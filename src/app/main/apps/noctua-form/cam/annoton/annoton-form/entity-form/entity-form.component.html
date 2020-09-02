@@ -111,7 +111,7 @@
                   <mat-icon>playlist_add</mat-icon>
                 </button>
                 <mat-autocomplete #referenceAuto="matAutocomplete" class="noc-term-autocomplete">
-                  <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
+                  <mat-option *ngFor="let item of entity?.predicate?.referenceLookup.results" [value]="item">
                     <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                       <div class="noc-term-label">
                         {{ item }}
@@ -131,7 +131,7 @@
                   <mat-icon>playlist_add</mat-icon>
                 </button> -->
                 <mat-autocomplete #withAuto="matAutocomplete" class="noc-term-autocomplete">
-                  <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
+                  <mat-option *ngFor="let item of entity?.predicate?.withLookup.results" [value]="item">
                     <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                       <div class="noc-term-label">
                         {{ item }}

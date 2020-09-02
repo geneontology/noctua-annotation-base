@@ -31,7 +31,7 @@ export class AnnotonConnectorForm {
     predicate.evidence.forEach((evidence: Evidence) => {
       const evidenceForm = new EvidenceForm(self._metadata, null, evidence);
       self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(predicate.evidenceLookup);
+      evidenceForm.onValueChanges(predicate);
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }
@@ -45,7 +45,7 @@ export class AnnotonConnectorForm {
     predicate.evidence.forEach((evidence: Evidence) => {
       const evidenceForm = new EvidenceForm(self._metadata, null, evidence);
       self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(predicate.evidenceLookup);
+      evidenceForm.onValueChanges(predicate);
       self.evidenceFormArray.push(self._fb.group(evidenceForm));
     });
   }

@@ -13,6 +13,7 @@ import { termValidator } from './validators/term-validator';
 import { evidenceValidator } from './validators/evidence-validator';
 import { EntityLookup } from '../annoton/entity-lookup';
 import { Entity } from '../annoton/entity';
+import { Predicate } from '../annoton/predicate';
 
 export class EvidenceForm {
     uuid;
@@ -44,15 +45,15 @@ export class EvidenceForm {
         evidence.with = this.with.value;
     }
 
-    onValueChanges(lookup: EntityLookup) {
+    onValueChanges(predicate: Predicate) {
         const self = this;
 
         self.evidence.valueChanges.pipe(
             distinctUntilChanged(),
             debounceTime(400)
         ).subscribe(data => {
-            self._metadata.lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
-                lookup.results = response;
+            self._metadata.lookupFunc.termLookup(data, predicate.evidenceLookup.requestParams).subscribe(response => {
+                predicate.evidenceLookup.results = response;
             });
         });
 
@@ -60,14 +61,14 @@ export class EvidenceForm {
             distinctUntilChanged(),
             debounceTime(400)
         ).subscribe(data => {
-            lookup.results = self._metadata.lookupFunc.evidenceLookup(data, 'reference');
+            predicate.referenceLookup.results = self._metadata.lookupFunc.evidenceLookup(data, 'reference');
         });
 
         self.with.valueChanges.pipe(
             distinctUntilChanged(),
             debounceTime(400)
         ).subscribe(data => {
-            lookup.results = self._metadata.lookupFunc.evidenceLookup(data, 'with');
+            predicate.withLookup.results = self._metadata.lookupFunc.evidenceLookup(data, 'with');
         });
     }
 

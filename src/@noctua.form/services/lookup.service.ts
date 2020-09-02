@@ -118,32 +118,26 @@ export class NoctuaLookupService {
     });
   }
 
-  evidenceLookup(searchText: string, category: 'reference' | 'with'): Evidence[] {
+  evidenceLookup(searchText: string, category: 'reference' | 'with'): string[] {
     const self = this;
-    if (searchText.length < 1) {
-      return [];
+
+    const filterValue = searchText.toLowerCase();
+    let filteredResults: string[] = [];
+
+    switch (category) {
+      case 'reference':
+        filteredResults = self.referencePreLookup().filter(
+          option => option ? option.toLowerCase().includes(filterValue) : false
+        );
+        break;
+      case 'with':
+        filteredResults = self.withPreLookup().filter(
+          option => option ? option.toLowerCase().includes(filterValue) : false
+        );
+        break;
     }
 
-    if (typeof searchText === 'string') {
-      const filterValue = searchText.toLowerCase();
-      let filteredResults: Evidence[] = [];
-
-      switch (category) {
-        case 'reference':
-          filteredResults = self.evidenceList.filter(
-            option => option.reference ? option.reference.toLowerCase().includes(filterValue) : false
-          );
-          break;
-        case 'with':
-          filteredResults = self.evidenceList.filter(
-            option => option.with ? option.with.toLowerCase().includes(filterValue) : false
-          );
-          break;
-      }
-
-      return filteredResults;
-    }
-    return [];
+    return filteredResults;
   }
 
 
