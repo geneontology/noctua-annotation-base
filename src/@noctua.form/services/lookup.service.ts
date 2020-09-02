@@ -7,6 +7,7 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each, uniqWith } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
+import { Observable } from 'rxjs';
 
 declare const require: any;
 
@@ -72,11 +73,25 @@ export class NoctuaLookupService {
     });
     const url = this.golrURLBase + params.toString();
 
-    return this.httpClient.jsonp(url, 'json.wrf').pipe(
-      map(response => self._lookupMap(response))
-    );
+    if (searchText === '') {
+      return new Observable(observer => {
+        observer.next(self.termPreLookup());
+        observer.complete();
+      });
+    } else {
+      return this.httpClient.jsonp(url, 'json.wrf').pipe(
+        map(response => self._lookupMap(response))
+      );
+    }
   }
 
+  termPreLookup(): Entity[] {
+    const self = this;
+
+    return self.termList.map((annotonNode: AnnotonNode) => {
+      return annotonNode.term;
+    });
+  }
 
   evidenceLookup(searchText: string, category: 'reference' | 'with'): Evidence[] {
     const self = this;
@@ -118,12 +133,12 @@ export class NoctuaLookupService {
       sort: 'annotation_class_label asc',
       rows: '100',
       start: '0',
-      fl: "*,score",
+      fl: '*,score',
       facet: 'true',
       'facet.mincount': '1',
       'facet.sort': 'count',
       'json.nl': 'arrarr',
-      "facet.limit": '100',
+      'facet.limit': '100',
       fq: [
         'document_category: "annotation"',
         'aspect: "' + aspect + '"',
@@ -138,14 +153,14 @@ export class NoctuaLookupService {
         // 'qualifier',
         // 'taxon_label',
         'annotation_class_label',
-        //'regulates_closure_label',
+        // 'regulates_closure_label',
         // 'annotation_extension_class_closure_label'
       ],
       q: '*:*',
       //  packet: '1',
       //  callback_type: 'search',
       // _: Date.now()
-    }
+    };
 
 
     if (extraParams.term) {
@@ -376,12 +391,13 @@ export class NoctuaLookupService {
       };
     });
 
-    console.log(result)
+    console.log(result);
     return result;
   }
 
   private _makeEntitiesArray(ids: string[], labels: string[]): Entity[] {
-    let result = []
+    let result = [];
+
     if (ids.length === labels.length) {
       result = ids.map((id, key) => {
         return new Entity(id, labels[key]);
