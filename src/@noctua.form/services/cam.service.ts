@@ -17,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 import { Cam } from './../models/annoton/cam';
 import { uniqWith } from 'lodash';
 import { AnnotonNodeType, AnnotonNode, Entity } from './../models/annoton';
-import { compareTerm } from '@noctua.form/models/annoton/annoton-node';
+import { compareTerm } from './../models/annoton/annoton-node';
 
 @Injectable({
   providedIn: 'root'

@@ -8,7 +8,7 @@ import { find, filter, each, uniqWith } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
 import { Observable } from 'rxjs';
-import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith } from '@noctua.form/models/annoton/evidence';
+import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith } from './../models/annoton/evidence';
 
 declare const require: any;
 
