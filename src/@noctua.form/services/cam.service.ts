@@ -122,14 +122,24 @@ export class CamService {
     return self.noctuaGraphService.deleteAnnoton(self.cam, deleteData.uuids, deleteData.triples);
   }
 
-  updateTermList(formAnnoton?: Annoton) {
-    const termList: AnnotonNode[] = this.getUniqueTerms(formAnnoton);
-    this.noctuaLookupService.termList = termList;
+  updateTermList(formAnnoton: Annoton, entity: AnnotonNode) {
+    this.noctuaLookupService.termList = this.getUniqueTerms(formAnnoton);
+    entity.termLookup.results = this.noctuaLookupService.termPreLookup(entity.type);
   }
 
-  updateEvidenceList(formAnnoton?: Annoton) {
-    const evidenceList: Evidence[] = this.getUniqueEvidence(formAnnoton);
-    this.noctuaLookupService.evidenceList = evidenceList;
+  updateEvidenceList(formAnnoton: Annoton, entity: AnnotonNode) {
+    this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formAnnoton);
+    entity.predicate.evidenceLookup.results = this.noctuaLookupService.evidencePreLookup();
+  }
+
+  updateReferenceList(formAnnoton: Annoton, entity: AnnotonNode) {
+    this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formAnnoton);
+    entity.predicate.evidenceLookup.results = this.noctuaLookupService.referencePreLookup();
+  }
+
+  updateWithList(formAnnoton: Annoton, entity: AnnotonNode) {
+    this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formAnnoton);
+    entity.predicate.evidenceLookup.results = this.noctuaLookupService.withPreLookup();
   }
 
   getNodesByType(annotonType: AnnotonNodeType): any[] {

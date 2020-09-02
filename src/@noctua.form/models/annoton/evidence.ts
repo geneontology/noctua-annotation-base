@@ -151,3 +151,15 @@ export function compareEvidence(a: Evidence, b: Evidence) {
     && a.reference === b.reference
     && a.with === b.with;
 }
+
+export function compareEvidenceEvidence(a: Evidence, b: Evidence) {
+  return a.evidence.id === b.evidence.id;
+}
+
+export function compareEvidenceReference(a: Evidence, b: Evidence) {
+  return a.reference === b.reference;
+}
+
+export function compareEvidenceWith(a: Evidence, b: Evidence) {
+  return a.with === b.with;
+}

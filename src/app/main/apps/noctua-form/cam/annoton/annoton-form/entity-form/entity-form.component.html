@@ -73,7 +73,7 @@
             <div class="p-4" fxFlex="55">
               <mat-form-field appearance="outline" class="noc-sm w-100-p">
                 <mat-label>Evidence</mat-label>
-                <textarea type="text" matInput formControlName="evidence" (focus)="updateEvidenceList()"
+                <textarea type="text" matInput formControlName="evidence" (focus)="updateEvidenceList(entity)"
                   [matAutocomplete]="evidenceAuto" rows="2"></textarea>
                 <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
                   class="noc-term-autocomplete">
@@ -105,31 +105,16 @@
               <mat-form-field appearance="outline" class="noc-sm w-100-p">
                 <mat-label>Reference</mat-label>
                 <textarea matInput formControlName="reference" [matAutocomplete]="referenceAuto" rows="2"
-                  autocomplete="off" (focus)="updateEvidenceList()"></textarea>
+                  autocomplete="off" (focus)="updateReferenceList()"></textarea>
                 <button mat-icon-button matSuffix (click)="openAddReference($event, evidence, 'reference')"
                   class="noc-evidence-db-trigger">
                   <mat-icon>playlist_add</mat-icon>
                 </button>
-                <mat-autocomplete #referenceAuto="matAutocomplete" [displayWith]="referenceDisplayFn"
-                  class="noc-term-autocomplete">
-                  <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item.reference">
+                <mat-autocomplete #referenceAuto="matAutocomplete" class="noc-term-autocomplete">
+                  <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
                     <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                       <div class="noc-term-label">
-                        {{ item.reference }}
-                      </div>
-                      <span fxFlex></span>
-                      <div class="noc-term-id mr-8">
-                        <strong>
-                          {{ item.xref }}
-                        </strong>
-                      </div>
-                      <div class="noc-term-id">
-                        <a *ngIf="item.link" (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
-                          {{ item.reference }}
-                        </a>
-                        <span *ngIf="!item.link">
-                          {{ item.id }}
-                        </span>
+                        {{ item }}
                       </div>
                     </div>
                   </mat-option>
@@ -140,31 +125,16 @@
               <mat-form-field appearance="outline" class="noc-sm w-100-p">
                 <mat-label>With</mat-label>
                 <textarea matInput formControlName="with" [matAutocomplete]="withAuto" rows="2"
-                  (focus)="updateEvidenceList()" autocomplete="off"></textarea>
+                  (focus)="updateWithList()" autocomplete="off"></textarea>
                 <!--  <button mat-icon-button matSuffix (click)="openAddWith($event, evidence, 'with')"
                   class="noc-evidence-db-trigger">
                   <mat-icon>playlist_add</mat-icon>
                 </button> -->
-                <mat-autocomplete #withAuto="matAutocomplete" [displayWith]="withDisplayFn"
-                  class="noc-term-autocomplete">
+                <mat-autocomplete #withAuto="matAutocomplete" class="noc-term-autocomplete">
                   <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
                     <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                       <div class="noc-term-label">
-                        {{ item.with }}
-                      </div>
-                      <span fxFlex></span>
-                      <div class="noc-term-id mr-8">
-                        <strong>
-                          {{ item.xref }}
-                        </strong>
-                      </div>
-                      <div class="noc-term-id">
-                        <a *ngIf="item.link" (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
-                          {{ item.reference }}
-                        </a>
-                        <span *ngIf="!item.link">
-                          {{ item.id }}
-                        </span>
+                        {{ item }}
                       </div>
                     </div>
                   </mat-option>

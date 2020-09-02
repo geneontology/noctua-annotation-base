@@ -2,12 +2,13 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { AnnotonNode, AnnotonNodeClosure, Entity, Evidence, Predicate, Annoton, Cam } from './../models/annoton/';
+import { AnnotonNode, AnnotonNodeClosure, Entity, Evidence, Predicate, Annoton, Cam, AnnotonNodeType } from './../models/annoton/';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each, uniqWith } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
 import { Observable } from 'rxjs';
+import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith } from '@noctua.form/models/annoton/evidence';
 
 declare const require: any;
 
@@ -73,23 +74,47 @@ export class NoctuaLookupService {
     });
     const url = this.golrURLBase + params.toString();
 
-    if (searchText === '') {
-      return new Observable(observer => {
-        observer.next(self.termPreLookup());
-        observer.complete();
-      });
-    } else {
-      return this.httpClient.jsonp(url, 'json.wrf').pipe(
-        map(response => self._lookupMap(response))
-      );
-    }
+    return this.httpClient.jsonp(url, 'json.wrf').pipe(
+      map(response => self._lookupMap(response))
+    );
   }
 
-  termPreLookup(): Entity[] {
+  termPreLookup(type: AnnotonNodeType): Entity[] {
     const self = this;
 
-    return self.termList.map((annotonNode: AnnotonNode) => {
+    const filtered = filter(self.termList, (annotonNode: AnnotonNode) => {
+      return annotonNode.type === type;
+    });
+
+    return filtered.map((annotonNode: AnnotonNode) => {
       return annotonNode.term;
+    });
+  }
+
+  evidencePreLookup(): Entity[] {
+    const self = this;
+
+    const filtered = uniqWith(this.evidenceList, compareEvidenceEvidence);
+    return filtered.map((evidence: Evidence) => {
+      return evidence.evidence;
+    });
+  }
+
+  referencePreLookup(): string[] {
+    const self = this;
+
+    const filtered = uniqWith(self.evidenceList, compareEvidenceReference);
+    return filtered.map((evidence: Evidence) => {
+      return evidence.reference;
+    });
+  }
+
+  withPreLookup(): string[] {
+    const self = this;
+
+    const filtered = uniqWith(self.evidenceList, compareEvidenceWith);
+    return filtered.map((evidence: Evidence) => {
+      return evidence.with;
     });
   }
 

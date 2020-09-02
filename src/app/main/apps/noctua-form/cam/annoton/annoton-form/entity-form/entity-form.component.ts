@@ -279,12 +279,22 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   updateTermList() {
     const self = this;
-    this.camService.updateTermList(self.noctuaAnnotonFormService.annoton);
+    this.camService.updateTermList(self.noctuaAnnotonFormService.annoton, this.entity);
   }
 
   updateEvidenceList() {
     const self = this;
-    this.camService.updateEvidenceList(self.noctuaAnnotonFormService.annoton);
+    this.camService.updateEvidenceList(self.noctuaAnnotonFormService.annoton, this.entity);
+  }
+
+  updateReferenceList() {
+    const self = this;
+    this.camService.updateReferenceList(self.noctuaAnnotonFormService.annoton, this.entity);
+  }
+
+  updateWithList() {
+    const self = this;
+    this.camService.updateWithList(self.noctuaAnnotonFormService.annoton, this.entity);
   }
 
   openAddReference(event, evidence: FormGroup, name: string) {
