@@ -11,6 +11,13 @@ $rotate-graph: 235deg;
   width: 100%;
   background-color: #F7F7F7;
 
+  .noc-hide-column {
+    visibility: hidden;
+    overflow: hidden;
+    display: none;
+    @include deep-width(0 !important);
+  }
+
   .noc-summary-results-bar {
     position: -webkit-sticky;
     position: sticky;

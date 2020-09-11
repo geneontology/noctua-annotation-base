@@ -30,7 +30,7 @@
     </mat-paginator>
   </div>
   <table fxFlex="1 1 auto" mat-table class="" [dataSource]="cams" [@animateStagger]="{value:'50'}">
-    <ng-container [hidden]="true" matColumnDef="select">
+    <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef fxFlex="50px">
       </th>
       <td class="noc-checkbox-cell" mat-cell *matCellDef="let cam" fxFlex="50px">

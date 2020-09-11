@@ -47,18 +47,18 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   ReviewMode = ReviewMode;
 
   private _unsubscribeAll: Subject<any>;
-  @Input() options: any = {};
+  private _isReviewMode: string;
 
-  displayedColumns = [
-    'select',
-    'title',
-    'state',
-    'date',
-    'contributor',
-    'edit',
-    'export',
-    // 'expand',
-  ];
+  @Input() set isReviewMode(value: any) {
+    this._isReviewMode = value;
+    this.initTable(this._isReviewMode);
+  }
+
+  get isReviewMode(): any {
+    return this._isReviewMode;
+  }
+
+  displayedColumns = [];
 
 
   searchCriteria: any = {};
@@ -93,10 +93,23 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     this._unsubscribeAll = new Subject();
   }
 
-  ngOnInit(): void {
-    if (this.options.type === 'review') {
+  initTable(isReviewMode) {
+    this.displayedColumns = [
+      'title',
+      'state',
+      'date',
+      'contributor',
+      'edit',
+      'export',
+    ];
 
+    if (isReviewMode) {
+      this.displayedColumns.unshift('select');
     }
+  }
+
+  ngOnInit(): void {
+
 
     this.noctuaSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))

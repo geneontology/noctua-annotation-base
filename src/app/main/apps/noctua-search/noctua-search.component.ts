@@ -56,9 +56,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     detail: {}
   };
 
-  tableOptions = {
-    review: false
-  }
+  isReviewMode = false;
 
   cams: any[] = [];
 
@@ -73,7 +71,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaUserService: NoctuaUserService,
-    public noctuaSearchService: NoctuaSearchService
+    public noctuaSearchService: NoctuaSearchService,
   ) {
     this._unsubscribeAll = new Subject();
 
@@ -151,10 +149,11 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
   toggleReviewMode() {
     if (this.noctuaSearchMenuService.reviewMode === ReviewMode.off) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
-      this.tableOptions.review = true;
+      this.isReviewMode = true;
     } else if (this.noctuaSearchMenuService.reviewMode === ReviewMode.on) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.off;
-      this.tableOptions.review = false;
+      this.isReviewMode = false;;
+      this.noctuaSearchMenuService.closeLeftDrawer();
     }
   }
 
