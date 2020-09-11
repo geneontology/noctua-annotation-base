@@ -151,7 +151,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     if (this.selection.isSelected(cam)) {
       this.openReview(cam);
     } else {
-      this.camsService.removeCamFromReview(cam)
+      this.camsService.removeCamFromReview(cam);
     }
   }
 

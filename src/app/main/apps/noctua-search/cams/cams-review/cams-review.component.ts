@@ -27,6 +27,8 @@ import { noctuaAnimations } from '@noctua/animations';
 import { FormGroup, FormControl } from '@angular/forms';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaSearchDialogService } from '../../services/dialog.service';
+import { cloneDeep } from 'lodash';
+import { ArtReplaceCategory } from '@noctua.search/models/review-mode';
 
 @Component({
   selector: 'noc-cams-review',
@@ -36,6 +38,7 @@ import { NoctuaSearchDialogService } from '../../services/dialog.service';
 })
 export class CamsReviewComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
+  ArtReplaceCategory = ArtReplaceCategory;
 
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
@@ -59,6 +62,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
   gpNode: AnnotonNode;
   termNode: AnnotonNode;
+  selectedCategoryName;
 
   private _unsubscribeAll: Subject<any>;
 
@@ -73,7 +77,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
     this._unsubscribeAll = new Subject();
 
-    this.categories = this.noctuaFormConfigService.findReplaceCategories;
+    this.categories = cloneDeep(this.noctuaFormConfigService.findReplaceCategories);
 
     this.noctuaReviewSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -98,10 +102,8 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.searchForm = this.createSearchForm(this.categories.selected);
     this.onValueChanges();
-
   }
 
   ngOnDestroy(): void {
@@ -123,6 +125,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
 
   createSearchForm(selectedCategory) {
+    this.selectedCategoryName = selectedCategory.name;
     return new FormGroup({
       findWhat: new FormControl(),
       replaceWith: new FormControl(),
@@ -173,7 +176,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
   }
 
-
   selected() {
     this.search();
   }
@@ -185,6 +187,15 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   onValueChanges() {
     const self = this;
     const lookupFunc = self.noctuaLookupService.lookupFunc()
+
+    this.searchForm.get('category').valueChanges.pipe(
+      distinctUntilChanged(),
+    ).subscribe(data => {
+      if (data) {
+
+        this.selectedCategoryName = data.name;
+      }
+    });
 
     this.searchForm.get('findWhat').valueChanges.pipe(
       distinctUntilChanged(),

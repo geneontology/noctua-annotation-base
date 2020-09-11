@@ -92,9 +92,10 @@ export class CamsService {
     const found = find(this.cams, { id: cam.id })
 
     if (!found) {
-      cam.dateReviewAdded = Date.now;
+      cam.dateReviewAdded = Date.now();
       self.cams.push(cam);
       self.camService.loadCam(cam);
+      self.sortCams();
 
       self.onCamsChanged.next(this.cams);
     }
@@ -139,8 +140,12 @@ export class CamsService {
     });
   }
 
+  sortCams() {
+    this.cams.sort(this._compareDateReviewAdded);
+  }
+
   private _compareDateReviewAdded(a: Cam, b: Cam): number {
-    if (a.presentation.gpText.toLowerCase() < b.presentation.gpText.toLowerCase()) {
+    if (a.dateReviewAdded > b.dateReviewAdded) {
       return -1;
     } else {
       return 1;

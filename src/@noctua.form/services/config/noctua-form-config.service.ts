@@ -132,12 +132,9 @@ export class NoctuaFormConfigService {
 
   get findReplaceCategories() {
     const options = [
-      noctuaFormConfig.findReplaceCategory.options.goterm,
+      noctuaFormConfig.findReplaceCategory.options.term,
       noctuaFormConfig.findReplaceCategory.options.gp,
-      noctuaFormConfig.findReplaceCategory.options.evidence,
       noctuaFormConfig.findReplaceCategory.options.reference,
-      noctuaFormConfig.findReplaceCategory.options.withfrom,
-      noctuaFormConfig.findReplaceCategory.options.state,
     ];
 
     return {

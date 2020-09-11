@@ -18,16 +18,26 @@
         <div class="noc-annoton-group-row mb-8" fxLayout="row" fxLayoutAlign="start center">
           <mat-form-field appearance="outline" fxFlex="150px" class="noc-sm">
             <mat-label>Category</mat-label>
-            <mat-select placeholder="" [compareWith]="compareCategory">
+            <mat-select placeholder="" formControlName="category" [compareWith]="compareCategory">
               <mat-option *ngFor="let category of categories.options" [value]="category">
                 {{category.label}}
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="outline" fxFlex class="noc-sm mr-12">
-            <mat-label>Find What</mat-label>
-            <input type="text" matInput formControlName="findWhat" [matAutocomplete]="termAuto" rows="2"
-              placeholder="e.g. lipid transport activity" />
+          <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.term" appearance="outline" fxFlex
+            class="noc-sm mr-12">
+            <mat-label>Find What <strong>(Ontology Term)</strong></mat-label>
+            <input type="text" matInput formControlName="findWhat" [matAutocomplete]="termAuto" rows="2" />
+          </mat-form-field>
+          <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.gp" appearance="outline" fxFlex
+            class="noc-sm mr-12">
+            <mat-label>Find What <strong>(Gene Product)</strong></mat-label>
+            <input type="text" matInput formControlName="findWhat" [matAutocomplete]="gpAuto" rows="2" />
+          </mat-form-field>
+          <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.reference" appearance="outline" fxFlex
+            class="noc-sm mr-12">
+            <mat-label>Find What <strong>(Reference)</strong></mat-label>
+            <input type="text" matInput formControlName="findWhat" />
           </mat-form-field>
           <div class="noc-review-actions" fxLayout="row" fxLayoutAlign="start center">
             <div *ngIf="noctuaReviewSearchService.matchedCount===0" class="noc-matched-count">
@@ -50,16 +60,26 @@
         <div class="noc-annoton-group-row" fxLayout="row" fxLayoutAlign="start center">
           <div fxFlex="150px" class="noc-sm">
           </div>
-          <mat-form-field appearance="outline" fxFlex class="noc-sm mr-12">
-            <mat-label>Replace With</mat-label>
-            <input type="text" matInput formControlName="replaceWith" [matAutocomplete]="termAuto"
-              placeholder="e.g., lipid binding" />
+          <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.term" appearance="outline" fxFlex
+            class="noc-sm mr-12">
+            <mat-label>Replace With <strong>(Ontology Term)</strong></mat-label>
+            <input type="text" matInput formControlName="replaceWith" [matAutocomplete]="termAuto" />
+          </mat-form-field>
+          <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.gp" appearance="outline" fxFlex
+            class="noc-sm mr-12">
+            <mat-label>Replace With <strong>(Gene Product)</strong></mat-label>
+            <input type="text" matInput formControlName="replaceWith" [matAutocomplete]="gpAuto" />
+          </mat-form-field>
+          <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.reference" appearance="outline" fxFlex
+            class="noc-sm mr-12">
+            <mat-label>Replace With <strong>(Reference)</strong></mat-label>
+            <input type="text" matInput formControlName="replaceWith" />
           </mat-form-field>
           <div class="noc-review-actions" fxLayout="row" fxLayoutAlign="space-between center">
-            <button (click)="replace()" mat-raised-button color="warn" class="noc-review-btn" fxFlex="48">
+            <button (click)="replace()" mat-raised-button color="warn" class="noc-sm noc-review-btn" fxFlex="48">
               Replace
             </button>
-            <button (click)="replaceAll()" mat-raised-button color="warn" class="noc-review-btn" fxFlex="48">
+            <button (click)="replaceAll()" mat-raised-button color="warn" class="noc-sm noc-review-btn" fxFlex="48">
               Replace All
             </button>
           </div>
@@ -99,9 +119,8 @@
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
-
     <span fxFlex></span>
-    <button (click)='resetAll()' type="button" mat-raised-button color="warn" class="mr-8">Reset</button>
+    <button (click)='resetAll()' type="button" mat-raised-button color="" class="mr-8">Reset</button>
     <button (click)="reviewChanges()" type="submit" class="" mat-raised-button color="primary">
       Review Your Changes
     </button>
@@ -110,6 +129,20 @@
 <mat-autocomplete #termAuto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="termDisplayFn"
   class="noc-term-autocomplete">
   <mat-option class="noc-term-autocomplete" *ngFor="let item of termNode?.termLookup.results" [value]="item">
+    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <div class="noc-term-label">
+        {{ item.label }}
+      </div>
+      <span fxFlex></span>
+      <div class="noc-term-id">
+        {{ item.id }}
+      </div>
+    </div>
+  </mat-option>
+</mat-autocomplete>
+<mat-autocomplete #gpAuto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="termDisplayFn"
+  class="noc-term-autocomplete">
+  <mat-option class="noc-term-autocomplete" *ngFor="let item of gpNode?.termLookup.results" [value]="item">
     <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-term-label">
         {{ item.label }}

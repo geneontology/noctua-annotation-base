@@ -186,30 +186,17 @@ export const noctuaFormConfig = {
   },
   'findReplaceCategory': {
     'options': {
-      'goterm': {
-        'name': 'goterm',
-        'label': 'GO Term',
+      'term': {
+        'name': 'term',
+        'label': 'Ontology Term',
       },
       'gp': {
         'name': 'gp',
         'label': 'Gene Product',
       },
-      'evidence': {
-        'name': 'evidence',
-        'label': 'Evidence',
-      },
       'reference': {
         'name': 'reference',
         'label': 'Reference',
-      },
-
-      'withfrom': {
-        'name': 'withfrom',
-        'label': 'With From ',
-      },
-      'state': {
-        'name': 'state',
-        'label': 'Model State',
       },
     }
   },

@@ -76,7 +76,7 @@ export class Cam {
 
   queryMatch: CamQueryMatch = new CamQueryMatch();
 
-  dateReviewAdded = Date.now;
+  dateReviewAdded = Date.now();
 
   private _filteredAnnotons: Annoton[] = [];
   private _annotons: Annoton[] = [];
