@@ -15,7 +15,7 @@ import { Evidence, compareEvidence } from './../models/annoton/evidence';
 
 import { v4 as uuid } from 'uuid';
 import { Cam } from './../models/annoton/cam';
-import { uniqWith, each, map, groupBy, find } from 'lodash';
+import { uniqWith, each, map, groupBy, find, remove } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/annoton/entity';
 
@@ -89,22 +89,19 @@ export class CamsService {
     const self = this;
 
     // cam.expanded = true;
-    cam.dateReviewAdded = Date.now;
-    self.cams.push(cam);
-    self.camService.loadCam(cam);
+    const found = find(this.cams, { id: cam.id })
 
-    self.onCamsChanged.next(this.cams);
+    if (!found) {
+      cam.dateReviewAdded = Date.now;
+      self.cams.push(cam);
+      self.camService.loadCam(cam);
+
+      self.onCamsChanged.next(this.cams);
+    }
   }
 
   removeCamFromReview(cam: Cam) {
-    const self = this;
-
-    // cam.expanded = true;
-    cam.dateReviewAdded = Date.now;
-    self.cams.push(cam);
-    self.camService.loadCam(cam);
-
-    self.onCamsChanged.next(this.cams);
+    remove(this.cams, { id: cam.id });
   }
 
   findInCams(filter?: any) {

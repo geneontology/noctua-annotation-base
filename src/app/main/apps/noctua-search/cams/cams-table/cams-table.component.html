@@ -34,7 +34,7 @@
       <th mat-header-cell *matHeaderCellDef fxFlex="50px">
       </th>
       <td class="noc-checkbox-cell" mat-cell *matCellDef="let cam" fxFlex="50px">
-        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? toggleSelection($event, cam) : null"
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? toggleSelection(cam) : null"
           [checked]="selection.isSelected(cam)" [aria-label]="checkboxLabel(cam)">
         </mat-checkbox>
       </td>

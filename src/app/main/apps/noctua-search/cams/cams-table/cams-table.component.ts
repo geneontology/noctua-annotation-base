@@ -146,12 +146,12 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     console.log(this.selection)
   }
 
-  toggleSelection($event, cam) {
+  toggleSelection(cam: Cam) {
     this.selection.toggle(cam);
     if (this.selection.isSelected(cam)) {
       this.openReview(cam);
     } else {
-
+      this.camsService.removeCamFromReview(cam)
     }
   }
 
