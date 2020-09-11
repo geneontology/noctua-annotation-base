@@ -91,6 +91,8 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     private noctuaSearchDialogService: NoctuaSearchDialogService,
     public noctuaSearchService: NoctuaSearchService) {
     this._unsubscribeAll = new Subject();
+
+    this.selection.sort()
   }
 
   initTable(isReviewMode) {
@@ -109,7 +111,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
 
     this.noctuaSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -143,6 +144,15 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       this.cams.forEach(row => this.selection.select(row));
 
     console.log(this.selection)
+  }
+
+  toggleSelection($event, cam) {
+    this.selection.toggle(cam);
+    if (this.selection.isSelected(cam)) {
+      this.openReview(cam);
+    } else {
+
+    }
   }
 
   /** The label for the checkbox on the passed row */
@@ -195,14 +205,10 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   }
 
-  openFind() {
-    console.log(this.selection, this.noctuaSearchService.searchCriteria.terms)
+  openReview(cam: Cam) {
 
-    const filter = {
-      terms: this.noctuaSearchService.searchCriteria.terms
-    };
-    this.camsService.initializeForm(this.selection.selected);
-    this.camsService.loadCams(filter);
+    // this.camsService.initializeForm(this.selection.selected);
+    this.camsService.addCamToReview(cam);
     this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsReview);
   }
 

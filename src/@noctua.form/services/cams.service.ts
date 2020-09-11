@@ -25,7 +25,7 @@ import { Entity } from './../models/annoton/entity';
 export class CamsService {
   curieUtil: any;
   loading = false;
-  cams: Cam[];
+  cams: Cam[] = [];
   foundMatchCount = 0;
   onCamsChanged: BehaviorSubject<any>;
   currentHighlightedUuid;
@@ -85,6 +85,28 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
+  addCamToReview(cam: Cam) {
+    const self = this;
+
+    // cam.expanded = true;
+    cam.dateReviewAdded = Date.now;
+    self.cams.push(cam);
+    self.camService.loadCam(cam);
+
+    self.onCamsChanged.next(this.cams);
+  }
+
+  removeCamFromReview(cam: Cam) {
+    const self = this;
+
+    // cam.expanded = true;
+    cam.dateReviewAdded = Date.now;
+    self.cams.push(cam);
+    self.camService.loadCam(cam);
+
+    self.onCamsChanged.next(this.cams);
+  }
+
   findInCams(filter?: any) {
     const self = this;
     each(this.cams, (cam: Cam) => {
@@ -118,6 +140,14 @@ export class CamsService {
     return forkJoin(promises).subscribe(results => {
       console.log(results);
     });
+  }
+
+  private _compareDateReviewAdded(a: Cam, b: Cam): number {
+    if (a.presentation.gpText.toLowerCase() < b.presentation.gpText.toLowerCase()) {
+      return -1;
+    } else {
+      return 1;
+    }
   }
 
 }

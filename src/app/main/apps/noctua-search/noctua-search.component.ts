@@ -150,10 +150,10 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     if (this.noctuaSearchMenuService.reviewMode === ReviewMode.off) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
       this.isReviewMode = true;
+      this.noctuaSearchMenuService.closeLeftDrawer();
     } else if (this.noctuaSearchMenuService.reviewMode === ReviewMode.on) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.off;
-      this.isReviewMode = false;;
-      this.noctuaSearchMenuService.closeLeftDrawer();
+      this.isReviewMode = false;
     }
   }
 
