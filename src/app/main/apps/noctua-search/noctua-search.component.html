@@ -81,14 +81,18 @@
             CREATE MODEL IN FORM
           </button>
           <button mat-raised-button (click)="createModel('graph-editor')" color=""
-            class="noc-rounded-button noc-half-button noc-l">
+            class="noc-rounded-button mr-4 noc-half-button noc-m">
             CREATE MODEL IN GRAPH EDITOR
           </button>
-          <button mat-raised-button (click)="openReview('graph-editor')" color=""
+          <button mat-raised-button (click)="toggleReviewMode()" color=""
             class="noc-rounded-button noc-half-button noc-l">
-            REVIEW
+            ANNOTATION REVIEW
           </button>
         </div>
+      </div>
+      <div *ngIf="noctuaSearchMenuService.reviewMode === ReviewMode.on" class="noc-art-info" fxLayout="row"
+        fxLayoutAlign="start center">
+        Review Mode: Please Select Models to review
       </div>
       <div class="noc-summary-filter-bar" fxLayout="row" fxLayoutAlign="start center">
         <small class="mr-12">Filtered By: </small>
@@ -155,7 +159,7 @@
         </mat-chip>
       </div>
       <div class="noc-table-container w-100-p">
-        <noc-cams-table></noc-cams-table>
+        <noc-cams-table [options]="tableOptions"></noc-cams-table>
       </div>
       <div class="w-100-p">
         <app-footer></app-footer>

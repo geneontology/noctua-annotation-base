@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { NoctuaGraphService } from 'noctua-form-base';
 import { HttpParams } from '@angular/common/http';
+import { ReviewMode } from './../models/review-mode';
 
 @Injectable({
     providedIn: 'root'
@@ -47,6 +48,8 @@ export class NoctuaSearchMenuService {
             id: 8
         }
     };
+
+    reviewMode: ReviewMode = ReviewMode.off;
 
     selectedLeftPanel;
     selectedRightPanel;

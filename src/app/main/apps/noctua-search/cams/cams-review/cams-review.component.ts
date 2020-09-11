@@ -152,7 +152,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       if (replace) {
         this.noctuaReviewSearchService.replaceAll(replaceWith);
       }
-    }
+    };
 
     this.noctuaSearchDialogService.openCamReplaceConfirmDialog(success);
   }
@@ -164,6 +164,15 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   findPrevious() {
     this.noctuaReviewSearchService.findPrevious();
   }
+
+  resetAll() {
+
+  }
+
+  reviewChanges() {
+
+  }
+
 
   selected() {
     this.search();

@@ -99,6 +99,12 @@
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
+
+    <span fxFlex></span>
+    <button (click)='resetAll()' type="button" mat-raised-button color="warn" class="mr-8">Reset</button>
+    <button (click)="reviewChanges()" type="submit" class="" mat-raised-button color="primary">
+      Review Your Changes
+    </button>
   </div>
 </div>
 <mat-autocomplete #termAuto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="termDisplayFn"

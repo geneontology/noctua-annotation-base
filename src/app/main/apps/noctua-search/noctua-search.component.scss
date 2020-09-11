@@ -108,6 +108,13 @@ $accent: map-get($theme, accent);
     }
   }
 
+  .noc-art-info {
+    padding: 2px 10px;
+    @include deep-height(30px);
+    background-color: rgb(60, 156, 36);
+    color: #FFF;
+  }
+
   .noc-summary-filter-bar {
     position: -webkit-sticky;
     position: sticky;

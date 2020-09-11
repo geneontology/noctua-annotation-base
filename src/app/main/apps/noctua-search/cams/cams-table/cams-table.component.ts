@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { noctuaAnimations } from '@noctua/animations';
@@ -17,6 +17,7 @@ import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-m
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { NoctuaSearchDialogService } from '../../services/dialog.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { ReviewMode } from '@noctua.search/models/review-mode';
 
 export function CustomPaginator() {
   const customPaginatorIntl = new MatPaginatorIntl();
@@ -43,10 +44,10 @@ export function CustomPaginator() {
   ]
 })
 export class CamsTableComponent implements OnInit, OnDestroy {
-  private _unsubscribeAll: Subject<any>;
+  ReviewMode = ReviewMode;
 
-  //@ViewChild(MatPaginator, { static: true })
-  // paginator: MatPaginator;
+  private _unsubscribeAll: Subject<any>;
+  @Input() options: any = {};
 
   displayedColumns = [
     'select',
@@ -58,6 +59,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     'export',
     // 'expand',
   ];
+
 
   searchCriteria: any = {};
   searchFormData: any = [];
@@ -92,6 +94,10 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.options.type === 'review') {
+
+    }
+
     this.noctuaSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(cams => {

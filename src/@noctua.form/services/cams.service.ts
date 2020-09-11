@@ -118,7 +118,6 @@ export class CamsService {
     return forkJoin(promises).subscribe(results => {
       console.log(results);
     });
-
   }
 
 }

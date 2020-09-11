@@ -19,6 +19,7 @@ import { CamPage } from '@noctua.search/models/cam-page';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
+import { ReviewMode } from '@noctua.search/models/review-mode';
 
 @Component({
   selector: 'noc-noctua-search',
@@ -34,6 +35,8 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
 
   @ViewChild('rightDrawer', { static: true })
   rightDrawer: MatDrawer;
+
+  ReviewMode = ReviewMode;
 
   camPage: CamPage;
   public cam: Cam;
@@ -52,6 +55,11 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     expanded: false,
     detail: {}
   };
+
+  tableOptions = {
+    review: false
+  }
+
   cams: any[] = [];
 
   private _unsubscribeAll: Subject<any>;
@@ -121,10 +129,12 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     // this.loadModel(this.selectCam)
     this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camForm);
   }
+
   openLeftDrawer(panel) {
     this.noctuaSearchMenuService.selectLeftPanel(panel);
     this.noctuaSearchMenuService.openLeftDrawer();
   }
+
   openRightDrawer(panel) {
     this.noctuaSearchMenuService.selectRightPanel(panel);
     this.noctuaSearchMenuService.openRightDrawer();
@@ -138,8 +148,14 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     this.noctuaCommonMenuService.createModel(type);
   }
 
-  reviewModel() {
-
+  toggleReviewMode() {
+    if (this.noctuaSearchMenuService.reviewMode === ReviewMode.off) {
+      this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
+      this.tableOptions.review = true;
+    } else if (this.noctuaSearchMenuService.reviewMode === ReviewMode.on) {
+      this.noctuaSearchMenuService.reviewMode = ReviewMode.off;
+      this.tableOptions.review = false;
+    }
   }
 
   search() {
