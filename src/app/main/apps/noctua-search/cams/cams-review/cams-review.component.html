@@ -3,10 +3,6 @@
     <span class="noc-drawer-header-title">
       Annotation Review Tool</span>
     <span fxFlex></span>
-    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
-      aria-label="Close dialog">
-      <mat-icon>close</mat-icon> Close
-    </button>
   </div>
   <div id="noc-review-results" class="noc-drawer-body w-100-p" noctuaPerfectScrollbar>
     <div *ngIf="!noctuaUserService.user" class="noc-draw-body-disabled" fxLayoutAlign="center center">
@@ -27,7 +23,22 @@
           <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.term" appearance="outline" fxFlex
             class="noc-sm mr-12">
             <mat-label>Find What <strong>(Ontology Term)</strong></mat-label>
-            <input type="text" matInput formControlName="findWhat" [matAutocomplete]="termAuto" rows="2" />
+            <input type="text" matInput formControlName="findWhat" [matAutocomplete]="termFindAuto" rows="2" />
+            <mat-autocomplete #termFindAuto="matAutocomplete" (optionSelected)="findSelected($event.option.value)"
+              [displayWith]="termDisplayFn" class="noc-term-autocomplete">
+              <mat-option class="noc-term-autocomplete" *ngFor="let item of termNode?.termLookup.results"
+                [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.label }}
+                  </div>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    {{ item.id }}
+                  </div>
+                </div>
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
           <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.gp" appearance="outline" fxFlex
             class="noc-sm mr-12">
@@ -57,13 +68,29 @@
             </div>
           </div>
         </div>
-        <div class="noc-annoton-group-row" fxLayout="row" fxLayoutAlign="start center">
+        <div [ngClass]="{'noc-disabled':!enableReplace}" class="noc-annoton-group-row" fxLayout="row"
+          fxLayoutAlign="start center">
           <div fxFlex="150px" class="noc-sm">
           </div>
           <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.term" appearance="outline" fxFlex
             class="noc-sm mr-12">
             <mat-label>Replace With <strong>(Ontology Term)</strong></mat-label>
-            <input type="text" matInput formControlName="replaceWith" [matAutocomplete]="termAuto" />
+            <input type="text" matInput formControlName="replaceWith" [matAutocomplete]="termReplaceAuto" />
+            <mat-autocomplete #termReplaceAuto="matAutocomplete" [displayWith]="termDisplayFn"
+              class="noc-term-autocomplete">
+              <mat-option class="noc-term-autocomplete" *ngFor="let item of termReplaceNode?.termLookup.results"
+                [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.label }}
+                  </div>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    {{ item.id }}
+                  </div>
+                </div>
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
           <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.gp" appearance="outline" fxFlex
             class="noc-sm mr-12">
@@ -96,6 +123,9 @@
             </div>
           </div>
           <div fxFlex></div>
+          <button mat-button class="" fxFlex="100px" color="primary" (click)="resetCam(cam)">
+            Reset
+          </button>
           <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
             <mat-icon>more_vert</mat-icon>
           </button>
@@ -126,20 +156,6 @@
     </button>
   </div>
 </div>
-<mat-autocomplete #termAuto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="termDisplayFn"
-  class="noc-term-autocomplete">
-  <mat-option class="noc-term-autocomplete" *ngFor="let item of termNode?.termLookup.results" [value]="item">
-    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-      <div class="noc-term-label">
-        {{ item.label }}
-      </div>
-      <span fxFlex></span>
-      <div class="noc-term-id">
-        {{ item.id }}
-      </div>
-    </div>
-  </mat-option>
-</mat-autocomplete>
 <mat-autocomplete #gpAuto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="termDisplayFn"
   class="noc-term-autocomplete">
   <mat-option class="noc-term-autocomplete" *ngFor="let item of gpNode?.termLookup.results" [value]="item">

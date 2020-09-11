@@ -15,7 +15,7 @@ import { Evidence, compareEvidence } from './../models/annoton/evidence';
 
 import { v4 as uuid } from 'uuid';
 import { Cam } from './../models/annoton/cam';
-import { uniqWith } from 'lodash';
+import { uniqWith, each } from 'lodash';
 import { AnnotonNodeType, AnnotonNode, Entity } from './../models/annoton';
 import { compareTerm } from './../models/annoton/annoton-node';
 
@@ -42,6 +42,7 @@ export class CamService {
     private noctuaUserService: NoctuaUserService,
     private noctuaGraphService: NoctuaGraphService,
     private noctuaLookupService: NoctuaLookupService,
+    private _noctuaGraphService: NoctuaGraphService,
     private curieService: CurieService) {
     this.onCamChanged = new BehaviorSubject(null);
     this.onCamTermsChanged = new BehaviorSubject(null);
@@ -150,6 +151,13 @@ export class CamService {
     return this.cam.getNodesByTypeFlat(annotonType);
   }
 
+  replaceAnnotonInternal(cam: Cam, entities: Entity[], replaceWithTerm: Entity) {
+
+    const self = this;
+
+    cam.replace(entities, replaceWithTerm);
+  }
+
   getUniqueTerms(formAnnoton?: Annoton): AnnotonNode[] {
     const annotonNodes = this.cam.getTerms(formAnnoton);
     const result = uniqWith(annotonNodes, compareTerm);
@@ -161,6 +169,20 @@ export class CamService {
     const evidences = this.cam.getEvidences(formAnnoton);
     const result = uniqWith(evidences, compareEvidence);
 
+    return result;
+  }
+
+
+  bulkEdit(cam: Cam) {
+    const self = this;
+
+    return self._noctuaGraphService.bulkEditAnnoton(cam);
+  }
+
+  reviewChanges(cam: Cam) {
+    const result = {
+      terms: cam.reviewTermChanges()
+    }
     return result;
   }
 }

@@ -158,6 +158,10 @@ export class NoctuaReviewSearchService {
         this.camsService.replace(this.matchedEntities, replaceWith);
     }
 
+    bulkEdit() {
+        this.camsService.bulkEdit();
+    }
+
     getPage(pageNumber: number, pageSize: number) {
         this.searchCriteria.camPage.pageNumber = pageNumber;
         this.searchCriteria.camPage.size = pageSize;

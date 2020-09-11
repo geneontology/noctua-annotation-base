@@ -18,7 +18,9 @@ import {
   AnnotonNode,
   EntityLookup,
   NoctuaLookupService,
-  EntityDefinition
+  EntityDefinition,
+  CamService,
+  Entity
 } from 'noctua-form-base';
 
 import { takeUntil, distinctUntilChanged, debounceTime } from 'rxjs/operators';
@@ -47,12 +49,11 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   cams: Cam[] = [];
   terms: any[];
   searchResults = [];
-  modelId = '';
 
-  searchFormType = 'replace';
+  enableReplace = false;
 
   tableOptions = {
-    hideHeader: true,
+    reviewMode: true,
   };
 
   noctuaFormConfig = noctuaFormConfig;
@@ -62,11 +63,14 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
   gpNode: AnnotonNode;
   termNode: AnnotonNode;
+  termReplaceNode: AnnotonNode;
   selectedCategoryName;
 
   private _unsubscribeAll: Subject<any>;
 
   constructor(
+    private camService: CamService,
+    private camsService: CamsService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaUserService: NoctuaUserService,
     private noctuaSearchDialogService: NoctuaSearchDialogService,
@@ -98,7 +102,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       EntityDefinition.GoAnatomicalEntity,
       EntityDefinition.GoCellTypeEntity
     ]);
-
   }
 
   ngOnInit(): void {
@@ -111,8 +114,15 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
-  selectSearchFormType(searchFormType) {
-    this.searchFormType = searchFormType;
+  resetTermNode() {
+    this.termNode = EntityDefinition.generateBaseTerm([
+      EntityDefinition.GoMolecularFunction,
+      EntityDefinition.GoBiologicalProcess,
+      EntityDefinition.GoCellularComponent,
+      EntityDefinition.GoBiologicalPhase,
+      EntityDefinition.GoAnatomicalEntity,
+      EntityDefinition.GoCellTypeEntity
+    ]);
   }
 
   viewAsModel(cam: Cam) {
@@ -123,7 +133,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     cam.displayType = noctuaFormConfig.camDisplayType.options.entity;
   }
 
-
   createSearchForm(selectedCategory) {
     this.selectedCategoryName = selectedCategory.name;
     return new FormGroup({
@@ -131,6 +140,25 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       replaceWith: new FormControl(),
       category: new FormControl(selectedCategory),
     });
+  }
+
+  getClosure(rootTypes: Entity[]) {
+    const s = [
+      EntityDefinition.GoMolecularFunction,
+      EntityDefinition.GoBiologicalProcess,
+      EntityDefinition.GoCellularComponent,
+      EntityDefinition.GoBiologicalPhase,
+      EntityDefinition.GoAnatomicalEntity,
+      EntityDefinition.GoCellTypeEntity
+    ];
+
+    const closures = s.filter(x => {
+      return rootTypes.find(y => y.id === x.category)
+    })
+
+    console.log(closures);
+
+    return closures;
   }
 
   search() {
@@ -145,8 +173,12 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   }
 
   replace() {
+    const value = this.searchForm.value;
+    const replaceWith = value.replaceWith;
 
+    //  this.noctuaReviewSearchService.replace(replaceWith);
   }
+
   replaceAll() {
     const value = this.searchForm.value;
     const replaceWith = value.replaceWith;
@@ -168,15 +200,32 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this.noctuaReviewSearchService.findPrevious();
   }
 
-  resetAll() {
+  resetCam(cam: Cam) {
+    this.camService.loadCam(cam);
+  }
 
+  resetAll() {
+    this.camsService.loadCams();
   }
 
   reviewChanges() {
+    const success = (replace) => {
+      if (replace) {
+        this.noctuaReviewSearchService.bulkEdit();
+        this.noctuaFormMenuService.closeRightDrawer();
+      }
+    };
 
+    this.noctuaSearchDialogService.openCamReviewChangesDialog(success);
   }
 
-  selected() {
+  findSelected(value) {
+    const closures = this.getClosure(value.rootTypes);
+
+    if (closures) {
+      this.termReplaceNode = EntityDefinition.generateBaseTerm(closures);
+    }
+
     this.search();
   }
 
@@ -192,8 +241,9 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
     ).subscribe(data => {
       if (data) {
-
-        this.selectedCategoryName = data.name;
+        self.selectedCategoryName = data.name;
+        self.searchForm.get('findWhat').value(null);
+        self.searchForm.get('replaceWith').value(null)
       }
     });
 
@@ -205,13 +255,15 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
         lookup.results = response;
       });
+
+      self.enableReplace = data && data.id;
     });
 
     this.searchForm.get('replaceWith').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(400)
     ).subscribe(data => {
-      const lookup: EntityLookup = self.termNode.termLookup;
+      const lookup: EntityLookup = self.termReplaceNode.termLookup;
       lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
         lookup.results = response;
       });

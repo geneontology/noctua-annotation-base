@@ -151,17 +151,13 @@ export class Cam {
     if (self.queryMatch && self.queryMatch.terms.length > 0) {
       self._filteredAnnotons = [];
       self.matchedCount = 0;
-      this.displayType = noctuaFormConfig.camDisplayType.options.entity;
+      //  this.displayType = noctuaFormConfig.camDisplayType.options.entity;
 
       each(self._annotons, (annoton: Annoton) => {
         let match = false;
         each(annoton.nodes, (node: AnnotonNode) => {
           node.term.highlight = false;
           each(self.queryMatch.terms, (term) => {
-
-            // each(node.evidence, (evidence: Evidence) => {
-            //    match = match || (evidence.uuid === uuid);
-            //  })
 
             if (node.term.uuid === term.uuid) {
               node.term.highlight = true;
@@ -177,24 +173,40 @@ export class Cam {
       });
     }
 
-    /*  if (self.filter.uuids.length > 0) {
-       self.grid = [];
- 
-       each(self.annotons, (annoton: Annoton) => {
-         each(annoton.nodes, (node: AnnotonNode) => {
-           each(self.filter.uuids, (uuid) => {
-             let match = false
-             // each(node.evidence, (evidence: Evidence) => {
-             //    match = match || (evidence.uuid === uuid);
-             //  })
-             match = match || (node.uuid === uuid);
-             if (match) {
-               self.generateGridRow(annoton, node);
-             }
-           });
-         });
-       });
-     } */
+  }
+
+  replace(findEntities: Entity[], replaceWith: Entity) {
+    const self = this;
+
+    each(self._annotons, (annoton: Annoton) => {
+      each(annoton.nodes, (node: AnnotonNode) => {
+        // node.term.highlight = false;
+        each(findEntities, (entity: Entity) => {
+          if (node.term.uuid === entity.uuid) {
+            node.term.termHistory.push(new Entity(node.term.id, node.term.label));
+
+            node.term.modified = true;
+            node.term.id = replaceWith.id;
+            node.term.label = replaceWith.label;
+          }
+        });
+      });
+    });
+  }
+
+  reviewTermChanges(): Entity[] {
+    const self = this;
+    const result = [];
+
+    each(self._annotons, (annoton: Annoton) => {
+      each(annoton.nodes, (node: AnnotonNode) => {
+        if (node.term.modified) {
+          result.push(node.term);
+        }
+      });
+    });
+
+    return result;
   }
 
   getAnnotonByConnectionId(connectionId) {

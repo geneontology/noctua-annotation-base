@@ -580,8 +580,31 @@ export class NoctuaGraphService {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
-    reqs.store_model(modelId);
+    // reqs.store_model(modelId);
     return manager.request_with(reqs);
+  }
+
+
+  bulkEditAnnoton(cam: Cam,) {
+
+    const self = this;
+    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
+    each(cam.annotons, (annoton: Annoton) => {
+      each(annoton.nodes, (node: AnnotonNode) => {
+        self.bulkEditIndividual(reqs, cam, node);
+        //self.bulkEditFact(reqs, cam, srcTriples, destTriples);
+        //  self.bulkAddFact(reqs, destTriples);
+
+      });
+    });
+
+
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
+    }
+
+    reqs.store_model(cam.modelId);
+    return cam.manager.request_with(reqs);
   }
 
   deleteAnnoton(cam: Cam, uuids: string[], triples: Triple<AnnotonNode>[]) {
@@ -785,6 +808,22 @@ export class NoctuaGraphService {
       reqs.add_type_to_individual(
         class_expression.cls(destNode.getTerm().id),
         srcNode.uuid,
+        cam.modelId,
+      );
+    }
+  }
+
+  bulkEditIndividual(reqs, cam: Cam, node: AnnotonNode) {
+    if (node.hasValue() && node.term.modified) {
+      reqs.remove_type_from_individual(
+        node.classExpression,
+        node.uuid,
+        cam.modelId,
+      );
+
+      reqs.add_type_to_individual(
+        class_expression.cls(node.getTerm().id),
+        node.uuid,
         cam.modelId,
       );
     }

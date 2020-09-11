@@ -129,11 +129,15 @@ $accent: map-get($theme, accent);
       align-items: center;
 
       &.noc-highlight-match {
-        background-color: #ccc9fb;
+        background-color: #fffcd8;
+      }
+
+      &.noc-highlight-modified {
+        background-color: #ffbf00;
       }
 
       &.noc-highlight-match-current {
-        border: #3d388f solid 5px;
+        border: #ac6219 solid 5px;
       }
     }
 

@@ -46,7 +46,7 @@ export class CamDetailComponent implements OnInit, OnDestroy {
   matchedCount = 0;
 
   tableOptions = {
-    hideHeader: true,
+    reviewMode: true,
   }
 
   noctuaFormConfig = noctuaFormConfig;

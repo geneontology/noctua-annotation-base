@@ -16,6 +16,8 @@ export class Entity implements EntityBase {
   modelId: string;
   classExpression: any;
   highlight: boolean;
+  modified: boolean;
+  termHistory: Entity[] = [];
 
   constructor(_id: string, _label: string, _url?: string, _uuid?: string, _modelId?: string) {
     this.id = _id;

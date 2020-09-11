@@ -13,6 +13,7 @@ import { CamsReviewComponent } from './cams/cams-review/cams-review.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CamDetailComponent } from './cams/cam-detail/cam-detail.component';
 import { CamsReplaceConfirmDialogComponent } from './dialogs/cams-replace-confirm/cams-replace-confirm.component';
+import { CamsReviewChangesDialogComponent } from './dialogs/cams-review-changes/cams-review-changes.component';
 
 const routes = [
   {
@@ -36,6 +37,7 @@ const routes = [
   ],
   declarations: [
     CamsReplaceConfirmDialogComponent,
+    CamsReviewChangesDialogComponent,
     NoctuaSearchComponent,
     CamsTableComponent,
     CamsReviewComponent,
