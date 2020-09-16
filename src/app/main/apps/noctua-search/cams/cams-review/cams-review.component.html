@@ -68,8 +68,8 @@
             </div>
           </div>
         </div>
-        <div [ngClass]="{'noc-disabled':!enableReplace}" class="noc-annoton-group-row" fxLayout="row"
-          fxLayoutAlign="start center">
+        <div [ngClass]="{'noc-disabled':!displayReplaceForm.replaceSection}" class="noc-annoton-group-row"
+          fxLayout="row" fxLayoutAlign="start center">
           <div fxFlex="150px" class="noc-sm">
           </div>
           <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.term" appearance="outline" fxFlex
@@ -102,7 +102,8 @@
             <mat-label>Replace With <strong>(Reference)</strong></mat-label>
             <input type="text" matInput formControlName="replaceWith" />
           </mat-form-field>
-          <div class="noc-review-actions" fxLayout="row" fxLayoutAlign="space-between center">
+          <div [ngClass]="{'noc-disabled':!displayReplaceForm.replaceActions}" class="noc-review-actions" fxLayout="row"
+            fxLayoutAlign="space-between center">
             <button (click)="replace()" mat-raised-button color="warn" class="noc-sm noc-review-btn" fxFlex="48">
               Replace
             </button>

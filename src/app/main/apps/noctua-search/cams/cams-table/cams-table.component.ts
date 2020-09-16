@@ -213,7 +213,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   openDetails(cam: Cam) {
-    console.log(this.selection, this.noctuaSearchService.searchCriteria.terms)
+    console.log(this.selection, this.noctuaSearchService.searchCriteria.terms);
 
     /*  const filter = {
        terms: this.noctuaSearchService.searchCriteria.terms

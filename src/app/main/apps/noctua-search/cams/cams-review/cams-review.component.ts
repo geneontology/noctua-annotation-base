@@ -51,7 +51,11 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   terms: any[];
   searchResults = [];
 
-  enableReplace = false;
+  displayReplaceForm = {
+    replaceSection: false,
+    replaceActions: false
+  }
+
 
   tableOptions = {
     reviewMode: true,
@@ -85,7 +89,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
     this.categories = cloneDeep(this.noctuaFormConfigService.findReplaceCategories);
 
-    this.noctuaReviewSearchService.onCamsChanged
+    this.camsService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(cams => {
         if (!cams) {
@@ -216,9 +220,13 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
+    const self = this;
+
     const success = (cancel) => {
       if (cancel) {
-        this.panelDrawer.close();
+        self.searchForm.reset();
+        self.panelDrawer.close();
+        this.noctuaReviewSearchService.clear();
       }
     };
 
@@ -265,8 +273,12 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     ).subscribe(data => {
       if (data) {
         self.selectedCategoryName = data.name;
-        self.searchForm.get('findWhat').value(null);
-        self.searchForm.get('replaceWith').value(null)
+        self.searchForm.patchValue({
+          findWhat: null,
+          replaceWith: null
+        });
+
+        self.calculateEnableReplace();
       }
     });
 
@@ -279,7 +291,8 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
         lookup.results = response;
       });
 
-      self.enableReplace = data && data.id;
+      self.calculateEnableReplace();
+
     });
 
     this.searchForm.get('replaceWith').valueChanges.pipe(
@@ -290,7 +303,19 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
         lookup.results = response;
       });
+
+      self.calculateEnableReplace();
+
     });
+  }
+
+  calculateEnableReplace() {
+    const value = this.searchForm.value;
+    const findWhat = value.findWhat;
+    const replaceWith = value.replaceWith;
+
+    this.displayReplaceForm.replaceSection = findWhat && findWhat.id;
+    this.displayReplaceForm.replaceActions = replaceWith && replaceWith.id;
   }
 
   compareCategory(a: any, b: any) {

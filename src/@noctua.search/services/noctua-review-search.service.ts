@@ -2,7 +2,7 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, finalize } from 'rxjs/operators';
 
 import {
@@ -34,14 +34,14 @@ export class NoctuaReviewSearchService {
     onSearchCriteriaChanged: BehaviorSubject<any>;
     onSearchHistoryChanged: BehaviorSubject<any>;
     curieUtil: any;
-    cams: any[] = [];
     camPage: CamPage;
     searchCriteria: SearchCriteria;
     searchApi = environment.searchApi;
     separator = '@@';
     loading = false;
-    onCamsChanged: BehaviorSubject<any>;
-    onCamsReviewChanged: BehaviorSubject<any>;
+    // onCamsChanged: BehaviorSubject<any>;
+    //onCamsReviewChanged: BehaviorSubject<any>;
+    onResetReview: Subject<boolean>;
     onCamsPageChanged: BehaviorSubject<any>;
     onCamChanged: BehaviorSubject<any>;
     searchSummary: any = {};
@@ -61,12 +61,11 @@ export class NoctuaReviewSearchService {
         private httpClient: HttpClient,
         private camsService: CamsService,
         private curieService: CurieService) {
-        this.onCamsChanged = new BehaviorSubject([]);
-        this.onCamsReviewChanged = new BehaviorSubject([]);
+        //  this.onCamsChanged = new BehaviorSubject([]);
+        this.onResetReview = new Subject();
         this.onCamsPageChanged = new BehaviorSubject(null);
         this.onCamChanged = new BehaviorSubject([]);
         this.onSearchHistoryChanged = new BehaviorSubject(null);
-
         this.searchCriteria = new SearchCriteria();
         this.onSearchCriteriaChanged = new BehaviorSubject(null);
         this.curieUtil = this.curieService.getCurieUtil();
@@ -78,7 +77,6 @@ export class NoctuaReviewSearchService {
 
             this.getCams(searchCriteria).subscribe((response: any) => {
                 // this.cams = response;
-                this.onCamsChanged.next(this.cams);
                 this.matchedCountCursor = 0;
                 this.calculateMatched();
                 this.findNext();
@@ -92,18 +90,14 @@ export class NoctuaReviewSearchService {
         });
 
         this.camsService.onCamsChanged
-            .subscribe(cams => {
+            .subscribe((cams: Cam[]) => {
                 if (!cams) {
                     return;
                 }
-                this.cams = cams;
-
                 const ids = cams.map((cam: Cam) => {
-                    cam.expanded = true;
                     return cam.modelId;
                 });
-                this.onCamsChanged.next(this.cams);
-                // this.updateSearch();
+
                 this.searchCriteria['ids'] = ids;
 
             });
@@ -168,6 +162,14 @@ export class NoctuaReviewSearchService {
         this.camsService.bulkEdit();
     }
 
+    clear() {
+        this.matchedEntities = [];
+        this.matchedCountCursor = 0;
+        this.matchedCount = 0;
+        this.currentMatchedEnity = null;
+        this.searchCriteria = new SearchCriteria();
+    }
+
     getPage(pageNumber: number, pageSize: number) {
         this.searchCriteria.camPage.pageNumber = pageNumber;
         this.searchCriteria.camPage.size = pageSize;
@@ -205,7 +207,6 @@ export class NoctuaReviewSearchService {
     saveHistory() {
         const searchHistoryItem = new SearchHistory(this.searchCriteria);
         this.searchHistory.unshift(searchHistoryItem);
-
         this.onSearchHistoryChanged.next(this.searchHistory);
     }
 
@@ -263,7 +264,7 @@ export class NoctuaReviewSearchService {
         res.models.forEach((response) => {
 
             const modelId = response.id;
-            const cam: Cam = find(self.cams, (inCam: Cam) => {
+            const cam: Cam = find(self.camsService.cams, (inCam: Cam) => {
                 return inCam.modelId === modelId;
             });
 
@@ -282,9 +283,7 @@ export class NoctuaReviewSearchService {
                         }));
                 });
 
-
                 cam.applyFilter();
-                console.log(cam.queryMatch)
             }
 
             result.push(cam);
@@ -310,7 +309,7 @@ export class NoctuaReviewSearchService {
     }
 
     calculateMatchedCountNumber(): number {
-        const matchCount = this.cams.reduce((total, currentValue) => {
+        const matchCount = this.camsService.cams.reduce((total, currentValue) => {
             total += currentValue.matchedCount;
             return total;
         }, 0);
@@ -320,7 +319,7 @@ export class NoctuaReviewSearchService {
 
 
     calculateMatched() {
-        this.matchedEntities = this.cams.reduce((total: Entity[], currentValue: Cam) => {
+        this.matchedEntities = this.camsService.cams.reduce((total: Entity[], currentValue: Cam) => {
             if (currentValue.queryMatch && currentValue.queryMatch.terms) {
                 total.push(...currentValue.queryMatch.terms);
             }

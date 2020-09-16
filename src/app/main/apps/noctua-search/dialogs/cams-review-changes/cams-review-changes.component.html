@@ -19,18 +19,14 @@
         Terms
       </div>
       <div fxFlex>
-        <!--   <div *ngFor="let reviewDataChanges of reviewData">
-
-          <div *ngFor="let reviewChange of reviewDataChanges">
-            {{reviewChange | json}}
-            <div *ngFor="let term of reviewChange.changes.terms | keys">
-              <div *ngFor="let termHistory of term.value.termHistory">
-                {{termHistory.label}}
-              </div>
-              {{term.label}}
+        <div *ngFor="let modelSummary of summary">
+          <div *ngFor="let term of modelSummary.changes?.terms">
+            <div *ngFor="let termHistory of term.termHistory">
+              {{termHistory.label}}
             </div>
+            {{term.label}}
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>

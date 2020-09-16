@@ -88,9 +88,7 @@ export class CamsService {
 
   addCamToReview(cam: Cam) {
     const self = this;
-
-    // cam.expanded = true;
-    const found = find(this.cams, { id: cam.id })
+    const found = find(this.cams, { id: cam.id });
 
     if (!found) {
       cam.dateReviewAdded = Date.now();

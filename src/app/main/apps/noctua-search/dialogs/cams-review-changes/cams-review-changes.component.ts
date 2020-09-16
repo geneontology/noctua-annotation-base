@@ -41,7 +41,7 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
   occurrences = 0;
   models = 0;
 
-  reviewData
+  summary
   private _unsubscribeAll: Subject<any>;
 
   constructor
@@ -63,8 +63,8 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const self = this;
 
-    this.reviewData = self.camsService.reviewChanges();
-    console.log(this.reviewData);
+    this.summary = self.camsService.reviewChanges();
+    console.log(this.summary);
 
   }
 
