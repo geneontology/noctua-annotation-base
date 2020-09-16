@@ -158,8 +158,7 @@
     </button>
   </div>
 </div>
-<mat-autocomplete #gpAuto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="termDisplayFn"
-  class="noc-term-autocomplete">
+<mat-autocomplete #gpAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
   <mat-option class="noc-term-autocomplete" *ngFor="let item of gpNode?.termLookup.results" [value]="item">
     <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-term-label">

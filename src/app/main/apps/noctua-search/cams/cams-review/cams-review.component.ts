@@ -98,7 +98,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
         this.cams = cams;
       });
 
-
     this.gpNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity]);
     this.termNode = EntityDefinition.generateBaseTerm([
       EntityDefinition.GoMolecularFunction,
@@ -160,9 +159,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
     const closures = s.filter(x => {
       return rootTypes.find(y => y.id === x.category)
-    })
-
-    console.log(closures);
+    });
 
     return closures;
   }
@@ -174,8 +171,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
     this.noctuaReviewSearchService.searchCriteria[filterType] = [findWhat];
     this.noctuaReviewSearchService.updateSearch();
-
-    // this.camsService.findInCams(filter);
   }
 
   replace() {
@@ -183,19 +178,16 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     const replaceWith = value.replaceWith;
 
     this.noctuaReviewSearchService.replace(replaceWith);
-
   }
 
   replaceAll() {
     const value = this.searchForm.value;
     const replaceWith = value.replaceWith;
-
     const groupedEntities = groupBy(
-      this.noctuaReviewSearchService.matchedEntities, 'modelId') as { string: Entity[] };
-
+      this.noctuaReviewSearchService.matchedEntities,
+      'modelId') as { string: Entity[] };
     const models = Object.keys(groupedEntities).length;
     const occurrences = this.noctuaReviewSearchService.matchedCount;
-
     const success = (replace) => {
       if (replace) {
         this.noctuaReviewSearchService.replaceAll(replaceWith);
@@ -227,6 +219,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
         self.searchForm.reset();
         self.panelDrawer.close();
         this.noctuaReviewSearchService.clear();
+        this.noctuaReviewSearchService.onResetReview.next(true);
       }
     };
 

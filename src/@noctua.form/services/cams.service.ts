@@ -27,53 +27,24 @@ export class CamsService {
   curieUtil: any;
   loading = false;
   cams: Cam[] = [];
-  foundMatchCount = 0;
   onCamsChanged: BehaviorSubject<any>;
   currentHighlightedUuid;
 
   public annoton: Annoton;
-  private camForm: CamForm;
-  private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
   private _replaceBbopManager;
 
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
     private _fb: FormBuilder,
-    private noctuaUserService: NoctuaUserService,
     private _noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
-    private noctuaLookupService: NoctuaLookupService,
     private curieService: CurieService) {
     this.onCamsChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
-    this.camFormGroup = new BehaviorSubject(null);
-    this.camFormGroup$ = this.camFormGroup.asObservable();
   }
 
   setup() {
     this._replaceBbopManager = this._noctuaGraphService.registerManager();
-  }
-
-  initializeForm(cams?: Cam[]) {
-    const self = this;
-
-    if (cams) {
-      this.cams = cams;
-    }
-
-    // self.camForm = this.createCamForm();
-    // self.camFormGroup.next(this._fb.group(this.camForm));
-  }
-
-  createCamForm() {
-    const self = this;
-
-    const formMetadata = new AnnotonFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
-    const camForm = new CamForm(formMetadata);
-
-    // camForm.createCamForm(this.cams, this.noctuaUserService.user);
-
-    return camForm;
   }
 
   loadCams(filter?: any) {
@@ -117,12 +88,12 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
-  expandMatch(uuid: string) {
+  expandMatch(nodeId: string) {
     const self = this;
 
     each(self.cams, (cam: Cam) => {
       cam.expanded = true;
-      const annotons = cam.findAnnotonByNodeId(uuid);
+      const annotons = cam.findAnnotonByNodeId(nodeId);
 
       each(annotons, (annoton: Annoton) => {
         annoton.expanded = true;
@@ -167,6 +138,11 @@ export class CamsService {
     });
 
     return result;
+  }
+
+  reset() {
+    this.cams = [];
+    this.onCamsChanged.next(this.cams);
   }
 
   sortCams() {

@@ -34,7 +34,7 @@
       </div>
     </div> -->
 
-    <div class="noc-with-group" *ngFor="let comp of myForm.get('companies').controls; let i=index">
+    <div class="noc-with-group" *ngFor="let comp of myForm.get('companies')?.controls; let i=index">
       <div [formGroupName]="i">
         <div formArrayName="projects">
           <div *ngFor="let project of comp.get('projects').controls; let j=index">

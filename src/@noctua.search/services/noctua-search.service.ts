@@ -56,6 +56,7 @@ export class NoctuaSearchService {
     searchSummary: any = {};
 
     filterType = {
+        ids: 'ids',
         titles: 'titles',
         gps: 'gps',
         terms: 'terms',

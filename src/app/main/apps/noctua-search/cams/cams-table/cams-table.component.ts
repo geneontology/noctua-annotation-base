@@ -18,6 +18,7 @@ import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { NoctuaSearchDialogService } from '../../services/dialog.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ReviewMode } from '@noctua.search/models/review-mode';
+import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 
 export function CustomPaginator() {
   const customPaginatorIntl = new MatPaginatorIntl();
@@ -80,10 +81,10 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<Cam>(true, []);
 
   constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
     private camService: CamService,
     private camsService: CamsService,
     private noctuaDataService: NoctuaDataService,
+    public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
@@ -129,11 +130,21 @@ export class CamsTableComponent implements OnInit, OnDestroy {
         }
         this.camPage = camPage;
       });
+
+    this.noctuaReviewSearchService.onResetReview
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((reset: boolean) => {
+        if (reset) {
+          this.camsService.reset();
+          this.selection.clear();
+        }
+      });
   }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.cams.length;
+
     return numSelected === numRows;
   }
 
@@ -143,7 +154,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       this.selection.clear() :
       this.cams.forEach(row => this.selection.select(row));
 
-    console.log(this.selection)
   }
 
   toggleSelection(cam: Cam) {
