@@ -29,8 +29,9 @@ import { noctuaAnimations } from '@noctua/animations';
 import { FormGroup, FormControl } from '@angular/forms';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaSearchDialogService } from '../../services/dialog.service';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, groupBy } from 'lodash';
 import { ArtReplaceCategory } from '@noctua.search/models/review-mode';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'noc-cams-review',
@@ -71,6 +72,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   constructor(
     private camService: CamService,
     private camsService: CamsService,
+    private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaUserService: NoctuaUserService,
     private noctuaSearchDialogService: NoctuaSearchDialogService,
@@ -176,12 +178,19 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     const value = this.searchForm.value;
     const replaceWith = value.replaceWith;
 
-    //  this.noctuaReviewSearchService.replace(replaceWith);
+    this.noctuaReviewSearchService.replace(replaceWith);
+
   }
 
   replaceAll() {
     const value = this.searchForm.value;
     const replaceWith = value.replaceWith;
+
+    const groupedEntities = groupBy(
+      this.noctuaReviewSearchService.matchedEntities, 'modelId') as { string: Entity[] };
+
+    const models = Object.keys(groupedEntities).length;
+    const occurrences = this.noctuaReviewSearchService.matchedCount;
 
     const success = (replace) => {
       if (replace) {
@@ -189,7 +198,9 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.noctuaSearchDialogService.openCamReplaceConfirmDialog(success);
+    this.confirmDialogService.openConfirmDialog('Confirm ReplaceAll?',
+      `Replace ${occurrences} occurrences across ${models} models`,
+      success);
   }
 
   findNext() {
@@ -204,6 +215,18 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this.camService.loadCam(cam);
   }
 
+  cancel() {
+    const success = (cancel) => {
+      if (cancel) {
+        this.panelDrawer.close();
+      }
+    };
+
+    this.confirmDialogService.openConfirmDialog('Confirm Cancel?',
+      'You are about to cancel annotation review. All your unsaved changes will be lost.',
+      success);
+  }
+
   resetAll() {
     this.camsService.loadCams();
   }
@@ -212,7 +235,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     const success = (replace) => {
       if (replace) {
         this.noctuaReviewSearchService.bulkEdit();
-        this.noctuaFormMenuService.closeRightDrawer();
+        this.close();
       }
     };
 

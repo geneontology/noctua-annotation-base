@@ -59,7 +59,7 @@ export class NoctuaSearchDialogService {
 
     openCamReviewChangesDialog(success): void {
         this.dialogRef = this._matDialog.open(CamsReviewChangesDialogComponent, {
-            panelClass: 'noc-cams-replace-confirm-dialog',
+            panelClass: 'noc-cams-review-changes-dialog',
             data: {
                 // searchCriteria: searchCriteria
             },

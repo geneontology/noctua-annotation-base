@@ -57,7 +57,8 @@ export class AnnotonConnectorFormComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private camService: CamService,
+  constructor(
+    private camService: CamService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaAnnotonConnectorService: NoctuaAnnotonConnectorService,
     public noctuaUserService: NoctuaUserService,

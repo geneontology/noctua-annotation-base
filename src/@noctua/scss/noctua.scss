@@ -105,6 +105,15 @@ mat-chip {
   }
 }
 
+.noc-cams-review-changes-dialog {
+  @include deep-height(90%);
+  @include deep-width(800px);
+
+  @include media-breakpoint('lt-lg') {
+    @include deep-width(90%);
+  }
+}
+
 textarea {
   resize: none !important;
   overflow: hidden;

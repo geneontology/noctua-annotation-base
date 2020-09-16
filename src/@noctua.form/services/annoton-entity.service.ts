@@ -90,6 +90,21 @@ export class NoctuaAnnotonEntityService {
       saveData.removeTriples);
   }
 
+  saveAnnotonInternal() {
+    const self = this;
+
+    self.annotonEntityFormToAnnoton();
+    const saveData = self.annoton.createEdit(self.currentAnnoton);
+
+    return self.noctuaGraphService.editAnnoton(self.cam,
+      saveData.srcNodes,
+      saveData.destNodes,
+      saveData.srcTriples,
+      saveData.destTriples,
+      saveData.removeIds,
+      saveData.removeTriples);
+  }
+
   searchModels() {
     const self = this;
 

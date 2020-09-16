@@ -77,7 +77,7 @@ export class NoctuaReviewSearchService {
             }
 
             this.getCams(searchCriteria).subscribe((response: any) => {
-                this.cams = response;
+                // this.cams = response;
                 this.onCamsChanged.next(this.cams);
                 this.matchedCountCursor = 0;
                 this.calculateMatched();
@@ -156,6 +156,10 @@ export class NoctuaReviewSearchService {
 
     replaceAll(replaceWith) {
         this.camsService.replace(this.matchedEntities, replaceWith);
+    }
+
+    replace(replaceWith) {
+        this.camsService.replace([this.currentMatchedEnity], replaceWith);
     }
 
     bulkEdit() {

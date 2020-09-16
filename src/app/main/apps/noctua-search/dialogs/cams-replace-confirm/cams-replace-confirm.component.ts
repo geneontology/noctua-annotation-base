@@ -68,8 +68,6 @@ export class CamsReplaceConfirmDialogComponent implements OnInit, OnDestroy {
 
     this.models = Object.keys(this.groupedEntities).length;
     this.occurrences = this.noctuaReviewSearchService.matchedCount;
-
-
   }
 
   ngOnDestroy(): void {

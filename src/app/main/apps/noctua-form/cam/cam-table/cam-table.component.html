@@ -70,8 +70,9 @@
             </mat-menu>
           </div>
         </div>
-        <noc-annoton-table [cam]="cam" [annoton]="annoton" *ngIf="annoton.expanded" class="noc-cam-table-body"
-          [@annotonExpand]="annoton.expanded ? 'expanded' : 'collapsed'" fxLayout="row" fxLayoutAlign="start center">
+        <noc-annoton-table [options]="options" [cam]="cam" [annoton]="annoton" *ngIf="annoton.expanded"
+          class="noc-cam-table-body" [@annotonExpand]="annoton.expanded ? 'expanded' : 'collapsed'" fxLayout="row"
+          fxLayoutAlign="start center">
         </noc-annoton-table>
       </div>
     </ng-container>
