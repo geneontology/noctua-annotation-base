@@ -216,19 +216,11 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   openReview(cam: Cam) {
-
-    // this.camsService.initializeForm(this.selection.selected);
-    this.camsService.addCamToReview(cam);
+    this.camsService.addCamToReview(cam.id);
     this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsReview);
   }
 
   openDetails(cam: Cam) {
-    console.log(this.selection, this.noctuaSearchService.searchCriteria.terms);
-
-    /*  const filter = {
-       terms: this.noctuaSearchService.searchCriteria.terms
-     }; */
-    // this.camService.initializeForm(cam);
     this.camService.loadCam(cam);
     this.camService.cam = cam;
     this.camService.onCamChanged.next(cam);

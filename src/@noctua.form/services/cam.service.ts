@@ -95,7 +95,6 @@ export class CamService {
   }
 
   loadCam(cam: Cam, filter?: any) {
-
     cam.loading.status = true;
     cam.loading.message = 'Sending Request...';
 
@@ -112,7 +111,6 @@ export class CamService {
     cam.expanded = true;
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
     this.cam = cam;
-    //  this.onCamChanged.next(cam);
 
   }
 

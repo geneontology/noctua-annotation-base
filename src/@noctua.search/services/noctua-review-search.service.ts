@@ -166,7 +166,8 @@ export class NoctuaReviewSearchService {
         this.matchedEntities = [];
         this.matchedCountCursor = 0;
         this.matchedCount = 0;
-        this.currentMatchedEnity = null;
+        this.currentMatchedEnity = undefined;
+        this.camsService.currentHighlightedUuid = undefined;
         this.searchCriteria = new SearchCriteria();
     }
 
@@ -241,6 +242,7 @@ export class NoctuaReviewSearchService {
 
     getCams(searchCriteria: SearchCriteria): Observable<any> {
         const self = this;
+        this.searchCriteria.expand = false;
         const query = searchCriteria.build();
         const url = `${this.searchApi}/models?${query}`;
 

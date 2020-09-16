@@ -48,7 +48,8 @@
 
 
   </div>
-  <mat-drawer-container class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start" autosize>
+  <mat-drawer-container class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start" [hasBackdrop]="false"
+    autosize>
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>
       <div [ngSwitch]="noctuaSearchMenuService.selectedLeftPanel?.id" class="h-100-p">
         <noc-search-form *ngSwitchCase="noctuaSearchMenuService.leftPanel.search.id"></noc-search-form>
@@ -164,7 +165,7 @@
         <app-footer></app-footer>
       </div>
     </mat-drawer-content>
-    <mat-drawer #rightDrawer class="noc-right-drawer" noctuaPerfectScrollbar mode="side" position="end">
+    <mat-drawer #rightDrawer class="noc-right-drawer" noctuaPerfectScrollbar mode="over" position="end">
       <div [ngSwitch]="noctuaSearchMenuService.selectedRightPanel?.id" class="h-100-p">
         <noc-cam-form [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaSearchMenuService.rightPanel.camForm.id">
         </noc-cam-form>

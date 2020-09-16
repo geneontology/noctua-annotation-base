@@ -216,6 +216,11 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
     const success = (cancel) => {
       if (cancel) {
+        const element = document.querySelector('#noc-review-results');
+
+        if (element) {
+          element.scrollTop = 0;
+        }
         self.searchForm.reset();
         self.panelDrawer.close();
         this.noctuaReviewSearchService.clear();
@@ -233,10 +238,21 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   }
 
   reviewChanges() {
+    const self = this;
+
     const success = (replace) => {
       if (replace) {
-        this.noctuaReviewSearchService.bulkEdit();
-        this.close();
+        const element = document.querySelector('#noc-review-results');
+
+        if (element) {
+          element.scrollTop = 0;
+        }
+        self.noctuaReviewSearchService.bulkEdit();
+        self.searchForm.reset();
+        self.panelDrawer.close();
+        self.noctuaReviewSearchService.clear();
+        self.noctuaReviewSearchService.onResetReview.next(true);
+        self.close();
       }
     };
 
@@ -254,7 +270,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   }
 
   termDisplayFn(term): string | undefined {
-    return term ? term.label : undefined;
+    return term && term.id ? `${term.label} (${term.id})` : undefined;
   }
 
   onValueChanges() {

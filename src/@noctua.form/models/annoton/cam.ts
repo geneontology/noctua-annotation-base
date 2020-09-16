@@ -128,10 +128,14 @@ export class Cam {
     }
   }
 
-  resetFilter() {
-    this.filter.contributor = null;
-    this.filter.uuids = [];
-    this.filter.terms = []
+  clearFilter() {
+    const self = this;
+
+    each(self._annotons, (annoton: Annoton) => {
+      each(annoton.nodes, (node: AnnotonNode) => {
+        node.term.highlight = false;
+      });
+    });
   }
 
   findAnnotonById(id) {
@@ -157,6 +161,8 @@ export class Cam {
   applyFilter() {
     const self = this;
 
+    self.clearFilter();
+
     if (self.queryMatch && self.queryMatch.terms.length > 0) {
       self._filteredAnnotons = [];
       self.matchedCount = 0;
@@ -181,7 +187,6 @@ export class Cam {
         }
       });
     }
-
   }
 
   replace(findEntities: Entity[], replaceWith: Entity) {

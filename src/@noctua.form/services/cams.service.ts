@@ -57,11 +57,13 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
-  addCamToReview(cam: Cam) {
+  addCamToReview(camId: string) {
     const self = this;
-    const found = find(this.cams, { id: cam.id });
+    const cam = new Cam();
+    const found = find(this.cams, { id: camId });
 
     if (!found) {
+      cam.id = camId;
       cam.dateReviewAdded = Date.now();
       self.cams.push(cam);
       self.camService.loadCam(cam);
