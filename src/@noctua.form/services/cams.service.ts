@@ -23,6 +23,7 @@ import { Entity } from './../models/annoton/entity';
   providedIn: 'root'
 })
 export class CamsService {
+
   curieUtil: any;
   loading = false;
   cams: Cam[] = [];
@@ -107,7 +108,8 @@ export class CamsService {
 
   findInCams(filter?: any) {
     const self = this;
-    each(this.cams, (cam: Cam) => {
+
+    each(self.cams, (cam: Cam) => {
       cam.expanded = true;
       if (filter) {
         cam.filter = filter;
@@ -115,6 +117,19 @@ export class CamsService {
     });
 
     self.onCamsChanged.next(this.cams);
+  }
+
+  expandMatch(uuid: string) {
+    const self = this;
+
+    each(self.cams, (cam: Cam) => {
+      cam.expanded = true;
+      const annotons = cam.findAnnotonByNodeId(uuid);
+
+      each(annotons, (annoton: Annoton) => {
+        annoton.expanded = true;
+      });
+    });
   }
 
   replace(entities: Entity[], replaceWithTerm: Entity) {

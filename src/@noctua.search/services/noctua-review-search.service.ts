@@ -135,6 +135,8 @@ export class NoctuaReviewSearchService {
         // so it circulates
         this.matchedCountCursor = (this.matchedCountCursor + 1) % this.matchedCount;
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
+
+        this.camsService.expandMatch(this.currentMatchedEnity.uuid);
         this.scroll(NoctuaUtils.cleanID(this.currentMatchedEnity.uuid));
         this.camsService.currentHighlightedUuid = this.currentMatchedEnity.uuid;
         return this.currentMatchedEnity;

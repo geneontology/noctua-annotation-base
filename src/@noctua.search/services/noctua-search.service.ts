@@ -80,7 +80,6 @@ export class NoctuaSearchService {
         this.onCamsPageChanged = new BehaviorSubject(null);
         this.onCamChanged = new BehaviorSubject([]);
         this.onSearchHistoryChanged = new BehaviorSubject(null);
-
         this.states = this.noctuaFormConfigService.modelState.options;
         this.searchCriteria = new SearchCriteria();
         this.onSearchCriteriaChanged = new BehaviorSubject(null);

@@ -12,7 +12,7 @@ import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
 import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
-import { each, find } from 'lodash';
+import { each, find, filter } from 'lodash';
 
 
 
@@ -23,19 +23,16 @@ export class CamQueryMatch {
 }
 
 export class Cam {
-
   title: string;
   state: any;
   groups: Group[] = [];
   contributors: Contributor[] = [];
   groupId: any;
-
   id: string;
   expanded = false;
   model: any;
   annotatedEntity?: {};
   camRow?: any;
-
   connectorAnnotons: ConnectorAnnoton[] = [];
   triples: Triple<AnnotonNode>[] = [];
   sort;
@@ -143,6 +140,18 @@ export class Cam {
     return find(self.annotons, (annoton) => {
       return annoton.id === id;
     });
+  }
+
+  findAnnotonByNodeId(nodeId): Annoton[] {
+    const self = this;
+
+    const result = filter(self.annotons, (annoton: Annoton) => {
+      return find(annoton.nodes, (annotonNode: AnnotonNode) => {
+        return annotonNode.uuid === nodeId;
+      });
+    }) as Annoton[];
+
+    return result;
   }
 
   applyFilter() {
