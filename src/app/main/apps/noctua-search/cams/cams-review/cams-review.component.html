@@ -118,6 +118,10 @@
       <div class="noc-cam-container" *ngFor="let cam of cams" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
           [@animateStagger]="{value:'50'}">
+          <button mat-icon-button (click)="cam.toggleExpand()" class="">
+            <fa-icon *ngIf="!cam.expanded" [icon]="['fas', 'chevron-right']"></fa-icon>
+            <fa-icon *ngIf="cam.expanded" [icon]="['fas', 'chevron-down']"></fa-icon>
+          </button>
           <div *ngIf="cam?.title" class="noc-title" fxLayout="row" fxLayoutAlign="start center">
             <div class="text-truncate pr-8">
               <strong>Title: </strong>{{cam?.title }}
@@ -145,7 +149,7 @@
             </button>
           </mat-menu>
         </div>
-        <noc-cam-table [cam]="cam" [options]="tableOptions"></noc-cam-table>
+        <noc-cam-table [cam]="cam" *ngIf="cam.expanded" [options]="tableOptions"></noc-cam-table>
       </div>
     </div>
   </div>

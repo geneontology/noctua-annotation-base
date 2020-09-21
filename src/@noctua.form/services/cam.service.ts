@@ -108,7 +108,6 @@ export class CamService {
     if (filter) {
       cam.filter = filter;
     }
-    cam.expanded = true;
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
     this.cam = cam;
 

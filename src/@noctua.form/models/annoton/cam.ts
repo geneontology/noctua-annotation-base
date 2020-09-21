@@ -105,6 +105,10 @@ export class Cam {
     this._annotons = srcAnnotons;
   }
 
+  toggleExpand() {
+    this.expanded = !this.expanded;
+  }
+
   expandAllAnnotons(expand: boolean) {
     const self = this;
 

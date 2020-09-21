@@ -50,7 +50,6 @@ export class CamsService {
   loadCams(filter?: any) {
     const self = this;
     each(this.cams, (cam: Cam) => {
-      cam.expanded = true;
       self.camService.loadCam(cam, filter);
     });
 
@@ -81,7 +80,6 @@ export class CamsService {
     const self = this;
 
     each(self.cams, (cam: Cam) => {
-      cam.expanded = true;
       if (filter) {
         cam.filter = filter;
       }

@@ -35,18 +35,6 @@
       matTooltip="History" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'history']"></fa-icon>
     </button>
-    <button mat-icon-button color="" class="noc-rounded-button"
-      (click)="toggleLeftDrawer(noctuaSearchMenuService.leftPanel.replace)"
-      [ngClass]="{'noc-active': noctuaSearchMenuService.selectedLeftPanel?.id === noctuaSearchMenuService.leftPanel.replace.id}"
-      matTooltip="Find and Replace" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
-
-      <fa-stack>
-        <fa-icon [icon]="['fas', 'search']" stackItemSize="1x"></fa-icon>
-        <fa-icon [icon]="['fas', 'copy']" stackItemSize="1x"></fa-icon>
-      </fa-stack>
-    </button>
-
-
   </div>
   <mat-drawer-container class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start" [hasBackdrop]="false"
     autosize>
@@ -167,21 +155,8 @@
     </mat-drawer-content>
     <mat-drawer #rightDrawer class="noc-right-drawer" noctuaPerfectScrollbar mode="over" position="end">
       <div [ngSwitch]="noctuaSearchMenuService.selectedRightPanel?.id" class="h-100-p">
-        <noc-cam-form [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaSearchMenuService.rightPanel.camForm.id">
-        </noc-cam-form>
-        <noc-annoton-form [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaSearchMenuService.rightPanel.annotonForm.id">
-        </noc-annoton-form>
-        <noc-annoton-entity-form [panelDrawer]="rightDrawer"
-          *ngSwitchCase="noctuaSearchMenuService.rightPanel.annotonEntityForm.id"></noc-annoton-entity-form>
-        <noc-annoton-connector [panelDrawer]="rightDrawer"
-          *ngSwitchCase="noctuaSearchMenuService.rightPanel.connectorForm.id">
-        </noc-annoton-connector>
         <noc-cams-review [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaSearchMenuService.rightPanel.camsReview.id">
         </noc-cams-review>
-        <noc-cams-replace [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaSearchMenuService.rightPanel.camsReplace.id">
-        </noc-cams-replace>
-        <noc-cam-detail [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaSearchMenuService.rightPanel.camDetail.id">
-        </noc-cam-detail>
       </div>
     </mat-drawer>
   </mat-drawer-container>
