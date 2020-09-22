@@ -228,9 +228,14 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       }
     };
 
+    const options = {
+      cancelLabel: 'No',
+      confirmLabel: 'Yes'
+    }
+
     this.confirmDialogService.openConfirmDialog('Confirm Cancel?',
       'You are about to cancel annotation review. All your unsaved changes will be lost.',
-      success);
+      success, options);
   }
 
   resetAll() {

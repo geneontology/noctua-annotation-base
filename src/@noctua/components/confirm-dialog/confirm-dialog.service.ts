@@ -18,11 +18,12 @@ export class NoctuaConfirmDialogService {
         private _matDialog: MatDialog) {
     }
 
-    openConfirmDialog(title, message, success): void {
+    openConfirmDialog(title: string, message: string, success, data?): void {
         let confirmDialogRef: MatDialogRef<NoctuaConfirmDialogComponent> = this._matDialog.open(NoctuaConfirmDialogComponent, {
             panelClass: 'noc-confirm-dialog',
             disableClose: false,
             width: '600px',
+            data: data
         });
 
         confirmDialogRef.componentInstance.title = title;
