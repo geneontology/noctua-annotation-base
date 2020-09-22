@@ -231,7 +231,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     const options = {
       cancelLabel: 'No',
       confirmLabel: 'Yes'
-    }
+    };
 
     this.confirmDialogService.openConfirmDialog('Confirm Cancel?',
       'You are about to cancel annotation review. All your unsaved changes will be lost.',
@@ -300,12 +300,14 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       debounceTime(400)
     ).subscribe(data => {
-      const lookup: EntityLookup = self.termNode.termLookup;
-      lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
-        lookup.results = response;
-      });
+      if (data) {
+        const lookup: EntityLookup = self.termNode.termLookup;
+        lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
+          lookup.results = response;
+        });
 
-      self.calculateEnableReplace();
+        self.calculateEnableReplace();
+      }
 
     });
 
@@ -313,13 +315,14 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       debounceTime(400)
     ).subscribe(data => {
-      const lookup: EntityLookup = self.termReplaceNode.termLookup;
-      lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
-        lookup.results = response;
-      });
+      if (data && self.termReplaceNode) {
+        const lookup: EntityLookup = self.termReplaceNode.termLookup;
+        lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
+          lookup.results = response;
+        });
 
-      self.calculateEnableReplace();
-
+        self.calculateEnableReplace();
+      }
     });
   }
 
