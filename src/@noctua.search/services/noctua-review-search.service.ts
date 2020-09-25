@@ -28,9 +28,7 @@ const amigo = require('amigo2');
 })
 export class NoctuaReviewSearchService {
     linker = new amigo.linker();
-
     searchHistory: SearchHistory[] = [];
-
     onSearchCriteriaChanged: BehaviorSubject<any>;
     onSearchHistoryChanged: BehaviorSubject<any>;
     curieUtil: any;
@@ -40,7 +38,7 @@ export class NoctuaReviewSearchService {
     separator = '@@';
     loading = false;
     // onCamsChanged: BehaviorSubject<any>;
-    //onCamsReviewChanged: BehaviorSubject<any>;
+    onArtBasketChanged: BehaviorSubject<any>;
     onResetReview: Subject<boolean>;
     onCamsPageChanged: BehaviorSubject<any>;
     onCamChanged: BehaviorSubject<any>;
@@ -61,7 +59,7 @@ export class NoctuaReviewSearchService {
         private httpClient: HttpClient,
         private camsService: CamsService,
         private curieService: CurieService) {
-        //  this.onCamsChanged = new BehaviorSubject([]);
+        this.onArtBasketChanged = new BehaviorSubject([]);
         this.onResetReview = new Subject();
         this.onCamsPageChanged = new BehaviorSubject(null);
         this.onCamChanged = new BehaviorSubject([]);

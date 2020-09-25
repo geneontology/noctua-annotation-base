@@ -99,6 +99,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   initTable(isReviewMode) {
     this.displayedColumns = [
+      'expand',
       'title',
       'state',
       'date',
@@ -223,9 +224,10 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   openDetails(cam: Cam) {
     this.camService.loadCam(cam);
+    cam.expanded = true;
     this.camService.cam = cam;
     this.camService.onCamChanged.next(cam);
-    this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camDetail);
+    //this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camDetail);
   }
 
   openLeftDrawer(panel) {
