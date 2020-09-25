@@ -29,6 +29,7 @@ export class CamsService {
   cams: Cam[] = [];
   onCamsChanged: BehaviorSubject<any>;
   currentHighlightedUuid;
+  currentHighlightedModel;
 
   public annoton: Annoton;
   public camFormGroup$: Observable<FormGroup>;
@@ -56,7 +57,7 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
-  addCamToReview(camId: string) {
+  addCamToReview(camId: string, metaCam?: Cam) {
     const self = this;
     const cam = new Cam();
     const found = find(this.cams, { id: camId });
@@ -64,6 +65,10 @@ export class CamsService {
     if (!found) {
       cam.id = camId;
       cam.dateReviewAdded = Date.now();
+
+      if (metaCam) {
+        cam.title = metaCam.title;
+      }
       self.cams.push(cam);
       self.camService.loadCam(cam);
       self.sortCams();

@@ -54,7 +54,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   displayReplaceForm = {
     replaceSection: false,
     replaceActions: false
-  }
+  };
 
 
   tableOptions = {

@@ -79,8 +79,19 @@
         </div>
       </div>
       <div *ngIf="noctuaSearchMenuService.reviewMode === ReviewMode.on" class="noc-art-info" fxLayout="row"
-        fxLayoutAlign="start center">
-        Review Mode: Please Select Models to review
+        fxLayoutAlign="center center">
+        <div class="noc-art-tabs">
+          <button mat-stroked-button (click)="selectMiddlePanel(noctuaSearchMenuService.middlePanel.cams)" class=""
+            color="" matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
+            <div class="noc-title">Results</div><br>
+            <div class="noc-description">Select Models to review</div>
+          </button>
+          <button mat-stroked-button (click)="selectMiddlePanel(noctuaSearchMenuService.middlePanel.camsReview)"
+            class="" color="" matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
+            <div class="noc-title">Review Basket</div> <br>
+            <div class="noc-description">View Selected Models</div>
+          </button>
+        </div>
       </div>
       <div class="noc-summary-filter-bar" fxLayout="row" fxLayoutAlign="start center">
         <small class="mr-12">Filtered By: </small>
@@ -146,18 +157,18 @@
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
       </div>
-      <div class="noc-table-container w-100-p">
-        <noc-cams-table [isReviewMode]="isReviewMode"></noc-cams-table>
+      <div [ngSwitch]="noctuaSearchMenuService.selectedMiddlePanel?.id" class="h-100-p">
+        <noc-cams-table *ngSwitchCase="noctuaSearchMenuService.middlePanel.cams.id" [isReviewMode]="isReviewMode">
+        </noc-cams-table>
+        <noc-cams-review *ngSwitchCase="noctuaSearchMenuService.middlePanel.camsReview.id">
+        </noc-cams-review>
       </div>
       <div class="w-100-p">
         <app-footer></app-footer>
       </div>
     </mat-drawer-content>
     <mat-drawer #rightDrawer class="noc-right-drawer" noctuaPerfectScrollbar mode="over" position="end">
-      <div [ngSwitch]="noctuaSearchMenuService.selectedRightPanel?.id" class="h-100-p">
-        <noc-cams-review [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaSearchMenuService.rightPanel.camsReview.id">
-        </noc-cams-review>
-      </div>
+
     </mat-drawer>
   </mat-drawer-container>
 </div>

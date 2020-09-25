@@ -129,10 +129,11 @@ export class NoctuaReviewSearchService {
         // so it circulates
         this.matchedCountCursor = (this.matchedCountCursor + 1) % this.matchedCount;
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
-
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
         this.scroll(NoctuaUtils.cleanID(this.currentMatchedEnity.uuid));
         this.camsService.currentHighlightedUuid = this.currentMatchedEnity.uuid;
+        this.camsService.currentHighlightedModel = this.currentMatchedEnity.modelId;
+
         return this.currentMatchedEnity;
     }
 
@@ -147,6 +148,7 @@ export class NoctuaReviewSearchService {
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
         this.scroll(NoctuaUtils.cleanID(this.currentMatchedEnity.uuid));
         this.camsService.currentHighlightedUuid = this.currentMatchedEnity.uuid;
+        this.camsService.currentHighlightedModel = this.currentMatchedEnity.modelId;
         return this.currentMatchedEnity;
     }
 
@@ -168,6 +170,7 @@ export class NoctuaReviewSearchService {
         this.matchedCount = 0;
         this.currentMatchedEnity = undefined;
         this.camsService.currentHighlightedUuid = undefined;
+        this.camsService.currentHighlightedModel = undefined;
         this.searchCriteria = new SearchCriteria();
     }
 

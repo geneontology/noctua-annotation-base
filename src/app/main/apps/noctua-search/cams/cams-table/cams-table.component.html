@@ -151,7 +151,8 @@
       </td>
     </ng-container> -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row (click)="$event.stopPropagation()" *matRowDef="let cam; columns: displayedColumns;">
+    <tr mat-row (click)="$event.stopPropagation()" *matRowDef="let cam; columns: displayedColumns;"
+      id="{{cleanId(cam.id)}}">
     </tr>
     <!--
     <tr mat-row *matRowDef="let cam; columns: ['expandedDetail']"

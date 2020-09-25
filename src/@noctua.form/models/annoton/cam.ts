@@ -75,6 +75,7 @@ export class Cam {
 
   dateReviewAdded = Date.now();
 
+
   private _filteredAnnotons: Annoton[] = [];
   private _annotons: Annoton[] = [];
 

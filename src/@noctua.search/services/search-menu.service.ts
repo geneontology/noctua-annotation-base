@@ -1,8 +1,5 @@
-import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { NoctuaGraphService } from 'noctua-form-base';
-import { HttpParams } from '@angular/common/http';
 import { ReviewMode } from './../models/review-mode';
 
 @Injectable({
@@ -29,6 +26,15 @@ export class NoctuaSearchMenuService {
         }
     };
 
+    middlePanel = {
+        cams: {
+            id: 1
+        },
+        camsReview: {
+            id: 2
+        }
+    };
+
     rightPanel = {
         camForm: {
             id: 1
@@ -52,19 +58,24 @@ export class NoctuaSearchMenuService {
     reviewMode: ReviewMode = ReviewMode.off;
 
     selectedLeftPanel;
+    selectedMiddlePanel;
     selectedRightPanel;
 
     private leftDrawer: MatDrawer;
     private rightDrawer: MatDrawer;
 
     constructor() {
-        const self = this;
         this.selectedLeftPanel = this.leftPanel.filter;
+        this.selectedMiddlePanel = this.middlePanel.cams;
         this.selectedRightPanel = this.rightPanel.annotonEntityForm;
     }
 
     selectLeftPanel(panel) {
         this.selectedLeftPanel = panel;
+    }
+
+    selectMiddlePanel(panel) {
+        this.selectedMiddlePanel = panel;
     }
 
     selectRightPanel(panel) {

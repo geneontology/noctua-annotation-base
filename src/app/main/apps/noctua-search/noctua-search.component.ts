@@ -133,6 +133,10 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     this.noctuaSearchMenuService.openLeftDrawer();
   }
 
+  selectMiddlePanel(panel) {
+    this.noctuaSearchMenuService.selectMiddlePanel(panel);
+  }
+
   openRightDrawer(panel) {
     this.noctuaSearchMenuService.selectRightPanel(panel);
     this.noctuaSearchMenuService.openRightDrawer();
@@ -150,7 +154,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     if (this.noctuaSearchMenuService.reviewMode === ReviewMode.off) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
       this.isReviewMode = true;
-      this.noctuaSearchMenuService.closeLeftDrawer();
+      // this.noctuaSearchMenuService.closeLeftDrawer();
     } else if (this.noctuaSearchMenuService.reviewMode === ReviewMode.on) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.off;
       this.isReviewMode = false;

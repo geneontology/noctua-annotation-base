@@ -19,6 +19,7 @@ import { NoctuaSearchDialogService } from '../../services/dialog.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ReviewMode } from '@noctua.search/models/review-mode';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
+import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 
 export function CustomPaginator() {
   const customPaginatorIntl = new MatPaginatorIntl();
@@ -216,7 +217,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   openReview(cam: Cam) {
-    this.camsService.addCamToReview(cam.id);
+    this.camsService.addCamToReview(cam.id, cam);
     this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsReview);
   }
 
@@ -248,6 +249,10 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
+  }
+
+  cleanId(dirtyId: string) {
+    return NoctuaUtils.cleanID(dirtyId);
   }
 
 }
