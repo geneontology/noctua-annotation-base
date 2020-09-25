@@ -1,84 +1,34 @@
 import { Injectable } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
+import { LeftPanel, MiddlePanel, RightPanel } from './../models/menu-panels';
 import { ReviewMode } from './../models/review-mode';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NoctuaSearchMenuService {
-    leftPanel = {
-        search: {
-            id: 1
-        }, filter: {
-            id: 2
-        }, relation: {
-            id: 3
-        }, group: {
-            id: 4
-        }, contributor: {
-            id: 5
-        }, organism: {
-            id: 6
-        }, history: {
-            id: 7
-        }, replace: {
-            id: 8
-        }
-    };
-
-    middlePanel = {
-        cams: {
-            id: 1
-        },
-        camsReview: {
-            id: 2
-        }
-    };
-
-    rightPanel = {
-        camForm: {
-            id: 1
-        }, connectorForm: {
-            id: 2
-        }, annotonForm: {
-            id: 3
-        }, annotonEntityForm: {
-            id: 4
-        }, camTable: {
-            id: 5
-        }, camsReview: {
-            id: 6
-        }, camsReplace: {
-            id: 7
-        }, camDetail: {
-            id: 8
-        }
-    };
-
     reviewMode: ReviewMode = ReviewMode.off;
-
-    selectedLeftPanel;
-    selectedMiddlePanel;
-    selectedRightPanel;
+    selectedLeftPanel: LeftPanel;
+    selectedMiddlePanel: MiddlePanel;
+    selectedRightPanel: RightPanel;
 
     private leftDrawer: MatDrawer;
     private rightDrawer: MatDrawer;
 
     constructor() {
-        this.selectedLeftPanel = this.leftPanel.filter;
-        this.selectedMiddlePanel = this.middlePanel.cams;
-        this.selectedRightPanel = this.rightPanel.annotonEntityForm;
+        this.selectedLeftPanel = LeftPanel.filter;
+        this.selectedMiddlePanel = MiddlePanel.cams;
     }
 
-    selectLeftPanel(panel) {
+    selectLeftPanel(panel: LeftPanel) {
         this.selectedLeftPanel = panel;
     }
 
-    selectMiddlePanel(panel) {
+    selectMiddlePanel(panel: MiddlePanel) {
         this.selectedMiddlePanel = panel;
     }
 
-    selectRightPanel(panel) {
+    selectRightPanel(panel: RightPanel) {
         this.selectedRightPanel = panel;
     }
 
@@ -94,8 +44,8 @@ export class NoctuaSearchMenuService {
         return this.leftDrawer.close();
     }
 
-    public toggleLeftDrawer(panel) {
-        if (this.selectedLeftPanel.id === panel.id) {
+    public toggleLeftDrawer(panel: LeftPanel) {
+        if (this.selectedLeftPanel === panel) {
             this.leftDrawer.toggle();
         } else {
             this.selectLeftPanel(panel);

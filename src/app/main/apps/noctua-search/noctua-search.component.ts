@@ -20,6 +20,7 @@ import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.ser
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { ReviewMode } from '@noctua.search/models/review-mode';
+import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
 
 @Component({
   selector: 'noc-noctua-search',
@@ -37,6 +38,9 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
   rightDrawer: MatDrawer;
 
   ReviewMode = ReviewMode;
+  LeftPanel = LeftPanel;
+  MiddlePanel = MiddlePanel;
+  RightPanel = RightPanel;
 
   camPage: CamPage;
   public cam: Cam;
@@ -125,7 +129,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
 
   edit() {
     // this.loadModel(this.selectCam)
-    this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camForm);
+    this.openRightDrawer(RightPanel.camForm);
   }
 
   openLeftDrawer(panel) {

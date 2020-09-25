@@ -20,6 +20,8 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { ReviewMode } from '@noctua.search/models/review-mode';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
+
 
 export function CustomPaginator() {
   const customPaginatorIntl = new MatPaginatorIntl();
@@ -47,6 +49,9 @@ export function CustomPaginator() {
 })
 export class CamsTableComponent implements OnInit, OnDestroy {
   ReviewMode = ReviewMode;
+  LeftPanel = LeftPanel;
+  MiddlePanel = MiddlePanel;
+  RightPanel = RightPanel;
 
   private _unsubscribeAll: Subject<any>;
   private _isReviewMode: string;
@@ -219,7 +224,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   openReview(cam: Cam) {
     this.camsService.addCamToReview(cam.id, cam);
-    this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camsReview);
+    this.openRightDrawer(RightPanel.camsReview);
   }
 
   openDetails(cam: Cam) {
@@ -227,7 +232,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     cam.expanded = true;
     this.camService.cam = cam;
     this.camService.onCamChanged.next(cam);
-    //this.openRightDrawer(this.noctuaSearchMenuService.rightPanel.camDetail);
+    //this.openRightDrawer(RightPanel.camDetail);
   }
 
   openLeftDrawer(panel) {

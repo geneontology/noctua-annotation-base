@@ -118,7 +118,7 @@
   <mat-drawer-container class="noc-drawer-container w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start"
     autosize>
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start">
-      <div [ngSwitch]="noctuaFormMenuService.selectedLeftPanel?.id" class="h-100-p">
+      <div [ngSwitch]="noctuaFormMenuService.selectedLeftPanel" class="h-100-p">
         <noc-cam-form [panelDrawer]="leftDrawer" *ngSwitchCase="noctuaFormMenuService.panel.camForm.id">
         </noc-cam-form>
         <noc-annoton-form [panelDrawer]="leftDrawer" *ngSwitchCase="noctuaFormMenuService.panel.annotonForm.id">
