@@ -28,28 +28,22 @@ import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { noctuaAnimations } from '@noctua/animations';
 import { FormGroup, FormControl } from '@angular/forms';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
-import { NoctuaSearchDialogService } from '../../services/dialog.service';
 import { cloneDeep, groupBy } from 'lodash';
 import { ArtReplaceCategory } from '@noctua.search/models/review-mode';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 @Component({
-  selector: 'noc-cams-review',
-  templateUrl: './cams-review.component.html',
-  styleUrls: ['./cams-review.component.scss'],
+  selector: 'noc-review-form',
+  templateUrl: './review-form.component.html',
+  styleUrls: ['./review-form.component.scss'],
   animations: noctuaAnimations,
 })
-export class CamsReviewComponent implements OnInit, OnDestroy {
+export class ReviewFormComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
   ArtReplaceCategory = ArtReplaceCategory;
 
-  @Input('panelDrawer')
-  panelDrawer: MatDrawer;
-
   searchForm: FormGroup;
   cams: Cam[] = [];
-  terms: any[];
-  searchResults = [];
 
   displayReplaceForm = {
     replaceSection: false,
@@ -57,18 +51,8 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   };
 
 
-  tableOptions = {
-    reviewMode: true,
-  };
-
-  loadingSpinner: any = {
-    color: 'primary',
-    mode: 'indeterminate'
-  };
-
   noctuaFormConfig = noctuaFormConfig;
 
-  searchCriteria: any = {};
   categories: any;
 
   gpNode: AnnotonNode;
@@ -84,7 +68,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaUserService: NoctuaUserService,
-    private noctuaSearchDialogService: NoctuaSearchDialogService,
     private noctuaLookupService: NoctuaLookupService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
@@ -135,13 +118,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  viewAsModel(cam: Cam) {
-    cam.displayType = noctuaFormConfig.camDisplayType.options.model;
-  }
-
-  viewAsActivities(cam: Cam) {
-    cam.displayType = noctuaFormConfig.camDisplayType.options.entity;
-  }
 
   createSearchForm(selectedCategory) {
     this.selectedCategoryName = selectedCategory.name;
@@ -210,63 +186,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
   findPrevious() {
     this.noctuaReviewSearchService.findPrevious();
-  }
-
-  resetCam(cam: Cam) {
-    this.camService.loadCam(cam);
-  }
-
-  cancel() {
-    const self = this;
-
-    const success = (cancel) => {
-      if (cancel) {
-        const element = document.querySelector('#noc-review-results');
-
-        if (element) {
-          element.scrollTop = 0;
-        }
-        self.searchForm.reset();
-        self.panelDrawer.close();
-        this.noctuaReviewSearchService.clear();
-        this.noctuaReviewSearchService.onResetReview.next(true);
-      }
-    };
-
-    const options = {
-      cancelLabel: 'No',
-      confirmLabel: 'Yes'
-    };
-
-    this.confirmDialogService.openConfirmDialog('Confirm Cancel?',
-      'You are about to cancel annotation review. All your unsaved changes will be lost.',
-      success, options);
-  }
-
-  resetAll() {
-    this.camsService.loadCams();
-  }
-
-  reviewChanges() {
-    const self = this;
-
-    const success = (replace) => {
-      if (replace) {
-        const element = document.querySelector('#noc-review-results');
-
-        if (element) {
-          element.scrollTop = 0;
-        }
-        self.noctuaReviewSearchService.bulkEdit();
-        self.searchForm.reset();
-        self.panelDrawer.close();
-        self.noctuaReviewSearchService.clear();
-        self.noctuaReviewSearchService.onResetReview.next(true);
-        self.close();
-      }
-    };
-
-    this.noctuaSearchDialogService.openCamReviewChangesDialog(success);
   }
 
   findSelected(value) {
@@ -347,7 +266,4 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  close() {
-    this.panelDrawer.close();
-  }
 }

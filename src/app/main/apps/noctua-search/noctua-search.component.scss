@@ -77,7 +77,6 @@ $accent: map-get($theme, accent);
 
   .noc-left-drawer {
     @include deep-height(100%);
-    @include deep-width(300px);
     background-color: #FFF;
     border-right: #BBB solid 1px;
     @include mat-elevation(4);
@@ -109,25 +108,72 @@ $accent: map-get($theme, accent);
   }
 
   .noc-art-info {
-    padding: 2px 10px;
-    @include deep-height(80px);
+    padding: 0;
+    @include deep-height(100px);
     //background-color: rgb(60, 156, 36);
     //color: #FFF;
 
     .noc-art-tabs {
+      width: 100%;
+
+      .noc-line {
+        display: block;
+        height: 5px;
+        border-top: #CCC solid 1px;
+        border-bottom: #CCC solid 1px;
+        background-color: #CCC;
+        padding: 0;
+
+        &.noc-visited {
+          border-top: map-get($primary, default) solid 1px;
+          border-bottom: map-get($primary, default) solid 1px;
+          background-color: map-get($primary, default);
+        }
+      }
+
       button {
         @include deep-height(60px);
-        @include deep-width(150px);
+        @include deep-width(170px);
         line-height: 12px !important;
+
+        border: #BBB solid 1px;
 
         .noc-title {
           font-size: 18px;
-          font-weight: bold;
+          color: #999;
         }
 
         .noc-description {
           font-size: 12px;
-          color: #888;
+          color: #BBB;
+        }
+
+        &.noc-active {
+          border: #444 solid 1px;
+
+          .noc-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+          }
+
+          .noc-description {
+            font-size: 12px;
+            color: #555;
+          }
+        }
+
+        &.noc-visited {
+          border: map-get($primary, default) solid 1px;
+
+          .noc-title {
+            font-weight: bold;
+            color: map-get($primary, default);
+          }
+
+          .noc-description {
+            color: rgba(map-get($primary, default), 0.5);
+          }
         }
       }
 

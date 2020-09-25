@@ -8,7 +8,7 @@
     <div *ngIf="!noctuaUserService.user" class="noc-draw-body-disabled" fxLayoutAlign="center center">
       Log in to Continue
     </div>
-    <div class="noc-search-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+    <!--   <div class="noc-search-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <form *ngIf="searchForm" class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch"
         name="searchForm" [formGroup]="searchForm" class="w-100-p h-100-p">
         <div class="noc-annoton-group-row mb-8" fxLayout="row" fxLayoutAlign="start center">
@@ -113,7 +113,7 @@
           </div>
         </div>
       </form>
-    </div>
+    </div> -->
     <div class="noc-cams-results">
       <div class="noc-cam-container" *ngFor="let cam of cams" fxLayout="column" fxLayoutAlign="start stretch">
         <div *ngIf="cam?.loading.status" class="noc-cam-heading noc-loading-container" fxLayout="column"

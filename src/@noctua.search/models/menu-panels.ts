@@ -1,17 +1,18 @@
 export enum LeftPanel {
-    search = 'search',
     filter = 'filter',
     relation = 'relation',
     group = 'group',
     contributor = 'contributor',
     organism = 'organism',
     history = 'history',
-    replace = 'replace'
+    replace = 'replace',
+    artBasket = 'artBasket'
 };
 
 export enum MiddlePanel {
     cams = 'cams',
-    camsReview = 'camReview'
+    camsReview = 'camReview',
+    reviewChanges = 'reviewChanges'
 };
 
 export enum RightPanel {

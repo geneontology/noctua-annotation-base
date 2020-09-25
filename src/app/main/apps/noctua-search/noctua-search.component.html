@@ -33,7 +33,8 @@
       [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'history']"></fa-icon>
     </button>
-    <button mat-icon-button color="" class="noc-rounded-button" (click)="toggleLeftDrawer(LeftPanel.artBasket)"
+    <button *ngIf="noctuaSearchMenuService.reviewMode !== ReviewMode.off" mat-icon-button color=""
+      class="noc-rounded-button" (click)="toggleLeftDrawer(LeftPanel.artBasket)"
       [ngClass]="{'noc-active': noctuaSearchMenuService.selectedLeftPanel === LeftPanel.artBasket}"
       matTooltip="Art Basket" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'shopping-basket']"></fa-icon>
@@ -43,7 +44,6 @@
     autosize>
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>
       <div [ngSwitch]="noctuaSearchMenuService.selectedLeftPanel" class="h-100-p">
-        <noc-search-form *ngSwitchCase="LeftPanel.search"></noc-search-form>
         <noc-search-filter *ngSwitchCase="LeftPanel.filter"></noc-search-filter>
         <noc-search-relation *ngSwitchCase="LeftPanel.relation"></noc-search-relation>
         <noc-search-groups *ngSwitchCase="LeftPanel.group"></noc-search-groups>
@@ -82,34 +82,47 @@
           </button>
         </div>
       </div>
-      <div *ngIf="noctuaSearchMenuService.reviewMode === ReviewMode.on" class="noc-art-info" fxLayout="row"
-        fxLayoutAlign="center end">
+      <div *ngIf="noctuaSearchMenuService.reviewMode !== ReviewMode.off" class="noc-art-info" fxLayout="row"
+        fxLayoutAlign="center center">
         <div class="noc-art-tabs" fxLayout="row" fxLayoutAlign="center center">
-          <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.cams)" class="" color=""
-            matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
+          <div class="noc-line noc-visited" fxFlex>
+          </div>
+          <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.cams)" class="" color="" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.cams,
+            'noc-visited': noctuaSearchMenuService.reviewLevel>0}" matTooltip="Refresh Search"
+            [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
             <div class="noc-title">Search Results</div><br>
             <div class="noc-description">Select Models to review</div>
           </button>
-          <fa-icon class="noc-icon-separator" [icon]="['fas', 'chevron-right']"></fa-icon>
-          <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.camsReview)" matBadge="8"
-            matBadgePosition="after" matBadgeColor="accent" class="mr-8" color="" matTooltip="Refresh Search"
-            [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
+          <div class="noc-line" fxFlex [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>0}">
+          </div>
+          <!--   <fa-icon class="noc-icon-separator" [icon]="['fas', 'chevron-right']"></fa-icon>
+         -->
+          <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.camsReview)"
+            matBadge="{{artBasket?.cams.length}}" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.camsReview,
+            'noc-visited': noctuaSearchMenuService.reviewLevel>1}" matBadgePosition="after" matBadgeColor="accent"
+            class="" color="" matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
             <div class="noc-title">Review Basket</div> <br>
             <div class="noc-description">View Selected Models</div>
           </button>
-          <fa-icon class="noc-icon-separator" [icon]="['fas', 'chevron-right']"></fa-icon>
-          <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.camsReview)" class="" color=""
-            matTooltip="Refresh Search" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
+          <!--   <fa-icon class="noc-icon-separator" [icon]="['fas', 'chevron-right']"></fa-icon>
+         -->
+          <div class="noc-line" fxFlex [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>1}">
+          </div>
+          <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.camsReview)" class="" color="" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.reviewChanges,
+            'noc-visited': noctuaSearchMenuService.reviewLevel>2}" matTooltip="Refresh Search"
+            [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
             <div class="noc-title">Checkout</div> <br>
             <div class="noc-description">Review Changes</div>
           </button>
+          <div class="noc-line" fxFlex [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>2}">
+          </div>
         </div>
       </div>
-
-      <div [ngSwitch]="noctuaSearchMenuService.selectedMiddlePanel" class="h-100-p">
-        <noc-cams-table *ngSwitchCase="MiddlePanel.cams" [isReviewMode]="isReviewMode">
+      <div class="h-100-p w-100-p">
+        <noc-cams-table [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.cams"
+          [isReviewMode]="isReviewMode">
         </noc-cams-table>
-        <noc-cams-review *ngSwitchCase="MiddlePanel.camsReview">
+        <noc-cams-review [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.camsReview">
         </noc-cams-review>
       </div>
       <div class="w-100-p">

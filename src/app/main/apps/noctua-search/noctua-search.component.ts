@@ -21,6 +21,8 @@ import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-m
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { ReviewMode } from '@noctua.search/models/review-mode';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
+import { ArtBasket } from '@noctua.search/models/art-basket';
+import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 
 @Component({
   selector: 'noc-noctua-search',
@@ -41,6 +43,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
   LeftPanel = LeftPanel;
   MiddlePanel = MiddlePanel;
   RightPanel = RightPanel;
+  artBasket: ArtBasket = new ArtBasket();
 
   camPage: CamPage;
   public cam: Cam;
@@ -71,6 +74,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
     private camService: CamService,
     private camsService: CamsService,
     private noctuaDataService: NoctuaDataService,
+    public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
@@ -115,6 +119,14 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
       .subscribe(cams => {
         this.cams = cams;
       });
+
+    this.noctuaReviewSearchService.onArtBasketChanged.pipe(
+      takeUntil(this._unsubscribeAll))
+      .subscribe((artBasket: ArtBasket) => {
+        if (artBasket) {
+          this.artBasket = artBasket;
+        }
+      });
   }
   loadCam(modelId) {
     const self = this;
@@ -129,7 +141,7 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
 
   edit() {
     // this.loadModel(this.selectCam)
-    this.openRightDrawer(RightPanel.camForm);
+    // this.openRightDrawer(RightPanel.camForm);
   }
 
   openLeftDrawer(panel) {
@@ -139,6 +151,19 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
 
   selectMiddlePanel(panel) {
     this.noctuaSearchMenuService.selectMiddlePanel(panel);
+
+    switch (panel) {
+      case MiddlePanel.cams:
+        this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
+        break;
+      case MiddlePanel.camsReview:
+        this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.artBasket);
+        break;
+      case MiddlePanel.reviewChanges:
+        this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.artBasket);
+        break;
+    }
+
   }
 
   openRightDrawer(panel) {
@@ -161,6 +186,8 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
       // this.noctuaSearchMenuService.closeLeftDrawer();
     } else if (this.noctuaSearchMenuService.reviewMode === ReviewMode.on) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.off;
+      this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
+      this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
       this.isReviewMode = false;
     }
   }

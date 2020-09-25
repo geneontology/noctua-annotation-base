@@ -53,6 +53,11 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   MiddlePanel = MiddlePanel;
   RightPanel = RightPanel;
 
+  loadingSpinner: any = {
+    color: 'primary',
+    mode: 'indeterminate'
+  };
+
   private _unsubscribeAll: Subject<any>;
   private _isReviewMode: string;
 
@@ -71,10 +76,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;
-  loadingSpinner: any = {
-    color: 'primary',
-    mode: 'indeterminate'
-  };
 
   cams: any[] = [];
   camPage: CamPage;
@@ -169,6 +170,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       this.openReview(cam);
     } else {
       this.camsService.removeCamFromReview(cam);
+      this.noctuaReviewSearchService.removeFromArtBasket(cam.id);
     }
   }
 
@@ -224,7 +226,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   openReview(cam: Cam) {
     this.camsService.addCamToReview(cam.id, cam);
-    this.openRightDrawer(RightPanel.camsReview);
+    this.noctuaReviewSearchService.addToArtBasket(cam.id, cam.title);
   }
 
   openDetails(cam: Cam) {

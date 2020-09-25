@@ -6,6 +6,10 @@
   background-color: white;
   @include mat-elevation(4);
 
+  .noc-drawer {
+    @include deep-width(300px);
+  }
+
   .noc-header {
     @include deep-height(30px);
     background-color: #EEE;

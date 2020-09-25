@@ -3,8 +3,13 @@
 
 :host {
   width: 100%; // display: block;
+  @include deep-width(300px);
   background-color: white;
   @include mat-elevation(4);
+
+  .noc-drawer {
+    @include deep-width(400px);
+  }
 
   .noc-header {
     @include deep-height(30px);

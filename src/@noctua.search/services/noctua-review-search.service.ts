@@ -18,6 +18,7 @@ import { CurieService } from '@noctua.curie/services/curie.service';
 import { CamPage } from './../models/cam-page';
 import { SearchHistory } from './../models/search-history';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { ArtBasket } from '@noctua.search/models/art-basket';
 
 declare const require: any;
 
@@ -28,6 +29,7 @@ const amigo = require('amigo2');
 })
 export class NoctuaReviewSearchService {
     linker = new amigo.linker();
+    artBasket = new ArtBasket();
     searchHistory: SearchHistory[] = [];
     onSearchCriteriaChanged: BehaviorSubject<any>;
     onSearchHistoryChanged: BehaviorSubject<any>;
@@ -59,7 +61,7 @@ export class NoctuaReviewSearchService {
         private httpClient: HttpClient,
         private camsService: CamsService,
         private curieService: CurieService) {
-        this.onArtBasketChanged = new BehaviorSubject([]);
+        this.onArtBasketChanged = new BehaviorSubject(null);
         this.onResetReview = new Subject();
         this.onCamsPageChanged = new BehaviorSubject(null);
         this.onCamChanged = new BehaviorSubject([]);
@@ -215,6 +217,21 @@ export class NoctuaReviewSearchService {
     clearHistory() {
         this.searchHistory = [];
         this.onSearchHistoryChanged.next(this.searchHistory);
+    }
+
+    addToArtBasket(id: string, title: string) {
+        this.artBasket.addCamToBasket(id, title);
+        this.onArtBasketChanged.next(this.artBasket);
+    }
+
+    removeFromArtBasket(id) {
+        this.artBasket.removeCamFromBasket(id);
+        this.onArtBasketChanged.next(this.artBasket);
+    }
+
+    clearBasket() {
+        this.artBasket.clearBasket();
+        this.onArtBasketChanged.next(this.artBasket);
     }
 
     downloadSearchConfig() {

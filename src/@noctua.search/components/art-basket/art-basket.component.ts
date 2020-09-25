@@ -4,7 +4,7 @@ import { NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { takeUntil } from 'rxjs/operators';
-import { ArtBasket } from './../..//models/art-basket';
+import { ArtBasket, ArtBasketItem } from './../..//models/art-basket';
 import { NoctuaReviewSearchService } from './../../services/noctua-review-search.service';
 
 @Component({
@@ -13,8 +13,7 @@ import { NoctuaReviewSearchService } from './../../services/noctua-review-search
   styleUrls: ['./art-basket.component.scss']
 })
 export class ArtBasketComponent implements OnInit, OnDestroy {
-  searchCriteria: any = {};
-  searchHistory: ArtBasket[] = [];
+  artBasket: ArtBasket = new ArtBasket();
 
   private _unsubscribeAll: Subject<any>;
 
@@ -29,18 +28,19 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.noctuaReviewSearchService.onArtBasketChanged.pipe(
       takeUntil(this._unsubscribeAll))
-      .subscribe((searchHistory: ArtBasket[]) => {
-        this.searchHistory = searchHistory;
+      .subscribe((artBasket: ArtBasket) => {
+        if (artBasket) {
+          this.artBasket = artBasket;
+        }
       });
   }
 
-  selectSearch(searchHistoryItem: ArtBasket) {
-    this.noctuaSearchService.searchCriteria = searchHistoryItem.getSearchCriteria();
-    this.noctuaSearchService.updateSearch(false);
+  selectItem(artBasketItem: ArtBasketItem) {
+
   }
 
   clear() {
-    this.noctuaSearchService.clearHistory();
+    this.noctuaReviewSearchService.clearBasket();
   }
 
   close() {

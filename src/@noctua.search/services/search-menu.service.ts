@@ -8,6 +8,7 @@ import { ReviewMode } from './../models/review-mode';
 })
 export class NoctuaSearchMenuService {
     reviewMode: ReviewMode = ReviewMode.off;
+    reviewLevel = 0;
     selectedLeftPanel: LeftPanel;
     selectedMiddlePanel: MiddlePanel;
     selectedRightPanel: RightPanel;
@@ -26,6 +27,14 @@ export class NoctuaSearchMenuService {
 
     selectMiddlePanel(panel: MiddlePanel) {
         this.selectedMiddlePanel = panel;
+
+        if (panel === MiddlePanel.cams) {
+            this.reviewLevel = 0;
+        } else if (panel === MiddlePanel.camsReview) {
+            this.reviewLevel = 1;
+        } else if (panel === MiddlePanel.reviewChanges) {
+            this.reviewLevel = 2;
+        }
     }
 
     selectRightPanel(panel: RightPanel) {

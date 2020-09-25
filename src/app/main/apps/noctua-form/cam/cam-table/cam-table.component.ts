@@ -2,13 +2,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
-
-
-
-
 import { CamTableService } from './services/cam-table.service';
 import { NoctuaFormDialogService } from './../../services/dialog.service';
-
 import {
   noctuaFormConfig,
   NoctuaAnnotonConnectorService,

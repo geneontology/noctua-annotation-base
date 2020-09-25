@@ -7,7 +7,6 @@
 
   .noc-drawer-header {
     border-bottom: #DDD solid 1px;
-    ;
   }
 
   .noc-cams {
@@ -20,9 +19,9 @@
   }
 
   .noc-search-form {
-    padding: 12px;
+    //padding: 12px;
     margin-bottom: 12px;
-    @include deep-height(128px);
+    @include deep-height(200px);
     position: sticky;
     position: -webkit-sticky;
     top: 0;
@@ -30,6 +29,10 @@
     background-color: #FFF;
     border-bottom: #BBB solid 1px;
     @include mat-elevation(3);
+
+    .noc-review-input {
+      @include deep-width(240px);
+    }
   }
 
   .noc-cams-results {
@@ -85,23 +88,28 @@
   }
 
   .noc-review-actions {
-    @include deep-width(250px);
+    @include deep-width(180px);
+
+    .noc-matched-count {
+
+      display: flex;
+      flex-direction: row;
+      justify-items: center;
+      align-items: center;
+      padding: 0 8px;
+      height: 100%;
+      font-size: 10
+    }
 
     .noc-review-btn {
-      //height: 45px;
+      height: 35px;
+      width: 35px;
     }
 
     .noc-disabled {}
   }
 
-  .noc-matched-count {
-    display: flex;
-    flex-direction: row;
-    justify-items: center;
-    align-items: center;
-    padding: 0 12px;
-    height: 100%;
-  }
+
 
   mat-chip {
     font-size: 12px;
