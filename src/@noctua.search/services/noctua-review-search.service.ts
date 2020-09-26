@@ -61,6 +61,7 @@ export class NoctuaReviewSearchService {
         private httpClient: HttpClient,
         private camsService: CamsService,
         private curieService: CurieService) {
+        const self = this;
         this.onArtBasketChanged = new BehaviorSubject(null);
         this.onResetReview = new Subject();
         this.onCamsPageChanged = new BehaviorSubject(null);
@@ -101,6 +102,14 @@ export class NoctuaReviewSearchService {
                 this.searchCriteria['ids'] = ids;
 
             });
+
+        const artBasket = localStorage.getItem('artBasket');
+
+        if (artBasket) {
+            this.artBasket = new ArtBasket(JSON.parse(artBasket));
+            self.camsService.addCamsToReview(this.artBasket.cams);
+            this.onArtBasketChanged.next(this.artBasket);
+        }
     }
 
     scroll(id) {
@@ -221,16 +230,19 @@ export class NoctuaReviewSearchService {
 
     addToArtBasket(id: string, title: string) {
         this.artBasket.addCamToBasket(id, title);
+        localStorage.setItem('artBasket', JSON.stringify(this.artBasket));
         this.onArtBasketChanged.next(this.artBasket);
     }
 
     removeFromArtBasket(id) {
         this.artBasket.removeCamFromBasket(id);
+        localStorage.setItem('artBasket', JSON.stringify(this.artBasket));
         this.onArtBasketChanged.next(this.artBasket);
     }
 
     clearBasket() {
         this.artBasket.clearBasket();
+        localStorage.setItem('artBasket', JSON.stringify(this.artBasket));
         this.onArtBasketChanged.next(this.artBasket);
     }
 

@@ -57,6 +57,27 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
+  addCamsToReview(cams: any[]) {
+    const self = this;
+
+    each(cams, (metaCam) => {
+      const cam = new Cam();
+      const found = find(this.cams, { id: metaCam.id });
+
+      if (!found) {
+        cam.id = metaCam.id;
+        cam.dateReviewAdded = metaCam.dateAdded;
+        cam.title = metaCam.title;
+        self.cams.push(cam);
+        self.camService.loadCam(cam);
+
+      }
+    });
+
+    self.sortCams();
+    self.onCamsChanged.next(this.cams);
+  }
+
   addCamToReview(camId: string, metaCam?: Cam) {
     const self = this;
     const cam = new Cam();

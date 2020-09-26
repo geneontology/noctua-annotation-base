@@ -161,7 +161,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     this.isAllSelected() ?
       this.selection.clear() :
       this.cams.forEach(row => this.selection.select(row));
-
   }
 
   toggleSelection(cam: Cam) {
@@ -172,6 +171,10 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       this.camsService.removeCamFromReview(cam);
       this.noctuaReviewSearchService.removeFromArtBasket(cam.id);
     }
+  }
+
+  preCheck() {
+    this.cams.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */

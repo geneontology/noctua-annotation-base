@@ -93,7 +93,7 @@
             <div class="noc-title">Search Results</div><br>
             <div class="noc-description">Select Models to review</div>
           </button>
-          <div class="noc-line" fxFlex [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>0}">
+          <div class="noc-line" fxFlex="80px" [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>0}">
           </div>
           <!--   <fa-icon class="noc-icon-separator" [icon]="['fas', 'chevron-right']"></fa-icon>
          -->
@@ -106,7 +106,7 @@
           </button>
           <!--   <fa-icon class="noc-icon-separator" [icon]="['fas', 'chevron-right']"></fa-icon>
          -->
-          <div class="noc-line" fxFlex [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>1}">
+          <div class="noc-line" fxFlex="80px" [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>1}">
           </div>
           <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.camsReview)" class="" color="" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.reviewChanges,
             'noc-visited': noctuaSearchMenuService.reviewLevel>2}" matTooltip="Refresh Search"

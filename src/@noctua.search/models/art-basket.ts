@@ -16,7 +16,10 @@ export class ArtBasket {
 
     cams: ArtBasketItem[] = [];
 
-    constructor() {
+    constructor(artBasket?) {
+        if (artBasket) {
+            this.cams = artBasket.cams;
+        }
     }
 
     addCamToBasket(id: string, title: string): ArtBasketItem {
@@ -47,6 +50,8 @@ export class ArtBasket {
     sortCams() {
         this.cams.sort(this._compareDateReviewAdded);
     }
+
+
 
     private _compareDateReviewAdded(a: ArtBasketItem, b: ArtBasketItem): number {
         if (a.dateAdded > b.dateAdded) {
