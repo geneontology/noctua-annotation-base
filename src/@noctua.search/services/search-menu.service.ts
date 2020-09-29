@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
+import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
 import { LeftPanel, MiddlePanel, RightPanel } from './../models/menu-panels';
 import { ReviewMode } from './../models/review-mode';
 
@@ -7,11 +8,13 @@ import { ReviewMode } from './../models/review-mode';
     providedIn: 'root'
 })
 export class NoctuaSearchMenuService {
+
     reviewMode: ReviewMode = ReviewMode.off;
     reviewLevel = 0;
     selectedLeftPanel: LeftPanel;
     selectedMiddlePanel: MiddlePanel;
     selectedRightPanel: RightPanel;
+    resultsViewScrollbar: NoctuaPerfectScrollbarDirective;
 
     private leftDrawer: MatDrawer;
     private rightDrawer: MatDrawer;
@@ -72,5 +75,35 @@ export class NoctuaSearchMenuService {
 
     public closeRightDrawer() {
         return this.rightDrawer.close();
+    }
+
+    resetResults() {
+        const element = document.querySelector('#noc-results');
+
+        if (element) {
+            // element.scrollTop = 0;
+        }
+
+        setTimeout(() => {
+            if (this.resultsViewScrollbar) {
+                this.resultsViewScrollbar.update();
+
+                setTimeout(() => {
+                    this.resultsViewScrollbar.scrollToTop(0);
+                });
+            }
+        });
+    }
+
+    private _prepareChatForReplies(): void {
+        setTimeout(() => {
+            if (this.resultsViewScrollbar) {
+                this.resultsViewScrollbar.update();
+
+                setTimeout(() => {
+                    this.resultsViewScrollbar.scrollToBottom(0);
+                });
+            }
+        });
     }
 }

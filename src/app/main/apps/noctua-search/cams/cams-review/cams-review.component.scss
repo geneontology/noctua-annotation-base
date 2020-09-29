@@ -38,6 +38,10 @@
     .noc-cam-container {
       @include mat-elevation(2);
       margin-bottom: 12px;
+
+      &.noc-selected {
+        border-left: rgba(#93d170, 0.4) solid 5px;
+      }
     }
 
     .noc-cam-heading {

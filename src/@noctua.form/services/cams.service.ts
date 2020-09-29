@@ -20,8 +20,11 @@ export class CamsService {
   loading = false;
   cams: Cam[] = [];
   onCamsChanged: BehaviorSubject<any>;
-  currentHighlightedUuid;
-  currentHighlightedModel;
+  onSelectedCamChanged: BehaviorSubject<any>;
+  onSelectedNodeChanged: BehaviorSubject<any>;
+
+  selectedNodeUuid;
+  selectedCamUuid;
 
   public annoton: Annoton;
   public camFormGroup$: Observable<FormGroup>;
@@ -31,7 +34,23 @@ export class CamsService {
     private camService: CamService,
     private curieService: CurieService) {
     this.onCamsChanged = new BehaviorSubject(null);
+    this.onSelectedCamChanged = new BehaviorSubject(null);
+    this.onSelectedNodeChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
+
+    this.onSelectedCamChanged.subscribe((uuid: string) => {
+      if (uuid) {
+        this.selectedCamUuid = uuid;
+      }
+    });
+
+    this.onSelectedNodeChanged.subscribe((uuid: string) => {
+      if (uuid) {
+        this.selectedNodeUuid = uuid;
+      }
+    });
+
+
   }
 
   setup() {
@@ -59,7 +78,6 @@ export class CamsService {
         cam.title = metaCam.title;
         self.cams.push(cam);
         self.camService.loadCam(cam);
-
       }
     });
 

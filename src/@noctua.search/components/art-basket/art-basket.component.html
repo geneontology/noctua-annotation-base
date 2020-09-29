@@ -16,7 +16,8 @@
       <noc-review-form></noc-review-form>
     </div>
     <div *ngFor="let item of artBasket?.cams" [attr.id]='item.displayId' (click)="selectItem(item)"
-      class="noc-group-row" fxLayout="row" fxLayoutAlign="start center">
+      class="noc-group-row" [ngClass]="{'noc-selected': item.id===camsService.selectedCamUuid}" fxLayout="row"
+      fxLayoutAlign="start center">
       <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
         <div class="noc-history-item">
           <small>Title</small>: {{item.title}}

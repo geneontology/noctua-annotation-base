@@ -62,6 +62,10 @@
     &:hover {
       background-color: #F2F2F2;
     }
+
+    &.noc-selected {
+      background-color: #7ae060;
+    }
   }
 
   .noc-body {

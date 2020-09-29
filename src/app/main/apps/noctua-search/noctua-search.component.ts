@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
@@ -23,6 +23,7 @@ import { ReviewMode } from '@noctua.search/models/review-mode';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
 import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
+import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
 
 @Component({
   selector: 'noc-noctua-search',
@@ -31,13 +32,16 @@ import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review
   // encapsulation: ViewEncapsulation.None,
   animations: noctuaAnimations
 })
-export class NoctuaSearchComponent implements OnInit, OnDestroy {
+export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('leftDrawer', { static: true })
   leftDrawer: MatDrawer;
 
   @ViewChild('rightDrawer', { static: true })
   rightDrawer: MatDrawer;
+
+  @ViewChildren(NoctuaPerfectScrollbarDirective)
+  private _noctuaPerfectScrollbarDirectives: QueryList<NoctuaPerfectScrollbarDirective>;
 
   ReviewMode = ReviewMode;
   LeftPanel = LeftPanel;
@@ -127,7 +131,17 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
           this.artBasket = artBasket;
         }
       });
+
+
+
   }
+
+  ngAfterViewInit(): void {
+    this.noctuaSearchMenuService.resultsViewScrollbar = this._noctuaPerfectScrollbarDirectives.find((directive) => {
+      return directive.elementRef.nativeElement.id === 'noc-results';
+    });
+  }
+
   loadCam(modelId) {
     const self = this;
 
