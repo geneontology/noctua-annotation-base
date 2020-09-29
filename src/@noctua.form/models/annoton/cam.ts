@@ -13,6 +13,7 @@ import { Triple } from './triple';
 import { Entity } from './entity';
 import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
 import { each, find, filter } from 'lodash';
+import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 
 
 
@@ -28,7 +29,6 @@ export class Cam {
   groups: Group[] = [];
   contributors: Contributor[] = [];
   groupId: any;
-  id: string;
   expanded = false;
   model: any;
   annotatedEntity?: {};
@@ -52,14 +52,17 @@ export class Cam {
   };
 
   goterms: Entity[] = [];
-
-
-
   queryMatch: CamQueryMatch = new CamQueryMatch();
 
   dateReviewAdded = Date.now();
 
   // Display 
+
+  /**
+   * Used for HTML id attribute
+   */
+  displayId: string;
+
   displayType;
   grid: any = [];
   graphPreview = {
@@ -74,9 +77,19 @@ export class Cam {
 
   private _filteredAnnotons: Annoton[] = [];
   private _annotons: Annoton[] = [];
+  private _id: string;
 
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  set id(id: string) {
+    this._id = id;
+    this.displayId = NoctuaUtils.cleanID(id);
   }
 
   get annotons() {

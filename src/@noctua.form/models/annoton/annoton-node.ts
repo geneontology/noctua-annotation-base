@@ -6,6 +6,7 @@ import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { Predicate } from '.';
 import { each, find, some } from 'lodash';
+import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 
 export interface GoCategory {
   id: AnnotonNodeType;
@@ -54,7 +55,6 @@ export interface AnnotonNodeDisplay {
 }
 
 export class AnnotonNode implements AnnotonNodeDisplay {
-  id: string;
   type: AnnotonNodeType;
   label: string;
   uuid: string;
@@ -90,7 +90,10 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   showInMenu = false;
   insertMenuNodes = [];
   linkedNode = false;
-  familyNodes = []
+  familyNodes = [];
+  displayId: string;
+
+  private _id: string;
 
   constructor(annotonNode?: Partial<AnnotonNodeDisplay>) {
     if (annotonNode) {
@@ -100,6 +103,15 @@ export class AnnotonNode implements AnnotonNodeDisplay {
 
   getTerm() {
     return this.term;
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  set id(id: string) {
+    this._id = id;
+    this.displayId = NoctuaUtils.cleanID(id);
   }
 
   get classExpression() {

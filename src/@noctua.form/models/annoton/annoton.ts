@@ -13,6 +13,7 @@ import { AnnotonParser } from './parser';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
 import { each, filter } from 'lodash';
+import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 
 export enum AnnotonState {
   creation = 1,
@@ -27,7 +28,6 @@ export enum AnnotonType {
 
 export class Annoton extends SaeGraph<AnnotonNode> {
   gp;
-  id: string;
   label: string;
   parser: AnnotonParser;
   annotonRows;
@@ -44,10 +44,16 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   molecularEntityNode: AnnotonNode;
   molecularFunctionNode: AnnotonNode;
 
+  /**
+   * Used for HTML id attribute
+   */
+  displayId: string;
+
 
   bpOnlyEdge: Entity;
   private _presentation: any;
   private _grid: any[] = [];
+  private _id: string;
 
   constructor() {
     super();
@@ -55,6 +61,15 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     this.id = uuid();
     this.errors = [];
     this.submitErrors = [];
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  set id(id: string) {
+    this._id = id;
+    this.displayId = NoctuaUtils.cleanID(id);
   }
 
   get annotonConnections() {

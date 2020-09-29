@@ -15,14 +15,14 @@
     <div class="w-100-p">
       <noc-review-form></noc-review-form>
     </div>
-    <div *ngFor="let item of artBasket?.cams" (click)="selectItem(item)" class="noc-group-row" fxLayout="row"
-      fxLayoutAlign="start center">
+    <div *ngFor="let item of artBasket?.cams" [attr.id]='item.displayId' (click)="selectItem(item)"
+      class="noc-group-row" fxLayout="row" fxLayoutAlign="start center">
       <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
         <div class="noc-history-item">
           <small>Title</small>: {{item.title}}
         </div>
         <div class="noc-history-item">
-          <small>Added On</small>: {{item.dateAdded | date: 'long'}}
+          {{item.displayId}}
         </div>
       </div>
       <span fxFlex></span>

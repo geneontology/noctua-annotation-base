@@ -79,7 +79,7 @@ export class CamService {
     cam.loading.status = true;
     cam.loading.message = 'Sending Request...';
 
-    cam.id = uuid();
+    //cam.id = uuid();
     cam.graph = null;
     cam.model = Object.assign({}, {
       id: modelId,

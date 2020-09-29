@@ -45,7 +45,6 @@ export class NoctuaReviewSearchService {
     onCamsPageChanged: BehaviorSubject<any>;
     onCamChanged: BehaviorSubject<any>;
     searchSummary: any = {};
-
     matchedEntities: Entity[] = [];
     matchedCountCursor = 0;
     matchedCount = 0;
@@ -297,7 +296,7 @@ export class NoctuaReviewSearchService {
 
             const modelId = response.id;
             const cam: Cam = find(self.camsService.cams, (inCam: Cam) => {
-                return inCam.modelId === modelId;
+                return inCam.id === modelId;
             });
 
             if (cam) {
