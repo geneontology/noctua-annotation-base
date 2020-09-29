@@ -8,7 +8,6 @@ import { ReviewMode } from './../models/review-mode';
     providedIn: 'root'
 })
 export class NoctuaSearchMenuService {
-
     reviewMode: ReviewMode = ReviewMode.off;
     reviewLevel = 0;
     selectedLeftPanel: LeftPanel;
@@ -90,6 +89,20 @@ export class NoctuaSearchMenuService {
 
                 setTimeout(() => {
                     this.resultsViewScrollbar.scrollToTop(0);
+                });
+            }
+        });
+    }
+
+    scrollTo(displayId: string) {
+        const element = '#noc-review-cams-' + displayId
+
+        setTimeout(() => {
+            if (this.resultsViewScrollbar) {
+                this.resultsViewScrollbar.update();
+
+                setTimeout(() => {
+                    this.resultsViewScrollbar.scrollToElement(element, 0, 2000);
                 });
             }
         });

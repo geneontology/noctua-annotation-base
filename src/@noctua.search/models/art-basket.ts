@@ -11,7 +11,7 @@ export class ArtBasketItem {
         public title: string,
         public dateAdded: Date,
     ) {
-        this.displayId = 'noc-basket-' + NoctuaUtils.cleanID(id);
+        this.displayId = NoctuaUtils.cleanID(id);
     }
 }
 
