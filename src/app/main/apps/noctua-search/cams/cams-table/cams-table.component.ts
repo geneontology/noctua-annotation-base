@@ -199,7 +199,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       'noc-development': stateLabel === 'development',
       'noc-production': stateLabel === 'production',
       'noc-review': stateLabel === 'review'
-    }
+    };
   }
 
   setPage($event) {
