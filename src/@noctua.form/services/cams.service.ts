@@ -133,7 +133,7 @@ export class CamsService {
     const groupedEntities = groupBy(entities, 'modelId') as { string: Entity[] };
 
     each(groupedEntities, (values: Entity[], key) => {
-      const cam: Cam = find(this.cams, { modelId: key });
+      const cam: Cam = find(this.cams, { id: key });
       cam.replace(entities, replaceWithTerm);
       // this.camService.replaceAnnotonInternal(cam)
 

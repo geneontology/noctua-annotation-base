@@ -105,7 +105,7 @@ export class NoctuaGraphService {
     const self = this;
 
     cam.onGraphChanged = new BehaviorSubject(null);
-    cam.modelId = modelId;
+    cam.id = modelId;
     cam.manager = this.registerManager();
     cam.individualManager = this.registerManager();
     cam.groupManager = this.registerManager();
@@ -117,7 +117,7 @@ export class NoctuaGraphService {
       cam.loading.message = 'Loading Model Entities Metadata...';
 
       cam.graph = new noctua_graph();
-      cam.modelId = resp.data().id;
+      cam.id = resp.data().id;
       cam.graph.load_data_basic(resp.data());
       const titleAnnotations = cam.graph.get_annotations_by_key('title');
       const stateAnnotations = cam.graph.get_annotations_by_key('state');
@@ -485,7 +485,7 @@ export class NoctuaGraphService {
 
     const titleAnnotations = cam.graph.get_annotations_by_key('title');
     const stateAnnotations = cam.graph.get_annotations_by_key('state');
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
+    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.id);
 
     each(titleAnnotations, function (annotation) {
       reqs.remove_annotation_from_model('title', annotation.value());
@@ -498,7 +498,7 @@ export class NoctuaGraphService {
     reqs.add_annotation_to_model('title', annotations.title);
     reqs.add_annotation_to_model('state', annotations.state);
 
-    reqs.store_model(cam.modelId);
+    reqs.store_model(cam.id);
     cam.manager.request_with(reqs);
   }
 
@@ -516,7 +516,7 @@ export class NoctuaGraphService {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
-    reqs.store_model(cam.modelId);
+    reqs.store_model(cam.id);
     return cam.manager.request_with(reqs);
 
   }
@@ -530,7 +530,7 @@ export class NoctuaGraphService {
     removeTriples: Triple<AnnotonNode>[]) {
 
     const self = this;
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
+    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.id);
 
     each(destNodes, function (destNode: AnnotonNode) {
       const srcNode = find(srcNodes, (node: AnnotonNode) => {
@@ -561,7 +561,7 @@ export class NoctuaGraphService {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
-    reqs.store_model(cam.modelId);
+    reqs.store_model(cam.id);
     return cam.manager.request_with(reqs);
   }
 
@@ -588,7 +588,7 @@ export class NoctuaGraphService {
   bulkEditAnnoton(cam: Cam,) {
 
     const self = this;
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.modelId);
+    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.id);
     each(cam.annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
         self.bulkEditIndividual(reqs, cam, node);
@@ -603,7 +603,7 @@ export class NoctuaGraphService {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
-    reqs.store_model(cam.modelId);
+    reqs.store_model(cam.id);
     return cam.manager.request_with(reqs);
   }
 
@@ -625,7 +625,7 @@ export class NoctuaGraphService {
         reqs.remove_individual(uuid);
       });
 
-      reqs.store_model(cam.modelId);
+      reqs.store_model(cam.id);
 
       if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
         reqs.use_groups([self.noctuaUserService.user.group.id]);
@@ -802,13 +802,13 @@ export class NoctuaGraphService {
       reqs.remove_type_from_individual(
         srcNode.classExpression,
         srcNode.uuid,
-        cam.modelId,
+        cam.id,
       );
 
       reqs.add_type_to_individual(
         class_expression.cls(destNode.getTerm().id),
         srcNode.uuid,
-        cam.modelId,
+        cam.id,
       );
     }
   }
@@ -818,13 +818,13 @@ export class NoctuaGraphService {
       reqs.remove_type_from_individual(
         node.classExpression,
         node.uuid,
-        cam.modelId,
+        cam.id,
       );
 
       reqs.add_type_to_individual(
         class_expression.cls(node.getTerm().id),
         node.uuid,
-        cam.modelId,
+        cam.id,
       );
     }
   }

@@ -36,7 +36,6 @@ export class Cam {
   connectorAnnotons: ConnectorAnnoton[] = [];
   triples: Triple<AnnotonNode>[] = [];
   sort;
-
   error = false;
   engine;
   onGraphChanged;
@@ -45,10 +44,6 @@ export class Cam {
   groupManager;
   graph;
   date;
-  modelId;
-  summaryExpanded = false;
-
-  ///
   matchedCount = 0;
   filter = {
     contributor: null,
@@ -56,11 +51,17 @@ export class Cam {
     terms: []
   };
 
-  displayType;
-
-  grid: any = [];
   goterms: Entity[] = [];
 
+
+
+  queryMatch: CamQueryMatch = new CamQueryMatch();
+
+  dateReviewAdded = Date.now();
+
+  // Display 
+  displayType;
+  grid: any = [];
   graphPreview = {
     nodes: [],
     edges: []
@@ -70,11 +71,6 @@ export class Cam {
     status: false,
     message: ''
   };
-
-  queryMatch: CamQueryMatch = new CamQueryMatch();
-
-  dateReviewAdded = Date.now();
-
 
   private _filteredAnnotons: Annoton[] = [];
   private _annotons: Annoton[] = [];

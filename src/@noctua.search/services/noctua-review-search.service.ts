@@ -96,7 +96,7 @@ export class NoctuaReviewSearchService {
                     return;
                 }
                 const ids = cams.map((cam: Cam) => {
-                    return cam.modelId;
+                    return cam.id;
                 });
 
                 this.searchCriteria['ids'] = ids;
@@ -310,7 +310,7 @@ export class NoctuaReviewSearchService {
                                 '',
                                 null,
                                 self.curieUtil.getCurie(v1),
-                                cam.modelId
+                                cam.id
                             );
                         }));
                 });
