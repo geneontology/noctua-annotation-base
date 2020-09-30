@@ -1,5 +1,4 @@
-
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
 export interface EntityBase {
   id: string;
@@ -40,7 +39,7 @@ export class Entity implements EntityBase {
 
   set uuid(uuid: string) {
     this._uuid = uuid;
-    this.displayId = 'noc-node-' + NoctuaUtils.cleanID(uuid);
+    this.displayId = 'noc-node-' + NoctuaFormUtils.cleanID(uuid);
   }
 
   hasValue() {

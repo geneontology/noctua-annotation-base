@@ -122,6 +122,9 @@ export class NoctuaSearchService {
 
         self.noctuaDataService.onContributorsChanged
             .subscribe(contributors => {
+                if (!contributors) {
+                    return;
+                }
                 this.noctuaUserService.contributors = contributors;
                 /*   this.searchCriteria.terms = [{
                       id: 'GO:0006869',
@@ -330,7 +333,7 @@ export class NoctuaSearchService {
                 modelInfo: this.noctuaFormConfigService.getModelUrls(modelId)
             });
 
-            cam.groups = <Group[]>response.groups.map(function (url) {
+            cam.groups = <Group[]>response.groups.map((url) => {
                 const group = find(self.noctuaUserService.groups, (inGroup: Group) => {
                     return inGroup.url === url;
                 });

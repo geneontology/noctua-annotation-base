@@ -26,6 +26,7 @@ import { NoctuaUserService } from './../services/user.service';
 import { AnnotonType } from './../models/annoton/annoton';
 import { Contributor } from './../models/contributor';
 import { find } from 'lodash';
+import { Group } from './../models';
 
 declare const require: any;
 
@@ -136,6 +137,7 @@ export class NoctuaGraphService {
       }
 
       self.populateContributors(cam);
+      self.populateGroups(cam);
 
       self.loadCam(cam);
       cam.loading.status = false;
@@ -170,6 +172,20 @@ export class NoctuaGraphService {
       });
 
       return contributor ? contributor : { orcid: orcid };
+    });
+  }
+
+  populateGroups(cam: Cam) {
+    const self = this;
+    const groupAnnotations = cam.graph.get_annotations_by_key('providedBy');
+
+    cam.groups = <Group[]>groupAnnotations.map((groupAnnotation) => {
+      const url = groupAnnotation.value();
+      const group = find(self.noctuaUserService.groups, (inGroup: Group) => {
+        return inGroup.url === url;
+      });
+
+      return group ? group : { url: url };
     });
   }
 

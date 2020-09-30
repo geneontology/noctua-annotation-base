@@ -38,7 +38,9 @@ import {
     faArrowUp,
     faArrowDown,
     faCaretDown,
-    faCaretRight
+    faCaretRight,
+    faAngleDoubleDown,
+    faAngleDoubleUp
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -86,6 +88,8 @@ export class AppModule {
         library.addIcons(
             faArrowUp,
             faArrowDown,
+            faAngleDoubleUp,
+            faAngleDoubleDown,
             faCalendarDay,
             faCalendarWeek,
             faCaretDown,

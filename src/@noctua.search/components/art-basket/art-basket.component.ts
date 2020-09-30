@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
-import { CamsService, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
+import { Cam, CamsService, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { takeUntil } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { NoctuaReviewSearchService } from './../../services/noctua-review-search
 })
 export class ArtBasketComponent implements OnInit, OnDestroy {
   artBasket: ArtBasket = new ArtBasket();
+  cams: Cam[] = [];
 
   private _unsubscribeAll: Subject<any>;
 
@@ -34,6 +35,17 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
         if (artBasket) {
           this.artBasket = artBasket;
         }
+      });
+
+    this.camsService.onCamsChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(cams => {
+        if (!cams) {
+          return;
+        }
+        this.cams = cams;
+
+        console.log(cams);
       });
 
   }

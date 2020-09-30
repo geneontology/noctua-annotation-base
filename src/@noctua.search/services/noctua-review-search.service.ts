@@ -20,6 +20,7 @@ import { SearchHistory } from './../models/search-history';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaSearchMenuService } from './search-menu.service';
+import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 
 declare const require: any;
 
@@ -58,6 +59,7 @@ export class NoctuaReviewSearchService {
     };
 
     constructor(
+        private noctuaDataService: NoctuaDataService,
         public noctuaSearchMenuService: NoctuaSearchMenuService,
         private httpClient: HttpClient,
         private camsService: CamsService,
@@ -106,11 +108,17 @@ export class NoctuaReviewSearchService {
 
         const artBasket = localStorage.getItem('artBasket');
 
-        if (artBasket) {
-            this.artBasket = new ArtBasket(JSON.parse(artBasket));
-            self.camsService.addCamsToReview(this.artBasket.cams);
-            this.onArtBasketChanged.next(this.artBasket);
-        }
+        self.noctuaDataService.onContributorsChanged
+            .subscribe((contributors) => {
+                if (!contributors) {
+                    return;
+                }
+                if (artBasket) {
+                    this.artBasket = new ArtBasket(JSON.parse(artBasket));
+                    self.camsService.addCamsToReview(this.artBasket.cams);
+                    this.onArtBasketChanged.next(this.artBasket);
+                }
+            });
     }
 
     scroll(id) {

@@ -5,7 +5,7 @@ import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } 
 
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { Annoton } from './annoton'
-import { AnnotonNode, AnnotonNodeType } from './annoton-node'
+import { AnnotonNode, AnnotonNodeType } from './annoton-node';
 import { Group } from '../group';
 import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
@@ -13,7 +13,7 @@ import { Triple } from './triple';
 import { Entity } from './entity';
 import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
 import { each, find, filter } from 'lodash';
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
 
 
@@ -62,6 +62,7 @@ export class Cam {
    * Used for HTML id attribute
    */
   displayId: string;
+  moreDetail = false;
 
   displayType;
   grid: any = [];
@@ -89,7 +90,7 @@ export class Cam {
 
   set id(id: string) {
     this._id = id;
-    this.displayId = NoctuaUtils.cleanID(id);
+    this.displayId = NoctuaFormUtils.cleanID(id);
   }
 
   get annotons() {

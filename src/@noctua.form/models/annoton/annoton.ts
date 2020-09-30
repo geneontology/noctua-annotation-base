@@ -13,7 +13,7 @@ import { AnnotonParser } from './parser';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
 import { each, filter } from 'lodash';
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
 export enum AnnotonState {
   creation = 1,
@@ -69,7 +69,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   set id(id: string) {
     this._id = id;
-    this.displayId = NoctuaUtils.cleanID(id);
+    this.displayId = NoctuaFormUtils.cleanID(id);
   }
 
   get annotonConnections() {

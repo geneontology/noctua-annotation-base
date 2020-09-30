@@ -72,7 +72,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   displayedColumns = [];
 
-
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;
