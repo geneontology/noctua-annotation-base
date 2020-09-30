@@ -22,7 +22,6 @@ export class CamsService {
   onCamsChanged: BehaviorSubject<any>;
   onSelectedCamChanged: BehaviorSubject<any>;
   onSelectedNodeChanged: BehaviorSubject<any>;
-
   selectedNodeUuid;
   selectedCamUuid;
 
@@ -74,6 +73,7 @@ export class CamsService {
 
       if (!found) {
         cam.id = metaCam.id;
+        cam.expanded = true;
         cam.dateReviewAdded = metaCam.dateAdded;
         cam.title = metaCam.title;
         self.cams.push(cam);
@@ -92,6 +92,7 @@ export class CamsService {
 
     if (!found) {
       cam.id = camId;
+      cam.expanded = true;
       cam.dateReviewAdded = Date.now();
 
       if (metaCam) {

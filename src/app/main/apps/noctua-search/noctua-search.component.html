@@ -80,8 +80,17 @@
               CREATE MODEL IN GRAPH EDITOR
             </button>
             <button mat-raised-button (click)="toggleReviewMode()" color=""
-              class="noc-rounded-button noc-half-button noc-l">
-              ANNOTATION REVIEW
+              class="noc-rounded-button noc-half-button noc-l noc-review-mode-button" fxLayout="row"
+              fxLayoutAlign="start center">
+              <div class="noc-title">
+                ANNOTATION REVIEW MODE
+              </div>
+              <span fxFlex=""></span>
+              <div class="noc-slide-toggle-container" fxLayout="row" fxLayoutAlign="end center">
+                <mat-slide-toggle class="" [color]="color"
+                  [checked]="noctuaSearchMenuService.reviewMode !== ReviewMode.off" [disabled]="disabled">
+                </mat-slide-toggle>
+              </div>
             </button>
           </div>
         </div>

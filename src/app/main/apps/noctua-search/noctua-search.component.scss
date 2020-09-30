@@ -136,17 +136,39 @@ $warn: map-get($theme, warn);
     padding: 8px;
 
     button {
+      padding: 0 8px;
       color: map-get($accent, default);
       width: 250px;
       font-weight: 500;
       @include mat-elevation(4);
+
+      &.noc-review-mode-button {
+        width: 270px;
+
+        .noc-title {
+          width: 200px;
+        }
+
+        .noc-slide-toggle-container {
+          pointer-events: none;
+          border-left: #000 solid 1px;
+          width: 50px;
+        }
+      }
     }
   }
 
   .noc-art-info {
     padding: 0;
+    margin-bottom: 5px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1001;
+    padding: 0;
     @include deep-height(100px);
-    //background-color: rgb(60, 156, 36);
+    background-color: #FFFFFF;
+    @include mat-elevation(2);
     //color: #FFF;
 
     .noc-art-tabs {

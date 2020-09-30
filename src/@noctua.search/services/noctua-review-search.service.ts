@@ -19,6 +19,7 @@ import { CamPage } from './../models/cam-page';
 import { SearchHistory } from './../models/search-history';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { ArtBasket } from '@noctua.search/models/art-basket';
+import { NoctuaSearchMenuService } from './search-menu.service';
 
 declare const require: any;
 
@@ -57,6 +58,7 @@ export class NoctuaReviewSearchService {
     };
 
     constructor(
+        public noctuaSearchMenuService: NoctuaSearchMenuService,
         private httpClient: HttpClient,
         private camsService: CamsService,
         private curieService: CurieService) {
@@ -134,13 +136,16 @@ export class NoctuaReviewSearchService {
         if (this.matchedCount === 0) {
             return;
         }
+
         // so it circulates
         this.matchedCountCursor = (this.matchedCountCursor + 1) % this.matchedCount;
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
-        this.scroll(NoctuaUtils.cleanID(this.currentMatchedEnity.uuid));
+        //  this.scroll(NoctuaUtils.cleanID(this.currentMatchedEnity.uuid));
         this.camsService.selectedNodeUuid = this.currentMatchedEnity.uuid;
         this.camsService.selectedCamUuid = this.currentMatchedEnity.modelId;
+
+        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.displayId)
 
         return this.currentMatchedEnity;
     }

@@ -94,15 +94,14 @@ export class NoctuaSearchMenuService {
         });
     }
 
-    scrollTo(displayId: string) {
-        const element = '#noc-review-cams-' + displayId
+    scrollTo(a: string) {
 
         setTimeout(() => {
             if (this.resultsViewScrollbar) {
                 this.resultsViewScrollbar.update();
 
                 setTimeout(() => {
-                    this.resultsViewScrollbar.scrollToElement(element, 0, 2000);
+                    this.resultsViewScrollbar.scrollToElement(a, 0, 1000);
                 });
             }
         });

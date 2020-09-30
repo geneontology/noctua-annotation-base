@@ -40,7 +40,8 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
   selectItem(artBasketItem: ArtBasketItem) {
     this.camsService.onSelectedCamChanged.next(artBasketItem.id);
-    this.noctuaSearchMenuService.scrollTo(artBasketItem.displayId)
+    const q = '#noc-review-cams-' + artBasketItem.displayId;
+    this.noctuaSearchMenuService.scrollTo(q);
   }
 
   clear() {

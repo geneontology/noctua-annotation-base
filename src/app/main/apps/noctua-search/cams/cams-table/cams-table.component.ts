@@ -219,7 +219,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   toggleCamExpand(cam: Cam) {
     if (!cam.expanded) {
-      this.camService.loadCam(cam);
+      this.openDetails(cam);
     } else {
       cam.expanded = false;
     }

@@ -97,7 +97,6 @@ export class CamService {
   loadCam(cam: Cam, filter?: any) {
     cam.loading.status = true;
     cam.loading.message = 'Sending Request...';
-
     cam.graph = null;
     cam.model = Object.assign({}, {
       id: cam.id,

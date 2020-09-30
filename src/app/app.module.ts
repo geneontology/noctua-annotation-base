@@ -37,6 +37,8 @@ import {
     faLevelUpAlt,
     faArrowUp,
     faArrowDown,
+    faCaretDown,
+    faCaretRight
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -58,7 +60,6 @@ const appRoutes: Routes = [
         HttpClientModule,
         HttpClientJsonpModule,
         RouterModule.forRoot(appRoutes),
-
         // Noctua Main and Shared modules
         NoctuaModule.forRoot(noctuaConfig),
         ContextMenuModule.forRoot(),
@@ -87,6 +88,8 @@ export class AppModule {
             faArrowDown,
             faCalendarDay,
             faCalendarWeek,
+            faCaretDown,
+            faCaretRight,
             faChevronDown,
             faChevronRight,
             faCopy,

@@ -1,7 +1,5 @@
 
-import { EntityLookup } from './entity-lookup';
-declare const require: any;
-const uuid = require('uuid/v1');
+import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 
 export interface EntityBase {
   id: string;
@@ -9,7 +7,7 @@ export interface EntityBase {
 }
 
 export class Entity implements EntityBase {
-  uuid: string;
+
   id: string;
   label: string;
   url: string;
@@ -18,6 +16,9 @@ export class Entity implements EntityBase {
   highlight: boolean;
   modified: boolean;
   termHistory: Entity[] = [];
+  displayId: string;
+
+  private _uuid: string;
 
   constructor(_id: string, _label: string, _url?: string, _uuid?: string, _modelId?: string) {
     this.id = _id;
@@ -33,9 +34,18 @@ export class Entity implements EntityBase {
     return entity;
   }
 
+  get uuid() {
+    return this._uuid;
+  }
+
+  set uuid(uuid: string) {
+    this._uuid = uuid;
+    this.displayId = 'noc-node-' + NoctuaUtils.cleanID(uuid);
+  }
+
   hasValue() {
     const result = this.id !== null && this.id !== undefined && this.id.length > 0;
 
     return result;
   }
-} 
+}
