@@ -6,7 +6,7 @@ import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { Predicate } from '.';
 import { each, find, some } from 'lodash';
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
 export interface GoCategory {
   id: AnnotonNodeType;
@@ -111,7 +111,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
 
   set id(id: string) {
     this._id = id;
-    this.displayId = NoctuaUtils.cleanID(id);
+    this.displayId = NoctuaFormUtils.cleanID(id);
   }
 
   get classExpression() {

@@ -48,6 +48,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
    * Used for HTML id attribute
    */
   displayId: string;
+  displayNumber = '0';
 
 
   bpOnlyEdge: Entity;

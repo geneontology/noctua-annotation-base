@@ -82,7 +82,8 @@ export class CamsService {
     });
 
     self.sortCams();
-    self.onCamsChanged.next(this.cams);
+    self.updateDisplayNumber(self.cams);
+    self.onCamsChanged.next(self.cams);
   }
 
   addCamToReview(camId: string, metaCam?: Cam) {
@@ -100,14 +101,17 @@ export class CamsService {
       }
       self.cams.push(cam);
       self.camService.loadCam(cam);
-      self.sortCams();
 
-      self.onCamsChanged.next(this.cams);
+      self.sortCams();
+      self.updateDisplayNumber(self.cams);
+      self.onCamsChanged.next(self.cams);
     }
   }
 
   removeCamFromReview(cam: Cam) {
     remove(this.cams, { id: cam.id });
+    this.updateDisplayNumber(this.cams);
+    this.onCamsChanged.next(this.cams);
   }
 
   findInCams(filter?: any) {
@@ -180,6 +184,16 @@ export class CamsService {
 
   sortCams() {
     this.cams.sort(this._compareDateReviewAdded);
+  }
+
+  updateDisplayNumber(cams: any[]) {
+    const self = this;
+
+    each(cams, (cam: Cam, key) => {
+      cam.displayNumber = (key + 1).toString();
+      cam.updateAnnotonDisplayNumber();
+    });
+
   }
 
   private _compareDateReviewAdded(a: Cam, b: Cam): number {

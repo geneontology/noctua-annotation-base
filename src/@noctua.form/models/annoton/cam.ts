@@ -15,8 +15,6 @@ import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
 import { each, find, filter } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
-
-
 export class CamQueryMatch {
   modelId?: string;
   terms?: Entity[] = [];
@@ -63,6 +61,7 @@ export class Cam {
    */
   displayId: string;
   moreDetail = false;
+  displayNumber = '0';
 
   displayType;
   grid: any = [];
@@ -440,6 +439,14 @@ export class Cam {
     } else {
       return node.predicate.edge.label;
     }
+  }
+
+  updateAnnotonDisplayNumber() {
+    const self = this;
+
+    each(self.annotons, (annoton: Annoton, key) => {
+      annoton.displayNumber = self.displayNumber + '.' + (key + 1).toString();
+    });
   }
 
   private _compareMolecularFunction(a: Annoton, b: Annoton): number {
