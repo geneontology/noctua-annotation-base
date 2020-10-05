@@ -188,7 +188,7 @@ $warn: map-get($theme, warn);
 
       button {
         @include deep-height(60px);
-        @include deep-width(170px);
+        @include deep-width(180px);
         line-height: 12px !important;
 
         border: #BBB solid 1px;

@@ -98,15 +98,15 @@
               matBadge="{{artBasket?.cams.length}}" matBadgePosition="after" matBadgeColor="warn" class="" color=""
               [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.cams,
             'noc-visited': noctuaSearchMenuService.reviewLevel>0}">
-              <div class="noc-title">Select Models</div><br>
+              <div class="noc-title">Search</div><br>
               <div class="noc-description">Add/remove to review</div>
             </button>
             <div class="noc-line" fxFlex="80px" [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>0}">
             </div>
             <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.camsReview)" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.camsReview,
             'noc-visited': noctuaSearchMenuService.reviewLevel>1}" class="" color="">
-              <div class="noc-title">Review Models</div> <br>
-              <div class="noc-description">Review selected models</div>
+              <div class="noc-title">Review</div> <br>
+              <div class="noc-description">Edit models</div>
             </button>
             <div class="noc-line" fxFlex="80px" [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>1}">
             </div>
@@ -114,7 +114,7 @@
               [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.reviewChanges,
             'noc-visited': noctuaSearchMenuService.reviewLevel>2}">
               <div class="noc-title">Checkout</div> <br>
-              <div class="noc-description">Review changes & save</div>
+              <div class="noc-description">Review and submit changes</div>
             </button>
             <div class="noc-line" fxFlex [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>2}">
             </div>
