@@ -94,7 +94,9 @@
           <div class="noc-art-tabs" fxLayout="row" fxLayoutAlign="center center">
             <div class="noc-line noc-visited" fxFlex>
             </div>
-            <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.cams)" class="" color="" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.cams,
+            <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.cams)"
+              matBadge="{{artBasket?.cams.length}}" matBadgePosition="after" matBadgeColor="warn" class="" color=""
+              [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.cams,
             'noc-visited': noctuaSearchMenuService.reviewLevel>0}">
               <div class="noc-title">Select Models</div><br>
               <div class="noc-description">Add/remove to review</div>
@@ -102,8 +104,7 @@
             <div class="noc-line" fxFlex="80px" [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>0}">
             </div>
             <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.camsReview)" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.camsReview,
-            'noc-visited': noctuaSearchMenuService.reviewLevel>1}" matBadge="{{artBasket?.cams.length}}"
-              matBadgePosition="after" matBadgeColor="warn" class="" color="">
+            'noc-visited': noctuaSearchMenuService.reviewLevel>1}" class="" color="">
               <div class="noc-title">Review Models</div> <br>
               <div class="noc-description">Review selected models</div>
             </button>
