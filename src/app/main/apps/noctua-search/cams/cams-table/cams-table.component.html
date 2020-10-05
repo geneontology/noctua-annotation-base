@@ -212,7 +212,6 @@
     <tr mat-row (click)="$event.stopPropagation()" *matRowDef="let cam; columns: displayedColumns;"
       id="{{cleanId(cam.id)}}">
     </tr>
-
     <tr mat-row *matRowDef="let cam; columns: ['expandedDetail']"
       [@detailExpand]="cam.expanded ? 'expanded' : 'collapsed'" style="overflow: hidden"> </tr>
 

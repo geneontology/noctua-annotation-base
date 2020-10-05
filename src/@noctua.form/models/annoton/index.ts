@@ -9,7 +9,7 @@ export {
     AnnotonType,
     AnnotonState
 } from './annoton';
-export { Cam, CamQueryMatch } from './cam';
+export { Cam, CamStats, CamQueryMatch } from './cam';
 export { Evidence } from './evidence';
 export { SimpleAnnoton } from './simple-annoton';
 export {

@@ -21,6 +21,15 @@ export class CamQueryMatch {
   reference?: Entity[] = [];
 }
 
+export class CamStats {
+  camsCount = 0;
+  termsCount = 0;
+  gpsCount = 0;
+  evidenceCount = 0;
+  referencesCount = 0;
+  relationsCount = 0;
+}
+
 export class Cam {
   title: string;
   state: any;
@@ -222,7 +231,7 @@ export class Cam {
     });
   }
 
-  reviewTermChanges(termsCount: number): Entity[] {
+  reviewTermChanges(stat: CamStats): Entity[] {
     const self = this;
     const result = [];
 
@@ -230,7 +239,7 @@ export class Cam {
       each(annoton.nodes, (node: AnnotonNode) => {
         if (node.term.modified) {
           result.push(node.term);
-          termsCount++;
+          stat.termsCount++;
         }
       });
     });

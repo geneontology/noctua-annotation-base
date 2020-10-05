@@ -14,7 +14,7 @@ import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { Evidence, compareEvidence } from './../models/annoton/evidence';
 
 import { v4 as uuid } from 'uuid';
-import { Cam } from './../models/annoton/cam';
+import { Cam, CamStats } from './../models/annoton/cam';
 import { uniqWith, each } from 'lodash';
 import { AnnotonNodeType, AnnotonNode, Entity } from './../models/annoton';
 import { compareTerm } from './../models/annoton/annoton-node';
@@ -175,9 +175,9 @@ export class CamService {
     return self._noctuaGraphService.bulkEditAnnoton(cam);
   }
 
-  reviewChanges(cam: Cam, termsCount: number) {
+  reviewChanges(cam: Cam, stats: CamStats) {
     const result = {
-      terms: cam.reviewTermChanges(termsCount)
+      terms: cam.reviewTermChanges(stats)
     };
     return result;
   }

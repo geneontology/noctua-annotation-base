@@ -1,58 +1,61 @@
-<div fxLayout="column" fxLayoutAlign="start stretch" class="noc-stats noc-drawer">
-  <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
-    <span class="noc-drawer-header-title">
-      Review Changes</span>
-    <span fxFlex></span>
+<div class="noc-cams-table noc-drawer-body" fxLayout="column" fxLayoutAlign="start stretch">
+  <div *ngIf="!noctuaUserService.user" class="noc-draw-body-disabled" fxLayoutAlign="center center">
+    Log in to Continue
   </div>
-  <div id="noc-review-results" class="noc-drawer-body w-100-p">
-    <div *ngIf="!noctuaUserService.user" class="noc-draw-body-disabled" fxLayoutAlign="center center">
-      Log in to Continue
-    </div>
-    <div class="noc-stats-results">
-      <table fxFlex="1 1 auto" mat-table class="" [dataSource]="stats" [@animateStagger]="{value:'50'}">
-        <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef fxFlex="250px" fxLayout="row" fxLayoutAlign="start center">
-            Category
-          </th>
-          <td mat-cell *matCellDef="let stat" fxFlex="250px" class="noc-title" fxLayout="row"
-            fxLayoutAlign="start center">
-            {{stat.category }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="count">
-          <th mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row" fxLayoutAlign="start center">Changes</th>
-          <td mat-cell *matCellDef="let stat" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
-            {{stat.count}}
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row (click)="$event.stopPropagation()" *matRowDef="let stat; columns: displayedColumns;">
-        </tr>
 
-      </table>
-
-      <!--   <div fxLayout="row" fxLayoutAlign="start center">
-        <div fxFlex="200px">
-          Summary
-        </div>
-        <div fxFlex>
-          Details
-        </div>
+  <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
+    <span class="noc-header-title">
+      Review and submit changes</span>
+  </div>
+  <div class="noc-stats-results" fxLayout="column" fxLayoutAlign="start center">
+    <table fxFlex="1 1 auto" mat-table class="noc-review-changes-table" [dataSource]="stats"
+      [@animateStagger]="{value:'50'}">
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef fxFlex="250px" fxLayout="row" fxLayoutAlign="start center">
+          Category
+        </th>
+        <td mat-cell *matCellDef="let stat" fxFlex="250px" class="noc-title" fxLayout="row"
+          fxLayoutAlign="start center">
+          {{stat.category }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="count">
+        <th mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row" fxLayoutAlign="start center">Changes</th>
+        <td mat-cell *matCellDef="let stat" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
+          {{stat.count}}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row (click)="$event.stopPropagation()" *matRowDef="let stat; columns: displayedColumns;">
+      </tr>
+    </table>
+    <!--   <div fxLayout="row" fxLayoutAlign="start center">
+      <div fxFlex="200px">
+        Summary
       </div>
-      <div fxLayout="row" fxLayoutAlign="start center">
-        <div fxFlex="200px">
-          Terms
-        </div>
-        <div fxFlex>
-          <div *ngFor="let modelSummary of summary">
-            <div *ngFor="let term of modelSummary.changes?.terms">
-              <div *ngFor="let termHistory of term.termHistory">
-                {{term.label}} -> {{termHistory.label}}
-              </div>
+      <div fxFlex>
+        Details
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <div fxFlex="200px">
+        Terms
+      </div>
+      <div fxFlex>
+        <div *ngFor="let modelSummary of summary">
+          <div *ngFor="let term of modelSummary.changes?.terms">
+            <div *ngFor="let termHistory of term.termHistory">
+              {{term.label}} -> {{termHistory.label}}
             </div>
           </div>
         </div>
-      </div> -->
-    </div>
+      </div>
+    </div> -->
+  </div>
+  <div *ngIf="artBasket?.cams.length===0" class="noc-no-info">
+    No models to review
+    <a (click)="selectMiddlePanel(MiddlePanel.camsReview)">
+      Add Models
+    </a>
   </div>
 </div>

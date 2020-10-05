@@ -6,7 +6,7 @@ import { NoctuaGraphService } from './../services/graph.service';
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
 import { Annoton } from './../models/annoton/annoton';
 
-import { Cam } from './../models/annoton/cam';
+import { Cam, CamStats } from './../models/annoton/cam';
 import { each, groupBy, find, remove } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/annoton/entity';
@@ -167,18 +167,11 @@ export class CamsService {
   reviewChanges() {
     const self = this;
     const details = [];
-    const stats = {
-      camsCount: 0,
-      termsCount: 0,
-      gpsCount: 0,
-      evidenceCount: 0,
-      referencesCount: 0,
-      relationsCount: 0,
-    };
+    const stats = new CamStats();
 
 
     each(this.cams, (cam: Cam) => {
-      const changes = self.camService.reviewChanges(cam, stats.termsCount);
+      const changes = self.camService.reviewChanges(cam, stats);
       if (changes) {
         details.push({
           cam: cam,
@@ -189,7 +182,7 @@ export class CamsService {
 
     const result = {
       stats: stats,
-      details: details,
+      details: details
     };
 
     this.onCamsCheckoutChanged.next(result);

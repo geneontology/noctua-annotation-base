@@ -131,9 +131,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
           this.artBasket = artBasket;
         }
       });
-
-
-
   }
 
   ngAfterViewInit(): void {
@@ -181,6 +178,13 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
     }
 
+  }
+
+  reviewChanges() {
+    const self = this;
+
+    self.camsService.reviewChanges();
+    self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.reviewChanges);
   }
 
   openRightDrawer(panel) {

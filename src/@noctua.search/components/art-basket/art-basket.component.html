@@ -72,14 +72,14 @@
   </div>
   <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
     <ng-container *ngIf="noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.cams">
-      <button (click)="clear()" type="button" mat-raised-button>Clear Basket</button>
+      <button (click)="clear()" type="button" mat-raised-button>Clear List</button>
     </ng-container>
     <ng-container *ngIf="noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.camsReview">
-      <button (click)="clear()" type="button" mat-raised-button>Clear Basket</button>
+      <button (click)="clear()" type="button" mat-raised-button>Clear List</button>
       <span fxFlex=""></span>
-      <button (click)='resetAll()' type="button" mat-raised-button color="" class="mr-8">Reset</button>
+      <button (click)='resetAll()' type="button" mat-raised-button color="" class="mr-8">Undo Changes</button>
       <button (click)="reviewChanges()" type="submit" class="" mat-raised-button color="primary">
-        Review Your Changes
+        Review Changes
       </button>
     </ng-container>
     <ng-container *ngIf="noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.reviewChanges">
