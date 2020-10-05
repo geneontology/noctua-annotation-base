@@ -16,10 +16,18 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="start center">
       <div fxFlex="200px">
+        Models
+      </div>
+      <div fxFlex>
+        {{summary?.stats.camss}}
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <div fxFlex="200px">
         Terms
       </div>
       <div fxFlex>
-        <div *ngFor="let modelSummary of summary">
+        <div *ngFor="let modelSummary of summary.details">
           <div *ngFor="let term of modelSummary.changes?.terms">
             <div *ngFor="let termHistory of term.termHistory">
               {{term.label}} -> {{termHistory.label}}

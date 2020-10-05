@@ -28,7 +28,6 @@ import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { noctuaAnimations } from '@noctua/animations';
 import { FormGroup, FormControl } from '@angular/forms';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
-import { NoctuaSearchDialogService } from '../../services/dialog.service';
 import { cloneDeep, groupBy } from 'lodash';
 import { ArtReplaceCategory } from '@noctua.search/models/review-mode';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
@@ -42,9 +41,6 @@ import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/co
 export class CamsReviewComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
   ArtReplaceCategory = ArtReplaceCategory;
-
-  @Input('panelDrawer')
-  panelDrawer: MatDrawer;
 
   searchForm: FormGroup;
   cams: Cam[] = [];
@@ -84,7 +80,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaUserService: NoctuaUserService,
-    private noctuaSearchDialogService: NoctuaSearchDialogService,
     private noctuaLookupService: NoctuaLookupService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
@@ -216,58 +211,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this.camService.loadCam(cam);
   }
 
-  cancel() {
-    const self = this;
 
-    const success = (cancel) => {
-      if (cancel) {
-        const element = document.querySelector('#noc-review-results');
-
-        if (element) {
-          element.scrollTop = 0;
-        }
-        self.searchForm.reset();
-        self.panelDrawer.close();
-        this.noctuaReviewSearchService.clear();
-        this.noctuaReviewSearchService.onResetReview.next(true);
-      }
-    };
-
-    const options = {
-      cancelLabel: 'No',
-      confirmLabel: 'Yes'
-    };
-
-    this.confirmDialogService.openConfirmDialog('Confirm Cancel?',
-      'You are about to cancel annotation review. All your unsaved changes will be lost.',
-      success, options);
-  }
-
-  resetAll() {
-    this.camsService.loadCams();
-  }
-
-  reviewChanges() {
-    const self = this;
-
-    const success = (replace) => {
-      if (replace) {
-        const element = document.querySelector('#noc-review-results');
-
-        if (element) {
-          element.scrollTop = 0;
-        }
-        self.noctuaReviewSearchService.bulkEdit();
-        self.searchForm.reset();
-        self.panelDrawer.close();
-        self.noctuaReviewSearchService.clear();
-        self.noctuaReviewSearchService.onResetReview.next(true);
-        self.close();
-      }
-    };
-
-    this.noctuaSearchDialogService.openCamReviewChangesDialog(success);
-  }
 
   findSelected(value) {
     const closures = this.getClosure(value.rootTypes);
@@ -347,7 +291,4 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  close() {
-    this.panelDrawer.close();
-  }
 }

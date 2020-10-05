@@ -222,7 +222,7 @@ export class Cam {
     });
   }
 
-  reviewTermChanges(): Entity[] {
+  reviewTermChanges(termsCount: number): Entity[] {
     const self = this;
     const result = [];
 
@@ -230,6 +230,7 @@ export class Cam {
       each(annoton.nodes, (node: AnnotonNode) => {
         if (node.term.modified) {
           result.push(node.term);
+          termsCount++;
         }
       });
     });

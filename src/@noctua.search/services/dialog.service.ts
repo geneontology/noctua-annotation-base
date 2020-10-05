@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { NoctuaConfirmDialogComponent } from '@noctua/components/confirm-dialog/confirm-dialog.component';
-import { CamsReplaceConfirmDialogComponent } from '../dialogs/cams-replace-confirm/cams-replace-confirm.component';
-import { CamsReviewChangesDialogComponent } from '../dialogs/cams-review-changes/cams-review-changes.component';
+import { CamsReplaceConfirmDialogComponent } from './../components/dialogs/cams-replace-confirm/cams-replace-confirm.component';
+import { CamsReviewChangesDialogComponent } from './../components/dialogs/cams-review-changes/cams-review-changes.component';
 
 @Injectable({
     providedIn: 'root'
@@ -71,6 +71,4 @@ export class NoctuaSearchDialogService {
                 }
             });
     }
-
-
 }

@@ -175,10 +175,10 @@ export class CamService {
     return self._noctuaGraphService.bulkEditAnnoton(cam);
   }
 
-  reviewChanges(cam: Cam) {
+  reviewChanges(cam: Cam, termsCount: number) {
     const result = {
-      terms: cam.reviewTermChanges()
-    }
+      terms: cam.reviewTermChanges(termsCount)
+    };
     return result;
   }
 }

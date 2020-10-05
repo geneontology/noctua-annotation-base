@@ -20,6 +20,7 @@ export class CamsService {
   loading = false;
   cams: Cam[] = [];
   onCamsChanged: BehaviorSubject<any>;
+  onCamsCheckoutChanged: BehaviorSubject<any>;
   onSelectedCamChanged: BehaviorSubject<any>;
   onSelectedNodeChanged: BehaviorSubject<any>;
   selectedNodeUuid;
@@ -33,6 +34,7 @@ export class CamsService {
     private camService: CamService,
     private curieService: CurieService) {
     this.onCamsChanged = new BehaviorSubject(null);
+    this.onCamsCheckoutChanged = new BehaviorSubject(null);
     this.onSelectedCamChanged = new BehaviorSubject(null);
     this.onSelectedNodeChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
@@ -48,8 +50,6 @@ export class CamsService {
         this.selectedNodeUuid = uuid;
       }
     });
-
-
   }
 
   setup() {
@@ -166,15 +166,33 @@ export class CamsService {
 
   reviewChanges() {
     const self = this;
+    const details = [];
+    const stats = {
+      camsCount: 0,
+      termsCount: 0,
+      gpsCount: 0,
+      evidenceCount: 0,
+      referencesCount: 0,
+      relationsCount: 0,
+    };
 
-    const result = this.cams.map((cam: Cam) => {
-      return {
-        cam: cam,
-        changes: self.camService.reviewChanges(cam)
-      };
+
+    each(this.cams, (cam: Cam) => {
+      const changes = self.camService.reviewChanges(cam, stats.termsCount);
+      if (changes) {
+        details.push({
+          cam: cam,
+          changes: changes
+        });
+      }
     });
 
-    return result;
+    const result = {
+      stats: stats,
+      details: details,
+    };
+
+    this.onCamsCheckoutChanged.next(result);
   }
 
   reset() {

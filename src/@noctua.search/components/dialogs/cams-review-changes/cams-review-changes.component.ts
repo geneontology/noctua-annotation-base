@@ -63,7 +63,7 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const self = this;
 
-    this.summary = self.camsService.reviewChanges();
+    //this.summary = self.camsService.reviewChanges();
     console.log(this.summary);
 
   }
@@ -71,6 +71,33 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
+  }
+
+  generate(stats) {
+    const self = this;
+    const result = [
+      {
+        category: 'CAMs',
+        count: stats.camsCount
+      }, {
+        category: 'Genes',
+        count: stats.gpsCount
+      }, {
+        category: 'Terms',
+        count: stats.termsCount
+      }, {
+        category: 'Evidence',
+        count: stats.evidenceCount
+      }, {
+        category: 'Reference',
+        count: stats.referencesCount
+      }, {
+        category: 'Relations',
+        count: stats.relationsCount
+      }
+    ];
+
+    return result;
   }
 
   save() {
