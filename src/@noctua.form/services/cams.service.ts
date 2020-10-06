@@ -29,7 +29,8 @@ export class CamsService {
   public annoton: Annoton;
   public camFormGroup$: Observable<FormGroup>;
 
-  constructor(public noctuaFormConfigService: NoctuaFormConfigService,
+  constructor(
+    public noctuaFormConfigService: NoctuaFormConfigService,
     private _noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
     private curieService: CurieService) {

@@ -14,7 +14,7 @@ import {
 
 import { FormGroup } from '@angular/forms';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { CamPage } from '@noctua.search/models/cam-page';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
@@ -104,6 +104,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
     this.noctuaUserService.onUserChanged.pipe(
+      distinctUntilChanged(this.noctuaUserService.distinctUser),
       takeUntil(this._unsubscribeAll))
       .subscribe((user: Contributor) => {
         this.noctuaFormConfigService.setupUrls();
@@ -142,15 +143,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   loadCam(modelId) {
     const self = this;
 
-    self.noctuaDataService.onContributorsChanged.pipe(
-      takeUntil(this._unsubscribeAll))
-      .subscribe((contributors: Contributor[]) => {
-        if (!contributors) {
-          return;
-        }
-        self.noctuaUserService.contributors = contributors;
-        this.cam = this.camService.getCam(modelId);
-      });
+    this.cam = this.camService.getCam(modelId);
   }
 
   edit() {
@@ -231,10 +224,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   reset() {
     this.noctuaSearchService.clearSearchCriteria();
-  }
-
-  selectCam(cam) {
-    this.noctuaSearchService.onCamChanged.next(cam);
   }
 
   ngOnDestroy(): void {

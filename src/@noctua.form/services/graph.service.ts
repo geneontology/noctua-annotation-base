@@ -501,7 +501,7 @@ export class NoctuaGraphService {
 
     const titleAnnotations = cam.graph.get_annotations_by_key('title');
     const stateAnnotations = cam.graph.get_annotations_by_key('state');
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.id);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
     each(titleAnnotations, function (annotation) {
       reqs.remove_annotation_from_model('title', annotation.value());
@@ -520,7 +520,7 @@ export class NoctuaGraphService {
 
   saveAnnoton(cam: Cam, triples: Triple<AnnotonNode>[], title) {
     const self = this;
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
 
     if (!cam.title) {
       reqs.add_annotation_to_model('title', title);
@@ -546,7 +546,7 @@ export class NoctuaGraphService {
     removeTriples: Triple<AnnotonNode>[]) {
 
     const self = this;
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.id);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
     each(destNodes, function (destNode: AnnotonNode) {
       const srcNode = find(srcNodes, (node: AnnotonNode) => {
@@ -584,7 +584,7 @@ export class NoctuaGraphService {
   replaceAnnoton(manager, modelId, entities: Entity[], replaceWithTerm: Entity) {
 
     const self = this;
-    const reqs = new minerva_requests.request_set(manager.user_token(), modelId);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, modelId);
 
     each(entities, function (entity: Entity) {
       self.replaceIndividual(reqs, modelId, entity, replaceWithTerm);
@@ -604,7 +604,7 @@ export class NoctuaGraphService {
   bulkEditAnnoton(cam: Cam,) {
 
     const self = this;
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.id);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
     each(cam.annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
         self.bulkEditIndividual(reqs, cam, node);
@@ -627,7 +627,7 @@ export class NoctuaGraphService {
     const self = this;
 
     const success = () => {
-      const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
+      const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
 
       each(triples, function (triple: Triple<AnnotonNode>) {
         reqs.remove_fact([

@@ -108,17 +108,11 @@ export class NoctuaReviewSearchService {
 
         const artBasket = localStorage.getItem('artBasket');
 
-        self.noctuaDataService.onContributorsChanged
-            .subscribe((contributors) => {
-                if (!contributors) {
-                    return;
-                }
-                if (artBasket) {
-                    this.artBasket = new ArtBasket(JSON.parse(artBasket));
-                    self.camsService.addCamsToReview(this.artBasket.cams);
-                    this.onArtBasketChanged.next(this.artBasket);
-                }
-            });
+        if (artBasket) {
+            this.artBasket = new ArtBasket(JSON.parse(artBasket));
+            self.camsService.addCamsToReview(this.artBasket.cams);
+            this.onArtBasketChanged.next(this.artBasket);
+        }
     }
 
     scroll(id) {
