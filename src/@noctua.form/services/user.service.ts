@@ -19,7 +19,7 @@ export class NoctuaUserService {
 
   constructor(
     private httpClient: HttpClient) {
-    this.onUserChanged = new BehaviorSubject(null);
+    this.onUserChanged = new BehaviorSubject(undefined);
   }
 
   set baristaToken(value) {

@@ -20,7 +20,6 @@ export class NoctuaDataService {
     private noctuaUserService: NoctuaUserService) {
     this.onOrganismsChanged = new BehaviorSubject([]);
 
-    // this._getUsersDifference();
   }
 
   setup() {

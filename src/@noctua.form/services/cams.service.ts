@@ -160,16 +160,13 @@ export class CamsService {
       promises.push(self._noctuaGraphService.bulkEditAnnoton(cam));
     });
 
-    return forkJoin(promises).subscribe(results => {
-      console.log(results);
-    });
+    return forkJoin(promises);
   }
 
   reviewChanges() {
     const self = this;
     const details = [];
     const stats = new CamStats();
-
 
     each(this.cams, (cam: Cam) => {
       const changes = self.camService.reviewChanges(cam, stats);
@@ -180,6 +177,8 @@ export class CamsService {
         });
       }
     });
+
+    stats.camsCount = details.length;
 
     const result = {
       stats: stats,

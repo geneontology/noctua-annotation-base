@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Cam, CamsService, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ArtBasket, ArtBasketItem } from './../..//models/art-basket';
 import { NoctuaReviewSearchService } from './../../services/noctua-review-search.service';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
-import { MiddlePanel } from './../../models/menu-panels';
+import { LeftPanel, MiddlePanel } from './../../models/menu-panels';
 import { NoctuaSearchDialogService } from './../../services/dialog.service';
 
 @Component({
@@ -24,6 +24,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
+    private zone: NgZone,
     public camsService: CamsService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaSearchDialogService: NoctuaSearchDialogService,
@@ -51,8 +52,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
           return;
         }
         this.cams = cams;
-
-        console.log(cams);
       });
 
     this.camsService.onCamsCheckoutChanged
@@ -142,8 +141,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   submitChanges() {
     const self = this;
 
-    this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.reviewChanges);
-
     const success = (replace) => {
       if (replace) {
         const element = document.querySelector('#noc-review-results');
@@ -151,21 +148,35 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
         if (element) {
           element.scrollTop = 0;
         }
-        self.noctuaReviewSearchService.bulkEdit();
-        self.noctuaReviewSearchService.clear();
-        self.noctuaReviewSearchService.onResetReview.next(true);
-        self.close();
+        self.noctuaReviewSearchService.bulkEdit().pipe(takeUntil(this._unsubscribeAll))
+          .subscribe(cams => {
+            if (!cams) {
+              return;
+            }
+
+            self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
+            self.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
+            self.noctuaReviewSearchService.clear();
+            self.camsService.reset();
+            self.noctuaReviewSearchService.clearBasket();
+            self.noctuaReviewSearchService.onResetReview.next(true);
+            self.zone.run(() => {
+              self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
+            });
+          });
       }
     };
+
     const options = {
       cancelLabel: 'Go Back',
       confirmLabel: 'Submit'
     };
 
     if (self.summary) {
-      const occurrences = self.summary.termsCount;
+      const occurrences = self.summary.stats.termsCount;
+      const models = self.summary.stats.camsCount;
       this.confirmDialogService.openConfirmDialog('Save Changes?',
-        `Bulk edit ${occurrences} occurrences across ${self.summary.camsCount} models`,
+        `Bulk edit ${occurrences} occurrences across ${models} models`,
         success, options);
     }
   }

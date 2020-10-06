@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { NoctuaConfirmDialogComponent } from '@noctua/components/confirm-dialog/confirm-dialog.component';
@@ -13,7 +12,7 @@ export class NoctuaSearchDialogService {
 
     dialogRef: any;
 
-    constructor(private httpClient: HttpClient,
+    constructor(
         private snackBar: MatSnackBar,
         private _matDialog: MatDialog) {
     }

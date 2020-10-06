@@ -86,8 +86,6 @@ export class NoctuaSearchService {
         this.onSearchCriteriaChanged = new BehaviorSubject(null);
         this.curieUtil = this.curieService.getCurieUtil();
 
-        this._getModelMetadata();
-
         this.onSearchCriteriaChanged.subscribe((searchCriteria: SearchCriteria) => {
             if (!searchCriteria) {
                 return;
@@ -106,17 +104,13 @@ export class NoctuaSearchService {
             });
 
             this.noctuaSearchMenuService.resetResults();
-
-
         });
     }
 
     // Get Users and Groups
-    private _getModelMetadata() {
+    setup() {
         const self = this;
 
-        //  self.noctuaDataService.loadContributors();
-        //  self.noctuaDataService.loadGroups();
         self.noctuaDataService.loadOrganisms();
 
         self.noctuaDataService.onOrganismsChanged

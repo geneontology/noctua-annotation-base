@@ -18,7 +18,6 @@ import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { CamPage } from '@noctua.search/models/cam-page';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
-import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { ReviewMode } from '@noctua.search/models/review-mode';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
 import { ArtBasket } from '@noctua.search/models/art-basket';
@@ -77,7 +76,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private camService: CamService,
     private camsService: CamsService,
-    private noctuaDataService: NoctuaDataService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
@@ -107,8 +105,13 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
       distinctUntilChanged(this.noctuaUserService.distinctUser),
       takeUntil(this._unsubscribeAll))
       .subscribe((user: Contributor) => {
+        if (user === undefined) {
+          return;
+        }
         this.noctuaFormConfigService.setupUrls();
         this.noctuaFormConfigService.setUniversalUrls();
+        this.noctuaSearchService.setup();
+        this.noctuaReviewSearchService.setup();
         this.camsService.setup();
       });
   }

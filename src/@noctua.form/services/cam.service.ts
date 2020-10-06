@@ -176,9 +176,14 @@ export class CamService {
   }
 
   reviewChanges(cam: Cam, stats: CamStats) {
-    const result = {
-      terms: cam.reviewTermChanges(stats)
-    };
-    return result;
+    const terms = cam.reviewTermChanges(stats);
+
+    if (terms.length > 0) {
+      return {
+        terms: terms
+      };
+    }
+
+    return null;
   }
 }
