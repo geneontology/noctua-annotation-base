@@ -84,7 +84,7 @@ $accent: map-get($theme, accent);
           top: 50%;
           transform: translateY(-50%);
           color: white;
-          background-color: #BBB;
+          background-color: $noc-tree-line-color;
           content: "";
         }
       }

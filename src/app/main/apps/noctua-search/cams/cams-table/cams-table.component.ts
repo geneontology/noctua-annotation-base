@@ -96,7 +96,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     public noctuaSearchService: NoctuaSearchService) {
     this._unsubscribeAll = new Subject();
 
-    this.selection.sort()
+    this.selection.sort();
   }
 
   initTable(isReviewMode) {
