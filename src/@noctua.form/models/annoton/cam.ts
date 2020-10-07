@@ -51,6 +51,8 @@ export class Cam {
   groupManager;
   graph;
   date;
+  modified = false;
+  modifiedStats = new CamStats();
   matchedCount = 0;
   filter = {
     contributor: null,
@@ -235,11 +237,16 @@ export class Cam {
     const self = this;
     const result = [];
 
+    self.modifiedStats = new CamStats();
+
     each(self._annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
         if (node.term.modified) {
           result.push(node.term);
+          self.modifiedStats.termsCount++;
           stat.termsCount++;
+          annoton.modified = true;
+          self.modified = true;
         }
       });
     });

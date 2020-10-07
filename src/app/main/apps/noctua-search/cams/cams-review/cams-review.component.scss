@@ -58,7 +58,7 @@
       @include mat-elevation(2);
 
       &.noc-selected {
-        border-left: $noc-highlight-color solid 5px;
+        border-left: darken($noc-highlight-color, 15%) solid 5px;
       }
     }
 

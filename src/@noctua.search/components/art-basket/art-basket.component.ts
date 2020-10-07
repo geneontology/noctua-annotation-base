@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Cam, CamsService, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
+import { Cam, CamService, CamsService, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { takeUntil } from 'rxjs/operators';
@@ -26,6 +26,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   constructor(
     private zone: NgZone,
     public camsService: CamsService,
+    public camService: CamService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaSearchDialogService: NoctuaSearchDialogService,
     public noctuaUserService: NoctuaUserService,
@@ -70,6 +71,10 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     this.camsService.onSelectedCamChanged.next(artBasketItem.id);
     const q = '#noc-review-cams-' + artBasketItem.displayId;
     this.noctuaSearchMenuService.scrollTo(q);
+  }
+
+  resetCam(cam: Cam) {
+    this.camService.loadCam(cam);
   }
 
   remove(cam: Cam) {

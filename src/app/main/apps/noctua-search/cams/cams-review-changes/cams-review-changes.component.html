@@ -8,8 +8,7 @@
       Review and submit changes</span>
   </div>
   <div class="noc-stats-results" fxLayout="column" fxLayoutAlign="start center">
-    <table fxFlex="1 1 auto" mat-table class="noc-review-changes-table" [dataSource]="stats"
-      [@animateStagger]="{value:'50'}">
+    <table fxFlex="1 1 auto" mat-table class="noc-summary-table" [dataSource]="stats" [@animateStagger]="{value:'50'}">
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef fxFlex="250px" fxLayout="row" fxLayoutAlign="start center">
           Category

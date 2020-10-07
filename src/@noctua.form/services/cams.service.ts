@@ -141,7 +141,7 @@ export class CamsService {
   }
 
   replace(entities: Entity[], replaceWithTerm: Entity) {
-
+    const self = this;
     const groupedEntities = groupBy(entities, 'modelId') as { string: Entity[] };
 
     each(groupedEntities, (values: Entity[], key) => {
@@ -150,6 +150,7 @@ export class CamsService {
       // this.camService.replaceAnnotonInternal(cam)
 
     });
+    self.reviewChanges();
   }
 
   bulkEdit() {

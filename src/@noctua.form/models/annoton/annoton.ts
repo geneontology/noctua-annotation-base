@@ -34,6 +34,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
   annotonType;
   errors;
   submitErrors;
+  modified = false;
   expanded = false;
   visible = true;
   graphPreview = {
