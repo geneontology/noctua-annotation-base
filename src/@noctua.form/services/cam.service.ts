@@ -98,6 +98,8 @@ export class CamService {
     cam.loading.status = true;
     cam.loading.message = 'Sending Request...';
     cam.graph = null;
+    cam.modified = false;
+    cam.modifiedStats = new CamStats();
     cam.model = Object.assign({}, {
       id: cam.id,
       title: '',
@@ -109,7 +111,6 @@ export class CamService {
     }
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
     this.cam = cam;
-
   }
 
   deleteAnnoton(annoton: Annoton) {

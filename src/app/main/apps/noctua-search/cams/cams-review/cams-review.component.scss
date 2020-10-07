@@ -24,7 +24,7 @@
     top: 101px;
     margin-bottom: 4px;
     padding: 0 10px 0 20px;
-    @include deep-height(40px);
+    @include deep-height(30px);
     //  min-height: 40px; //min-height: 35px;
     background-color: #FFF;
     font-size: 16px;
@@ -33,6 +33,12 @@
 
     @include mat-elevation(2);
 
+    .noc-header-title {}
+
+    .noc-review-number {
+      color: #555;
+      font-size: 12px;
+    }
 
     .noc-art-tools {
       //background-color: ;
@@ -58,7 +64,7 @@
       @include mat-elevation(2);
 
       &.noc-selected {
-        border-left: darken($noc-highlight-color, 15%) solid 5px;
+        border-left: darken($noc-highlight-model-color, 15%) solid 5px;
       }
     }
 

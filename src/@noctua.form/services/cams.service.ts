@@ -180,6 +180,7 @@ export class CamsService {
     });
 
     stats.camsCount = details.length;
+    stats.updateTotal();
 
     const result = {
       stats: stats,

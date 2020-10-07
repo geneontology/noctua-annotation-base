@@ -42,26 +42,31 @@ $accent: map-get($theme, accent);
   }
 
   .noc-group-row {
-    padding: 12px 10px;
     min-height: 40px;
-    max-height: 300px;
+    max-height: 500px;
     border-bottom: #CCC solid 1px;
     font-size: 12px;
     @include mat-elevation(1);
 
-    .noc-item-header {
+    .noc-modified-header {
+      padding: 0 12px;
       @include deep-height(30px);
       font-size: 12px;
+      background-color: $noc-highlight-color;
+      border-bottom: darken($noc-highlight-color, 20%) solid 1px;
 
       .noc-title {
-        font-style: italic;
-
+        font-weight: bold;
+        margin-right: 8px;
       }
 
       .noc-action-button {
-        @include deep-height(30px);
-        @include deep-width(30px);
+        // @include deep-height(30px);
       }
+    }
+
+    .noc-item-body {
+      padding: 12px 10px;
     }
 
     .noc-name {
@@ -109,7 +114,7 @@ $accent: map-get($theme, accent);
     }
 
     &.noc-selected {
-      background-color: $noc-highlight-color;
+      background-color: $noc-highlight-model-color;
     }
   }
 

@@ -70,6 +70,7 @@ export class CamsReviewChangesComponent implements OnInit, OnDestroy {
   }
 
   generateStats(stats: CamStats): any[] {
+    stats.updateTotal();
     const result = [{
       category: 'Genes',
       count: stats.gpsCount

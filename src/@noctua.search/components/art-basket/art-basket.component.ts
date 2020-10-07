@@ -75,6 +75,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
   resetCam(cam: Cam) {
     this.camService.loadCam(cam);
+    this.camsService.reviewChanges();
   }
 
   remove(cam: Cam) {
@@ -134,6 +135,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
   resetAll() {
     this.camsService.loadCams();
+    this.camsService.reviewChanges();
   }
 
   reviewChanges() {

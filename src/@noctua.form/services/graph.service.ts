@@ -1,7 +1,7 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin } from 'rxjs';
-import { map, finalize } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import {
   Cam,
@@ -300,7 +300,9 @@ export class NoctuaGraphService {
           }
         }
         if (assignedBys.length > 0) {
-          evidence.assignedBy = new Entity(null, assignedBys[0].value(), assignedBys[0].value());
+          evidence.assignedBy = new Entity(null,
+            self.noctuaUserService.getGroupName(assignedBys[0].value()),
+            assignedBys[0].value());
         }
         result.push(evidence);
       }
@@ -323,7 +325,7 @@ export class NoctuaGraphService {
     return forkJoin(promises);
   }
 
-  graphPostParse(cam: Cam, graph) {
+  graphPostParse(cam: Cam) {
     const self = this;
     const promises = [];
 
@@ -558,7 +560,7 @@ export class NoctuaGraphService {
       }
     });
 
-    self.editFact(reqs, cam, srcTriples, destTriples);
+    self.editFact(reqs, srcTriples, destTriples);
     self.addFact(reqs, destTriples);
 
     each(removeTriples, function (triple: Triple<AnnotonNode>) {
@@ -684,7 +686,6 @@ export class NoctuaGraphService {
 
   private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode,
     partialObjectNode: Partial<AnnotonNode>): AnnotonNode {
-    const self = this;
     const nodeDescriptions: ModelDefinition.InsertNodeDescription = subjectNode.canInsertNodes;
     let objectNode;
 
@@ -762,8 +763,7 @@ export class NoctuaGraphService {
     });
   }
 
-  editFact(reqs, cam: Cam, srcTriples: Triple<AnnotonNode>[], destTriples: Triple<AnnotonNode>[]) {
-    const self = this;
+  editFact(reqs, srcTriples: Triple<AnnotonNode>[], destTriples: Triple<AnnotonNode>[]) {
 
     each(destTriples, (destTriple: Triple<AnnotonNode>) => {
 
@@ -785,8 +785,6 @@ export class NoctuaGraphService {
     const self = this;
 
     each(triples, function (triple: Triple<AnnotonNode>) {
-      const subject = self.addIndividual(reqs, triple.subject);
-      const object = self.addIndividual(reqs, triple.object);
       each(triple.predicate.evidence, function (evidence: Evidence) {
         reqs.remove_individual(evidence.uuid);
       });

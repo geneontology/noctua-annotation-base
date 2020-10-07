@@ -22,12 +22,24 @@ export class CamQueryMatch {
 }
 
 export class CamStats {
+  totalChanges = 0;
   camsCount = 0;
   termsCount = 0;
   gpsCount = 0;
   evidenceCount = 0;
   referencesCount = 0;
   relationsCount = 0;
+
+  constructor() { }
+
+  updateTotal() {
+    this.totalChanges =
+      this.termsCount
+      + this.gpsCount
+      + this.evidenceCount
+      + this.referencesCount
+      + this.relationsCount;
+  }
 }
 
 export class Cam {
@@ -251,6 +263,7 @@ export class Cam {
       });
     });
 
+    self.modifiedStats.updateTotal();
     return result;
   }
 

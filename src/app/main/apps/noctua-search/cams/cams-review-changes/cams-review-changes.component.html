@@ -8,6 +8,15 @@
       Review and submit changes</span>
   </div>
   <div class="noc-stats-results" fxLayout="column" fxLayoutAlign="start center">
+    <div class="noc-stat-summary">
+      <span class="noc-number">
+        {{summary?.stats.totalChanges }}
+      </span>
+      changes across
+      <span class="noc-number">
+        {{summary?.stats.camsCount }} models
+      </span>
+    </div>
     <table fxFlex="1 1 auto" mat-table class="noc-summary-table" [dataSource]="stats" [@animateStagger]="{value:'50'}">
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef fxFlex="250px" fxLayout="row" fxLayoutAlign="start center">

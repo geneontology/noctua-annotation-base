@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Contributor } from '../models/contributor';
 import { Group } from '../models/group';
+import { find } from 'lodash';
 
 
 @Injectable({
@@ -101,6 +102,16 @@ export class NoctuaUserService {
     const filterValue = value.toLowerCase();
 
     return this.groups.filter((group: Group) => group.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  getGroupName(url: string) {
+    const self = this;
+
+    const group = find(self.groups, (inGroup: Group) => {
+      return inGroup.url === url;
+    });
+
+    return group ? group.name : url;
   }
 
   distinctUser(prev, curr) {

@@ -55,6 +55,15 @@
 
   .noc-stats-results {
     padding: 20px 10px 300px 10px;
+
+    .noc-stat-summary {
+      padding: 12px 0;
+      font-size: 16px;
+
+      .noc-number {
+        font-weight: bold;
+      }
+    }
   }
 
   .noc-summary-table {

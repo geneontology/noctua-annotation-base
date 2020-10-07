@@ -4,8 +4,9 @@
   </div>
 
   <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
-    <span class="noc-header-title">
+    <span class="noc-header-title mr-8">
       Review Models</span>
+    (<span class="noc-review-number">{{artBasket?.cams.length}} models </span>)
   </div>
   <div class="noc-cams-results">
     <div class="noc-cam-container" *ngFor="let cam of cams" id="{{'noc-review-cams-'+cam.displayId}}"
@@ -39,11 +40,12 @@
           </div>
         </div>
         <div fxFlex></div>
-        <button mat-button class="" fxFlex="100px" color="primary" (click)="resetCam(cam)">
+        <!--  <button mat-button class="" fxFlex="100px" color="primary" (click)="resetCam(cam)">
           Reset
-        </button>
-        <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
-          <mat-icon>more_vert</mat-icon>
+        </button> -->
+        <button mat-stroked-button class="noc-rounded-button noc-sm" color="primary"
+          [matMenuTriggerFor]="activityOptionMenu">
+          Options
         </button>
         <mat-menu #activityOptionMenu="matMenu" class="noc-dropdown-menu">
           <button mat-menu-item class="" (click)="viewAsModel(cam)">

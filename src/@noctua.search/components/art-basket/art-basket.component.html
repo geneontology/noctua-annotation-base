@@ -18,16 +18,18 @@
     <div *ngFor="let cam of cams" id="{{'noc-basket-'+cam.displayId}}" (click)="selectItem(cam)" class="noc-group-row"
       [ngClass]="{'noc-selected': cam.id===camsService.selectedCamUuid}" fxLayout="column"
       fxLayoutAlign="start stretch">
-      <div *ngIf="cam.modified" class="noc-item-header w-100-p">
-        <div class="noc-title">Modified Model</div>
+      <div *ngIf="cam.modified" class="noc-modified-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-title">Modified Model:
+        </div>
+        (<strong class="mr-4">{{cam.modifiedStats?.totalChanges}}</strong> change(s) )
         <span fxFlex></span>
-        <strong>{{cam.modifiedStats?.termsCount}}</strong> Changes
-        <button class="noc-action-button" mat-icon-button (click)="resetCam(cam)" color="primary"
-          matTooltip="Undo Model Changes" [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
-          <fa-icon [icon]="['fas', 'undo']"></fa-icon>
+        <button class="noc-rounded-button noc-xs noc-action-button" mat-stroked-button
+          (click)="resetCam(cam); $event.stopPropagation()" color="primary" matTooltip="Undo Model Changes"
+          [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
+          Undo
         </button>
       </div>
-      <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <div class="noc-item-body w-100-p" fxLayout="row" fxLayoutAlign="start center">
         <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
           <div class="noc-item" fxLayout="row wrap" fxLayoutAlign="start center">
             <div class="noc-title">Title:</div> {{cam.title}}
