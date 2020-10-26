@@ -6,7 +6,7 @@ import { NoctuaGraphService } from './../services/graph.service';
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
 import { Annoton } from './../models/annoton/annoton';
 
-import { Cam, CamStats } from './../models/annoton/cam';
+import { Cam, CamQueryMatch, CamStats } from './../models/annoton/cam';
 import { each, groupBy, find, remove } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/annoton/entity';
@@ -193,6 +193,14 @@ export class CamsService {
   reset() {
     this.cams = [];
     this.onCamsChanged.next(this.cams);
+  }
+
+  resetMatch() {
+    const self = this;
+
+    each(this.cams, (cam: Cam) => {
+      cam.queryMatch = new CamQueryMatch();
+    });
   }
 
   sortCams() {
