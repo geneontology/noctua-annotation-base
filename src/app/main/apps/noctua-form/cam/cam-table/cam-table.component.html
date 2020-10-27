@@ -49,16 +49,17 @@
             <span>{{annotonTypeOptions[annoton.annotonType]?.label}}</span>
           </mat-chip>
           <span fxFlex=""></span>
+          <!--
           <div *ngIf="!options.reviewMode" class="" fxFlex="200px" fxLayout="row" fxLayoutAlign="end center">
             <button *ngIf="annoton.annotonType !==AnnotonType.ccOnly" mat-stroked-button
               (click)="openAnnotonConnector(annoton)" color="primary" class="noc-rounded-button noc-sm mr-8"
               matTooltip="connect activity causal relation" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
               <small>Connect</small>
             </button>
-            <!-- <button mat-stroked-button (click)="openAnnotonForm(annoton)" color="primary"
+             <button mat-stroked-button (click)="openAnnotonForm(annoton)" color="primary"
               class="noc-rounded-button noc-sm mr-8">
               <small>Edit</small>
-            </button> -->
+            </button> 
             <button mat-icon-button class="noc-rounded-button noc-sm" fxFlex="40px" color="primary"
               [matMenuTriggerFor]="connectionOptionMenu">
               <mat-icon>more_vert</mat-icon>
@@ -69,6 +70,7 @@
                 Delete Activity
               </button>
             </mat-menu>
+           -->
           </div>
         </div>
         <noc-annoton-table [options]="options" [cam]="cam" [annoton]="annoton" *ngIf="annoton.expanded"
