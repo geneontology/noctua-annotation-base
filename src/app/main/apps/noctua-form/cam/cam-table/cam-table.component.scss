@@ -111,12 +111,11 @@ $accent: map-get($theme, accent);
       content: "";
     }
 
-    &::before {
+    &::after {
       position: absolute;
       top: 0;
       left: 37px;
-      height: 40px;
-      // bottom: 0;
+      bottom: 0;
       width: 2px;
       color: white;
       background-color: $noc-tree-line-color;

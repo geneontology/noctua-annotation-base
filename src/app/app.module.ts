@@ -40,7 +40,7 @@ import {
     faCaretDown,
     faCaretRight,
     faAngleDoubleDown,
-    faAngleDoubleUp, faUndo
+    faAngleDoubleUp, faUndo, faSave
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -122,6 +122,7 @@ export class AppModule {
             faPaw,
             faPen,
             faPlus,
+            faSave,
             faSearch,
             faShoppingBasket,
             faSitemap,

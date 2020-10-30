@@ -64,6 +64,7 @@ export class Cam {
   graph;
   date;
   modified = false;
+  modifiedP = false;
   modifiedStats = new CamStats();
   matchedCount = 0;
   filter = {

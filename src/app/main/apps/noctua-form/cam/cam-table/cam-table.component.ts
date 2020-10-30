@@ -78,7 +78,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
         if (!annotons) {
           return;
         }
-        this.cam.annotons[0].presentation.title = ' 44444'
+
         this.cam.updateAnnotonDisplayNumber();
       });
   }

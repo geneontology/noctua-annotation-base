@@ -111,15 +111,16 @@ export class NoctuaGraphService {
     cam.individualManager = this.registerManager();
     cam.groupManager = this.registerManager();
 
-    const rebuild = (resp) => {
+    const rebuild = (response) => {
       const noctua_graph = model.graph;
 
       cam.loading.status = true;
       cam.loading.message = 'Loading Model Entities Metadata...';
 
       cam.graph = new noctua_graph();
-      cam.id = resp.data().id;
-      cam.graph.load_data_basic(resp.data());
+      cam.id = response.data().id;
+      cam.modifiedP = response['modified-p'];
+      cam.graph.load_data_basic(response.data());
       const titleAnnotations = cam.graph.get_annotations_by_key('title');
       const stateAnnotations = cam.graph.get_annotations_by_key('state');
       const dateAnnotations = cam.graph.get_annotations_by_key('date');

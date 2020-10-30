@@ -304,6 +304,7 @@ export class NoctuaSearchService {
             cam.state = self.noctuaFormConfigService.findModelState(response.state);
             cam.title = response.title;
             cam.date = response.date;
+            cam.modifiedP = response['modified-p'];
 
             cam.model = Object.assign({}, {
                 modelInfo: this.noctuaFormConfigService.getModelUrls(modelId)
