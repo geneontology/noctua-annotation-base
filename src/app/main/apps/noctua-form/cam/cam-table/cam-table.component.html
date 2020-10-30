@@ -34,10 +34,8 @@
               <fa-icon *ngIf="annoton.expanded" [icon]="['fas', 'caret-down']"></fa-icon>
             </button>
           </div>
-          <div fxFlex="30px" class="mr-8" (click)="$event.stopPropagation()">
-            <div class="noc-display-number noc-sm">
-              {{annoton.displayNumber}}
-            </div>
+          <div class="noc-display-number noc-sm mr-8" (click)="$event.stopPropagation()">
+            {{annoton.displayNumber}}
           </div>
           <div class="noc-title mr-12">
             <div class="text-truncate">
@@ -70,8 +68,8 @@
                 Delete Activity
               </button>
             </mat-menu>
-           -->
-          </div>
+           
+          </div>-->
         </div>
         <noc-annoton-table [options]="options" [cam]="cam" [annoton]="annoton" *ngIf="annoton.expanded"
           class="noc-cam-table-body" [@annotonExpand]="annoton.expanded ? 'expanded' : 'collapsed'" fxLayout="row"

@@ -95,6 +95,11 @@ $accent: map-get($theme, accent);
       max-width: 200px
     }
 
+    .noc-display-number {
+      background-color: #FFF;
+      z-index: 2;
+    }
+
     &::before {
       position: absolute;
       top: 20px;
@@ -104,6 +109,19 @@ $accent: map-get($theme, accent);
       color: white;
       background-color: $noc-tree-line-color;
       content: "";
+    }
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 37px;
+      height: 40px;
+      // bottom: 0;
+      width: 2px;
+      color: white;
+      background-color: $noc-tree-line-color;
+      content: "";
+      z-index: 1;
     }
   }
 

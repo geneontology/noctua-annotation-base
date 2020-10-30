@@ -14,7 +14,8 @@ import {
   Annoton,
   AnnotonType,
   NoctuaUserService,
-  NoctuaFormMenuService
+  NoctuaFormMenuService,
+  RightPanel
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
@@ -77,7 +78,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
         if (!annotons) {
           return;
         }
-
+        this.cam.annotons[0].presentation.title = ' 44444'
         this.cam.updateAnnotonDisplayNumber();
       });
   }
@@ -89,7 +90,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   openForm(location?) {
     this.noctuaAnnotonFormService.mfLocation = location;
     this.noctuaAnnotonFormService.initializeForm();
-    this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.annotonForm)
+    //this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.annotonForm)
   }
 
   search() {
@@ -112,14 +113,14 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.noctuaAnnotonConnectorService.annoton = annoton;
     this.noctuaAnnotonConnectorService.onAnnotonChanged.next(annoton);
     this.noctuaAnnotonConnectorService.getConnections();
-    this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.connectorForm);
+    // this.noctuaFormMenuService.openRightDrawer(RightPanel.connectorForm);
   }
 
   openAnnotonForm(annoton: Annoton) {
     this.camService.onCamChanged.next(this.cam);
     this.camService.annoton = annoton;
     this.noctuaAnnotonFormService.initializeForm(annoton);
-    this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.annotonForm)
+    // this.noctuaFormMenuService.openRightDrawer(RightPanel.annotonForm)
   }
 
   sortBy(sortCriteria) {

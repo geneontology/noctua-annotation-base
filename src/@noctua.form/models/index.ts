@@ -1,4 +1,4 @@
-
+export { LeftPanel, MiddlePanel, RightPanel } from './menu-panels';
 export { Article } from './article';
 export { Contributor, compareContributor } from './contributor';
 export { CamPage } from './cam-page';
@@ -8,3 +8,4 @@ export { Organism, compareOrganism } from './organism';
 
 export * from './annoton';
 export * from './forms';
+
