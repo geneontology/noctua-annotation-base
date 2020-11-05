@@ -153,6 +153,14 @@ export class CamsTableComponent implements OnInit, OnDestroy {
           this.selection.clear();
         }
       });
+
+    this.noctuaReviewSearchService.onReplaceChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((refresh: boolean) => {
+        if (refresh) {
+          this.refresh();
+        }
+      });
   }
 
   isAllSelected() {

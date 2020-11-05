@@ -43,7 +43,8 @@ export class NoctuaReviewSearchService {
     loading = false;
     // onCamsChanged: BehaviorSubject<any>;
     onArtBasketChanged: BehaviorSubject<any>;
-    onResetReview: Subject<boolean>;
+    onResetReview: BehaviorSubject<boolean>;
+    onReplaceChanged: BehaviorSubject<boolean>;
     onCamsPageChanged: BehaviorSubject<any>;
     onCamChanged: BehaviorSubject<any>;
     searchSummary: any = {};
@@ -66,7 +67,8 @@ export class NoctuaReviewSearchService {
         private curieService: CurieService) {
         const self = this;
         this.onArtBasketChanged = new BehaviorSubject(null);
-        this.onResetReview = new Subject();
+        this.onResetReview = new BehaviorSubject(false);
+        this.onReplaceChanged = new BehaviorSubject(false);
         this.onCamsPageChanged = new BehaviorSubject(null);
         this.onCamChanged = new BehaviorSubject([]);
         this.onSearchHistoryChanged = new BehaviorSubject(null);
@@ -104,7 +106,6 @@ export class NoctuaReviewSearchService {
                 });
 
                 this.searchCriteria['ids'] = ids;
-
             });
 
     }
@@ -172,16 +173,16 @@ export class NoctuaReviewSearchService {
         return this.currentMatchedEnity;
     }
 
-    replaceAll(replaceWith) {
-        this.camsService.replace(this.matchedEntities, replaceWith);
+    replaceAll(replaceWith): Observable<any> {
+        return this.camsService.replace(this.matchedEntities, replaceWith);
     }
 
-    replace(replaceWith) {
-        this.camsService.replace([this.currentMatchedEnity], replaceWith);
+    replace(replaceWith): Observable<any> {
+        return this.camsService.replace([this.currentMatchedEnity], replaceWith);
     }
 
-    bulkEdit(): Observable<any> {
-        return this.camsService.bulkEdit();
+    bulkEdit(store = false): Observable<any> {
+        return this.camsService.bulkEdit(store);
     }
 
     clear() {

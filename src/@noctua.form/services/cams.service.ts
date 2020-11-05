@@ -147,18 +147,29 @@ export class CamsService {
     each(groupedEntities, (values: Entity[], key) => {
       const cam: Cam = find(this.cams, { id: key });
       cam.replace(entities, replaceWithTerm);
-      // this.camService.replaceAnnotonInternal(cam)
-
     });
+
     self.reviewChanges();
+    return self.bulkEdit();
   }
 
-  bulkEdit() {
+  bulkEdit(store = false) {
     const self = this;
     const promises = [];
 
     each(this.cams, (cam: Cam) => {
-      promises.push(self._noctuaGraphService.bulkEditAnnoton(cam));
+      promises.push(self._noctuaGraphService.bulkEditAnnoton(cam, store));
+    });
+
+    return forkJoin(promises);
+  }
+
+  resetModels() {
+    const self = this;
+    const promises = [];
+
+    each(this.cams, (cam: Cam) => {
+      promises.push(self._noctuaGraphService.resetModel(cam));
     });
 
     return forkJoin(promises);

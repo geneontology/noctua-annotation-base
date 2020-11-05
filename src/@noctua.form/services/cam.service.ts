@@ -148,12 +148,6 @@ export class CamService {
     return this.cam.getNodesByTypeFlat(annotonType);
   }
 
-  replaceAnnotonInternal(cam: Cam, entities: Entity[], replaceWithTerm: Entity) {
-
-    const self = this;
-
-    cam.replace(entities, replaceWithTerm);
-  }
 
   getUniqueTerms(formAnnoton?: Annoton): AnnotonNode[] {
     const annotonNodes = this.cam.getTerms(formAnnoton);
