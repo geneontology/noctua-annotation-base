@@ -6,11 +6,14 @@ export enum ViolationType {
 }
 
 export class Violation {
+  protected _message: string;
   constructor(public node: Partial<AnnotonNode>, public type: ViolationType) {
   }
 
-  getDisplayError() {
+  getDisplayError() { }
 
+  get message() {
+    return this._message;
   }
 }
 
@@ -22,6 +25,11 @@ export class CardinalityViolation extends Violation {
     public cardinality: string) {
     super(node, ViolationType.cardinality);
     this.subject = node;
+  }
+
+  get message() {
+    this._message = `Only one ${this.predicate?.label} is allowed`
+    return this._message;
   }
 
   getDisplayError() {
@@ -36,8 +44,7 @@ export class CardinalityViolation extends Violation {
       },
     };
 
-    const error = new AnnotonError(ErrorLevel.error, ErrorType.cardinality, 'Only one ' +
-      meta.edge.label + ' is allowed', meta);
+    const error = new AnnotonError(ErrorLevel.error, ErrorType.cardinality, self.message, meta);
 
     return error;
   }
@@ -51,6 +58,11 @@ export class RelationViolation extends Violation {
   constructor(public node: Partial<AnnotonNode>) {
     super(node, ViolationType.relation);
     this.subject = node;
+  }
+
+  get message() {
+    this._message = `Incorrect relationship between ${this.subject?.term?.label} and ${this.object?.term?.label}`;
+    return this._message;
   }
 
   getDisplayError() {
@@ -68,8 +80,7 @@ export class RelationViolation extends Violation {
       },
     };
 
-    const error = new AnnotonError(ErrorLevel.error, ErrorType.relation, 'Incorrect relationship between ' +
-      meta.subjectNode.label + ' and ' + meta.objectNode.label, meta);
+    const error = new AnnotonError(ErrorLevel.error, ErrorType.relation, self.message, meta);
 
     return error;
   }
