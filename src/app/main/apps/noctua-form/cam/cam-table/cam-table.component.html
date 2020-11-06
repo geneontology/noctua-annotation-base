@@ -1,8 +1,18 @@
 <div class="w-100-p p-0 cam-table">
   <div *ngIf="!options.reviewMode" class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
-    <span class='noc-title'>
+    <span class='noc-title mr-12'>
       ACTIVITIES
     </span>
+    <div *ngIf="cam.hasViolations" class="noc-error" fxLayout="row" fxLayoutAlign="start center">
+      <mat-chip class="noc-error-chip" fxLayout="row" fxLayoutAlign="start center" (click)="displayErrors()">
+        <div class="noc-icon">
+          <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
+        </div>
+        <div fxFlex="" class="noc-chip-label">
+          {{cam.violations?.length}} Errors Found
+        </div>
+      </mat-chip>
+    </div>
     <span fxFlex></span>
     <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
       <mat-icon>more_vert</mat-icon>
@@ -46,6 +56,17 @@
           <mat-chip class="noc-chip-xs" [ngClass]="annoton.annotonType">
             <span>{{annotonTypeOptions[annoton.annotonType]?.label}}</span>
           </mat-chip>
+          <div *ngIf="annoton.hasViolations" class="noc-error" fxLayout="row" fxLayoutAlign="start center">
+            <mat-chip class="noc-error-chip" fxLayout="row" fxLayoutAlign="start center"
+              (click)="displayAnnotonErrors(annoton)">
+              <div class="noc-icon">
+                <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
+              </div>
+              <div fxFlex="" class="noc-chip-label">
+                {{annoton.violations?.length}} Errors Found
+              </div>
+            </mat-chip>
+          </div>
           <span fxFlex=""></span>
           <!--
           <div *ngIf="!options.reviewMode" class="" fxFlex="200px" fxLayout="row" fxLayoutAlign="end center">

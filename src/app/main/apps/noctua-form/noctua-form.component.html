@@ -2,6 +2,7 @@
   <div *ngIf="!noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
     Not Logged In: You can only view existing annotations
   </div>
+
   <div *ngIf="cam" class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
     [@animateStagger]="{value:'50'}">
     <div class="" fxFlex="180px">

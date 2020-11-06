@@ -321,9 +321,12 @@ export class NoctuaFormConfigService {
   }
 
   findEdge(predicateId) {
-    find(noctuaFormConfig.edge, {
+
+    const edge = find(noctuaFormConfig.edge, {
       id: predicateId
     });
+
+    return edge ? Entity.createEntity(edge) : null;
   }
 
   getAspect(id) {

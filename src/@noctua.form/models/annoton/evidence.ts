@@ -1,4 +1,4 @@
-import { AnnotonError } from "./parser/annoton-error";
+import { AnnotonError, ErrorLevel, ErrorType } from "./parser/annoton-error";
 import { Entity } from './entity';
 import { AnnotonNode } from './annoton-node';
 import { includes, isEqual } from 'lodash';
@@ -81,14 +81,14 @@ export class Evidence {
     } else {
       self.evidenceRequired = true;
 
-      const error = new AnnotonError('error', 1, `No evidence for "${node.label}": on evidence(${position})`, meta);
+      const error = new AnnotonError(ErrorLevel.error, ErrorType.general, `No evidence for "${node.label}": on evidence(${position})`, meta);
 
       errors.push(error);
       result = false;
     }
 
     if (self.evidence.id && !self.reference) {
-      const error = new AnnotonError('error', 1,
+      const error = new AnnotonError(ErrorLevel.error, ErrorType.general,
         `You provided an evidence for "${node.label}" but no reference: on evidence(${position})`,
         meta);
       errors.push(error);
@@ -112,7 +112,7 @@ export class Evidence {
     };
 
     if (!reference.includes(':')) {
-      const error = new AnnotonError('error', 1,
+      const error = new AnnotonError(ErrorLevel.error, ErrorType.general,
         `Use DB:accession format for reference "${node.label}" on evidence(${position})`,
         meta);
       errors.push(error);
@@ -126,7 +126,7 @@ export class Evidence {
 
     /*
     if (!dbs.includes(db)) {
-      const error = new AnnotonError('error', 1,
+      const error = new AnnotonError(ErrorLevel.error, ErrorType.general, 
         `Please enter either PMID, DOI or GO_REF for "${node.label}" on evidence(${position})`,
         meta);
       errors.push(error);
@@ -134,7 +134,7 @@ export class Evidence {
     } */
 
     if (accession === '') {
-      const error = new AnnotonError('error', 1,
+      const error = new AnnotonError(ErrorLevel.error, ErrorType.general,
         `"${db}" accession is required "${node.label}" on evidence(${position})`,
         meta);
       errors.push(error);

@@ -2,18 +2,18 @@ import { v4 as uuid } from 'uuid';
 import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
-import { AnnotonError } from './parser/annoton-error';
+import { AnnotonError, ErrorLevel, ErrorType } from './parser/annoton-error';
 import { AnnotonNode, AnnotonNodeType } from './annoton-node';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
 import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
-import { AnnotonParser } from './parser';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
 import { each, filter } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
+import { Violation } from './error/violation-error';
 
 export enum AnnotonState {
   creation = 1,
@@ -29,7 +29,6 @@ export enum AnnotonType {
 export class Annoton extends SaeGraph<AnnotonNode> {
   gp;
   label: string;
-  parser: AnnotonParser;
   annotonRows;
   annotonType;
   errors;
@@ -50,6 +49,9 @@ export class Annoton extends SaeGraph<AnnotonNode> {
    */
   displayId: string;
   displayNumber = '0';
+
+  hasViolations = false;
+  violations: Violation[] = [];
 
 
   bpOnlyEdge: Entity;
@@ -203,6 +205,17 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     }
   }
 
+  getViolationDisplayErrors() {
+    const self = this;
+    const result = [];
+
+    result.push(...self.violations.map((violation: Violation) => {
+      return violation.getDisplayError();
+    }));
+
+    return result;
+  }
+
   adjustAnnoton() {
     const self = this;
 
@@ -265,7 +278,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         const meta = {
           aspect: 'Molecular Function'
         };
-        const error = new AnnotonError('error', 1, `Causal relation is required`, meta);
+        const error = new AnnotonError(ErrorLevel.error, ErrorType.general, `Causal relation is required`, meta);
         self.submitErrors.push(error);
         result = false;
       }

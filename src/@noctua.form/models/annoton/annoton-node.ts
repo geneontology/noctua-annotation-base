@@ -1,5 +1,5 @@
 import { Evidence } from './evidence';
-import { AnnotonError } from './parser/annoton-error';
+import { AnnotonError, ErrorLevel, ErrorType } from './parser/annoton-error';
 import { Annoton } from './annoton';
 import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
@@ -210,7 +210,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
       const meta = {
         aspect: self.label
       };
-      const error = new AnnotonError('error', 1, `"${self.label}" is required`, meta);
+      const error = new AnnotonError(ErrorLevel.error, ErrorType.general, `"${self.label}" is required`, meta);
       errors.push(error);
       result = false;
     } else {

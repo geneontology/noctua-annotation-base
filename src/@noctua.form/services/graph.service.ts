@@ -27,6 +27,7 @@ import { AnnotonType } from './../models/annoton/annoton';
 import { Contributor } from './../models/contributor';
 import { find } from 'lodash';
 import { Group } from './../models';
+import { CardinalityViolation, RelationViolation } from './../models/annoton/error/violation-error';
 
 declare const require: any;
 
@@ -99,6 +100,8 @@ export class NoctuaGraphService {
     manager.register('warning', warning, 10);
     manager.register('error', error, 10);
 
+    manager.use_reasoner_p(true);
+
     return manager;
   }
 
@@ -121,6 +124,12 @@ export class NoctuaGraphService {
       cam.id = response.data().id;
       cam.modifiedP = response['modified-p'];
       cam.graph.load_data_basic(response.data());
+      cam.isReasoned = response['is-reasoned'];
+
+      if (cam.isReasoned) {
+
+      }
+
       const titleAnnotations = cam.graph.get_annotations_by_key('title');
       const stateAnnotations = cam.graph.get_annotations_by_key('state');
       const dateAnnotations = cam.graph.get_annotations_by_key('date');
@@ -140,7 +149,9 @@ export class NoctuaGraphService {
       self.populateContributors(cam);
       self.populateGroups(cam);
 
+
       self.loadCam(cam);
+      self.loadViolations(cam, response.data()['validation-results'])
       cam.loading.status = false;
       cam.loading.message = '';
     };
@@ -160,6 +171,60 @@ export class NoctuaGraphService {
     cam.onGraphChanged.next(cam.annotons);
     cam.connectorAnnotons = self.getConnectorAnnotons(cam);
     cam.setPreview();
+  }
+
+  loadViolations(cam: Cam, validationResults) {
+    const self = this;
+    let violations;
+
+    if (validationResults &&
+      validationResults['shex-validation'] &&
+      validationResults['shex-validation']['violations']) {
+      violations = validationResults['shex-validation']['violations'];
+      cam.hasViolations = violations.length > 0;
+      cam.violations = [];
+      violations.forEach((violation: any) => {
+        violation.explanations.forEach((explanation) => {
+          explanation.constraints.forEach((constraint) => {
+            const camViolation = self.generateViolation(cam, violation.node, constraint);
+
+            if (camViolation) {
+              cam.violations.push(camViolation);
+            }
+          });
+        });
+      });
+    }
+
+    cam.setViolations();
+    console.log(cam.violations);
+
+  }
+
+  generateViolation(cam: Cam, node, constraint) {
+    const self = this;
+    const annotonNode = self.nodeToAnnotonNode(cam.graph, node)
+
+    if (!annotonNode) {
+      return null;
+    }
+
+    let violation;
+    if (constraint.cardinality) {
+      const edge = self.noctuaFormConfigService.findEdge(constraint.property);
+      violation = new CardinalityViolation(
+        annotonNode,
+        edge,
+        constraint.nobjects,
+        constraint.cardinality
+      );
+    } else if (constraint.object) {
+      violation = new RelationViolation(annotonNode);
+      violation.predicate = self.noctuaFormConfigService.findEdge(constraint.property);
+      violation.object = self.nodeToAnnotonNode(cam.graph, constraint.object);
+    }
+
+    return violation;
   }
 
   populateContributors(cam: Cam) {
@@ -250,6 +315,9 @@ export class NoctuaGraphService {
     const self = this;
 
     const node = graph.get_node(objectId);
+    if (!node) {
+      return null;
+    }
     const nodeInfo = self.getNodeInfo(node);
     const result = {
       uuid: objectId,

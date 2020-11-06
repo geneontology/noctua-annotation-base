@@ -1,14 +1,20 @@
+export enum ErrorType {
+  general = 'general',
+  cardinality = 'cardinality',
+  relation = 'relation'
+}
+
+export enum ErrorLevel {
+  warning = 'warning',
+  error = 'error'
+}
 
 export class AnnotonError {
-  category;
-  type;
-  message;
-  meta;
 
-  constructor(category, type, message, meta?) {
-    this.category = category;
-    this.type = type;
-    this.message = message;
-    this.meta = meta;
+  constructor(
+    public category: ErrorLevel,
+    public type: ErrorType,
+    public message: string,
+    public meta?) {
   }
 }

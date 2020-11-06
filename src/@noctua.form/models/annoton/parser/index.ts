@@ -1,3 +1,2 @@
-export { AnnotonError } from './annoton-error';
-export { AnnotonParser } from './annoton-parser';
+export { AnnotonError, ErrorLevel, ErrorType } from './annoton-error';
 export { AnnotonRules } from './annoton-rules';

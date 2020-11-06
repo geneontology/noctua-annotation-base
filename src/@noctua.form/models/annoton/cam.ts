@@ -14,6 +14,7 @@ import { Entity } from './entity';
 import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
 import { each, find, filter } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
+import { Violation } from './error/violation-error';
 
 export class CamQueryMatch {
   modelId?: string;
@@ -99,9 +100,16 @@ export class Cam {
     message: ''
   };
 
+  // Error Handling
+  isReasoned = false;
+  hasViolations = false;
+  violations: Violation[];
+
   private _filteredAnnotons: Annoton[] = [];
   private _annotons: Annoton[] = [];
   private _id: string;
+
+
 
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;
@@ -412,19 +420,31 @@ export class Cam {
         });*/
   }
 
+  setViolations() {
+    const self = this;
+    self.violations?.forEach((violation: Violation) => {
+      const annotons = this.findAnnotonByNodeId(violation.node.uuid);
+
+      if (annotons) {
+        annotons.forEach((annoton: Annoton) => {
+          annoton.hasViolations = true;
+          annoton.violations.push(violation);
+        });
+      }
+    });
+  }
+
   generateTripleGrid() {
-    let grid = [...this.triples.map((triple) => {
+    const grid = [...this.triples.map((triple) => {
       return triple.grid;
-    })]
+    })];
 
     return grid;
-    //return flattenDeep(grid);
   }
 
   generateGridRow(annoton: Annoton, node: AnnotonNode) {
     const self = this;
-
-    let term = node.getTerm();
+    const term = node.getTerm();
 
     self.grid.push({
       displayEnabledBy: self.tableCanDisplayEnabledBy(node),
@@ -434,35 +454,27 @@ export class Cam {
       term: node.isExtension ? {} : term,
       extension: node.isExtension ? term : {},
       aspect: node.aspect,
-      /*  evidence: node.evidence.length > 0 ? node.evidence[0].evidence : {},
-       reference: node.evidence.length > 0 ? node.evidence[0].reference : {},
-       with: node.evidence.length > 0 ? node.evidence[0].with : {},
-       assignedBy: node.evidence.length > 0 ? node.evidence[0].assignedBy : {}, */
       annoton: annoton,
       node: node
-    })
-    /* 
-        for (let i = 1; i < node.evidence.length; i++) {
-          self.grid.push({
-            treeLevel: node.treeLevel,
-            evidence: node.evidence[i].evidence,
-            reference: node.evidence[i].reference,
-            with: node.evidence[i].with.control,
-            assignedBy: node.evidence[i].assignedBy,
-            node: node,
-          }) 
-        }*/
+    });
+  }
+
+  getViolationDisplayErrors() {
+    const self = this;
+    const result = [];
+
+    result.push(...self.violations.map((violation: Violation) => {
+      return violation.getDisplayError();
+    }));
+
+    return result;
   }
 
   tableCanDisplayEnabledBy(node: AnnotonNode) {
-    const self = this;
-
     return node.predicate.edge && node.predicate.edge.id === noctuaFormConfig.edge.enabledBy.id;
   }
 
   tableDisplayExtension(node: AnnotonNode) {
-    const self = this;
-
     if (node.id === 'mf') {
       return '';
     } else if (node.isComplement) {

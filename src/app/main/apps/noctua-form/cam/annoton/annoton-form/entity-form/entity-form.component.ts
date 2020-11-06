@@ -14,7 +14,9 @@ import {
   ShapeDefinition,
   AnnotonError,
   AnnotonNodeType,
-  Annoton
+  Annoton,
+  ErrorLevel,
+  ErrorType
 } from 'noctua-form-base';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 import { each, find, flatten } from 'lodash';
@@ -108,8 +110,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
         const meta = {
           aspect: node.label
         };
-        const error = new AnnotonError('error',
-          1,
+        const error = new AnnotonError(ErrorLevel.error, ErrorType.general,
           `Cannot add 'NOT Qualifier', Remove Extension'${node.label}'`, meta);
         errors.push(error);
       }
@@ -151,7 +152,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       };
       self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
     } else {
-      // const error = new AnnotonError('error', 1, "Please enter a gene product", meta)
+      // const error = new AnnotonError(ErrorLevel.error, ErrorType.general,  "Please enter a gene product", meta)
       //errors.push(error);
       // self.dialogService.openAnnotonErrorsDialog(ev, entity, errors)
     }
@@ -181,7 +182,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       };
       self.noctuaFormDialogService.openSearchEvidenceDialog(data, success);
     } else {
-      // const error = new AnnotonError('error', 1, "Please enter a gene product", meta)
+      // const error = new AnnotonError(ErrorLevel.error, ErrorType.general,  "Please enter a gene product", meta)
       //errors.push(error);
       // self.dialogService.openAnnotonErrorsDialog(ev, entity, errors)
     }

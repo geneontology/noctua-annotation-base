@@ -28,7 +28,7 @@ export class Entity implements EntityBase {
   }
 
   static createEntity(value: Partial<EntityBase>) {
-    const entity = new Entity(value.id, value.label);
+    const entity = new Entity(value?.id, value?.label);
 
     return entity;
   }
