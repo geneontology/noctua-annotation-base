@@ -21,7 +21,7 @@
     },
     {
        "operation":"added",
-       "type":"fact",
+       "key":"fact",
        "id":"gomodel:5b91dbd100001639/5b91dbd100001644",
        "subject":"gomodel:5fa77b4b00000000/5fa77b4b00000001",
        "property":"RO:0002333",
@@ -53,7 +53,7 @@
     },
     {
        "operation":"removed",
-       "type":"fact",
+       "key":"fact",
        "id":"gomodel:5b91dbd100001639/5b91dbd100001644",
        "subject":"gomodel:5fa77b4b00000000/5fa77b4b00000001",
        "property":"RO:0002333",
