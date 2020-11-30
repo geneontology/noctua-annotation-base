@@ -76,7 +76,7 @@ export class RelationViolation extends Violation {
         label: self.predicate?.label
       },
       objectNode: {
-        label: self.object?.term?.label
+        label: self.object?.term?.label ? self.object?.term?.label : self.object?.term?.id
       },
     };
 

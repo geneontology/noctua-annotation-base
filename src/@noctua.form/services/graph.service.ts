@@ -576,6 +576,26 @@ export class NoctuaGraphService {
     return cam.manager.request_with(reqs);
   }
 
+  diffModel(cam: Cam) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+    const req = new minerva_requests.request('model', 'diff');
+    req.model(cam.id);
+    reqs.add(req, 'query');
+
+    return cam.manager.request_with(reqs);
+  }
+
+  storedModel(cam: Cam) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+    const req = new minerva_requests.request('model', 'stored-model');
+    req.model(cam.id);
+    reqs.add(req, 'query');
+
+    return cam.manager.request_with(reqs);
+  }
+
   saveCamAnnotations(cam: Cam, annotations) {
     const self = this;
 

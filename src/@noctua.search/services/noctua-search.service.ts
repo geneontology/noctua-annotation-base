@@ -42,7 +42,6 @@ export class NoctuaSearchService {
 
     onSearchCriteriaChanged: BehaviorSubject<any>;
     onSearchHistoryChanged: BehaviorSubject<any>;
-    baseUrl = environment.spaqrlApiUrl;
     curieUtil: any;
     cams: any[] = [];
     camPage: CamPage;

@@ -23,7 +23,6 @@ import { compareTerm } from './../models/annoton/annoton-node';
   providedIn: 'root'
 })
 export class CamService {
-  baseUrl = environment.spaqrlApiUrl;
   curieUtil: any;
   loading = false;
   cam: Cam;
@@ -161,6 +160,18 @@ export class CamService {
     const result = uniqWith(evidences, compareEvidence);
 
     return result;
+  }
+
+  diffModel(cam: Cam) {
+    const self = this;
+
+    return self._noctuaGraphService.diffModel(cam);
+  }
+
+  storedModel(cam: Cam) {
+    const self = this;
+
+    return self._noctuaGraphService.storedModel(cam);
   }
 
 
