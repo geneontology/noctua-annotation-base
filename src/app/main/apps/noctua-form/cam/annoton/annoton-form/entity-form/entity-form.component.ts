@@ -128,7 +128,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     const self = this;
     const gpNode = this.noctuaAnnotonFormService.annoton.getGPNode();
 
-    if (gpNode) {
+    if (gpNode && gpNode.hasValue()) {
       const data = {
         readonly: false,
         gpNode: gpNode.term,
@@ -152,9 +152,11 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       };
       self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
     } else {
-      // const error = new AnnotonError(ErrorLevel.error, ErrorType.general,  "Please enter a gene product", meta)
-      //errors.push(error);
-      // self.dialogService.openAnnotonErrorsDialog(ev, entity, errors)
+      const meta = {
+        aspect: 'Gene Product'
+      };
+      const error = new AnnotonError(ErrorLevel.error, ErrorType.general, 'Please enter a gene product', meta)
+      self.noctuaFormDialogService.openAnnotonErrorsDialog([error])
     }
   }
 
