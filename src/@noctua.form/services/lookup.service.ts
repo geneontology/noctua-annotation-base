@@ -193,10 +193,6 @@ export class NoctuaLookupService {
     const params = new HttpParams({
       fromObject: requestParams
     })
-    // .set('callback', 'JSONP_CALLBACK')
-    //.set('jsonpCallbackParam', 'json.wrf')
-    // .set('params', requestParams);
-
 
     const url = golrUrl + params.toString();
 
@@ -204,6 +200,7 @@ export class NoctuaLookupService {
       map(response => {
         const docs = response['response'].docs;
         const result = [];
+        console.log(docs)
 
         each(docs, function (doc) {
           let annotonNode: AnnotonNode;
@@ -212,11 +209,11 @@ export class NoctuaLookupService {
           evidence.setEvidence(new Entity(doc.evidence, doc.evidence_label));
 
           if (doc.reference && doc.reference.length > 0) {
-            evidence.reference = doc.reference[0];
+            evidence.reference = doc.reference.join(' | ');
           }
 
           if (doc.evidence_with && doc.evidence_with.length > 0) {
-            evidence.with = doc.evidence_with[0];
+            evidence.with = doc.evidence_with.join(' | ');
           }
 
           evidence.assignedBy = new Entity(null, doc.assigned_by);
