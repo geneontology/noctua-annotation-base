@@ -230,9 +230,9 @@ export class CamsService {
 
   private _compareDateReviewAdded(a: Cam, b: Cam): number {
     if (a.dateReviewAdded > b.dateReviewAdded) {
-      return -1;
-    } else {
       return 1;
+    } else {
+      return -1;
     }
   }
 
