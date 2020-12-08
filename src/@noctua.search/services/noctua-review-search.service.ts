@@ -120,13 +120,6 @@ export class NoctuaReviewSearchService {
         }
     }
 
-    scroll(id) {
-        const el = document.getElementById(id);
-        if (el) {
-            el.scrollIntoView();
-        }
-    }
-
     search(searchCriteria) {
         this.searchCriteria = new SearchCriteria();
 
@@ -151,7 +144,7 @@ export class NoctuaReviewSearchService {
         this.camsService.selectedNodeUuid = this.currentMatchedEnity.uuid;
         this.camsService.selectedCamUuid = this.currentMatchedEnity.modelId;
 
-        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.displayId);
+        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
 
         return this.currentMatchedEnity;
     }
@@ -169,7 +162,7 @@ export class NoctuaReviewSearchService {
         this.camsService.selectedNodeUuid = this.currentMatchedEnity.uuid;
         this.camsService.selectedCamUuid = this.currentMatchedEnity.modelId;
 
-        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.displayId);
+        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
         return this.currentMatchedEnity;
     }
 

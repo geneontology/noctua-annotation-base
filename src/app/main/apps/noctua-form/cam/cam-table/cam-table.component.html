@@ -41,7 +41,7 @@
           {{cam?.loading.message}}
         </h3>
       </div>
-      <div *ngFor="let annoton of cam.annotons" class="w-100-p"
+      <div *ngFor="let annoton of cam.annotons" [attr.id]="annoton.displayId" class="w-100-p"
         [ngClass]="{'noc-annoton-selected': annoton.id=== camService.annoton?.id}">
         <div class="noc-annoton-table-heading" fxLayout="row" fxLayoutAlign="start center">
           <div fxFlex="25px" (click)="$event.stopPropagation()">

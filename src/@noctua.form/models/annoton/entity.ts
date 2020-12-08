@@ -7,24 +7,21 @@ export interface EntityBase {
 
 export class Entity implements EntityBase {
 
-  id: string;
-  label: string;
-  url: string;
-  modelId: string;
   classExpression: any;
   highlight: boolean;
   modified: boolean;
   termHistory: Entity[] = [];
   displayId: string;
+  annotonDisplayId: string;
 
   private _uuid: string;
 
-  constructor(_id: string, _label: string, _url?: string, _uuid?: string, _modelId?: string) {
-    this.id = _id;
-    this.label = _label;
-    this.url = _url;
-    this.uuid = _uuid;
-    this.modelId = _modelId;
+  constructor(public id: string,
+    public label: string,
+    public url?: string,
+    uuid?: string,
+    public modelId?: string) {
+    this.uuid = uuid;
   }
 
   static createEntity(value: Partial<EntityBase>) {

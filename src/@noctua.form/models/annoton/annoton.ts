@@ -73,7 +73,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   set id(id: string) {
     this._id = id;
-    this.displayId = NoctuaFormUtils.cleanID(id);
+    this.displayId = NoctuaFormUtils.cleanID(id) + 'annoton';
   }
 
   get annotonConnections() {

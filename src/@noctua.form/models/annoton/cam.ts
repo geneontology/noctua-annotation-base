@@ -222,6 +222,8 @@ export class Cam {
 
             if (node.term.uuid === term.uuid) {
               node.term.highlight = true;
+              node.term.annotonDisplayId = term.annotonDisplayId = annoton.displayId;
+
               self.matchedCount += 1;
               match = true;
             }
