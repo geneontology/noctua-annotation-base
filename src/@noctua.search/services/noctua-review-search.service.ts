@@ -86,7 +86,7 @@ export class NoctuaReviewSearchService {
                 // this.cams = response;
                 this.matchedCountCursor = 0;
                 this.calculateMatched();
-                this.findNext();
+                this.goto(0);
             });
 
             const element = document.querySelector('#noc-review-results');
@@ -163,6 +163,22 @@ export class NoctuaReviewSearchService {
         this.camsService.selectedCamUuid = this.currentMatchedEnity.modelId;
 
         this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
+        return this.currentMatchedEnity;
+    }
+
+    goto(step: number) {
+        if (this.matchedCount === 0) {
+            return;
+        }
+
+        this.matchedCountCursor = step;
+        this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
+        this.camsService.expandMatch(this.currentMatchedEnity.uuid);
+        this.camsService.selectedNodeUuid = this.currentMatchedEnity.uuid;
+        this.camsService.selectedCamUuid = this.currentMatchedEnity.modelId;
+
+        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
+
         return this.currentMatchedEnity;
     }
 
