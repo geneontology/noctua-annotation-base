@@ -40,7 +40,7 @@ import {
     faCaretDown,
     faCaretRight,
     faAngleDoubleDown,
-    faAngleDoubleUp, faUndo, faSave, faExclamationTriangle
+    faAngleDoubleUp, faUndo, faSave, faExclamationTriangle, faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -103,8 +103,12 @@ export class AppModule {
         library.addIcons(
             faArrowUp,
             faArrowDown,
+            faAngleDoubleLeft,
+            faAngleDoubleRight,
             faAngleDoubleUp,
             faAngleDoubleDown,
+            faAngleLeft,
+            faAngleRight,
             faCalendarDay,
             faCalendarWeek,
             faCaretDown,
@@ -132,6 +136,8 @@ export class AppModule {
             faUndo,
             faUser,
             faUsers,
+
+
         );
     }
 }

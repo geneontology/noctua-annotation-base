@@ -198,6 +198,10 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     this.noctuaReviewSearchService.findPrevious();
   }
 
+  goto(step: 'first' | 'last') {
+    this.noctuaReviewSearchService.goto(step);
+  }
+
   findSelected(value) {
     const closures = this.getClosure(value.rootTypes);
 

@@ -166,9 +166,17 @@ export class NoctuaReviewSearchService {
         return this.currentMatchedEnity;
     }
 
-    goto(step: number) {
+    goto(step: number | 'first' | 'last') {
         if (this.matchedCount === 0) {
             return;
+        }
+
+        if (step === 'first') {
+            step = 0;
+        }
+
+        if (step === 'last') {
+            step = this.matchedEntities.length - 1;
         }
 
         this.matchedCountCursor = step;

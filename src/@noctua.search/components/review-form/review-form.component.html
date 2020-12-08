@@ -59,11 +59,20 @@
         </div>
         <span fxFlex></span>
         <div [ngClass]="{'noc-disabled':noctuaReviewSearchService.matchedCount===0}">
-          <button mat-icon-button (click)="findPrevious()" class="" color="primary">
-            <fa-icon [icon]="['fas', 'arrow-up']"></fa-icon>
+          <button mat-icon-button (click)="goto('first')" class="noc-icon-button"
+            [ngClass]="{'noc-disabled': noctuaReviewSearchService.matchedCountCursor===0}" color="primary">
+            <fa-icon [icon]="['fas', 'angle-double-left']"></fa-icon>
           </button>
-          <button mat-icon-button (click)="findNext()" class="" color="primary">
-            <fa-icon [icon]="['fas', 'arrow-down']"></fa-icon>
+          <button mat-icon-button (click)="findPrevious()" class="noc-icon-button" color="primary">
+            <fa-icon [icon]="['fas', 'angle-left']"></fa-icon>
+          </button>
+          <button mat-icon-button (click)="findNext()" class="noc-icon-button  noc-rotate-90" color="primary">
+            <fa-icon [icon]="['fas', 'angle-right']"></fa-icon>
+          </button>
+          <button mat-icon-button (click)="goto('last')" class="noc-icon-button"
+            [ngClass]="{'noc-disabled': noctuaReviewSearchService.matchedCountCursor===noctuaReviewSearchService.matchedCount-1}"
+            color="primary">
+            <fa-icon [icon]="['fas', 'angle-double-right']"></fa-icon>
           </button>
         </div>
       </div>
