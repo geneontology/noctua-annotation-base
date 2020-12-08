@@ -26,9 +26,7 @@ $primary: map-get($theme, primary);
     @include deep-height(100%);
     background-color: #FFF;
 
-    .noc-review-input {
-      @include deep-width(200px);
-    }
+
   }
 
   .noc-cams-results {
@@ -84,7 +82,6 @@ $primary: map-get($theme, primary);
   }
 
   .noc-review-actions {
-    @include deep-width(230px);
 
     .noc-matched-count {
 
@@ -94,7 +91,7 @@ $primary: map-get($theme, primary);
       align-items: center;
       padding: 0 8px;
       height: 100%;
-      font-size: 10
+      font-size: 12px;
     }
 
     .noc-icon-button {
@@ -108,8 +105,10 @@ $primary: map-get($theme, primary);
     }
 
     .noc-review-btn {
-      height: 35px;
-      width: 35px;
+      padding: 0 8px;
+      height: 30px;
+      line-height: 28px;
+      font-size: 12px;
     }
 
     .noc-disabled {}
