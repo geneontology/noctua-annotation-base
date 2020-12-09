@@ -180,7 +180,7 @@ $accent: map-get($theme, accent);
 
     &.noc-selected {
       table {
-        background-color: rgba(map-get($accent, default), 0.05) !important;
+        background-color: rgba($noc-highlight-model-color, 0.3);
       }
     }
   }

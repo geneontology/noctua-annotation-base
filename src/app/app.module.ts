@@ -42,6 +42,7 @@ import {
     faAngleDoubleDown,
     faAngleDoubleUp, faUndo, faSave, faExclamationTriangle, faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight
 } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
@@ -115,6 +116,7 @@ export class AppModule {
             faCaretRight,
             faChevronDown,
             faChevronRight,
+            faCheckCircle,
             faCopy,
             faExclamationTriangle,
             faFacebook,
@@ -132,6 +134,7 @@ export class AppModule {
             faShoppingBasket,
             faSitemap,
             faTasks,
+            faTimesCircle,
             faTwitter,
             faUndo,
             faUser,

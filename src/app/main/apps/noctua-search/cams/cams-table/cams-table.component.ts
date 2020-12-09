@@ -103,6 +103,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     this.displayedColumns = [
       'expand',
       'title',
+      'saved',
       'state',
       'date',
       'contributor',
