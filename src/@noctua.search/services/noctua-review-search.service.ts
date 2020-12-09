@@ -141,9 +141,7 @@ export class NoctuaReviewSearchService {
         this.matchedCountCursor = (this.matchedCountCursor + 1) % this.matchedCount;
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
-        this.camsService.selectedNodeUuid = this.currentMatchedEnity.uuid;
-        this.camsService.selectedCamUuid = this.currentMatchedEnity.modelId;
-
+        this.camsService.currentMatch = this.currentMatchedEnity;
         this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
 
         return this.currentMatchedEnity;
@@ -154,15 +152,16 @@ export class NoctuaReviewSearchService {
             return;
         }
         this.matchedCountCursor = this.matchedCountCursor - 1;
+
         if (this.matchedCountCursor < 0) {
             this.matchedCountCursor = this.matchedCount - 1;
         }
+
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
-        this.camsService.selectedNodeUuid = this.currentMatchedEnity.uuid;
-        this.camsService.selectedCamUuid = this.currentMatchedEnity.modelId;
-
+        this.camsService.currentMatch = this.currentMatchedEnity;
         this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
+
         return this.currentMatchedEnity;
     }
 
@@ -182,19 +181,18 @@ export class NoctuaReviewSearchService {
         this.matchedCountCursor = step;
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
-        this.camsService.selectedNodeUuid = this.currentMatchedEnity.uuid;
-        this.camsService.selectedCamUuid = this.currentMatchedEnity.modelId;
+        this.camsService.currentMatch = this.currentMatchedEnity;
 
         this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
 
         return this.currentMatchedEnity;
     }
 
-    replaceAll(replaceWith): Observable<any> {
+    replaceAll(replaceWith: Entity): Observable<any> {
         return this.camsService.replace(this.matchedEntities, replaceWith);
     }
 
-    replace(replaceWith): Observable<any> {
+    replace(replaceWith: Entity): Observable<any> {
         return this.camsService.replace([this.currentMatchedEnity], replaceWith);
     }
 
@@ -207,8 +205,7 @@ export class NoctuaReviewSearchService {
         this.matchedCountCursor = 0;
         this.matchedCount = 0;
         this.currentMatchedEnity = undefined;
-        this.camsService.selectedNodeUuid = undefined;
-        this.camsService.selectedCamUuid = undefined;
+        this.camsService.currentMatch = new Entity(null, null);
         this.searchCriteria = new SearchCriteria();
     }
 

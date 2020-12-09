@@ -66,7 +66,8 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
 
   private unsubscribeAll: Subject<any>;
 
-  constructor(private camService: CamService,
+  constructor(
+    private camService: CamService,
     public camsService: CamsService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,

@@ -178,18 +178,19 @@ $accent: map-get($theme, accent);
     }
   }
 
-  .noc-annoton-selected {
-    border: rgba(map-get($accent, default), 0.4) solid 1px;
-    border-left: rgba(map-get($accent, default), 0.5) solid 5px;
+  .noc-selected {
     background-color: #FFFFFF;
 
-    .noc-annoton-table-heading {
-      background-color: rgba(map-get($accent, default), 0.05);
+    .noc-cam-table-body {
+
+      &::before {
+        left: 37px;
+        width: 5px;
+        background-color: darken($noc-highlight-model-color, 15%);
+        content: "";
+      }
     }
 
-    .noc-cam-table-body {
-      background-color: rgba(map-get($accent, default), 0.05);
-    }
   }
 
   .noc-cam-table-body {

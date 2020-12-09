@@ -42,7 +42,7 @@
         </h3>
       </div>
       <div *ngFor="let annoton of cam.annotons" [attr.id]="annoton.displayId" class="w-100-p"
-        [ngClass]="{'noc-annoton-selected': annoton.id=== camService.annoton?.id}">
+        [ngClass]="{'noc-selected': annoton.displayId===camsService.currentMatch?.annotonDisplayId}">
         <div class="noc-annoton-table-heading" fxLayout="row" fxLayoutAlign="start center">
           <div fxFlex="25px" (click)="$event.stopPropagation()">
             <button mat-icon-button (click)="toggleExpand(annoton)" color="primary" class="noc-toggle-expand-button">
@@ -57,6 +57,8 @@
             <div class="text-truncate">
               <strong> {{annoton?.presentation.qualifier}} </strong>
               {{annoton?.presentation.title}}
+
+              {{annoton.id}}, {{camService.annoton?.id}}
             </div>
           </div>
           <mat-chip class="noc-chip-xs" [ngClass]="annoton.annotonType">

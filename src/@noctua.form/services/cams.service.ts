@@ -23,8 +23,10 @@ export class CamsService {
   onCamsCheckoutChanged: BehaviorSubject<any>;
   onSelectedCamChanged: BehaviorSubject<any>;
   onSelectedNodeChanged: BehaviorSubject<any>;
-  selectedNodeUuid;
-  selectedCamUuid;
+  _selectedNodeUuid: string;
+  _selectedCamUuid;
+
+  currentMatch: Entity = new Entity(null, null);
 
   public annoton: Annoton;
   public camFormGroup$: Observable<FormGroup>;
@@ -42,13 +44,13 @@ export class CamsService {
 
     this.onSelectedCamChanged.subscribe((uuid: string) => {
       if (uuid) {
-        this.selectedCamUuid = uuid;
+        this.currentMatch.modelId = uuid;
       }
     });
 
     this.onSelectedNodeChanged.subscribe((uuid: string) => {
       if (uuid) {
-        this.selectedNodeUuid = uuid;
+        this.currentMatch.uuid = uuid;
       }
     });
   }

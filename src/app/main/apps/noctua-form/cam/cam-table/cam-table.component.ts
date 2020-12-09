@@ -15,7 +15,8 @@ import {
   AnnotonType,
   NoctuaUserService,
   NoctuaFormMenuService,
-  RightPanel
+  RightPanel,
+  CamsService
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
@@ -56,7 +57,9 @@ export class CamTableComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(public camService: CamService,
+  constructor(
+    public camService: CamService,
+    public camsService: CamsService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,

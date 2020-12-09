@@ -92,7 +92,6 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         if (!annotons) {
           return;
         }
-        annotons[0].presentation.title = ' 44444'
         this.cam.updateAnnotonDisplayNumber();
       });
   }
