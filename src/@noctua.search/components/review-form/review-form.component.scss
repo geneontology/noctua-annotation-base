@@ -98,6 +98,7 @@ $primary: map-get($theme, primary);
       @include deep-width(30px);
       @include deep-height(30px);
       line-height: 28px;
+      font-size: 18px;
       //border: map-get($accent, default) solid 1px;
       //border-radius: 0 !important;
 

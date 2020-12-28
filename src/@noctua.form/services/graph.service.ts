@@ -111,6 +111,7 @@ export class NoctuaGraphService {
     cam.onGraphChanged = new BehaviorSubject(null);
     cam.id = modelId;
     cam.manager = this.registerManager();
+    cam.artManager = this.registerManager();
     cam.individualManager = this.registerManager();
     cam.groupManager = this.registerManager();
 
@@ -572,7 +573,9 @@ export class NoctuaGraphService {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
-    reqs.reset_model(cam.id);
+    const req = new minerva_requests.request('model', 'reset');
+    req.model(cam.id);
+    reqs.add(req, 'query');
     return cam.manager.request_with(reqs);
   }
 
@@ -583,17 +586,17 @@ export class NoctuaGraphService {
     req.model(cam.id);
     reqs.add(req, 'query');
 
-    return cam.manager.request_with(reqs);
+    return cam.artManager.request_with(reqs);
   }
 
   storedModel(cam: Cam) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
-    const req = new minerva_requests.request('model', 'stored-model');
+    const req = new minerva_requests.request('model', 'get-stored-model');
     req.model(cam.id);
     reqs.add(req, 'query');
 
-    return cam.manager.request_with(reqs);
+    return cam.artManager.request_with(reqs);
   }
 
   saveCamAnnotations(cam: Cam, annotations) {
