@@ -314,6 +314,23 @@ export class NoctuaReviewSearchService {
             );
     }
 
+    getStoredModel(searchCriteria: SearchCriteria): Observable<any> {
+        const self = this;
+        this.searchCriteria.expand = false;
+        const query = searchCriteria.build();
+        const url = `${this.searchApi}/stored?${query}`;
+
+        self.loading = true;
+
+        return this.httpClient
+            .get(url)
+            .pipe(
+                //map(res => this.addCam(res)),
+                finalize(() => {
+                    self.loading = false;
+                })
+            );
+    }
 
     addCam(res) {
         const self = this;

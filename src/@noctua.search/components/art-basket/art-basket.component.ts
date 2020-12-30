@@ -9,6 +9,7 @@ import { NoctuaReviewSearchService } from './../../services/noctua-review-search
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { LeftPanel, MiddlePanel } from './../../models/menu-panels';
 import { NoctuaSearchDialogService } from './../../services/dialog.service';
+import { SearchCriteria } from '@noctua.search/models/search-criteria';
 
 @Component({
   selector: 'noc-art-basket',
@@ -81,6 +82,13 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   remove(cam: Cam) {
     this.camsService.removeCamFromReview(cam);
     this.noctuaReviewSearchService.removeFromArtBasket(cam.id);
+  }
+
+  getStoredCam(cam: Cam) {
+    const searchCriteria = new SearchCriteria();
+
+    searchCriteria.ids = [cam.id];
+    this.noctuaReviewSearchService.getStoredModel(searchCriteria);
   }
 
   clear() {

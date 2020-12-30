@@ -21,6 +21,7 @@ import { ArtBasket } from '@noctua.search/models/art-basket';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { ReviewMode } from '@noctua.search/models/review-mode';
+import { SearchCriteria } from '@noctua.search/models/search-criteria';
 
 @Component({
   selector: 'noc-cams-review',
@@ -108,6 +109,13 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
   resetCam(cam: Cam) {
     this.camService.loadCam(cam);
+  }
+
+  getStoredCam(cam: Cam) {
+    const searchCriteria = new SearchCriteria();
+
+    searchCriteria.ids = [cam.id];
+    this.noctuaReviewSearchService.getStoredModel(searchCriteria);
   }
 
   selectMiddlePanel(panel) {
