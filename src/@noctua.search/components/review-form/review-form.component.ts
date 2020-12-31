@@ -179,7 +179,9 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
       if (replace) {
         this.noctuaReviewSearchService.replaceAll(replaceWith).subscribe((cams) => {
           if (cams) {
-            self.noctuaReviewSearchService.onReplaceChanged.next(true);
+            this.camsService.bulkStoredEdit().subscribe((cams) => {
+              self.noctuaReviewSearchService.onReplaceChanged.next(true);
+            });
           }
         });
       }

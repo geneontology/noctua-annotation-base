@@ -247,7 +247,6 @@ export class Cam {
         each(findEntities, (entity: Entity) => {
           if (node.term.uuid === entity.uuid) {
             node.term.termHistory.push(new Entity(node.term.id, node.term.label));
-
             node.term.modified = true;
             node.term.id = replaceWith.id;
             node.term.label = replaceWith.label;

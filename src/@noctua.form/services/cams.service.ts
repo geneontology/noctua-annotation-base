@@ -10,12 +10,15 @@ import { Cam, CamQueryMatch, CamStats } from './../models/annoton/cam';
 import { each, groupBy, find, remove } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/annoton/entity';
+import { HttpClient } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
+import { environment } from 'environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CamsService {
-
+  searchApi = environment.searchApi;
   curieUtil: any;
   loading = false;
   cams: Cam[] = [];
@@ -32,6 +35,7 @@ export class CamsService {
   public camFormGroup$: Observable<FormGroup>;
 
   constructor(
+    private httpClient: HttpClient,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private _noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
@@ -111,6 +115,21 @@ export class CamsService {
     }
   }
 
+  getStoredModel(id: string): Observable<any> {
+    const self = this;
+    const url = `${this.searchApi}/stored?id=${id}`;
+
+    self.loading = true;
+
+    return this.httpClient
+      .get(url)
+      .pipe(
+        //map(res => this.addCam(res)),
+        finalize(() => {
+        })
+      );
+  }
+
   removeCamFromReview(cam: Cam) {
     remove(this.cams, { id: cam.id });
     this.updateDisplayNumber(this.cams);
@@ -142,6 +161,10 @@ export class CamsService {
     });
   }
 
+  applyStored() {
+
+  }
+
   replace(entities: Entity[], replaceWithTerm: Entity) {
     const self = this;
     const groupedEntities = groupBy(entities, 'modelId') as { string: Entity[] };
@@ -161,6 +184,17 @@ export class CamsService {
 
     each(this.cams, (cam: Cam) => {
       promises.push(self._noctuaGraphService.bulkEditAnnoton(cam, store));
+    });
+
+    return forkJoin(promises);
+  }
+
+  bulkStoredEdit() {
+    const self = this;
+    const promises = [];
+
+    each(this.cams, (cam: Cam) => {
+      promises.push(self.getStoredModel(cam.id));
     });
 
     return forkJoin(promises);

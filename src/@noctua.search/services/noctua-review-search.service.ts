@@ -2,7 +2,7 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, finalize } from 'rxjs/operators';
 
 import {
@@ -17,20 +17,13 @@ import { each, find } from 'lodash';
 import { CurieService } from '@noctua.curie/services/curie.service';
 import { CamPage } from './../models/cam-page';
 import { SearchHistory } from './../models/search-history';
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaSearchMenuService } from './search-menu.service';
-import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-
-declare const require: any;
-
-const amigo = require('amigo2');
 
 @Injectable({
     providedIn: 'root'
 })
 export class NoctuaReviewSearchService {
-    linker = new amigo.linker();
     artBasket = new ArtBasket();
     searchHistory: SearchHistory[] = [];
     onSearchCriteriaChanged: BehaviorSubject<any>;
@@ -39,7 +32,6 @@ export class NoctuaReviewSearchService {
     camPage: CamPage;
     searchCriteria: SearchCriteria;
     searchApi = environment.searchApi;
-    separator = '@@';
     loading = false;
     // onCamsChanged: BehaviorSubject<any>;
     onArtBasketChanged: BehaviorSubject<any>;
@@ -47,7 +39,6 @@ export class NoctuaReviewSearchService {
     onReplaceChanged: BehaviorSubject<boolean>;
     onCamsPageChanged: BehaviorSubject<any>;
     onCamChanged: BehaviorSubject<any>;
-    searchSummary: any = {};
     matchedEntities: Entity[] = [];
     matchedCountCursor = 0;
     matchedCount = 0;
@@ -60,7 +51,6 @@ export class NoctuaReviewSearchService {
     };
 
     constructor(
-        private noctuaDataService: NoctuaDataService,
         public noctuaSearchMenuService: NoctuaSearchMenuService,
         private httpClient: HttpClient,
         private camsService: CamsService,
@@ -82,7 +72,7 @@ export class NoctuaReviewSearchService {
             }
 
             self.camsService.resetMatch();
-            this.getCams(searchCriteria).subscribe((response: any) => {
+            this.getCams(searchCriteria).subscribe(() => {
                 // this.cams = response;
                 this.matchedCountCursor = 0;
                 this.calculateMatched();
@@ -308,24 +298,6 @@ export class NoctuaReviewSearchService {
             .get(url)
             .pipe(
                 map(res => this.addCam(res)),
-                finalize(() => {
-                    self.loading = false;
-                })
-            );
-    }
-
-    getStoredModel(searchCriteria: SearchCriteria): Observable<any> {
-        const self = this;
-        this.searchCriteria.expand = false;
-        const query = searchCriteria.build();
-        const url = `${this.searchApi}/stored?${query}`;
-
-        self.loading = true;
-
-        return this.httpClient
-            .get(url)
-            .pipe(
-                //map(res => this.addCam(res)),
                 finalize(() => {
                     self.loading = false;
                 })

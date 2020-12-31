@@ -111,13 +111,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this.camService.loadCam(cam);
   }
 
-  getStoredCam(cam: Cam) {
-    const searchCriteria = new SearchCriteria();
-
-    searchCriteria.ids = [cam.id];
-    this.noctuaReviewSearchService.getStoredModel(searchCriteria);
-  }
-
   selectMiddlePanel(panel) {
     this.noctuaSearchMenuService.selectMiddlePanel(panel);
 

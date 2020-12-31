@@ -84,13 +84,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     this.noctuaReviewSearchService.removeFromArtBasket(cam.id);
   }
 
-  getStoredCam(cam: Cam) {
-    const searchCriteria = new SearchCriteria();
-
-    searchCriteria.ids = [cam.id];
-    this.noctuaReviewSearchService.getStoredModel(searchCriteria);
-  }
-
   clear() {
 
     const success = (cancel) => {
