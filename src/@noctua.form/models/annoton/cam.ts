@@ -64,6 +64,7 @@ export class Cam {
   individualManager;
   groupManager;
   graph;
+  storedGraph;
   date;
   modified = false;
   modifiedP = false;
@@ -108,9 +109,8 @@ export class Cam {
 
   private _filteredAnnotons: Annoton[] = [];
   private _annotons: Annoton[] = [];
+  private _storedAnnotons: Annoton[] = [];
   private _id: string;
-
-
 
   constructor() {
     this.displayType = noctuaFormConfig.camDisplayType.options.model;
@@ -135,8 +135,6 @@ export class Cam {
   }
 
   set annotons(srcAnnotons: Annoton[]) {
-    const prevAnnotons = this._annotons;
-
     each(srcAnnotons, (annoton: Annoton) => {
       const prevAnnoton = this.findAnnotonById(annoton.id);
 
@@ -146,6 +144,22 @@ export class Cam {
     });
 
     this._annotons = srcAnnotons;
+  }
+
+  get storedAnnotons() {
+    return this._storedAnnotons.sort(this._compareMolecularFunction);
+  }
+
+  set storedAnnotons(srcAnnotons: Annoton[]) {
+    each(srcAnnotons, (annoton: Annoton) => {
+      const prevAnnoton = this.findAnnotonById(annoton.id);
+
+      if (prevAnnoton) {
+        annoton.expanded = prevAnnoton.expanded;
+      }
+    });
+
+    this._storedAnnotons = srcAnnotons;
   }
 
   toggleExpand() {
@@ -185,6 +199,22 @@ export class Cam {
     });
   }
 
+  findNodeById(id, annotons: Annoton[]): AnnotonNode {
+    const self = this;
+
+    each(annotons, (annoton) => {
+      const found = find(annoton.nodes, (node: AnnotonNode) => {
+        return node.id === id;
+      });
+
+      if (found) {
+        return found
+      }
+    })
+
+    return null;
+  }
+
   findAnnotonById(id) {
     const self = this;
 
@@ -203,6 +233,21 @@ export class Cam {
     }) as Annoton[];
 
     return result;
+  }
+
+  checkStored() {
+    const self = this;
+
+    each(self._annotons, (annoton: Annoton) => {
+      each(annoton.nodes, (node: AnnotonNode) => {
+        // node.term.highlight = false;
+        const found: AnnotonNode = self.findNodeById(node.id, self.storedAnnotons)
+        if (found && node.term.id !== found.term.id) {
+          node.term.termHistory.unshift(new Entity(found.term.id, found.term.label));
+          node.term.modified = true;
+        }
+      });
+    });
   }
 
   applyFilter() {

@@ -11,8 +11,12 @@ import { each, groupBy, find, remove } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/annoton/entity';
 import { HttpClient } from '@angular/common/http';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { environment } from 'environments/environment';
+
+declare const require: any;
+
+const model = require('bbop-graph-noctua');
 
 @Injectable({
   providedIn: 'root'
@@ -115,19 +119,30 @@ export class CamsService {
     }
   }
 
-  getStoredModel(id: string): Observable<any> {
+  getStoredModel(cam: Cam): Observable<any> {
     const self = this;
-    const url = `${this.searchApi}/stored?id=${id}`;
+    const url = `${this.searchApi}/stored?id=${cam.id}`;
 
     self.loading = true;
 
     return this.httpClient
       .get(url)
       .pipe(
-        //map(res => this.addCam(res)),
+        map(res => this.foo(cam, res)),
         finalize(() => {
         })
       );
+  }
+
+  foo(cam: Cam, res) {
+    const self = this;
+
+    const noctua_graph = model.graph;
+
+    cam.storedGraph = new noctua_graph();
+    cam.storedGraph.load_data_basic(res.storedModel);
+    cam.storedAnnotons = self._noctuaGraphService.graphToAnnotons(cam.storedGraph)
+    cam.checkStored()
   }
 
   removeCamFromReview(cam: Cam) {
@@ -189,12 +204,12 @@ export class CamsService {
     return forkJoin(promises);
   }
 
-  bulkStoredEdit() {
+  bulkStoredModel() {
     const self = this;
     const promises = [];
 
     each(this.cams, (cam: Cam) => {
-      promises.push(self.getStoredModel(cam.id));
+      promises.push(self.getStoredModel(cam));
     });
 
     return forkJoin(promises);

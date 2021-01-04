@@ -25,13 +25,12 @@ import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
 import { AnnotonType } from './../models/annoton/annoton';
 import { Contributor } from './../models/contributor';
-import { find } from 'lodash';
+import { find, each } from 'lodash';
 import { Group } from './../models';
 import { CardinalityViolation, RelationViolation } from './../models/annoton/error/violation-error';
 
 declare const require: any;
 
-const each = require('lodash/forEach');
 const model = require('bbop-graph-noctua');
 const amigo = require('amigo2');
 const barista_response = require('bbop-response-barista');
@@ -150,7 +149,6 @@ export class NoctuaGraphService {
       self.populateContributors(cam);
       self.populateGroups(cam);
 
-
       self.loadCam(cam);
       self.loadViolations(cam, response.data()['validation-results'])
       cam.loading.status = false;
@@ -167,7 +165,7 @@ export class NoctuaGraphService {
   loadCam(cam: Cam) {
     const self = this;
 
-    cam.annotons = self.graphToAnnotons(cam);
+    cam.annotons = self.graphToAnnotons(cam.graph);
     cam.applyFilter();
     cam.onGraphChanged.next(cam.annotons);
     cam.connectorAnnotons = self.getConnectorAnnotons(cam);
@@ -451,21 +449,19 @@ export class NoctuaGraphService {
     return self.noctuaFormConfigService.createAnnotonBaseModel(annotonType);
   }
 
-  graphToAnnotons(cam: Cam): Annoton[] {
+  graphToAnnotons(camGraph): Annoton[] {
     const self = this;
     const annotons: Annoton[] = [];
 
-    cam.loading.message = 'Generating activities...';
-
-    each(cam.graph.all_edges(), (bbopEdge) => {
+    each(camGraph.all_edges(), (bbopEdge) => {
       const bbopSubjectId = bbopEdge.subject_id();
-      const subjectNode = self.nodeToAnnotonNode(cam.graph, bbopSubjectId);
+      const subjectNode = self.nodeToAnnotonNode(camGraph, bbopSubjectId);
 
       if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
         (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
           subjectNode.hasRootType(EntityDefinition.GoMolecularEntity))) {
 
-        const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
+        const subjectEdges = camGraph.get_edges_by_subject(bbopSubjectId);
         const annoton: Annoton = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
         const subjectAnnotonNode = annoton.rootNode;
 
@@ -473,7 +469,7 @@ export class NoctuaGraphService {
         subjectAnnotonNode.classExpression = subjectNode.classExpression;
         subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
         subjectAnnotonNode.uuid = bbopSubjectId;
-        self._graphToAnnotonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
+        self._graphToAnnotonDFS(camGraph, annoton, subjectEdges, subjectAnnotonNode);
         annoton.id = bbopSubjectId;
         annoton.postRunUpdate();
         annotons.push(annoton);
@@ -757,14 +753,14 @@ export class NoctuaGraphService {
     return success();
   }
 
-  private _graphToAnnotonDFS(cam: Cam, annoton: Annoton, bbopEdges, subjectNode: AnnotonNode) {
+  private _graphToAnnotonDFS(camGraph, annoton: Annoton, bbopEdges, subjectNode: AnnotonNode) {
     const self = this;
 
     each(bbopEdges, (bbopEdge) => {
       const bbopPredicateId = bbopEdge.predicate_id();
       const bbopObjectId = bbopEdge.object_id();
-      const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
-      const partialObjectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
+      const evidence = self.edgeToEvidence(camGraph, bbopEdge);
+      const partialObjectNode = self.nodeToAnnotonNode(camGraph, bbopObjectId);
       const objectNode = this._insertNode(annoton, bbopPredicateId, subjectNode, partialObjectNode);
 
       annoton.updateEntityInsertMenu();
@@ -778,7 +774,7 @@ export class NoctuaGraphService {
           triple.object.setIsComplement(partialObjectNode.isComplement);
           triple.predicate.evidence = evidence;
           triple.predicate.uuid = bbopEdge.id();
-          self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
+          self._graphToAnnotonDFS(camGraph, annoton, camGraph.get_edges_by_subject(bbopObjectId), triple.object);
         }
       }
     });
@@ -788,7 +784,7 @@ export class NoctuaGraphService {
 
   private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode,
     partialObjectNode: Partial<AnnotonNode>): AnnotonNode {
-    const nodeDescriptions: ModelDefinition.InsertNodeDescription = subjectNode.canInsertNodes;
+    const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
     let objectNode;
 
     each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
