@@ -199,20 +199,20 @@ export class Cam {
     });
   }
 
-  findNodeById(id, annotons: Annoton[]): AnnotonNode {
+  findNodeById(uuid, annotons: Annoton[]): AnnotonNode {
     const self = this;
-
+    let found
     each(annotons, (annoton) => {
-      const found = find(annoton.nodes, (node: AnnotonNode) => {
-        return node.id === id;
+      found = find(annoton.nodes, (node: AnnotonNode) => {
+        return node.uuid === uuid;
       });
 
       if (found) {
-        return found
+        return false;
       }
     })
 
-    return null;
+    return found;
   }
 
   findAnnotonById(id) {
@@ -241,7 +241,7 @@ export class Cam {
     each(self._annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
         // node.term.highlight = false;
-        const found: AnnotonNode = self.findNodeById(node.id, self.storedAnnotons)
+        const found: AnnotonNode = self.findNodeById(node.uuid, self.storedAnnotons)
         if (found && node.term.id !== found.term.id) {
           node.term.termHistory.unshift(new Entity(found.term.id, found.term.label));
           node.term.modified = true;

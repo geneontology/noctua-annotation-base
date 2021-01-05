@@ -142,6 +142,7 @@ export class CamsService {
     cam.storedGraph = new noctua_graph();
     cam.storedGraph.load_data_basic(res.storedModel);
     cam.storedAnnotons = self._noctuaGraphService.graphToAnnotons(cam.storedGraph)
+    console.log(cam.storedGraph)
     cam.checkStored()
   }
 
@@ -174,10 +175,6 @@ export class CamsService {
         annoton.expanded = true;
       });
     });
-  }
-
-  applyStored() {
-
   }
 
   replace(entities: Entity[], replaceWithTerm: Entity) {
@@ -215,16 +212,7 @@ export class CamsService {
     return forkJoin(promises);
   }
 
-  resetModels() {
-    const self = this;
-    const promises = [];
 
-    each(this.cams, (cam: Cam) => {
-      promises.push(self._noctuaGraphService.resetModel(cam));
-    });
-
-    return forkJoin(promises);
-  }
 
   reviewChanges() {
     const self = this;
@@ -252,9 +240,24 @@ export class CamsService {
     this.onCamsCheckoutChanged.next(result);
   }
 
-  reset() {
+  clearCams() {
     this.cams = [];
     this.onCamsChanged.next(this.cams);
+  }
+
+  resetCam(cam: Cam) {
+    return this._noctuaGraphService.resetModel(cam);
+  }
+
+  resetCams() {
+    const self = this;
+    const promises = [];
+
+    each(this.cams, (cam: Cam) => {
+      promises.push(self._noctuaGraphService.resetModel(cam));
+    });
+
+    return forkJoin(promises);
   }
 
   resetMatch() {

@@ -148,9 +148,9 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
     this.noctuaReviewSearchService.onResetReview
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((reset: boolean) => {
-        if (reset) {
-          this.camsService.reset();
+      .subscribe((remove: boolean) => {
+        if (remove) {
+          this.camsService.clearCams();
           this.selection.clear();
         }
       });
@@ -198,6 +198,10 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       if (found) {
         self.selection.select(cam);
       }
+    });
+
+    this.camsService.bulkStoredModel().subscribe((cams) => {
+      console.log('stored', cams)
     });
 
   }

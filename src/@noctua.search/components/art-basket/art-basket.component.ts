@@ -74,10 +74,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     this.noctuaSearchMenuService.scrollTo(q);
   }
 
-  resetCam(cam: Cam) {
-    this.camService.loadCam(cam);
-    this.camsService.reviewChanges();
-  }
+
 
   remove(cam: Cam) {
     this.camsService.removeCamFromReview(cam);
@@ -90,7 +87,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       if (cancel) {
 
         this.noctuaReviewSearchService.clear();
-        this.camsService.reset();
+        this.camsService.clearCams();
         this.noctuaReviewSearchService.clearBasket();
       }
     };
@@ -134,10 +131,22 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       success, options);
   }
 
-  resetAll() {
+  resetCam(cam: Cam) {
     const self = this;
 
-    self.camsService.resetModels().subscribe((cams) => {
+    self.camsService.resetCam(cam).subscribe((cams) => {
+      if (cams) {
+        self.camsService.loadCams();
+        self.noctuaReviewSearchService.onReplaceChanged.next(true);
+      }
+    });
+    self.camsService.reviewChanges();
+  }
+
+  resetCams() {
+    const self = this;
+
+    self.camsService.resetCams().subscribe((cams) => {
       if (cams) {
         self.camsService.loadCams();
         self.noctuaReviewSearchService.onReplaceChanged.next(true);
@@ -172,7 +181,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
             self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
             self.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
             self.noctuaReviewSearchService.clear();
-            self.camsService.reset();
+            self.camsService.clearCams();
             self.noctuaReviewSearchService.clearBasket();
             self.noctuaReviewSearchService.onResetReview.next(true);
             self.zone.run(() => {
