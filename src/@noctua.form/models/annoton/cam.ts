@@ -67,7 +67,6 @@ export class Cam {
   storedGraph;
   date;
   modified = false;
-  modifiedP = false;
   modifiedStats = new CamStats();
   matchedCount = 0;
   filter = {
@@ -314,7 +313,6 @@ export class Cam {
           self.modifiedStats.termsCount++;
           stat.termsCount++;
           annoton.modified = true;
-          self.modified = true;
         }
       });
     });

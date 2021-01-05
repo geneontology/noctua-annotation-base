@@ -122,7 +122,7 @@ export class NoctuaGraphService {
 
       cam.graph = new noctua_graph();
       cam.id = response.data().id;
-      cam.modifiedP = response['modified-p'];
+      cam.modified = response.data()['modified-p'];
       cam.graph.load_data_basic(response.data());
       cam.isReasoned = response['is-reasoned'];
 

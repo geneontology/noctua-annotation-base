@@ -128,21 +128,19 @@ export class CamsService {
     return this.httpClient
       .get(url)
       .pipe(
-        map(res => this.foo(cam, res)),
+        map(res => this.populateStoredModel(cam, res)),
         finalize(() => {
         })
       );
   }
 
-  foo(cam: Cam, res) {
+  populateStoredModel(cam: Cam, res) {
     const self = this;
-
     const noctua_graph = model.graph;
 
     cam.storedGraph = new noctua_graph();
     cam.storedGraph.load_data_basic(res.storedModel);
     cam.storedAnnotons = self._noctuaGraphService.graphToAnnotons(cam.storedGraph)
-    console.log(cam.storedGraph)
     cam.checkStored()
   }
 
@@ -212,8 +210,6 @@ export class CamsService {
     return forkJoin(promises);
   }
 
-
-
   reviewChanges() {
     const self = this;
     const details = [];
@@ -261,8 +257,6 @@ export class CamsService {
   }
 
   resetMatch() {
-    const self = this;
-
     each(this.cams, (cam: Cam) => {
       cam.queryMatch = new CamQueryMatch();
     });
@@ -273,8 +267,6 @@ export class CamsService {
   }
 
   updateDisplayNumber(cams: any[]) {
-    const self = this;
-
     each(cams, (cam: Cam, key) => {
       cam.displayNumber = (key + 1).toString();
       cam.updateAnnotonDisplayNumber();
