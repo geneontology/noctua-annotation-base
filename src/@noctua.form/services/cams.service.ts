@@ -242,7 +242,7 @@ export class CamsService {
   }
 
   resetCam(cam: Cam) {
-    return this._noctuaGraphService.resetModel(cam);
+    return forkJoin([this._noctuaGraphService.resetModel(cam)]);
   }
 
   resetCams() {

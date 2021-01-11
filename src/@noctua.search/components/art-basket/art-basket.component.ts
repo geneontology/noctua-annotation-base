@@ -138,9 +138,9 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       if (cams) {
         self.camsService.loadCams();
         self.noctuaReviewSearchService.onReplaceChanged.next(true);
+        self.camsService.reviewChanges();
       }
     });
-    self.camsService.reviewChanges();
   }
 
   resetCams() {
@@ -150,9 +150,9 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       if (cams) {
         self.camsService.loadCams();
         self.noctuaReviewSearchService.onReplaceChanged.next(true);
+        self.camsService.reviewChanges();
       }
     });
-    self.camsService.reviewChanges();
   }
 
   reviewChanges() {

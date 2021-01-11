@@ -157,9 +157,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
   resetModel(cam: Cam) {
     this.camService.resetModel(cam);
   }
-  storedModel(cam: Cam) {
-    this.camService.storedModel(cam);
-  }
 
   displayErrors() {
     const errors = this.cam.getViolationDisplayErrors();

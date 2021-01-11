@@ -167,12 +167,6 @@ export class CamService {
     return self._noctuaGraphService.diffModel(cam);
   }
 
-  storedModel(cam: Cam) {
-    const self = this;
-
-    return self._noctuaGraphService.storedModel(cam);
-  }
-
   resetModel(cam: Cam) {
     const self = this;
 
