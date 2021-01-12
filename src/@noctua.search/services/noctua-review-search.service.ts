@@ -10,6 +10,7 @@ import {
     Entity,
     CamsService,
     CamQueryMatch,
+    NoctuaUserService,
 } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 import { saveAs } from 'file-saver';
@@ -51,6 +52,7 @@ export class NoctuaReviewSearchService {
     };
 
     constructor(
+        private noctuaUserService: NoctuaUserService,
         public noctuaSearchMenuService: NoctuaSearchMenuService,
         private httpClient: HttpClient,
         private camsService: CamsService,
@@ -97,10 +99,14 @@ export class NoctuaReviewSearchService {
 
                 this.searchCriteria['ids'] = ids;
             });
-
     }
 
     setup() {
+        if (!this.noctuaUserService.user) {
+            this.clearBasket();
+            return;
+        }
+
         const artBasket = localStorage.getItem('artBasket');
 
         if (artBasket) {
@@ -246,6 +252,7 @@ export class NoctuaReviewSearchService {
 
     addToArtBasket(id: string, title: string) {
         this.artBasket.addCamToBasket(id, title);
+
         localStorage.setItem('artBasket', JSON.stringify(this.artBasket));
         this.onArtBasketChanged.next(this.artBasket);
     }

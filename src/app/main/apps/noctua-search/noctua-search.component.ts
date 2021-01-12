@@ -173,7 +173,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.artBasket);
         break;
     }
-
   }
 
   reviewChanges() {

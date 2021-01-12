@@ -74,8 +74,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     this.noctuaSearchMenuService.scrollTo(q);
   }
 
-
-
   remove(cam: Cam) {
     this.camsService.removeCamFromReview(cam);
     this.noctuaReviewSearchService.removeFromArtBasket(cam.id);
