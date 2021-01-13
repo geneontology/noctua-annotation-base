@@ -192,10 +192,6 @@ export class NoctuaReviewSearchService {
         return this.camsService.replace([this.currentMatchedEnity], replaceWith);
     }
 
-    bulkEdit(store = false): Observable<any> {
-        return this.camsService.bulkEdit(store);
-    }
-
     clear() {
         this.matchedEntities = [];
         this.matchedCountCursor = 0;

@@ -173,13 +173,6 @@ export class CamService {
     return self._noctuaGraphService.resetModel(cam);
   }
 
-
-  bulkEdit(cam: Cam) {
-    const self = this;
-
-    return self._noctuaGraphService.bulkEditAnnoton(cam);
-  }
-
   reviewChanges(cam: Cam, stats: CamStats) {
     const terms = cam.reviewTermChanges(stats);
 

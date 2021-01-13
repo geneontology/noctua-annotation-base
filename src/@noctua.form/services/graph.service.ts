@@ -585,6 +585,18 @@ export class NoctuaGraphService {
     return cam.artManager.request_with(reqs);
   }
 
+  storeModel(cam: Cam) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
+    }
+
+    reqs.store_model(cam.id);
+    return cam.manager.request_with(reqs);
+  }
+
   storedModel(cam: Cam) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
@@ -700,7 +712,7 @@ export class NoctuaGraphService {
   }
 
 
-  bulkEditAnnoton(cam: Cam, store = false) {
+  bulkEditAnnoton(cam: Cam) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
     each(cam.annotons, (annoton: Annoton) => {
@@ -717,9 +729,6 @@ export class NoctuaGraphService {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
-    if (store) {
-      reqs.store_model(cam.id);
-    }
     return cam.manager.request_with(reqs);
   }
 

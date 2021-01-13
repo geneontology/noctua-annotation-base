@@ -67,6 +67,11 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       });
   }
 
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
+
   selectItem(artBasketItem: ArtBasketItem) {
     this.camsService.onSelectedCamChanged.next(artBasketItem.id);
     const q = '#noc-review-cams-' + artBasketItem.displayId;
@@ -159,9 +164,23 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.reviewChanges);
   }
 
+
   submitChanges() {
     const self = this;
 
+    this.storeModels(self.camsService.cams)
+  }
+
+  submitChange(cam: Cam) {
+    this.storeModels([cam])
+  }
+
+  close() {
+    this.noctuaSearchMenuService.closeLeftDrawer();
+  }
+
+  private storeModels(cams: Cam[]) {
+    const self = this;
     const success = (replace) => {
       if (replace) {
         const element = document.querySelector('#noc-review-results');
@@ -169,7 +188,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
         if (element) {
           element.scrollTop = 0;
         }
-        self.noctuaReviewSearchService.bulkEdit(true).pipe(takeUntil(this._unsubscribeAll))
+        self.camsService.storeModels(self.camsService.cams).pipe(takeUntil(this._unsubscribeAll))
           .subscribe(cams => {
             if (!cams) {
               return;
@@ -202,12 +221,4 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     }
   }
 
-  close() {
-    this.noctuaSearchMenuService.closeLeftDrawer();
-  }
-
-  ngOnDestroy(): void {
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
-  }
 }

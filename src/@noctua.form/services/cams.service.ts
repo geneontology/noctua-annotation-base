@@ -178,26 +178,42 @@ export class CamsService {
   replace(entities: Entity[], replaceWithTerm: Entity) {
     const self = this;
     const groupedEntities = groupBy(entities, 'modelId') as { string: Entity[] };
+    const cams: Cam[] = []
 
     each(groupedEntities, (values: Entity[], key) => {
       const cam: Cam = find(this.cams, { id: key });
-      cam.replace(entities, replaceWithTerm);
+      if (cam) {
+        cam.replace(entities, replaceWithTerm);
+        cams.push(cam)
+      }
     });
 
     self.reviewChanges();
-    return self.bulkEdit();
+    return self.bulkEdit(cams);
   }
 
-  bulkEdit(store = false) {
+  bulkEdit(cams: Cam[]): Observable<any> {
     const self = this;
     const promises = [];
 
-    each(this.cams, (cam: Cam) => {
-      promises.push(self._noctuaGraphService.bulkEditAnnoton(cam, store));
+    each(cams, (cam: Cam) => {
+      promises.push(self._noctuaGraphService.bulkEditAnnoton(cam));
     });
 
     return forkJoin(promises);
   }
+
+  storeModels(cams: Cam[]): Observable<any> {
+    const self = this;
+    const promises = [];
+
+    each(cams, (cam: Cam) => {
+      promises.push(self._noctuaGraphService.storeModel(cam));
+    });
+
+    return forkJoin(promises);
+  }
+
 
   bulkStoredModel() {
     const self = this;
@@ -234,6 +250,31 @@ export class CamsService {
     };
 
     this.onCamsCheckoutChanged.next(result);
+  }
+
+
+  reviewCamChanges(cam: Cam) {
+    const self = this;
+    const details = [];
+    const stats = new CamStats();
+
+    const changes = self.camService.reviewChanges(cam, stats);
+    if (changes) {
+      details.push({
+        cam: cam,
+        changes: changes
+      });
+    }
+
+    stats.camsCount = details.length;
+    stats.updateTotal();
+
+    const result = {
+      stats: stats,
+      details: details
+    };
+
+    return result
   }
 
   clearCams() {
