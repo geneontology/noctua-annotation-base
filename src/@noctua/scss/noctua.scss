@@ -116,6 +116,15 @@ mat-chip {
   }
 }
 
+.noc-cams-unchanged-dialog {
+  @include deep-height(90%);
+  @include deep-width(800px);
+
+  @include media-breakpoint('sm') {
+    @include deep-width(100%);
+  }
+}
+
 .noc-display-number {
   display: flex;
   align-items: center;

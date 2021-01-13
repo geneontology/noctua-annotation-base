@@ -65,7 +65,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
         this.summary = summary;
       });
-
   }
 
   selectItem(artBasketItem: ArtBasketItem) {
@@ -188,8 +187,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
           });
       }
     };
-
-
 
     const options = {
       cancelLabel: 'Go Back',

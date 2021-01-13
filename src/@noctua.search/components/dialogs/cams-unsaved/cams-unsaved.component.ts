@@ -37,7 +37,7 @@ import { groupBy } from 'lodash';
   animations: noctuaAnimations,
 })
 export class CamsUnsavedDialogComponent implements OnInit, OnDestroy {
-  groupedEntities;
+  cams: Cam[] = []
   occurrences = 0;
   models = 0;
 
@@ -51,23 +51,27 @@ export class CamsUnsavedDialogComponent implements OnInit, OnDestroy {
       private camsService: CamsService,
       private noctuaLookupService: NoctuaLookupService,
       private noctuaDataService: NoctuaDataService,
-      public noctuaReviewSearchService: NoctuaReviewSearchService,
-      public noctuaSearchService: NoctuaSearchService,
-      public noctuaUserService: NoctuaUserService,
-      public noctuaFormConfigService: NoctuaFormConfigService,
-      public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-      public noctuaFormMenuService: NoctuaFormMenuService) {
+      private noctuaReviewSearchService: NoctuaReviewSearchService,
+      private noctuaSearchService: NoctuaSearchService,
+      private noctuaUserService: NoctuaUserService,
+      private noctuaFormConfigService: NoctuaFormConfigService,
+      private noctuaAnnotonFormService: NoctuaAnnotonFormService,
+      private noctuaFormMenuService: NoctuaFormMenuService) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
     const self = this;
 
-    this.groupedEntities = groupBy(
-      this.noctuaReviewSearchService.matchedEntities, 'modelId') as { string: Entity[] };
+    this.camsService.onCamsChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(cams => {
+        if (!cams) {
+          return;
+        }
+        this.cams = cams;
+      });
 
-    this.models = Object.keys(this.groupedEntities).length;
-    this.occurrences = this.noctuaReviewSearchService.matchedCount;
   }
 
   ngOnDestroy(): void {

@@ -98,7 +98,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
-
   viewAsModel(cam: Cam) {
     cam.displayType = noctuaFormConfig.camDisplayType.options.model;
   }

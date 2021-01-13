@@ -21,6 +21,7 @@ import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-m
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
+import { NoctuaSearchDialogService } from '@noctua.search/services/dialog.service';
 
 @Component({
     selector: 'noctua-toolbar',
@@ -51,6 +52,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         private noctuaCommonMenuService: NoctuaCommonMenuService,
         public noctuaUserService: NoctuaUserService,
         private confirmDialogService: NoctuaConfirmDialogService,
+        private noctuaSearchDialogService: NoctuaSearchDialogService,
         public noctuaConfigService: NoctuaFormConfigService,
         public noctuaAnnotonFormService: NoctuaAnnotonFormService,
         public noctuaFormMenuService: NoctuaFormMenuService,
@@ -105,7 +107,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         this.noctuaFormMenuService.openLeftDrawer(LeftPanel.annotonForm);
     }
 
-    logoutOut() {
+    logout() {
         const self = this;
 
         const success = (logout) => {
@@ -122,9 +124,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         };
 
         if (self.artBasket?.cams.length > 0) {
-            this.confirmDialogService.openConfirmDialog('Unsaved Changes (Annotation Review Tool', 'It looks like you have pending changes for Annotation Review Tool. '
-                + 'If you leave before saving, your basket changes will be lost',
-                success, options);
+            this.noctuaSearchDialogService.openCamsUnsavedDialog(success);
         }
     }
 
