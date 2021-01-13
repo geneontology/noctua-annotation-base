@@ -168,7 +168,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   submitChanges() {
     const self = this;
 
-    this.storeModels(self.camsService.cams)
+    this.storeModels(self.camsService.cams, true)
   }
 
   submitChange(cam: Cam) {
@@ -179,7 +179,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     this.noctuaSearchMenuService.closeLeftDrawer();
   }
 
-  private storeModels(cams: Cam[]) {
+  private storeModels(cams: Cam[], reset = false) {
     const self = this;
     const success = (replace) => {
       if (replace) {
@@ -188,24 +188,27 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
         if (element) {
           element.scrollTop = 0;
         }
-        self.camsService.storeModels(self.camsService.cams).pipe(takeUntil(this._unsubscribeAll))
+        self.camsService.storeModels(cams).pipe(takeUntil(this._unsubscribeAll))
           .subscribe(cams => {
             if (!cams) {
               return;
             }
 
-            self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
-            self.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
-            self.noctuaReviewSearchService.clear();
-            self.camsService.clearCams();
-            self.noctuaReviewSearchService.clearBasket();
-            self.noctuaReviewSearchService.onResetReview.next(true);
+            if (reset) {
+              self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
+              self.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
+              self.noctuaReviewSearchService.clear();
+              self.camsService.clearCams();
+              self.noctuaReviewSearchService.clearBasket();
+              self.noctuaReviewSearchService.onResetReview.next(true);
+            }
             self.zone.run(() => {
               self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
             });
           });
       }
     };
+
 
     const options = {
       cancelLabel: 'Go Back',
@@ -220,5 +223,8 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
         success, options);
     }
   }
+
+
+
 
 }
