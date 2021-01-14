@@ -66,7 +66,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     detail: {}
   };
 
-  isReviewMode = false;
 
   cams: any[] = [];
 
@@ -189,19 +188,19 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.openLeftDrawer(LeftPanel.artBasket);
     this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.camsReview);
     this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
-    this.isReviewMode = true;
+    this.noctuaSearchMenuService.isReviewMode = true;
   }
 
   toggleReviewMode() {
     if (this.noctuaSearchMenuService.reviewMode === ReviewMode.off) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
-      this.isReviewMode = true;
+      this.noctuaSearchMenuService.isReviewMode = true;
       // this.noctuaSearchMenuService.closeLeftDrawer();
     } else if (this.noctuaSearchMenuService.reviewMode === ReviewMode.on) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.off;
       this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
       this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
-      this.isReviewMode = false;
+      this.noctuaSearchMenuService.isReviewMode = false;
     }
   }
 

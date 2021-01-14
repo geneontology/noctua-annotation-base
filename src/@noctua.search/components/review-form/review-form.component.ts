@@ -272,8 +272,10 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     const findWhat = value.findWhat;
     const replaceWith = value.replaceWith;
 
-    this.displayReplaceForm.replaceSection = findWhat && findWhat.id;
-    this.displayReplaceForm.replaceActions = replaceWith && replaceWith.id;
+    const matched = this.noctuaReviewSearchService.matchedCount > 0
+
+    this.displayReplaceForm.replaceSection = matched && findWhat && findWhat.id;
+    this.displayReplaceForm.replaceActions = matched && replaceWith && replaceWith.id;
   }
 
   compareCategory(a: any, b: any) {

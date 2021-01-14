@@ -113,18 +113,13 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         const success = (logout) => {
             if (logout) {
                 window.location.href = self.noctuaConfigService.logoutUrl;
-
-
             }
-        };
-
-        const options = {
-            cancelLabel: 'Cancel',
-            confirmLabel: 'Ok'
         };
 
         if (self.artBasket?.cams.length > 0) {
             this.noctuaSearchDialogService.openCamsUnsavedDialog(success);
+        } else {
+            window.location.href = self.noctuaConfigService.logoutUrl;
         }
     }
 

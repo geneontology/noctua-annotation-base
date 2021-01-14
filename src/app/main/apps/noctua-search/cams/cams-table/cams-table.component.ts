@@ -201,9 +201,9 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     });
 
     this.camsService.bulkStoredModel().subscribe((cams) => {
+      this.camsService.reviewChanges();
       console.log('stored', cams)
     });
-
   }
 
   /** The label for the checkbox on the passed row */

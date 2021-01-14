@@ -122,7 +122,7 @@
         </div>
         <div class="h-100-p w-100-p">
           <noc-cams-table [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.cams"
-            [isReviewMode]="isReviewMode">
+            [isReviewMode]="noctuaSearchMenuService.isReviewMode">
           </noc-cams-table>
           <noc-cams-review [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.camsReview">
           </noc-cams-review>

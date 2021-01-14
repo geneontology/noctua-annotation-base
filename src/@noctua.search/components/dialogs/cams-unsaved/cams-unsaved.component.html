@@ -2,18 +2,31 @@
   <mat-toolbar class="mat-primary m-0">
     <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="start center">
       <span class="title dialog-title">
-        Unsaved CHanges (Annotation Review Tool) </span>
+        Unsaved Changes (Annotation Review Tool) </span>
       <span fxFlex></span>
       <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" aria-label="Close dialog">
         <mat-icon>close</mat-icon> Close
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
-  <div class="noc-dialog-body  noc-form-section" noctuaPerfectScrollbar>
-    Replace {{occurrences}} occurrences across {{models}} models
-    It looks like you have pending changes for Annotation Review Tool.
-    .If you leave before saving, your basket changes will be lost
-
+  <div class="noc-dialog-body">
+    <div *ngIf="summary?.stats.totalChanges>0" class="alert alert-danger w-100-p">
+      It looks like you have pending changes for Annotation Review Tool.
+      .If you leave before saving, your basket changes will be lost.
+      <div class="noc-stat-summary w-100-p">
+        <span class="noc-number">
+          {{summary?.stats.totalChanges }}
+        </span>
+        unsaved changes across
+        <span class="noc-number">
+          {{summary?.stats.camsCount }} models
+        </span>
+      </div>
+    </div>
+    <div *ngIf="summary?.stats.totalChanges===0" class="alert alert-warning w-100-p">
+      It looks like Annotation Review Tool Basket is not empty.
+      .If you leave, your basket will be cleared.
+    </div>
     <div *ngFor="let cam of cams" class="noc-group-row"
       [ngClass]="{'noc-selected': cam.id===camsService.currentMatch?.modelId}" fxLayout="column"
       fxLayoutAlign="start stretch">
@@ -22,7 +35,7 @@
         </div>
         (<strong class="mr-4">{{cam.modifiedStats?.totalChanges}}</strong> change(s) )
         <span fxFlex></span>
-        <button class="noc-rounded-button noc-xs noc-action-button" mat-stroked-button
+        <!--    <button class="noc-rounded-button noc-xs noc-action-button" mat-stroked-button
           (click)="resetCam(cam); $event.stopPropagation()" color="primary" matTooltip="Undo Model Changes"
           [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
           Undo
@@ -31,7 +44,7 @@
           (click)="submitChange(cam); $event.stopPropagation()" color="primary" matTooltip="Save Model Changes"
           [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
           Save
-        </button>
+        </button> -->
       </div>
       <div class="noc-item-body w-100-p" fxLayout="row" fxLayoutAlign="start center">
         <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
@@ -81,14 +94,13 @@
           </div>
         </div>
         <span fxFlex></span>
-        <button class="noc-remove-button" mat-icon-button (click)="remove(cam)" color="warn">X</button>
       </div>
     </div>
   </div>
   <div class="m-0 p-16 noc-dialog-footer" fxLayout="row" fxLayoutAlign="space-between center">
-    <span fxFlex></span>
     <button (click)='close()' type="button" mat-raised-button color="" class="mr-8">Cancel</button>
-    <button (click)='close()' type="button" mat-raised-button color="" class="mr-8">Clear List</button>
-    <button (click)="save()" type="button" mat-raised-button color="primary">Save Changes</button>
+    <span fxFlex></span>
+    <button (click)="reviewChanges()" type="button" mat-raised-button color="primary">Review Changes</button>
+    <button (click)="logout()" type="button" mat-raised-button color="warn">Logout Anyway</button>
   </div>
 </div>

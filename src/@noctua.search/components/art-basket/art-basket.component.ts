@@ -225,6 +225,4 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   }
 
 
-
-
 }

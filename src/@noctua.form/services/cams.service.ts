@@ -249,6 +249,8 @@ export class CamsService {
       details: details
     };
 
+    console.log(result)
+
     this.onCamsCheckoutChanged.next(result);
   }
 
