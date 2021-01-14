@@ -150,9 +150,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  diffModel(cam: Cam) {
-    this.camService.diffModel(cam);
-  }
 
   resetModel(cam: Cam) {
     this.camService.resetModel(cam);

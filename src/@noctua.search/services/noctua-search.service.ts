@@ -23,6 +23,7 @@ import { CamPage } from './../models/cam-page';
 import { SearchHistory } from './../models/search-history';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { NoctuaSearchMenuService } from './search-menu.service';
+import { MiddlePanel } from '../models/menu-panels';
 
 declare const require: any;
 
@@ -102,7 +103,9 @@ export class NoctuaSearchService {
                 this.onCamsPageChanged.next(this.camPage);
             });
 
-            this.noctuaSearchMenuService.resetResults();
+            if (this.noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.cams) {
+                this.noctuaSearchMenuService.resetResults();
+            }
         });
     }
 

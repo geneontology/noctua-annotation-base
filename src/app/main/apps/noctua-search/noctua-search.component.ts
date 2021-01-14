@@ -144,14 +144,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadCam(modelId) {
-    const self = this;
-
     this.cam = this.camService.getCam(modelId);
-  }
-
-  edit() {
-    // this.loadModel(this.selectCam)
-    // this.openRightDrawer(RightPanel.camForm);
   }
 
   openLeftDrawer(panel) {

@@ -282,7 +282,7 @@ export class Cam {
     }
   }
 
-  replace(findEntities: Entity[], replaceWith: Entity) {
+  addPendingChanges(findEntities: Entity[], replaceWith: Entity) {
     const self = this;
 
     each(self._annotons, (annoton: Annoton) => {
@@ -290,10 +290,8 @@ export class Cam {
         // node.term.highlight = false;
         each(findEntities, (entity: Entity) => {
           if (node.term.uuid === entity.uuid) {
-            node.term.termHistory.push(new Entity(node.term.id, node.term.label));
-            node.term.modified = true;
-            node.term.id = replaceWith.id;
-            node.term.label = replaceWith.label;
+            node.pendingChangeEntity = new Entity(replaceWith.id, replaceWith.label);
+            node.pendingChangeEntity.uuid = node.term.uuid;
           }
         });
       });

@@ -536,16 +536,6 @@ export class NoctuaGraphService {
     return connectorAnnotons;
   }
 
-  graphToAnnotonDFSError(annoton, annotonNode) {
-    const self = this;
-    const edge = annoton.getEdges(annotonNode.id);
-
-    each(edge.nodes, function (node) {
-      node.object.status = 2;
-      self.graphToAnnotonDFSError(annoton, node.object);
-    });
-  }
-
   evidenceUseGroups(reqs, evidence: Evidence) {
     const self = this;
     const assignedBy = evidence.assignedBy;
@@ -575,16 +565,6 @@ export class NoctuaGraphService {
     return cam.manager.request_with(reqs);
   }
 
-  diffModel(cam: Cam) {
-    const self = this;
-    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
-    const req = new minerva_requests.request('model', 'diff');
-    req.model(cam.id);
-    reqs.add(req, 'query');
-
-    return cam.artManager.request_with(reqs);
-  }
-
   storeModel(cam: Cam) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
@@ -595,16 +575,6 @@ export class NoctuaGraphService {
 
     reqs.store_model(cam.id);
     return cam.manager.request_with(reqs);
-  }
-
-  storedModel(cam: Cam) {
-    const self = this;
-    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
-    const req = new minerva_requests.request('model', 'get-stored-model');
-    req.model(cam.id);
-    reqs.add(req, 'query');
-
-    return cam.artManager.request_with(reqs);
   }
 
   saveCamAnnotations(cam: Cam, annotations) {
@@ -935,7 +905,7 @@ export class NoctuaGraphService {
   }
 
   bulkEditIndividual(reqs, cam: Cam, node: AnnotonNode) {
-    if (node.hasValue() && node.term.modified) {
+    if (node.hasValue() && node.pendingChangeEntity) {
       reqs.remove_type_from_individual(
         node.classExpression,
         node.uuid,
@@ -943,8 +913,8 @@ export class NoctuaGraphService {
       );
 
       reqs.add_type_to_individual(
-        class_expression.cls(node.getTerm().id),
-        node.uuid,
+        class_expression.cls(node.pendingChangeEntity.id),
+        node.pendingChangeEntity.uuid,
         cam.id,
       );
     }

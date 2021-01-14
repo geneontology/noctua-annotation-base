@@ -95,6 +95,9 @@ export class AnnotonNode implements AnnotonNodeDisplay {
 
   private _id: string;
 
+  //For Save 
+  pendingChangeEntity: Entity;
+
   constructor(annotonNode?: Partial<AnnotonNodeDisplay>) {
     if (annotonNode) {
       this.overrideValues(annotonNode);

@@ -128,7 +128,7 @@ export class CamsService {
     return this.httpClient
       .get(url)
       .pipe(
-        map(res => this.populateStoredModel(cam, res)),
+        map(res => self.populateStoredModel(cam, res)),
         finalize(() => {
         })
       );
@@ -183,7 +183,7 @@ export class CamsService {
     each(groupedEntities, (values: Entity[], key) => {
       const cam: Cam = find(this.cams, { id: key });
       if (cam) {
-        cam.replace(entities, replaceWithTerm);
+        cam.addPendingChanges(entities, replaceWithTerm);
         cams.push(cam)
       }
     });
