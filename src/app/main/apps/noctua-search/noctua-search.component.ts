@@ -160,6 +160,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectMiddlePanel(panel) {
+    const self = this;
     this.noctuaSearchMenuService.selectMiddlePanel(panel);
 
     switch (panel) {
@@ -167,20 +168,16 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
         break;
       case MiddlePanel.camsReview:
+        self.camsService.reviewChanges();
         this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.artBasket);
         break;
       case MiddlePanel.reviewChanges:
+        self.camsService.reviewChanges();
         this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.artBasket);
         break;
     }
   }
 
-  reviewChanges() {
-    const self = this;
-
-    self.camsService.reviewChanges();
-    self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.reviewChanges);
-  }
 
   openRightDrawer(panel) {
     this.noctuaSearchMenuService.selectRightPanel(panel);
