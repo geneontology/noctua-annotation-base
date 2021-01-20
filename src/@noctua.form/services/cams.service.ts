@@ -12,7 +12,7 @@ import { CamService } from './cam.service';
 import { Entity } from './../models/annoton/entity';
 import { HttpClient } from '@angular/common/http';
 import { finalize, map } from 'rxjs/operators';
-import { environment } from 'environments/environment';
+import { environment } from './../../environments/environment';
 
 declare const require: any;
 

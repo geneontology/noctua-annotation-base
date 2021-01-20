@@ -3,7 +3,7 @@
     <span class='noc-title mr-12'>
       ACTIVITIES
     </span>
-    <div *ngIf="cam.hasViolations" class="noc-error" fxLayout="row" fxLayoutAlign="start center">
+    <div *ngIf="cam.violations?.length>0" class="noc-error" fxLayout="row" fxLayoutAlign="start center">
       <mat-chip class="noc-error-chip" fxLayout="row" fxLayoutAlign="start center" (click)="displayErrors()">
         <div class="noc-icon">
           <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>

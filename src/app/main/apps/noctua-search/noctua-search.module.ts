@@ -16,7 +16,7 @@ import { CamsReviewChangesComponent } from './cams/cams-review-changes/cams-revi
 
 const routes = [
   {
-    path: '',
+    path: 's',
     component: NoctuaSearchComponent
   }
 ];
