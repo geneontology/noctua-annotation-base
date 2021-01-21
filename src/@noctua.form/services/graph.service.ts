@@ -28,6 +28,7 @@ import { Contributor } from './../models/contributor';
 import { find, each } from 'lodash';
 import { Group } from './../models';
 import { CardinalityViolation, RelationViolation } from './../models/annoton/error/violation-error';
+import { CurieService } from './../../@noctua.curie/services/curie.service';
 
 declare const require: any;
 
@@ -46,11 +47,14 @@ export class NoctuaGraphService {
   baristaLocation = environment.globalBaristaLocation;
   minervaDefinitionName = environment.globalMinervaDefinitionName;
   linker = new amigo.linker();
+  curieUtil: any;
 
   constructor(
+    private curieService: CurieService,
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaLookupService: NoctuaLookupService) {
+    this.curieUtil = this.curieService.getCurieUtil();
   }
 
   registerManager() {
@@ -196,8 +200,8 @@ export class NoctuaGraphService {
     }
 
     cam.setViolations();
+    console.log(violations);
     console.log(cam.violations);
-
   }
 
   generateViolation(cam: Cam, node, constraint) {
@@ -220,7 +224,12 @@ export class NoctuaGraphService {
     } else if (constraint.object) {
       violation = new RelationViolation(annotonNode);
       violation.predicate = self.noctuaFormConfigService.findEdge(constraint.property);
-      violation.object = self.nodeToAnnotonNode(cam.graph, constraint.object);
+
+      const object = constraint.object.startsWith('http')
+        ? self.curieUtil.getCurie(constraint.object)
+        : constraint.object
+
+      violation.object = self.nodeToAnnotonNode(cam.graph, object);
     }
 
     return violation;

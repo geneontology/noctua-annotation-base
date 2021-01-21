@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment';
 import { Entity } from './models/annoton/entity';
 
 const edge = {
@@ -90,6 +91,8 @@ const edge = {
     label: 'directly negatively regulates'
   },
 }
+
+
 
 export const noctuaFormConfig = {
   'annotonType': {
@@ -257,6 +260,7 @@ export const noctuaFormConfig = {
     }
   },
   edge: edge,
+  allEdges: environment.globalKnownRelations,
   noDuplicateEdges: [
     'RO:0002333',
     'RO:0002092',

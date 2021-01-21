@@ -55,10 +55,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { SearchEvidenceDialogComponent } from './dialogs/search-evidence/search-evidence.component';
 import { SelectEvidenceComponent } from './components/select-evidence/select-evidence.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { CamErrorsDialogComponent } from './dialogs/cam-errors/cam-errors.component';
 
 const routes = [
   {
-    path: '',
+    path: 'f',
     component: NoctuaFormComponent
   }
 ];
@@ -101,6 +102,7 @@ const routes = [
     CamTableComponent,
     AddEvidenceDialogComponent,
     AnnotonErrorsDialogComponent,
+    CamErrorsDialogComponent,
     BeforeSaveDialogComponent,
     CreateFromExistingDialogComponent,
     LinkToExistingDialogComponent,
@@ -132,6 +134,7 @@ const routes = [
     CamTableComponent,
     AddEvidenceDialogComponent,
     AnnotonErrorsDialogComponent,
+    CamErrorsDialogComponent,
     BeforeSaveDialogComponent,
     PreviewAnnotonDialogComponent,
     CreateFromExistingDialogComponent,
@@ -156,6 +159,7 @@ const routes = [
   entryComponents: [
     AddEvidenceDialogComponent,
     AnnotonErrorsDialogComponent,
+    CamErrorsDialogComponent,
     BeforeSaveDialogComponent,
     CreateFromExistingDialogComponent,
     LinkToExistingDialogComponent,

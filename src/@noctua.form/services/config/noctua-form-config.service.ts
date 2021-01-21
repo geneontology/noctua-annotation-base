@@ -202,6 +202,13 @@ export class NoctuaFormConfigService {
       };
     });
 
+    self.globalUrl.universalBetaTestWorkbenches = environment.globalWorkbenchesUniversalBetaTest.map(workbench => {
+      return {
+        label: workbench['menu-name'],
+        url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
+      };
+    });
+
     return self.globalUrl;
   }
 
@@ -228,6 +235,13 @@ export class NoctuaFormConfigService {
     modelInfo.noctuaFormUrl = environment.workbenchUrl + 'noctua-form?' + paramsString;
 
     modelInfo.modelWorkbenches = environment.globalWorkbenchesModel.map(workbench => {
+      return {
+        label: workbench['menu-name'],
+        url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
+      };
+    });
+
+    modelInfo.modelBetaTestWorkbenches = environment.globalWorkbenchesModelBetaTest.map(workbench => {
       return {
         label: workbench['menu-name'],
         url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
@@ -322,11 +336,11 @@ export class NoctuaFormConfigService {
 
   findEdge(predicateId) {
 
-    const edge = find(noctuaFormConfig.edge, {
+    const edge = find(noctuaFormConfig.allEdges, {
       id: predicateId
     });
 
-    return edge ? Entity.createEntity(edge) : null;
+    return edge ? Entity.createEntity(edge) : Entity.createEntity({ id: predicateId, label: predicateId });
   }
 
   getAspect(id) {
