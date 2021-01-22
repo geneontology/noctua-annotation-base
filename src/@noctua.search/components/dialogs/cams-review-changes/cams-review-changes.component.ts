@@ -52,19 +52,11 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
 
     this._unsubscribeAll = new Subject();
 
-    this.camsService.onCamsCheckoutChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(summary => {
-        if (!summary) {
-          return;
-        }
+    this.summary = this._data.summary
 
-        this.summary = summary;
+    this.stats = this.generateStats(this.summary.stats);
 
-        this.stats = this.generateStats(summary.stats);
-
-        console.log(this.summary);
-      });
+    console.log(this.summary);
   }
 
   ngOnInit(): void {
@@ -120,6 +112,4 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
   close() {
     this._matDialogRef.close();
   }
-
-
 }

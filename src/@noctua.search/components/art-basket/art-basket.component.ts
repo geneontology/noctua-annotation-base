@@ -79,8 +79,14 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   }
 
   remove(cam: Cam) {
-    this.camsService.removeCamFromReview(cam);
-    this.noctuaReviewSearchService.removeFromArtBasket(cam.id);
+    const self = this;
+
+    const success = (done) => {
+    }
+
+    this.confirmDialogService.openConfirmDialog('Model Unsaved Changes',
+      'Please Save Changes or Undo Changes before removing it.',
+      success);
   }
 
   clear() {
@@ -164,6 +170,16 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.reviewChanges);
   }
 
+  reviewCamChanges(cam: Cam) {
+    const self = this;
+
+    const success = (done) => {
+    }
+
+    const summary = self.camsService.reviewCamChanges(cam)
+    self.noctuaSearchDialogService.openCamReviewChangesDialog(success, summary)
+
+  }
 
   submitChanges() {
     const self = this;
@@ -174,6 +190,8 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   submitChange(cam: Cam) {
     this.storeModels([cam])
   }
+
+
 
   close() {
     this.noctuaSearchMenuService.closeLeftDrawer();
@@ -209,7 +227,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       }
     };
 
-
     const options = {
       cancelLabel: 'Go Back',
       confirmLabel: 'Submit'
@@ -223,6 +240,5 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
         success, options);
     }
   }
-
 
 }
