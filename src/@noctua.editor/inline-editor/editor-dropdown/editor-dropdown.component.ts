@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
 import {
@@ -8,6 +8,7 @@ import {
   CamService,
   Entity,
   noctuaFormConfig,
+  CamsService,
 } from 'noctua-form-base';
 
 import { Cam } from 'noctua-form-base';
@@ -52,9 +53,12 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     with: false,
   };
 
-  constructor(public dialogRef: EditorDropdownOverlayRef,
+  constructor(
+    private zone: NgZone,
+    public dialogRef: EditorDropdownOverlayRef,
     @Inject(editorDropdownData) public data: any,
     private noctuaFormDialogService: NoctuaFormDialogService,
+    private camsService: CamsService,
     private camService: CamService,
     private noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
     private inlineReferenceService: InlineReferenceService,
@@ -96,11 +100,25 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   save() {
     const self = this;
-
-    self.noctuaAnnotonEntityService.saveAnnoton().then(() => {
-      this.close();
-      self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
-    });
+    switch (self.category) {
+      case EditorCategory.term:
+      case EditorCategory.evidence:
+        self.noctuaAnnotonEntityService.saveAnnotonReplace(self.cam).subscribe(() => {
+          this.close();
+          // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+          self.camsService.getStoredModel(self.cam).subscribe(() => {
+            self.zone.run(() => {
+              self.camsService.reviewChanges();
+            })
+          });
+        });
+        break;
+      default:
+        self.noctuaAnnotonEntityService.saveAnnoton().then(() => {
+          this.close();
+          self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+        });
+    }
   }
 
   addEvidence() {

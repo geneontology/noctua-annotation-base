@@ -4,7 +4,7 @@ import { Annoton } from './annoton';
 import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
-import { Predicate } from '.';
+import { CamStats, Predicate } from '.';
 import { each, find, some } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
@@ -55,6 +55,7 @@ export interface AnnotonNodeDisplay {
 }
 
 export class AnnotonNode implements AnnotonNodeDisplay {
+
   type: AnnotonNodeType;
   label: string;
   uuid: string;
@@ -202,6 +203,55 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     }
 
     return result;
+  }
+
+  reviewTermChanges(stat: CamStats, modifiedStats: CamStats): boolean {
+    const self = this;
+    let modified = false;
+
+    if (self.term.modified) {
+      //result.push(self.term);
+      modifiedStats.termsCount++;
+      stat.termsCount++;
+      modified = true;
+    }
+
+    each(self.predicate.evidence, (evidence: Evidence, key) => {
+      const evidenceModified = evidence.reviewEvidenceChanges(stat, modifiedStats);
+      modified = modified || evidenceModified;
+    });
+
+    modifiedStats.updateTotal();
+    return modified;
+  }
+
+  checkStored(oldNode: AnnotonNode) {
+    const self = this;
+
+    if (oldNode && self.term.id !== oldNode.term.id) {
+      self.term.termHistory.unshift(new Entity(oldNode.term.id, oldNode.term.label));
+      self.term.modified = true;
+    }
+
+    each(self.predicate.evidence, (evidence: Evidence, key) => {
+      const oldEvidence = oldNode.predicate.getEvidenceById(evidence.uuid)
+      evidence.checkStored(oldEvidence)
+    });
+  }
+
+  addPendingChanges(oldNode: AnnotonNode) {
+    const self = this;
+
+    self.pendingChangeEntity = new Entity(self.term.id, self.term.label);
+    self.pendingChangeEntity.uuid = self.uuid;
+
+    each(self.predicate.evidence, (evidence: Evidence, key) => {
+      const oldEvidence = oldNode.predicate.getEvidenceById(evidence.uuid)
+      evidence.addPendingChanges(oldEvidence);
+    });
+
+    //this is temporary swap back into old
+    self.term = oldNode.term
   }
 
   enableSubmit(errors) {

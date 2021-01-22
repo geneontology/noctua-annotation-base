@@ -173,20 +173,19 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     const self = this;
 
     const summary = self.camsService.reviewCamChanges(cam);
+    const success = (ok) => {
+      if (ok) {
+        self.camsService.resetCam(cam).subscribe((cams) => {
+          if (cams) {
+            self.camsService.loadCams();
+            self.noctuaReviewSearchService.onReplaceChanged.next(true);
+            self.camsService.reviewChanges();
+          }
+        });
+      }
+    }
 
     if (summary?.stats.totalChanges > 0) {
-
-      const success = (ok) => {
-        if (ok) {
-          self.camsService.resetCam(cam).subscribe((cams) => {
-            if (cams) {
-              self.camsService.loadCams();
-              self.noctuaReviewSearchService.onReplaceChanged.next(true);
-              self.camsService.reviewChanges();
-            }
-          });
-        }
-      }
 
       const options = {
         title: 'Discard Unsaved Changes',
@@ -196,25 +195,26 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       }
 
       self.noctuaSearchDialogService.openCamReviewChangesDialog(success, summary, options)
+    } else {
+      success(true);
     }
   }
 
   resetCams() {
     const self = this;
 
-    if (self.summary?.stats.totalChanges > 0) {
-
-      const success = (ok) => {
-        if (ok) {
-          self.camsService.resetCams().subscribe((cams) => {
-            if (cams) {
-              self.camsService.loadCams();
-              self.noctuaReviewSearchService.onReplaceChanged.next(true);
-              self.camsService.reviewChanges();
-            }
-          });
-        }
+    const success = (ok) => {
+      if (ok) {
+        self.camsService.resetCams().subscribe((cams) => {
+          if (cams) {
+            self.camsService.loadCams();
+            self.noctuaReviewSearchService.onReplaceChanged.next(true);
+            self.camsService.reviewChanges();
+          }
+        });
       }
+    }
+    if (self.summary?.stats.totalChanges > 0) {
 
       const options = {
         title: 'Discard Unsaved Changes',
@@ -224,6 +224,8 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       }
 
       self.noctuaSearchDialogService.openCamReviewChangesDialog(success, self.summary, options)
+    } else {
+      success(true);
     }
   }
 

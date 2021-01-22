@@ -228,25 +228,19 @@ export class CamsService {
 
   reviewChanges() {
     const self = this;
-    const details = [];
     const stats = new CamStats();
 
     each(this.cams, (cam: Cam) => {
       const changes = self.camService.reviewChanges(cam, stats);
       if (changes) {
-        details.push({
-          cam: cam,
-          changes: changes
-        });
+        stats.camsCount++;
       }
     });
 
-    stats.camsCount = details.length;
     stats.updateTotal();
 
     const result = {
       stats: stats,
-      details: details
     };
 
     console.log(result)
@@ -257,23 +251,17 @@ export class CamsService {
 
   reviewCamChanges(cam: Cam) {
     const self = this;
-    const details = [];
     const stats = new CamStats();
 
     const changes = self.camService.reviewChanges(cam, stats);
     if (changes) {
-      details.push({
-        cam: cam,
-        changes: changes
-      });
+      stats.camsCount++;
     }
 
-    stats.camsCount = details.length;
     stats.updateTotal();
 
     const result = {
       stats: stats,
-      details: details
     };
 
     return result

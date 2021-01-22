@@ -4,8 +4,10 @@ import { AnnotonNode } from './annoton-node';
 import { includes, isEqual } from 'lodash';
 
 import { noctuaFormConfig } from './../../noctua-form-config';
+import { CamStats } from "./cam";
 
 export class Evidence {
+
   edge: Entity;
   evidence: Entity = new Entity('', '');
   reference: string;
@@ -17,6 +19,8 @@ export class Evidence {
   evidenceRequired = false;
   referenceRequired = false;
   ontologyClass = [];
+
+  pendingChangeEntity: Entity;
 
   constructor() {
 
@@ -67,6 +71,39 @@ export class Evidence {
     result = result && isEqual(self.with, evidence.with);
 
     return result;
+  }
+
+  reviewEvidenceChanges(stat: CamStats, modifiedStats: CamStats): boolean {
+    const self = this;
+    let modified = false;
+
+    if (self.evidence.modified) {
+      modifiedStats.evidenceCount++;
+      stat.evidenceCount++;
+      modified = true;
+    }
+
+    modifiedStats.updateTotal();
+    return modified;
+  }
+
+  checkStored(oldEvidence: Evidence) {
+    const self = this;
+
+    if (oldEvidence && self.evidence.id !== oldEvidence.evidence.id) {
+      self.evidence.termHistory.unshift(new Entity(oldEvidence.evidence.id, oldEvidence.evidence.label));
+      self.evidence.modified = true;
+    }
+  }
+
+  addPendingChanges(oldEvidence: Evidence) {
+    const self = this;
+
+    self.pendingChangeEntity = new Entity(self.evidence.id, self.evidence.label);
+    self.pendingChangeEntity.uuid = self.uuid;
+
+    //this is temporary swap back into old
+    self.evidence = oldEvidence.evidence
   }
 
   enableSubmit(errors, node: AnnotonNode, position) {

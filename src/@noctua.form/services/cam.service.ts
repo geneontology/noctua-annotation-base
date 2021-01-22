@@ -1,7 +1,7 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
@@ -111,6 +111,15 @@ export class CamService {
     this.cam = cam;
   }
 
+  bulkEdit(cam: Cam): Observable<any> {
+    const self = this;
+    const promises = [];
+
+    promises.push(self._noctuaGraphService.bulkEditAnnoton(cam));
+
+    return forkJoin(promises);
+  }
+
   deleteAnnoton(annoton: Annoton) {
     const self = this;
     const deleteData = annoton.createDelete();
@@ -167,15 +176,7 @@ export class CamService {
     return self._noctuaGraphService.resetModel(cam);
   }
 
-  reviewChanges(cam: Cam, stats: CamStats) {
-    const terms = cam.reviewTermChanges(stats);
-
-    if (terms.length > 0) {
-      return {
-        terms: terms
-      };
-    }
-
-    return null;
+  reviewChanges(cam: Cam, stats: CamStats): boolean {
+    return cam.reviewCamChanges(stats);
   }
 }

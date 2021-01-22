@@ -240,11 +240,8 @@ export class Cam {
     each(self._annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
         // node.term.highlight = false;
-        const found: AnnotonNode = self.findNodeById(node.uuid, self.storedAnnotons)
-        if (found && node.term.id !== found.term.id) {
-          node.term.termHistory.unshift(new Entity(found.term.id, found.term.label));
-          node.term.modified = true;
-        }
+        const oldNode: AnnotonNode = self.findNodeById(node.uuid, self.storedAnnotons)
+        node.checkStored(oldNode)
       });
     });
   }
@@ -298,25 +295,21 @@ export class Cam {
     });
   }
 
-  reviewTermChanges(stat: CamStats): Entity[] {
+  reviewCamChanges(stat: CamStats): boolean {
     const self = this;
-    const result = [];
+    let modified = false;
 
     self.modifiedStats = new CamStats();
 
     each(self._annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
-        if (node.term.modified) {
-          result.push(node.term);
-          self.modifiedStats.termsCount++;
-          stat.termsCount++;
-          annoton.modified = true;
-        }
+        annoton.modified = node.reviewTermChanges(stat, self.modifiedStats);
+        modified = modified || annoton.modified;
       });
     });
 
     self.modifiedStats.updateTotal();
-    return result;
+    return modified;
   }
 
   getAnnotonByConnectionId(connectionId) {

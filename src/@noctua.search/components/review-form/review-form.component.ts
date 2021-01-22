@@ -1,6 +1,6 @@
 
 
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
@@ -55,6 +55,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
+    private zone: NgZone,
     private camsService: CamsService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
@@ -189,7 +190,10 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     this.camsService.bulkStoredModel()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cams) => {
-        self.noctuaReviewSearchService.onReplaceChanged.next(true);
+        self.zone.run(() => {
+          self.noctuaReviewSearchService.onReplaceChanged.next(true);
+          this.camsService.reviewChanges();
+        });
       });
   }
 

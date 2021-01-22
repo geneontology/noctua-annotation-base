@@ -62,6 +62,8 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
   @Input('options')
   public options: any = {};
 
+  public editableTerms = false;
+
   public currentMenuEvent: any = {};
 
   private unsubscribeAll: Subject<any>;
@@ -82,7 +84,13 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    console.log(this.options)
+    if (this.options?.editableTerms) {
+      this.editableTerms = this.options.editableTerms
+    }
     this.loadCam();
+
   }
 
   loadCam() {

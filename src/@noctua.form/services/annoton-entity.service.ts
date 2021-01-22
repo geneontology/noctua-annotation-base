@@ -90,6 +90,18 @@ export class NoctuaAnnotonEntityService {
       saveData.removeTriples);
   }
 
+  saveAnnotonReplace(cam: Cam): Observable<any> {
+    const self = this;
+
+    const oldEntity = cloneDeep(self.entity);
+    self.annotonEntityFormToAnnoton();
+
+    self.entity.addPendingChanges(oldEntity);
+
+    return self.camService.bulkEdit(cam);
+
+  }
+
   saveAnnotonInternal() {
     const self = this;
 
