@@ -32,6 +32,12 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
 
   summary;
 
+  public title = 'Review Changes';
+  public message: string;
+  public readonlyDialog = false;
+  public cancelLabel = 'Cancel'
+  public confirmLabel = 'Confirm'
+
   displayedColumns = [
     'category',
     'count'
@@ -52,11 +58,14 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
 
     this._unsubscribeAll = new Subject();
 
-    this.summary = this._data.summary
+    if (_data.options) {
+      this.cancelLabel = _data.options.cancelLabel ? _data.options.cancelLabel : 'Cancel';
+      this.confirmLabel = _data.options.confirmLabel ? _data.options.confirmLabel : 'Confirm';
+    }
 
+    this.summary = this._data.summary
     this.stats = this.generateStats(this.summary.stats);
 
-    console.log(this.summary);
   }
 
   ngOnInit(): void {
@@ -105,11 +114,11 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  save() {
+  confirm() {
     this._matDialogRef.close(true);
   }
 
-  close() {
+  cancel() {
     this._matDialogRef.close();
   }
 }
