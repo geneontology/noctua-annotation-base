@@ -1,10 +1,10 @@
 {
   "name": "noctua-form-base",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 4202 ",
+    "start": "ng serve --port 4202",
     "clean": "rm -r workbenches/noctua-form/public",
     "build": "ng build --prod --index src/inject.tmpl  --base-href  /workbench/noctua-form/ ",
     "build:beta-test": "ng build --prod --index src/inject.tmpl --output-path workbenches/noctua-form-beta/public --base-href  /workbench/noctua-form-beta/ --configuration=beta-test",

@@ -287,8 +287,8 @@ export class Cam {
         // node.term.highlight = false;
         each(findEntities, (entity: Entity) => {
           if (node.term.uuid === entity.uuid) {
-            node.pendingChangeEntity = new Entity(replaceWith.id, replaceWith.label);
-            node.pendingChangeEntity.uuid = node.term.uuid;
+            node.pendingEntityChanges = new Entity(replaceWith.id, replaceWith.label);
+            node.pendingEntityChanges.uuid = node.term.uuid;
           }
         });
       });

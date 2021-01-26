@@ -10,6 +10,8 @@ export class Evidence {
 
   edge: Entity;
   evidence: Entity = new Entity('', '');
+  referenceEntity: Entity = new Entity('', '');
+  withEntity: Entity = new Entity('', '');
   reference: string;
   referenceUrl: string;
   with: string;
@@ -20,7 +22,9 @@ export class Evidence {
   referenceRequired = false;
   ontologyClass = [];
 
-  pendingChangeEntity: Entity;
+  pendingEvidenceChanges: Entity;
+  pendingReferenceChanges: Entity;
+  pendingWithChanges: Entity;
 
   constructor() {
 
@@ -99,8 +103,8 @@ export class Evidence {
   addPendingChanges(oldEvidence: Evidence) {
     const self = this;
 
-    self.pendingChangeEntity = new Entity(self.evidence.id, self.evidence.label);
-    self.pendingChangeEntity.uuid = self.uuid;
+    self.pendingEvidenceChanges = new Entity(self.evidence.id, self.evidence.label);
+    self.pendingEvidenceChanges.uuid = self.uuid;
 
     //this is temporary swap back into old
     self.evidence = oldEvidence.evidence

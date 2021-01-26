@@ -918,7 +918,7 @@ export class NoctuaGraphService {
   }
 
   bulkEditIndividual(reqs, cam: Cam, node: AnnotonNode) {
-    if (node.hasValue() && node.pendingChangeEntity) {
+    if (node.hasValue() && node.pendingEntityChanges) {
       reqs.remove_type_from_individual(
         class_expression.cls(node.term.id),
         node.uuid,
@@ -926,15 +926,15 @@ export class NoctuaGraphService {
       );
 
       reqs.add_type_to_individual(
-        class_expression.cls(node.pendingChangeEntity.id),
-        node.pendingChangeEntity.uuid,
+        class_expression.cls(node.pendingEntityChanges.id),
+        node.pendingEntityChanges.uuid,
         cam.id,
       );
     }
   }
 
   bulkEditEvidence(reqs, cam: Cam, evidence: Evidence) {
-    if (evidence.hasValue() && evidence.pendingChangeEntity) {
+    if (evidence.hasValue() && evidence.pendingEvidenceChanges) {
       reqs.remove_type_from_individual(
         class_expression.cls(evidence.evidence.id),
         evidence.uuid,
@@ -942,8 +942,8 @@ export class NoctuaGraphService {
       );
 
       reqs.add_type_to_individual(
-        class_expression.cls(evidence.pendingChangeEntity.id),
-        evidence.pendingChangeEntity.uuid,
+        class_expression.cls(evidence.pendingEvidenceChanges.id),
+        evidence.pendingEvidenceChanges.uuid,
         cam.id,
       );
     }

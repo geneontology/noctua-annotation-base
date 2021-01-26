@@ -97,7 +97,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   private _id: string;
 
   //For Save 
-  pendingChangeEntity: Entity;
+  pendingEntityChanges: Entity;
 
   constructor(annotonNode?: Partial<AnnotonNodeDisplay>) {
     if (annotonNode) {
@@ -242,8 +242,8 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   addPendingChanges(oldNode: AnnotonNode) {
     const self = this;
 
-    self.pendingChangeEntity = new Entity(self.term.id, self.term.label);
-    self.pendingChangeEntity.uuid = self.uuid;
+    self.pendingEntityChanges = new Entity(self.term.id, self.term.label);
+    self.pendingEntityChanges.uuid = self.uuid;
 
     each(self.predicate.evidence, (evidence: Evidence, key) => {
       const oldEvidence = oldNode.predicate.getEvidenceById(evidence.uuid)

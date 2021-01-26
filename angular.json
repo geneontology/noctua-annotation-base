@@ -20,6 +20,7 @@
             "customWebpackConfig": {
               "path": "./webpack.extra.js"
             },
+            "outputPath": "workbenches/noctua-form/public",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -49,10 +50,10 @@
               "vendorChunk": false,
               "buildOptimizer": true
             },
-            "beta-test": {
+            "dev-temp": {
               "fileReplacements": [{
                 "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.beta-test.ts"
+                "with": "src/environments/environment.dev-temp.ts"
               }],
               "optimization": true,
               "outputHashing": "all",
@@ -78,8 +79,8 @@
             "production": {
               "browserTarget": "noctua:build:production"
             },
-            "beta-test": {
-              "browserTarget": "noctua:build:beta-test"
+            "dev-temp": {
+              "browserTarget": "noctua:build:dev-temp"
             },
             "hmr": {
               "hmr": true,
