@@ -79,6 +79,16 @@ export class NoctuaUserService {
     return this.httpClient.get(`${self.baristaUrl}/user_info_by_id/${encodedUrl}`);
   }
 
+  getUserName(orcid: string) {
+    const self = this;
+
+    const contributor = find(self.contributors, (inContributor: Contributor) => {
+      return inContributor.orcid === orcid;
+    });
+
+    return contributor ? contributor.name : orcid;
+  }
+
   getGroups(): Observable<any> {
     const self = this;
 

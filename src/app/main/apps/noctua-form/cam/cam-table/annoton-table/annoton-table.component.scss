@@ -70,8 +70,12 @@ $accent: map-get($theme, accent);
     // position: relative;
     //  flex: 1 1 auto;
     //    border-bottom: 1px solid rgba(0, 0, 0, .12);
-    //  overflow: auto;
 
+
+    table {
+      // width: 800px; 
+      overflow: auto;
+    }
 
     tr.mat-footer-row,
     tr.mat-row {
@@ -158,6 +162,10 @@ $accent: map-get($theme, accent);
 
       &.noc-highlight-modified {
         background-color: #fdd661;
+      }
+
+      &.noc-highlight-modified-user {
+        background-color: #f3ccbb;
       }
 
       &.noc-highlight-match-current {

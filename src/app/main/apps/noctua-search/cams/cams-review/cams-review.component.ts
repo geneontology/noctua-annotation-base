@@ -47,7 +47,9 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
 
   tableOptions = {
     editableTerms: true,
-    editableEvience: true,
+    editableEvidence: true,
+    editableReference: true,
+    editableWith: true,
     reviewMode: true,
   };
 

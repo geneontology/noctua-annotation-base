@@ -364,22 +364,26 @@ export class NoctuaGraphService {
 
         const sources = annotationNode.get_annotations_by_key('source');
         const withs = annotationNode.get_annotations_by_key('with');
+        const contributors = annotationNode.get_annotations_by_key('contributor');
         const assignedBys = annotationNode.get_annotations_by_key('providedBy');
         if (sources.length > 0) {
           evidence.reference = sources[0].value();
-          evidence.referenceUrl = self.noctuaLookupService.getTermURL(evidence.reference);
+          const referenceUrl = self.noctuaLookupService.getTermURL(evidence.reference);
+          evidence.referenceEntity = new Entity(evidence.reference, evidence.reference, referenceUrl)
         }
         if (withs.length > 0) {
-          if (withs[0].value().startsWith('gomodel')) {
-            evidence.with = withs[0].value();
-          } else {
-            evidence.with = withs[0].value();
-          }
+          evidence.with = withs[0].value();
+          evidence.withEntity = new Entity(evidence.with, evidence.with)
         }
         if (assignedBys.length > 0) {
-          evidence.assignedBy = new Entity(null,
+          evidence.assignedBy = new Entity(assignedBys[0].value(),
             self.noctuaUserService.getGroupName(assignedBys[0].value()),
             assignedBys[0].value());
+        }
+        if (contributors.length > 0) {
+          evidence.contributor = new Entity(contributors[0].value(),
+            self.noctuaUserService.getUserName(contributors[0].value()),
+            contributors[0].value());
         }
         result.push(evidence);
       }
@@ -947,6 +951,23 @@ export class NoctuaGraphService {
         cam.id,
       );
     }
+
+    if (evidence.hasValue() && evidence.pendingReferenceChanges) {
+      reqs.remove_annotation_from_individual('source', evidence.reference, null, evidence.pendingReferenceChanges.uuid);
+      reqs.add_annotation_to_individual('source',
+        evidence.pendingReferenceChanges.id,
+        null,
+        evidence.pendingReferenceChanges.uuid)
+    }
+
+    if (evidence.hasValue() && evidence.pendingWithChanges) {
+      reqs.remove_annotation_from_individual('with', evidence.with, null, evidence.pendingWithChanges.uuid);
+      reqs.add_annotation_to_individual('with',
+        evidence.pendingWithChanges.id,
+        null,
+        evidence.pendingWithChanges.uuid)
+    }
+
   }
 
   replaceIndividual(reqs, modelId: string, entity: Entity, replaceWithTerm: Entity) {

@@ -103,6 +103,8 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     switch (self.category) {
       case EditorCategory.term:
       case EditorCategory.evidence:
+      case EditorCategory.reference:
+      case EditorCategory.with:
         self.noctuaAnnotonEntityService.saveAnnotonReplace(self.cam).subscribe(() => {
           this.close();
           // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');

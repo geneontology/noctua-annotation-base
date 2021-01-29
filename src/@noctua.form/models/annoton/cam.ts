@@ -29,6 +29,7 @@ export class CamStats {
   gpsCount = 0;
   evidenceCount = 0;
   referencesCount = 0;
+  withsCount = 0;
   relationsCount = 0;
 
   constructor() { }
@@ -39,6 +40,7 @@ export class CamStats {
       + this.gpsCount
       + this.evidenceCount
       + this.referencesCount
+      + this.withsCount
       + this.relationsCount;
   }
 }

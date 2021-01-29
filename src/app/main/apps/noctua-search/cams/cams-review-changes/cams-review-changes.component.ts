@@ -92,6 +92,9 @@ export class CamsReviewChangesComponent implements OnInit, OnDestroy {
       category: 'Reference',
       count: stats.referencesCount
     }, {
+      category: 'With',
+      count: stats.withsCount
+    }, {
       category: 'Relations',
       count: stats.relationsCount
     }];

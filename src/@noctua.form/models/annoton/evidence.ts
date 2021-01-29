@@ -16,6 +16,7 @@ export class Evidence {
   referenceUrl: string;
   with: string;
   assignedBy: Entity = new Entity('', '');
+  contributor: Entity = new Entity('', '');
   classExpression;
   uuid;
   evidenceRequired = false;
@@ -87,6 +88,18 @@ export class Evidence {
       modified = true;
     }
 
+    if (self.referenceEntity.modified) {
+      modifiedStats.referencesCount++;
+      stat.referencesCount++;
+      modified = true;
+    }
+
+    if (self.withEntity.modified) {
+      modifiedStats.withsCount++;
+      stat.withsCount++;
+      modified = true;
+    }
+
     modifiedStats.updateTotal();
     return modified;
   }
@@ -98,16 +111,50 @@ export class Evidence {
       self.evidence.termHistory.unshift(new Entity(oldEvidence.evidence.id, oldEvidence.evidence.label));
       self.evidence.modified = true;
     }
+
+    if (oldEvidence && self.reference !== oldEvidence.reference) {
+      self.referenceEntity.termHistory.unshift(new Entity(oldEvidence.referenceEntity.id, oldEvidence.referenceEntity.label));
+      self.referenceEntity.modified = true;
+    }
+
+    if (oldEvidence && self.with !== oldEvidence.with) {
+      self.withEntity.termHistory.unshift(new Entity(oldEvidence.withEntity.id, oldEvidence.withEntity.label));
+      self.withEntity.modified = true;
+    }
+
+    if (oldEvidence && self.assignedBy.id !== oldEvidence.assignedBy.id) {
+      self.assignedBy.termHistory.unshift(new Entity(oldEvidence.assignedBy.id, oldEvidence.assignedBy.label));
+      self.assignedBy.modified = true;
+    }
+
+    if (oldEvidence && self.contributor.id !== oldEvidence.contributor.id) {
+      self.contributor.termHistory.unshift(new Entity(oldEvidence.contributor.id, oldEvidence.contributor.label));
+      self.contributor.modified = true;
+    }
   }
 
   addPendingChanges(oldEvidence: Evidence) {
     const self = this;
 
-    self.pendingEvidenceChanges = new Entity(self.evidence.id, self.evidence.label);
-    self.pendingEvidenceChanges.uuid = self.uuid;
+    if (self.evidence.id !== oldEvidence.evidence.id) {
+      self.pendingEvidenceChanges = new Entity(self.evidence.id, self.evidence.label);
+      self.pendingEvidenceChanges.uuid = self.uuid;
+    }
+
+    if (self.reference !== oldEvidence.reference) {
+      self.pendingReferenceChanges = new Entity(self.reference, self.reference);
+      self.pendingReferenceChanges.uuid = self.uuid;
+    }
+
+    if (self.with !== oldEvidence.with) {
+      self.pendingWithChanges = new Entity(self.with, self.with);
+      self.pendingWithChanges.uuid = self.uuid;
+    }
 
     //this is temporary swap back into old
-    self.evidence = oldEvidence.evidence
+    self.evidence = oldEvidence.evidence;
+    self.reference = oldEvidence.reference;
+    self.with = oldEvidence.with;
   }
 
   enableSubmit(errors, node: AnnotonNode, position) {
