@@ -704,10 +704,6 @@ export class NoctuaGraphService {
         each(node.predicate.evidence, (evidence: Evidence, key) => {
           self.bulkEditEvidence(reqs, cam, evidence);
         });
-
-        //self.bulkEditFact(reqs, cam, srcTriples, destTriples);
-        //  self.bulkAddFact(reqs, destTriples);
-
       });
     });
 
@@ -950,6 +946,8 @@ export class NoctuaGraphService {
         evidence.pendingEvidenceChanges.uuid,
         cam.id,
       );
+
+      this.editUserEvidenceAnnotations(reqs, evidence.pendingReferenceChanges.uuid)
     }
 
     if (evidence.hasValue() && evidence.pendingReferenceChanges) {
@@ -958,6 +956,7 @@ export class NoctuaGraphService {
         evidence.pendingReferenceChanges.id,
         null,
         evidence.pendingReferenceChanges.uuid)
+      this.editUserEvidenceAnnotations(reqs, evidence.pendingReferenceChanges.uuid)
     }
 
     if (evidence.hasValue() && evidence.pendingWithChanges) {
@@ -966,8 +965,15 @@ export class NoctuaGraphService {
         evidence.pendingWithChanges.id,
         null,
         evidence.pendingWithChanges.uuid)
+      this.editUserEvidenceAnnotations(reqs, evidence.pendingReferenceChanges.uuid)
     }
+  }
 
+  editUserEvidenceAnnotations(reqs, uuid) {
+    reqs.remove_annotation_to_individual('provided-by', this.noctuaUserService.user.group.id, null, uuid);
+    reqs.add_annotation_to_individual('provided-by', this.noctuaUserService.user.group.id, null, uuid);
+    reqs.remove_annotation_to_individual('contributor', this.noctuaUserService.user.orcid, null, uuid);
+    reqs.add_annotation_to_individual('contributor', this.noctuaUserService.user.orcid, null, uuid);
   }
 
   replaceIndividual(reqs, modelId: string, entity: Entity, replaceWithTerm: Entity) {

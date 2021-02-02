@@ -148,13 +148,7 @@
         <ng-container matColumnDef="assignedBy">
           <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Assigned By
           </th>
-          <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center"
-            [ngClass]="{'noc-highlight-modified-user': entity.assignedBy?.modified}">
-            <p class="noc-old-term" *ngIf="entity.assignedBy?.modified && entity.assignedBy?.termHistory?.length>0">
-              <a (click)="$event.stopPropagation()" href="{{entity.assignedBy?.termHistory[0]?.url}}" target="_blank">
-                {{ entity.assignedBy?.termHistory[0]?.label }}
-              </a>
-            </p>
+          <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">
             <p *ngIf="!entity.assignedBy?.url" class="">{{entity.assignedBy?.label}}</p>
             <p *ngIf="entity.assignedBy?.url" class="">
               <a (click)="$event.stopPropagation()" href="{{entity.assignedBy?.url}}" target="_blank">
@@ -166,13 +160,7 @@
         <ng-container matColumnDef="contributor">
           <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Contributor
           </th>
-          <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center"
-            [ngClass]="{'noc-highlight-modified-user': entity.contributor?.modified}">
-            <p class="noc-old-term" *ngIf="entity.contributor?.modified && entity.contributor?.termHistory?.length>0">
-              <a (click)="$event.stopPropagation()" href="{{entity.contributor?.termHistory[0]?.url}}" target="_blank">
-                {{ entity.contributor?.termHistory[0]?.label }}
-              </a>
-            </p>
+          <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">
             <p *ngIf="!entity.contributor?.url" class="">{{entity.contributor?.label}}</p>
             <p *ngIf="entity.contributor?.url" class="">
               <a (click)="$event.stopPropagation()" href="{{entity.contributor?.url}}" target="_blank">
