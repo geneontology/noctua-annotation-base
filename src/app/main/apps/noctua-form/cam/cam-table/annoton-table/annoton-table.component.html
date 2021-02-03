@@ -1,216 +1,213 @@
 <div class="w-100-p">
-  <div class="noc-annoton-table-body w-100-p" fxLayout="row" fxLayoutAlign="start start">
-    <div class="annoton-table"
-      [ngClass]="{'noc-selected': annoton.displayId===camsService.currentMatch?.annotonDisplayId}" fxFlex="">
-      <table mat-table fxFlex="1 1 auto" class="" [dataSource]="grid" [@animateStagger]="{value:'50'}">
-        <ng-container matColumnDef="relationship" sticky>
-          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Relationship
-          </th>
-          <td mat-cell *matCellDef="let entity" fxFlex="120px" sticky>
-            <p class="">
-              <strong> {{entity.qualifier}} </strong>
-              {{entity.relationship}}
-            </p>
-            <noctua-inline-editor *ngIf="noctuaUserService.user && entity.relationEditable && !options.reviewMode"
-              [cam]="cam" [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.relationship"
-              class="noc-edit-button">
-            </noctua-inline-editor>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="aspect" sticky>
-          <th mat-header-cell *matHeaderCellDef fxFlex="30px" fxLayout="row" fxLayoutAlign="start center">Asp</th>
-          <td mat-cell *matCellDef="let entity" fxFlex="30px">
-            <p class="">{{entity.aspect}}</p>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="term">
-          <th mat-header-cell *matHeaderCellDef class="noc-column-flex" fxFlex="" fxLayout="row"
-            fxLayoutAlign="start center">Term</th>
-          <td mat-cell class="noc-column-flex" *matCellDef="let entity" fxFlex="" fxLayout="row"
-            fxLayoutAlign="start center" [attr.id]="entity.term?.displayId" [ngClass]="{'noc-highlight-match': entity.term?.highlight,
+  <div class="noc-annoton-table w-100-p"
+    [ngClass]="{'noc-selected': annoton.displayId===camsService.currentMatch?.annotonDisplayId}" fxFlex="">
+    <table mat-table fxFlex="1 1 auto" class="" [dataSource]="grid" [@animateStagger]="{value:'50'}">
+      <ng-container matColumnDef="relationship" sticky>
+        <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Relationship
+        </th>
+        <td mat-cell *matCellDef="let entity" fxFlex="120px" sticky>
+          <p class="">
+            <strong> {{entity.qualifier}} </strong>
+            {{entity.relationship}}
+          </p>
+          <noctua-inline-editor *ngIf="noctuaUserService.user && entity.relationEditable && !options.reviewMode"
+            [cam]="cam" [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.relationship"
+            class="noc-edit-button">
+          </noctua-inline-editor>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="aspect" sticky>
+        <th mat-header-cell *matHeaderCellDef fxFlex="30px" fxLayout="row" fxLayoutAlign="start center">Asp</th>
+        <td mat-cell *matCellDef="let entity" fxFlex="30px">
+          <p class="">{{entity.aspect}}</p>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="term">
+        <th mat-header-cell *matHeaderCellDef class="noc-column-flex" fxFlex="" fxLayout="row"
+          fxLayoutAlign="start center">Term</th>
+        <td mat-cell class="noc-column-flex" *matCellDef="let entity" fxFlex="" fxLayout="row"
+          fxLayoutAlign="start center" [attr.id]="entity.term?.displayId" [ngClass]="{'noc-highlight-match': entity.term?.highlight,
             'noc-highlight-modified': entity.term?.modified,
             'noc-highlight-match-current': entity.term?.uuid===camsService.currentMatch?.uuid}">
-            <p class="noc-old-term" *ngIf="entity.term?.modified && entity.term?.termHistory?.length>0">
-              {{entity.term?.termHistory[0]?.label}}
-              <a (click)="$event.stopPropagation()" href="{{entity.term?.termHistory[0]?.url}}" target="_blank">
-                {{ entity.term?.termHistory[0]?.id }}
-              </a>
-            </p>
-            <p class="">
-              {{entity.term?.label}} <br>
-              <a (click)="$event.stopPropagation()" href="{{entity.term?.url}}" target="_blank">
-                {{ entity.term?.id }}
-              </a>
-            </p>
-            <noctua-inline-editor *ngIf="noctuaUserService.user && entity.term && options.editableTerms" [cam]="cam"
-              [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.term" class="noc-edit-button">
-            </noctua-inline-editor>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="relationshipExt">
-          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Relationship
-            (ext)</th>
-          <td mat-cell *matCellDef="let entity" fxFlex="120px">
-            <p class="">{{entity.relationshipExt}}</p>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="extension">
-          <th mat-header-cell *matHeaderCellDef fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">Extension
-          </th>
-          <td mat-cell *matCellDef="let entity" [attr.id]="entity.extension?.displayId" fxFlex="150px" fxLayout="row"
-            fxLayoutAlign="start center" [ngClass]="{'noc-highlight-match': entity.extension?.highlight,
+          <p class="noc-old-term" *ngIf="entity.term?.modified && entity.term?.termHistory?.length>0">
+            {{entity.term?.termHistory[0]?.label}}
+            <a (click)="$event.stopPropagation()" href="{{entity.term?.termHistory[0]?.url}}" target="_blank">
+              {{ entity.term?.termHistory[0]?.id }}
+            </a>
+          </p>
+          <p class="">
+            {{entity.term?.label}} <br>
+            <a (click)="$event.stopPropagation()" href="{{entity.term?.url}}" target="_blank">
+              {{ entity.term?.id }}
+            </a>
+          </p>
+          <noctua-inline-editor *ngIf="noctuaUserService.user && entity.term && options.editableTerms" [cam]="cam"
+            [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.term" class="noc-edit-button">
+          </noctua-inline-editor>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="relationshipExt">
+        <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Relationship
+          (ext)</th>
+        <td mat-cell *matCellDef="let entity" fxFlex="120px">
+          <p class="">{{entity.relationshipExt}}</p>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="extension">
+        <th mat-header-cell *matHeaderCellDef fxFlex="150px" fxLayout="row" fxLayoutAlign="start center">Extension
+        </th>
+        <td mat-cell *matCellDef="let entity" [attr.id]="entity.extension?.displayId" fxFlex="150px" fxLayout="row"
+          fxLayoutAlign="start center" [ngClass]="{'noc-highlight-match': entity.extension?.highlight,
             'noc-highlight-modified': entity.extension?.modified,
             'noc-highlight-match-current': entity.extension?.uuid===camsService.currentMatch?.uuid}">
-            <p class="noc-old-term" *ngIf="entity.extension?.modified && entity.extension?.termHistory?.length>0">
-              {{entity.extension?.termHistory[0]?.label}}
-              <a (click)="$event.stopPropagation()" href="{{entity.extension?.termHistory[0]?.url}}" target="_blank">
-                {{ entity.extension?.termHistory[0]?.id }}
+          <p class="noc-old-term" *ngIf="entity.extension?.modified && entity.extension?.termHistory?.length>0">
+            {{entity.extension?.termHistory[0]?.label}}
+            <a (click)="$event.stopPropagation()" href="{{entity.extension?.termHistory[0]?.url}}" target="_blank">
+              {{ entity.extension?.termHistory[0]?.id }}
+            </a>
+          </p>
+          <p class="">{{entity.extension?.label}} <br>
+            <a (click)="$event.stopPropagation()" href="{{entity.extension?.url}}" target="_blank">
+              {{ entity.extension?.id }}
+            </a>
+          </p>
+          <noctua-inline-editor *ngIf="noctuaUserService.user && entity.extension && options.editableTerms" [cam]="cam"
+            [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.term" class="noc-edit-button">
+          </noctua-inline-editor>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="evidence">
+        <th mat-header-cell *matHeaderCellDef class="noc-column-flex" fxFlex="" fxLayout="row"
+          fxLayoutAlign="start center">Evidence</th>
+        <td mat-cell *matCellDef="let entity" class="noc-column-flex" fxFlex="" fxLayout="row"
+          fxLayoutAlign="start center" [ngClass]="{'noc-highlight-modified': entity.evidence?.modified}">
+          <p class="noc-old-term" *ngIf="entity.evidence?.modified && entity.evidence?.termHistory?.length>0">
+            {{entity.evidence?.termHistory[0]?.label}}
+            <a (click)="$event.stopPropagation()" href="{{entity.evidence?.termHistory[0]?.url}}" target="_blank">
+              {{ entity.evidence?.termHistory[0]?.id }}
+            </a>
+          </p>
+          <p class="">{{entity.evidence?.label}}<br>
+            <a (click)="$event.stopPropagation()" href="{{entity.evidence?.url}}" target="_blank">
+              {{ entity.evidence?.id }}
+            </a>
+          </p>
+          <noctua-inline-editor *ngIf="noctuaUserService.user && options.editableEvidence" [cam]="cam"
+            [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.evidence"
+            [evidenceIndex]="entity.evidenceIndex" class="noc-edit-button">
+          </noctua-inline-editor>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="reference">
+        <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Reference
+        </th>
+        <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center"
+          [ngClass]="{'noc-highlight-modified': entity.referenceEntity?.modified}">
+          <p class="noc-old-term"
+            *ngIf="entity.referenceEntity?.modified && entity.referenceEntity?.termHistory?.length>0">
+            <a (click)="$event.stopPropagation()" href="{{entity.referenceEntity?.termHistory[0]?.url}}"
+              target="_blank">
+              {{ entity.referenceEntity?.termHistory[0]?.id }}
+            </a>
+          </p>
+          <p *ngIf="!entity.referenceEntity?.url" class="">{{entity.reference}}</p>
+          <p *ngIf="entity.referenceEntity?.url" class="">
+            <a (click)="$event.stopPropagation()" href="{{entity.referenceEntity?.url}}" target="_blank">
+              {{entity.reference}}
+            </a>
+          </p>
+          <noctua-inline-editor *ngIf="noctuaUserService.user && options.editableReference" [cam]="cam"
+            [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.reference"
+            [evidenceIndex]="entity.evidenceIndex" class="noc-edit-button">
+          </noctua-inline-editor>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="with">
+        <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">With</th>
+        <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center"
+          [ngClass]="{'noc-highlight-modified': entity.withEntity?.modified}">
+          <p class="noc-old-term" *ngIf="entity.withEntity?.modified && entity.withEntity?.termHistory?.length>0">
+            <a (click)="$event.stopPropagation()" href="{{entity.withEntity?.termHistory[0]?.url}}" target="_blank">
+              {{ entity.withEntity?.termHistory[0]?.id }}
+            </a>
+          </p>
+          <p *ngIf="!entity.withEntity?.url" class="">{{entity.with}}</p>
+          <p *ngIf="entity.withEntity?.url" class="">
+            <a (click)="$event.stopPropagation()" href="{{entity.withEntity?.url}}" target="_blank">
+              {{entity.with}}
+            </a>
+          </p>
+          <noctua-inline-editor *ngIf="noctuaUserService.user && options.editableWith" [cam]="cam" [annoton]='annoton'
+            [entity]="entity.node" [category]="EditorCategory.with" [evidenceIndex]="entity.evidenceIndex"
+            class="noc-edit-button">
+          </noctua-inline-editor>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="assignedBy">
+        <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Assigned By
+        </th>
+        <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">
+          <p class="">
+            <span *ngFor="let group of entity.groups; let i=index; let isLast=last">
+              <a (click)="$event.stopPropagation()" href="{{group.url}}" target="_blank">
+                {{group.name}}
               </a>
-            </p>
-            <p class="">{{entity.extension?.label}} <br>
-              <a (click)="$event.stopPropagation()" href="{{entity.extension?.url}}" target="_blank">
-                {{ entity.extension?.id }}
+              <span *ngIf="!isLast">&#44;&nbsp;</span>
+            </span>
+          </p>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="contributor">
+        <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Contributors
+        </th>
+        <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">
+          <p class="">
+            <span *ngFor="let contributor of entity.contributors; let i=index; let isLast=last">
+              <a (click)="$event.stopPropagation()" href="{{contributor.urcid}}" target="_blank">
+                {{contributor.name}}
               </a>
-            </p>
-            <noctua-inline-editor *ngIf="noctuaUserService.user && entity.extension && options.editableTerms"
-              [cam]="cam" [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.term"
-              class="noc-edit-button">
-            </noctua-inline-editor>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="evidence">
-          <th mat-header-cell *matHeaderCellDef class="noc-column-flex" fxFlex="" fxLayout="row"
-            fxLayoutAlign="start center">Evidence</th>
-          <td mat-cell *matCellDef="let entity" class="noc-column-flex" fxFlex="" fxLayout="row"
-            fxLayoutAlign="start center" [ngClass]="{'noc-highlight-modified': entity.evidence?.modified}">
-            <p class="noc-old-term" *ngIf="entity.evidence?.modified && entity.evidence?.termHistory?.length>0">
-              {{entity.evidence?.termHistory[0]?.label}}
-              <a (click)="$event.stopPropagation()" href="{{entity.evidence?.termHistory[0]?.url}}" target="_blank">
-                {{ entity.evidence?.termHistory[0]?.id }}
-              </a>
-            </p>
-            <p class="">{{entity.evidence?.label}}<br>
-              <a (click)="$event.stopPropagation()" href="{{entity.evidence?.url}}" target="_blank">
-                {{ entity.evidence?.id }}
-              </a>
-            </p>
-            <noctua-inline-editor *ngIf="noctuaUserService.user && options.editableEvidence" [cam]="cam"
-              [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.evidence"
-              [evidenceIndex]="entity.evidenceIndex" class="noc-edit-button">
-            </noctua-inline-editor>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="reference">
-          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Reference
-          </th>
-          <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center"
-            [ngClass]="{'noc-highlight-modified': entity.referenceEntity?.modified}">
-            <p class="noc-old-term"
-              *ngIf="entity.referenceEntity?.modified && entity.referenceEntity?.termHistory?.length>0">
-              <a (click)="$event.stopPropagation()" href="{{entity.referenceEntity?.termHistory[0]?.url}}"
-                target="_blank">
-                {{ entity.referenceEntity?.termHistory[0]?.id }}
-              </a>
-            </p>
-            <p *ngIf="!entity.referenceEntity?.url" class="">{{entity.reference}}</p>
-            <p *ngIf="entity.referenceEntity?.url" class="">
-              <a (click)="$event.stopPropagation()" href="{{entity.referenceEntity?.url}}" target="_blank">
-                {{entity.reference}}
-              </a>
-            </p>
-            <noctua-inline-editor *ngIf="noctuaUserService.user && options.editableReference" [cam]="cam"
-              [annoton]='annoton' [entity]="entity.node" [category]="EditorCategory.reference"
-              [evidenceIndex]="entity.evidenceIndex" class="noc-edit-button">
-            </noctua-inline-editor>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="with">
-          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">With</th>
-          <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center"
-            [ngClass]="{'noc-highlight-modified': entity.withEntity?.modified}">
-            <p class="noc-old-term" *ngIf="entity.withEntity?.modified && entity.withEntity?.termHistory?.length>0">
-              <a (click)="$event.stopPropagation()" href="{{entity.withEntity?.termHistory[0]?.url}}" target="_blank">
-                {{ entity.withEntity?.termHistory[0]?.id }}
-              </a>
-            </p>
-            <p *ngIf="!entity.withEntity?.url" class="">{{entity.with}}</p>
-            <p *ngIf="entity.withEntity?.url" class="">
-              <a (click)="$event.stopPropagation()" href="{{entity.withEntity?.url}}" target="_blank">
-                {{entity.with}}
-              </a>
-            </p>
-            <noctua-inline-editor *ngIf="noctuaUserService.user && options.editableWith" [cam]="cam" [annoton]='annoton'
-              [entity]="entity.node" [category]="EditorCategory.with" [evidenceIndex]="entity.evidenceIndex"
-              class="noc-edit-button">
-            </noctua-inline-editor>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="assignedBy">
-          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Assigned By
-          </th>
-          <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">
-            <p class="">
-              <span *ngFor="let group of entity.groups; let i=index; let isLast=last">
-                <a (click)="$event.stopPropagation()" href="{{group.url}}" target="_blank">
-                  {{group.name}}
-                </a>
-                <span *ngIf="!isLast">&#44;&nbsp;</span>
-              </span>
-            </p>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="contributor">
-          <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Contributors
-          </th>
-          <td mat-cell *matCellDef="let entity" fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">
-            <p class="">
-              <span *ngFor="let contributor of entity.contributors; let i=index; let isLast=last">
-                <a (click)="$event.stopPropagation()" href="{{contributor.urcid}}" target="_blank">
-                  {{contributor.name}}
-                </a>
-                <span *ngIf="!isLast">&#44;&nbsp;</span>
-              </span>
-            </p>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="actions" stickyEnd>
-          <th mat-header-cell *matHeaderCellDef fxFlex="50px" fxLayout="row" fxLayoutAlign="start center"></th>
-          <td mat-cell *matCellDef="let entity" fxFlex="50px" fxLayout="row" fxLayoutAlign="start center">
-            <span fxFlex=""></span>
-            <button mat-icon-button *ngIf="noctuaUserService.user" (click)="updateCurrentMenuEvent($event)"
-              class="noc-action-button" fxFlex="40px" [matMenuTriggerFor]="entityMenu">
-              <mat-icon>more_vert</mat-icon>
+              <span *ngIf="!isLast">&#44;&nbsp;</span>
+            </span>
+          </p>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef fxFlex="50px" fxLayout="row" fxLayoutAlign="start center"></th>
+        <td mat-cell *matCellDef="let entity" fxFlex="50px" fxLayout="row" fxLayoutAlign="start center">
+          <span fxFlex=""></span>
+          <button mat-icon-button *ngIf="noctuaUserService.user" (click)="updateCurrentMenuEvent($event)"
+            class="noc-action-button" fxFlex="40px" [matMenuTriggerFor]="entityMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
+            <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
+              NOT Qualifier
             </button>
-            <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
-              <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
-                NOT Qualifier
-              </button>
-              <button mat-menu-item *ngIf="entity.node.insertMenuNodes" [matMenuTriggerFor]="addMenu">Add</button>
-              <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
-            </mat-menu>
-            <mat-menu #addMenu="matMenu">
-              <button mat-menu-item *ngFor="let insertMenuItem of entity.node.insertMenuNodes" class=""
-                (click)="insertEntity(entity.node, insertMenuItem)">
-                {{insertMenuItem.label}}
-              </button>
-            </mat-menu>
-            <mat-menu #evidenceMenu="matMenu">
-              <button mat-menu-item (click)="addEvidence(entity.node, entity.evidenceIndex)" class="">
-                Add Evidence
-              </button>
-              <!--   <button (click)="removeEvidence(entity.node,i)" mat-menu-item>
+            <button mat-menu-item *ngIf="entity.node.insertMenuNodes" [matMenuTriggerFor]="addMenu">Add</button>
+            <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
+          </mat-menu>
+          <mat-menu #addMenu="matMenu">
+            <button mat-menu-item *ngFor="let insertMenuItem of entity.node.insertMenuNodes" class=""
+              (click)="insertEntity(entity.node, insertMenuItem)">
+              {{insertMenuItem.label}}
+            </button>
+          </mat-menu>
+          <mat-menu #evidenceMenu="matMenu">
+            <button mat-menu-item (click)="addEvidence(entity.node, entity.evidenceIndex)" class="">
+              Add Evidence
+            </button>
+            <!--   <button (click)="removeEvidence(entity.node,i)" mat-menu-item>
                 Remove Evidence
               </button> -->
-            </mat-menu>
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let entity; columns: displayedColumns;" class="" matRipple [ngClass]="{'noc-row-term': entity.term,
+          </mat-menu>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let entity; columns: displayedColumns;" class="" matRipple [ngClass]="{'noc-row-term': entity.term,
           'noc-row-selected': entity.node.uuid === noctuaAnnotonEntityService.termNode?.uuid}"></tr>
-      </table>
-      <div *ngIf="grid?.length===0" class="noc-no-info">
-        no results yet.
-      </div>
+    </table>
+    <div *ngIf="grid?.length===0" class="noc-no-info">
+      no results yet.
     </div>
   </div>
 </div>

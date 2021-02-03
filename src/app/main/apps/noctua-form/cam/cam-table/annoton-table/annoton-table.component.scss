@@ -27,10 +27,6 @@ $accent: map-get($theme, accent);
     }
   }
 
-  .noc-annoton-table-body {
-    overflow: hidden;
-  }
-
   .noc-group-side-heading {
     @include deep-width(25px);
     @include deep-height(100%);
@@ -65,7 +61,7 @@ $accent: map-get($theme, accent);
     }
   }
 
-  .annoton-table {
+  .noc-annoton-table {
 
     // position: relative;
     //  flex: 1 1 auto;

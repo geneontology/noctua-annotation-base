@@ -908,7 +908,7 @@ export class NoctuaGraphService {
         cam.id,
       );
 
-      this.editUserEvidenceAnnotations(reqs, evidence.pendingReferenceChanges.uuid)
+      this.editUserEvidenceAnnotations(reqs, evidence.pendingEvidenceChanges.uuid)
     }
 
     if (evidence.hasValue() && evidence.pendingReferenceChanges) {
@@ -926,14 +926,14 @@ export class NoctuaGraphService {
         evidence.pendingWithChanges.id,
         null,
         evidence.pendingWithChanges.uuid)
-      this.editUserEvidenceAnnotations(reqs, evidence.pendingReferenceChanges.uuid)
+      this.editUserEvidenceAnnotations(reqs, evidence.pendingWithChanges.uuid)
     }
   }
 
   editUserEvidenceAnnotations(reqs, uuid) {
-    reqs.remove_annotation_to_individual('provided-by', this.noctuaUserService.user.group.id, null, uuid);
-    reqs.add_annotation_to_individual('provided-by', this.noctuaUserService.user.group.id, null, uuid);
-    reqs.remove_annotation_to_individual('contributor', this.noctuaUserService.user.orcid, null, uuid);
+    reqs.remove_annotation_from_individual('provided-by', this.noctuaUserService.user.group.url, null, uuid);
+    reqs.add_annotation_to_individual('provided-by', this.noctuaUserService.user.group.url, null, uuid);
+    reqs.remove_annotation_from_individual('contributor', this.noctuaUserService.user.orcid, null, uuid);
     reqs.add_annotation_to_individual('contributor', this.noctuaUserService.user.orcid, null, uuid);
   }
 
