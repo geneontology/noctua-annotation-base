@@ -79,7 +79,17 @@ export class NoctuaUserService {
     return this.httpClient.get(`${self.baristaUrl}/user_info_by_id/${encodedUrl}`);
   }
 
-  getUserName(orcid: string) {
+  getContributorDetails(orcid: string): Contributor {
+    const self = this;
+
+    const contributor = find(self.contributors, (inContributor: Contributor) => {
+      return inContributor.orcid === orcid;
+    });
+
+    return contributor
+  }
+
+  getContributorName(orcid: string) {
     const self = this;
 
     const contributor = find(self.contributors, (inContributor: Contributor) => {
@@ -89,17 +99,50 @@ export class NoctuaUserService {
     return contributor ? contributor.name : orcid;
   }
 
+  getContributorsFromAnnotations(annotations): Contributor[] {
+    const self = this;
+
+    const contributors = <Contributor[]>annotations.map((annotation) => {
+      const orcid = annotation.value();
+      const contributor = self.getContributorDetails(annotation.value())
+      return contributor ? contributor : { orcid: orcid };
+    });
+
+    return contributors
+  }
+
   getGroups(): Observable<any> {
     const self = this;
 
     return this.httpClient.get(`${self.baristaUrl}/groups`);
   }
 
+  getGroupDetails(url: string): Group {
+    const self = this;
+
+    const group = find(self.groups, (inGroup: Group) => {
+      return inGroup.url === url;
+    });
+
+    return group
+  }
   getGroupInfo(uri: string): Observable<any> {
     const self = this;
 
     const encodedUrl = encodeURIComponent(uri);
     return this.httpClient.get(`${self.baristaUrl}/group_info_by_id/${encodedUrl}`);
+  }
+
+  getGroupsFromAnnotations(annotations): Group[] {
+    const self = this;
+
+    const groups = <Group[]>annotations.map((annotation) => {
+      const orcid = annotation.value();
+      const group = self.getGroupDetails(annotation.value())
+      return group ? group : { orcid: orcid };
+    });
+
+    return groups
   }
 
   filterContributors(value: string): any[] {

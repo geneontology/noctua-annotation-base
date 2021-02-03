@@ -498,8 +498,8 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       referenceEntity: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].referenceEntity : {},
       with: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].with : '',
       withEntity: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].withEntity : {},
-      assignedBy: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].assignedBy : {},
-      contributor: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].contributor : {},
+      groups: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].groups : [],
+      contributors: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].contributors : [],
       evidenceIndex: 0,
       relationEditable: node.relationEditable,
       node: node
@@ -514,8 +514,8 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         referenceUrl: node.predicate.evidence[i].referenceUrl,
         with: node.predicate.evidence[i].with,
         withEntity: node.predicate.evidence[i].withEntity,
-        assignedBy: node.predicate.evidence[i].assignedBy,
-        contributor: node.predicate.evidence[i].contributor,
+        groups: node.predicate.evidence[i].groups,
+        contributors: node.predicate.evidence[i].contributors,
         evidenceIndex: i,
         node: node,
       });

@@ -137,6 +137,11 @@ export class NoctuaGraphService {
       const titleAnnotations = cam.graph.get_annotations_by_key('title');
       const stateAnnotations = cam.graph.get_annotations_by_key('state');
       const dateAnnotations = cam.graph.get_annotations_by_key('date');
+      const groupAnnotations = cam.graph.get_annotations_by_key('providedBy');
+      const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
+
+      cam.contributors = self.noctuaUserService.getContributorsFromAnnotations(contributorAnnotations);
+      cam.groups = self.noctuaUserService.getGroupsFromAnnotations(groupAnnotations);
 
       if (dateAnnotations.length > 0) {
         cam.date = dateAnnotations[0].value();
@@ -149,9 +154,6 @@ export class NoctuaGraphService {
       if (stateAnnotations.length > 0) {
         cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
       }
-
-      self.populateContributors(cam);
-      self.populateGroups(cam);
 
       self.loadCam(cam);
       self.loadViolations(cam, response.data()['validation-results'])
@@ -233,34 +235,6 @@ export class NoctuaGraphService {
     }
 
     return violation;
-  }
-
-  populateContributors(cam: Cam) {
-    const self = this;
-    const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
-
-    cam.contributors = <Contributor[]>contributorAnnotations.map((contributorAnnotation) => {
-      const orcid = contributorAnnotation.value();
-      const contributor = find(self.noctuaUserService.contributors, (user: Contributor) => {
-        return user.orcid === orcid;
-      });
-
-      return contributor ? contributor : { orcid: orcid };
-    });
-  }
-
-  populateGroups(cam: Cam) {
-    const self = this;
-    const groupAnnotations = cam.graph.get_annotations_by_key('providedBy');
-
-    cam.groups = <Group[]>groupAnnotations.map((groupAnnotation) => {
-      const url = groupAnnotation.value();
-      const group = find(self.noctuaUserService.groups, (inGroup: Group) => {
-        return inGroup.url === url;
-      });
-
-      return group ? group : { url: url };
-    });
   }
 
   getNodeInfo(node) {
@@ -364,27 +338,28 @@ export class NoctuaGraphService {
 
         const sources = annotationNode.get_annotations_by_key('source');
         const withs = annotationNode.get_annotations_by_key('with');
-        const contributors = annotationNode.get_annotations_by_key('contributor');
-        const assignedBys = annotationNode.get_annotations_by_key('providedBy');
+        const contributorAnnotations = annotationNode.get_annotations_by_key('contributor');
+        const groupAnnotations = annotationNode.get_annotations_by_key('providedBy');
+
         if (sources.length > 0) {
           evidence.reference = sources[0].value();
           const referenceUrl = self.noctuaLookupService.getTermURL(evidence.reference);
           evidence.referenceEntity = new Entity(evidence.reference, evidence.reference, referenceUrl)
         }
+
         if (withs.length > 0) {
           evidence.with = withs[0].value();
           evidence.withEntity = new Entity(evidence.with, evidence.with)
         }
-        if (assignedBys.length > 0) {
-          evidence.assignedBy = new Entity(assignedBys[0].value(),
-            self.noctuaUserService.getGroupName(assignedBys[0].value()),
-            assignedBys[0].value());
+
+        if (groupAnnotations.length > 0) {
+          evidence.groups = self.noctuaUserService.getGroupsFromAnnotations(groupAnnotations);
         }
-        if (contributors.length > 0) {
-          evidence.contributor = new Entity(contributors[0].value(),
-            self.noctuaUserService.getUserName(contributors[0].value()),
-            contributors[0].value());
+
+        if (contributorAnnotations.length > 0) {
+          evidence.contributors = self.noctuaUserService.getContributorsFromAnnotations(contributorAnnotations);
         }
+
         result.push(evidence);
       }
     });
@@ -549,24 +524,10 @@ export class NoctuaGraphService {
     return connectorAnnotons;
   }
 
-  evidenceUseGroups(reqs, evidence: Evidence) {
-    const self = this;
-    const assignedBy = evidence.assignedBy;
-
-    if (assignedBy) {
-      reqs.use_groups(['http://purl.obolibrary.org/go/groups/' + assignedBy]);
-    } else if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
-      reqs.use_groups([self.noctuaUserService.user.group.id]);
-    } else {
-      reqs.use_groups([]);
-    }
-  }
-
   saveModelGroup(cam: Cam, groupId) {
     cam.manager.use_groups([groupId]);
     cam.groupId = groupId;
   }
-
 
   resetModel(cam: Cam) {
     const self = this;

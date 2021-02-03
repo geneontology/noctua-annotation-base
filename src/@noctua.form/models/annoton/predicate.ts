@@ -31,7 +31,7 @@ export class Predicate {
     this.addEvidence();
   }
 
-  setEvidence(evidences: Evidence[], except?) {
+  setEvidence(evidences: Evidence[]) {
     const self = this;
     self.evidence = [];
 

@@ -5,6 +5,8 @@ import { includes, isEqual } from 'lodash';
 
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { CamStats } from "./cam";
+import { Contributor } from "../contributor";
+import { Group } from "../group";
 
 export class Evidence {
 
@@ -15,14 +17,13 @@ export class Evidence {
   reference: string;
   referenceUrl: string;
   with: string;
-  assignedBy: Entity = new Entity('', '');
-  contributor: Entity = new Entity('', '');
+  groups: Group[] = [];
+  contributors: Contributor[] = [];
   classExpression;
   uuid;
   evidenceRequired = false;
   referenceRequired = false;
   ontologyClass = [];
-
   pendingEvidenceChanges: Entity;
   pendingReferenceChanges: Entity;
   pendingWithChanges: Entity;
@@ -55,16 +56,6 @@ export class Evidence {
     self.setEvidence(new Entity('', ''));
     self.reference = '';
     self.with = '';
-    self.assignedBy = new Entity('', '');
-  }
-
-  copyValues(evidence: Evidence, except) {
-    const self = this;
-
-    self.setEvidence(evidence.evidence);
-    !includes(except, 'reference') ? self.reference = evidence.reference : null;
-    !includes(except, 'with') ? self.with = evidence.with : null;
-    !includes(except, 'assignedBy') ? self.assignedBy = evidence.assignedBy : null;
   }
 
   isEvidenceEqual(evidence) {
@@ -122,15 +113,6 @@ export class Evidence {
       self.withEntity.modified = true;
     }
 
-    if (oldEvidence && self.assignedBy.id !== oldEvidence.assignedBy.id) {
-      self.assignedBy.termHistory.unshift(new Entity(oldEvidence.assignedBy.id, oldEvidence.assignedBy.label));
-      self.assignedBy.modified = true;
-    }
-
-    if (oldEvidence && self.contributor.id !== oldEvidence.contributor.id) {
-      self.contributor.termHistory.unshift(new Entity(oldEvidence.contributor.id, oldEvidence.contributor.label));
-      self.contributor.modified = true;
-    }
   }
 
   addPendingChanges(oldEvidence: Evidence) {

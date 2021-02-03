@@ -9,6 +9,7 @@ import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
 import { Observable } from 'rxjs';
 import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith } from './../models/annoton/evidence';
+import { Group } from './../models/group';
 
 declare const require: any;
 
@@ -216,7 +217,7 @@ export class NoctuaLookupService {
             evidence.with = doc.evidence_with.join(' | ');
           }
 
-          evidence.assignedBy = new Entity(null, doc.assigned_by);
+          evidence.groups = [new Group(doc.assigned_by)];
 
           annotonNode = find(result, (srcAnnotonNode: AnnotonNode) => {
             return srcAnnotonNode.getTerm().id === doc.annotation_class;

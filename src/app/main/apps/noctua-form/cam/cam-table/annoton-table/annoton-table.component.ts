@@ -217,7 +217,7 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     const evidences: Evidence[] = this.camService.getUniqueEvidence(self.noctuaAnnotonFormService.annoton);
     const success = (selected) => {
       if (selected.evidences && selected.evidences.length > 0) {
-        entity.predicate.setEvidence(selected.evidences, ['assignedBy']);
+        entity.predicate.setEvidence(selected.evidences);
         self.noctuaAnnotonFormService.initializeForm();
       }
     };
