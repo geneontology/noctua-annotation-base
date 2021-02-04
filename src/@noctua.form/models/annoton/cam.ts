@@ -224,15 +224,23 @@ export class Cam {
     });
   }
 
-  findAnnotonByNodeId(nodeId): Annoton[] {
+  findAnnotonByNodeUuid(nodeId): Annoton[] {
     const self = this;
 
-    const result = filter(self.annotons, (annoton: Annoton) => {
-      return find(annoton.nodes, (annotonNode: AnnotonNode) => {
-        return annotonNode.uuid === nodeId;
-      });
-    }) as Annoton[];
+    const result: Annoton[] = [];
 
+    each(self._annotons, (annoton: Annoton) => {
+      each(annoton.nodes, (node: AnnotonNode) => {
+        if (node.uuid === nodeId) {
+          result.push(annoton)
+        }
+        each(node.predicate.evidence, (evidence: Evidence) => {
+          if (evidence.uuid === nodeId) {
+            result.push(annoton)
+          }
+        });
+      });
+    });
     return result;
   }
 
@@ -261,7 +269,6 @@ export class Cam {
       each(self._annotons, (annoton: Annoton) => {
         let match = false;
         each(annoton.nodes, (node: AnnotonNode) => {
-          node.term.highlight = false;
           each(self.queryMatch.terms, (term) => {
 
             if (node.term.uuid === term.uuid) {
@@ -271,6 +278,20 @@ export class Cam {
               self.matchedCount += 1;
               match = true;
             }
+          });
+
+
+          each(node.predicate.evidence, (evidence: Evidence) => {
+            each(self.queryMatch.terms, (term) => {
+
+              if (evidence.uuid === term.uuid) {
+                evidence.referenceEntity.highlight = true;
+                evidence.referenceEntity.annotonDisplayId = term.annotonDisplayId = annoton.displayId;
+
+                self.matchedCount += 1;
+                match = true;
+              }
+            });
           });
         });
 
@@ -461,7 +482,7 @@ export class Cam {
   setViolations() {
     const self = this;
     self.violations?.forEach((violation: Violation) => {
-      const annotons = this.findAnnotonByNodeId(violation.node.uuid);
+      const annotons = this.findAnnotonByNodeUuid(violation.node.uuid);
 
       if (annotons) {
         annotons.forEach((annoton: Annoton) => {

@@ -29,6 +29,7 @@ import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review
 import { cloneDeep, groupBy } from 'lodash';
 import { ArtReplaceCategory } from '@noctua.search/models/review-mode';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
+import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 
 @Component({
   selector: 'noc-review-form',
@@ -51,7 +52,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   replaceNode: AnnotonNode;
   gpNode: AnnotonNode;
   termNode: AnnotonNode;
-  selectedCategoryName;
+  selectedCategory;
 
   textboxDetail = {
     placeholder: ''
@@ -68,7 +69,8 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     private noctuaLookupService: NoctuaLookupService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-    public noctuaFormMenuService: NoctuaFormMenuService) {
+    public noctuaFormMenuService: NoctuaFormMenuService,
+    private inlineReferenceService: InlineReferenceService,) {
 
     this._unsubscribeAll = new Subject();
     this.categories = cloneDeep(this.noctuaFormConfigService.findReplaceCategories);
@@ -93,14 +95,19 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.searchForm = this.createSearchForm(this.categories.selected);
-    this.onValueChanges();
-    this.onNodeValueChange(this.categories.selected.name)
+    this.selectedCategory = this.categories.selected;
+    this.resetForm(this.selectedCategory)
   }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
+  }
+
+  resetForm(selectedCategory): void {
+    this.searchForm = this.createSearchForm(selectedCategory);
+    this.onValueChanges();
+    this.onNodeValueChange(selectedCategory)
   }
 
   resetTermNode() {
@@ -115,7 +122,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   }
 
   createSearchForm(selectedCategory) {
-    this.selectedCategoryName = selectedCategory.name;
+    this.selectedCategory = selectedCategory;
     return new FormGroup({
       findWhat: new FormControl(),
       replaceWith: new FormControl(),
@@ -148,10 +155,29 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   search() {
     const value = this.searchForm.value;
     const findWhat = value.findWhat;
-    const filterType = 'terms';
+    let filterType: string;
+
+    this.noctuaReviewSearchService.clear();
+
+    if (this.selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.term.name) {
+      filterType = this.noctuaReviewSearchService.filterType.terms;
+    } else if (this.selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.gp.name) {
+      filterType = this.noctuaReviewSearchService.filterType.gps;
+    } else if (this.selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+      filterType = this.noctuaReviewSearchService.filterType.pmids;
+    }
 
     this.noctuaReviewSearchService.searchCriteria[filterType] = [findWhat];
     this.noctuaReviewSearchService.updateSearch();
+  }
+
+  openAddReference(event, name: string) {
+
+    const data = {
+      formControl: this.searchForm.controls[name] as FormControl,
+    };
+    this.inlineReferenceService.open(event.target, { data });
+
   }
 
   replace() {
@@ -225,8 +251,6 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
     if (closures) {
       this.replaceNode = EntityDefinition.generateBaseTerm(closures);
-
-      console.log(this.replaceNode)
     }
 
     this.search();
@@ -240,39 +264,39 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     const self = this;
 
     this.searchForm.get('category').valueChanges.pipe(
+      takeUntil(this._unsubscribeAll),
       distinctUntilChanged(),
     ).subscribe(data => {
       if (data) {
-        self.selectedCategoryName = data.name;
-        self.onNodeValueChange(data.name)
+        self.selectedCategory = data;
         self.searchForm.patchValue({
           findWhat: null,
           replaceWith: null
         });
 
         self.calculateEnableReplace();
+        self.resetForm(data)
       }
     });
   }
 
-  onNodeValueChange(selectedCategoryName) {
+  onNodeValueChange(selectedCategory) {
     const self = this;
     const lookupFunc = self.noctuaLookupService.lookupFunc();
 
-    if (selectedCategoryName === noctuaFormConfig.findReplaceCategory.options.term.name) {
+    if (selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.term.name) {
       self.findNode = self.termNode;
       self.textboxDetail.placeholder = 'Ontology Term'
-    } else if (selectedCategoryName === noctuaFormConfig.findReplaceCategory.options.gp.name) {
+    } else if (selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.gp.name) {
       self.findNode = self.gpNode;
       self.textboxDetail.placeholder = 'Gene Product'
-    } else if (selectedCategoryName === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+    } else if (selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
       self.findNode = null;
       self.textboxDetail.placeholder = 'Reference'
     }
 
-    this.findNode!.termLookup.results = []
-
     if (self.findNode) {
+      this.findNode.termLookup.results = []
       this.searchForm.get('findWhat').valueChanges.pipe(
         takeUntil(this._unsubscribeAll),
         distinctUntilChanged(),
@@ -299,6 +323,27 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
             lookup.results = response;
           });
 
+          self.calculateEnableReplace();
+        }
+      });
+    } else {
+      this.searchForm.get('findWhat').valueChanges.pipe(
+        takeUntil(this._unsubscribeAll),
+        distinctUntilChanged(),
+        debounceTime(400)
+      ).subscribe(data => {
+        if (data && data.includes(':')) {
+          self.search();
+          self.calculateEnableReplace();
+        }
+      });
+
+      this.searchForm.get('replaceWith').valueChanges.pipe(
+        takeUntil(this._unsubscribeAll),
+        distinctUntilChanged(),
+        debounceTime(400)
+      ).subscribe(data => {
+        if (data && self.replaceNode && data.includes(':')) {
           self.calculateEnableReplace();
         }
       });

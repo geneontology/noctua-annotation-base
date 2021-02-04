@@ -344,12 +344,12 @@ export class NoctuaGraphService {
         if (sources.length > 0) {
           evidence.reference = sources[0].value();
           const referenceUrl = self.noctuaLookupService.getTermURL(evidence.reference);
-          evidence.referenceEntity = new Entity(evidence.reference, evidence.reference, referenceUrl)
+          evidence.referenceEntity = new Entity(evidence.reference, evidence.reference, referenceUrl, evidence.uuid)
         }
 
         if (withs.length > 0) {
           evidence.with = withs[0].value();
-          evidence.withEntity = new Entity(evidence.with, evidence.with)
+          evidence.withEntity = new Entity(evidence.with, evidence.with, null, evidence.uuid)
         }
 
         if (groupAnnotations.length > 0) {

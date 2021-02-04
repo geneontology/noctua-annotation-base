@@ -311,6 +311,10 @@ export class NoctuaReviewSearchService {
         const self = this;
         const result: Array<Cam> = [];
 
+        each(self.camsService.cams, (cam: Cam) => {
+            return cam.clearFilter();
+        });
+
         res.models.forEach((response) => {
 
             const modelId = response.id;

@@ -167,7 +167,7 @@ export class CamsService {
 
     each(self.cams, (cam: Cam) => {
       cam.expanded = true;
-      const annotons = cam.findAnnotonByNodeId(nodeId);
+      const annotons = cam.findAnnotonByNodeUuid(nodeId);
 
       each(annotons, (annoton: Annoton) => {
         annoton.expanded = true;
