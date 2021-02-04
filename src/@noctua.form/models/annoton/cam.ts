@@ -302,16 +302,25 @@ export class Cam {
     }
   }
 
-  addPendingChanges(findEntities: Entity[], replaceWith: Entity) {
+  addPendingChanges(findEntities: Entity[], replaceWith: string, category) {
     const self = this;
 
     each(self._annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
-        // node.term.highlight = false;
         each(findEntities, (entity: Entity) => {
-          if (node.term.uuid === entity.uuid) {
-            node.pendingEntityChanges = new Entity(replaceWith.id, replaceWith.label);
-            node.pendingEntityChanges.uuid = node.term.uuid;
+
+          if (category.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+            each(node.predicate.evidence, (evidence: Evidence, key) => {
+              if (evidence.uuid === entity.uuid) {
+                evidence.pendingReferenceChanges = new Entity(replaceWith, replaceWith);
+                evidence.pendingReferenceChanges.uuid = evidence.uuid;
+              }
+            });
+          } else {
+            if (node.term.uuid === entity.uuid) {
+              node.pendingEntityChanges = new Entity(replaceWith, replaceWith);
+              node.pendingEntityChanges.uuid = node.term.uuid;
+            }
           }
         });
       });

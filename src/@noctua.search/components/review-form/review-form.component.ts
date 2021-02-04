@@ -183,9 +183,13 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   replace() {
     const self = this;
     const value = this.searchForm.value;
-    const replaceWith = value.replaceWith;
+    let replaceWith = value.replaceWith;
 
-    this.noctuaReviewSearchService.replace(replaceWith)
+    if (self.selectedCategory.name !== noctuaFormConfig.findReplaceCategory.options.reference.name) {
+      replaceWith = value.replaceWith?.id;
+    }
+
+    this.noctuaReviewSearchService.replace(replaceWith, self.selectedCategory)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cams) => {
         if (cams) {
@@ -197,15 +201,19 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   replaceAll() {
     const self = this;
     const value = this.searchForm.value;
-    const replaceWith = value.replaceWith;
     const groupedEntities = groupBy(
       this.noctuaReviewSearchService.matchedEntities,
       'modelId') as { string: Entity[] };
     const models = Object.keys(groupedEntities).length;
     const occurrences = this.noctuaReviewSearchService.matchedCount;
+    let replaceWith = value.replaceWith;
+
+    if (self.selectedCategory.name !== noctuaFormConfig.findReplaceCategory.options.reference.name) {
+      replaceWith = value.replaceWith?.id;
+    }
     const success = (replace) => {
       if (replace) {
-        this.noctuaReviewSearchService.replaceAll(replaceWith)
+        this.noctuaReviewSearchService.replaceAll(replaceWith, self.selectedCategory)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe((cams) => {
             if (cams) {
@@ -274,7 +282,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
           replaceWith: null
         });
 
-        self.calculateEnableReplace();
+        self.calculateEnableReplace(self.selectedCategory);
         self.resetForm(data)
       }
     });
@@ -308,7 +316,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
             lookup.results = response;
           });
 
-          self.calculateEnableReplace();
+          self.calculateEnableReplace(selectedCategory);
         }
       });
 
@@ -323,7 +331,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
             lookup.results = response;
           });
 
-          self.calculateEnableReplace();
+          self.calculateEnableReplace(selectedCategory);
         }
       });
     } else {
@@ -334,7 +342,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
       ).subscribe(data => {
         if (data && data.includes(':')) {
           self.search();
-          self.calculateEnableReplace();
+          self.calculateEnableReplace(selectedCategory);
         }
       });
 
@@ -343,22 +351,27 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         debounceTime(400)
       ).subscribe(data => {
-        if (data && self.replaceNode && data.includes(':')) {
-          self.calculateEnableReplace();
+        if (data && data.includes(':')) {
+          self.calculateEnableReplace(selectedCategory);
         }
       });
     }
   }
 
-  calculateEnableReplace() {
-    const value = this.searchForm.value;
+  calculateEnableReplace(selectedCategory) {
+    const self = this;
+
+    const value = self.searchForm.value;
     const findWhat = value.findWhat;
     const replaceWith = value.replaceWith;
 
-    const matched = this.noctuaReviewSearchService.matchedCount > 0
-
-    this.displayReplaceForm.replaceSection = matched && findWhat && findWhat.id;
-    this.displayReplaceForm.replaceActions = matched && replaceWith && replaceWith.id;
+    if (selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+      self.displayReplaceForm.replaceSection = findWhat;
+      self.displayReplaceForm.replaceActions = replaceWith;
+    } else {
+      self.displayReplaceForm.replaceSection = findWhat && findWhat.id;
+      self.displayReplaceForm.replaceActions = replaceWith && replaceWith.id;
+    }
   }
 
   compareCategory(a: any, b: any) {

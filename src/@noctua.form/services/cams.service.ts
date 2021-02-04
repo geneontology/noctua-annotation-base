@@ -175,7 +175,7 @@ export class CamsService {
     });
   }
 
-  replace(entities: Entity[], replaceWithTerm: Entity) {
+  replace(entities: Entity[], replaceWithTerm: string, category) {
     const self = this;
     const groupedEntities = groupBy(entities, 'modelId') as { string: Entity[] };
     const cams: Cam[] = []
@@ -183,7 +183,7 @@ export class CamsService {
     each(groupedEntities, (values: Entity[], key) => {
       const cam: Cam = find(this.cams, { id: key });
       if (cam) {
-        cam.addPendingChanges(entities, replaceWithTerm);
+        cam.addPendingChanges(entities, replaceWithTerm, category);
         cams.push(cam)
       }
     });

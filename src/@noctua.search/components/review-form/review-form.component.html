@@ -63,7 +63,9 @@
         </button>
       </mat-form-field>
     </div>
-    <div class="noc-annoton-group-row mt-8 w-100-p" fxLayout="row" fxLayoutAlign="start center">
+    <div class="noc-annoton-group-row mt-8 w-100-p"
+      [ngClass]="{'noc-disabled':noctuaReviewSearchService.matchedCount===0}" fxLayout="row"
+      fxLayoutAlign="start center">
       <div class="noc-review-actions" fxLayout="row" fxLayoutAlign="start center" fxFlex="">
         <span fxFlex></span>
         <div *ngIf="noctuaReviewSearchService.matchedCount===0" class="noc-matched-count">
@@ -72,7 +74,7 @@
         <div *ngIf="noctuaReviewSearchService.matchedCount>0" class="noc-matched-count mr-8">
           {{noctuaReviewSearchService.matchedCountCursor +1}} of {{noctuaReviewSearchService.matchedCount}}
         </div>
-        <div [ngClass]="{'noc-disabled':noctuaReviewSearchService.matchedCount===0}" class="mr-8">
+        <div class="mr-8">
           <button mat-icon-button (click)="goto('first')" class="noc-icon-button"
             [ngClass]="{'noc-disabled': noctuaReviewSearchService.matchedCountCursor===0}" color="primary">
             <fa-icon [icon]="['fas', 'angle-double-left']"></fa-icon>
