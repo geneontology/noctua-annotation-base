@@ -47,10 +47,15 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   };
   noctuaFormConfig = noctuaFormConfig;
   categories: any;
+  findNode: AnnotonNode;
+  replaceNode: AnnotonNode;
   gpNode: AnnotonNode;
   termNode: AnnotonNode;
-  termReplaceNode: AnnotonNode;
   selectedCategoryName;
+
+  textboxDetail = {
+    placeholder: ''
+  }
 
   private _unsubscribeAll: Subject<any>;
 
@@ -90,6 +95,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.searchForm = this.createSearchForm(this.categories.selected);
     this.onValueChanges();
+    this.onNodeValueChange(this.categories.selected.name)
   }
 
   ngOnDestroy(): void {
@@ -108,7 +114,6 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     ]);
   }
 
-
   createSearchForm(selectedCategory) {
     this.selectedCategoryName = selectedCategory.name;
     return new FormGroup({
@@ -120,12 +125,17 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
   getClosure(rootTypes: Entity[]) {
     const s = [
+      EntityDefinition.GoMolecularEntity,
       EntityDefinition.GoMolecularFunction,
       EntityDefinition.GoBiologicalProcess,
       EntityDefinition.GoCellularComponent,
       EntityDefinition.GoBiologicalPhase,
       EntityDefinition.GoAnatomicalEntity,
-      EntityDefinition.GoCellTypeEntity
+      EntityDefinition.GoCellTypeEntity,
+      EntityDefinition.GoProteinContainingComplex,
+      EntityDefinition.GoChemicalEntity,
+      EntityDefinition.GoOrganism,
+      EntityDefinition.GoEvidence
     ];
 
     const closures = s.filter(x => {
@@ -211,9 +221,12 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
   findSelected(value) {
     const closures = this.getClosure(value.rootTypes);
+    this.findNode!.termLookup.results = []
 
     if (closures) {
-      this.termReplaceNode = EntityDefinition.generateBaseTerm(closures);
+      this.replaceNode = EntityDefinition.generateBaseTerm(closures);
+
+      console.log(this.replaceNode)
     }
 
     this.search();
@@ -225,13 +238,13 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
   onValueChanges() {
     const self = this;
-    const lookupFunc = self.noctuaLookupService.lookupFunc()
 
     this.searchForm.get('category').valueChanges.pipe(
       distinctUntilChanged(),
     ).subscribe(data => {
       if (data) {
         self.selectedCategoryName = data.name;
+        self.onNodeValueChange(data.name)
         self.searchForm.patchValue({
           findWhat: null,
           replaceWith: null
@@ -240,35 +253,56 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
         self.calculateEnableReplace();
       }
     });
+  }
 
-    this.searchForm.get('findWhat').valueChanges.pipe(
-      distinctUntilChanged(),
-      debounceTime(400)
-    ).subscribe(data => {
-      if (data) {
-        const lookup: EntityLookup = self.termNode.termLookup;
-        lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
-          lookup.results = response;
-        });
+  onNodeValueChange(selectedCategoryName) {
+    const self = this;
+    const lookupFunc = self.noctuaLookupService.lookupFunc();
 
-        self.calculateEnableReplace();
-      }
+    if (selectedCategoryName === noctuaFormConfig.findReplaceCategory.options.term.name) {
+      self.findNode = self.termNode;
+      self.textboxDetail.placeholder = 'Ontology Term'
+    } else if (selectedCategoryName === noctuaFormConfig.findReplaceCategory.options.gp.name) {
+      self.findNode = self.gpNode;
+      self.textboxDetail.placeholder = 'Gene Product'
+    } else if (selectedCategoryName === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+      self.findNode = null;
+      self.textboxDetail.placeholder = 'Reference'
+    }
 
-    });
+    this.findNode!.termLookup.results = []
 
-    this.searchForm.get('replaceWith').valueChanges.pipe(
-      distinctUntilChanged(),
-      debounceTime(400)
-    ).subscribe(data => {
-      if (data && self.termReplaceNode) {
-        const lookup: EntityLookup = self.termReplaceNode.termLookup;
-        lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
-          lookup.results = response;
-        });
+    if (self.findNode) {
+      this.searchForm.get('findWhat').valueChanges.pipe(
+        takeUntil(this._unsubscribeAll),
+        distinctUntilChanged(),
+        debounceTime(400)
+      ).subscribe(data => {
+        if (data) {
+          const lookup: EntityLookup = self.findNode.termLookup;
+          lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
+            lookup.results = response;
+          });
 
-        self.calculateEnableReplace();
-      }
-    });
+          self.calculateEnableReplace();
+        }
+      });
+
+      this.searchForm.get('replaceWith').valueChanges.pipe(
+        takeUntil(this._unsubscribeAll),
+        distinctUntilChanged(),
+        debounceTime(400)
+      ).subscribe(data => {
+        if (data && self.replaceNode) {
+          const lookup: EntityLookup = self.replaceNode.termLookup;
+          lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
+            lookup.results = response;
+          });
+
+          self.calculateEnableReplace();
+        }
+      });
+    }
   }
 
   calculateEnableReplace() {

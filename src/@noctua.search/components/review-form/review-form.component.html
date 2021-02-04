@@ -24,26 +24,12 @@
       <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.term" appearance="outline"
         class="noc-sm noc-review-input">
         <mat-label>Find What <strong>(Ontology Term)</strong></mat-label>
-        <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="termFindAuto" rows="2"></textarea>
-        <mat-autocomplete #termFindAuto="matAutocomplete" (optionSelected)="findSelected($event.option.value)"
-          [displayWith]="termDisplayFn" class="noc-term-autocomplete">
-          <mat-option class="noc-term-autocomplete" *ngFor="let item of termNode?.termLookup.results" [value]="item">
-            <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-              <div class="noc-term-label">
-                {{ item.label }}
-              </div>
-              <span fxFlex></span>
-              <div class="noc-term-id">
-                {{ item.id }}
-              </div>
-            </div>
-          </mat-option>
-        </mat-autocomplete>
+        <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="findAuto" rows="2"></textarea>
       </mat-form-field>
       <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.gp" appearance="outline"
         class="noc-sm  noc-review-input">
         <mat-label>Find What <strong>(Gene Product)</strong></mat-label>
-        <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="gpAuto" rows="2"></textarea>
+        <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="findAuto" rows="2"></textarea>
       </mat-form-field>
       <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.reference" appearance="outline"
         class="noc-sm  noc-review-input">
@@ -56,27 +42,12 @@
       <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.term" appearance="outline"
         class="noc-sm noc-review-input">
         <mat-label>Replace With <strong>(Ontology Term)</strong></mat-label>
-        <textarea type="text" matInput formControlName="replaceWith" [matAutocomplete]="termReplaceAuto"></textarea>
-        <mat-autocomplete #termReplaceAuto="matAutocomplete" [displayWith]="termDisplayFn"
-          class="noc-term-autocomplete">
-          <mat-option class="noc-term-autocomplete" *ngFor="let item of termReplaceNode?.termLookup.results"
-            [value]="item">
-            <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-              <div class="noc-term-label">
-                {{ item.label }}
-              </div>
-              <span fxFlex></span>
-              <div class="noc-term-id">
-                {{ item.id }}
-              </div>
-            </div>
-          </mat-option>
-        </mat-autocomplete>
+        <textarea type="text" matInput formControlName="replaceWith" [matAutocomplete]="replaceAuto"></textarea>
       </mat-form-field>
       <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.gp" appearance="outline"
         class="noc-sm  noc-review-input">
         <mat-label>Replace With <strong>(Gene Product)</strong></mat-label>
-        <textarea type="text" matInput formControlName="replaceWith" [matAutocomplete]="gpAuto"></textarea>
+        <textarea type="text" matInput formControlName="replaceWith" [matAutocomplete]="replaceAuto"></textarea>
       </mat-form-field>
       <mat-form-field *ngIf="selectedCategoryName === ArtReplaceCategory.reference" appearance="outline"
         class="noc-sm  noc-review-input">
@@ -124,9 +95,23 @@
     </div>
   </form>
 </div>
+<mat-autocomplete #findAuto="matAutocomplete" (optionSelected)="findSelected($event.option.value)"
+  [displayWith]="termDisplayFn" class="noc-term-autocomplete">
+  <mat-option class="noc-term-autocomplete" *ngFor="let item of findNode?.termLookup.results" [value]="item">
+    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <div class="noc-term-label">
+        {{ item.label }}
+      </div>
+      <span fxFlex></span>
+      <div class="noc-term-id">
+        {{ item.id }}
+      </div>
+    </div>
+  </mat-option>
+</mat-autocomplete>
 
-<mat-autocomplete #gpAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
-  <mat-option class="noc-term-autocomplete" *ngFor="let item of gpNode?.termLookup.results" [value]="item">
+<mat-autocomplete #replaceAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
+  <mat-option class="noc-term-autocomplete" *ngFor="let item of replaceNode?.termLookup.results" [value]="item">
     <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-term-label">
         {{ item.label }}
