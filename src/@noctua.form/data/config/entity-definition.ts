@@ -1,8 +1,3 @@
-
-declare const require: any;
-const getUuid = require('uuid/v1');
-
-import { noctuaFormConfig } from './../../noctua-form-config';
 import {
     AnnotonNode,
     AnnotonNodeType,
@@ -12,7 +7,6 @@ import {
 } from './../../models/annoton/annoton-node';
 import { EntityLookup } from './../..//models/annoton/entity-lookup';
 import { Predicate } from './../../models/annoton/predicate';
-
 
 const baseRequestParams = {
     defType: 'edismax',
@@ -170,8 +164,7 @@ export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<
     return annotonNode;
 };
 
-
-export const generateGoTerm = (): AnnotonNode => {
+export const generateGOTerm = (): AnnotonNode => {
     const annotonNode = generateBaseTerm();
 
     annotonNode.id = 'goterm';

@@ -196,6 +196,11 @@ export class Cam {
     each(self._annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
         node.term.highlight = false;
+        each(node.predicate.evidence, (evidence: Evidence) => {
+          evidence.evidence.highlight = false;
+          evidence.referenceEntity.highlight = false;
+          evidence.withEntity.highlight = false;
+        });
       });
     });
   }
@@ -280,7 +285,6 @@ export class Cam {
             }
           });
 
-
           each(node.predicate.evidence, (evidence: Evidence) => {
             each(self.queryMatch.terms, (term) => {
 
@@ -308,7 +312,6 @@ export class Cam {
     each(self._annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
         each(findEntities, (entity: Entity) => {
-
           if (category.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
             each(node.predicate.evidence, (evidence: Evidence, key) => {
               if (evidence.uuid === entity.uuid) {

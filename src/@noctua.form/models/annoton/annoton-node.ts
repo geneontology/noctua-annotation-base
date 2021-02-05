@@ -7,6 +7,7 @@ import { Contributor } from './../contributor';
 import { CamStats, Predicate } from '.';
 import { each, find, some } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
+import * as EntityDefinition from './../../data/config/entity-definition';
 
 export interface GoCategory {
   id: AnnotonNodeType;
@@ -210,9 +211,14 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     let modified = false;
 
     if (self.term.modified) {
-      //result.push(self.term);
-      modifiedStats.termsCount++;
-      stat.termsCount++;
+      if (self.id === EntityDefinition.GoMolecularEntity.id) {
+        modifiedStats.gpsCount++;
+        stat.gpsCount++;
+      } else {
+        modifiedStats.termsCount++;
+        stat.termsCount++;
+      }
+
       modified = true;
     }
 

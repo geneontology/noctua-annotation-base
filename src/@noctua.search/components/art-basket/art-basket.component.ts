@@ -274,6 +274,8 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
                 return;
               }
 
+              self.noctuaSearchService.updateSearch();
+              self.noctuaReviewSearchService.updateSearch();
               self.zone.run(() => {
                 self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
               });
@@ -316,6 +318,8 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
               self.noctuaReviewSearchService.clearBasket();
               self.noctuaReviewSearchService.onResetReview.next(true);
             }
+            self.noctuaSearchService.updateSearch();
+            self.noctuaReviewSearchService.updateSearch();
             self.zone.run(() => {
               self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
             });

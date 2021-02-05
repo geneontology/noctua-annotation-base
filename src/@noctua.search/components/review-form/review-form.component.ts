@@ -19,7 +19,8 @@ import {
   EntityLookup,
   NoctuaLookupService,
   EntityDefinition,
-  Entity
+  Entity,
+  Evidence
 } from 'noctua-form-base';
 
 import { takeUntil, distinctUntilChanged, debounceTime } from 'rxjs/operators';
@@ -152,11 +153,8 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     return closures;
   }
 
-  search() {
-    const value = this.searchForm.value;
-    const findWhat = value.findWhat;
+  search(findWhat) {
     let filterType: string;
-
     this.noctuaReviewSearchService.clear();
 
     if (this.selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.term.name) {
@@ -189,6 +187,10 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
       replaceWith = value.replaceWith?.id;
     }
 
+    if (self.selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+      replaceWith = Evidence.formatReference(value.replaceWith);
+    }
+
     this.noctuaReviewSearchService.replace(replaceWith, self.selectedCategory)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cams) => {
@@ -210,6 +212,10 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
     if (self.selectedCategory.name !== noctuaFormConfig.findReplaceCategory.options.reference.name) {
       replaceWith = value.replaceWith?.id;
+    }
+
+    if (self.selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+      replaceWith = Evidence.formatReference(value.replaceWith);
     }
     const success = (replace) => {
       if (replace) {
@@ -261,7 +267,12 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
       this.replaceNode = EntityDefinition.generateBaseTerm(closures);
     }
 
-    this.search();
+    const findWhat = this.searchForm.value.findWhat;
+    this.search(findWhat);
+
+    this.searchForm.patchValue({
+      replaceWith: null
+    });
   }
 
   termDisplayFn(term): string | undefined {
@@ -316,6 +327,10 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
             lookup.results = response;
           });
 
+          self.searchForm.patchValue({
+            replaceWith: null
+          });
+
           self.calculateEnableReplace(selectedCategory);
         }
       });
@@ -338,11 +353,14 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
       this.searchForm.get('findWhat').valueChanges.pipe(
         takeUntil(this._unsubscribeAll),
         distinctUntilChanged(),
-        debounceTime(400)
+        debounceTime(1000)
       ).subscribe(data => {
         if (data && data.includes(':')) {
-          self.search();
-          self.calculateEnableReplace(selectedCategory);
+          if (Evidence.checkReference) {
+            const findWhat = Evidence.formatReference(data);
+            self.search(findWhat);
+            self.calculateEnableReplace(selectedCategory);
+          }
         }
       });
 
@@ -366,8 +384,8 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     const replaceWith = value.replaceWith;
 
     if (selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
-      self.displayReplaceForm.replaceSection = findWhat;
-      self.displayReplaceForm.replaceActions = replaceWith;
+      self.displayReplaceForm.replaceSection = findWhat && Evidence.checkReference(findWhat);
+      self.displayReplaceForm.replaceActions = replaceWith && Evidence.checkReference(replaceWith);
     } else {
       self.displayReplaceForm.replaceSection = findWhat && findWhat.id;
       self.displayReplaceForm.replaceActions = replaceWith && replaceWith.id;

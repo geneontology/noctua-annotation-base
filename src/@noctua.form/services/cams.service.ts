@@ -214,7 +214,6 @@ export class CamsService {
     return forkJoin(promises);
   }
 
-
   bulkStoredModel() {
     const self = this;
     const promises = [];
@@ -242,8 +241,6 @@ export class CamsService {
     const result = {
       stats: stats,
     };
-
-    console.log(result)
 
     this.onCamsCheckoutChanged.next(result);
   }

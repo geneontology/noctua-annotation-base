@@ -1,7 +1,7 @@
 import { AnnotonError, ErrorLevel, ErrorType } from "./parser/annoton-error";
 import { Entity } from './entity';
 import { AnnotonNode } from './annoton-node';
-import { includes, isEqual } from 'lodash';
+import { find, includes, isEqual } from 'lodash';
 
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { CamStats } from "./cam";
@@ -192,7 +192,6 @@ export class Evidence {
     const DBAccession = reference.split(':');
     const db = DBAccession[0].trim().toLowerCase();
     const accession = DBAccession[1].trim().toLowerCase();
-    const dbs = ['pmid', 'go_ref', 'doi'];
 
     /*
     if (!dbs.includes(db)) {
@@ -214,6 +213,34 @@ export class Evidence {
     return true;
   }
 
+  public static formatReference(reference: string) {
+    const DBAccession = reference.split(':');
+    const db = DBAccession[0].trim();
+    const accession = DBAccession[1].trim();
+
+    return db + ':' + accession;
+  }
+
+  public static checkReference(reference: string) {
+    let result = false;
+
+    if (reference.includes(':')) {
+      const DBAccession = reference.split(':');
+      const db = DBAccession[0].trim().toUpperCase();
+      const accession = DBAccession[1].trim();
+      const dbs = [
+        noctuaFormConfig.evidenceDB.options.pmid,
+        noctuaFormConfig.evidenceDB.options.doi,
+        noctuaFormConfig.evidenceDB.options.goRef,
+      ];
+
+      const found = find(dbs, { name: db });
+      const accessionFound = accession.length > 0;
+      result = found && accessionFound;
+    }
+
+    return result;
+  }
 }
 
 export function compareEvidence(a: Evidence, b: Evidence) {

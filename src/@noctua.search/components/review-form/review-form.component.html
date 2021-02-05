@@ -41,8 +41,8 @@
         </button>
       </mat-form-field>
     </div>
-    <div [ngClass]="{'noc-disabled':!displayReplaceForm.replaceSection}" class="noc-annoton-group-row w-100-p"
-      fxLayout="column" fxLayoutAlign="start stretch">
+    <div [ngClass]="{'noc-disabled':noctuaReviewSearchService.matchedCount===0 || !displayReplaceForm.replaceSection}"
+      class="noc-annoton-group-row w-100-p" fxLayout="column" fxLayoutAlign="start stretch">
       <mat-form-field *ngIf="selectedCategory?.name === ArtReplaceCategory.term" appearance="outline"
         class="noc-sm noc-review-input">
         <mat-label>Replace With <strong>(Ontology Term)</strong></mat-label>
