@@ -59,7 +59,7 @@ import { CamErrorsDialogComponent } from './dialogs/cam-errors/cam-errors.compon
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];

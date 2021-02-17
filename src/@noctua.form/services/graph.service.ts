@@ -115,7 +115,6 @@ export class NoctuaGraphService {
     cam.id = modelId;
     cam.manager = this.registerManager();
     cam.artManager = this.registerManager();
-    cam.individualManager = this.registerManager();
     cam.groupManager = this.registerManager();
 
     const rebuild = (response) => {

@@ -1,4 +1,4 @@
-<mat-toolbar class="" fxLayout="row" fxLayoutAlign="start center" [ngClass]="{'noc-beta': is_beta}">
+<mat-toolbar class="" fxLayout="row" fxLayoutAlign="start center" [ngClass]="{'noc-beta': is_beta, 'noc-dev': is_dev}">
   <mat-progress-bar *ngIf="showLoadingBar" class="loading-bar" color="accent" mode="indeterminate"></mat-progress-bar>
   <div class="noc-br h-100-p" fxLayout="row" fxLayoutAlign="start center" fxFlex="200px">
     <div class="noc-logo pl-8" fxLayout="row" fxLayoutAlign="start">
@@ -12,7 +12,7 @@
       [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
       <mat-icon class="">apps</mat-icon>
     </button>
-    <ng-container *ngIf="!is_beta">
+    <ng-container *ngIf="!is_beta && !is_dev">
       <a class="noc-main-logo" href="{{noctuaConfigService.noctuaUrl}}" target="_blank">
         Noctua
       </a>
@@ -26,6 +26,17 @@
       </div>
       <div class="noc-description">
         Testing Version. Visit <a class="" href="{{noctuaConfigService.noctuaUrl}}" target="_blank">
+          Noctua Form
+        </a> for 2.0 version
+      </div>
+    </div>
+
+    <div *ngIf="is_dev" class="noc-dev-logo" fxLayout="column" fxLayoutAlign="center start ">
+      <div class="noc-title">
+        Noctua Form (dev)
+      </div>
+      <div class="noc-description">
+        Dev Version. Visit <a class="" href="{{noctuaConfigService.noctuaUrl}}" target="_blank">
           Noctua Form
         </a> for 2.0 version
       </div>

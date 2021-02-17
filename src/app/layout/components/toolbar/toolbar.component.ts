@@ -44,6 +44,7 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     noctuaUrl = '';
 
     is_beta = environment.is_beta
+    is_dev = environment.is_dev
 
     private _unsubscribeAll: Subject<any>;
 

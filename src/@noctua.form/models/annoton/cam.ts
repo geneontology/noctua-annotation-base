@@ -1,7 +1,7 @@
 
 declare const require: any;
 const uuid = require('uuid/v1');
-import { Edge as NgxEdge, Node as NgxNode, NodeDimension, ClusterNode, Layout } from '@swimlane/ngx-graph';
+import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { Annoton } from './annoton'
@@ -53,20 +53,13 @@ export class Cam {
   groupId: any;
   expanded = false;
   model: any;
-  annotatedEntity?: {};
-  camRow?: any;
   connectorAnnotons: ConnectorAnnoton[] = [];
   triples: Triple<AnnotonNode>[] = [];
   sort;
   error = false;
-  engine;
-  onGraphChanged;
-  manager;
-  artManager;
-  individualManager;
-  groupManager;
-  graph;
-  storedGraph;
+
+
+
   date;
   modified = false;
   modifiedStats = new CamStats();
@@ -81,6 +74,17 @@ export class Cam {
   queryMatch: CamQueryMatch = new CamQueryMatch();
 
   dateReviewAdded = Date.now();
+
+  //bbop graphs
+  graph;
+  storedGraph;
+  onGraphChanged;
+
+  // bbop managers 
+  engine;
+  manager;
+  artManager;
+  groupManager;
 
   // Display 
 
