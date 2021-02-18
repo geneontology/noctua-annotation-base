@@ -146,8 +146,6 @@ export class AppModule {
             faUndo,
             faUser,
             faUsers,
-
-
         );
     }
 }

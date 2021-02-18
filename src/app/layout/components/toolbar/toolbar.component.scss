@@ -31,20 +31,6 @@ $accent: map-get($theme, accent);
       background-color: #fad38a;
     }
 
-    .noc-beta-logo {
-      @include deep-height(100%);
-      line-height: 20px;
-
-      .noc-title {
-        font-size: 20px;
-        font-weight: bold;
-      }
-
-      .noc-description {
-        font-size: 10px;
-        font-style: italic;
-      }
-    }
 
     mat-toolbar-row {
       @include deep-height(40px);
@@ -61,17 +47,22 @@ $accent: map-get($theme, accent);
       }
     }
 
-    &.noc-dev {
+    &.noc-beta {
       background-color: #fad38a;
     }
 
-    .noc-dev-logo {
+    .noc-beta-logo {
       @include deep-height(100%);
       line-height: 20px;
 
       .noc-title {
         font-size: 20px;
         font-weight: bold;
+
+        a {
+          text-decoration: none;
+          color: #555;
+        }
       }
 
       .noc-description {
