@@ -9,6 +9,16 @@ $warn: map-get($theme, warn);
   width: 100%;
   background-color: #FFF;
 
+  .noc-loading-container {
+    background-color: rgba(#555, 0.4);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+  }
+
   .noc-sidemenu {
     padding: 0;
     @include deep-height(100%);

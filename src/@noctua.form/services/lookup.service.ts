@@ -201,7 +201,6 @@ export class NoctuaLookupService {
       map(response => {
         const docs = response['response'].docs;
         const result = [];
-        console.log(docs)
 
         each(docs, function (doc) {
           let annotonNode: AnnotonNode;
@@ -408,7 +407,6 @@ export class NoctuaLookupService {
       };
     });
 
-    console.log(result);
     return result;
   }
 

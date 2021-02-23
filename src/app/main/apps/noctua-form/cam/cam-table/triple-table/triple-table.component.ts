@@ -58,7 +58,6 @@ export class TripleTableComponent implements OnInit, OnDestroy {
   }
 
   selectTriple(triple) {
-    console.log(this.grid);
     this.camService.onCamChanged.next(this.cam);
 
     this.noctuaTripleFormService.initializeForm(triple);

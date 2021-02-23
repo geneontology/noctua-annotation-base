@@ -90,7 +90,6 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    console.log(this.options)
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }
@@ -102,7 +101,6 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     this.grid = this.annoton.grid;
     this.gpNode = this.annoton.getGPNode();
 
-    console.log(this.gpNode)
   }
 
   toggleExpand(annoton: Annoton) {

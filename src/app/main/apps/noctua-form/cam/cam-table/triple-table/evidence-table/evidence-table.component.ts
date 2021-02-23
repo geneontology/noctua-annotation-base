@@ -63,8 +63,6 @@ export class EvidenceTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.evidence)
-
     if (this.evidence.length > 0) {
       this.qualifier = this.evidence[0].edge
     }

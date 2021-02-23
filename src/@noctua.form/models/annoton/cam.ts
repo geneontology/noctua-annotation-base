@@ -57,9 +57,6 @@ export class Cam {
   triples: Triple<AnnotonNode>[] = [];
   sort;
   error = false;
-
-
-
   date;
   modified = false;
   modifiedStats = new CamStats();

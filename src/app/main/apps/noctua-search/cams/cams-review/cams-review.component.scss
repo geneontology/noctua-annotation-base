@@ -5,6 +5,16 @@
   padding: 0px;
   width: 100%;
 
+  .noc-loading-container {
+    background-color: rgba(#555, 0.4);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+  }
+
   .noc-drawer-header {
     border-bottom: #DDD solid 1px;
   }
@@ -58,6 +68,7 @@
   }
 
   .noc-cams-results {
+    position: relative;
     padding: 12px;
 
     .noc-cam-container {

@@ -201,8 +201,6 @@ export class NoctuaGraphService {
     }
 
     cam.setViolations();
-    console.log(violations);
-    console.log(cam.violations);
   }
 
   generateViolation(cam: Cam, node, constraint) {
@@ -317,6 +315,7 @@ export class NoctuaGraphService {
   }
 
   edgeToEvidence(graph, edge) {
+
     const self = this;
     const evidenceAnnotations = edge.get_annotations_by_key('evidence');
     const result = [];

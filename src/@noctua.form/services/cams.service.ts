@@ -24,7 +24,6 @@ const model = require('bbop-graph-noctua');
 export class CamsService {
   searchApi = environment.searchApi;
   curieUtil: any;
-  loading = false;
   cams: Cam[] = [];
   onCamsChanged: BehaviorSubject<any>;
   onCamsCheckoutChanged: BehaviorSubject<any>;
@@ -32,6 +31,11 @@ export class CamsService {
   onSelectedNodeChanged: BehaviorSubject<any>;
   _selectedNodeUuid: string;
   _selectedCamUuid;
+
+  loading = {
+    status: false,
+    message: ''
+  };
 
   currentMatch: Entity = new Entity(null, null);
 
@@ -123,13 +127,14 @@ export class CamsService {
     const self = this;
     const url = `${this.searchApi}/stored?id=${cam.id}`;
 
-    self.loading = true;
+    cam.loading.status = true;
 
     return this.httpClient
       .get(url)
       .pipe(
         map(res => self.populateStoredModel(cam, res)),
         finalize(() => {
+          cam.loading.status = false;
         })
       );
   }

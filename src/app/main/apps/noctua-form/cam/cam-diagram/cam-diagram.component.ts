@@ -68,7 +68,6 @@ export class CamDiagramComponent implements OnInit {
 
   addNode(name: string) {
     this.nodes = [name];
-    console.log(this.nodes);
   }
 
   showConnectOnClick() {

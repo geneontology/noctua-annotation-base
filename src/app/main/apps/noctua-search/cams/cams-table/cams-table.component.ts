@@ -202,7 +202,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
     this.camsService.bulkStoredModel().subscribe((cams) => {
       this.camsService.reviewChanges();
-      console.log('stored', cams)
     });
   }
 
@@ -232,7 +231,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   setPage($event) {
-    console.log($event)
     if (this.camPage) {
       let pageIndex = $event.pageIndex;
       if (this.noctuaSearchService.searchCriteria.camPage.size > $event.pageSize) {
