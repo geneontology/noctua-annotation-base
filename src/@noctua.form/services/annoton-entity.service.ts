@@ -94,7 +94,7 @@ export class NoctuaAnnotonEntityService {
     const self = this;
 
     if (addLoadingStatus) {
-      cam.loading.status = false;
+      cam.loading.status = true;
     }
 
     const oldEntity = cloneDeep(self.entity);

@@ -20,7 +20,7 @@ import { editorDropdownData } from './editor-dropdown.tokens';
 import { EditorDropdownOverlayRef } from './editor-dropdown-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { EditorCategory } from './../../models/editor-category';
-import { concatMap, finalize, takeUntil } from 'rxjs/operators';
+import { concatMap, finalize, take, takeUntil } from 'rxjs/operators';
 import { find } from 'lodash';
 import { InlineReferenceService } from './../../inline-reference/inline-reference.service';
 
@@ -107,13 +107,15 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
       case EditorCategory.with:
         this.close();
         self.noctuaAnnotonEntityService.saveAnnotonReplace(self.cam, true).pipe(
-          takeUntil(this._unsubscribeAll),
+          take(1),
           concatMap((result) => {
             console.log(result)
             return self.camsService.getStoredModel(self.cam)
           }),
           finalize(() => {
-            self.cam.loading.status = false;
+            self.zone.run(() => {
+              self.cam.loading.status = false;
+            })
           }))
           .subscribe(() => {
             self.zone.run(() => {
