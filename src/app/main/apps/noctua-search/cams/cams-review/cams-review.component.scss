@@ -15,6 +15,15 @@
     z-index: 1000;
   }
 
+  .noc-cam-progress {
+    position: absolute;
+    top: 0;
+    height: 5px;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+  }
+
   .noc-drawer-header {
     border-bottom: #DDD solid 1px;
   }
@@ -89,6 +98,7 @@
     }
 
     .noc-cam-heading {
+      position: relative;
       margin-bottom: 0px;
       padding: 0 10px 0 0;
       @include deep-height(35px);

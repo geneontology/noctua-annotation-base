@@ -20,7 +20,7 @@ import { editorDropdownData } from './editor-dropdown.tokens';
 import { EditorDropdownOverlayRef } from './editor-dropdown-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { EditorCategory } from './../../models/editor-category';
-import { takeUntil } from 'rxjs/operators';
+import { concatMap, finalize, takeUntil } from 'rxjs/operators';
 import { find } from 'lodash';
 import { InlineReferenceService } from './../../inline-reference/inline-reference.service';
 
@@ -105,15 +105,23 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
       case EditorCategory.evidence:
       case EditorCategory.reference:
       case EditorCategory.with:
-        self.noctuaAnnotonEntityService.saveAnnotonReplace(self.cam).subscribe(() => {
-          this.close();
-          // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
-          self.camsService.getStoredModel(self.cam).subscribe(() => {
+        this.close();
+        self.noctuaAnnotonEntityService.saveAnnotonReplace(self.cam, true).pipe(
+          takeUntil(this._unsubscribeAll),
+          concatMap((result) => {
+            console.log(result)
+            return self.camsService.getStoredModel(self.cam)
+          }),
+          finalize(() => {
+            self.cam.loading.status = false;
+          }))
+          .subscribe(() => {
             self.zone.run(() => {
               self.camsService.reviewChanges();
             })
+            // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+
           });
-        });
         break;
       default:
         self.noctuaAnnotonEntityService.saveAnnoton().then(() => {

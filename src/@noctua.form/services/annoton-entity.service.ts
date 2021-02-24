@@ -90,8 +90,12 @@ export class NoctuaAnnotonEntityService {
       saveData.removeTriples);
   }
 
-  saveAnnotonReplace(cam: Cam): Observable<any> {
+  saveAnnotonReplace(cam: Cam, addLoadingStatus?: boolean): Observable<any> {
     const self = this;
+
+    if (addLoadingStatus) {
+      cam.loading.status = false;
+    }
 
     const oldEntity = cloneDeep(self.entity);
     self.annotonEntityFormToAnnoton();

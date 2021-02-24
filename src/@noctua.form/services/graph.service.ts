@@ -57,7 +57,7 @@ export class NoctuaGraphService {
     this.curieUtil = this.curieService.getCurieUtil();
   }
 
-  registerManager() {
+  registerManager(useReasoner = true) {
     const engine = new jquery_engine(barista_response);
     engine.method('POST');
 
@@ -103,7 +103,7 @@ export class NoctuaGraphService {
     manager.register('warning', warning, 10);
     manager.register('error', error, 10);
 
-    manager.use_reasoner_p(true);
+    manager.use_reasoner_p(useReasoner);
 
     return manager;
   }
@@ -116,12 +116,13 @@ export class NoctuaGraphService {
     cam.manager = this.registerManager();
     cam.artManager = this.registerManager();
     cam.groupManager = this.registerManager();
+    cam.replaceManager = this.registerManager(false);
 
     const rebuild = (response) => {
       const noctua_graph = model.graph;
 
-      cam.loading.status = true;
-      cam.loading.message = 'Loading Model Entities Metadata...';
+      // cam.loading.status = true;
+      // cam.loading.message = 'Loading Model Entities Metadata...';
 
       cam.graph = new noctua_graph();
       cam.id = response.data().id;
@@ -156,11 +157,15 @@ export class NoctuaGraphService {
 
       self.loadCam(cam);
       self.loadViolations(cam, response.data()['validation-results'])
-      cam.loading.status = false;
-      cam.loading.message = '';
+      // cam.loading.status = false;
+      // cam.loading.message = '';
     };
 
     cam.manager.register('rebuild', function (resp) {
+      rebuild(resp);
+    }, 10);
+
+    cam.replaceManager.register('rebuild', function (resp) {
       rebuild(resp);
     }, 10);
 
@@ -657,6 +662,7 @@ export class NoctuaGraphService {
   bulkEditAnnoton(cam: Cam) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
     each(cam.annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
         self.bulkEditIndividual(reqs, cam, node);
@@ -666,12 +672,11 @@ export class NoctuaGraphService {
       });
     });
 
-
     if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
-    return cam.manager.request_with(reqs);
+    return cam.replaceManager.request_with(reqs);
   }
 
   deleteAnnoton(cam: Cam, uuids: string[], triples: Triple<AnnotonNode>[]) {

@@ -127,14 +127,12 @@ export class CamsService {
     const self = this;
     const url = `${this.searchApi}/stored?id=${cam.id}`;
 
-    cam.loading.status = true;
-
     return this.httpClient
       .get(url)
       .pipe(
         map(res => self.populateStoredModel(cam, res)),
         finalize(() => {
-          cam.loading.status = false;
+          //cam.loading.status = false;
         })
       );
   }

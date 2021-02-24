@@ -75,8 +75,8 @@ export class CamService {
   getCam(modelId): Cam {
     const cam: Cam = new Cam();
 
-    cam.loading.status = true;
-    cam.loading.message = 'Sending Request...';
+    //cam.loading.status = true;
+    //cam.loading.message = 'Sending Request...';
 
     //cam.id = uuid();
     cam.graph = null;
@@ -94,8 +94,6 @@ export class CamService {
   }
 
   loadCam(cam: Cam, filter?: any) {
-    cam.loading.status = true;
-    cam.loading.message = 'Sending Request...';
     cam.graph = null;
     cam.modifiedStats = new CamStats();
     cam.model = Object.assign({}, {

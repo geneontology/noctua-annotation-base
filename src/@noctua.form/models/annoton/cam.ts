@@ -82,6 +82,7 @@ export class Cam {
   manager;
   artManager;
   groupManager;
+  replaceManager;
 
   // Display 
 

@@ -8,7 +8,6 @@
     "clean": "rm -r workbenches/noctua-form/public",
     "build": "ng build --prod --index src/inject.tmpl  --base-href  /workbench/noctua-form/ ",
     "build:beta-test": "ng build --prod --index src/inject.tmpl --output-path workbenches/noctua-form-beta/public --base-href  /workbench/noctua-form-beta/ --configuration=beta-test",
- 
     "start-hmr": "ng serve --configuration hmr -sm=false",
     "start-hmr-sourcemaps": "ng serve --hmr -e=hmr",
     "build-dev": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --dev",
