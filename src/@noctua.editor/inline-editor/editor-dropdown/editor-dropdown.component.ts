@@ -106,24 +106,25 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
       case EditorCategory.reference:
       case EditorCategory.with:
         this.close();
-        self.noctuaAnnotonEntityService.saveAnnotonReplace(self.cam, true).pipe(
-          take(1),
-          concatMap((result) => {
-            console.log(result)
-            return self.camsService.getStoredModel(self.cam)
-          }),
-          finalize(() => {
-            self.zone.run(() => {
-              self.cam.loading.status = false;
-            })
-          }))
-          .subscribe(() => {
-            self.zone.run(() => {
-              self.camsService.reviewChanges();
-            })
-            // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
-
-          });
+        self.noctuaAnnotonEntityService.saveAnnotonReplace(self.cam)//
+        /*     .pipe(
+              take(1),
+              concatMap((result) => {
+                console.log(result)
+                return self.camsService.getStoredModel(self.cam)
+              }),
+              finalize(() => {
+                self.zone.run(() => {
+                  self.cam.loading.status = false;
+                })
+              }))
+              .subscribe(() => {
+                self.zone.run(() => {
+                  self.camsService.reviewChanges();
+                })
+                // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+    
+              }); */
         break;
       default:
         self.noctuaAnnotonEntityService.saveAnnoton().then(() => {

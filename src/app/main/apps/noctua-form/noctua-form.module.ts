@@ -27,7 +27,6 @@ import { AnnotonConnectorFormComponent } from './cam/annoton/annoton-connector-f
 import { AnnotonEntityTableComponent } from './cam/cam-table/annoton-entity-table/annoton-entity-table.component';
 import { AnnotonTableComponent } from './cam/cam-table/annoton-table/annoton-table.component';
 import { TripleTableComponent } from './cam/cam-table/triple-table/triple-table.component';
-import { EvidenceTableComponent } from './cam/cam-table/triple-table/evidence-table/evidence-table.component';
 import { GraphPreviewComponent } from './cam/cam-preview/graph-preview/graph-preview.component';
 import { NoctuaConfirmDialogModule } from '@noctua/components';
 import { CamPreviewComponent } from './cam/cam-preview/cam-preview.component';
@@ -56,6 +55,7 @@ import { SearchEvidenceDialogComponent } from './dialogs/search-evidence/search-
 import { SelectEvidenceComponent } from './components/select-evidence/select-evidence.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { CamErrorsDialogComponent } from './dialogs/cam-errors/cam-errors.component';
+import { EvidenceTableComponent } from './cam/cam-table/annoton-table/evidence-table/evidence-table.component';
 
 const routes = [
   {

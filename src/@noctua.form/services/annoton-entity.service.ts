@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
@@ -24,6 +24,7 @@ export class NoctuaAnnotonEntityService {
   public entityFormGroup$: Observable<FormGroup>;
 
   constructor(private _fb: FormBuilder,
+    private zone: NgZone,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
@@ -37,6 +38,8 @@ export class NoctuaAnnotonEntityService {
       }
 
       this.cam = cam;
+
+      console.log(cam)
     });
   }
 
@@ -99,10 +102,20 @@ export class NoctuaAnnotonEntityService {
 
     const oldEntity = cloneDeep(self.entity);
     self.annotonEntityFormToAnnoton();
-
     self.entity.addPendingChanges(oldEntity);
 
-    return self.camService.bulkEdit(cam);
+    const node = cam.findNodeById(self.entity.uuid, cam.annotons);
+    node.addPendingChanges(oldEntity);
+    const annotons = cam.annotons;
+    cam.annotons = annotons;
+    cam.annotons.forEach((annoton: Annoton) => {
+      self.zone.run(() => {
+        annoton.resetGrid();
+        console.log(annoton.grid);
+      })
+
+    })
+    //return self.camService.bulkEdit(cam);
 
   }
 

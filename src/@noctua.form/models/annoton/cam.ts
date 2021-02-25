@@ -319,12 +319,18 @@ export class Cam {
               if (evidence.uuid === entity.uuid) {
                 evidence.pendingReferenceChanges = new Entity(replaceWith, replaceWith);
                 evidence.pendingReferenceChanges.uuid = evidence.uuid;
+
+                evidence.referenceEntity.termHistory.unshift(new Entity(replaceWith, replaceWith));
+                evidence.referenceEntity.modified = true;
               }
             });
           } else {
             if (node.term.uuid === entity.uuid) {
               node.pendingEntityChanges = new Entity(replaceWith, replaceWith);
               node.pendingEntityChanges.uuid = node.term.uuid;
+
+              node.term.termHistory.unshift(new Entity(replaceWith, replaceWith));
+              node.term.modified = true;
             }
           }
         });

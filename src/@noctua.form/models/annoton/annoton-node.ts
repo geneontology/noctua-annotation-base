@@ -251,13 +251,16 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     self.pendingEntityChanges = new Entity(self.term.id, self.term.label);
     self.pendingEntityChanges.uuid = self.uuid;
 
+    self.term.termHistory.unshift(new Entity(self.term.id, self.term.label));
+    self.term.modified = true;
+
     each(self.predicate.evidence, (evidence: Evidence, key) => {
       const oldEvidence = oldNode.predicate.getEvidenceById(evidence.uuid)
       evidence.addPendingChanges(oldEvidence);
     });
 
     //this is temporary swap back into old
-    self.term = oldNode.term
+    // self.term = oldNode.term
   }
 
   enableSubmit(errors) {

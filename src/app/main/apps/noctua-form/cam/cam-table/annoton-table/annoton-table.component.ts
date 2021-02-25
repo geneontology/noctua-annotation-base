@@ -95,6 +95,8 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     }
     this.loadCam();
 
+    console.log('---', this.grid)
+
   }
 
   loadCam() {
