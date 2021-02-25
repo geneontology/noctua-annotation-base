@@ -894,9 +894,10 @@ export class NoctuaGraphService {
   }
 
   bulkEditIndividual(reqs, cam: Cam, node: AnnotonNode) {
-    if (node.hasValue() && node.pendingEntityChanges) {
+    if (node.hasValue() && node.pendingEntityChanges
+      && node.term.termHistory.length > 0) {
       reqs.remove_type_from_individual(
-        class_expression.cls(node.term.id),
+        class_expression.cls(node.term.termHistory[0].id),
         node.uuid,
         cam.id,
       );
@@ -910,9 +911,10 @@ export class NoctuaGraphService {
   }
 
   bulkEditEvidence(reqs, cam: Cam, evidence: Evidence) {
-    if (evidence.hasValue() && evidence.pendingEvidenceChanges) {
+    if (evidence.hasValue() && evidence.pendingEvidenceChanges
+      && evidence.evidence.termHistory.length > 0) {
       reqs.remove_type_from_individual(
-        class_expression.cls(evidence.evidence.id),
+        class_expression.cls(evidence.evidence.termHistory[0].id),
         evidence.uuid,
         cam.id,
       );
@@ -926,8 +928,9 @@ export class NoctuaGraphService {
       this.editUserEvidenceAnnotations(reqs, evidence.pendingEvidenceChanges.uuid)
     }
 
-    if (evidence.hasValue() && evidence.pendingReferenceChanges) {
-      reqs.remove_annotation_from_individual('source', evidence.reference, null, evidence.pendingReferenceChanges.uuid);
+    if (evidence.hasValue() && evidence.pendingReferenceChanges
+      && evidence.referenceEntity.termHistory.length > 0) {
+      reqs.remove_annotation_from_individual('source', evidence.referenceEntity.termHistory[0].id, null, evidence.pendingReferenceChanges.uuid);
       reqs.add_annotation_to_individual('source',
         evidence.pendingReferenceChanges.id,
         null,
@@ -935,8 +938,9 @@ export class NoctuaGraphService {
       this.editUserEvidenceAnnotations(reqs, evidence.pendingReferenceChanges.uuid)
     }
 
-    if (evidence.hasValue() && evidence.pendingWithChanges) {
-      reqs.remove_annotation_from_individual('with', evidence.with, null, evidence.pendingWithChanges.uuid);
+    if (evidence.hasValue() && evidence.pendingWithChanges
+      && evidence.withEntity.termHistory.length > 0) {
+      reqs.remove_annotation_from_individual('with', evidence.withEntity.termHistory[0].id, null, evidence.pendingWithChanges.uuid);
       reqs.add_annotation_to_individual('with',
         evidence.pendingWithChanges.id,
         null,

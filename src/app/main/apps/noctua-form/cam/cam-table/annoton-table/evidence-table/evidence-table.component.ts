@@ -1,14 +1,8 @@
 
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { noctuaAnimations } from './../../../../../../../../@noctua/animations';
-
-
-
 
 import { CamTableService } from './../../services/cam-table.service';
 
@@ -16,8 +10,10 @@ import {
   NoctuaFormConfigService,
   NoctuaAnnotonEntityService,
   CamService,
-  Evidence,
-  NoctuaFormMenuService
+  NoctuaFormMenuService,
+  Predicate,
+  NoctuaUserService,
+  CamsService
 } from 'noctua-form-base';
 
 import {
@@ -25,6 +21,7 @@ import {
   Annoton,
   AnnotonNode
 } from 'noctua-form-base';
+import { EditorCategory } from '@noctua.editor/models/editor-category';
 
 
 @Component({
@@ -34,25 +31,28 @@ import {
   animations: noctuaAnimations
 })
 export class EvidenceTableComponent implements OnInit, OnDestroy {
+  EditorCategory = EditorCategory;
   displayedColumns = [
     'evidence',
     'reference',
     'with',
     'assignedBy'];
 
-  grid: any[] = [];
-
-  qualifier;
+  @Input('options')
+  options: any = {};
 
   @Input('cam')
   public cam: Cam;
 
-  @Input('evidence')
-  public evidence: Evidence[];
+  @Input('entity')
+  public entity: AnnotonNode;
 
   private unsubscribeAll: Subject<any>;
 
-  constructor(private camService: CamService,
+  constructor(
+    private camService: CamService,
+    public camsService: CamsService,
+    public noctuaUserService: NoctuaUserService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     //  public noctuaFormMenuService: NoctuaFormMenuService,
@@ -63,9 +63,7 @@ export class EvidenceTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.evidence.length > 0) {
-      this.qualifier = this.evidence[0].edge
-    }
+    console.log(this.options)
   }
 
   selectEntity(annoton: Annoton, entity: AnnotonNode) {

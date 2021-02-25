@@ -47,13 +47,8 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     'relationship',
     'aspect',
     'term',
-    'relationshipExt',
     'extension',
     'evidence',
-    'reference',
-    'with',
-    'assignedBy',
-    'contributor',
     'actions'];
 
   grid: any[] = [];
@@ -66,6 +61,8 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
 
   @Input('options')
   options: any = {};
+
+  optionsDisplay: any = {}
 
   gpNode: AnnotonNode;
   editableTerms = false;
@@ -95,12 +92,11 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     }
     this.loadCam();
 
-    console.log('---', this.grid)
-
+    this.optionsDisplay = { ...this.options, hideHeader: true };
   }
 
   loadCam() {
-    this.grid = this.annoton.grid;
+    // this.grid = this.annoton.grid;
     this.gpNode = this.annoton.getGPNode();
 
   }

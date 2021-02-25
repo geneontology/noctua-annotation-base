@@ -248,11 +248,13 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   addPendingChanges(oldNode: AnnotonNode) {
     const self = this;
 
-    self.pendingEntityChanges = new Entity(self.term.id, self.term.label);
-    self.pendingEntityChanges.uuid = self.uuid;
+    if (self.term.id !== oldNode.term.id) {
+      self.pendingEntityChanges = new Entity(self.term.id, self.term.label);
+      self.pendingEntityChanges.uuid = self.uuid;
 
-    self.term.termHistory.unshift(new Entity(self.term.id, self.term.label));
-    self.term.modified = true;
+      self.term.termHistory.unshift(new Entity(oldNode.term.id, oldNode.term.label));
+      self.term.modified = true;
+    }
 
     each(self.predicate.evidence, (evidence: Evidence, key) => {
       const oldEvidence = oldNode.predicate.getEvidenceById(evidence.uuid)
@@ -260,7 +262,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     });
 
     //this is temporary swap back into old
-    // self.term = oldNode.term
+    //self.term = oldNode.term
   }
 
   enableSubmit(errors) {

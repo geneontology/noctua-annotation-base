@@ -123,7 +123,7 @@ export class Evidence {
       self.pendingEvidenceChanges = new Entity(self.evidence.id, self.evidence.label);
       self.pendingEvidenceChanges.uuid = self.uuid;
 
-      oldEvidence.evidence.termHistory.unshift(new Entity(self.evidence.id, self.evidence.label));
+      oldEvidence.evidence.termHistory.unshift(new Entity(oldEvidence.evidence.id, oldEvidence.evidence.label));
       oldEvidence.evidence.modified = true;
     }
 
@@ -131,22 +131,18 @@ export class Evidence {
       self.pendingReferenceChanges = new Entity(self.reference, self.reference);
       self.pendingReferenceChanges.uuid = self.uuid;
 
-      oldEvidence.referenceEntity.termHistory.unshift(new Entity(self.referenceEntity.id, self.referenceEntity.label));
-      oldEvidence.referenceEntity.modified = true;
+      self.referenceEntity.termHistory.unshift(new Entity(oldEvidence.reference, oldEvidence.reference));
+      self.referenceEntity.modified = true;
     }
 
     if (self.with !== oldEvidence.with) {
       self.pendingWithChanges = new Entity(self.with, self.with);
       self.pendingWithChanges.uuid = self.uuid;
 
-      oldEvidence.withEntity.termHistory.unshift(new Entity(self.withEntity.id, self.withEntity.label));
-      oldEvidence.withEntity.modified = true;
+      self.withEntity.termHistory.unshift(new Entity(oldEvidence.with, oldEvidence.with));
+      self.withEntity.modified = true;
     }
 
-    //this is temporary swap back into old
-    self.evidence = oldEvidence.evidence;
-    self.reference = oldEvidence.reference;
-    self.with = oldEvidence.with;
   }
 
   enableSubmit(errors, node: AnnotonNode, position) {

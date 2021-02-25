@@ -5,12 +5,8 @@ $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
 
 :host {
-  padding: 0px;
+  padding: 0;
   width: 100%;
-
-  @include mat-elevation(1);
-  border: 1px solid #2e6f9a;
-  background-color: white;
 
   .noc-qualifier {
     padding: 5px;
@@ -18,6 +14,16 @@ $accent: map-get($theme, accent);
     font-size: 12px;
     text-align: center;
     border-bottom: 1px solid rgba(#2e6f9a, 0.3);
+  }
+
+  p {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin: 0;
+  }
+
+  a {
+    font-size: 10px !important;
   }
 
   .noc-form-container {
@@ -38,45 +44,6 @@ $accent: map-get($theme, accent);
     }
   }
 
-  .noc-triple {
-    @include deep-height(180px);
-
-    .noc-evidence-box {
-      padding: 8px;
-      @include deep-width(150px);
-      @include deep-height(110px);
-      font-size: 12px;
-      @include mat-elevation(1);
-      text-align: center;
-      z-index: 4;
-      border: 1px solid #2e6f9a;
-      opacity: 1;
-      cursor: initial;
-      background-color: white;
-    }
-
-    .noc-line {
-      padding: 4px;
-      @include deep-height(55px);
-      font-size: 10px;
-      text-align: center;
-      border-bottom: 2px solid #2e6f9a;
-    }
-
-    .noc-arrow {
-      color: #2e6f9a;
-      margin-top: 40px;
-    }
-  }
-
-
-
-  .mat-tab-group,
-  .mat-tab-body-wrapper,
-  .tab-content {
-    flex: 1 1 auto;
-    max-width: 100%;
-  }
 
   .noc-toolbar {
     padding: 0px 20px;
@@ -93,46 +60,69 @@ $accent: map-get($theme, accent);
     }
   }
 
-  .evidence-table {
+  .noc-evidence-table {
+
     // position: relative;
     //  flex: 1 1 auto;
     //    border-bottom: 1px solid rgba(0, 0, 0, .12);
-    //  overflow: auto;
 
-
-
-
-    .mat-cell {
-      padding: 0 10px;
-      font-size: 12px !important;
-      color: #000;
-      word-break: break-all;
+    table {
+      // width: 800px; 
+      overflow: auto;
     }
+
+    tr.mat-footer-row,
+    tr.mat-row {
+      height: auto;
+
+      &.noc-row-term {
+        &::before {
+          position: absolute;
+          left: 0px;
+          width: 20px;
+          height: 2px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: white;
+          background-color: $noc-tree-line-color;
+          content: "";
+        }
+      }
+    }
+
+    tr.mat-header-row,
+    tr.mat-row {
+      padding-left: 15px;
+    }
+
+    .noc-column-flex {
+      min-width: 150px !important;
+    }
+
 
     .mat-header-cell {
       padding: 0 10px;
-      font-size: 10px;
+      font-size: 10px !important;
+      //color: #0F0; // map-get($primary, default);
+      font-weight: bold;
       color: map-get($primary, default);
       text-transform: uppercase;
       font-weight: bold;
     }
 
-    .mat-header-cell,
     .mat-header-row {
+
       @include deep-height(30px);
       border-bottom: $noc-primary-color-light solid 1px;
-      // display: none;
-      // @include deep-height(0);
-      /*
-      //padding: 0;
-      min-height: 40px;
-      position: sticky;
-      position: -webkit-sticky;
-      top: 0;
-      z-index: 1000;
-      //  background-color: $noc-primary-color-light;
-      // font-size: 3px !important;
-      */
+
+      &.noc-hide-header {
+        @include deep-height(0);
+        visibility: hidden;
+        display: none;
+        overflow: hidden;
+        border: none;
+      }
+
     }
 
     .noc-paginator {
@@ -151,6 +141,42 @@ $accent: map-get($theme, accent);
       min-width: 0;
       display: flex;
       align-items: center;
+
+      //display: inline-block !important;
+      padding: 0 30px 0 10px;
+      font-size: 12px !important;
+      color: #000;
+      border-right: #AAA solid 1px;
+      position: relative;
+      overflow-wrap: break-word;
+
+      .noc-edit-button {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+
+      &.noc-highlight-match {
+        background-color: #fffcd8;
+      }
+
+      &.noc-highlight-modified {
+        background-color: #fdd661;
+      }
+
+      &.noc-highlight-modified-user {
+        background-color: #f3ccbb;
+      }
+
+      &.noc-highlight-match-current {
+        border: #ac6219 solid 5px;
+      }
+
+      .noc-old-term {
+        color: #777;
+        font-size: 10px;
+        text-decoration: line-through rgba(#ec6868, 0.5);
+      }
     }
 
     .mat-column-id {
@@ -165,5 +191,11 @@ $accent: map-get($theme, accent);
       display:flex;
       justify-content:flex-end;
      } */
+
+    &.noc-selected {
+      table {
+        background-color: rgba($noc-highlight-model-color, 0.3);
+      }
+    }
   }
 }
