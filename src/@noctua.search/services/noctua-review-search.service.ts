@@ -184,13 +184,6 @@ export class NoctuaReviewSearchService {
         return this.currentMatchedEnity;
     }
 
-    replaceAll(replaceWith: string, category): Observable<any> {
-        return this.camsService.replace(this.matchedEntities, replaceWith, category);
-    }
-
-    replace(replaceWith: string, category): Observable<any> {
-        return this.camsService.replace([this.currentMatchedEnity], replaceWith, category);
-    }
 
     clear() {
         this.matchedEntities = [];

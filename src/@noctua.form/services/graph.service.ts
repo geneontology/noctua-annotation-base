@@ -110,7 +110,8 @@ export class NoctuaGraphService {
 
   getGraphInfo(cam: Cam, modelId) {
     const self = this;
-
+    cam.loading.status = true;
+    cam.loading.message = 'Getting Models...';
     cam.onGraphChanged = new BehaviorSubject(null);
     cam.id = modelId;
     cam.manager = this.registerManager();
@@ -157,6 +158,17 @@ export class NoctuaGraphService {
 
       self.loadCam(cam);
       self.loadViolations(cam, response.data()['validation-results'])
+      cam.loading.status = false;
+      cam.loading.message = '';
+    };
+
+
+
+
+
+    const update = (response) => {
+      const noctua_graph = model.graph;
+
       // cam.loading.status = false;
       // cam.loading.message = '';
     };
@@ -166,7 +178,7 @@ export class NoctuaGraphService {
     }, 10);
 
     cam.replaceManager.register('rebuild', function (resp) {
-      rebuild(resp);
+      update(resp);
     }, 10);
 
     cam.manager.get_model(modelId);

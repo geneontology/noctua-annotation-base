@@ -178,7 +178,7 @@ export class CamsService {
     });
   }
 
-  replace(entities: Entity[], replaceWithTerm: string, category) {
+  getReplaceObject(entities: Entity[], replaceWithTerm: string, category) {
     const self = this;
     const groupedEntities = groupBy(entities, 'modelId') as { string: Entity[] };
     const cams: Cam[] = []
@@ -190,6 +190,13 @@ export class CamsService {
         cams.push(cam)
       }
     });
+
+    self.reviewChanges();
+    return cams;
+  }
+
+  replace(cams: Cam[]) {
+    const self = this;
 
     self.reviewChanges();
     return self.bulkEdit(cams);
@@ -217,11 +224,11 @@ export class CamsService {
     return forkJoin(promises);
   }
 
-  bulkStoredModel() {
+  bulkStoredModel(cams: Cam[]) {
     const self = this;
     const promises = [];
 
-    each(this.cams, (cam: Cam) => {
+    each(cams, (cam: Cam) => {
       promises.push(self.getStoredModel(cam));
     });
 

@@ -200,7 +200,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.camsService.bulkStoredModel().subscribe((cams) => {
+    this.camsService.bulkStoredModel(self.camsService.cams).subscribe((cams) => {
       this.camsService.reviewChanges();
     });
   }

@@ -23,11 +23,11 @@ import {
   Evidence
 } from 'noctua-form-base';
 
-import { takeUntil, distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import { takeUntil, distinctUntilChanged, debounceTime, take, concatMap, finalize } from 'rxjs/operators';
 import { noctuaAnimations } from '@noctua/animations';
 import { FormGroup, FormControl } from '@angular/forms';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
-import { cloneDeep, groupBy } from 'lodash';
+import { cloneDeep, each, groupBy } from 'lodash';
 import { ArtReplaceCategory } from '@noctua.search/models/review-mode';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
@@ -191,13 +191,30 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
       replaceWith = Evidence.formatReference(value.replaceWith);
     }
 
-    this.noctuaReviewSearchService.replace(replaceWith, self.selectedCategory)
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((cams) => {
-        if (cams) {
-          self.bulkStoredModel();
-        }
-      });
+    const cams = self.camsService.getReplaceObject([this.noctuaReviewSearchService.currentMatchedEnity],
+      replaceWith, self.selectedCategory);
+
+    this.camsService.replace(cams).pipe(
+      take(1),
+      concatMap((result) => {
+        console.log(result)
+        return self.camsService.bulkStoredModel(cams)
+      }),
+      finalize(() => {
+        self.zone.run(() => {
+          each(cams, (cam: Cam) => {
+            cam.loading.status = false;
+          });
+        })
+      }))
+      .subscribe(() => {
+        self.zone.run(() => {
+          self.noctuaReviewSearchService.onReplaceChanged.next(true);
+          self.camsService.reviewChanges();
+        })
+        // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+
+      })
   }
 
   replaceAll() {
@@ -219,32 +236,37 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     }
     const success = (replace) => {
       if (replace) {
-        this.noctuaReviewSearchService.replaceAll(replaceWith, self.selectedCategory)
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe((cams) => {
-            if (cams) {
-              self.bulkStoredModel();
-            }
-          });
+
+        const cams = self.camsService.getReplaceObject(this.noctuaReviewSearchService.matchedEntities,
+          replaceWith, self.selectedCategory);
+
+        this.camsService.replace(cams).pipe(
+          take(1),
+          concatMap((result) => {
+            console.log(result)
+            return self.camsService.bulkStoredModel(cams)
+          }),
+          finalize(() => {
+            self.zone.run(() => {
+              each(cams, (cam: Cam) => {
+                cam.loading.status = false;
+              });
+            })
+          }))
+          .subscribe(() => {
+            self.zone.run(() => {
+              self.noctuaReviewSearchService.onReplaceChanged.next(true);
+              self.camsService.reviewChanges();
+            })
+            // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+
+          })
       }
     };
 
     this.confirmDialogService.openConfirmDialog('Confirm ReplaceAll?',
       `Replace ${occurrences} occurrences across ${models} models`,
       success);
-  }
-
-  bulkStoredModel() {
-    const self = this;
-
-    this.camsService.bulkStoredModel()
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((cams) => {
-        self.zone.run(() => {
-          self.noctuaReviewSearchService.onReplaceChanged.next(true);
-          this.camsService.reviewChanges();
-        });
-      });
   }
 
   findNext() {
