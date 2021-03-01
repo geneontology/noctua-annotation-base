@@ -1,16 +1,5 @@
 
 import { Component, OnInit, Input } from '@angular/core';
-
-import { Subject } from 'rxjs';
-
-
-
-declare const require: any;
-
-
-
-
-
 import { NoctuaFormConfigService } from 'noctua-form-base';
 
 

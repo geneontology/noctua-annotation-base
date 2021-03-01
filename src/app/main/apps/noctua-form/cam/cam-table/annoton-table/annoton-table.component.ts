@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { noctuaAnimations } from './../../../../../../../@noctua/animations';
-import { CamTableService } from './../services/cam-table.service';
 import { NoctuaFormDialogService } from './../../../services/dialog.service';
 
 import {
@@ -76,7 +75,6 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public camTableService: CamTableService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,

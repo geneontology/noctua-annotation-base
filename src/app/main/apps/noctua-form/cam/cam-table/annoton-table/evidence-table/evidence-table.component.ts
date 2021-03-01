@@ -4,7 +4,6 @@ import { Subject } from 'rxjs';
 
 import { noctuaAnimations } from './../../../../../../../../@noctua/animations';
 
-import { CamTableService } from './../../services/cam-table.service';
 
 import {
   NoctuaFormConfigService,
@@ -56,7 +55,6 @@ export class EvidenceTableComponent implements OnInit, OnDestroy {
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     //  public noctuaFormMenuService: NoctuaFormMenuService,
-    public camTableService: CamTableService,
     public noctuaAnnotonEntityService: NoctuaAnnotonEntityService) {
 
     this.unsubscribeAll = new Subject();

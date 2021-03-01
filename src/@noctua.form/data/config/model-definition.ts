@@ -7,9 +7,9 @@ import { AnnotonNodeType, AnnotonNodeDisplay, AnnotonNode } from './../../models
 import { Entity } from '../../models/annoton/entity';
 import { Predicate } from '../../models/annoton/predicate';
 import { AnnotonType, Annoton } from '../../models/annoton/annoton';
+import { v4 as uuid } from 'uuid';
 
-declare const require: any;
-const getUuid = require('uuid/v1');
+
 
 export interface ActivityDescription {
     type: AnnotonType;
@@ -277,7 +277,7 @@ export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescr
 
     objectNode.id = nodeDescription.node.isKey ?
         nodeDescription.node.type :
-        `${nodeDescription.node.type}'@@'${getUuid()}`;
+        `${nodeDescription.node.type}'@@'${uuid()}`;
 
     objectNode.type = nodeDescription.node.type;
     annoton.addNode(objectNode);

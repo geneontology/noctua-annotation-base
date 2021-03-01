@@ -21,7 +21,6 @@ import { CamDiagramComponent } from './cam/cam-diagram/cam-diagram.component';
 import { NodeComponent } from './cam/cam-diagram/nodes/node/node.component';
 import { NodesContainerComponent } from './cam/cam-diagram/nodes/nodes-container.component';
 import { CamDiagramService } from './cam/cam-diagram/services/cam-diagram.service';
-import { CamTableService } from './cam/cam-table/services/cam-table.service';
 import { NodeService } from './cam/cam-diagram/nodes/services/node.service';
 import { AnnotonConnectorFormComponent } from './cam/annoton/annoton-connector-form/annoton-connector-form.component';
 import { AnnotonEntityTableComponent } from './cam/cam-table/annoton-entity-table/annoton-entity-table.component';
@@ -124,7 +123,6 @@ const routes = [
     NoctuaFormDialogService,
     NodeService,
     CamDiagramService,
-    CamTableService,
   ],
   declarations: [
     NoctuaFormComponent,

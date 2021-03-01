@@ -4,8 +4,6 @@ import { noctuaAnimations } from './../../../../../../../@noctua/animations';
 import { takeUntil } from 'rxjs/internal/operators';
 
 
-import { CamTableService } from './../services/cam-table.service';
-
 import {
   NoctuaFormConfigService,
   NoctuaAnnotonEntityService,
@@ -53,7 +51,6 @@ export class AnnotonEntityTableComponent implements OnInit, OnDestroy {
     private camService: CamService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public camTableService: CamTableService,
     public noctuaAnnotonEntityService: NoctuaAnnotonEntityService) {
 
     this._unsubscribeAll = new Subject();

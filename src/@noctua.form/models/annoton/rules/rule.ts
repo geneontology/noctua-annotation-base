@@ -1,6 +1,3 @@
-
-declare const require: any;
-
 export class Rule {
   name: string;
   label: string;

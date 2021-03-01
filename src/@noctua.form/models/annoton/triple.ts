@@ -1,6 +1,4 @@
-
-declare const require: any;
-const uuid = require('uuid/v1');
+import { v4 as uuid } from 'uuid';
 
 import { AnnotonNode } from './annoton-node';
 import { Predicate } from './predicate';

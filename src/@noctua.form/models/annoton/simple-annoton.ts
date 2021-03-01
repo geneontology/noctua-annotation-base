@@ -1,5 +1,5 @@
 declare const require: any;
-const uuid = require('uuid/v1');
+import { v4 as uuid } from 'uuid';
 import { SaeGraph } from './sae-graph';
 import { AnnotonNode } from './annoton-node';
 
