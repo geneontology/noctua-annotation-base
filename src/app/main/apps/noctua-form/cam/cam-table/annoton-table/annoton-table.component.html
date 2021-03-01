@@ -83,7 +83,7 @@
   <div *ngIf="annoton.expanded" class="noc-annoton-table w-100-p"
     [ngClass]="{'noc-selected': annoton.displayId===camsService.currentMatch?.annotonDisplayId}" fxLayout="column"
     fxLayoutAlign="start start">
-    <table mat-table fxFlex="1 1 auto" class="" [dataSource]="annoton.nodes" [@animateStagger]="{value:'50'}">
+    <table mat-table fxFlex="1 1 auto" class="" [dataSource]="dataSource" [@animateStagger]="{value:'50'}">
       <ng-container matColumnDef="relationship" sticky>
         <th mat-header-cell *matHeaderCellDef fxFlex="220px" fxLayout="row" fxLayoutAlign="start center">Relationship
         </th>
@@ -144,8 +144,6 @@
           </noc-evidence-table>
           <noc-evidence-table *ngIf="i>0" class="w-100-p" [options]="optionsDisplay" [cam]="cam" [entity]="entity">
           </noc-evidence-table>
-
-
         </td>
       </ng-container>
       <ng-container matColumnDef="actions" stickyEnd>

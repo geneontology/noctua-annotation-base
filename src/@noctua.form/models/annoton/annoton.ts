@@ -95,6 +95,9 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
       if (mfNode && edge) {
         mfNode.predicate = edge.predicate;
+        if (edge.predicate.edge) {
+          edge.predicate.edge.label = ''
+        }
       }
     }
   }

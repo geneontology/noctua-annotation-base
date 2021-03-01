@@ -29,6 +29,7 @@ import { EditorCategory } from '@noctua.editor/models/editor-category';
 import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'noc-annoton-table',
@@ -41,7 +42,7 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
   AnnotonType = AnnotonType;
   camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
   annotonTypeOptions = noctuaFormConfig.annotonType.options;
-
+  dataSource: MatTableDataSource<AnnotonNode>;
   displayedColumns = [
     'relationship',
     'aspect',
@@ -80,7 +81,11 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
     private inlineEditorService: InlineEditorService) {
 
+
+    this.dataSource = new MatTableDataSource<AnnotonNode>();
     this.unsubscribeAll = new Subject();
+
+
   }
 
   ngOnInit(): void {
@@ -88,16 +93,18 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }
-    this.loadCam();
-
-    this.optionsDisplay = { ...this.options, hideHeader: true };
-  }
-
-  loadCam() {
-    // this.grid = this.annoton.grid;
     this.gpNode = this.annoton.getGPNode();
 
+    this.optionsDisplay = { ...this.options, hideHeader: true };
+    this.dataSource.data = this.annoton.nodes;
+    this.dataSource.filterPredicate = function customFilter(data, filter: string): boolean {
+      return (data.id !== filter);
+    }
+
+    this.dataSource.filter = this.gpNode?.id;
   }
+
+
 
   toggleExpand(annoton: Annoton) {
     annoton.expanded = !annoton.expanded;
