@@ -14,7 +14,7 @@
     "paths": {
       "noctua-form-base": [
         "@noctua.form/"
-      ],
+      ]
     },
     "target": "es5",
     "typeRoots": [
