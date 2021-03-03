@@ -162,10 +162,6 @@ export class NoctuaGraphService {
       cam.loading.message = '';
     };
 
-
-
-
-
     const update = (response) => {
       const noctua_graph = model.graph;
 

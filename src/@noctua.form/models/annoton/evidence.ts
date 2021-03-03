@@ -123,24 +123,24 @@ export class Evidence {
       self.pendingEvidenceChanges = new Entity(self.evidence.id, self.evidence.label);
       self.pendingEvidenceChanges.uuid = self.uuid;
 
-      oldEvidence.evidence.termHistory.unshift(new Entity(oldEvidence.evidence.id, oldEvidence.evidence.label));
-      oldEvidence.evidence.modified = true;
+      //oldEvidence.evidence.termHistory.unshift(new Entity(oldEvidence.evidence.id, oldEvidence.evidence.label));
+      // oldEvidence.evidence.modified = true;
     }
 
     if (self.reference !== oldEvidence.reference) {
       self.pendingReferenceChanges = new Entity(self.reference, self.reference);
       self.pendingReferenceChanges.uuid = self.uuid;
 
-      self.referenceEntity.termHistory.unshift(new Entity(oldEvidence.reference, oldEvidence.reference));
-      self.referenceEntity.modified = true;
+      //self.referenceEntity.termHistory.unshift(new Entity(oldEvidence.reference, oldEvidence.reference));
+      // self.referenceEntity.modified = true;
     }
 
     if (self.with !== oldEvidence.with) {
       self.pendingWithChanges = new Entity(self.with, self.with);
       self.pendingWithChanges.uuid = self.uuid;
 
-      self.withEntity.termHistory.unshift(new Entity(oldEvidence.with, oldEvidence.with));
-      self.withEntity.modified = true;
+      //self.withEntity.termHistory.unshift(new Entity(oldEvidence.with, oldEvidence.with));
+      //self.withEntity.modified = true;
     }
 
   }
