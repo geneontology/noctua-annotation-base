@@ -165,6 +165,7 @@ export class NoctuaGraphService {
     const update = (response) => {
       const noctua_graph = model.graph;
 
+      console.log(response)
       // cam.loading.status = false;
       // cam.loading.message = '';
     };
@@ -673,11 +674,27 @@ export class NoctuaGraphService {
 
     each(cam.annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
-        self.bulkEditIndividual(reqs, cam, node);
-        each(node.predicate.evidence, (evidence: Evidence, key) => {
-          self.bulkEditEvidence(reqs, cam, evidence);
+        self.bulkEditIndividual(reqs, cam.id, node);
+        each(node.predicate.evidence, (evidence: Evidence) => {
+          self.bulkEditEvidence(reqs, cam.id, evidence);
         });
       });
+    });
+
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
+    }
+
+    return cam.replaceManager.request_with(reqs);
+  }
+
+  bulkEditAnnotonNode(cam: Cam, node: AnnotonNode) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    self.bulkEditIndividual(reqs, cam.id, node);
+    each(node.predicate.evidence, (evidence: Evidence) => {
+      self.bulkEditEvidence(reqs, cam.id, evidence);
     });
 
     if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
@@ -889,44 +906,41 @@ export class NoctuaGraphService {
     }
   }
 
-  bulkEditIndividual(reqs, cam: Cam, node: AnnotonNode) {
-    if (node.hasValue() && node.pendingEntityChanges
-      && node.term.termHistory.length > 0) {
+  bulkEditIndividual(reqs, camId: string, node: AnnotonNode) {
+    if (node.hasValue() && node.pendingEntityChanges) {
       reqs.remove_type_from_individual(
-        class_expression.cls(node.term.termHistory[0].id),
+        class_expression.cls(node.term.id),
         node.uuid,
-        cam.id,
+        camId,
       );
 
       reqs.add_type_to_individual(
         class_expression.cls(node.pendingEntityChanges.id),
         node.pendingEntityChanges.uuid,
-        cam.id,
+        camId,
       );
     }
   }
 
-  bulkEditEvidence(reqs, cam: Cam, evidence: Evidence) {
-    if (evidence.hasValue() && evidence.pendingEvidenceChanges
-      && evidence.evidence.termHistory.length > 0) {
+  bulkEditEvidence(reqs, camId: string, evidence: Evidence) {
+    if (evidence.hasValue() && evidence.pendingEvidenceChanges) {
       reqs.remove_type_from_individual(
-        class_expression.cls(evidence.evidence.termHistory[0].id),
+        class_expression.cls(evidence.evidence.id),
         evidence.uuid,
-        cam.id,
+        camId,
       );
 
       reqs.add_type_to_individual(
         class_expression.cls(evidence.pendingEvidenceChanges.id),
         evidence.pendingEvidenceChanges.uuid,
-        cam.id,
+        camId,
       );
 
       this.editUserEvidenceAnnotations(reqs, evidence.pendingEvidenceChanges.uuid)
     }
 
-    if (evidence.hasValue() && evidence.pendingReferenceChanges
-      && evidence.referenceEntity.termHistory.length > 0) {
-      reqs.remove_annotation_from_individual('source', evidence.referenceEntity.termHistory[0].id, null, evidence.pendingReferenceChanges.uuid);
+    if (evidence.hasValue() && evidence.pendingReferenceChanges) {
+      reqs.remove_annotation_from_individual('source', evidence.reference, null, evidence.pendingReferenceChanges.uuid);
       reqs.add_annotation_to_individual('source',
         evidence.pendingReferenceChanges.id,
         null,
@@ -934,9 +948,8 @@ export class NoctuaGraphService {
       this.editUserEvidenceAnnotations(reqs, evidence.pendingReferenceChanges.uuid)
     }
 
-    if (evidence.hasValue() && evidence.pendingWithChanges
-      && evidence.withEntity.termHistory.length > 0) {
-      reqs.remove_annotation_from_individual('with', evidence.withEntity.termHistory[0].id, null, evidence.pendingWithChanges.uuid);
+    if (evidence.hasValue() && evidence.pendingWithChanges) {
+      reqs.remove_annotation_from_individual('with', evidence.with, null, evidence.pendingWithChanges.uuid);
       reqs.add_annotation_to_individual('with',
         evidence.pendingWithChanges.id,
         null,
