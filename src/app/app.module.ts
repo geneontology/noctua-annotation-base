@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,30 +16,48 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { PagesModule } from './main/pages/pages.module';
 import { AppsModule } from './main/apps/apps.module';
 import {
-    faPaw,
-    faPen,
-    faSitemap,
-    faUser,
-    faUsers,
+    faAngleDoubleDown,
+    faAngleDoubleLeft,
+    faAngleDoubleRight,
+    faAngleDoubleUp,
+    faAngleLeft,
+    faAngleRight,
+    faArrowDown,
+    faArrowUp,
     faCalendarDay,
     faCalendarWeek,
-    faSearch,
-    faTasks,
-    faListAlt,
-    faChevronRight,
-    faHistory,
-    faShoppingBasket,
-    faCopy,
-    faPlus,
-    faLink,
+    faCaretDown,
+    faCaretRight,
     faChevronDown,
+    faChevronRight,
+    faCopy,
+    faExclamationTriangle,
+    faHistory,
     faLevelDownAlt,
     faLevelUpAlt,
-    faArrowUp,
-    faArrowDown,
+    faLink,
+    faListAlt,
+    faPaw,
+    faPen,
+    faPlus,
+    faSave,
+    faSearch,
+    faShoppingBasket,
+    faSitemap,
+    faTasks,
+    faUndo,
+    faUser,
+    faUsers,
 } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
+import { StartupService } from './startup.service';
+
+export function startup(startupService: StartupService) {
+    return () => startupService.loadData();
+}
 
 const appRoutes: Routes = [
     {
@@ -57,8 +75,7 @@ const appRoutes: Routes = [
         BrowserAnimationsModule,
         HttpClientModule,
         HttpClientJsonpModule,
-        RouterModule.forRoot(appRoutes),
-
+        RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),
         // Noctua Main and Shared modules
         NoctuaModule.forRoot(noctuaConfig),
         ContextMenuModule.forRoot(),
@@ -75,6 +92,15 @@ const appRoutes: Routes = [
         PagesModule,
         AppsModule
     ],
+    providers: [
+        StartupService,
+        {
+            provide: APP_INITIALIZER,
+            useFactory: startup,
+            deps: [StartupService, NoctuaDataService],
+            multi: true
+        }
+    ],
     bootstrap: [
         AppComponent
     ]
@@ -85,14 +111,24 @@ export class AppModule {
         library.addIcons(
             faArrowUp,
             faArrowDown,
+            faAngleDoubleLeft,
+            faAngleDoubleRight,
+            faAngleDoubleUp,
+            faAngleDoubleDown,
+            faAngleLeft,
+            faAngleRight,
             faCalendarDay,
             faCalendarWeek,
+            faCaretDown,
+            faCaretRight,
             faChevronDown,
             faChevronRight,
+            faCheckCircle,
             faCopy,
+            faExclamationTriangle,
             faFacebook,
-            faHistory,
             faGithub,
+            faHistory,
             faLevelDownAlt,
             faLevelUpAlt,
             faLink,
@@ -100,11 +136,14 @@ export class AppModule {
             faPaw,
             faPen,
             faPlus,
+            faSave,
             faSearch,
             faShoppingBasket,
             faSitemap,
             faTasks,
+            faTimesCircle,
             faTwitter,
+            faUndo,
             faUser,
             faUsers,
         );

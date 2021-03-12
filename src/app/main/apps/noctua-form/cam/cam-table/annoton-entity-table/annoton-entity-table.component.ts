@@ -4,8 +4,6 @@ import { noctuaAnimations } from './../../../../../../../@noctua/animations';
 import { takeUntil } from 'rxjs/internal/operators';
 
 
-import { CamTableService } from './../services/cam-table.service';
-
 import {
   NoctuaFormConfigService,
   NoctuaAnnotonEntityService,
@@ -53,7 +51,6 @@ export class AnnotonEntityTableComponent implements OnInit, OnDestroy {
     private camService: CamService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public camTableService: CamTableService,
     public noctuaAnnotonEntityService: NoctuaAnnotonEntityService) {
 
     this._unsubscribeAll = new Subject();
@@ -77,7 +74,7 @@ export class AnnotonEntityTableComponent implements OnInit, OnDestroy {
   selectEntity(annoton: Annoton, entity: AnnotonNode) {
     this.camService.onCamChanged.next(this.cam);
     this.noctuaAnnotonEntityService.initializeForm(annoton, entity);
-    this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.annotonEntityForm);
+    // this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.annotonEntityForm);
   }
 
   ngOnDestroy(): void {

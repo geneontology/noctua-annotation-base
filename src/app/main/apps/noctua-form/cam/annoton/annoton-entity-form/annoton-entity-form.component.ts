@@ -4,14 +4,6 @@ import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-
-
-
-
-
-
-import { CamTableService } from './../../cam-table/services/cam-table.service';
 import {
   NoctuaFormConfigService,
   NoctuaAnnotonFormService,
@@ -50,7 +42,6 @@ export class AnnotonEntityFormComponent implements OnInit, OnDestroy {
     private camService: CamService,
     private formBuilder: FormBuilder,
     private noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
-    public camTableService: CamTableService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,

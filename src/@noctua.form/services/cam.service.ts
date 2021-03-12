@@ -1,7 +1,7 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
@@ -14,7 +14,7 @@ import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { Evidence, compareEvidence } from './../models/annoton/evidence';
 
 import { v4 as uuid } from 'uuid';
-import { Cam } from './../models/annoton/cam';
+import { Cam, CamStats } from './../models/annoton/cam';
 import { uniqWith, each } from 'lodash';
 import { AnnotonNodeType, AnnotonNode, Entity } from './../models/annoton';
 import { compareTerm } from './../models/annoton/annoton-node';
@@ -23,7 +23,6 @@ import { compareTerm } from './../models/annoton/annoton-node';
   providedIn: 'root'
 })
 export class CamService {
-  baseUrl = environment.spaqrlApiUrl;
   curieUtil: any;
   loading = false;
   cam: Cam;
@@ -76,9 +75,6 @@ export class CamService {
   getCam(modelId): Cam {
     const cam: Cam = new Cam();
 
-    cam.loading.status = true;
-    cam.loading.message = 'Sending Request...';
-
     //cam.id = uuid();
     cam.graph = null;
     cam.model = Object.assign({}, {
@@ -95,10 +91,8 @@ export class CamService {
   }
 
   loadCam(cam: Cam, filter?: any) {
-    cam.loading.status = true;
-    cam.loading.message = 'Sending Request...';
-
     cam.graph = null;
+    cam.modifiedStats = new CamStats();
     cam.model = Object.assign({}, {
       id: cam.id,
       title: '',
@@ -110,7 +104,24 @@ export class CamService {
     }
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
     this.cam = cam;
+  }
 
+  bulkEdit(cam: Cam): Observable<any> {
+    const self = this;
+    const promises = [];
+
+    promises.push(self._noctuaGraphService.bulkEditAnnoton(cam));
+
+    return forkJoin(promises);
+  }
+
+  bulkEditAnnotonNode(cam: Cam, node: AnnotonNode): Observable<any> {
+    const self = this;
+    const promises = [];
+
+    promises.push(self._noctuaGraphService.bulkEditAnnotonNode(cam, node));
+
+    return forkJoin(promises);
   }
 
   deleteAnnoton(annoton: Annoton) {
@@ -148,12 +159,6 @@ export class CamService {
     return this.cam.getNodesByTypeFlat(annotonType);
   }
 
-  replaceAnnotonInternal(cam: Cam, entities: Entity[], replaceWithTerm: Entity) {
-
-    const self = this;
-
-    cam.replace(entities, replaceWithTerm);
-  }
 
   getUniqueTerms(formAnnoton?: Annoton): AnnotonNode[] {
     const annotonNodes = this.cam.getTerms(formAnnoton);
@@ -169,17 +174,13 @@ export class CamService {
     return result;
   }
 
-
-  bulkEdit(cam: Cam) {
+  resetModel(cam: Cam) {
     const self = this;
 
-    return self._noctuaGraphService.bulkEditAnnoton(cam);
+    return self._noctuaGraphService.resetModel(cam);
   }
 
-  reviewChanges(cam: Cam) {
-    const result = {
-      terms: cam.reviewTermChanges()
-    }
-    return result;
+  reviewChanges(cam: Cam, stats: CamStats): boolean {
+    return cam.reviewCamChanges(stats);
   }
 }

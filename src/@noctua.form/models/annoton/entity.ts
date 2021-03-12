@@ -1,7 +1,4 @@
-
-import { EntityLookup } from './entity-lookup';
-declare const require: any;
-const uuid = require('uuid/v1');
+import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
 export interface EntityBase {
   id: string;
@@ -9,28 +6,37 @@ export interface EntityBase {
 }
 
 export class Entity implements EntityBase {
-  uuid: string;
-  id: string;
-  label: string;
-  url: string;
-  modelId: string;
+
   classExpression: any;
   highlight: boolean;
   modified: boolean;
   termHistory: Entity[] = [];
+  displayId: string;
+  annotonDisplayId: string;
 
-  constructor(_id: string, _label: string, _url?: string, _uuid?: string, _modelId?: string) {
-    this.id = _id;
-    this.label = _label;
-    this.url = _url;
-    this.uuid = _uuid;
-    this.modelId = _modelId;
+  private _uuid: string;
+
+  constructor(public id: string,
+    public label: string,
+    public url?: string,
+    uuid?: string,
+    public modelId?: string) {
+    this.uuid = uuid;
   }
 
   static createEntity(value: Partial<EntityBase>) {
-    const entity = new Entity(value.id, value.label);
+    const entity = new Entity(value?.id, value?.label);
 
     return entity;
+  }
+
+  get uuid() {
+    return this._uuid;
+  }
+
+  set uuid(uuid: string) {
+    this._uuid = uuid;
+    this.displayId = 'noc-node-' + NoctuaFormUtils.cleanID(uuid);
   }
 
   hasValue() {
@@ -38,4 +44,4 @@ export class Entity implements EntityBase {
 
     return result;
   }
-} 
+}

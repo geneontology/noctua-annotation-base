@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { noctuaAnimations } from './../../../../../../../@noctua/animations';
-import { CamTableService } from './../services/cam-table.service';
 import { NoctuaFormDialogService } from './../../../services/dialog.service';
 
 import {
@@ -15,7 +14,8 @@ import {
   noctuaFormConfig,
   NoctuaUserService,
   NoctuaFormMenuService,
-  CamsService
+  CamsService,
+  AnnotonType
 } from 'noctua-form-base';
 
 import {
@@ -29,6 +29,7 @@ import { EditorCategory } from '@noctua.editor/models/editor-category';
 import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'noc-annoton-table',
@@ -38,55 +39,87 @@ import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 })
 export class AnnotonTableComponent implements OnInit, OnDestroy {
   EditorCategory = EditorCategory;
-
+  AnnotonType = AnnotonType;
+  camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
+  annotonTypeOptions = noctuaFormConfig.annotonType.options;
+  dataSource: MatTableDataSource<AnnotonNode>;
   displayedColumns = [
     'relationship',
     'aspect',
     'term',
-    'relationshipExt',
     'extension',
     'evidence',
-    'reference',
-    'with',
-    'assignedBy',
     'actions'];
 
   grid: any[] = [];
 
   @Input('cam')
-  public cam: Cam
+  cam: Cam
 
   @Input('annoton')
-  public annoton: Annoton
+  annoton: Annoton
 
   @Input('options')
-  public options: any = {};
+  options: any = {};
 
-  public currentMenuEvent: any = {};
+  optionsDisplay: any = {}
+
+  gpNode: AnnotonNode;
+  editableTerms = false;
+  currentMenuEvent: any = {};
 
   private unsubscribeAll: Subject<any>;
 
-  constructor(private camService: CamService,
+  constructor(
+    private camService: CamService,
     public camsService: CamsService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public camTableService: CamTableService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
     public noctuaAnnotonFormService: NoctuaAnnotonFormService,
     private inlineEditorService: InlineEditorService) {
 
+
+    this.dataSource = new MatTableDataSource<AnnotonNode>();
     this.unsubscribeAll = new Subject();
+
+
   }
 
   ngOnInit(): void {
-    this.loadCam();
+
+    if (this.options?.editableTerms) {
+      this.editableTerms = this.options.editableTerms
+    }
+    this.gpNode = this.annoton.getGPNode();
+
+    this.optionsDisplay = { ...this.options, hideHeader: true };
+    this.dataSource.data = this.annoton.nodes;
+    this.dataSource.filterPredicate = function customFilter(data, filter: string): boolean {
+      return (data.id !== filter);
+    }
+
+    this.dataSource.filter = this.gpNode?.id;
   }
 
-  loadCam() {
-    this.grid = this.annoton.grid;
+
+
+  toggleExpand(annoton: Annoton) {
+    annoton.expanded = !annoton.expanded;
   }
+
+  displayCamErrors() {
+    const errors = this.cam.getViolationDisplayErrors();
+    this.noctuaFormDialogService.openCamErrorsDialog(errors);
+  }
+
+  displayAnnotonErrors(annoton: Annoton) {
+    const errors = annoton.getViolationDisplayErrors();
+    this.noctuaFormDialogService.openCamErrorsDialog(errors);
+  }
+
 
   addEvidence(entity: AnnotonNode) {
     const self = this;
@@ -148,7 +181,7 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
 
       self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
     } else {
-      // const error = new AnnotonError('error', 1, "Please enter a gene product", meta)
+      // const error = new AnnotonError(ErrorLevel.error, ErrorType.general,  "Please enter a gene product", meta)
       //errors.push(error);
       // self.dialogService.openAnnotonErrorsDialog(ev, entity, errors)
     }
@@ -207,7 +240,7 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     const evidences: Evidence[] = this.camService.getUniqueEvidence(self.noctuaAnnotonFormService.annoton);
     const success = (selected) => {
       if (selected.evidences && selected.evidences.length > 0) {
-        entity.predicate.setEvidence(selected.evidences, ['assignedBy']);
+        entity.predicate.setEvidence(selected.evidences);
         self.noctuaAnnotonFormService.initializeForm();
       }
     };
@@ -219,7 +252,7 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     this.camService.onCamChanged.next(this.cam);
 
     this.noctuaAnnotonEntityService.initializeForm(this.annoton, entity);
-    this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.annotonEntityForm);
+    //  this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.annotonEntityForm);
 
   }
 

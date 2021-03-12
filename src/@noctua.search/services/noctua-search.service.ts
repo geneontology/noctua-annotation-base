@@ -13,6 +13,7 @@ import {
     NoctuaFormConfigService,
     NoctuaUserService,
     Entity,
+    CamsService
 } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 import { saveAs } from 'file-saver';
@@ -22,6 +23,7 @@ import { CamPage } from './../models/cam-page';
 import { SearchHistory } from './../models/search-history';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { NoctuaSearchMenuService } from './search-menu.service';
+import { MiddlePanel } from '../models/menu-panels';
 
 declare const require: any;
 
@@ -41,7 +43,6 @@ export class NoctuaSearchService {
 
     onSearchCriteriaChanged: BehaviorSubject<any>;
     onSearchHistoryChanged: BehaviorSubject<any>;
-    baseUrl = environment.spaqrlApiUrl;
     curieUtil: any;
     cams: any[] = [];
     camPage: CamPage;
@@ -50,9 +51,7 @@ export class NoctuaSearchService {
     separator = '@@';
     loading = false;
     onCamsChanged: BehaviorSubject<any>;
-    onCamsReviewChanged: BehaviorSubject<any>;
     onCamsPageChanged: BehaviorSubject<any>;
-    onCamChanged: BehaviorSubject<any>;
     onContributorFilterChanged: BehaviorSubject<any>;
     searchSummary: any = {};
 
@@ -74,21 +73,18 @@ export class NoctuaSearchService {
     constructor(
         private httpClient: HttpClient,
         private noctuaDataService: NoctuaDataService,
+        private camsService: CamsService,
         public noctuaFormConfigService: NoctuaFormConfigService,
         public noctuaUserService: NoctuaUserService,
         private noctuaSearchMenuService: NoctuaSearchMenuService,
         private curieService: CurieService) {
         this.onCamsChanged = new BehaviorSubject([]);
-        this.onCamsReviewChanged = new BehaviorSubject([]);
         this.onCamsPageChanged = new BehaviorSubject(null);
-        this.onCamChanged = new BehaviorSubject([]);
         this.onSearchHistoryChanged = new BehaviorSubject(null);
         this.states = this.noctuaFormConfigService.modelState.options;
         this.searchCriteria = new SearchCriteria();
         this.onSearchCriteriaChanged = new BehaviorSubject(null);
         this.curieUtil = this.curieService.getCurieUtil();
-
-        this._getModelMetadata();
 
         this.onSearchCriteriaChanged.subscribe((searchCriteria: SearchCriteria) => {
             if (!searchCriteria) {
@@ -97,6 +93,7 @@ export class NoctuaSearchService {
 
             this.getCams(searchCriteria).subscribe((response: any) => {
                 this.cams = response;
+                this.camsService.updateDisplayNumber(this.cams);
                 this.onCamsChanged.next(this.cams);
             });
 
@@ -106,48 +103,32 @@ export class NoctuaSearchService {
                 this.onCamsPageChanged.next(this.camPage);
             });
 
-            this.noctuaSearchMenuService.resetResults();
-
-
+            if (this.noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.cams) {
+                this.noctuaSearchMenuService.resetResults();
+            }
         });
     }
 
     // Get Users and Groups
-    private _getModelMetadata() {
+    setup() {
         const self = this;
 
-        self.noctuaDataService.loadContributors();
-        self.noctuaDataService.loadGroups();
         self.noctuaDataService.loadOrganisms();
-
-        self.noctuaDataService.onContributorsChanged
-            .subscribe(contributors => {
-                this.noctuaUserService.contributors = contributors;
-                /*   this.searchCriteria.terms = [{
-                      id: 'GO:0006869',
-                      label: 'lipid transport'
-                  }]; */
-
-                const contributor =
-                    {
-                        'name': 'Tremayne Mushayahama',
-                        'orcid': 'http://orcid.org/0000-0002-2874-6934',
-                        'initials': 'TM',
-                        'color': '#e1bee7'
-                    } as Contributor;
-                this.searchCriteria.contributors = [contributor];
-                this.updateSearch();
-            });
-
-        self.noctuaDataService.onGroupsChanged
-            .subscribe(groups => {
-                this.noctuaUserService.groups = groups;
-            });
 
         self.noctuaDataService.onOrganismsChanged
             .subscribe(organisms => {
                 this.organisms = organisms;
             });
+
+        const contributor =
+            {
+                'name': 'Tremayne Mushayahama',
+                'orcid': 'http://orcid.org/0000-0002-2874-6934',
+                'initials': 'TM',
+                'color': '#e1bee7'
+            } as Contributor;
+        //  this.searchCriteria.contributors = [contributor];
+        this.updateSearch();
     }
 
     search(searchCriteria) {
@@ -325,12 +306,12 @@ export class NoctuaSearchService {
             cam.state = self.noctuaFormConfigService.findModelState(response.state);
             cam.title = response.title;
             cam.date = response.date;
-
+            cam.modified = response['modified-p'];
             cam.model = Object.assign({}, {
                 modelInfo: this.noctuaFormConfigService.getModelUrls(modelId)
             });
 
-            cam.groups = <Group[]>response.groups.map(function (url) {
+            cam.groups = <Group[]>response.groups.map((url) => {
                 const group = find(self.noctuaUserService.groups, (inGroup: Group) => {
                     return inGroup.url === url;
                 });

@@ -1,5 +1,4 @@
-declare const require: any;
-const uuid = require('uuid/v1');
+import { v4 as uuid } from 'uuid';
 import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';

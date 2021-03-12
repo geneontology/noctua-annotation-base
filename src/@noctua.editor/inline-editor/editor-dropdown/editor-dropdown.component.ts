@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
 import {
@@ -8,6 +8,7 @@ import {
   CamService,
   Entity,
   noctuaFormConfig,
+  CamsService,
 } from 'noctua-form-base';
 
 import { Cam } from 'noctua-form-base';
@@ -19,7 +20,7 @@ import { editorDropdownData } from './editor-dropdown.tokens';
 import { EditorDropdownOverlayRef } from './editor-dropdown-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { EditorCategory } from './../../models/editor-category';
-import { takeUntil } from 'rxjs/operators';
+import { concatMap, finalize, take, takeUntil } from 'rxjs/operators';
 import { find } from 'lodash';
 import { InlineReferenceService } from './../../inline-reference/inline-reference.service';
 
@@ -52,9 +53,12 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     with: false,
   };
 
-  constructor(public dialogRef: EditorDropdownOverlayRef,
+  constructor(
+    private zone: NgZone,
+    public dialogRef: EditorDropdownOverlayRef,
     @Inject(editorDropdownData) public data: any,
     private noctuaFormDialogService: NoctuaFormDialogService,
+    private camsService: CamsService,
     private camService: CamService,
     private noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
     private inlineReferenceService: InlineReferenceService,
@@ -96,11 +100,37 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   save() {
     const self = this;
+    switch (self.category) {
+      case EditorCategory.term:
+      case EditorCategory.evidence:
+      case EditorCategory.reference:
+      case EditorCategory.with:
+        this.close();
+        self.noctuaAnnotonEntityService.saveAnnotonReplace(self.cam).pipe(
+          take(1),
+          concatMap((result) => {
+            console.log(result)
+            return self.camsService.getStoredModel(self.cam)
+          }),
+          finalize(() => {
+            self.zone.run(() => {
+              self.cam.loading.status = false;
+            })
+          }))
+          .subscribe(() => {
+            self.zone.run(() => {
+              self.camsService.reviewChanges();
+            })
+            // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
 
-    self.noctuaAnnotonEntityService.saveAnnoton().then(() => {
-      this.close();
-      self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
-    });
+          });
+        break;
+      default:
+        self.noctuaAnnotonEntityService.saveAnnoton().then(() => {
+          this.close();
+          self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+        });
+    }
   }
 
   addEvidence() {
@@ -149,7 +179,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
       }
       self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
     } else {
-      // const error = new AnnotonError('error', 1, "Please enter a gene product", meta)
+      // const error = new AnnotonError(ErrorLevel.error, ErrorType.general,  "Please enter a gene product", meta)
       //errors.push(error);
       // self.dialogService.openAnnotonErrorsDialog(ev, entity, errors)
     }
@@ -188,7 +218,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     const evidences: Evidence[] = this.camService.getUniqueEvidence(self.noctuaAnnotonFormService.annoton);
     const success = (selected) => {
       if (selected.evidences && selected.evidences.length > 0) {
-        self.entity.predicate.setEvidence(selected.evidences, ['assignedBy']);
+        self.entity.predicate.setEvidence(selected.evidences);
         self.noctuaAnnotonFormService.initializeForm();
       }
     };

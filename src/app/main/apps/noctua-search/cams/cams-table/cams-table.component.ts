@@ -14,13 +14,12 @@ import { CamPage } from '@noctua.search/models/cam-page';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
-import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { NoctuaSearchDialogService } from '../../services/dialog.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ReviewMode } from '@noctua.search/models/review-mode';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
+import { each, find } from 'lodash';
 
 
 export function CustomPaginator() {
@@ -72,7 +71,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   displayedColumns = [];
 
-
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;
@@ -90,23 +88,22 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   constructor(
     private camService: CamService,
     private camsService: CamsService,
-    private noctuaDataService: NoctuaDataService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaUserService: NoctuaUserService,
-    private noctuaSearchDialogService: NoctuaSearchDialogService,
     public noctuaSearchService: NoctuaSearchService) {
     this._unsubscribeAll = new Subject();
 
-    this.selection.sort()
+    this.selection.sort();
   }
 
   initTable(isReviewMode) {
     this.displayedColumns = [
       'expand',
       'title',
+      'saved',
       'state',
       'date',
       'contributor',
@@ -128,6 +125,16 @@ export class CamsTableComponent implements OnInit, OnDestroy {
           return;
         }
         this.cams = cams;
+        this.preCheck();
+      });
+
+    this.camsService.onCamsChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(cams => {
+        if (!cams) {
+          return;
+        }
+        this.preCheck();
       });
 
     this.noctuaSearchService.onCamsPageChanged
@@ -141,10 +148,18 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
     this.noctuaReviewSearchService.onResetReview
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((reset: boolean) => {
-        if (reset) {
-          this.camsService.reset();
+      .subscribe((remove: boolean) => {
+        if (remove) {
+          this.camsService.clearCams();
           this.selection.clear();
+        }
+      });
+
+    this.noctuaReviewSearchService.onReplaceChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((refresh: boolean) => {
+        if (refresh) {
+          this.refresh();
         }
       });
   }
@@ -174,7 +189,20 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   preCheck() {
-    this.cams.forEach(row => this.selection.select(row));
+    const self = this;
+    this.selection.clear();
+
+    each(self.cams, (cam) => {
+      const found = find(self.camsService.cams, { id: cam.id });
+
+      if (found) {
+        self.selection.select(cam);
+      }
+    });
+
+    this.camsService.bulkStoredModel(self.camsService.cams).subscribe((cams) => {
+      this.camsService.reviewChanges();
+    });
   }
 
   /** The label for the checkbox on the passed row */
@@ -203,7 +231,6 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   setPage($event) {
-    console.log($event)
     if (this.camPage) {
       let pageIndex = $event.pageIndex;
       if (this.noctuaSearchService.searchCriteria.camPage.size > $event.pageSize) {
@@ -219,7 +246,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   toggleCamExpand(cam: Cam) {
     if (!cam.expanded) {
-      this.camService.loadCam(cam);
+      this.openDetails(cam);
     } else {
       cam.expanded = false;
     }

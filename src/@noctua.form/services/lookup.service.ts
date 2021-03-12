@@ -9,6 +9,7 @@ import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
 import { Observable } from 'rxjs';
 import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith } from './../models/annoton/evidence';
+import { Group } from './../models/group';
 
 declare const require: any;
 
@@ -193,10 +194,6 @@ export class NoctuaLookupService {
     const params = new HttpParams({
       fromObject: requestParams
     })
-    // .set('callback', 'JSONP_CALLBACK')
-    //.set('jsonpCallbackParam', 'json.wrf')
-    // .set('params', requestParams);
-
 
     const url = golrUrl + params.toString();
 
@@ -212,14 +209,14 @@ export class NoctuaLookupService {
           evidence.setEvidence(new Entity(doc.evidence, doc.evidence_label));
 
           if (doc.reference && doc.reference.length > 0) {
-            evidence.reference = doc.reference[0];
+            evidence.reference = doc.reference.join(' | ');
           }
 
           if (doc.evidence_with && doc.evidence_with.length > 0) {
-            evidence.with = doc.evidence_with[0];
+            evidence.with = doc.evidence_with.join(' | ');
           }
 
-          evidence.assignedBy = new Entity(null, doc.assigned_by);
+          evidence.groups = [new Group(doc.assigned_by)];
 
           annotonNode = find(result, (srcAnnotonNode: AnnotonNode) => {
             return srcAnnotonNode.getTerm().id === doc.annotation_class;
@@ -410,7 +407,6 @@ export class NoctuaLookupService {
       };
     });
 
-    console.log(result);
     return result;
   }
 

@@ -8,8 +8,8 @@ import { ReviewMode } from './../models/review-mode';
     providedIn: 'root'
 })
 export class NoctuaSearchMenuService {
-
     reviewMode: ReviewMode = ReviewMode.off;
+    isReviewMode = false;
     reviewLevel = 0;
     selectedLeftPanel: LeftPanel;
     selectedMiddlePanel: MiddlePanel;
@@ -95,15 +95,17 @@ export class NoctuaSearchMenuService {
         });
     }
 
-    private _prepareChatForReplies(): void {
+    scrollTo(q: string) {
+
         setTimeout(() => {
             if (this.resultsViewScrollbar) {
                 this.resultsViewScrollbar.update();
 
                 setTimeout(() => {
-                    this.resultsViewScrollbar.scrollToBottom(0);
+                    this.resultsViewScrollbar.scrollToElement(q, -140, 1000);
                 });
             }
         });
     }
+
 }

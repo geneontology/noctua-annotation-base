@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
@@ -24,6 +24,7 @@ export class NoctuaAnnotonEntityService {
   public entityFormGroup$: Observable<FormGroup>;
 
   constructor(private _fb: FormBuilder,
+    private zone: NgZone,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
@@ -88,6 +89,20 @@ export class NoctuaAnnotonEntityService {
       saveData.destTriples,
       saveData.removeIds,
       saveData.removeTriples);
+  }
+
+  saveAnnotonReplace(cam: Cam, addLoadingStatus?: boolean): Observable<any> {
+    const self = this;
+
+    if (addLoadingStatus) {
+      cam.loading.status = true;
+    }
+
+    const oldEntity = cloneDeep(self.entity);
+    self.annotonEntityFormToAnnoton();
+    self.entity.addPendingChanges(oldEntity);
+    return self.camService.bulkEdit(cam);
+
   }
 
   saveAnnotonInternal() {

@@ -1,7 +1,7 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin } from 'rxjs';
-import { map, finalize } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import {
   Cam,
@@ -25,11 +25,13 @@ import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
 import { AnnotonType } from './../models/annoton/annoton';
 import { Contributor } from './../models/contributor';
-import { find } from 'lodash';
+import { find, each } from 'lodash';
+import { Group } from './../models';
+import { CardinalityViolation, RelationViolation } from './../models/annoton/error/violation-error';
+import { CurieService } from './../../@noctua.curie/services/curie.service';
 
 declare const require: any;
 
-const each = require('lodash/forEach');
 const model = require('bbop-graph-noctua');
 const amigo = require('amigo2');
 const barista_response = require('bbop-response-barista');
@@ -45,14 +47,17 @@ export class NoctuaGraphService {
   baristaLocation = environment.globalBaristaLocation;
   minervaDefinitionName = environment.globalMinervaDefinitionName;
   linker = new amigo.linker();
+  curieUtil: any;
 
   constructor(
+    private curieService: CurieService,
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaLookupService: NoctuaLookupService) {
+    this.curieUtil = this.curieService.getCurieUtil();
   }
 
-  registerManager() {
+  registerManager(useReasoner = true) {
     const engine = new jquery_engine(barista_response);
     engine.method('POST');
 
@@ -98,30 +103,46 @@ export class NoctuaGraphService {
     manager.register('warning', warning, 10);
     manager.register('error', error, 10);
 
+    manager.use_reasoner_p(useReasoner);
+
     return manager;
   }
 
   getGraphInfo(cam: Cam, modelId) {
     const self = this;
-
+    cam.loading.status = true;
+    cam.loading.message = 'Getting Models...';
     cam.onGraphChanged = new BehaviorSubject(null);
     cam.id = modelId;
     cam.manager = this.registerManager();
-    cam.individualManager = this.registerManager();
+    cam.artManager = this.registerManager();
     cam.groupManager = this.registerManager();
+    cam.replaceManager = this.registerManager(false);
 
-    const rebuild = (resp) => {
+    const rebuild = (response) => {
       const noctua_graph = model.graph;
 
-      cam.loading.status = true;
-      cam.loading.message = 'Loading Model Entities Metadata...';
+      // cam.loading.status = true;
+      // cam.loading.message = 'Loading Model Entities Metadata...';
 
       cam.graph = new noctua_graph();
-      cam.id = resp.data().id;
-      cam.graph.load_data_basic(resp.data());
+      cam.id = response.data().id;
+      cam.modified = response.data()['modified-p'];
+      cam.graph.load_data_basic(response.data());
+      cam.isReasoned = response['is-reasoned'];
+
+      if (cam.isReasoned) {
+
+      }
+
       const titleAnnotations = cam.graph.get_annotations_by_key('title');
       const stateAnnotations = cam.graph.get_annotations_by_key('state');
       const dateAnnotations = cam.graph.get_annotations_by_key('date');
+      const groupAnnotations = cam.graph.get_annotations_by_key('providedBy');
+      const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
+
+      cam.contributors = self.noctuaUserService.getContributorsFromAnnotations(contributorAnnotations);
+      cam.groups = self.noctuaUserService.getGroupsFromAnnotations(groupAnnotations);
 
       if (dateAnnotations.length > 0) {
         cam.date = dateAnnotations[0].value();
@@ -135,15 +156,26 @@ export class NoctuaGraphService {
         cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
       }
 
-      self.populateContributors(cam);
-
       self.loadCam(cam);
+      self.loadViolations(cam, response.data()['validation-results'])
       cam.loading.status = false;
       cam.loading.message = '';
     };
 
+    const update = (response) => {
+      const noctua_graph = model.graph;
+
+      console.log(response)
+      // cam.loading.status = false;
+      // cam.loading.message = '';
+    };
+
     cam.manager.register('rebuild', function (resp) {
       rebuild(resp);
+    }, 10);
+
+    cam.replaceManager.register('rebuild', function (resp) {
+      update(resp);
     }, 10);
 
     cam.manager.get_model(modelId);
@@ -152,25 +184,68 @@ export class NoctuaGraphService {
   loadCam(cam: Cam) {
     const self = this;
 
-    cam.annotons = self.graphToAnnotons(cam);
+    cam.annotons = self.graphToAnnotons(cam.graph);
     cam.applyFilter();
     cam.onGraphChanged.next(cam.annotons);
     cam.connectorAnnotons = self.getConnectorAnnotons(cam);
     cam.setPreview();
   }
 
-  populateContributors(cam: Cam) {
+  loadViolations(cam: Cam, validationResults) {
     const self = this;
-    const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
+    let violations;
 
-    cam.contributors = <Contributor[]>contributorAnnotations.map((contributorAnnotation) => {
-      const orcid = contributorAnnotation.value();
-      const contributor = find(self.noctuaUserService.contributors, (user: Contributor) => {
-        return user.orcid === orcid;
+    if (validationResults &&
+      validationResults['shex-validation'] &&
+      validationResults['shex-validation']['violations']) {
+      violations = validationResults['shex-validation']['violations'];
+      cam.hasViolations = violations.length > 0;
+      cam.violations = [];
+      violations.forEach((violation: any) => {
+        violation.explanations.forEach((explanation) => {
+          explanation.constraints.forEach((constraint) => {
+            const camViolation = self.generateViolation(cam, violation.node, constraint);
+
+            if (camViolation) {
+              cam.violations.push(camViolation);
+            }
+          });
+        });
       });
+    }
 
-      return contributor ? contributor : { orcid: orcid };
-    });
+    cam.setViolations();
+  }
+
+  generateViolation(cam: Cam, node, constraint) {
+    const self = this;
+    const annotonNode = self.nodeToAnnotonNode(cam.graph, node)
+
+    if (!annotonNode) {
+      return null;
+    }
+
+    let violation;
+    if (constraint.cardinality) {
+      const edge = self.noctuaFormConfigService.findEdge(constraint.property);
+      violation = new CardinalityViolation(
+        annotonNode,
+        edge,
+        constraint.nobjects,
+        constraint.cardinality
+      );
+    } else if (constraint.object) {
+      violation = new RelationViolation(annotonNode);
+      violation.predicate = self.noctuaFormConfigService.findEdge(constraint.property);
+
+      const object = constraint.object.startsWith('http')
+        ? self.curieUtil.getCurie(constraint.object)
+        : constraint.object
+
+      violation.object = self.nodeToAnnotonNode(cam.graph, object);
+    }
+
+    return violation;
   }
 
   getNodeInfo(node) {
@@ -233,6 +308,9 @@ export class NoctuaGraphService {
     const self = this;
 
     const node = graph.get_node(objectId);
+    if (!node) {
+      return null;
+    }
     const nodeInfo = self.getNodeInfo(node);
     const result = {
       uuid: objectId,
@@ -251,6 +329,7 @@ export class NoctuaGraphService {
   }
 
   edgeToEvidence(graph, edge) {
+
     const self = this;
     const evidenceAnnotations = edge.get_annotations_by_key('evidence');
     const result = [];
@@ -271,21 +350,28 @@ export class NoctuaGraphService {
 
         const sources = annotationNode.get_annotations_by_key('source');
         const withs = annotationNode.get_annotations_by_key('with');
-        const assignedBys = annotationNode.get_annotations_by_key('providedBy');
+        const contributorAnnotations = annotationNode.get_annotations_by_key('contributor');
+        const groupAnnotations = annotationNode.get_annotations_by_key('providedBy');
+
         if (sources.length > 0) {
           evidence.reference = sources[0].value();
-          evidence.referenceUrl = self.noctuaLookupService.getTermURL(evidence.reference);
+          const referenceUrl = self.noctuaLookupService.getTermURL(evidence.reference);
+          evidence.referenceEntity = new Entity(evidence.reference, evidence.reference, referenceUrl, evidence.uuid)
         }
+
         if (withs.length > 0) {
-          if (withs[0].value().startsWith('gomodel')) {
-            evidence.with = withs[0].value();
-          } else {
-            evidence.with = withs[0].value();
-          }
+          evidence.with = withs[0].value();
+          evidence.withEntity = new Entity(evidence.with, evidence.with, null, evidence.uuid)
         }
-        if (assignedBys.length > 0) {
-          evidence.assignedBy = new Entity(null, assignedBys[0].value(), assignedBys[0].value());
+
+        if (groupAnnotations.length > 0) {
+          evidence.groups = self.noctuaUserService.getGroupsFromAnnotations(groupAnnotations);
         }
+
+        if (contributorAnnotations.length > 0) {
+          evidence.contributors = self.noctuaUserService.getContributorsFromAnnotations(contributorAnnotations);
+        }
+
         result.push(evidence);
       }
     });
@@ -307,7 +393,7 @@ export class NoctuaGraphService {
     return forkJoin(promises);
   }
 
-  graphPostParse(cam: Cam, graph) {
+  graphPostParse(cam: Cam) {
     const self = this;
     const promises = [];
 
@@ -363,21 +449,19 @@ export class NoctuaGraphService {
     return self.noctuaFormConfigService.createAnnotonBaseModel(annotonType);
   }
 
-  graphToAnnotons(cam: Cam): Annoton[] {
+  graphToAnnotons(camGraph): Annoton[] {
     const self = this;
     const annotons: Annoton[] = [];
 
-    cam.loading.message = 'Generating activities...';
-
-    each(cam.graph.all_edges(), (bbopEdge) => {
+    each(camGraph.all_edges(), (bbopEdge) => {
       const bbopSubjectId = bbopEdge.subject_id();
-      const subjectNode = self.nodeToAnnotonNode(cam.graph, bbopSubjectId);
+      const subjectNode = self.nodeToAnnotonNode(camGraph, bbopSubjectId);
 
       if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
         (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
           subjectNode.hasRootType(EntityDefinition.GoMolecularEntity))) {
 
-        const subjectEdges = cam.graph.get_edges_by_subject(bbopSubjectId);
+        const subjectEdges = camGraph.get_edges_by_subject(bbopSubjectId);
         const annoton: Annoton = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
         const subjectAnnotonNode = annoton.rootNode;
 
@@ -385,7 +469,7 @@ export class NoctuaGraphService {
         subjectAnnotonNode.classExpression = subjectNode.classExpression;
         subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
         subjectAnnotonNode.uuid = bbopSubjectId;
-        self._graphToAnnotonDFS(cam, annoton, subjectEdges, subjectAnnotonNode);
+        self._graphToAnnotonDFS(camGraph, annoton, subjectEdges, subjectAnnotonNode);
         annoton.id = bbopSubjectId;
         annoton.postRunUpdate();
         annotons.push(annoton);
@@ -452,32 +536,31 @@ export class NoctuaGraphService {
     return connectorAnnotons;
   }
 
-  graphToAnnotonDFSError(annoton, annotonNode) {
-    const self = this;
-    const edge = annoton.getEdges(annotonNode.id);
-
-    each(edge.nodes, function (node) {
-      node.object.status = 2;
-      self.graphToAnnotonDFSError(annoton, node.object);
-    });
-  }
-
-  evidenceUseGroups(reqs, evidence: Evidence) {
-    const self = this;
-    const assignedBy = evidence.assignedBy;
-
-    if (assignedBy) {
-      reqs.use_groups(['http://purl.obolibrary.org/go/groups/' + assignedBy]);
-    } else if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
-      reqs.use_groups([self.noctuaUserService.user.group.id]);
-    } else {
-      reqs.use_groups([]);
-    }
-  }
-
   saveModelGroup(cam: Cam, groupId) {
     cam.manager.use_groups([groupId]);
     cam.groupId = groupId;
+  }
+
+  resetModel(cam: Cam) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    const req = new minerva_requests.request('model', 'reset');
+    req.model(cam.id);
+    reqs.add(req, 'query');
+    return cam.manager.request_with(reqs);
+  }
+
+  storeModel(cam: Cam) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
+    }
+
+    reqs.store_model(cam.id);
+    return cam.manager.request_with(reqs);
   }
 
   saveCamAnnotations(cam: Cam, annotations) {
@@ -485,7 +568,7 @@ export class NoctuaGraphService {
 
     const titleAnnotations = cam.graph.get_annotations_by_key('title');
     const stateAnnotations = cam.graph.get_annotations_by_key('state');
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.id);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
     each(titleAnnotations, function (annotation) {
       reqs.remove_annotation_from_model('title', annotation.value());
@@ -504,7 +587,7 @@ export class NoctuaGraphService {
 
   saveAnnoton(cam: Cam, triples: Triple<AnnotonNode>[], title) {
     const self = this;
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
 
     if (!cam.title) {
       reqs.add_annotation_to_model('title', title);
@@ -530,7 +613,7 @@ export class NoctuaGraphService {
     removeTriples: Triple<AnnotonNode>[]) {
 
     const self = this;
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.id);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
     each(destNodes, function (destNode: AnnotonNode) {
       const srcNode = find(srcNodes, (node: AnnotonNode) => {
@@ -542,7 +625,7 @@ export class NoctuaGraphService {
       }
     });
 
-    self.editFact(reqs, cam, srcTriples, destTriples);
+    self.editFact(reqs, srcTriples, destTriples);
     self.addFact(reqs, destTriples);
 
     each(removeTriples, function (triple: Triple<AnnotonNode>) {
@@ -568,7 +651,7 @@ export class NoctuaGraphService {
   replaceAnnoton(manager, modelId, entities: Entity[], replaceWithTerm: Entity) {
 
     const self = this;
-    const reqs = new minerva_requests.request_set(manager.user_token(), modelId);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, modelId);
 
     each(entities, function (entity: Entity) {
       self.replaceIndividual(reqs, modelId, entity, replaceWithTerm);
@@ -585,33 +668,47 @@ export class NoctuaGraphService {
   }
 
 
-  bulkEditAnnoton(cam: Cam,) {
-
+  bulkEditAnnoton(cam: Cam) {
     const self = this;
-    const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.id);
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
     each(cam.annotons, (annoton: Annoton) => {
       each(annoton.nodes, (node: AnnotonNode) => {
-        self.bulkEditIndividual(reqs, cam, node);
-        //self.bulkEditFact(reqs, cam, srcTriples, destTriples);
-        //  self.bulkAddFact(reqs, destTriples);
-
+        self.bulkEditIndividual(reqs, cam.id, node);
+        each(node.predicate.evidence, (evidence: Evidence) => {
+          self.bulkEditEvidence(reqs, cam.id, evidence);
+        });
       });
     });
-
 
     if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
-    reqs.store_model(cam.id);
-    return cam.manager.request_with(reqs);
+    return cam.replaceManager.request_with(reqs);
+  }
+
+  bulkEditAnnotonNode(cam: Cam, node: AnnotonNode) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    self.bulkEditIndividual(reqs, cam.id, node);
+    each(node.predicate.evidence, (evidence: Evidence) => {
+      self.bulkEditEvidence(reqs, cam.id, evidence);
+    });
+
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
+    }
+
+    return cam.replaceManager.request_with(reqs);
   }
 
   deleteAnnoton(cam: Cam, uuids: string[], triples: Triple<AnnotonNode>[]) {
     const self = this;
 
     const success = () => {
-      const reqs = new minerva_requests.request_set(cam.manager.user_token(), cam.model.id);
+      const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
 
       each(triples, function (triple: Triple<AnnotonNode>) {
         reqs.remove_fact([
@@ -637,14 +734,14 @@ export class NoctuaGraphService {
     return success();
   }
 
-  private _graphToAnnotonDFS(cam: Cam, annoton: Annoton, bbopEdges, subjectNode: AnnotonNode) {
+  private _graphToAnnotonDFS(camGraph, annoton: Annoton, bbopEdges, subjectNode: AnnotonNode) {
     const self = this;
 
     each(bbopEdges, (bbopEdge) => {
       const bbopPredicateId = bbopEdge.predicate_id();
       const bbopObjectId = bbopEdge.object_id();
-      const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
-      const partialObjectNode = self.nodeToAnnotonNode(cam.graph, bbopObjectId);
+      const evidence = self.edgeToEvidence(camGraph, bbopEdge);
+      const partialObjectNode = self.nodeToAnnotonNode(camGraph, bbopObjectId);
       const objectNode = this._insertNode(annoton, bbopPredicateId, subjectNode, partialObjectNode);
 
       annoton.updateEntityInsertMenu();
@@ -658,7 +755,7 @@ export class NoctuaGraphService {
           triple.object.setIsComplement(partialObjectNode.isComplement);
           triple.predicate.evidence = evidence;
           triple.predicate.uuid = bbopEdge.id();
-          self._graphToAnnotonDFS(cam, annoton, cam.graph.get_edges_by_subject(bbopObjectId), triple.object);
+          self._graphToAnnotonDFS(camGraph, annoton, camGraph.get_edges_by_subject(bbopObjectId), triple.object);
         }
       }
     });
@@ -668,8 +765,7 @@ export class NoctuaGraphService {
 
   private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode,
     partialObjectNode: Partial<AnnotonNode>): AnnotonNode {
-    const self = this;
-    const nodeDescriptions: ModelDefinition.InsertNodeDescription = subjectNode.canInsertNodes;
+    const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
     let objectNode;
 
     each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
@@ -746,8 +842,7 @@ export class NoctuaGraphService {
     });
   }
 
-  editFact(reqs, cam: Cam, srcTriples: Triple<AnnotonNode>[], destTriples: Triple<AnnotonNode>[]) {
-    const self = this;
+  editFact(reqs, srcTriples: Triple<AnnotonNode>[], destTriples: Triple<AnnotonNode>[]) {
 
     each(destTriples, (destTriple: Triple<AnnotonNode>) => {
 
@@ -769,8 +864,6 @@ export class NoctuaGraphService {
     const self = this;
 
     each(triples, function (triple: Triple<AnnotonNode>) {
-      const subject = self.addIndividual(reqs, triple.subject);
-      const object = self.addIndividual(reqs, triple.object);
       each(triple.predicate.evidence, function (evidence: Evidence) {
         reqs.remove_individual(evidence.uuid);
       });
@@ -813,20 +906,63 @@ export class NoctuaGraphService {
     }
   }
 
-  bulkEditIndividual(reqs, cam: Cam, node: AnnotonNode) {
-    if (node.hasValue() && node.term.modified) {
+  bulkEditIndividual(reqs, camId: string, node: AnnotonNode) {
+    if (node.hasValue() && node.pendingEntityChanges) {
       reqs.remove_type_from_individual(
-        node.classExpression,
+        class_expression.cls(node.term.id),
         node.uuid,
-        cam.id,
+        camId,
       );
 
       reqs.add_type_to_individual(
-        class_expression.cls(node.getTerm().id),
-        node.uuid,
-        cam.id,
+        class_expression.cls(node.pendingEntityChanges.id),
+        node.pendingEntityChanges.uuid,
+        camId,
       );
     }
+  }
+
+  bulkEditEvidence(reqs, camId: string, evidence: Evidence) {
+    if (evidence.hasValue() && evidence.pendingEvidenceChanges) {
+      reqs.remove_type_from_individual(
+        class_expression.cls(evidence.evidence.id),
+        evidence.uuid,
+        camId,
+      );
+
+      reqs.add_type_to_individual(
+        class_expression.cls(evidence.pendingEvidenceChanges.id),
+        evidence.pendingEvidenceChanges.uuid,
+        camId,
+      );
+
+      this.editUserEvidenceAnnotations(reqs, evidence.pendingEvidenceChanges.uuid)
+    }
+
+    if (evidence.hasValue() && evidence.pendingReferenceChanges) {
+      reqs.remove_annotation_from_individual('source', evidence.reference, null, evidence.pendingReferenceChanges.uuid);
+      reqs.add_annotation_to_individual('source',
+        evidence.pendingReferenceChanges.id,
+        null,
+        evidence.pendingReferenceChanges.uuid)
+      this.editUserEvidenceAnnotations(reqs, evidence.pendingReferenceChanges.uuid)
+    }
+
+    if (evidence.hasValue() && evidence.pendingWithChanges) {
+      reqs.remove_annotation_from_individual('with', evidence.with, null, evidence.pendingWithChanges.uuid);
+      reqs.add_annotation_to_individual('with',
+        evidence.pendingWithChanges.id,
+        null,
+        evidence.pendingWithChanges.uuid)
+      this.editUserEvidenceAnnotations(reqs, evidence.pendingWithChanges.uuid)
+    }
+  }
+
+  editUserEvidenceAnnotations(reqs, uuid) {
+    reqs.remove_annotation_from_individual('provided-by', this.noctuaUserService.user.group.url, null, uuid);
+    reqs.add_annotation_to_individual('provided-by', this.noctuaUserService.user.group.url, null, uuid);
+    reqs.remove_annotation_from_individual('contributor', this.noctuaUserService.user.orcid, null, uuid);
+    reqs.add_annotation_to_individual('contributor', this.noctuaUserService.user.orcid, null, uuid);
   }
 
   replaceIndividual(reqs, modelId: string, entity: Entity, replaceWithTerm: Entity) {

@@ -45,8 +45,8 @@ export class SearchDatabaseDialogComponent implements OnInit, OnDestroy {
     this.initialize();
 
   }
-  ngOnInit() {
-  }
+  ngOnInit() { }
+
   initialize() {
     const self = this;
 
@@ -56,7 +56,6 @@ export class SearchDatabaseDialogComponent implements OnInit, OnDestroy {
       this.searchCriteria.params)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response) => {
-        console.log(response);
         this.annotonNodes = response;
       });
   }

@@ -1,12 +1,13 @@
 import { Evidence } from './evidence';
-import { AnnotonError } from './parser/annoton-error';
+import { AnnotonError, ErrorLevel, ErrorType } from './parser/annoton-error';
 import { Annoton } from './annoton';
 import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
-import { Predicate } from '.';
+import { CamStats, Predicate } from '.';
 import { each, find, some } from 'lodash';
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
+import * as EntityDefinition from './../../data/config/entity-definition';
 
 export interface GoCategory {
   id: AnnotonNodeType;
@@ -55,6 +56,7 @@ export interface AnnotonNodeDisplay {
 }
 
 export class AnnotonNode implements AnnotonNodeDisplay {
+
   type: AnnotonNodeType;
   label: string;
   uuid: string;
@@ -95,6 +97,9 @@ export class AnnotonNode implements AnnotonNodeDisplay {
 
   private _id: string;
 
+  //For Save 
+  pendingEntityChanges: Entity;
+
   constructor(annotonNode?: Partial<AnnotonNodeDisplay>) {
     if (annotonNode) {
       this.overrideValues(annotonNode);
@@ -111,7 +116,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
 
   set id(id: string) {
     this._id = id;
-    this.displayId = NoctuaUtils.cleanID(id);
+    this.displayId = NoctuaFormUtils.cleanID(id);
   }
 
   get classExpression() {
@@ -201,6 +206,65 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     return result;
   }
 
+  reviewTermChanges(stat: CamStats, modifiedStats: CamStats): boolean {
+    const self = this;
+    let modified = false;
+
+    if (self.term.modified) {
+      if (self.id === EntityDefinition.GoMolecularEntity.id) {
+        modifiedStats.gpsCount++;
+        stat.gpsCount++;
+      } else {
+        modifiedStats.termsCount++;
+        stat.termsCount++;
+      }
+
+      modified = true;
+    }
+
+    each(self.predicate.evidence, (evidence: Evidence, key) => {
+      const evidenceModified = evidence.reviewEvidenceChanges(stat, modifiedStats);
+      modified = modified || evidenceModified;
+    });
+
+    modifiedStats.updateTotal();
+    return modified;
+  }
+
+  checkStored(oldNode: AnnotonNode) {
+    const self = this;
+
+    if (oldNode && self.term.id !== oldNode.term.id) {
+      self.term.termHistory.unshift(new Entity(oldNode.term.id, oldNode.term.label));
+      self.term.modified = true;
+    }
+
+    each(self.predicate.evidence, (evidence: Evidence, key) => {
+      const oldEvidence = oldNode.predicate.getEvidenceById(evidence.uuid)
+      evidence.checkStored(oldEvidence)
+    });
+  }
+
+  addPendingChanges(oldNode: AnnotonNode) {
+    const self = this;
+
+    if (self.term.id !== oldNode.term.id) {
+      self.pendingEntityChanges = new Entity(self.term.id, self.term.label);
+      self.pendingEntityChanges.uuid = self.uuid;
+
+      //  self.term.termHistory.unshift(new Entity(oldNode.term.id, oldNode.term.label));
+      // self.term.modified = true;
+    }
+
+    each(self.predicate.evidence, (evidence: Evidence, key) => {
+      const oldEvidence = oldNode.predicate.getEvidenceById(evidence.uuid)
+      evidence.addPendingChanges(oldEvidence);
+    });
+
+    //this is temporary swap back into old
+    //self.term = oldNode.term
+  }
+
   enableSubmit(errors) {
     const self = this;
     let result = true;
@@ -210,7 +274,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
       const meta = {
         aspect: self.label
       };
-      const error = new AnnotonError('error', 1, `"${self.label}" is required`, meta);
+      const error = new AnnotonError(ErrorLevel.error, ErrorType.general, `"${self.label}" is required`, meta);
       errors.push(error);
       result = false;
     } else {

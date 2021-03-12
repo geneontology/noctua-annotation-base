@@ -21,13 +21,11 @@ import { CamDiagramComponent } from './cam/cam-diagram/cam-diagram.component';
 import { NodeComponent } from './cam/cam-diagram/nodes/node/node.component';
 import { NodesContainerComponent } from './cam/cam-diagram/nodes/nodes-container.component';
 import { CamDiagramService } from './cam/cam-diagram/services/cam-diagram.service';
-import { CamTableService } from './cam/cam-table/services/cam-table.service';
 import { NodeService } from './cam/cam-diagram/nodes/services/node.service';
 import { AnnotonConnectorFormComponent } from './cam/annoton/annoton-connector-form/annoton-connector-form.component';
 import { AnnotonEntityTableComponent } from './cam/cam-table/annoton-entity-table/annoton-entity-table.component';
 import { AnnotonTableComponent } from './cam/cam-table/annoton-table/annoton-table.component';
 import { TripleTableComponent } from './cam/cam-table/triple-table/triple-table.component';
-import { EvidenceTableComponent } from './cam/cam-table/triple-table/evidence-table/evidence-table.component';
 import { GraphPreviewComponent } from './cam/cam-preview/graph-preview/graph-preview.component';
 import { NoctuaConfirmDialogModule } from '@noctua/components';
 import { CamPreviewComponent } from './cam/cam-preview/cam-preview.component';
@@ -55,6 +53,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { SearchEvidenceDialogComponent } from './dialogs/search-evidence/search-evidence.component';
 import { SelectEvidenceComponent } from './components/select-evidence/select-evidence.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { CamErrorsDialogComponent } from './dialogs/cam-errors/cam-errors.component';
+import { EvidenceTableComponent } from './cam/cam-table/annoton-table/evidence-table/evidence-table.component';
 
 const routes = [
   {
@@ -101,6 +101,7 @@ const routes = [
     CamTableComponent,
     AddEvidenceDialogComponent,
     AnnotonErrorsDialogComponent,
+    CamErrorsDialogComponent,
     BeforeSaveDialogComponent,
     CreateFromExistingDialogComponent,
     LinkToExistingDialogComponent,
@@ -122,7 +123,6 @@ const routes = [
     NoctuaFormDialogService,
     NodeService,
     CamDiagramService,
-    CamTableService,
   ],
   declarations: [
     NoctuaFormComponent,
@@ -132,6 +132,7 @@ const routes = [
     CamTableComponent,
     AddEvidenceDialogComponent,
     AnnotonErrorsDialogComponent,
+    CamErrorsDialogComponent,
     BeforeSaveDialogComponent,
     PreviewAnnotonDialogComponent,
     CreateFromExistingDialogComponent,
@@ -156,6 +157,7 @@ const routes = [
   entryComponents: [
     AddEvidenceDialogComponent,
     AnnotonErrorsDialogComponent,
+    CamErrorsDialogComponent,
     BeforeSaveDialogComponent,
     CreateFromExistingDialogComponent,
     LinkToExistingDialogComponent,

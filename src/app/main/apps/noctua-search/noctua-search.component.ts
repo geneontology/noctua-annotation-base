@@ -14,11 +14,10 @@ import {
 
 import { FormGroup } from '@angular/forms';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { CamPage } from '@noctua.search/models/cam-page';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
-import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { ReviewMode } from '@noctua.search/models/review-mode';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
 import { ArtBasket } from '@noctua.search/models/art-basket';
@@ -43,6 +42,11 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(NoctuaPerfectScrollbarDirective)
   private _noctuaPerfectScrollbarDirectives: QueryList<NoctuaPerfectScrollbarDirective>;
 
+  loadingSpinner: any = {
+    color: 'primary',
+    mode: 'indeterminate'
+  };
+
   ReviewMode = ReviewMode;
   LeftPanel = LeftPanel;
   MiddlePanel = MiddlePanel;
@@ -58,16 +62,8 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;
-  loadingSpinner: any = {
-    color: 'primary',
-    mode: 'indeterminate'
-  };
-  summary: any = {
-    expanded: false,
-    detail: {}
-  };
 
-  isReviewMode = false;
+
 
   cams: any[] = [];
 
@@ -76,8 +72,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private camService: CamService,
-    private camsService: CamsService,
-    private noctuaDataService: NoctuaDataService,
+    public camsService: CamsService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
@@ -104,10 +99,16 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
     this.noctuaUserService.onUserChanged.pipe(
+      distinctUntilChanged(this.noctuaUserService.distinctUser),
       takeUntil(this._unsubscribeAll))
       .subscribe((user: Contributor) => {
+        if (user === undefined) {
+          return;
+        }
         this.noctuaFormConfigService.setupUrls();
         this.noctuaFormConfigService.setUniversalUrls();
+        this.noctuaSearchService.setup();
+        this.noctuaReviewSearchService.setup();
         this.camsService.setup();
       });
   }
@@ -131,9 +132,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
           this.artBasket = artBasket;
         }
       });
-
-
-
   }
 
   ngAfterViewInit(): void {
@@ -143,19 +141,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadCam(modelId) {
-    const self = this;
-
-    self.noctuaDataService.onContributorsChanged.pipe(
-      takeUntil(this._unsubscribeAll))
-      .subscribe((contributors: Contributor[]) => {
-        self.noctuaUserService.contributors = contributors;
-        this.cam = this.camService.getCam(modelId);
-      });
-  }
-
-  edit() {
-    // this.loadModel(this.selectCam)
-    // this.openRightDrawer(RightPanel.camForm);
+    this.cam = this.camService.getCam(modelId);
   }
 
   openLeftDrawer(panel) {
@@ -164,6 +150,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectMiddlePanel(panel) {
+    const self = this;
     this.noctuaSearchMenuService.selectMiddlePanel(panel);
 
     switch (panel) {
@@ -171,14 +158,16 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
         break;
       case MiddlePanel.camsReview:
+        self.camsService.reviewChanges();
         this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.artBasket);
         break;
       case MiddlePanel.reviewChanges:
+        self.camsService.reviewChanges();
         this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.artBasket);
         break;
     }
-
   }
+
 
   openRightDrawer(panel) {
     this.noctuaSearchMenuService.selectRightPanel(panel);
@@ -197,19 +186,19 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.openLeftDrawer(LeftPanel.artBasket);
     this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.camsReview);
     this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
-    this.isReviewMode = true;
+    this.noctuaSearchMenuService.isReviewMode = true;
   }
 
   toggleReviewMode() {
     if (this.noctuaSearchMenuService.reviewMode === ReviewMode.off) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
-      this.isReviewMode = true;
+      this.noctuaSearchMenuService.isReviewMode = true;
       // this.noctuaSearchMenuService.closeLeftDrawer();
     } else if (this.noctuaSearchMenuService.reviewMode === ReviewMode.on) {
       this.noctuaSearchMenuService.reviewMode = ReviewMode.off;
       this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
       this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
-      this.isReviewMode = false;
+      this.noctuaSearchMenuService.isReviewMode = false;
     }
   }
 
@@ -224,10 +213,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   reset() {
     this.noctuaSearchService.clearSearchCriteria();
-  }
-
-  selectCam(cam) {
-    this.noctuaSearchService.onCamChanged.next(cam);
   }
 
   ngOnDestroy(): void {

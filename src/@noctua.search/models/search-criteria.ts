@@ -62,7 +62,7 @@ export class SearchCriteria {
         query.push('limit=' + self.camPage.size.toString());
 
         each(self.titles, (title) => {
-            query.push(`title=*${title}*`);
+            query.push(`title=${title}`);
         });
 
         each(self.terms, (term) => {
@@ -112,6 +112,8 @@ export class SearchCriteria {
         if (self.expand) {
             query.push('expand');
         }
+
+        query.push('debug')
 
         return query;
     }

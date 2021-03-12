@@ -2,8 +2,6 @@ import { Entity } from './entity';
 import { Evidence } from './evidence';
 import { each, find, cloneDeep } from 'lodash';
 import { EntityLookup } from './entity-lookup';
-declare const require: any;
-const uuid = require('uuid/v1');
 
 export class Predicate {
   uuid: string;
@@ -31,7 +29,7 @@ export class Predicate {
     this.addEvidence();
   }
 
-  setEvidence(evidences: Evidence[], except?) {
+  setEvidence(evidences: Evidence[]) {
     const self = this;
     self.evidence = [];
 

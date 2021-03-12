@@ -5,6 +5,8 @@ $noc-primary-color-lighter: #dfe3ee;
 $noc-primary-color-light: rgba(#798fb8, 0.3);
 $noc-primary-color-text: #4a8bfc;
 
+$noc-tree-line-color: rgba(#798fb8, 0.3);
+
 $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
 
@@ -123,7 +125,7 @@ $accent: map-get($theme, accent);
   }
 
   .noc-dialog-body {
-    min-height: calc(100% - 90px);
+    @include deep-height(calc(100% - 90px));
   }
 
   .noc-dialog-footer {

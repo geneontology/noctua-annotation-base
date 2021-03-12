@@ -2,18 +2,18 @@ import { v4 as uuid } from 'uuid';
 import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
-import { AnnotonError } from './parser/annoton-error';
+import { AnnotonError, ErrorLevel, ErrorType } from './parser/annoton-error';
 import { AnnotonNode, AnnotonNodeType } from './annoton-node';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
 import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
-import { AnnotonParser } from './parser';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
 import { each, filter } from 'lodash';
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
+import { Violation } from './error/violation-error';
 
 export enum AnnotonState {
   creation = 1,
@@ -29,11 +29,11 @@ export enum AnnotonType {
 export class Annoton extends SaeGraph<AnnotonNode> {
   gp;
   label: string;
-  parser: AnnotonParser;
   annotonRows;
   annotonType;
   errors;
   submitErrors;
+  modified = false;
   expanded = false;
   visible = true;
   graphPreview = {
@@ -48,6 +48,10 @@ export class Annoton extends SaeGraph<AnnotonNode> {
    * Used for HTML id attribute
    */
   displayId: string;
+  displayNumber = '0';
+
+  hasViolations = false;
+  violations: Violation[] = [];
 
 
   bpOnlyEdge: Entity;
@@ -69,7 +73,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
   set id(id: string) {
     this._id = id;
-    this.displayId = NoctuaUtils.cleanID(id);
+    this.displayId = NoctuaFormUtils.cleanID(id) + 'annoton';
   }
 
   get annotonConnections() {
@@ -91,6 +95,9 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
       if (mfNode && edge) {
         mfNode.predicate = edge.predicate;
+        if (edge.predicate.edge) {
+          edge.predicate.edge.label = ''
+        }
       }
     }
   }
@@ -201,6 +208,17 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     }
   }
 
+  getViolationDisplayErrors() {
+    const self = this;
+    const result = [];
+
+    result.push(...self.violations.map((violation: Violation) => {
+      return violation.getDisplayError();
+    }));
+
+    return result;
+  }
+
   adjustAnnoton() {
     const self = this;
 
@@ -263,7 +281,7 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         const meta = {
           aspect: 'Molecular Function'
         };
-        const error = new AnnotonError('error', 1, `Causal relation is required`, meta);
+        const error = new AnnotonError(ErrorLevel.error, ErrorType.general, `Causal relation is required`, meta);
         self.submitErrors.push(error);
         result = false;
       }
@@ -450,6 +468,10 @@ export class Annoton extends SaeGraph<AnnotonNode> {
     this._presentation = null;
   }
 
+  resetGrid() {
+    this._grid = [];
+  }
+
   generateGrid() {
     const self = this;
     self._grid = [];
@@ -479,10 +501,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
       extension: node.isExtension ? term : null,
       aspect: node.aspect,
       evidence: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].evidence : {},
-      reference: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].reference : {},
-      referenceUrl: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].referenceUrl : {},
-      with: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].with : {},
-      assignedBy: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].assignedBy : {},
+      reference: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].reference : '',
+      referenceEntity: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].referenceEntity : {},
+      with: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].with : '',
+      withEntity: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].withEntity : {},
+      groups: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].groups : [],
+      contributors: node.predicate.evidence.length > 0 ? node.predicate.evidence[0].contributors : [],
       evidenceIndex: 0,
       relationEditable: node.relationEditable,
       node: node
@@ -493,9 +517,12 @@ export class Annoton extends SaeGraph<AnnotonNode> {
         treeLevel: node.treeLevel,
         evidence: node.predicate.evidence[i].evidence,
         reference: node.predicate.evidence[i].reference,
+        referenceEntity: node.predicate.evidence[i].referenceEntity,
         referenceUrl: node.predicate.evidence[i].referenceUrl,
         with: node.predicate.evidence[i].with,
-        assignedBy: node.predicate.evidence[i].assignedBy,
+        withEntity: node.predicate.evidence[i].withEntity,
+        groups: node.predicate.evidence[i].groups,
+        contributors: node.predicate.evidence[i].contributors,
         evidenceIndex: i,
         node: node,
       });

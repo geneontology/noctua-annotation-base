@@ -1,6 +1,6 @@
 
 declare const require: any;
-const uuid = require('uuid/v1');
+import { v4 as uuid } from 'uuid';
 
 export class EntityLookup {
   category: string;
