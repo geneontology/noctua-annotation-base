@@ -44,7 +44,7 @@ export class NoctuaAnnotonEntityService {
   initializeForm(annoton: Annoton, entity: AnnotonNode) {
     this.currentAnnoton = cloneDeep(annoton);
     this.annoton = annoton;
-    this.entity = cloneDeep(entity);
+    this.entity = entity;
     this.entityForm = this.createAnnotonEntityForm(this.entity);
     this.entityFormGroup.next(this._fb.group(this.entityForm));
     this._onAnnotonFormChanges();

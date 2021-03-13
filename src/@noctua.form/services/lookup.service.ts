@@ -2,12 +2,11 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { AnnotonNode, AnnotonNodeClosure, Entity, Evidence, Predicate, Annoton, Cam, AnnotonNodeType } from './../models/annoton/';
+import { AnnotonNode, Entity, Evidence, Predicate, AnnotonNodeType } from './../models/annoton/';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each, uniqWith } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
-import { Observable } from 'rxjs';
 import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith } from './../models/annoton/evidence';
 import { Group } from './../models/group';
 

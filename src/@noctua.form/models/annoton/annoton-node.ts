@@ -4,10 +4,12 @@ import { Annoton } from './annoton';
 import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
-import { CamStats, PendingChange, Predicate } from '.';
 import { each, find, some } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import * as EntityDefinition from './../../data/config/entity-definition';
+import { Predicate } from './predicate';
+import { PendingChange } from './pending-change';
+import { CamStats } from './cam';
 
 export interface GoCategory {
   id: AnnotonNodeType;
