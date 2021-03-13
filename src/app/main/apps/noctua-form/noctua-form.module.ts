@@ -6,7 +6,6 @@ import { NoctuaSharedModule } from './../../../../@noctua/shared.module';
 import { NoctuaFormDialogService } from './services/dialog.service';
 import { ContextMenuModule } from 'ngx-contextmenu';
 import { AnnotonFormComponent } from './cam/annoton/annoton-form/annoton-form.component';
-import { AnnotonEntityFormComponent } from './cam/annoton/annoton-entity-form/annoton-entity-form.component';
 import { EntityFormComponent } from './cam/annoton/annoton-form/entity-form/entity-form.component';
 import { CamTableComponent } from './cam/cam-table/cam-table.component';
 import { CamFormComponent } from './cam/cam-form/cam-form.component';
@@ -23,7 +22,6 @@ import { NodesContainerComponent } from './cam/cam-diagram/nodes/nodes-container
 import { CamDiagramService } from './cam/cam-diagram/services/cam-diagram.service';
 import { NodeService } from './cam/cam-diagram/nodes/services/node.service';
 import { AnnotonConnectorFormComponent } from './cam/annoton/annoton-connector-form/annoton-connector-form.component';
-import { AnnotonEntityTableComponent } from './cam/cam-table/annoton-entity-table/annoton-entity-table.component';
 import { AnnotonTableComponent } from './cam/cam-table/annoton-table/annoton-table.component';
 import { TripleTableComponent } from './cam/cam-table/triple-table/triple-table.component';
 import { GraphPreviewComponent } from './cam/cam-preview/graph-preview/graph-preview.component';
@@ -58,7 +56,7 @@ import { EvidenceTableComponent } from './cam/cam-table/annoton-table/evidence-t
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];
@@ -96,7 +94,6 @@ const routes = [
   ],
   exports: [
     AnnotonFormComponent,
-    AnnotonEntityFormComponent,
     EntityFormComponent,
     CamTableComponent,
     AddEvidenceDialogComponent,
@@ -114,7 +111,6 @@ const routes = [
     NodeComponent,
     NodesContainerComponent,
     AnnotonConnectorFormComponent,
-    AnnotonEntityTableComponent,
     AnnotonTableComponent,
     TripleTableComponent,
     CamPreviewComponent
@@ -127,7 +123,6 @@ const routes = [
   declarations: [
     NoctuaFormComponent,
     AnnotonFormComponent,
-    AnnotonEntityFormComponent,
     EntityFormComponent,
     CamTableComponent,
     AddEvidenceDialogComponent,
@@ -145,7 +140,6 @@ const routes = [
     NodeComponent,
     NodesContainerComponent,
     AnnotonConnectorFormComponent,
-    AnnotonEntityTableComponent,
     TripleTableComponent,
     AnnotonTableComponent,
     EvidenceTableComponent,
@@ -154,20 +148,20 @@ const routes = [
     CamGraphComponent,
     SelectEvidenceComponent,
   ],
-  entryComponents: [
-    AddEvidenceDialogComponent,
-    AnnotonErrorsDialogComponent,
-    CamErrorsDialogComponent,
-    BeforeSaveDialogComponent,
-    CreateFromExistingDialogComponent,
-    LinkToExistingDialogComponent,
-    SelectEvidenceDialogComponent,
-    SearchDatabaseDialogComponent,
-    SearchEvidenceDialogComponent,
-    PreviewAnnotonDialogComponent
-    //  NodeComponent,
-    // NodesContainerComponent
-  ]
+  /*  entryComponents: [
+     AddEvidenceDialogComponent,
+     AnnotonErrorsDialogComponent,
+     CamErrorsDialogComponent,
+     BeforeSaveDialogComponent,
+     CreateFromExistingDialogComponent,
+     LinkToExistingDialogComponent,
+     SelectEvidenceDialogComponent,
+     SearchDatabaseDialogComponent,
+     SearchEvidenceDialogComponent,
+     PreviewAnnotonDialogComponent
+     //  NodeComponent,
+     // NodesContainerComponent
+   ] */
 })
 
 export class NoctuaFormModule {
