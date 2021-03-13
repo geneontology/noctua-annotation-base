@@ -64,13 +64,6 @@ export class EvidenceTableComponent implements OnInit, OnDestroy {
     console.log(this.options)
   }
 
-  selectEntity(annoton: Annoton, entity: AnnotonNode) {
-    this.camService.onCamChanged.next(this.cam);
-
-    this.noctuaAnnotonEntityService.initializeForm(annoton, entity);
-    // this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.annotonEntityForm);
-  }
-
   ngOnDestroy(): void {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();

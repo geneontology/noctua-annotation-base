@@ -56,7 +56,7 @@ import { EvidenceTableComponent } from './cam/cam-table/annoton-table/evidence-t
 
 const routes = [
   {
-    path: '',
+    path: 'f',
     component: NoctuaFormComponent
   }
 ];

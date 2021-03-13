@@ -104,8 +104,6 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     this.dataSource.filter = this.gpNode?.id;
   }
 
-
-
   toggleExpand(annoton: Annoton) {
     annoton.expanded = !annoton.expanded;
   }
@@ -246,14 +244,6 @@ export class AnnotonTableComponent implements OnInit, OnDestroy {
     };
 
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
-  }
-
-  selectEntity(entity: AnnotonNode) {
-    this.camService.onCamChanged.next(this.cam);
-
-    this.noctuaAnnotonEntityService.initializeForm(this.annoton, entity);
-    //  this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.annotonEntityForm);
-
   }
 
   updateCurrentMenuEvent(event) {

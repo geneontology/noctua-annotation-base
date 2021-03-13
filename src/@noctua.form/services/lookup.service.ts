@@ -296,45 +296,6 @@ export class NoctuaLookupService {
       }));
   }
 
-  // Closures
-  addLocalClosure(term, closure, isaClosure) {
-    const self = this;
-    const data = {
-      term: term,
-      closure: closure,
-      isaClosure: isaClosure
-    };
-
-    if (!self.localClosureExist(term, closure)) {
-      self.localClosures.push(data);
-    }
-  }
-
-  localClosureExist(term, closure) {
-    const self = this;
-    const data = new AnnotonNodeClosure(term, closure);
-
-    return (find(self.localClosures, data));
-  }
-
-  getLocalClosurex(term: string, categories: any[]) {
-    const self = this;
-    const closure = self.categoryToClosure(categories);
-    const data = self.localClosureExist(term, closure);
-
-    if (data) {
-      return data.isaClosure;
-    } else {
-      // we don't know locally
-      return undefined;
-    }
-  }
-
-  getLocalClosures(term: string) {
-    const self = this;
-
-    return filter(self.localClosures, { term: term, isaClosure: true });
-  }
 
   getTermURL(id: string) {
     const self = this;

@@ -1,9 +1,9 @@
+
 export {
     AnnotonNode,
     AnnotonNodeType,
     AnnotonNodeDisplay,
 } from './annoton-node';
-export { AnnotonNodeClosure } from './annoton-node-closure';
 export {
     Annoton,
     AnnotonType,
@@ -26,5 +26,7 @@ export { Predicate } from './predicate';
 export { Triple } from './triple';
 export { Rule } from './rules/rule';
 export { ConnectorRule } from './rules/connector-rule';
+export { PendingChange } from './pending-change';
+
 
 export * from './parser';

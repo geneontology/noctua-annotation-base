@@ -379,19 +379,6 @@ export class NoctuaGraphService {
     return result;
   }
 
-  graphPreParse(graph) {
-    const self = this;
-    const promises = [];
-
-    each(graph.get_nodes(), function (node) {
-      const termNodeInfo = self.getNodeInfo(node);
-      each(EntityDefinition.EntityCategories, (category) => {
-        promises.push(self.isaClosurePreParse(termNodeInfo.id, category));
-      });
-    });
-
-    return forkJoin(promises);
-  }
 
   graphPostParse(cam: Cam) {
     const self = this;
@@ -406,18 +393,6 @@ export class NoctuaGraphService {
     });
 
     return forkJoin(promises);
-  }
-
-  isaClosurePreParse(a: string, b: any[]) {
-    const self = this;
-    const closure = self.noctuaLookupService.categoryToClosure(b);
-
-    return self.noctuaLookupService.isaClosure(a, closure)
-      .pipe(
-        map((response) => {
-          self.noctuaLookupService.addLocalClosure(a, closure, response);
-        })
-      );
   }
 
   isaClosurePostParse(a: string, b: any[], node: AnnotonNode) {
@@ -909,13 +884,13 @@ export class NoctuaGraphService {
   bulkEditIndividual(reqs, camId: string, node: AnnotonNode) {
     if (node.hasValue() && node.pendingEntityChanges) {
       reqs.remove_type_from_individual(
-        class_expression.cls(node.term.id),
-        node.uuid,
+        class_expression.cls(node.pendingEntityChanges.oldValue.id),
+        node.pendingEntityChanges.uuid,
         camId,
       );
 
       reqs.add_type_to_individual(
-        class_expression.cls(node.pendingEntityChanges.id),
+        class_expression.cls(node.pendingEntityChanges.newValue.id),
         node.pendingEntityChanges.uuid,
         camId,
       );

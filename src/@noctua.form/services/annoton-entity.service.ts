@@ -44,7 +44,7 @@ export class NoctuaAnnotonEntityService {
   initializeForm(annoton: Annoton, entity: AnnotonNode) {
     this.currentAnnoton = cloneDeep(annoton);
     this.annoton = annoton;
-    this.entity = entity;
+    this.entity = cloneDeep(entity);
     this.entityForm = this.createAnnotonEntityForm(this.entity);
     this.entityFormGroup.next(this._fb.group(this.entityForm));
     this._onAnnotonFormChanges();
@@ -101,33 +101,8 @@ export class NoctuaAnnotonEntityService {
     const oldEntity = cloneDeep(self.entity);
     self.annotonEntityFormToAnnoton();
     self.entity.addPendingChanges(oldEntity);
-    return self.camService.bulkEdit(cam);
+    return self.camService.bulkEditAnnotonNode(cam, self.entity);
 
-  }
-
-  saveAnnotonInternal() {
-    const self = this;
-
-    self.annotonEntityFormToAnnoton();
-    const saveData = self.annoton.createEdit(self.currentAnnoton);
-
-    return self.noctuaGraphService.editAnnoton(self.cam,
-      saveData.srcNodes,
-      saveData.destNodes,
-      saveData.srcTriples,
-      saveData.destTriples,
-      saveData.removeIds,
-      saveData.removeTriples);
-  }
-
-  searchModels() {
-    const self = this;
-
-    self.annotonEntityFormToAnnoton();
-    const saveData = self.annoton.createEdit(self.currentAnnoton);
-  }
-
-  clearForm() {
   }
 }
 

@@ -4,7 +4,7 @@ import { Annoton } from './annoton';
 import { Entity } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
-import { CamStats, Predicate } from '.';
+import { CamStats, PendingChange, Predicate } from '.';
 import { each, find, some } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import * as EntityDefinition from './../../data/config/entity-definition';
@@ -98,7 +98,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
   private _id: string;
 
   //For Save 
-  pendingEntityChanges: Entity;
+  pendingEntityChanges: PendingChange;
 
   constructor(annotonNode?: Partial<AnnotonNodeDisplay>) {
     if (annotonNode) {
@@ -249,11 +249,7 @@ export class AnnotonNode implements AnnotonNodeDisplay {
     const self = this;
 
     if (self.term.id !== oldNode.term.id) {
-      self.pendingEntityChanges = new Entity(self.term.id, self.term.label);
-      self.pendingEntityChanges.uuid = self.uuid;
-
-      //  self.term.termHistory.unshift(new Entity(oldNode.term.id, oldNode.term.label));
-      // self.term.modified = true;
+      self.pendingEntityChanges = new PendingChange(self.uuid, oldNode.term, self.term);
     }
 
     each(self.predicate.evidence, (evidence: Evidence, key) => {

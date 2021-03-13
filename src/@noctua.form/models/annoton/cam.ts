@@ -12,6 +12,7 @@ import { ConnectorAnnoton, ConnectorType } from './connector-annoton';
 import { each, find, filter } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
+import { PendingChange } from './pending-change';
 
 export class CamQueryMatch {
   modelId?: string;
@@ -323,11 +324,8 @@ export class Cam {
             });
           } else {
             if (node.term.uuid === entity.uuid) {
-              node.pendingEntityChanges = new Entity(replaceWith, replaceWith);
-              node.pendingEntityChanges.uuid = node.term.uuid;
-
-              node.term.termHistory.unshift(new Entity(replaceWith, replaceWith));
-              node.term.modified = true;
+              const newValue = new Entity(replaceWith, replaceWith);
+              node.pendingEntityChanges = new PendingChange(node.uuid, node.term, newValue);
             }
           }
         });
