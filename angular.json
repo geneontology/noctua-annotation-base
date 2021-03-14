@@ -30,9 +30,18 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/jsplumb/dist/js/jsplumb.min.js"
+              "node_modules/jsplumb/dist/js/jsplumb.min.js",
+              "node_modules/jointjs/css/layout.css",
+              "node_modules/jointjs/css/themes/material.css",
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jqueryui/jquery-ui.min.js",
+              "node_modules/lodash/lodash.js",
+              "node_modules/backbone/backbone.js",
+              "node_modules/dagre/dist/dagre.min.js",
+              "node_modules/graphlib/dist/graphlib.min.js"
+            ]
           },
           "configurations": {
             "production": {
