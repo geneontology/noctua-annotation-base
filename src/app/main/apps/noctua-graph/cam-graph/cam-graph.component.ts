@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, ViewChildren, QueryList, Input } from '@angular/core';
 import * as _ from 'lodash';
 import * as joint from 'jointjs';
 import { ContextMenuComponent } from 'ngx-contextmenu';
@@ -22,8 +22,11 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('stencils') stencilContainers: QueryList<any>;
   @ViewChild(ContextMenuComponent, { static: true }) public basicMenu: ContextMenuComponent;
 
+  @Input('cam')
+  public cam: Cam;
+
   camId: string;
-  cam: Cam;
+
 
   private _unsubscribeAll: Subject<any>;
   stencils = [];
@@ -32,18 +35,12 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     public noctuaDataService: NoctuaDataService,
     // public noctuaCamEditorService: NoctuaCamEditorService,
     private _camService: CamService,
-    private _route: ActivatedRoute,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaCamGraphService: CamGraphService,
     private noctuaCamShapesService: NoctuaShapesService) {
 
     this._unsubscribeAll = new Subject();
-    this._route.params
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(params => {
-        this.camId = params['camId'] || null;
-        this.loadCam(this.camId);
-      });
+
     this.stencils = noctuaStencil.camStencil
 
     console.log(this.stencils)

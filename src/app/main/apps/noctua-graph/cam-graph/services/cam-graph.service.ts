@@ -86,7 +86,8 @@ export class CamGraphService {
     this.selectedElement = element;
     // annoton.type = element.get('type');
     this.annotonFormService.initializeForm(annoton);
-    this.noctuaCommonMenuService.openRightDrawer(RightPanel.annotonForm);
+    this.noctuaCommonMenuService.selectRightPanel(RightPanel.annotonForm);
+    this.noctuaCommonMenuService.openRightDrawer();
   }
 
   save() {

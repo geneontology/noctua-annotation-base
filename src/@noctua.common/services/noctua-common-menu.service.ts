@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
 import { NoctuaGraphService, NoctuaUserService } from 'noctua-form-base';
+import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
+import { LeftPanel, MiddlePanel, RightPanel } from './../models/menu-panels';
 
 
 
@@ -13,6 +15,7 @@ export class NoctuaCommonMenuService {
   selectedLeftPanel;
   selectedMiddlePanel;
   selectedRightPanel;
+  resultsViewScrollbar: NoctuaPerfectScrollbarDirective;
 
   private _leftDrawer: MatDrawer;
   private _rightDrawer: MatDrawer;
@@ -56,15 +59,15 @@ export class NoctuaCommonMenuService {
   }
 
 
-  selectLeftPanel(panel) {
+  selectLeftPanel(panel: LeftPanel) {
     this.selectedLeftPanel = panel;
   }
 
-  selectMiddlePanel(panel) {
+  selectMiddlePanel(panel: MiddlePanel) {
     this.selectedMiddlePanel = panel;
   }
 
-  selectRightPanel(panel) {
+  selectRightPanel(panel: RightPanel) {
     this.selectedRightPanel = panel;
   }
 
@@ -80,17 +83,11 @@ export class NoctuaCommonMenuService {
     this._rightDrawer = rightDrawer;
   }
 
-  public openMiddlePanel(panel) {
-    this.selectMiddlePanel(panel);
-  }
-
-  public openLeftDrawer(panel) {
-    this.selectLeftPanel(panel);
+  public openLeftDrawer() {
     return this._leftDrawer.open();
   }
 
-  public openRightDrawer(panel) {
-    this.selectRightPanel(panel);
+  public openRightDrawer() {
     return this._rightDrawer.open();
   }
 
@@ -98,6 +95,26 @@ export class NoctuaCommonMenuService {
     return this._rightDrawer.close();
   }
 
+  public toggleLeftDrawer(panel: LeftPanel) {
+    if (this.selectedLeftPanel === panel) {
+      this._leftDrawer.toggle();
+    } else {
+      this.selectLeftPanel(panel);
+      return this.openLeftDrawer();
+    }
+  }
 
+  scrollTo(q: string) {
+
+    setTimeout(() => {
+      if (this.resultsViewScrollbar) {
+        this.resultsViewScrollbar.update();
+
+        setTimeout(() => {
+          this.resultsViewScrollbar.scrollToElement(q, -140, 1000);
+        });
+      }
+    });
+  }
 
 }
