@@ -6,12 +6,12 @@
           TOOLBOX
         </span>
       </div>
-      <div class="noc-drawer-body w-100-p" scardPerfectScrollbar>
+      <div class="noc-drawer-body w-100-p" noctuaPerfectScrollbar>
         <div #stencils *ngFor="let stencil of stencils">
           <div class="noc-heading">
-            {{stencil.card?.title}}
+            {{stencil.title}}
           </div>
-          <div [attr.id]="stencil.card?.id" class=""></div>
+          <div [attr.id]="stencil.id" class=""></div>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
       <button mat-icon-button (click)="zoomIn()" color="" class="noc-rounded-button noc-half-button noc-l">
         <fa-icon class="" [icon]="['fas', 'search-plus']"></fa-icon>
       </button>
-      <button mat-icon-button (click)="scardCamGraphService.resetZoom()" color=""
+      <button mat-icon-button (click)="noctuaCamGraphService.resetZoom()" color=""
         class="noc-rounded-button noc-half-button noc-l">
         <mat-icon>youtube_searched_for</mat-icon>
       </button>

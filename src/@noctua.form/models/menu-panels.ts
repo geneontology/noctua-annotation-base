@@ -9,5 +9,6 @@ export enum MiddlePanel {
 };
 
 export enum RightPanel {
-
+    annotonForm = 'annotonForm',
+    camForm = 'camForm'
 }

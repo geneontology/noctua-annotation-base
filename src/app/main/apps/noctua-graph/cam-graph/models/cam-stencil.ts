@@ -1,5 +1,8 @@
-import { Triple, Card, CardType, GroupedCard } from "@scard.card";
-import { StencilItem, CardLink, CardCell } from '@scard.card/services/shapes.service';
+
+import { Annoton, Cam } from '@noctua.form';
+import { StencilItem, StencilItemNode } from '@noctua.graph/data/cam-stencil';
+import { StencilNode } from '@noctua.graph/models/shapes';
+import { NodeCell } from '@noctua.graph/services/shapes.service';
 import * as joint from 'jointjs';
 import { cloneDeep, each } from "lodash";
 import { CamCanvas } from "./cam-canvas";
@@ -11,9 +14,9 @@ export class CamStencil {
     stencilEl
     selectedStencilElement;
 
-    onAddElement: (element: joint.shapes.scard.CardCell) => CardCell;
+    onAddElement: (element: joint.shapes.noctua.NodeCell) => NodeCell;
 
-    constructor(camCanvas: CamCanvas, stencils: GroupedCard[]) {
+    constructor(camCanvas: CamCanvas, stencils: StencilItem[]) {
         const self = this;
 
         self.camCanvas = camCanvas;
@@ -24,19 +27,19 @@ export class CamStencil {
 
     }
 
-    private _initializeStencils(stencils: GroupedCard[]) {
+    private _initializeStencils(stencils: StencilItem[]) {
         const self = this;
 
         self.stencils = [];
-        each(stencils, (stencil: GroupedCard) => {
+        each(stencils, (stencil: StencilItem) => {
             const stencilGraph = new joint.dia.Graph();
             const stencilPaper = self.generateStencilPaper(stencil, stencilGraph);
 
-            self.addStencilGraph(stencilGraph, stencil.cards);
-            stencilPaper.on('cell:pointerdown', self.onMouseDown(stencil.card.id, self.camCanvas.canvasPaper));
+            self.addStencilGraph(stencilGraph, stencil.nodes);
+            stencilPaper.on('cell:pointerdown', self.onMouseDown(stencil.id, self.camCanvas.canvasPaper));
 
             self.stencils.push({
-                id: stencil.card.id,
+                id: stencil.id,
                 paper: stencilPaper,
                 graph: stencilGraph
             });
@@ -44,17 +47,17 @@ export class CamStencil {
     }
 
 
-    addStencilGraph(graph: joint.dia.Graph, cards: Card[]) {
+    addStencilGraph(graph: joint.dia.Graph, stencilNodes: StencilItemNode[]) {
         const self = this;
         const nodes = [];
 
-        each(cards, (card: Card) => {
-            const el = new StencilItem()
-                // .size(120, 80)
-                // .setColor(card.backgroundColor)
-                .setIcon(card.iconUrl);
-            el.attr('label/text', card.title);
-            el.set({ card: cloneDeep(card) });
+        each(stencilNodes, (stencilNode: StencilItemNode) => {
+            const el = new StencilNode()
+            // .size(120, 80)
+            // .setColor(cam.backgroundColor)
+            // .setIcon(cam.iconUrl);
+            el.attr('label/text', stencilNode.label);
+            el.set({ node: cloneDeep(stencilNode) });
 
             nodes.push(el);
         });
@@ -63,10 +66,10 @@ export class CamStencil {
         self._layout(graph);
     }
 
-    private generateStencilPaper(stencil: GroupedCard, stencilGraph: joint.dia.Graph): joint.dia.Paper {
+    private generateStencilPaper(stencil: StencilItem, stencilGraph: joint.dia.Graph): joint.dia.Paper {
         const stencilPaper = new joint.dia.Paper({
-            el: document.getElementById(stencil.card.id),
-            height: stencil.cards.length * 52,
+            el: document.getElementById(stencil.id),
+            height: stencil.nodes.length * 52,
             width: '100%',
             model: stencilGraph,
             interactive: false

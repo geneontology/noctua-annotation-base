@@ -17,6 +17,8 @@ export class Predicate {
     ontologyClass: 'eco'
   };
 
+  visible = true;
+
   constructor(edge: Entity, evidence?: Evidence[]) {
     this.edge = edge;
     this.evidence = evidence ? evidence : [];

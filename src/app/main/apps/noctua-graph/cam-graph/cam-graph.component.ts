@@ -1,18 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, OnDestroy, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
 import * as _ from 'lodash';
 import * as joint from 'jointjs';
-import { Card, CardDisplayOptions, ScardCardService, ScardDataService } from '@scard.card';
 import { ContextMenuComponent } from 'ngx-contextmenu';
-import { each, find } from 'lodash';
-import { ScardShapesService, CardLink } from '@scard.card/services/shapes.service';
 import { CamGraphService } from './services/cam-graph.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { generate } from 'geopattern';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ScardCommonMenuService } from '@scard.common/services/menu.service';
-import { Cam, ScardCamFormService, ScardCamEditorService } from '@scard.cam';
-import { NodeType } from 'noc-graph-ts';
+import { ActivatedRoute, } from '@angular/router';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
+import { Cam, CamService } from '@noctua.form';
+import { NoctuaShapesService } from '@noctua.graph/services/shapes.service';
+import { noctuaStencil } from '@noctua.graph/data/cam-stencil';
 
 @Component({
   selector: 'noc-cam-graph',
@@ -31,15 +29,13 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   stencils = [];
 
   constructor(
-    private cardService: ScardCardService,
-    public scardDataService: ScardDataService,
-    // public scardCamEditorService: ScardCamEditorService,
-    private _scardCamEditorService: ScardCamEditorService,
+    public noctuaDataService: NoctuaDataService,
+    // public noctuaCamEditorService: NoctuaCamEditorService,
+    private _camService: CamService,
     private _route: ActivatedRoute,
-    public scardCommonMenuService: ScardCommonMenuService,
-    private _scardCamFormService: ScardCamFormService,
-    public scardCamGraphService: CamGraphService,
-    private scardCardShapesService: ScardShapesService) {
+    public noctuaCommonMenuService: NoctuaCommonMenuService,
+    public noctuaCamGraphService: CamGraphService,
+    private noctuaCamShapesService: NoctuaShapesService) {
 
     this._unsubscribeAll = new Subject();
     this._route.params
@@ -48,7 +44,7 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
         this.camId = params['camId'] || null;
         this.loadCam(this.camId);
       });
-    this.stencils = this.scardDataService.groupCards(NodeType.node);
+    this.stencils = noctuaStencil.camStencil
 
     console.log(this.stencils)
   }
@@ -56,25 +52,25 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     const self = this;
 
-    self.scardCamGraphService.initializeGraph();
-    this.scardCamGraphService.initializeStencils();
-    this._scardCamEditorService.onCamChanged
+    self.noctuaCamGraphService.initializeGraph();
+    this.noctuaCamGraphService.initializeStencils();
+    this._camService.onCamChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cam: Cam) => {
         if (!cam) {
           return;
         }
         self.cam = cam;
-        // const pattern = generate(card.title);
-        // this.cam = card as Card;
+        // const pattern = generate(cam.title);
+        // this.cam = cam as Cam;
         // this.cam.backgroundStyle = pattern.toDataUrl(); 
-        self.scardCamGraphService.addToCanvas(self.cam);
+        self.noctuaCamGraphService.addToCanvas(self.cam);
 
       });
   }
 
   loadCam(camId: string): void {
-    this._scardCamEditorService.getCam(camId);
+    this._camService.getCam(camId);
   }
 
   ngOnInit() {
@@ -91,17 +87,17 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   save() {
-    this.scardCamGraphService.save();
+    this.noctuaCamGraphService.save();
   }
 
   zoomIn() {
     const delta = 0.1;
-    this.scardCamGraphService.zoom(delta);
+    this.noctuaCamGraphService.zoom(delta);
   }
 
   zoomOut() {
     const delta = -0.1;
-    this.scardCamGraphService.zoom(delta);
+    this.noctuaCamGraphService.zoom(delta);
   }
 
   onCtrlScroll($event) {
@@ -110,7 +106,7 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(delta)
 
     if ($event.ctrlKey) {
-      self.scardCamGraphService.zoom(delta, $event);
+      self.noctuaCamGraphService.zoom(delta, $event);
       $event.returnValue = false;
       // for Chrome and Firefox
       if ($event.preventDefault) {

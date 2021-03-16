@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as jQuery from 'jquery';
 import 'jqueryui';
 import * as _ from 'lodash';
@@ -8,7 +8,7 @@ import * as Backbone from 'backbone';
 import { each } from 'lodash';
 import { getColor } from '@noctua.form/data/noc-colors';
 
-export class StencilItem extends shapes.StencilItem {
+export class StencilNode extends shapes.StencilNode {
 
   setColor(colorKey: string): this {
     const self = this;
@@ -34,9 +34,9 @@ export class StencilItem extends shapes.StencilItem {
   }
 }
 
-export class CardCell extends shapes.CardCell {
+export class NodeCell extends shapes.NodeCell {
 
-  addCardPorts(): this {
+  addNodePorts(): this {
     const self = this;
 
     return this;
@@ -69,9 +69,9 @@ export class CardCell extends shapes.CardCell {
   }
 }
 
-export class CardLink extends shapes.CardLink {
+export class NodeLink extends shapes.NodeLink {
   static create() {
-    const link = new CardLink();
+    const link = new NodeLink();
     link.prop({
       z: -1,
       labels: [{
@@ -143,7 +143,7 @@ export class CardLink extends shapes.CardLink {
 @Injectable({
   providedIn: 'root'
 })
-export class ScardShapesService {
+export class NoctuaShapesService {
   constructor() {
     this.initialize();
   }
@@ -153,15 +153,15 @@ export class ScardShapesService {
     const self = this;
 
     (Object as any).assign(joint.shapes, {
-      scard: {
-        StencilItem: StencilItem,
-        CardCell: CardCell,
-        CardCellList: shapes.CardCellList,
-        CardLink: CardLink
+      noctua: {
+        StencilNode: StencilNode,
+        NodeCell: NodeCell,
+        NodeCellList: shapes.NodeCellList,
+        NodeLink: NodeLink
       }
     });
 
-    const CardCellBase = joint.dia.Element.define('scard.CardCellBase', {
+    const NodeCellBase = joint.dia.Element.define('noctua.NodeCellBase', {
       z: 3,
       attrs: {
         root: {

@@ -26,6 +26,24 @@ export enum AnnotonType {
   ccOnly = 'ccOnly'
 }
 
+export class AnnotonSize {
+  width: number = 150;
+  height: number = 100;
+
+  constructor() {
+
+  }
+}
+
+export class AnnotonPosition {
+  width: number = 0;
+  height: number = 0;
+
+  constructor() {
+
+  }
+}
+
 export class Annoton extends SaeGraph<AnnotonNode> {
   gp;
   label: string;
@@ -55,6 +73,11 @@ export class Annoton extends SaeGraph<AnnotonNode> {
 
 
   bpOnlyEdge: Entity;
+
+  //Graph
+  position: AnnotonPosition = new AnnotonPosition();
+  size: AnnotonSize = new AnnotonSize();
+
   private _presentation: any;
   private _grid: any[] = [];
   private _id: string;

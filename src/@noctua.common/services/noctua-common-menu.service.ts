@@ -1,7 +1,7 @@
 import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
 import { NoctuaGraphService, NoctuaUserService } from 'noctua-form-base';
 
 
@@ -10,6 +10,12 @@ import { NoctuaGraphService, NoctuaUserService } from 'noctua-form-base';
   providedIn: 'root'
 })
 export class NoctuaCommonMenuService {
+  selectedLeftPanel;
+  selectedMiddlePanel;
+  selectedRightPanel;
+
+  private _leftDrawer: MatDrawer;
+  private _rightDrawer: MatDrawer;
   private _leftSidenav: MatSidenav;
 
   constructor(
@@ -48,6 +54,50 @@ export class NoctuaCommonMenuService {
   public openLeftSidenav() {
     return this._leftSidenav.open();
   }
+
+
+  selectLeftPanel(panel) {
+    this.selectedLeftPanel = panel;
+  }
+
+  selectMiddlePanel(panel) {
+    this.selectedMiddlePanel = panel;
+  }
+
+  selectRightPanel(panel) {
+    this.selectedRightPanel = panel;
+  }
+
+  public setLeftDrawer(leftDrawer: MatDrawer) {
+    this._leftDrawer = leftDrawer;
+  }
+
+  public closeLeftDrawer() {
+    return this._leftDrawer.close();
+  }
+
+  public setRightDrawer(rightDrawer: MatDrawer) {
+    this._rightDrawer = rightDrawer;
+  }
+
+  public openMiddlePanel(panel) {
+    this.selectMiddlePanel(panel);
+  }
+
+  public openLeftDrawer(panel) {
+    this.selectLeftPanel(panel);
+    return this._leftDrawer.open();
+  }
+
+  public openRightDrawer(panel) {
+    this.selectRightPanel(panel);
+    return this._rightDrawer.open();
+  }
+
+  public closeRightDrawer() {
+    return this._rightDrawer.close();
+  }
+
 
 
 }

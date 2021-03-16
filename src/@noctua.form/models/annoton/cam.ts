@@ -14,6 +14,8 @@ import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
 
+
+
 export class CamQueryMatch {
   modelId?: string;
   terms?: Entity[] = [];
@@ -52,7 +54,7 @@ export class Cam {
   expanded = false;
   model: any;
   connectorAnnotons: ConnectorAnnoton[] = [];
-  triples: Triple<AnnotonNode>[] = [];
+  triples: Triple<Annoton>[] = [];
   sort;
   error = false;
   date;
@@ -506,14 +508,6 @@ export class Cam {
         });
       }
     });
-  }
-
-  generateTripleGrid() {
-    const grid = [...this.triples.map((triple) => {
-      return triple.grid;
-    })];
-
-    return grid;
   }
 
   generateGridRow(annoton: Annoton, node: AnnotonNode) {

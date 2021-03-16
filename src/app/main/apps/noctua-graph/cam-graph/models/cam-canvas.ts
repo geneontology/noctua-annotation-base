@@ -1,7 +1,7 @@
+import { Annoton, Cam, Entity, noctuaFormConfig, Predicate, Triple } from '@noctua.form';
+import { NodeCellType } from '@noctua.graph/models/shapes';
+import { NodeCell, NodeLink, StencilNode } from '@noctua.graph/services/shapes.service';
 import * as joint from 'jointjs';
-import { CardLink, CardCell, StencilItem } from '@scard.card/services/shapes.service';
-import { Cam } from '@scard.cam';
-import { CardType, Card, Triple, scardData } from '@scard.card';
 import { each, cloneDeep } from 'lodash';
 
 export class CamCanvas {
@@ -9,7 +9,7 @@ export class CamCanvas {
     canvasPaper: joint.dia.Paper;
     canvasGraph: joint.dia.Graph;
     selectedStencilElement;
-    elementOnClick: (element: joint.shapes.scard.CardCell) => void;
+    elementOnClick: (element: joint.shapes.noctua.NodeCell) => void;
     cam: Cam;
 
     constructor() {
@@ -88,16 +88,16 @@ export class CamCanvas {
             },
             'element:mouseover': function (cellView) {
                 const element = cellView.model;
-                if (element.get('type') === CardType.ScardCell) {
-                    (element as CardCell).hover(true);
+                if (element.get('type') === NodeCellType.cell) {
+                    (element as NodeCell).hover(true);
                 }
             },
 
             'element:mouseleave': function (cellView) {
                 cellView.removeTools();
                 const element = cellView.model;
-                if (element.get('type') === CardType.ScardCell) {
-                    (element as CardCell).hover(false);
+                if (element.get('type') === NodeCellType.cell) {
+                    (element as NodeCell).hover(false);
                 }
             },
             /* 'element:pointerup': function (elementView, evt, x, y) {
@@ -145,8 +145,8 @@ export class CamCanvas {
             evt.stopPropagation(); // stop any further actions with the element view (e.g. dragging)
 
             const model = elementView.model;
-            const card = model.prop('card') as Card;
-            self.toggleCardVisibility(model, card);
+            const annoton = model.prop('annoton') as Annoton;
+            self.toggleAnnotonVisibility(model, annoton);
         });
 
         this.canvasGraph.on('change:source change:target', function (link) {
@@ -163,36 +163,35 @@ export class CamCanvas {
         });
     }
 
-    addElement(element: joint.shapes.scard.CardCell): CardCell {
+    addElement(element: joint.shapes.noctua.NodeCell): NodeCell {
         const self = this;
 
-        const card: Card = element.get('card');
-        const el = new CardCell()
+        const annoton: Annoton = element.get('annoton');
+        const el = new NodeCell()
             .position(0, 0)
             .size(120, 100)
-            .addColor(card.backgroundColor);
 
-        el.attr({ nodeType: { text: card.category } });
-        el.attr({ scardTitle: { text: card.title } });
+        // el.attr({ nodeType: { text: annoton.category } });
+        el.attr({ noctuaTitle: { text: annoton.title } });
 
-        el.set({ card: new Card(card) });
+        // el.set({ annoton: new Annoton(annoton) });
 
         self.canvasGraph.addCell(el);
 
         return el;
     }
 
-    addLink(): CardLink {
+    addLink(): NodeLink {
         const self = this;
-        const link = CardLink.create();
-        const predicate: Card = new Card(scardData.defaultPredicate);
+        const link = NodeLink.create();
+        const predicate: Predicate = new Predicate(Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOf));
 
         link.set({
-            card: new Card(predicate),
-            id: predicate.id
+            annoton: predicate,
+            id: predicate.uuid
         });
 
-        link.setText(predicate.title);
+        link.setText(predicate.edge.label);
 
         // Add remove button to the link.
         const tools = new joint.dia.ToolsView({
@@ -203,32 +202,32 @@ export class CamCanvas {
         return link;
     }
 
-    createLinkFromElements(source: joint.shapes.scard.CardCell, target: joint.shapes.scard.CardCell) {
+    createLinkFromElements(source: joint.shapes.noctua.NodeCell, target: joint.shapes.noctua.NodeCell) {
         const self = this;
 
-        const subject = source.get('card') as Card;
-        const object = target.get('card') as Card;
+        const subject = source.get('annoton') as Annoton;
+        const object = target.get('annoton') as Annoton;
 
-        self.createLink(subject, new Card(scardData.defaultPredicate), object)
+        self.createLink(subject, new Predicate(Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOf)), object)
     }
 
-    createLink(subject: Card, predicate: Card, object: Card) {
+    createLink(subject: Annoton, predicate: Predicate, object: Annoton) {
         const self = this;
         const triple = new Triple(subject, predicate, object);
 
-        self.cam.addNode(predicate);
-        self.cam.addTriple(triple);
+        ///self.cam.addNode(predicate);
+        //self.cam.addTriple(triple);
         self.createLinkFromTriple(triple, true);
     }
 
-    createLinkFromTriple(triple: Triple<Card>, autoLayout?: boolean) {
+    createLinkFromTriple(triple: Triple<Annoton>, autoLayout?: boolean) {
         const self = this;
 
-        const link = CardLink.create();
-        link.setText(triple.predicate.title);
+        const link = NodeLink.create();
+        link.setText(triple.predicate.edge.label);
         link.set({
-            card: triple.predicate,
-            id: triple.predicate.id,
+            annoton: triple.predicate,
+            id: triple.predicate.edge.id,
             source: {
                 id: triple.subject.id,
                 port: 'right'
@@ -242,7 +241,7 @@ export class CamCanvas {
         link.addTo(self.canvasGraph);
         if (autoLayout) {
             self._layoutGraph(self.canvasGraph);
-            // self.addCanvasGraph(self.cam);
+            // self.addCanvasGraph(self.annoton);
         }
     }
 
@@ -273,17 +272,17 @@ export class CamCanvas {
         this.zoom(1);
     };
 
-    toggleCardVisibility(cell: joint.dia.Element, card: Card) {
+    toggleAnnotonVisibility(cell: joint.dia.Element, annoton: Annoton) {
         const self = this;
 
         console.log(cell.position())
 
-        //self.cam.subgraphVisibility(card, !card.expanded);
+        //self.annoton.subgraphVisibility(annoton, !annoton.expanded);
         const elements = self.canvasGraph.getSuccessors(cell).concat(cell);
         // find all the links between successors and the element
         const subgraph = self.canvasGraph.getSubgraph(elements);
 
-        if (card.expanded) {
+        if (annoton.expanded) {
             subgraph.forEach((element) => {
                 element.attr('./visibility', 'hidden');
             });
@@ -294,7 +293,7 @@ export class CamCanvas {
         }
 
         cell.attr('./visibility', 'visible');
-        card.expanded = !card.expanded;
+        annoton.expanded = !annoton.expanded;
 
         self._layoutGraph(self.canvasGraph);
 
@@ -310,16 +309,16 @@ export class CamCanvas {
         self.cam = cam;
         self.canvasGraph.resetCells(nodes);
 
-        each(cam.nodes, (card: Card) => {
-            if (card.visible) {
+        each(cam.annotons, (annoton: Annoton) => {
+            if (annoton.visible) {
 
-                const el = new CardCell()
-                    .addCardPorts()
-                    .addColor(card.backgroundColor)
-                    .setSuccessorCount(card.successorCount)
+                const el = new NodeCell()
+                //.addAnnotonPorts()
+                // .addColor(annoton.backgroundColor)
+                //.setSuccessorCount(annoton.successorCount)
 
-                el.attr({ nodeType: { text: card.id ? card.displayCategory : 'Skill' } });
-                el.attr({ scardTitle: { text: card.id ? card.title : 'New Card' } });
+                el.attr({ nodeType: { text: annoton.id ? annoton.annotonType : 'Activity Unity' } });
+                el.attr({ noctuaTitle: { text: annoton.id ? annoton.title : 'New Annoton' } });
                 el.attr({
                     expand: {
                         event: 'element:expand:pointerdown',
@@ -332,23 +331,23 @@ export class CamCanvas {
                     }
                 })
                 el.set({
-                    card: card,
-                    id: card.id,
-                    position: card.position,
-                    size: card.size,
+                    annoton: annoton,
+                    id: annoton.id,
+                    position: annoton.position,
+                    size: annoton.size,
                 });
 
                 nodes.push(el);
             }
         });
 
-        each(cam.triples, (triple: Triple<Card>) => {
+        each(cam.triples, (triple: Triple<Annoton>) => {
             if (triple.predicate.visible) {
-                const link = CardLink.create();
-                link.setText(triple.predicate.title);
+                const link = NodeLink.create();
+                link.setText(triple.predicate.edge.label);
                 link.set({
-                    card: triple.predicate,
-                    id: triple.predicate.id,
+                    annoton: triple.predicate,
+                    id: triple.predicate.edge.id,
                     source: {
                         id: triple.subject.id,
                         port: 'right'
@@ -371,36 +370,23 @@ export class CamCanvas {
         self.canvasPaper.render();
     }
 
-    addStencilGraph(graph: joint.dia.Graph, cards: Card[]) {
+    addStencilGraph(graph: joint.dia.Graph, annotons: Annoton[]) {
         const self = this;
         const nodes = [];
 
-        each(cards, (card: Card) => {
-            const el = new StencilItem()
-                // .size(120, 80)
-                // .setColor(card.backgroundColor)
-                .setIcon(card.iconUrl);
-            el.attr('label/text', card.title);
-            el.set({ card: cloneDeep(card) });
+        each(annotons, (annoton: Annoton) => {
+            const el = new StencilNode()
+            // .size(120, 80)
+            // .setColor(annoton.backgroundColor)
+            //.setIcon(annoton.iconUrl);
+            el.attr('label/text', annoton.title);
+            el.set({ annoton: cloneDeep(annoton) });
 
             nodes.push(el);
         });
 
         graph.resetCells(nodes);
         self._layout(graph);
-    }
-
-
-    private generateStencilPaper(stencil: Triple<Card>, stencilGraph: joint.dia.Graph): joint.dia.Paper {
-        const stencilPaper = new joint.dia.Paper({
-            el: document.getElementById(stencil.id),
-            height: stencil.triples.length * 52,
-            width: '100%',
-            model: stencilGraph,
-            interactive: false
-        });
-
-        return stencilPaper;
     }
 
     private _layout(graph: joint.dia.Graph) {

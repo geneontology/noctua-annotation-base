@@ -52,7 +52,6 @@ export class TripleTableComponent implements OnInit, OnDestroy {
   }
 
   loadCam() {
-    this.grid = this.cam.generateTripleGrid();
   }
 
   selectTriple(triple) {

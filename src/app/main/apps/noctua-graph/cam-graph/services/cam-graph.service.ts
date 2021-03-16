@@ -2,17 +2,15 @@ import { Injectable } from '@angular/core';
 import 'jqueryui';
 import * as joint from 'jointjs';
 import { each, cloneDeep } from 'lodash';
-import { ScardDataService, Card, ScardCardService, CardType } from '@scard.card';
-import { Triple } from '@scard.card/models/card/triple';
-import { ScardShapesService, CardLink, CardCell, StencilItem } from '@scard.card/services/shapes.service';
-import { ScardCardFormService } from '@scard.card/services/forms/card-form.service';
-import { ScardCommonMenuService } from '@scard.common/services/menu.service';
-import { Cam } from '@scard.cam';
-import { ScardCamService } from '@scard.cam/services/cam.service';
 import { CamCanvas } from '../models/cam-canvas';
 import { CamStencil } from '../models/cam-stencil';
-import { RightPanel } from '@scard.common/models/menu-panels';
-import { NodeType } from 'noc-graph-ts';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
+import { Annoton, Cam, CamService, NoctuaAnnotonFormService, RightPanel } from '@noctua.form';
+import { NodeLink, NodeCell, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
+import { NodeType } from 'scard-graph-ts';
+import { NodeCellType } from '@noctua.graph/models/shapes';
+import { noctuaStencil } from '@noctua.graph/data/cam-stencil';
 
 @Injectable({
   providedIn: 'root'
@@ -24,42 +22,36 @@ export class CamGraphService {
     paper: joint.dia.Paper;
     graph: joint.dia.Graph;
   }[] = [];
-  selectedElement: joint.shapes.scard.CardCell | joint.shapes.scard.CardLink;
-  selectedStencilElement: joint.shapes.scard.CardCell;
+  selectedElement: joint.shapes.noctua.NodeCell | joint.shapes.noctua.NodeLink;
+  selectedStencilElement: joint.shapes.noctua.NodeCell;
   camCanvas: CamCanvas;
   camStencil: CamStencil;
 
   constructor(
-    private _scardCardService: ScardCardService,
-    private _scardCamService: ScardCamService,
-    private scardDataService: ScardDataService,
-    private scardCardFormService: ScardCardFormService,
-    public scardCommonMenuService: ScardCommonMenuService,
-    private scardShapesService: ScardShapesService) {
+    private _camService: CamService,
+    private noctuaDataService: NoctuaDataService,
+    private annotonFormService: NoctuaAnnotonFormService,
+    public noctuaCommonMenuService: NoctuaCommonMenuService,
+    private noctuaShapesService: NoctuaShapesService) {
 
     const self = this;
 
-    this._scardCardService.onCardSaved
-      .subscribe((card: Card) => {
-        if (!card || !self.selectedElement) {
+    this._camService.onCamChanged
+      .subscribe((cam: Cam) => {
+        if (!cam || !self.selectedElement) {
           return;
-        }
-
-        if (card.operation === 'remove') {
-          self.selectedElement.remove();
         }
 
         const type = self.selectedElement.get('type');
 
-        if (type === CardType.ScardLink) {
-          (self.selectedElement as CardLink).setText(card.title);
+        if (type === NodeCellType.link) {
+          (self.selectedElement as NodeLink).setText(cam.title);
         } else {
-          self.selectedElement.attr(' nodeType/text', card.category);
-          self.selectedElement.attr('scardTitle/text', card.title);
-          (self.selectedElement as CardCell).addColor(card.backgroundColor);
+          self.selectedElement.attr('noctuaTitle/text', cam.title);
+          // (self.selectedElement as NodeCell).addColor(cam.backgroundColor);
         }
-        self.selectedElement.set({ card: card });
-        self.selectedElement.set({ id: card.id });
+        self.selectedElement.set({ cam: cam });
+        self.selectedElement.set({ id: cam.id });
       });
   }
 
@@ -73,7 +65,7 @@ export class CamGraphService {
   initializeStencils() {
     const self = this;
 
-    self.camStencil = new CamStencil(self.camCanvas, self.scardDataService.groupCards(NodeType.node));
+    self.camStencil = new CamStencil(self.camCanvas, noctuaStencil.camStencil);
   }
 
   addToCanvas(cam: Cam) {
@@ -89,24 +81,24 @@ export class CamGraphService {
     this.camCanvas.resetZoom();
   }
 
-  openForm(element: joint.shapes.scard.CardCell) {
-    const card = element.prop('card') as Card
+  openForm(element: joint.shapes.noctua.NodeCell) {
+    const annoton = element.prop('annoton') as Annoton
     this.selectedElement = element;
-    card.type = element.get('type');
-    this.scardCardFormService.initializeForm(card);
-    this.scardCommonMenuService.openRightDrawer(RightPanel.cardForm);
+    // annoton.type = element.get('type');
+    this.annotonFormService.initializeForm(annoton);
+    this.noctuaCommonMenuService.openRightDrawer(RightPanel.annotonForm);
   }
 
   save() {
     const self = this;
     const cells: joint.dia.Cell[] = this.camCanvas.canvasGraph.getCells();
-    const cards = [];
+    const cams = [];
     const triples = [];
 
     each(cells, (cell: joint.dia.Cell) => {
       const type = cell.get('type');
 
-      if (type === CardType.ScardLink) {
+      if (type === NodeCellType.link) {
         const subject = cell.get('source');
         const object = cell.get('target');
 
@@ -122,7 +114,7 @@ export class CamGraphService {
           }
         });
       } else {
-        cards.push({
+        cams.push({
           uuid: cell.get('id'),
           id: cell.get('id'),
           position: cell.get('position'),
@@ -131,13 +123,10 @@ export class CamGraphService {
       }
     });
 
-    const card = {
-      cards,
+    const cam = {
+      cams,
       triples
     };
-
-    this._scardCamService.updateCam(self.cam.id, card).subscribe((newCard) => {
-    });
 
   }
 }

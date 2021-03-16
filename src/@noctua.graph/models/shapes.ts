@@ -7,13 +7,18 @@ import * as Backbone from 'backbone';
 
 declare module 'jointjs' {
   namespace shapes {
-    namespace scard {
-      class StencilItem extends joint.dia.Link { }
-      class CardCell extends joint.dia.Element { }
-      class CardCellList extends joint.dia.Element { }
-      class CardLink extends joint.dia.Link { }
+    namespace noctua {
+      class StencilNode extends joint.dia.Link { }
+      class NodeCell extends joint.dia.Element { }
+      class NodeCellList extends joint.dia.Element { }
+      class NodeLink extends joint.dia.Link { }
     }
   }
+}
+
+export const enum NodeCellType {
+  link = 'noctua.NodeLink',
+  cell = 'noctua.NodeCell',
 }
 
 const Link = joint.dia.Link;
@@ -33,7 +38,7 @@ const portAttrs = {
   }
 };
 
-export const StencilItem = joint.dia.Element.define('scard.StencilItem', {
+export const StencilNode = joint.dia.Element.define('noctua.StencilNode', {
   size: { width: 180, height: 40 },
   attrs: {
     body: {
@@ -97,7 +102,7 @@ export const StencilItem = joint.dia.Element.define('scard.StencilItem', {
 
 });
 
-export const CardCell = joint.dia.Element.define('scard.CardCell', {
+export const NodeCell = joint.dia.Element.define('noctua.NodeCell', {
   attrs: {
     root: {
       magnet: false,
@@ -133,7 +138,7 @@ export const CardCell = joint.dia.Element.define('scard.CardCell', {
       fontSize: 12,
       style: 'text-transform: uppercase'
     },
-    scardTitle: {
+    noctuaTitle: {
       x: 0,
       refX: '50%',
       refY: '35px',
@@ -260,7 +265,7 @@ export const CardCell = joint.dia.Element.define('scard.CardCell', {
     selector: 'nodeType'
   }, {
     tagName: 'text',
-    selector: 'scardTitle'
+    selector: 'noctuaTitle'
   }, {
     tagName: 'rect',
     selector: 'expand'
@@ -282,7 +287,7 @@ export const CardCell = joint.dia.Element.define('scard.CardCell', {
   }
 });
 
-export const CardCellList = joint.dia.Element.define('scard.CardCellList', {
+export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
   attrs: {
     'rect': { width: 200 },
 
@@ -368,7 +373,7 @@ export const CardCellList = joint.dia.Element.define('scard.CardCellList', {
 });
 
 
-export const CardLink = joint.shapes.devs.Link.define('scard.CardLink', {
+export const NodeLink = joint.shapes.devs.Link.define('noctua.NodeLink', {
   attrs: {
     line: {
       connection: true,
