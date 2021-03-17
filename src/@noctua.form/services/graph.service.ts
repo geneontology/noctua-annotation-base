@@ -119,72 +119,96 @@ export class NoctuaGraphService {
     cam.groupManager = this.registerManager();
     cam.replaceManager = this.registerManager(false);
 
-    const rebuild = (response) => {
-      const noctua_graph = model.graph;
 
-      // cam.loading.status = true;
-      // cam.loading.message = 'Loading Model Entities Metadata...';
-
-      cam.graph = new noctua_graph();
-      cam.id = response.data().id;
-      cam.modified = response.data()['modified-p'];
-      cam.graph.load_data_basic(response.data());
-      cam.isReasoned = response['is-reasoned'];
-
-      if (cam.isReasoned) {
-
-      }
-
-      const titleAnnotations = cam.graph.get_annotations_by_key('title');
-      const stateAnnotations = cam.graph.get_annotations_by_key('state');
-      const dateAnnotations = cam.graph.get_annotations_by_key('date');
-      const groupAnnotations = cam.graph.get_annotations_by_key('providedBy');
-      const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
-
-      cam.contributors = self.noctuaUserService.getContributorsFromAnnotations(contributorAnnotations);
-      cam.groups = self.noctuaUserService.getGroupsFromAnnotations(groupAnnotations);
-
-      if (dateAnnotations.length > 0) {
-        cam.date = dateAnnotations[0].value();
-      }
-
-      if (titleAnnotations.length > 0) {
-        cam.title = titleAnnotations[0].value();
-      }
-
-      if (stateAnnotations.length > 0) {
-        cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
-      }
-
-      self.loadCam(cam);
-      self.loadViolations(cam, response.data()['validation-results'])
-      cam.loading.status = false;
-      cam.loading.message = '';
-    };
 
     const update = (response) => {
       const noctua_graph = model.graph;
 
       console.log(response)
-      // cam.loading.status = false;
-      // cam.loading.message = '';
+      cam.modified = response.data()['modified-p'];
+      cam.pendingGraph = new noctua_graph();
+      cam.pendingGraph.load_data_basic(response.data());
+
+      self.updateCam(cam);
+      cam.onGraphChanged.next(cam.annotons);
+      cam.loading.status = false;
+      cam.loading.message = '';
     };
 
     cam.manager.register('rebuild', function (resp) {
-      rebuild(resp);
-    }, 10);
-
-    cam.replaceManager.register('rebuild', function (resp) {
-      update(resp);
+      self.rebuild(cam, resp);
     }, 10);
 
     cam.manager.get_model(modelId);
+  }
+
+  rebuild(cam: Cam, response) {
+    const self = this;
+    const noctua_graph = model.graph;
+
+    // cam.loading.status = true;
+    // cam.loading.message = 'Loading Model Entities Metadata...';
+
+    if (cam.graph) {
+      const inGraph = new noctua_graph();
+
+      inGraph.load_data_basic(response.data());
+      cam.graph.merge_special(inGraph);
+    } else {
+      cam.graph = new noctua_graph();
+
+      cam.graph.load_data_basic(response.data());
+    }
+
+    cam.id = response.data().id;
+    cam.modified = response.data()['modified-p'];
+    cam.isReasoned = response['is-reasoned'];
+
+    if (cam.isReasoned) {
+
+    }
+
+    const titleAnnotations = cam.graph.get_annotations_by_key('title');
+    const stateAnnotations = cam.graph.get_annotations_by_key('state');
+    const dateAnnotations = cam.graph.get_annotations_by_key('date');
+    const groupAnnotations = cam.graph.get_annotations_by_key('providedBy');
+    const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
+
+    cam.contributors = self.noctuaUserService.getContributorsFromAnnotations(contributorAnnotations);
+    cam.groups = self.noctuaUserService.getGroupsFromAnnotations(groupAnnotations);
+
+    if (dateAnnotations.length > 0) {
+      cam.date = dateAnnotations[0].value();
+    }
+
+    if (titleAnnotations.length > 0) {
+      cam.title = titleAnnotations[0].value();
+    }
+
+    if (stateAnnotations.length > 0) {
+      cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
+    }
+
+    self.loadCam(cam);
+    self.loadViolations(cam, response.data()['validation-results'])
+    cam.loading.status = false;
+    cam.loading.message = '';
   }
 
   loadCam(cam: Cam) {
     const self = this;
 
     cam.annotons = self.graphToAnnotons(cam.graph);
+    cam.applyFilter();
+    cam.onGraphChanged.next(cam.annotons);
+    cam.connectorAnnotons = self.getConnectorAnnotons(cam);
+    cam.setPreview();
+  }
+
+  updateCam(cam: Cam) {
+    const self = this;
+
+    self.updateAnnotons(cam, cam.pendingGraph);
     cam.applyFilter();
     cam.onGraphChanged.next(cam.annotons);
     cam.connectorAnnotons = self.getConnectorAnnotons(cam);
@@ -422,6 +446,21 @@ export class NoctuaGraphService {
     }
 
     return self.noctuaFormConfigService.createAnnotonBaseModel(annotonType);
+  }
+
+  updateAnnotons(cam: Cam, camGraph) {
+    const self = this;
+    each(camGraph.all_nodes(), (bbopNode) => {
+      const annotonNode: AnnotonNode = cam.findNodeById(bbopNode.id(), cam.annotons);
+
+      if (annotonNode) {
+        const updatedAnnotonNode = self.nodeToAnnotonNode(camGraph, bbopNode.id());
+        annotonNode.term = updatedAnnotonNode.term;
+        annotonNode.classExpression = updatedAnnotonNode.classExpression;
+        annotonNode.setIsComplement(updatedAnnotonNode.isComplement);
+      }
+    });
+
   }
 
   graphToAnnotons(camGraph): Annoton[] {

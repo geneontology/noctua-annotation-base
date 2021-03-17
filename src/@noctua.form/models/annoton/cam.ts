@@ -75,6 +75,7 @@ export class Cam {
   //bbop graphs
   graph;
   storedGraph;
+  pendingGraph;
   onGraphChanged;
 
   // bbop managers 

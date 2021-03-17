@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription, Subject, EMPTY } from 'rxjs';
 import {
   NoctuaFormConfigService,
   NoctuaAnnotonFormService,
@@ -9,6 +9,7 @@ import {
   Entity,
   noctuaFormConfig,
   CamsService,
+  NoctuaGraphService,
 } from 'noctua-form-base';
 
 import { Cam } from 'noctua-form-base';
@@ -58,6 +59,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     public dialogRef: EditorDropdownOverlayRef,
     @Inject(editorDropdownData) public data: any,
     private noctuaFormDialogService: NoctuaFormDialogService,
+    private noctuaGraphService: NoctuaGraphService,
     private camsService: CamsService,
     private camService: CamService,
     private noctuaAnnotonEntityService: NoctuaAnnotonEntityService,
@@ -110,7 +112,10 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
           take(1),
           concatMap((result) => {
             console.log(result)
-            return self.camsService.getStoredModel(self.cam)
+            self.noctuaGraphService.rebuild(self.cam, result[0]);
+            self.cam.checkStored();
+            return EMPTY;
+            //return self.camsService.getStoredModel(self.cam)
           }),
           finalize(() => {
             self.zone.run(() => {

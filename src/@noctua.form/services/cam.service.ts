@@ -27,6 +27,7 @@ export class CamService {
   loading = false;
   cam: Cam;
   onCamChanged: BehaviorSubject<any>;
+  onCamUpdated: BehaviorSubject<any>;
   onCamTermsChanged: BehaviorSubject<any>;
 
 
@@ -44,6 +45,7 @@ export class CamService {
     private _noctuaGraphService: NoctuaGraphService,
     private curieService: CurieService) {
     this.onCamChanged = new BehaviorSubject(null);
+    this.onCamUpdated = new BehaviorSubject(null);
     this.onCamTermsChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
     this.camFormGroup = new BehaviorSubject(null);
