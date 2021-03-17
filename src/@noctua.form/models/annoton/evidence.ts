@@ -7,6 +7,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { CamStats } from "./cam";
 import { Contributor } from "../contributor";
 import { Group } from "../group";
+import { PendingChange } from "@noctua.form";
 
 export class Evidence {
 
@@ -24,9 +25,9 @@ export class Evidence {
   evidenceRequired = false;
   referenceRequired = false;
   ontologyClass = [];
-  pendingEvidenceChanges: Entity;
-  pendingReferenceChanges: Entity;
-  pendingWithChanges: Entity;
+  pendingEvidenceChanges: PendingChange;
+  pendingReferenceChanges: PendingChange;
+  pendingWithChanges: PendingChange;
 
   constructor() {
 
@@ -120,29 +121,23 @@ export class Evidence {
     const self = this;
 
     if (self.evidence.id !== oldEvidence.evidence.id) {
-      self.pendingEvidenceChanges = new Entity(self.evidence.id, self.evidence.label);
+      self.pendingEvidenceChanges = new PendingChange(self.uuid, oldEvidence.evidence, self.evidence);
       self.pendingEvidenceChanges.uuid = self.uuid;
-
-      //oldEvidence.evidence.termHistory.unshift(new Entity(oldEvidence.evidence.id, oldEvidence.evidence.label));
-      // oldEvidence.evidence.modified = true;
     }
 
     if (self.reference !== oldEvidence.reference) {
-      self.pendingReferenceChanges = new Entity(self.reference, self.reference);
-      self.pendingReferenceChanges.uuid = self.uuid;
+      const oldReference = new Entity(oldEvidence.reference, oldEvidence.reference);
+      const newReference = new Entity(self.reference, self.reference);
 
-      //self.referenceEntity.termHistory.unshift(new Entity(oldEvidence.reference, oldEvidence.reference));
-      // self.referenceEntity.modified = true;
+      self.pendingReferenceChanges = new PendingChange(self.uuid, oldReference, newReference);
     }
 
     if (self.with !== oldEvidence.with) {
-      self.pendingWithChanges = new Entity(self.with, self.with);
-      self.pendingWithChanges.uuid = self.uuid;
+      const oldWith = new Entity(oldEvidence.with, oldEvidence.with);
+      const newWith = new Entity(self.with, self.with);
 
-      //self.withEntity.termHistory.unshift(new Entity(oldEvidence.with, oldEvidence.with));
-      //self.withEntity.modified = true;
+      self.pendingWithChanges = new PendingChange(self.uuid, oldWith, newWith);
     }
-
   }
 
   enableSubmit(errors, node: AnnotonNode, position) {

@@ -939,13 +939,13 @@ export class NoctuaGraphService {
   bulkEditEvidence(reqs, camId: string, evidence: Evidence) {
     if (evidence.hasValue() && evidence.pendingEvidenceChanges) {
       reqs.remove_type_from_individual(
-        class_expression.cls(evidence.evidence.id),
+        class_expression.cls(evidence.pendingEvidenceChanges.oldValue.id),
         evidence.uuid,
         camId,
       );
 
       reqs.add_type_to_individual(
-        class_expression.cls(evidence.pendingEvidenceChanges.id),
+        class_expression.cls(evidence.pendingEvidenceChanges.newValue.id),
         evidence.pendingEvidenceChanges.uuid,
         camId,
       );
@@ -954,18 +954,18 @@ export class NoctuaGraphService {
     }
 
     if (evidence.hasValue() && evidence.pendingReferenceChanges) {
-      reqs.remove_annotation_from_individual('source', evidence.reference, null, evidence.pendingReferenceChanges.uuid);
+      reqs.remove_annotation_from_individual('source', evidence.pendingReferenceChanges.oldValue.id, null, evidence.pendingReferenceChanges.uuid);
       reqs.add_annotation_to_individual('source',
-        evidence.pendingReferenceChanges.id,
+        evidence.pendingReferenceChanges.newValue.id,
         null,
         evidence.pendingReferenceChanges.uuid)
       this.editUserEvidenceAnnotations(reqs, evidence.pendingReferenceChanges.uuid)
     }
 
     if (evidence.hasValue() && evidence.pendingWithChanges) {
-      reqs.remove_annotation_from_individual('with', evidence.with, null, evidence.pendingWithChanges.uuid);
+      reqs.remove_annotation_from_individual('with', evidence.pendingWithChanges.oldValue.id, null, evidence.pendingWithChanges.uuid);
       reqs.add_annotation_to_individual('with',
-        evidence.pendingWithChanges.id,
+        evidence.pendingWithChanges.newValue.id,
         null,
         evidence.pendingWithChanges.uuid)
       this.editUserEvidenceAnnotations(reqs, evidence.pendingWithChanges.uuid)
