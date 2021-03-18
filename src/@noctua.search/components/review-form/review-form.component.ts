@@ -3,7 +3,7 @@
 import { Component, OnDestroy, OnInit, Input, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
-import { Subject } from 'rxjs';
+import { EMPTY, Subject } from 'rxjs';
 
 
 import {
@@ -20,7 +20,8 @@ import {
   NoctuaLookupService,
   EntityDefinition,
   Entity,
-  Evidence
+  Evidence,
+  NoctuaGraphService
 } from 'noctua-form-base';
 
 import { takeUntil, distinctUntilChanged, debounceTime, take, concatMap, finalize } from 'rxjs/operators';
@@ -64,6 +65,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   constructor(
     private zone: NgZone,
     private camsService: CamsService,
+    private noctuaGraphService: NoctuaGraphService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaUserService: NoctuaUserService,
@@ -244,7 +246,12 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
           take(1),
           concatMap((result) => {
             console.log(result)
-            return self.camsService.bulkStoredModel(cams)
+            cams.forEach((cam: Cam) => {
+              // self.noctuaGraphService.rebuild(cam, result[0]);
+              //cam.checkStored();
+            })
+            return EMPTY;
+            //return self.camsService.bulkStoredModel(cams)
           }),
           finalize(() => {
             self.zone.run(() => {
@@ -265,7 +272,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     };
 
     this.confirmDialogService.openConfirmDialog('Confirm ReplaceAll?',
-      `Replace ${occurrences} occurrences across ${models} models`,
+      `Replace ${occurrences} occurrences across ${models} model(s)`,
       success);
   }
 

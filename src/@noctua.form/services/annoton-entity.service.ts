@@ -10,6 +10,7 @@ import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { AnnotonNode, Annoton } from '../models';
 import { NoctuaGraphService } from './graph.service';
 import { cloneDeep } from 'lodash';
+import { CamsService } from '@noctua.form';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,7 @@ export class NoctuaAnnotonEntityService {
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
+    private camsService: CamsService,
     private noctuaLookupService: NoctuaLookupService) {
 
     this.entityFormGroup = new BehaviorSubject(null);
@@ -101,7 +103,7 @@ export class NoctuaAnnotonEntityService {
     const oldEntity = cloneDeep(self.entity);
     self.annotonEntityFormToAnnoton();
     self.entity.addPendingChanges(oldEntity);
-    return self.camService.bulkEditAnnotonNode(cam, self.entity);
+    return self.camsService.bulkEditAnnotonNode(cam, self.entity);
 
   }
 }

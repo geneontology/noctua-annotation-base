@@ -1,6 +1,6 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
@@ -682,7 +682,7 @@ export class NoctuaGraphService {
   }
 
 
-  bulkEditAnnoton(cam: Cam) {
+  bulkEditAnnoton(cam: Cam): Observable<any> {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 

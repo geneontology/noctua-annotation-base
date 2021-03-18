@@ -117,14 +117,7 @@ export class CamService {
     return forkJoin(promises);
   }
 
-  bulkEditAnnotonNode(cam: Cam, node: AnnotonNode): Observable<any> {
-    const self = this;
-    const promises = [];
 
-    promises.push(self._noctuaGraphService.bulkEditAnnotonNode(cam, node));
-
-    return forkJoin(promises);
-  }
 
   deleteAnnoton(annoton: Annoton) {
     const self = this;

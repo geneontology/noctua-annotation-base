@@ -13,6 +13,7 @@ import { Entity } from './../models/annoton/entity';
 import { HttpClient } from '@angular/common/http';
 import { finalize, map } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
+import { AnnotonNode } from '@noctua.form';
 
 declare const require: any;
 
@@ -137,6 +138,23 @@ export class CamsService {
       );
   }
 
+  updateModel(cams: Cam[], responses) {
+    const self = this;
+
+    console.log("update called ", responses, cams);
+    if (responses && responses.length > 0) {
+      responses.forEach(response => {
+        const cam: Cam = find(this.cams, { id: response.data().id });
+        if (cam) {
+          self._noctuaGraphService.rebuild(cam, response);
+          cam.checkStored()
+        }
+      })
+    }
+
+
+  }
+
   populateStoredModel(cam: Cam, res) {
     const self = this;
     const noctua_graph = model.graph;
@@ -202,6 +220,18 @@ export class CamsService {
     return self.bulkEdit(cams);
   }
 
+
+  bulkEditAnnotonNode(cam: Cam, node: AnnotonNode): Observable<any> {
+    const self = this;
+    const promises = [];
+
+    promises.push(self._noctuaGraphService.bulkEditAnnotonNode(cam, node));
+
+    return forkJoin(promises).pipe(
+      map(res => self.updateModel([cam], res)),
+    );
+  }
+
   bulkEdit(cams: Cam[]): Observable<any> {
     const self = this;
     const promises = [];
@@ -210,7 +240,9 @@ export class CamsService {
       promises.push(self._noctuaGraphService.bulkEditAnnoton(cam));
     });
 
-    return forkJoin(promises);
+    return forkJoin(promises).pipe(
+      map(res => self.updateModel(cams, res)),
+    );;
   }
 
   storeModels(cams: Cam[]): Observable<any> {

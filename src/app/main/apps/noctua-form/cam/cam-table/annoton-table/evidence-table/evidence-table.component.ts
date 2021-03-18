@@ -61,7 +61,6 @@ export class EvidenceTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.options)
   }
 
   ngOnDestroy(): void {

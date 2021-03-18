@@ -285,7 +285,7 @@ export class NoctuaReviewSearchService {
     getCams(searchCriteria: SearchCriteria): Observable<any> {
         const self = this;
         this.searchCriteria.expand = false;
-        const query = searchCriteria.build();
+        const query = searchCriteria.build(false);
         const url = `${this.searchApi}/models?${query}`;
 
         self.loading = true;
