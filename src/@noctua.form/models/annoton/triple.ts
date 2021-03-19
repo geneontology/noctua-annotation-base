@@ -1,6 +1,7 @@
-import { Annoton } from '@noctua.form';
+
 import { CardTriple } from 'scard-graph-ts';
 import { v4 as uuid } from 'uuid';
+import { Annoton } from './annoton';
 
 import { AnnotonNode } from './annoton-node';
 import { Predicate } from './predicate';

@@ -7,7 +7,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { CamStats } from "./cam";
 import { Contributor } from "../contributor";
 import { Group } from "../group";
-import { PendingChange } from "@noctua.form";
+import { PendingChange } from "./pending-change";
 
 export class Evidence {
 

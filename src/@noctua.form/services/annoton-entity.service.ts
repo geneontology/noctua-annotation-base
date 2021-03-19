@@ -10,7 +10,7 @@ import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
 import { AnnotonNode, Annoton } from '../models';
 import { NoctuaGraphService } from './graph.service';
 import { cloneDeep } from 'lodash';
-import { CamsService } from '@noctua.form';
+import { CamsService } from './cams.service';
 
 @Injectable({
   providedIn: 'root'

@@ -13,7 +13,7 @@ import { Entity } from './../models/annoton/entity';
 import { HttpClient } from '@angular/common/http';
 import { finalize, map } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
-import { AnnotonNode } from '@noctua.form';
+import { AnnotonNode } from './../models/annoton/annoton-node';
 
 declare const require: any;
 
