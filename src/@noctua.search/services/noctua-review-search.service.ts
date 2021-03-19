@@ -2,8 +2,8 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { map, finalize, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, from, Observable } from 'rxjs';
+import { map, finalize, switchMap, mergeMap } from 'rxjs/operators';
 
 import {
     Cam,
@@ -150,58 +150,28 @@ export class NoctuaReviewSearchService {
                     self.camService.loadCamMeta(inCam);
 
                     inCam.loading.status = true;
-                    promises.push(self.camsService.getStoredModel(inCam));
+                    promises.push(inCam);
                 })
-
-                return forkJoin(promises);
+                return from(promises);
+            }),
+            mergeMap((cam: Cam) => {
+                return self.camsService.getStoredModel(cam);
             }),
             finalize(() => {
                 //cam.loading.status = false;
                 self.camsService.sortCams();
                 self.camsService.updateDisplayNumber(cams);
                 self.camsService.onCamsChanged.next(cams);
-            })).subscribe(responses => {
-                responses.forEach((response: any) => {
+                self.camsService.resetLoading(cams);
+            })).subscribe({
+                next: (response) => {
                     const cam = find(cams, { id: response.activeModel.id });
                     self._noctuaGraphService.rebuildStoredGraph(cam, response.activeModel);
                     self.populateStoredModel(cam, response)
-                })
+                    cam.loading.status = false;
+                },
 
             })
-
-        /* 
-                each(cams, (metaCam) => {
-                    const cam = new Cam();
-                    const found = find(this.cams, { id: metaCam.id });
-        
-        
-        
-                    if (!found) {
-                        cam.id = metaCam.id;
-                        cam.expanded = true;
-                        cam.dateReviewAdded = metaCam.dateAdded;
-                        cam.title = metaCam.title;
-                        self.cams.push(cam);
-                        self.camService.loadCamMeta(cam);
-        
-                        cam.loading.status = true;
-                        this.getStoredModel(cam).pipe(
-                            finalize(() => {
-                                cam.loading.status = false;
-                            })
-                        ).subscribe((response) => {
-                            self._noctuaGraphService.rebuildStoredGraph(cam, response.activeModel);
-                            self.populateStoredModel(cam, response)
-                        });
-                    }
-                });
-        
-                self.sortCams();
-                self.updateDisplayNumber(self.cams);
-                self.onCamsChanged.next(self.cams); */
-
-
-
     }
 
 

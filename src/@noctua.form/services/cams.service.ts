@@ -116,7 +116,7 @@ export class CamsService {
     console.log("update called ", responses, cams);
     if (responses && responses.length > 0) {
       responses.forEach(response => {
-        const cam: Cam = find(this.cams, { id: response.data().id });
+        const cam: Cam = find(cams, { id: response.data().id });
         if (cam) {
           self._noctuaGraphService.rebuild(cam, response);
           cam.checkStored()
@@ -293,6 +293,12 @@ export class CamsService {
   resetMatch() {
     each(this.cams, (cam: Cam) => {
       cam.queryMatch = new CamQueryMatch();
+    });
+  }
+
+  resetLoading(cams: Cam[]) {
+    each(cams, (cam: Cam) => {
+      cam.loading = new CamLoadingIndicator();
     });
   }
 
