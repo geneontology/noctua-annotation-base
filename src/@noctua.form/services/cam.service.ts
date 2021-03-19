@@ -74,10 +74,10 @@ export class CamService {
     return camForm;
   }
 
+  //Gets a new cam
   getCam(modelId): Cam {
     const cam: Cam = new Cam();
 
-    //cam.id = uuid();
     cam.graph = null;
     cam.model = Object.assign({}, {
       id: modelId,
@@ -86,12 +86,14 @@ export class CamService {
     });
     cam.expanded = true;
     this.noctuaGraphService.getGraphInfo(cam, modelId);
+    cam.manager.get_model(cam.id);
     this.cam = cam;
     this.onCamChanged.next(cam);
 
     return cam;
   }
 
+  //loads an existing cam
   loadCam(cam: Cam, filter?: any) {
     cam.graph = null;
     cam.modifiedStats = new CamStats();
@@ -106,7 +108,25 @@ export class CamService {
     }
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
     this.cam = cam;
+
+    cam.manager.get_model(cam.id);
   }
+
+  loadCamMeta(cam: Cam, filter?: any) {
+    cam.graph = null;
+    cam.modifiedStats = new CamStats();
+    cam.model = Object.assign({}, {
+      id: cam.id,
+      title: '',
+      modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
+    });
+
+    if (filter) {
+      cam.filter = filter;
+    }
+    this.noctuaGraphService.getGraphInfo(cam, cam.id);
+  }
+
 
   bulkEdit(cam: Cam): Observable<any> {
     const self = this;

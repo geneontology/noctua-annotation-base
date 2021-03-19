@@ -45,6 +45,21 @@ export class CamStats {
   }
 }
 
+export class CamLoadingIndicator {
+  status = false;
+  message = ''
+
+  constructor(status = false, message = '') {
+    this.status = status;
+    this.message = message;
+  }
+
+  reset() {
+    this.status = false;
+    this.message = '';
+  }
+}
+
 export class Cam {
   title: string;
   state: any;
@@ -101,10 +116,7 @@ export class Cam {
     edges: []
   };
 
-  loading = {
-    status: false,
-    message: ''
-  };
+  loading = new CamLoadingIndicator(false)
 
   // Error Handling
   isReasoned = false;

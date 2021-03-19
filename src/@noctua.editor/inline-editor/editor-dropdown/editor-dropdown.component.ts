@@ -111,9 +111,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
         self.noctuaAnnotonEntityService.saveAnnotonReplace(self.cam).pipe(
           take(1),
           concatMap((result) => {
-            console.log(result)
-            // self.noctuaGraphService.rebuild(self.cam, result[0]);
-            //self.cam.checkStored();
             return EMPTY;
             //return self.camsService.getStoredModel(self.cam)
           }),

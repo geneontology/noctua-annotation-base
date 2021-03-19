@@ -11,7 +11,12 @@ export {
     AnnotonSize,
     AnnotonPosition
 } from './annoton';
-export { Cam, CamStats, CamQueryMatch } from './cam';
+export {
+    Cam,
+    CamLoadingIndicator,
+    CamStats,
+    CamQueryMatch
+} from './cam';
 export { Evidence } from './evidence';
 export { SimpleAnnoton } from './simple-annoton';
 export {

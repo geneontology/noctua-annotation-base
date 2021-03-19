@@ -200,9 +200,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.camsService.bulkStoredModel(self.camsService.cams).subscribe((cams) => {
-      this.camsService.reviewChanges();
-    });
+
   }
 
   /** The label for the checkbox on the passed row */
@@ -246,7 +244,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   toggleCamExpand(cam: Cam) {
     if (!cam.expanded) {
-      this.openDetails(cam);
+      this.openCam(cam);
     } else {
       cam.expanded = false;
     }
@@ -259,7 +257,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     this.noctuaReviewSearchService.addToArtBasket(cam.id, cam.title);
   }
 
-  openDetails(cam: Cam) {
+  openCam(cam: Cam) {
     this.camService.loadCam(cam);
     cam.expanded = true;
     this.camService.cam = cam;

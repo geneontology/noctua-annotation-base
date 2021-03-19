@@ -73,6 +73,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const self = this;
     this.cam.onGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((annotons: Annoton[]) => {

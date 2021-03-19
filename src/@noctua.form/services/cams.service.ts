@@ -6,7 +6,7 @@ import { NoctuaGraphService } from './../services/graph.service';
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
 import { Annoton } from './../models/annoton/annoton';
 
-import { Cam, CamQueryMatch, CamStats } from './../models/annoton/cam';
+import { Cam, CamLoadingIndicator, CamQueryMatch, CamStats } from './../models/annoton/cam';
 import { each, groupBy, find, remove } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/annoton/entity';
@@ -80,27 +80,7 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
-  addCamsToReview(cams: any[]) {
-    const self = this;
 
-    each(cams, (metaCam) => {
-      const cam = new Cam();
-      const found = find(this.cams, { id: metaCam.id });
-
-      if (!found) {
-        cam.id = metaCam.id;
-        cam.expanded = true;
-        cam.dateReviewAdded = metaCam.dateAdded;
-        cam.title = metaCam.title;
-        self.cams.push(cam);
-        self.camService.loadCam(cam);
-      }
-    });
-
-    self.sortCams();
-    self.updateDisplayNumber(self.cams);
-    self.onCamsChanged.next(self.cams);
-  }
 
   addCamToReview(camId: string, metaCam?: Cam) {
     const self = this;
@@ -125,17 +105,9 @@ export class CamsService {
   }
 
   getStoredModel(cam: Cam): Observable<any> {
-    const self = this;
     const url = `${this.searchApi}/stored?id=${cam.id}`;
 
-    return this.httpClient
-      .get(url)
-      .pipe(
-        map(res => self.populateStoredModel(cam, res)),
-        finalize(() => {
-          //cam.loading.status = false;
-        })
-      );
+    return this.httpClient.get(url)
   }
 
   updateModel(cams: Cam[], responses) {
@@ -155,15 +127,6 @@ export class CamsService {
 
   }
 
-  populateStoredModel(cam: Cam, res) {
-    const self = this;
-    const noctua_graph = model.graph;
-
-    cam.storedGraph = new noctua_graph();
-    cam.storedGraph.load_data_basic(res.storedModel);
-    cam.storedAnnotons = self._noctuaGraphService.graphToAnnotons(cam.storedGraph)
-    cam.checkStored()
-  }
 
   removeCamFromReview(cam: Cam) {
     remove(this.cams, { id: cam.id });
@@ -261,6 +224,7 @@ export class CamsService {
     const promises = [];
 
     each(cams, (cam: Cam) => {
+      cam.loading = new CamLoadingIndicator(true, 'Loading ...');
       promises.push(self.getStoredModel(cam));
     });
 
