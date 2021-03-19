@@ -181,7 +181,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   toggleSelection(cam: Cam) {
     this.selection.toggle(cam);
     if (this.selection.isSelected(cam)) {
-      this.openReview(cam);
+      this.addToReview(cam);
     } else {
       this.camsService.removeCamFromReview(cam);
       this.noctuaReviewSearchService.removeFromArtBasket(cam.id);
@@ -252,8 +252,8 @@ export class CamsTableComponent implements OnInit, OnDestroy {
 
   }
 
-  openReview(cam: Cam) {
-    this.camsService.addCamToReview(cam.id, cam);
+  addToReview(cam: Cam) {
+    this.noctuaReviewSearchService.addCamsToReview([cam], this.camsService.cams);
     this.noctuaReviewSearchService.addToArtBasket(cam.id, cam.title);
   }
 

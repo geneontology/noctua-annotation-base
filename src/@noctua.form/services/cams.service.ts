@@ -80,30 +80,6 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
-
-
-  addCamToReview(camId: string, metaCam?: Cam) {
-    const self = this;
-    const cam = new Cam();
-    const found = find(this.cams, { id: camId });
-
-    if (!found) {
-      cam.id = camId;
-      cam.expanded = true;
-      cam.dateReviewAdded = Date.now();
-
-      if (metaCam) {
-        cam.title = metaCam.title;
-      }
-      self.cams.push(cam);
-      self.camService.loadCam(cam);
-
-      self.sortCams();
-      self.updateDisplayNumber(self.cams);
-      self.onCamsChanged.next(self.cams);
-    }
-  }
-
   getStoredModel(cam: Cam): Observable<any> {
     const url = `${this.searchApi}/stored?id=${cam.id}`;
 
@@ -123,10 +99,7 @@ export class CamsService {
         }
       })
     }
-
-
   }
-
 
   removeCamFromReview(cam: Cam) {
     remove(this.cams, { id: cam.id });
@@ -296,9 +269,9 @@ export class CamsService {
     });
   }
 
-  resetLoading(cams: Cam[]) {
+  resetLoading(cams: Cam[], camLoadingIndicator = new CamLoadingIndicator) {
     each(cams, (cam: Cam) => {
-      cam.loading = new CamLoadingIndicator();
+      cam.loading = camLoadingIndicator;
     });
   }
 

@@ -21,7 +21,8 @@ import {
   EntityDefinition,
   Entity,
   Evidence,
-  NoctuaGraphService
+  NoctuaGraphService,
+  CamLoadingIndicator
 } from 'noctua-form-base';
 
 import { takeUntil, distinctUntilChanged, debounceTime, take, concatMap, finalize } from 'rxjs/operators';
@@ -200,21 +201,21 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
       take(1),
       concatMap((result) => {
         console.log(result)
-        return self.camsService.bulkStoredModel(cams)
+        cams.forEach((cam: Cam) => {
+          // self.noctuaGraphService.rebuild(cam, result[0]);
+          //cam.checkStored();
+        })
+        return EMPTY;
+        //return self.camsService.bulkStoredModel(cams)
       }),
       finalize(() => {
         self.zone.run(() => {
-          each(cams, (cam: Cam) => {
-            cam.loading.status = false;
-          });
-        })
-      }))
-      .subscribe(() => {
-        self.zone.run(() => {
+          self.camsService.resetLoading(self.camsService.cams)
           self.noctuaReviewSearchService.onReplaceChanged.next(true);
           self.camsService.reviewChanges();
         })
-        // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+      }))
+      .subscribe(() => {
 
       })
   }
@@ -242,30 +243,22 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
         const cams = self.camsService.getReplaceObject(this.noctuaReviewSearchService.matchedEntities,
           replaceWith, self.selectedCategory);
 
+        self.camsService.resetLoading(cams, new CamLoadingIndicator(true, 'Loading...'))
+
         this.camsService.replace(cams).pipe(
           take(1),
           concatMap((result) => {
-            console.log(result)
-            cams.forEach((cam: Cam) => {
-              // self.noctuaGraphService.rebuild(cam, result[0]);
-              //cam.checkStored();
-            })
             return EMPTY;
             //return self.camsService.bulkStoredModel(cams)
           }),
           finalize(() => {
             self.zone.run(() => {
-              each(cams, (cam: Cam) => {
-                cam.loading.status = false;
-              });
-            })
-          }))
-          .subscribe(() => {
-            self.zone.run(() => {
+              self.camsService.resetLoading(cams)
               self.noctuaReviewSearchService.onReplaceChanged.next(true);
               self.camsService.reviewChanges();
             })
-            // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
+          }))
+          .subscribe(() => {
 
           })
       }

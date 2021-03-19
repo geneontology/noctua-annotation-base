@@ -117,11 +117,13 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
           finalize(() => {
             self.zone.run(() => {
               self.cam.loading.status = false;
+              self.cam.reviewCamChanges()
+              //self.camsService.reviewChanges();
             })
           }))
           .subscribe(() => {
             self.zone.run(() => {
-              self.camsService.reviewChanges();
+
             })
             // self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully updated.', 'OK');
 

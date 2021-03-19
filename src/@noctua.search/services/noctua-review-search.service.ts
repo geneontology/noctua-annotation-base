@@ -131,6 +131,8 @@ export class NoctuaReviewSearchService {
     addCamsToReview(metaCams: any[], cams: Cam[]) {
         const self = this;
 
+        if (!metaCams || metaCams.length === 0) return;
+
         const ids = metaCams.map((cam: Cam) => {
             return cam.id;
         });
@@ -144,7 +146,7 @@ export class NoctuaReviewSearchService {
                     const metaCam = find(metaCams, { id: inCam.id });
 
                     inCam.expanded = true;
-                    inCam.dateReviewAdded = metaCam ? metaCam.dateAdded : null;
+                    inCam.dateReviewAdded = metaCam ? metaCam.dateAdded : Date.now();
                     inCam.title = metaCam.title;
                     cams.push(inCam);
                     self.camService.loadCamMeta(inCam);
@@ -162,13 +164,14 @@ export class NoctuaReviewSearchService {
                 self.camsService.sortCams();
                 self.camsService.updateDisplayNumber(cams);
                 self.camsService.onCamsChanged.next(cams);
-                self.camsService.resetLoading(cams);
+                //self.camsService.resetLoading(cams);
             })).subscribe({
                 next: (response) => {
                     const cam = find(cams, { id: response.activeModel.id });
                     self._noctuaGraphService.rebuildStoredGraph(cam, response.activeModel);
                     self.populateStoredModel(cam, response)
                     cam.loading.status = false;
+                    self.camsService.onCamsChanged.next(cams);
                 },
 
             })
@@ -183,7 +186,7 @@ export class NoctuaReviewSearchService {
         cam.storedGraph.load_data_basic(response.storedModel);
         cam.storedAnnotons = self._noctuaGraphService.graphToAnnotons(cam.storedGraph)
         cam.checkStored();
-        cam.reviewCamChanges(new CamStats());
+        cam.reviewCamChanges();
 
         return response;
     }

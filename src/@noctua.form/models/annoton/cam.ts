@@ -348,7 +348,7 @@ export class Cam {
     });
   }
 
-  reviewCamChanges(stat: CamStats): boolean {
+  reviewCamChanges(stat: CamStats = new CamStats()): boolean {
     const self = this;
     let modified = false;
 
