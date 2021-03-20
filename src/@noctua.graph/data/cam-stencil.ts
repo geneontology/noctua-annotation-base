@@ -1,4 +1,4 @@
-import { AnnotonType, noctuaFormConfig } from "@noctua.form";
+import { AnnotonType, noctuaFormConfig } from "noctua-form-base";
 import { cloneDeep } from "lodash";
 
 export interface StencilItemNode {

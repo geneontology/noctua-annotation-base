@@ -105,9 +105,6 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   }
 
   loadCam(modelId) {
-    const self = this;
-
-
     this.cam = this.camService.getCam(modelId);
   }
 

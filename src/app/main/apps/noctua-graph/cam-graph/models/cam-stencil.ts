@@ -1,5 +1,4 @@
 
-import { Annoton, Cam } from '@noctua.form';
 import { StencilItem, StencilItemNode } from '@noctua.graph/data/cam-stencil';
 import { StencilNode } from '@noctua.graph/models/shapes';
 import { NodeCell } from '@noctua.graph/services/shapes.service';

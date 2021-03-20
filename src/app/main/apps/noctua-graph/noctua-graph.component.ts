@@ -112,7 +112,6 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     this.noctuaCommonMenuService.setLeftDrawer(this.leftDrawer);
     this.noctuaCommonMenuService.setRightDrawer(this.rightDrawer);
 
-
     this.cam.onGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((annotons: Annoton[]) => {
@@ -122,7 +121,6 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cam.updateAnnotonDisplayNumber();
       });
   }
-
 
   ngAfterViewInit(): void {
     this.noctuaCommonMenuService.resultsViewScrollbar = this._noctuaPerfectScrollbarDirectives.find((directive) => {

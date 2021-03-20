@@ -1,4 +1,11 @@
-import { Annoton, Cam, Entity, noctuaFormConfig, Predicate, Triple } from '@noctua.form';
+import {
+    Annoton,
+    Cam,
+    Entity,
+    noctuaFormConfig,
+    Predicate,
+    Triple
+} from 'noctua-form-base';
 import { NodeCellType } from '@noctua.graph/models/shapes';
 import { NodeCell, NodeLink, StencilNode } from '@noctua.graph/services/shapes.service';
 import * as joint from 'jointjs';
