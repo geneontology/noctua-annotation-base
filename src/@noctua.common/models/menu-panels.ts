@@ -16,7 +16,7 @@ export enum MiddlePanel {
 };
 
 export enum RightPanel {
-    annotonForm = 'annotonForm',
+    activityForm = 'activityForm',
     camForm = 'camForm',
     camTable = 'camTable',
 }

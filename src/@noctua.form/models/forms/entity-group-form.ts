@@ -1,8 +1,8 @@
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { Annoton } from './../annoton/annoton';
-import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
+import { Activity } from './../activity/activity';
+import { ActivityFormMetadata } from './../forms/activity-form-metadata';
 import { EntityForm } from './entity-form';
-import { AnnotonNode } from '../annoton';
+import { ActivityNode } from '../activity';
 
 
 export class EntityGroupForm {
@@ -11,18 +11,18 @@ export class EntityGroupForm {
     entityForms: EntityForm[] = [];
     entityGroup = new FormArray([]);
 
-    _metadata: AnnotonFormMetadata;
+    _metadata: ActivityFormMetadata;
     private _fb = new FormBuilder();
 
     constructor(metadata) {
         this._metadata = metadata;
     }
 
-    createEntityForms(entities: AnnotonNode[]) {
+    createEntityForms(entities: ActivityNode[]) {
         const self = this;
 
         this.entityForms = [];
-        entities.forEach((entity: AnnotonNode) => {
+        entities.forEach((entity: ActivityNode) => {
             if (entity.visible) {
                 const entityForm = new EntityForm(self._metadata, entity);
                 if (!entity.skipEvidence) {
@@ -34,7 +34,7 @@ export class EntityGroupForm {
         });
     }
 
-    populateAnnotonNodes(annoton: Annoton) {
+    populateActivityNodes(activity: Activity) {
         const self = this;
 
         self.entityForms.forEach((entityForm: EntityForm) => {

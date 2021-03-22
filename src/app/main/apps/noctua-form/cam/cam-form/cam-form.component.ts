@@ -39,8 +39,8 @@ export class CamFormComponent implements OnInit, OnDestroy {
     public noctuaFormMenuService: NoctuaFormMenuService
   ) {
     this._unsubscribeAll = new Subject();
-    // this.annoton = self.noctuaCamFormService.annoton;
-    //  this.camFormPresentation = this.noctuaCamFormService.annotonPresentation;
+    // this.activity = self.noctuaCamFormService.activity;
+    //  this.camFormPresentation = this.noctuaCamFormService.activityPresentation;
   }
 
   ngOnInit(): void {
@@ -80,10 +80,10 @@ export class CamFormComponent implements OnInit, OnDestroy {
   }
 
   checkErrors() {
-    // this.noctuaAnnotonFormService.annoton.enableSubmit();
+    // this.noctuaActivityFormService.activity.enableSubmit();
 
-    // let errors = this.noctuaAnnotonFormService.annoton.submitErrors;
-    //  this.noctuaFormDialogService.openAnnotonErrorsDialog(errors)
+    // let errors = this.noctuaActivityFormService.activity.submitErrors;
+    //  this.noctuaFormDialogService.openActivityErrorsDialog(errors)
   }
 
   save() {

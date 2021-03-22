@@ -1,7 +1,7 @@
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { Entity, AnnotonNodeDisplay } from './../../models/annoton';
+import { Entity, ActivityNodeDisplay } from './../../models/activity';
 import * as EntityDefinition from './entity-definition';
-import { AnnotonNodeType } from './../../models/annoton/annoton-node';
+import { ActivityNodeType } from './../../models/activity/activity-node';
 import { each } from 'lodash';
 
 export enum CardinalityType {
@@ -13,7 +13,7 @@ export enum CardinalityType {
 export interface ShapeDescription {
     id: string;
     label: string;
-    node: AnnotonNodeDisplay;
+    node: ActivityNodeDisplay;
     predicate: Entity;
     cardinality: CardinalityType;
 }
@@ -23,9 +23,9 @@ const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
 
     each(edges, (edge: Entity) => {
         causalShapeDescriptions.push({
-            id: AnnotonNodeType.GoBiologicalProcess,
-            node: <AnnotonNodeDisplay>{
-                type: AnnotonNodeType.GoBiologicalProcess,
+            id: ActivityNodeType.GoBiologicalProcess,
+            node: <ActivityNodeDisplay>{
+                type: ActivityNodeType.GoBiologicalProcess,
                 category: [EntityDefinition.GoBiologicalProcess],
                 aspect: 'P',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -43,12 +43,12 @@ const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
 };
 
 export const canInsertEntity = {
-    [AnnotonNodeType.GoMolecularEntity]: [
+    [ActivityNodeType.GoMolecularEntity]: [
         <ShapeDescription>{
             label: 'Add Part Of (Cellular Component)',
-            id: AnnotonNodeType.GoCellularComponent,
-            node: <AnnotonNodeDisplay>{
-                type: AnnotonNodeType.GoCellularComponent,
+            id: ActivityNodeType.GoCellularComponent,
+            node: <ActivityNodeDisplay>{
+                type: ActivityNodeType.GoCellularComponent,
                 category: [EntityDefinition.GoCellularComponent],
                 label: 'MF part of Cellular Component',
                 aspect: 'C',
@@ -61,13 +61,13 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToOne
         },
     ],
-    [AnnotonNodeType.GoMolecularFunction]: [
+    [ActivityNodeType.GoMolecularFunction]: [
         <ShapeDescription>{
             label: 'Add Enabled by GP',
-            id: AnnotonNodeType.GoMolecularEntity,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoMolecularEntity,
+            node: <ActivityNodeDisplay>{
                 id: EntityDefinition.GoMolecularEntity.id,
-                type: AnnotonNodeType.GoMolecularEntity,
+                type: ActivityNodeType.GoMolecularEntity,
                 category: [EntityDefinition.GoMolecularEntity],
                 label: 'Gene Product',
                 skipEvidence: true,
@@ -82,9 +82,9 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Part Of (Biological Process)',
-            id: AnnotonNodeType.GoBiologicalProcess,
-            node: <AnnotonNodeDisplay>{
-                type: AnnotonNodeType.GoBiologicalProcess,
+            id: ActivityNodeType.GoBiologicalProcess,
+            node: <ActivityNodeDisplay>{
+                type: ActivityNodeType.GoBiologicalProcess,
                 category: [EntityDefinition.GoBiologicalProcess],
                 label: 'MF part of Biological Process',
                 aspect: 'P',
@@ -98,9 +98,9 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Occurs In (Cellular Component)',
-            id: AnnotonNodeType.GoCellularComponent,
-            node: <AnnotonNodeDisplay>{
-                type: AnnotonNodeType.GoCellularComponent,
+            id: ActivityNodeType.GoCellularComponent,
+            node: <ActivityNodeDisplay>{
+                type: ActivityNodeType.GoCellularComponent,
                 category: [EntityDefinition.GoCellularComponent],
                 label: 'MF occurs in Cellular Component',
                 aspect: 'C',
@@ -114,10 +114,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Occurs In (Cell Type)',
-            id: AnnotonNodeType.GoCellTypeEntity,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoCellTypeEntity,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoCellTypeEntity],
-                type: AnnotonNodeType.GoCellTypeEntity,
+                type: ActivityNodeType.GoCellTypeEntity,
                 label: 'Occurs In (Cell Type)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -130,10 +130,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Occurs In (Anatomy)',
-            id: AnnotonNodeType.GoAnatomicalEntity,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoAnatomicalEntity,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoAnatomicalEntity],
-                type: AnnotonNodeType.GoAnatomicalEntity,
+                type: ActivityNodeType.GoAnatomicalEntity,
                 label: 'Occurs In (Anatomy)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -145,10 +145,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Occurs In (Organism)',
-            id: AnnotonNodeType.GoOrganism,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoOrganism,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoOrganism],
-                type: AnnotonNodeType.GoOrganism,
+                type: ActivityNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -160,10 +160,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Has Input (Chemical/Protein Containing Complex)',
-            id: AnnotonNodeType.GoChemicalEntityHasInput,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoChemicalEntityHasInput,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoChemicalEntity, EntityDefinition.GoProteinContainingComplex],
-                type: AnnotonNodeType.GoChemicalEntityHasInput,
+                type: ActivityNodeType.GoChemicalEntityHasInput,
                 label: 'Has Input (Chemical/Protein Containing Complex)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
@@ -176,10 +176,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Has Output (Chemical/Protein Containing Complex)',
-            id: AnnotonNodeType.GoChemicalEntityHasOutput,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoChemicalEntityHasOutput,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoChemicalEntity, EntityDefinition.GoProteinContainingComplex],
-                type: AnnotonNodeType.GoChemicalEntityHasOutput,
+                type: ActivityNodeType.GoChemicalEntityHasOutput,
                 label: 'Has Output (Chemical/Protein Containing Complex)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
@@ -192,10 +192,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Happens During (Biological Phase)',
-            id: AnnotonNodeType.GoBiologicalPhase,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoBiologicalPhase,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoBiologicalPhase],
-                type: AnnotonNodeType.GoBiologicalPhase,
+                type: ActivityNodeType.GoBiologicalPhase,
                 label: 'Happens During (Biological Phase)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.mf,
@@ -217,13 +217,13 @@ export const canInsertEntity = {
             Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfOrWithinNegativeEffect),
         ])
     ],
-    [AnnotonNodeType.GoBiologicalProcess]: [
+    [ActivityNodeType.GoBiologicalProcess]: [
         <ShapeDescription>{
             label: 'Add Part Of (Biological Process)',
-            id: AnnotonNodeType.GoBiologicalProcess,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoBiologicalProcess,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoBiologicalProcess],
-                type: AnnotonNodeType.GoBiologicalProcess,
+                type: ActivityNodeType.GoBiologicalProcess,
                 label: 'Part Of (Biological Process)',
                 aspect: 'P',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -237,10 +237,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Occurs In (Cellular Component)',
-            id: AnnotonNodeType.GoCellularComponent,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoCellularComponent,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoCellularComponent],
-                type: AnnotonNodeType.GoCellularComponent,
+                type: ActivityNodeType.GoCellularComponent,
                 aspect: 'C',
                 label: 'Occurs In Cellular Component',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -253,14 +253,14 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Has Input (Chemical/Anatomical Entity/Protein Containing Complex)',
-            id: AnnotonNodeType.GoChemicalEntityHasInput,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoChemicalEntityHasInput,
+            node: <ActivityNodeDisplay>{
                 category: [
                     EntityDefinition.GoChemicalEntity,
                     EntityDefinition.GoAnatomicalEntity,
                     EntityDefinition.GoProteinContainingComplex
                 ],
-                type: AnnotonNodeType.GoChemicalEntityHasInput,
+                type: ActivityNodeType.GoChemicalEntityHasInput,
                 label: 'Has Input (Chemical/Anatomical Entity/Protein Containing Complex)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.bp,
@@ -273,14 +273,14 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Has Output (Chemical/Anatomical Entity/Protein Containing Complex)',
-            id: AnnotonNodeType.GoChemicalEntityHasInput,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoChemicalEntityHasInput,
+            node: <ActivityNodeDisplay>{
                 category: [
                     EntityDefinition.GoChemicalEntity,
                     EntityDefinition.GoAnatomicalEntity,
                     EntityDefinition.GoProteinContainingComplex
                 ],
-                type: AnnotonNodeType.GoChemicalEntityHasOutput,
+                type: ActivityNodeType.GoChemicalEntityHasOutput,
                 label: 'Has Output (Chemical/Anatomical Entity/Protein Containing Complex)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.bp,
@@ -292,13 +292,13 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToMany
         },
     ],
-    [AnnotonNodeType.GoCellularComponent]: [
+    [ActivityNodeType.GoCellularComponent]: [
         <ShapeDescription>{
             label: 'Add Part Of (Cellular Component)',
-            id: AnnotonNodeType.GoCellularComponent,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoCellularComponent,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoCellularComponent],
-                type: AnnotonNodeType.GoCellularComponent,
+                type: ActivityNodeType.GoCellularComponent,
                 aspect: 'C',
                 label: 'Part Of Cellular Component',
                 displaySection: noctuaFormConfig.displaySection.fd,
@@ -312,10 +312,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Part Of (Cell Type)',
-            id: AnnotonNodeType.GoCellTypeEntity,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoCellTypeEntity,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoCellTypeEntity],
-                type: AnnotonNodeType.GoCellTypeEntity,
+                type: ActivityNodeType.GoCellTypeEntity,
                 label: 'Part Of (Cell Type)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -328,10 +328,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Part Of (Anatomy)',
-            id: AnnotonNodeType.GoAnatomicalEntity,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoAnatomicalEntity,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoAnatomicalEntity],
-                type: AnnotonNodeType.GoAnatomicalEntity,
+                type: ActivityNodeType.GoAnatomicalEntity,
                 label: 'Part Of (Anatomy)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -344,10 +344,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Part Of (Organism)',
-            id: AnnotonNodeType.GoOrganism,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoOrganism,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoOrganism],
-                type: AnnotonNodeType.GoOrganism,
+                type: ActivityNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -359,13 +359,13 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToOne
         }
     ],
-    [AnnotonNodeType.GoCellTypeEntity]: [
+    [ActivityNodeType.GoCellTypeEntity]: [
         <ShapeDescription>{
             label: 'Add Part Of (Anatomy)',
-            id: AnnotonNodeType.GoAnatomicalEntity,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoAnatomicalEntity,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoAnatomicalEntity],
-                type: AnnotonNodeType.GoAnatomicalEntity,
+                type: ActivityNodeType.GoAnatomicalEntity,
                 label: 'Part Of (Anatomy)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -378,10 +378,10 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Part Of (Organism)',
-            id: AnnotonNodeType.GoOrganism,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoOrganism,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoOrganism],
-                type: AnnotonNodeType.GoOrganism,
+                type: ActivityNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
@@ -393,13 +393,13 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToOne
         }
     ],
-    [AnnotonNodeType.GoAnatomicalEntity]: [
+    [ActivityNodeType.GoAnatomicalEntity]: [
         <ShapeDescription>{
             label: 'Add Part Of (Organism)',
-            id: AnnotonNodeType.GoOrganism,
-            node: <AnnotonNodeDisplay>{
+            id: ActivityNodeType.GoOrganism,
+            node: <ActivityNodeDisplay>{
                 category: [EntityDefinition.GoOrganism],
-                type: AnnotonNodeType.GoOrganism,
+                type: ActivityNodeType.GoOrganism,
                 label: 'Part Of (Organism)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,

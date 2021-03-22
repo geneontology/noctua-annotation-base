@@ -4,16 +4,16 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
-import { Annoton } from './../models/annoton/annoton';
+import { Activity } from './../models/activity/activity';
 
-import { Cam, CamLoadingIndicator, CamQueryMatch, CamStats } from './../models/annoton/cam';
+import { Cam, CamLoadingIndicator, CamQueryMatch, CamStats } from './../models/activity/cam';
 import { each, groupBy, find, remove } from 'lodash';
 import { CamService } from './cam.service';
-import { Entity } from './../models/annoton/entity';
+import { Entity } from './../models/activity/entity';
 import { HttpClient } from '@angular/common/http';
 import { finalize, map } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
-import { AnnotonNode } from './../models/annoton/annoton-node';
+import { ActivityNode } from './../models/activity/activity-node';
 
 declare const require: any;
 
@@ -40,7 +40,7 @@ export class CamsService {
 
   currentMatch: Entity = new Entity(null, null);
 
-  public annoton: Annoton;
+  public activity: Activity;
   public camFormGroup$: Observable<FormGroup>;
 
   constructor(
@@ -71,10 +71,10 @@ export class CamsService {
   setup() {
   }
 
-  loadCams(filter?: any) {
+  loadCams() {
     const self = this;
     each(this.cams, (cam: Cam) => {
-      self.camService.loadCam(cam, filter);
+      // self.camService.loadCam(cam, filter);
     });
 
     self.onCamsChanged.next(this.cams);
@@ -107,27 +107,15 @@ export class CamsService {
     this.onCamsChanged.next(this.cams);
   }
 
-  findInCams(filter?: any) {
-    const self = this;
-
-    each(self.cams, (cam: Cam) => {
-      if (filter) {
-        cam.filter = filter;
-      }
-    });
-
-    self.onCamsChanged.next(this.cams);
-  }
-
   expandMatch(nodeId: string) {
     const self = this;
 
     each(self.cams, (cam: Cam) => {
       cam.expanded = true;
-      const annotons = cam.findAnnotonByNodeUuid(nodeId);
+      const activities = cam.findActivityByNodeUuid(nodeId);
 
-      each(annotons, (annoton: Annoton) => {
-        annoton.expanded = true;
+      each(activities, (activity: Activity) => {
+        activity.expanded = true;
       });
     });
   }
@@ -157,11 +145,11 @@ export class CamsService {
   }
 
 
-  bulkEditAnnotonNode(cam: Cam, node: AnnotonNode): Observable<any> {
+  bulkEditActivityNode(cam: Cam, node: ActivityNode): Observable<any> {
     const self = this;
     const promises = [];
 
-    promises.push(self._noctuaGraphService.bulkEditAnnotonNode(cam, node));
+    promises.push(self._noctuaGraphService.bulkEditActivityNode(cam, node));
 
     return forkJoin(promises).pipe(
       map(res => self.updateModel([cam], res)),
@@ -173,7 +161,7 @@ export class CamsService {
     const promises = [];
 
     each(cams, (cam: Cam) => {
-      promises.push(self._noctuaGraphService.bulkEditAnnoton(cam));
+      promises.push(self._noctuaGraphService.bulkEditActivity(cam));
     });
 
     return forkJoin(promises).pipe(
@@ -282,7 +270,7 @@ export class CamsService {
   updateDisplayNumber(cams: any[]) {
     each(cams, (cam: Cam, key) => {
       cam.displayNumber = (key + 1).toString();
-      cam.updateAnnotonDisplayNumber();
+      cam.updateActivityDisplayNumber();
     });
 
   }

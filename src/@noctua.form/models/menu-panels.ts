@@ -1,5 +1,5 @@
 export enum LeftPanel {
-    annotonForm = 'annotonForm',
+    activityForm = 'activityForm',
     camForm = 'camForm'
 };
 
@@ -9,6 +9,6 @@ export enum MiddlePanel {
 };
 
 export enum RightPanel {
-    annotonForm = 'annotonForm',
+    activityForm = 'activityForm',
     camForm = 'camForm'
 }

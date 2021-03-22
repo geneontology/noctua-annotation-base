@@ -1,6 +1,6 @@
-export { NoctuaAnnotonConnectorService } from './annoton-connector.service';
-export { NoctuaAnnotonEntityService } from './annoton-entity.service';
-export { NoctuaAnnotonFormService } from './annoton-form.service';
+export { NoctuaActivityConnectorService } from './activity-connector.service';
+export { NoctuaActivityEntityService } from './activity-entity.service';
+export { NoctuaActivityFormService } from './activity-form.service';
 export { CamService } from './cam.service';
 export { CamsService } from './cams.service';
 export { NoctuaGraphService } from './graph.service';

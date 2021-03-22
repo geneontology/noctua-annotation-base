@@ -8,7 +8,7 @@ import {
   NoctuaUserService,
   NoctuaFormConfigService,
   NoctuaFormMenuService,
-  NoctuaAnnotonFormService,
+  NoctuaActivityFormService,
   noctuaFormConfig,
   CamsService,
   CamService
@@ -71,7 +71,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaAnnotonFormService: NoctuaAnnotonFormService,
+    public noctuaActivityFormService: NoctuaActivityFormService,
     public noctuaFormMenuService: NoctuaFormMenuService) {
 
     this._unsubscribeAll = new Subject();

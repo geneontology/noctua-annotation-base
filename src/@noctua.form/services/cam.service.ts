@@ -8,16 +8,16 @@ import { NoctuaGraphService } from './../services/graph.service';
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './user.service';
-import { Annoton } from './../models/annoton/annoton';
+import { Activity } from './../models/activity/activity';
 import { CamForm } from './../models/forms/cam-form';
-import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
-import { Evidence, compareEvidence } from './../models/annoton/evidence';
+import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
+import { Evidence, compareEvidence } from './../models/activity/evidence';
 
 import { v4 as uuid } from 'uuid';
-import { Cam, CamStats } from './../models/annoton/cam';
+import { Cam, CamStats } from './../models/activity/cam';
 import { uniqWith, each } from 'lodash';
-import { AnnotonNodeType, AnnotonNode, Entity } from './../models/annoton';
-import { compareTerm } from './../models/annoton/annoton-node';
+import { ActivityNodeType, ActivityNode, Entity } from './../models/activity';
+import { compareTerm } from './../models/activity/activity-node';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class CamService {
   onCamTermsChanged: BehaviorSubject<any>;
 
 
-  public annoton: Annoton;
+  public activity: Activity;
   private camForm: CamForm;
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
@@ -66,7 +66,7 @@ export class CamService {
   createCamForm() {
     const self = this;
 
-    const formMetadata = new AnnotonFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
+    const formMetadata = new ActivityFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
     const camForm = new CamForm(formMetadata);
 
     camForm.createCamForm(this.cam, this.noctuaUserService.user);
@@ -132,58 +132,58 @@ export class CamService {
     const self = this;
     const promises = [];
 
-    promises.push(self._noctuaGraphService.bulkEditAnnoton(cam));
+    promises.push(self._noctuaGraphService.bulkEditActivity(cam));
 
     return forkJoin(promises);
   }
 
 
 
-  deleteAnnoton(annoton: Annoton) {
+  deleteActivity(activity: Activity) {
     const self = this;
-    const deleteData = annoton.createDelete();
+    const deleteData = activity.createDelete();
 
-    return self.noctuaGraphService.deleteAnnoton(self.cam, deleteData.uuids, deleteData.triples);
+    return self.noctuaGraphService.deleteActivity(self.cam, deleteData.uuids, deleteData.triples);
   }
 
-  updateTermList(formAnnoton: Annoton, entity: AnnotonNode) {
-    this.noctuaLookupService.termList = this.getUniqueTerms(formAnnoton);
+  updateTermList(formActivity: Activity, entity: ActivityNode) {
+    this.noctuaLookupService.termList = this.getUniqueTerms(formActivity);
     entity.termLookup.results = this.noctuaLookupService.termPreLookup(entity.type);
   }
 
-  updateEvidenceList(formAnnoton: Annoton, entity: AnnotonNode) {
-    this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formAnnoton);
+  updateEvidenceList(formActivity: Activity, entity: ActivityNode) {
+    this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formActivity);
     entity.predicate.evidenceLookup.results = this.noctuaLookupService.evidencePreLookup();
   }
 
-  updateReferenceList(formAnnoton: Annoton, entity: AnnotonNode) {
-    this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formAnnoton);
+  updateReferenceList(formActivity: Activity, entity: ActivityNode) {
+    this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formActivity);
     entity.predicate.referenceLookup.results = this.noctuaLookupService.referencePreLookup();
   }
 
-  updateWithList(formAnnoton: Annoton, entity: AnnotonNode) {
-    this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formAnnoton);
+  updateWithList(formActivity: Activity, entity: ActivityNode) {
+    this.noctuaLookupService.evidenceList = this.getUniqueEvidence(formActivity);
     entity.predicate.withLookup.results = this.noctuaLookupService.withPreLookup();
   }
 
-  getNodesByType(annotonType: AnnotonNodeType): any[] {
-    return this.cam.getNodesByType(annotonType);
+  getNodesByType(activityType: ActivityNodeType): any[] {
+    return this.cam.getNodesByType(activityType);
   }
 
-  getNodesByTypeFlat(annotonType: AnnotonNodeType): AnnotonNode[] {
-    return this.cam.getNodesByTypeFlat(annotonType);
+  getNodesByTypeFlat(activityType: ActivityNodeType): ActivityNode[] {
+    return this.cam.getNodesByTypeFlat(activityType);
   }
 
 
-  getUniqueTerms(formAnnoton?: Annoton): AnnotonNode[] {
-    const annotonNodes = this.cam.getTerms(formAnnoton);
-    const result = uniqWith(annotonNodes, compareTerm);
+  getUniqueTerms(formActivity?: Activity): ActivityNode[] {
+    const activityNodes = this.cam.getTerms(formActivity);
+    const result = uniqWith(activityNodes, compareTerm);
 
     return result;
   }
 
-  getUniqueEvidence(formAnnoton?: Annoton): Evidence[] {
-    const evidences = this.cam.getEvidences(formAnnoton);
+  getUniqueEvidence(formActivity?: Activity): Evidence[] {
+    const evidences = this.cam.getEvidences(formActivity);
     const result = uniqWith(evidences, compareEvidence);
 
     return result;

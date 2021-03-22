@@ -184,7 +184,7 @@ export class NoctuaReviewSearchService {
 
         cam.storedGraph = new noctua_graph();
         cam.storedGraph.load_data_basic(response.storedModel);
-        cam.storedAnnotons = self._noctuaGraphService.graphToAnnotons(cam.storedGraph)
+        cam.storedActivities = self._noctuaGraphService.graphToActivities(cam.storedGraph)
         cam.checkStored();
         cam.reviewCamChanges();
 
@@ -223,7 +223,7 @@ export class NoctuaReviewSearchService {
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
         this.camsService.currentMatch = this.currentMatchedEnity;
-        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
+        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.activityDisplayId);
 
         return this.currentMatchedEnity;
     }
@@ -241,7 +241,7 @@ export class NoctuaReviewSearchService {
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
         this.camsService.currentMatch = this.currentMatchedEnity;
-        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
+        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.activityDisplayId);
 
         return this.currentMatchedEnity;
     }
@@ -264,7 +264,7 @@ export class NoctuaReviewSearchService {
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
         this.camsService.currentMatch = this.currentMatchedEnity;
 
-        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.annotonDisplayId);
+        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.activityDisplayId);
 
         return this.currentMatchedEnity;
     }

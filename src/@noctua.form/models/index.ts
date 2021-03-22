@@ -6,6 +6,6 @@ export { CamRow } from './cam-row';
 export { Group, compareGroup } from './group';
 export { Organism, compareOrganism } from './organism';
 
-export * from './annoton';
+export * from './activity';
 export * from './forms';
 

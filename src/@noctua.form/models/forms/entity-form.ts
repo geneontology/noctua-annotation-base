@@ -1,24 +1,24 @@
 import { FormArray, FormBuilder, FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Evidence } from './../annoton/evidence';
-import { AnnotonFormMetadata } from './annoton-form-metadata';
+import { Evidence } from './../activity/evidence';
+import { ActivityFormMetadata } from './activity-form-metadata';
 import { EvidenceForm } from './evidence-form';
 import { termValidator } from './validators/term-validator';
-import { EntityLookup } from '../annoton/entity-lookup';
-import { Entity } from './../annoton/entity';
-import { AnnotonNode } from './../annoton/annoton-node';
+import { EntityLookup } from '../activity/entity-lookup';
+import { Entity } from './../activity/entity';
+import { ActivityNode } from './../activity/activity-node';
 
 export class EntityForm {
     id: string;
-    node: AnnotonNode;
+    node: ActivityNode;
     relationship = new FormControl();
     term = new FormControl();
     evidenceForms: EvidenceForm[] = [];
     evidenceFormArray = new FormArray([]);
-    _metadata: AnnotonFormMetadata;
+    _metadata: ActivityFormMetadata;
     private _fb = new FormBuilder();
 
-    constructor(metadata, entity: AnnotonNode) {
+    constructor(metadata, entity: ActivityNode) {
         this._metadata = metadata;
         this.id = entity.id;
         this.node = entity;
@@ -28,7 +28,7 @@ export class EntityForm {
         this._onValueChanges(entity.termLookup);
     }
 
-    createEvidenceForms(entity: AnnotonNode) {
+    createEvidenceForms(entity: ActivityNode) {
         const self = this;
 
         this.setTermValidator(entity);

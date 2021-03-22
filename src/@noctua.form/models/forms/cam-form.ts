@@ -1,14 +1,14 @@
 import { FormControl } from '@angular/forms';
-import { Cam } from './../annoton/cam';
+import { Cam } from './../activity/cam';
 import { Contributor } from './../contributor';
-import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
+import { ActivityFormMetadata } from './../forms/activity-form-metadata';
 
 export class CamForm {
   title = new FormControl();
   state = new FormControl();
   group = new FormControl();
 
-  _metadata: AnnotonFormMetadata;
+  _metadata: ActivityFormMetadata;
 
   constructor(metadata) {
     this._metadata = metadata;

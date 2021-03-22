@@ -1,12 +1,12 @@
 import {
-    AnnotonNode,
-    AnnotonNodeType,
-    AnnotonNodeDisplay,
+    ActivityNode,
+    ActivityNodeType,
+    ActivityNodeDisplay,
     GoCategory,
     categoryToClosure
-} from './../../models/annoton/annoton-node';
-import { EntityLookup } from './../..//models/annoton/entity-lookup';
-import { Predicate } from './../../models/annoton/predicate';
+} from './../../models/activity/activity-node';
+import { EntityLookup } from './../..//models/activity/entity-lookup';
+import { Predicate } from './../../models/activity/predicate';
 
 const baseRequestParams = {
     defType: 'edismax',
@@ -45,73 +45,73 @@ const baseRequestParams = {
 
 
 export const GoProteinContainingComplex = {
-    id: AnnotonNodeType.GoProteinContainingComplex,
+    id: ActivityNodeType.GoProteinContainingComplex,
     category: 'GO:0032991',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoCellularComponent = {
-    id: AnnotonNodeType.GoCellularComponent,
+    id: ActivityNodeType.GoCellularComponent,
     category: 'GO:0005575',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoBiologicalProcess = {
-    id: AnnotonNodeType.GoBiologicalProcess,
+    id: ActivityNodeType.GoBiologicalProcess,
     category: 'GO:0008150',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoMolecularFunction = {
-    id: AnnotonNodeType.GoMolecularFunction,
+    id: ActivityNodeType.GoMolecularFunction,
     category: 'GO:0003674',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoMolecularEntity = {
-    id: AnnotonNodeType.GoMolecularEntity,
+    id: ActivityNodeType.GoMolecularEntity,
     category: 'CHEBI:33695',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoChemicalEntity = {
-    id: AnnotonNodeType.GoChemicalEntity,
+    id: ActivityNodeType.GoChemicalEntity,
     category: 'CHEBI:24431',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoEvidence = {
-    id: AnnotonNodeType.GoEvidence,
+    id: ActivityNodeType.GoEvidence,
     category: 'ECO:0000352',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoCellTypeEntity = {
-    id: AnnotonNodeType.GoCellTypeEntity,
+    id: ActivityNodeType.GoCellTypeEntity,
     category: 'CL:0000003',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoAnatomicalEntity = {
-    id: AnnotonNodeType.GoAnatomicalEntity,
+    id: ActivityNodeType.GoAnatomicalEntity,
     category: 'CARO:0000000',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoOrganism = {
-    id: AnnotonNodeType.GoOrganism,
+    id: ActivityNodeType.GoOrganism,
     category: 'NCBITaxon',
     categoryType: 'idspace',
 } as GoCategory;
 
 export const GoBiologicalPhase = {
-    id: AnnotonNodeType.GoBiologicalPhase,
+    id: ActivityNodeType.GoBiologicalPhase,
     category: 'GO:0044848',
     categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoCatalyticActivity = {
-    id: AnnotonNodeType.GoCatalyticActivity,
+    id: ActivityNodeType.GoCatalyticActivity,
     category: 'GO:0003824',
     categoryType: 'isa_closure',
 } as GoCategory;
@@ -133,8 +133,8 @@ export const EntityCategories = [
     // [GoCatalyticActivity]
 ];
 
-export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = new AnnotonNode();
+export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
+    const activityNode = new ActivityNode();
     const predicate = new Predicate(null);
     const fqTermCategory = categoryToClosure(goCategories);
     const fqEvidenceCategory = categoryToClosure([GoEvidence]);
@@ -146,10 +146,10 @@ export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<
         ],
     }));
 
-    annotonNode.predicate = predicate;
+    activityNode.predicate = predicate;
 
     if (goCategories && goCategories.length > 0) {
-        annotonNode.termLookup = new EntityLookup(null,
+        activityNode.termLookup = new EntityLookup(null,
             Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
                 fq: [
                     'document_category:"ontology_class"',
@@ -159,17 +159,17 @@ export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<
         );
     }
 
-    annotonNode.overrideValues(override);
+    activityNode.overrideValues(override);
 
-    return annotonNode;
+    return activityNode;
 };
 
-export const generateGOTerm = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
+export const generateGOTerm = (): ActivityNode => {
+    const activityNode = generateBaseTerm();
 
-    annotonNode.id = 'goterm';
-    annotonNode.ontologyClass = ['go'];
-    annotonNode.termLookup = new EntityLookup(null,
+    activityNode.id = 'goterm';
+    activityNode.ontologyClass = ['go'];
+    activityNode.termLookup = new EntityLookup(null,
         Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
             fq: [
                 'document_category:"ontology_class"',
@@ -178,6 +178,6 @@ export const generateGOTerm = (): AnnotonNode => {
         }),
     );
 
-    return annotonNode;
+    return activityNode;
 };
 

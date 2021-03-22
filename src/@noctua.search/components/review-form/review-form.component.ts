@@ -8,14 +8,14 @@ import { EMPTY, Subject } from 'rxjs';
 
 import {
   Cam,
-  AnnotonType,
+  ActivityType,
   NoctuaUserService,
   NoctuaFormConfigService,
   NoctuaFormMenuService,
-  NoctuaAnnotonFormService,
+  NoctuaActivityFormService,
   noctuaFormConfig,
   CamsService,
-  AnnotonNode,
+  ActivityNode,
   EntityLookup,
   NoctuaLookupService,
   EntityDefinition,
@@ -41,7 +41,7 @@ import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-r
   animations: noctuaAnimations,
 })
 export class ReviewFormComponent implements OnInit, OnDestroy {
-  AnnotonType = AnnotonType;
+  ActivityType = ActivityType;
   ArtReplaceCategory = ArtReplaceCategory;
   searchForm: FormGroup;
   cams: Cam[] = [];
@@ -51,10 +51,10 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   };
   noctuaFormConfig = noctuaFormConfig;
   categories: any;
-  findNode: AnnotonNode;
-  replaceNode: AnnotonNode;
-  gpNode: AnnotonNode;
-  termNode: AnnotonNode;
+  findNode: ActivityNode;
+  replaceNode: ActivityNode;
+  gpNode: ActivityNode;
+  termNode: ActivityNode;
   selectedCategory;
 
   textboxDetail = {
@@ -72,7 +72,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     public noctuaUserService: NoctuaUserService,
     private noctuaLookupService: NoctuaLookupService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaAnnotonFormService: NoctuaAnnotonFormService,
+    public noctuaActivityFormService: NoctuaActivityFormService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     private inlineReferenceService: InlineReferenceService,) {
 

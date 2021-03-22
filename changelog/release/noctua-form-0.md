@@ -4,7 +4,7 @@ title: Noctua Form 0.1
   
 # Noctua Form 0.1
 
-Welcome to the release of Simple Annoton Editor. This is a limited version and
+Welcome to the release of Simple Activity Editor. This is a limited version and
 we hope you enjoy some of the features. Some of the key highlights include
 
 Highlights

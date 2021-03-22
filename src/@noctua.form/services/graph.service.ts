@@ -5,16 +5,16 @@ import { map } from 'rxjs/operators';
 
 import {
   Cam,
-  Annoton,
+  Activity,
   Triple,
-  AnnotonNode,
+  ActivityNode,
   Evidence,
   Entity,
-  ConnectorAnnoton,
+  ConnectorActivity,
   ConnectorType,
   ConnectorState,
   Predicate
-} from './../models/annoton/';
+} from './../models/activity/';
 
 import * as ModelDefinition from './../data/config/model-definition';
 import * as EntityDefinition from './../data/config/entity-definition';
@@ -23,11 +23,11 @@ import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
-import { AnnotonType } from './../models/annoton/annoton';
+import { ActivityType } from './../models/activity/activity';
 import { Contributor } from './../models/contributor';
 import { find, each } from 'lodash';
 import { Group } from './../models';
-import { CardinalityViolation, RelationViolation } from './../models/annoton/error/violation-error';
+import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 
 declare const require: any;
@@ -214,10 +214,10 @@ export class NoctuaGraphService {
   loadCam(cam: Cam) {
     const self = this;
 
-    cam.annotons = self.graphToAnnotons(cam.graph);
+    cam.activities = self.graphToActivities(cam.graph);
     cam.applyFilter();
-    cam.onGraphChanged.next(cam.annotons);
-    cam.connectorAnnotons = self.getConnectorAnnotons(cam);
+    cam.onGraphChanged.next(cam.activities);
+    cam.connectorActivities = self.getConnectorActivities(cam);
     cam.setPreview();
   }
 
@@ -249,9 +249,9 @@ export class NoctuaGraphService {
 
   generateViolation(cam: Cam, node, constraint) {
     const self = this;
-    const annotonNode = self.nodeToAnnotonNode(cam.graph, node)
+    const activityNode = self.nodeToActivityNode(cam.graph, node)
 
-    if (!annotonNode) {
+    if (!activityNode) {
       return null;
     }
 
@@ -259,20 +259,20 @@ export class NoctuaGraphService {
     if (constraint.cardinality) {
       const edge = self.noctuaFormConfigService.findEdge(constraint.property);
       violation = new CardinalityViolation(
-        annotonNode,
+        activityNode,
         edge,
         constraint.nobjects,
         constraint.cardinality
       );
     } else if (constraint.object) {
-      violation = new RelationViolation(annotonNode);
+      violation = new RelationViolation(activityNode);
       violation.predicate = self.noctuaFormConfigService.findEdge(constraint.property);
 
       const object = constraint.object.startsWith('http')
         ? self.curieUtil.getCurie(constraint.object)
         : constraint.object
 
-      violation.object = self.nodeToAnnotonNode(cam.graph, object);
+      violation.object = self.nodeToActivityNode(cam.graph, object);
     }
 
     return violation;
@@ -334,7 +334,7 @@ export class NoctuaGraphService {
     return result;
   }
 
-  nodeToAnnotonNode(graph, objectId): Partial<AnnotonNode> {
+  nodeToActivityNode(graph, objectId): Partial<ActivityNode> {
     const self = this;
 
     const node = graph.get_node(objectId);
@@ -355,7 +355,7 @@ export class NoctuaGraphService {
     //  console.log(result.term.label, result.rootTypes, result.uuid)
     //}
 
-    return new AnnotonNode(result);
+    return new ActivityNode(result);
   }
 
   edgeToEvidence(graph, edge) {
@@ -414,8 +414,8 @@ export class NoctuaGraphService {
     const self = this;
     const promises = [];
 
-    each(cam.annotons, function (annoton: Annoton) {
-      const mfNode = annoton.getMFNode();
+    each(cam.activities, function (activity: Activity) {
+      const mfNode = activity.getMFNode();
 
       if (mfNode && mfNode.hasValue()) {
         promises.push(self.isaClosurePostParse(mfNode.getTerm().id, [EntityDefinition.GoCatalyticActivity], mfNode));
@@ -425,7 +425,7 @@ export class NoctuaGraphService {
     return forkJoin(promises);
   }
 
-  isaClosurePostParse(a: string, b: any[], node: AnnotonNode) {
+  isaClosurePostParse(a: string, b: any[], node: ActivityNode) {
     const self = this;
     const closure = self.noctuaLookupService.categoryToClosure(b);
 
@@ -436,64 +436,64 @@ export class NoctuaGraphService {
       }));
   }
 
-  getActivityPreset(subjectNode: Partial<AnnotonNode>, predicateId, bbopSubjectEdges): Annoton {
+  getActivityPreset(subjectNode: Partial<ActivityNode>, predicateId, bbopSubjectEdges): Activity {
     const self = this;
-    let annotonType = AnnotonType.default;
+    let activityType = ActivityType.default;
 
     if (predicateId === noctuaFormConfig.edge.partOf.id &&
       subjectNode.hasRootType(EntityDefinition.GoMolecularEntity)) {
-      annotonType = AnnotonType.ccOnly;
+      activityType = ActivityType.ccOnly;
     } else if (subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(bbopSubjectEdges, function (subjectEdge) {
         if (find(noctuaFormConfig.causalEdges, { id: subjectEdge.predicate_id() })) {
-          annotonType = AnnotonType.bpOnly;
+          activityType = ActivityType.bpOnly;
         }
       });
     }
 
-    return self.noctuaFormConfigService.createAnnotonBaseModel(annotonType);
+    return self.noctuaFormConfigService.createActivityBaseModel(activityType);
   }
 
-  graphToAnnotons(camGraph): Annoton[] {
+  graphToActivities(camGraph): Activity[] {
     const self = this;
-    const annotons: Annoton[] = [];
+    const activities: Activity[] = [];
 
     each(camGraph.all_edges(), (bbopEdge) => {
       const bbopSubjectId = bbopEdge.subject_id();
-      const subjectNode = self.nodeToAnnotonNode(camGraph, bbopSubjectId);
+      const subjectNode = self.nodeToActivityNode(camGraph, bbopSubjectId);
 
       if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
         (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
           subjectNode.hasRootType(EntityDefinition.GoMolecularEntity))) {
 
         const subjectEdges = camGraph.get_edges_by_subject(bbopSubjectId);
-        const annoton: Annoton = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
-        const subjectAnnotonNode = annoton.rootNode;
+        const activity: Activity = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
+        const subjectActivityNode = activity.rootNode;
 
-        subjectAnnotonNode.term = subjectNode.term;
-        subjectAnnotonNode.classExpression = subjectNode.classExpression;
-        subjectAnnotonNode.setIsComplement(subjectNode.isComplement);
-        subjectAnnotonNode.uuid = bbopSubjectId;
-        self._graphToAnnotonDFS(camGraph, annoton, subjectEdges, subjectAnnotonNode);
-        annoton.id = bbopSubjectId;
-        annoton.postRunUpdate();
-        annotons.push(annoton);
+        subjectActivityNode.term = subjectNode.term;
+        subjectActivityNode.classExpression = subjectNode.classExpression;
+        subjectActivityNode.setIsComplement(subjectNode.isComplement);
+        subjectActivityNode.uuid = bbopSubjectId;
+        self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
+        activity.id = bbopSubjectId;
+        activity.postRunUpdate();
+        activities.push(activity);
       }
     });
 
-    return annotons;
+    return activities;
   }
 
-  getConnectorAnnotons(cam: Cam) {
+  getConnectorActivities(cam: Cam) {
     const self = this;
-    const connectorAnnotons: ConnectorAnnoton[] = [];
+    const connectorActivities: ConnectorActivity[] = [];
 
-    each(cam.annotons, (subjectAnnoton: Annoton) => {
-      each(cam.graph.get_edges_by_subject(subjectAnnoton.id), (bbopEdge) => {
+    each(cam.activities, (subjectActivity: Activity) => {
+      each(cam.graph.get_edges_by_subject(subjectActivity.id), (bbopEdge) => {
         const predicateId = bbopEdge.predicate_id();
         const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
         const objectId = bbopEdge.object_id();
-        const objectInfo = self.nodeToAnnotonNode(cam.graph, objectId);
+        const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
 
         const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
           id: predicateId
@@ -501,44 +501,44 @@ export class NoctuaGraphService {
 
         if (causalEdge) {
           if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
-            const downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
-            const connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, downstreamAnnoton);
+            const downstreamActivity = cam.getActivityByConnectionId(objectId);
+            const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, downstreamActivity);
 
-            connectorAnnoton.state = ConnectorState.editing;
-            connectorAnnoton.type = ConnectorType.basic;
-            connectorAnnoton.rule.r1Edge = causalEdge;
-            connectorAnnoton.predicate = new Predicate(causalEdge, evidence);
-            connectorAnnoton.setRule();
-            connectorAnnoton.createGraph();
-            connectorAnnotons.push(connectorAnnoton);
+            connectorActivity.state = ConnectorState.editing;
+            connectorActivity.type = ConnectorType.basic;
+            connectorActivity.rule.r1Edge = causalEdge;
+            connectorActivity.predicate = new Predicate(causalEdge, evidence);
+            connectorActivity.setRule();
+            connectorActivity.createGraph();
+            connectorActivities.push(connectorActivity);
           } else if (objectInfo.hasRootType(EntityDefinition.GoBiologicalProcess)) {
-            const processNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
+            const processNodeInfo = self.nodeToActivityNode(cam.graph, objectId);
 
             const processNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoBiologicalProcess], { id: 'process', isKey: true });
-            const connectorAnnotonDTO = this._getConnectAnnotonIntermediate(cam, objectId);
+            const connectorActivityDTO = this._getConnectActivityIntermediate(cam, objectId);
 
-            if (connectorAnnotonDTO.downstreamAnnoton) {
+            if (connectorActivityDTO.downstreamActivity) {
               processNode.uuid = objectId;
               processNode.term = processNodeInfo.term;
               // processNode.setEvidence(self.edgeToEvidence(cam.graph, e));
 
-              const connectorAnnoton = this.noctuaFormConfigService.createAnnotonConnectorModel(subjectAnnoton, connectorAnnotonDTO.downstreamAnnoton, processNode, connectorAnnotonDTO.hasInputNode);
+              const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, connectorActivityDTO.downstreamActivity, processNode, connectorActivityDTO.hasInputNode);
 
-              connectorAnnoton.state = ConnectorState.editing;
-              connectorAnnoton.type = ConnectorType.intermediate;
-              connectorAnnoton.rule.r1Edge = new Entity(causalEdge.id, causalEdge.label);
-              connectorAnnoton.rule.r2Edge = connectorAnnotonDTO.rule.r2Edge;
-              connectorAnnoton.predicate = new Predicate(causalEdge, evidence);
-              connectorAnnoton.setRule();
-              connectorAnnoton.createGraph();
-              connectorAnnotons.push(connectorAnnoton);
+              connectorActivity.state = ConnectorState.editing;
+              connectorActivity.type = ConnectorType.intermediate;
+              connectorActivity.rule.r1Edge = new Entity(causalEdge.id, causalEdge.label);
+              connectorActivity.rule.r2Edge = connectorActivityDTO.rule.r2Edge;
+              connectorActivity.predicate = new Predicate(causalEdge, evidence);
+              connectorActivity.setRule();
+              connectorActivity.createGraph();
+              connectorActivities.push(connectorActivity);
             }
           }
         }
       });
     });
 
-    return connectorAnnotons;
+    return connectorActivities;
   }
 
   saveModelGroup(cam: Cam, groupId) {
@@ -590,7 +590,7 @@ export class NoctuaGraphService {
     cam.manager.request_with(reqs);
   }
 
-  saveAnnoton(cam: Cam, triples: Triple<AnnotonNode>[], title) {
+  saveActivity(cam: Cam, triples: Triple<ActivityNode>[], title) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
 
@@ -609,19 +609,19 @@ export class NoctuaGraphService {
 
   }
 
-  editAnnoton(cam: Cam,
-    srcNodes: AnnotonNode[],
-    destNodes: AnnotonNode[],
-    srcTriples: Triple<AnnotonNode>[],
-    destTriples: Triple<AnnotonNode>[],
+  editActivity(cam: Cam,
+    srcNodes: ActivityNode[],
+    destNodes: ActivityNode[],
+    srcTriples: Triple<ActivityNode>[],
+    destTriples: Triple<ActivityNode>[],
     removeIds: string[],
-    removeTriples: Triple<AnnotonNode>[]) {
+    removeTriples: Triple<ActivityNode>[]) {
 
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
-    each(destNodes, function (destNode: AnnotonNode) {
-      const srcNode = find(srcNodes, (node: AnnotonNode) => {
+    each(destNodes, function (destNode: ActivityNode) {
+      const srcNode = find(srcNodes, (node: ActivityNode) => {
         return node.uuid === destNode.uuid;
       });
 
@@ -633,7 +633,7 @@ export class NoctuaGraphService {
     self.editFact(reqs, srcTriples, destTriples);
     self.addFact(reqs, destTriples);
 
-    each(removeTriples, function (triple: Triple<AnnotonNode>) {
+    each(removeTriples, function (triple: Triple<ActivityNode>) {
       reqs.remove_fact([
         triple.subject.uuid,
         triple.object.uuid,
@@ -653,7 +653,7 @@ export class NoctuaGraphService {
     return cam.manager.request_with(reqs);
   }
 
-  replaceAnnoton(manager, modelId, entities: Entity[], replaceWithTerm: Entity) {
+  replaceActivity(manager, modelId, entities: Entity[], replaceWithTerm: Entity) {
 
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, modelId);
@@ -673,12 +673,12 @@ export class NoctuaGraphService {
   }
 
 
-  bulkEditAnnoton(cam: Cam): Observable<any> {
+  bulkEditActivity(cam: Cam): Observable<any> {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
-    each(cam.annotons, (annoton: Annoton) => {
-      each(annoton.nodes, (node: AnnotonNode) => {
+    each(cam.activities, (activity: Activity) => {
+      each(activity.nodes, (node: ActivityNode) => {
         self.bulkEditIndividual(reqs, cam.id, node);
         each(node.predicate.evidence, (evidence: Evidence) => {
           self.bulkEditEvidence(reqs, cam.id, evidence);
@@ -693,7 +693,7 @@ export class NoctuaGraphService {
     return cam.replaceManager.request_with(reqs);
   }
 
-  bulkEditAnnotonNode(cam: Cam, node: AnnotonNode) {
+  bulkEditActivityNode(cam: Cam, node: ActivityNode) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
@@ -709,13 +709,13 @@ export class NoctuaGraphService {
     return cam.replaceManager.request_with(reqs);
   }
 
-  deleteAnnoton(cam: Cam, uuids: string[], triples: Triple<AnnotonNode>[]) {
+  deleteActivity(cam: Cam, uuids: string[], triples: Triple<ActivityNode>[]) {
     const self = this;
 
     const success = () => {
       const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
 
-      each(triples, function (triple: Triple<AnnotonNode>) {
+      each(triples, function (triple: Triple<ActivityNode>) {
         reqs.remove_fact([
           triple.subject.uuid,
           triple.object.uuid,
@@ -739,20 +739,20 @@ export class NoctuaGraphService {
     return success();
   }
 
-  private _graphToAnnotonDFS(camGraph, annoton: Annoton, bbopEdges, subjectNode: AnnotonNode) {
+  private _graphToActivityDFS(camGraph, activity: Activity, bbopEdges, subjectNode: ActivityNode) {
     const self = this;
 
     each(bbopEdges, (bbopEdge) => {
       const bbopPredicateId = bbopEdge.predicate_id();
       const bbopObjectId = bbopEdge.object_id();
       const evidence = self.edgeToEvidence(camGraph, bbopEdge);
-      const partialObjectNode = self.nodeToAnnotonNode(camGraph, bbopObjectId);
-      const objectNode = this._insertNode(annoton, bbopPredicateId, subjectNode, partialObjectNode);
+      const partialObjectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
+      const objectNode = this._insertNode(activity, bbopPredicateId, subjectNode, partialObjectNode);
 
-      annoton.updateEntityInsertMenu();
+      activity.updateEntityInsertMenu();
 
       if (objectNode) {
-        const triple: Triple<AnnotonNode> = annoton.getEdge(subjectNode.id, objectNode.id);
+        const triple: Triple<ActivityNode> = activity.getEdge(subjectNode.id, objectNode.id);
         if (triple) {
           triple.object.uuid = partialObjectNode.uuid;
           triple.object.term = partialObjectNode.term;
@@ -760,23 +760,23 @@ export class NoctuaGraphService {
           triple.object.setIsComplement(partialObjectNode.isComplement);
           triple.predicate.evidence = evidence;
           triple.predicate.uuid = bbopEdge.id();
-          self._graphToAnnotonDFS(camGraph, annoton, camGraph.get_edges_by_subject(bbopObjectId), triple.object);
+          self._graphToActivityDFS(camGraph, activity, camGraph.get_edges_by_subject(bbopObjectId), triple.object);
         }
       }
     });
 
-    return annoton;
+    return activity;
   }
 
-  private _insertNode(annoton: Annoton, bbopPredicateId: string, subjectNode: AnnotonNode,
-    partialObjectNode: Partial<AnnotonNode>): AnnotonNode {
+  private _insertNode(activity: Activity, bbopPredicateId: string, subjectNode: ActivityNode,
+    partialObjectNode: Partial<ActivityNode>): ActivityNode {
     const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
     let objectNode;
 
     each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
       if (bbopPredicateId === nodeDescription.predicate.id) {
         if (partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
-          objectNode = ModelDefinition.insertNode(annoton, subjectNode, nodeDescription);
+          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
           return false;
         }
       }
@@ -785,14 +785,14 @@ export class NoctuaGraphService {
     return objectNode;
   }
 
-  private _getConnectAnnotonIntermediate(cam: Cam, bpSubjectId: string): ConnectorAnnoton {
+  private _getConnectActivityIntermediate(cam: Cam, bpSubjectId: string): ConnectorActivity {
     const self = this;
-    const connectorAnnoton = new ConnectorAnnoton();
+    const connectorActivity = new ConnectorActivity();
 
     each(cam.graph.get_edges_by_subject(bpSubjectId), (e) => {
       const predicateId = e.predicate_id();
       const objectId = e.object_id();
-      const objectInfo = self.nodeToAnnotonNode(cam.graph, objectId);
+      const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
 
       const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
         id: predicateId
@@ -800,33 +800,33 @@ export class NoctuaGraphService {
 
       if (causalEdge) {
         if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
-          const downstreamAnnoton = cam.getAnnotonByConnectionId(objectId);
+          const downstreamActivity = cam.getActivityByConnectionId(objectId);
 
-          connectorAnnoton.rule.r2Edge = new Entity(causalEdge.id, causalEdge.label);;
-          connectorAnnoton.downstreamAnnoton = downstreamAnnoton;
+          connectorActivity.rule.r2Edge = new Entity(causalEdge.id, causalEdge.label);;
+          connectorActivity.downstreamActivity = downstreamActivity;
         }
       }
 
       if (e.predicate_id() === noctuaFormConfig.edge.hasInput.id) {
         if (objectInfo.hasRootType(EntityDefinition.GoChemicalEntity)) {
-          const hasInputNodeInfo = self.nodeToAnnotonNode(cam.graph, objectId);
+          const hasInputNodeInfo = self.nodeToActivityNode(cam.graph, objectId);
           const hasInputNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoChemicalEntity], { id: 'has-input', isKey: true });
 
           hasInputNode.uuid = objectId;
           hasInputNode.term = hasInputNodeInfo.term;
           hasInputNode.predicate.setEvidence(self.edgeToEvidence(cam.graph, e));
-          connectorAnnoton.hasInputNode = hasInputNode;
+          connectorActivity.hasInputNode = hasInputNode;
         }
       }
     });
 
-    return connectorAnnoton;
+    return connectorActivity;
   }
 
-  addFact(reqs, triples: Triple<AnnotonNode>[]) {
+  addFact(reqs, triples: Triple<ActivityNode>[]) {
     const self = this;
 
-    each(triples, function (triple: Triple<AnnotonNode>) {
+    each(triples, function (triple: Triple<ActivityNode>) {
       const subject = self.addIndividual(reqs, triple.subject);
       const object = self.addIndividual(reqs, triple.object);
 
@@ -847,11 +847,11 @@ export class NoctuaGraphService {
     });
   }
 
-  editFact(reqs, srcTriples: Triple<AnnotonNode>[], destTriples: Triple<AnnotonNode>[]) {
+  editFact(reqs, srcTriples: Triple<ActivityNode>[], destTriples: Triple<ActivityNode>[]) {
 
-    each(destTriples, (destTriple: Triple<AnnotonNode>) => {
+    each(destTriples, (destTriple: Triple<ActivityNode>) => {
 
-      const srcTriple = find(srcTriples, (triple: Triple<AnnotonNode>) => {
+      const srcTriple = find(srcTriples, (triple: Triple<ActivityNode>) => {
         return triple.subject.uuid === destTriple.subject.uuid && triple.object.uuid === destTriple.object.uuid;
       });
 
@@ -865,10 +865,10 @@ export class NoctuaGraphService {
     });
   }
 
-  deleteFact(reqs, triples: Triple<AnnotonNode>[]) {
+  deleteFact(reqs, triples: Triple<ActivityNode>[]) {
     const self = this;
 
-    each(triples, function (triple: Triple<AnnotonNode>) {
+    each(triples, function (triple: Triple<ActivityNode>) {
       each(triple.predicate.evidence, function (evidence: Evidence) {
         reqs.remove_individual(evidence.uuid);
       });
@@ -876,7 +876,7 @@ export class NoctuaGraphService {
     });
   }
 
-  addIndividual(reqs: any, node: AnnotonNode): string | null {
+  addIndividual(reqs: any, node: ActivityNode): string | null {
     if (node.uuid) {
       return node.uuid;
     }
@@ -911,7 +911,7 @@ export class NoctuaGraphService {
     }
   }
 
-  bulkEditIndividual(reqs, camId: string, node: AnnotonNode) {
+  bulkEditIndividual(reqs, camId: string, node: ActivityNode) {
     if (node.hasValue() && node.pendingEntityChanges) {
       reqs.remove_type_from_individual(
         class_expression.cls(node.pendingEntityChanges.oldValue.id),

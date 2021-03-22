@@ -5,14 +5,14 @@ import * as ModelDefinition from './../../data/config/model-definition';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
 import {
-  AnnotonNode,
-  Annoton,
+  ActivityNode,
+  Activity,
   Evidence,
-  ConnectorAnnoton,
+  ConnectorActivity,
   Entity,
   Predicate
 } from './../../models';
-import { AnnotonType } from './../../models/annoton/annoton';
+import { ActivityType } from './../../models/activity/activity';
 import { find, filter, each } from 'lodash';
 import { HttpParams } from '@angular/common/http';
 import * as EntityDefinition from './../../data/config/entity-definition';
@@ -75,11 +75,11 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get annotonType() {
+  get activityType() {
     const options = [
-      noctuaFormConfig.annotonType.options.default,
-      noctuaFormConfig.annotonType.options.bpOnly,
-      noctuaFormConfig.annotonType.options.ccOnly,
+      noctuaFormConfig.activityType.options.default,
+      noctuaFormConfig.activityType.options.bpOnly,
+      noctuaFormConfig.activityType.options.ccOnly,
     ];
 
     return {
@@ -251,10 +251,10 @@ export class NoctuaFormConfigService {
     return modelInfo;
   }
 
-  createAnnotonConnectorModel(upstreamAnnoton: Annoton, downstreamAnnoton: Annoton, srcProcessNode?: AnnotonNode, srcHasInputNode?: AnnotonNode) {
+  createActivityConnectorModel(upstreamActivity: Activity, downstreamActivity: Activity, srcProcessNode?: ActivityNode, srcHasInputNode?: ActivityNode) {
     const self = this;
-    const srcUpstreamNode = upstreamAnnoton.getMFNode();
-    const srcDownstreamNode = downstreamAnnoton ? downstreamAnnoton.getMFNode() : new AnnotonNode();
+    const srcUpstreamNode = upstreamActivity.getMFNode();
+    const srcDownstreamNode = downstreamActivity ? downstreamActivity.getMFNode() : new ActivityNode();
     const upstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
     const downstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
     const processNode = srcProcessNode ?
@@ -268,54 +268,54 @@ export class NoctuaFormConfigService {
     upstreamNode.copyValues(srcUpstreamNode);
     downstreamNode.copyValues(srcDownstreamNode);
 
-    const connectorAnnoton = new ConnectorAnnoton(upstreamNode, downstreamNode);
-    connectorAnnoton.predicate = new Predicate(null);
-    connectorAnnoton.predicate.setEvidence(srcUpstreamNode.predicate.evidence);
-    connectorAnnoton.upstreamAnnoton = upstreamAnnoton;
-    connectorAnnoton.downstreamAnnoton = downstreamAnnoton;
-    connectorAnnoton.processNode = processNode;
-    connectorAnnoton.hasInputNode = hasInputNode;
+    const connectorActivity = new ConnectorActivity(upstreamNode, downstreamNode);
+    connectorActivity.predicate = new Predicate(null);
+    connectorActivity.predicate.setEvidence(srcUpstreamNode.predicate.evidence);
+    connectorActivity.upstreamActivity = upstreamActivity;
+    connectorActivity.downstreamActivity = downstreamActivity;
+    connectorActivity.processNode = processNode;
+    connectorActivity.hasInputNode = hasInputNode;
 
-    return connectorAnnoton;
+    return connectorActivity;
   }
 
-  createAnnotonBaseModel(modelType: AnnotonType): Annoton {
+  createActivityBaseModel(modelType: ActivityType): Activity {
     switch (modelType) {
-      case AnnotonType.default:
+      case ActivityType.default:
         return ModelDefinition.createActivity(ModelDefinition.activityUnitBaseDescription);
-      case AnnotonType.bpOnly:
+      case ActivityType.bpOnly:
         return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationBaseDescription);
-      case AnnotonType.ccOnly:
+      case ActivityType.ccOnly:
         return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationBaseDescription);
     }
   }
 
-  createAnnotonModel(modelType: AnnotonType): Annoton {
+  createActivityModel(modelType: ActivityType): Activity {
     switch (modelType) {
-      case AnnotonType.default:
+      case ActivityType.default:
         return ModelDefinition.createActivity(ModelDefinition.activityUnitDescription);
-      case AnnotonType.bpOnly:
+      case ActivityType.bpOnly:
         return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationDescription);
-      case AnnotonType.ccOnly:
+      case ActivityType.ccOnly:
         return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationDescription);
     }
   }
 
-  insertAnnotonNode(annoton: Annoton,
-    subjectNode: AnnotonNode,
-    nodeDescription: ShapeDescription.ShapeDescription): AnnotonNode {
-    return ModelDefinition.insertNode(annoton, subjectNode, nodeDescription);
+  insertActivityNode(activity: Activity,
+    subjectNode: ActivityNode,
+    nodeDescription: ShapeDescription.ShapeDescription): ActivityNode {
+    return ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
   }
 
-  createAnnotonModelFakeData(nodes) {
+  createActivityModelFakeData(nodes) {
     const self = this;
-    const annoton = self.createAnnotonModel(AnnotonType.default);
+    const activity = self.createActivityModel(ActivityType.default);
 
     nodes.forEach((node) => {
-      const annotonNode = annoton.getNode(node.id);
+      const activityNode = activity.getNode(node.id);
       const destEvidences: Evidence[] = [];
 
-      annotonNode.term = new Entity(node.term.id, node.term.label);
+      activityNode.term = new Entity(node.term.id, node.term.label);
 
       each(node.evidence, (evidence) => {
         const destEvidence: Evidence = new Evidence();
@@ -327,11 +327,11 @@ export class NoctuaFormConfigService {
         destEvidences.push(destEvidence);
       });
 
-      annotonNode.predicate.setEvidence(destEvidences);
+      activityNode.predicate.setEvidence(destEvidences);
     });
 
-    annoton.enableSubmit();
-    return annoton;
+    activity.enableSubmit();
+    return activity;
   }
 
   findEdge(predicateId) {

@@ -1,6 +1,6 @@
-export { AnnotonConnectorForm } from './annoton-connector-form';
-export { AnnotonForm } from './annoton-form';
-export { AnnotonFormMetadata } from './annoton-form-metadata';
+export { ActivityConnectorForm } from './activity-connector-form';
+export { ActivityForm } from './activity-form';
+export { ActivityFormMetadata } from './activity-form-metadata';
 export { EntityForm } from './entity-form';
 export { EntityGroupForm } from './entity-group-form';
 export { EvidenceForm } from './evidence-form';

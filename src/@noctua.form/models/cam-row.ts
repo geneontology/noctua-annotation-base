@@ -1,5 +1,5 @@
 
-import { AnnotonNode } from './../models/annoton/annoton-node';
+import { ActivityNode } from './../models/activity/activity-node';
 
 export interface CamRow {
     treeLevel: number;
@@ -16,6 +16,6 @@ export interface CamRow {
     reference?: string;
     with?: string;
     assignedBy?: {};
-    srcNode: AnnotonNode;
-    destNode: AnnotonNode;
+    srcNode: ActivityNode;
+    destNode: ActivityNode;
 }

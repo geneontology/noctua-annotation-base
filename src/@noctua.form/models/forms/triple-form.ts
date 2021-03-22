@@ -1,6 +1,6 @@
 import { FormControl, FormBuilder, FormArray } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
+import { ActivityFormMetadata } from './../forms/activity-form-metadata';
 import { EvidenceForm } from './evidence-form';
 
 import {
@@ -8,15 +8,15 @@ import {
   Evidence,
   EntityLookup,
   Entity
-} from '../annoton';
-import { AnnotonNode } from '..';
+} from '../activity';
+import { ActivityNode } from '..';
 
 export class TripleForm {
   subject = new FormControl();
   object = new FormControl();
   evidenceForms: EvidenceForm[] = [];
   evidenceFormArray = new FormArray([]);
-  _metadata: AnnotonFormMetadata;
+  _metadata: ActivityFormMetadata;
 
   private _fb = new FormBuilder();
 
@@ -24,7 +24,7 @@ export class TripleForm {
     this._metadata = metadata;
   }
 
-  createTripleForm(triple: Triple<AnnotonNode>) {
+  createTripleForm(triple: Triple<ActivityNode>) {
     const self = this;
 
     this.subject.setValue(triple.subject.getTerm());
@@ -39,19 +39,19 @@ export class TripleForm {
     });
   }
 
-  populateAnnotonEntityForm(annotonNode: AnnotonNode) {
+  populateActivityEntityForm(activityNode: ActivityNode) {
     const self = this;
 
-    annotonNode.term = new Entity(this.subject.value.id, this.subject.value.label);
+    activityNode.term = new Entity(this.subject.value.id, this.subject.value.label);
     self.evidenceForms.forEach(() => {
-      // const evidenceFound = annotonNode.getEvidenceById(evidenceForm.uuid);
+      // const evidenceFound = activityNode.getEvidenceById(evidenceForm.uuid);
       // const evidence = evidenceFound ? evidenceFound : new Evidence();
 
       //  evidenceForm.populateEvidence(evidence);
       //  evidences.push(evidence)
     });
 
-    // annotonNode.setEvidence(evidences);
+    // activityNode.setEvidence(evidences);
   }
 
   onValueChanges(lookup: EntityLookup) {

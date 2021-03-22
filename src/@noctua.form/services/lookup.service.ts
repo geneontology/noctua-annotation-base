@@ -2,12 +2,12 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { AnnotonNode, Entity, Evidence, Predicate, AnnotonNodeType } from './../models/annoton/';
+import { ActivityNode, Entity, Evidence, Predicate, ActivityNodeType } from './../models/activity/';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each, uniqWith } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
-import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith } from './../models/annoton/evidence';
+import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith } from './../models/activity/evidence';
 import { Group } from './../models/group';
 
 declare const require: any;
@@ -28,7 +28,7 @@ engine.use_jsonp(true)
 })
 export class NoctuaLookupService {
   evidenceList: Evidence[] = [];
-  termList: AnnotonNode[] = [];
+  termList: ActivityNode[] = [];
   name;
   linker;
   golrURLBase;
@@ -79,15 +79,15 @@ export class NoctuaLookupService {
     );
   }
 
-  termPreLookup(type: AnnotonNodeType): Entity[] {
+  termPreLookup(type: ActivityNodeType): Entity[] {
     const self = this;
 
-    const filtered = filter(self.termList, (annotonNode: AnnotonNode) => {
-      return annotonNode.type === type;
+    const filtered = filter(self.termList, (activityNode: ActivityNode) => {
+      return activityNode.type === type;
     });
 
-    return filtered.map((annotonNode: AnnotonNode) => {
-      return annotonNode.term;
+    return filtered.map((activityNode: ActivityNode) => {
+      return activityNode.term;
     });
   }
 
@@ -202,7 +202,7 @@ export class NoctuaLookupService {
         const result = [];
 
         each(docs, function (doc) {
-          let annotonNode: AnnotonNode;
+          let activityNode: ActivityNode;
           const evidence = new Evidence();
 
           evidence.setEvidence(new Entity(doc.evidence, doc.evidence_label));
@@ -217,18 +217,18 @@ export class NoctuaLookupService {
 
           evidence.groups = [new Group(doc.assigned_by)];
 
-          annotonNode = find(result, (srcAnnotonNode: AnnotonNode) => {
-            return srcAnnotonNode.getTerm().id === doc.annotation_class;
+          activityNode = find(result, (srcActivityNode: ActivityNode) => {
+            return srcActivityNode.getTerm().id === doc.annotation_class;
           });
 
-          if (annotonNode) {
-            annotonNode.predicate.addEvidence(evidence);
+          if (activityNode) {
+            activityNode.predicate.addEvidence(evidence);
           } else {
-            annotonNode = new AnnotonNode();
-            annotonNode.predicate = new Predicate(null);
-            annotonNode.term = new Entity(doc.annotation_class, doc.annotation_class_label);
-            annotonNode.predicate.addEvidence(evidence);
-            result.push(annotonNode);
+            activityNode = new ActivityNode();
+            activityNode.predicate = new Predicate(null);
+            activityNode.term = new Entity(doc.annotation_class, doc.annotation_class_label);
+            activityNode.predicate.addEvidence(evidence);
+            result.push(activityNode);
           }
         });
 

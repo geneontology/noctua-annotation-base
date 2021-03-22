@@ -1,7 +1,7 @@
 import { FormGroup, AbstractControl, ValidatorFn } from '@angular/forms';
-import { AnnotonNode } from './../../..//models/annoton';
+import { ActivityNode } from './../../..//models/activity';
 
-export function termValidator(termNode: AnnotonNode): ValidatorFn {
+export function termValidator(termNode: ActivityNode): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
         if (control.value) {
             if (!control.value.id) {

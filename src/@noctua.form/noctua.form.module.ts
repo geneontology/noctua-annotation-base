@@ -6,14 +6,14 @@ export * from './'
   imports: [
   ],
   providers: [
-    //  NoctuaAnnotonFormService,
+    //  NoctuaActivityFormService,
     //  CamService,
-    // NoctuaAnnotonConnectorService
+    // NoctuaActivityConnectorService
   ],
   exports: [
-    //  NoctuaAnnotonFormService,
+    //  NoctuaActivityFormService,
     // CamService,
-    //  NoctuaAnnotonConnectorService
+    //  NoctuaActivityConnectorService
   ],
 })
 

@@ -4,7 +4,7 @@ title: Noctua Form 1.0
 
 # Noctua Form 1.0
 
-Welcome to the first release of Noctua Form formerly known as the Simple Annoton
+Welcome to the first release of Noctua Form formerly known as the Simple Activity
 Editor. The focus of this version was working closely with curators to get
 initial release, layout and overall feel of Noctua Form. This version is packed
 with awesome features, mainly on different concepts of data input form structure

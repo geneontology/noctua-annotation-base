@@ -1,5 +1,5 @@
 import { environment } from './../environments/environment';
-import { Entity } from './models/annoton/entity';
+import { Entity } from './models/activity/entity';
 
 const edge = {
   placeholder: {
@@ -95,7 +95,7 @@ const edge = {
 
 
 export const noctuaFormConfig = {
-  'annotonType': {
+  'activityType': {
     'options': {
       'default': {
         'name': 'default',

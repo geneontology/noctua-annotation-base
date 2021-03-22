@@ -1,19 +1,19 @@
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
 
-import { Evidence } from './../annoton/evidence';
-import { AnnotonNode } from './../annoton/annoton-node';
+import { Evidence } from './../activity/evidence';
+import { ActivityNode } from './../activity/activity-node';
 
 declare const require: any;
 const each = require('lodash/forEach');
 
-import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
+import { ActivityFormMetadata } from './../forms/activity-form-metadata';
 
 import { termValidator } from './validators/term-validator';
 import { evidenceValidator } from './validators/evidence-validator';
-import { EntityLookup } from '../annoton/entity-lookup';
-import { Entity } from '../annoton/entity';
-import { Predicate } from '../annoton/predicate';
+import { EntityLookup } from '../activity/entity-lookup';
+import { Entity } from '../activity/entity';
+import { Predicate } from '../activity/predicate';
 
 export class EvidenceForm {
     uuid;
@@ -21,10 +21,10 @@ export class EvidenceForm {
     reference = new FormControl();
     with = new FormControl();
 
-    _metadata: AnnotonFormMetadata;
+    _metadata: ActivityFormMetadata;
     private _term
 
-    constructor(metadata, term: AnnotonNode, evidence: Evidence) {
+    constructor(metadata, term: ActivityNode, evidence: Evidence) {
         this._metadata = metadata;
 
         this._term = term;
