@@ -53,7 +53,6 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     editableEvience: true,
     editableReference: true,
     editableWith: true,
-    reviewMode: true,
   };
 
   private _unsubscribeAll: Subject<any>;

@@ -70,7 +70,6 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     editableEvidence: true,
     editableReference: true,
     editableWith: true,
-    reviewMode: true,
   };
 
   private _unsubscribeAll: Subject<any>;

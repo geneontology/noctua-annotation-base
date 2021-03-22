@@ -1,5 +1,6 @@
 import {
     Annoton,
+    AnnotonType,
     Cam,
     Entity,
     noctuaFormConfig,
@@ -10,6 +11,7 @@ import { NodeCellType } from '@noctua.graph/models/shapes';
 import { NodeCell, NodeLink, StencilNode } from '@noctua.graph/services/shapes.service';
 import * as joint from 'jointjs';
 import { each, cloneDeep } from 'lodash';
+import { StencilItemNode } from '@noctua.graph/data/cam-stencil';
 
 export class CamCanvas {
 
@@ -17,6 +19,7 @@ export class CamCanvas {
     canvasGraph: joint.dia.Graph;
     selectedStencilElement;
     elementOnClick: (element: joint.shapes.noctua.NodeCell) => void;
+    onElementAdd: (modelType: AnnotonType) => Annoton;
     cam: Cam;
 
     constructor() {
@@ -172,8 +175,9 @@ export class CamCanvas {
 
     addElement(element: joint.shapes.noctua.NodeCell): NodeCell {
         const self = this;
+        const node = element.get('node') as StencilItemNode;
 
-        const annoton: Annoton = element.get('annoton');
+        const annoton: Annoton = self.onElementAdd(node.type);
         const el = new NodeCell()
             .position(0, 0)
             .size(120, 100)
@@ -332,10 +336,6 @@ export class CamCanvas {
                         stroke: 'black',
                         strokeWidth: 2
                     },
-                    expandLabel: {
-                        fontSize: 8,
-                        fontWeight: 'bold'
-                    }
                 })
                 el.set({
                     annoton: annoton,

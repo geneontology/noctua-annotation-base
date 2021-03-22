@@ -54,12 +54,6 @@ export class NodeCell extends shapes.NodeCell {
   }
 
 
-
-  setSuccessorCount(count: number): this {
-    this.attr({ expandLabel: { text: count.toString() } });
-    return this;
-  }
-
   hover(on: boolean): this {
     const self = this;
     self.attr('wrapper/strokeWidth', on ? 20 : 0);
