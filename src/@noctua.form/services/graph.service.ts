@@ -556,7 +556,7 @@ export class NoctuaGraphService {
     return cam.manager.request_with(reqs);
   }
 
-  storeModel(cam: Cam) {
+  storeCam(cam: Cam) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 

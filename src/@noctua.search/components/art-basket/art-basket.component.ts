@@ -3,13 +3,12 @@ import { Subject } from 'rxjs';
 import { Cam, CamService, CamsService, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { ArtBasket, ArtBasketItem } from './../..//models/art-basket';
 import { NoctuaReviewSearchService } from './../../services/noctua-review-search.service';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { LeftPanel, MiddlePanel } from './../../models/menu-panels';
 import { NoctuaSearchDialogService } from './../../services/dialog.service';
-import { SearchCriteria } from '@noctua.search/models/search-criteria';
 
 @Component({
   selector: 'noc-art-basket',
@@ -179,13 +178,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     const summary = self.camsService.reviewCamChanges(cam);
     const success = (ok) => {
       if (ok) {
-        self.camsService.resetCam(cam).subscribe((cams) => {
-          if (cams) {
-            self.camsService.loadCams();
-            self.noctuaReviewSearchService.onReplaceChanged.next(true);
-            self.camsService.reviewChanges();
-          }
-        });
+        self.noctuaReviewSearchService.resetCams(self.camsService.cams);
       }
     }
 
@@ -209,13 +202,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
     const success = (ok) => {
       if (ok) {
-        self.camsService.resetCams().subscribe((cams) => {
-          if (cams) {
-            self.camsService.loadCams();
-            self.noctuaReviewSearchService.onReplaceChanged.next(true);
-            self.camsService.reviewChanges();
-          }
-        });
+        self.noctuaReviewSearchService.resetCams(self.camsService.cams);
       }
     }
     if (self.summary?.stats.totalChanges > 0) {
@@ -260,7 +247,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   submitChanges() {
     const self = this;
 
-    this.storeModels(self.camsService.cams, true)
+    this.storeCams(self.camsService.cams, true)
   }
 
   submitChange(cam: Cam) {
@@ -272,7 +259,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       const success = (replace) => {
         if (replace) {
 
-          self.camsService.storeModels([cam]).pipe(takeUntil(this._unsubscribeAll))
+          self.noctuaReviewSearchService.storeCams([cam]).pipe(takeUntil(this._unsubscribeAll))
             .subscribe(cams => {
               if (!cams) {
                 return;
@@ -299,7 +286,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   }
 
 
-  private storeModels(cams: Cam[], reset = false) {
+  private storeCams(cams: Cam[], reset = false) {
     const self = this;
     const success = (replace) => {
       if (replace) {
@@ -308,11 +295,9 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
         if (element) {
           element.scrollTop = 0;
         }
-        self.camsService.storeModels(cams).pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(cams => {
-            if (!cams) {
-              return;
-            }
+        self.noctuaReviewSearchService.storeCams(cams).pipe(
+          takeUntil(this._unsubscribeAll),
+          finalize(() => {
 
             if (reset) {
               self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
@@ -327,10 +312,15 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
             self.zone.run(() => {
               self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
             });
-          });
-      }
-    };
 
+          })).subscribe((cam: Cam) => {
+            if (!cam) {
+              return;
+            }
+            self.noctuaReviewSearchService.updateCams([cam])
+          })
+      };
+    }
 
     if (self.summary?.stats.totalChanges > 0) {
       const options = {

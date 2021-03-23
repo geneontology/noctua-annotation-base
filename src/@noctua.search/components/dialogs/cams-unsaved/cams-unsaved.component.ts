@@ -175,11 +175,11 @@ export class CamsUnsavedDialogComponent implements OnInit, OnDestroy, AfterViewI
   submitChanges() {
     const self = this;
 
-    this.storeModels(self.camsService.cams, true)
+    this.storeCams(self.camsService.cams, true)
   }
 
   submitChange(cam: Cam) {
-    this.storeModels([cam])
+    this.storeCams([cam])
   }
 
   logout() {
@@ -190,7 +190,7 @@ export class CamsUnsavedDialogComponent implements OnInit, OnDestroy, AfterViewI
     this._matDialogRef.close(true);
   }
 
-  private storeModels(cams: Cam[], reset = false) {
+  private storeCams(cams: Cam[], reset = false) {
     const self = this;
     const success = (replace) => {
       if (replace) {
@@ -199,7 +199,7 @@ export class CamsUnsavedDialogComponent implements OnInit, OnDestroy, AfterViewI
         if (element) {
           element.scrollTop = 0;
         }
-        self.camsService.storeModels(cams).pipe(takeUntil(this._unsubscribeAll))
+        self.camsService.storeCams(cams).pipe(takeUntil(this._unsubscribeAll))
           .subscribe(cams => {
             if (!cams) {
               return;

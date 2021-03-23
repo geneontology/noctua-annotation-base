@@ -14,6 +14,8 @@ import { HttpClient } from '@angular/common/http';
 import { finalize, map } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
 import { ActivityNode } from './../models/activity/activity-node';
+import { noctuaFormConfig } from './../noctua-form-config';
+import { Evidence } from './../models/activity/evidence';
 
 declare const require: any;
 
@@ -113,15 +115,23 @@ export class CamsService {
     });
   }
 
-  getReplaceObject(entities: Entity[], replaceWithTerm: string, category) {
+  getReplaceObject(entities: Entity[], replaceWithTerm: any, category) {
     const self = this;
     const groupedEntities = groupBy(entities, 'modelId') as { string: Entity[] };
     const cams: Cam[] = []
+    let replaceWith
+
+    if (category === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+      replaceWith = Evidence.formatReference(replaceWithTerm);
+    } else {
+      replaceWith = replaceWithTerm?.id;
+    }
 
     each(groupedEntities, (values: Entity[], key) => {
       const cam: Cam = find(this.cams, { id: key });
+
       if (cam) {
-        cam.addPendingChanges(entities, replaceWithTerm, category);
+        cam.addPendingChanges(entities, replaceWith, category);
         cams.push(cam)
       }
     });
@@ -162,12 +172,12 @@ export class CamsService {
     );;
   }
 
-  storeModels(cams: Cam[]): Observable<any> {
+  storeCams(cams: Cam[]): Observable<any> {
     const self = this;
     const promises = [];
 
     each(cams, (cam: Cam) => {
-      promises.push(self._noctuaGraphService.storeModel(cam));
+      promises.push(self._noctuaGraphService.storeCam(cam));
     });
 
     return forkJoin(promises);
@@ -204,7 +214,6 @@ export class CamsService {
 
     this.onCamsCheckoutChanged.next(result);
   }
-
 
   reviewCamChanges(cam: Cam) {
     const self = this;
@@ -269,7 +278,7 @@ export class CamsService {
   }
 
   private _compareDateReviewAdded(a: Cam, b: Cam): number {
-    if (a.dateReviewAdded > b.dateReviewAdded) {
+    if (a.dateReviewAdded < b.dateReviewAdded) {
       return 1;
     } else {
       return -1;

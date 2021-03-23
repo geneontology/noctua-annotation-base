@@ -54,7 +54,7 @@
         </noc-search-contributors>
         <noc-search-organisms *ngSwitchCase="LeftPanel.organism"></noc-search-organisms>
         <noc-search-history *ngSwitchCase="LeftPanel.history"></noc-search-history>
-        <noc-art-basket *ngSwitchCase="LeftPanel.artBasket"></noc-art-basket>
+        <noc-art-basket [hidden]="noctuaSearchMenuService.selectedLeftPanel !== LeftPanel.artBasket"></noc-art-basket>
       </div>
     </mat-drawer>
     <mat-drawer-content id="noc-results" class="w-100-p" noctuaPerfectScrollbar>

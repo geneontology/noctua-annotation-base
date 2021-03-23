@@ -136,19 +136,19 @@ export class NoctuaReviewSearchService {
 
         if (!metaCams || metaCams.length === 0) return;
 
-        const ids = metaCams.reduce((acc, x) => {
-
-            if (find(cams, { id: x.id })) {
-                acc.push(x.something);
-                return acc.id;
-            } else return acc;
+        const ids = metaCams.reduce((camIds, metaCam) => {
+            if (!find(cams, { id: metaCam.id })) {
+                camIds.push(metaCam.id);
+                return camIds;
+            } else return camIds;
         }, []);
 
-        console.log(ids)
+        self.updateSearch(true, [...ids, ...cams.map(cam => cam.id)]);
+
+        if (ids.length === 0) return;
 
         self.searchCamsByIds(ids).pipe(
             switchMap((inCams: any[]) => {
-
                 const promises = [];
 
                 each(inCams, (inCam: Cam) => {
@@ -159,7 +159,6 @@ export class NoctuaReviewSearchService {
                     inCam.title = metaCam?.title;
                     cams.push(inCam);
                     self.camService.loadCamMeta(inCam);
-
                     inCam.loading.status = true;
                     promises.push(inCam);
                 })
@@ -173,7 +172,6 @@ export class NoctuaReviewSearchService {
                 self.camsService.sortCams();
                 self.camsService.updateDisplayNumber(cams);
                 self.camsService.onCamsChanged.next(cams);
-                self.updateSearch();
                 //self.camsService.resetLoading(cams);
             })).subscribe({
                 next: (response) => {
@@ -181,6 +179,8 @@ export class NoctuaReviewSearchService {
                     self._noctuaGraphService.rebuildStoredGraph(cam, response.activeModel);
                     self.populateStoredModel(cam, response)
                     cam.loading.status = false;
+                    self.camsService.sortCams();
+                    self.camsService.updateDisplayNumber(cams);
                     self.camsService.onCamsChanged.next(cams);
                 },
             })
@@ -188,12 +188,87 @@ export class NoctuaReviewSearchService {
 
     removeCamFromReview(cam: Cam) {
         remove(this.camsService.cams, { id: cam.id });
+        this.updateSearch();
         this.artBasket.removeCamFromBasket(cam.id);
         localStorage.setItem('artBasket', JSON.stringify(this.artBasket));
         this.camsService.updateDisplayNumber(this.camsService.cams);
         this.camsService.onCamsChanged.next(this.camsService.cams);
         this.onArtBasketChanged.next(this.artBasket);
-        this.updateSearch();
+    }
+
+    resetCams(cams: Cam[]) {
+        const self = this;
+
+        from(cams).pipe(
+            mergeMap((cam: Cam) => {
+                return self._noctuaGraphService.resetModel(cam);
+            }),
+        ).subscribe({
+            next: (response: any) => {
+                const cam = find(cams, { id: response.data().id });
+
+                if (cam) {
+                    self.updateCams([cam]);
+                }
+            }
+        })
+    }
+
+    storeCams(cams: Cam[]) {
+        const self = this;
+
+        return from(cams).pipe(
+            mergeMap((cam: Cam) => {
+                return self._noctuaGraphService.storeCam(cam);
+            }),
+            map((response: any) => {
+                return find(cams, { id: response.data().id });
+            })
+
+        )
+    }
+
+    updateCams(cams: Cam[]) {
+        const self = this;
+
+        if (!cams || cams.length === 0) return;
+
+        const ids = cams.map(cam => cam.id);
+
+        if (ids.length === 0) return;
+
+        self.searchCamsByIds(ids).pipe(
+            switchMap((inCams: any[]) => {
+                const promises = [];
+
+                each(inCams, (inCam: Cam) => {
+                    inCam.expanded = true;
+                    self.camService.loadCamMeta(inCam);
+                    inCam.loading.status = true;
+                    promises.push(inCam);
+                })
+                return from(promises);
+            }),
+            mergeMap((cam: Cam) => {
+                return self.camsService.getStoredModel(cam);
+            }),
+            finalize(() => {
+                //cam.loading.status = false;
+                self.camsService.updateDisplayNumber(cams);
+                self.camsService.onCamsChanged.next(cams);
+                //self.camsService.resetLoading(cams);
+                self.onReplaceChanged.next(true);
+            })).subscribe({
+                next: (response) => {
+                    const cam = find(cams, { id: response.activeModel.id });
+                    self._noctuaGraphService.rebuildStoredGraph(cam, response.activeModel);
+                    self.populateStoredModel(cam, response)
+                    cam.loading.status = false;
+                    self.camsService.updateDisplayNumber(cams);
+                    self.camsService.onCamsChanged.next(cams);
+                    self.updateSearch();
+                },
+            })
     }
 
     populateStoredModel(cam: Cam, response) {
@@ -301,16 +376,19 @@ export class NoctuaReviewSearchService {
         this.updateSearch();
     }
 
-    updateSearch(save: boolean = true) {
-        const ids = this.camsService.cams.map((cam: Cam) => {
-            return cam.id;
-        });
-        this.searchCriteria.ids = ids;
+    updateSearch(save: boolean = true, inIds?: string[]) {
+
+        if (inIds && inIds.length > 0) {
+            this.searchCriteria.ids = inIds
+        } else {
+            const ids = this.camsService.cams.map((cam: Cam) => {
+                return cam.id;
+            });
+            this.searchCriteria.ids = ids;
+        }
+
         this.searchCriteria.updateFiltersCount();
-
-
         this.onSearchCriteriaChanged.next(this.searchCriteria);
-
 
         if (save) {
             this.saveHistory();
