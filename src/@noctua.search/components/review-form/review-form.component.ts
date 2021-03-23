@@ -237,6 +237,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     if (self.selectedCategory.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
       replaceWith = Evidence.formatReference(value.replaceWith);
     }
+
     const success = (replace) => {
       if (replace) {
 

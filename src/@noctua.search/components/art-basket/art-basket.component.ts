@@ -148,8 +148,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     const summary = self.camsService.reviewCamChanges(cam)
     const success = (ok) => {
       if (ok) {
-        this.camsService.removeCamFromReview(cam);
-        this.noctuaReviewSearchService.removeFromArtBasket(cam.id);
+        this.noctuaReviewSearchService.removeCamFromReview(cam);
       }
     }
 

@@ -85,8 +85,7 @@ export class CamsUnsavedDialogComponent implements OnInit, OnDestroy, AfterViewI
 
 
   remove(cam: Cam) {
-    this.camsService.removeCamFromReview(cam);
-    this.noctuaReviewSearchService.removeFromArtBasket(cam.id);
+    this.noctuaReviewSearchService.removeCamFromReview(cam);
   }
 
   clear() {

@@ -7,7 +7,7 @@ import { NoctuaFormConfigService } from './../services/config/noctua-form-config
 import { Activity } from './../models/activity/activity';
 
 import { Cam, CamLoadingIndicator, CamQueryMatch, CamStats } from './../models/activity/cam';
-import { each, groupBy, find, remove } from 'lodash';
+import { each, groupBy, find } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/activity/entity';
 import { HttpClient } from '@angular/common/http';
@@ -98,11 +98,7 @@ export class CamsService {
     }
   }
 
-  removeCamFromReview(cam: Cam) {
-    remove(this.cams, { id: cam.id });
-    this.updateDisplayNumber(this.cams);
-    this.onCamsChanged.next(this.cams);
-  }
+
 
   expandMatch(nodeId: string) {
     const self = this;

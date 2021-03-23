@@ -17,7 +17,7 @@ import {
 } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 import { saveAs } from 'file-saver';
-import { each, find } from 'lodash';
+import { each, find, remove } from 'lodash';
 import { CurieService } from '@noctua.curie/services/curie.service';
 import { CamPage } from './../models/cam-page';
 import { SearchHistory } from './../models/search-history';
@@ -85,17 +85,20 @@ export class NoctuaReviewSearchService {
             }
 
             self.camsService.resetMatch();
-            this.getCams(searchCriteria).subscribe(() => {
-                // this.cams = response;
-                this.matchedCountCursor = 0;
-                this.calculateMatched();
-                this.goto(0);
-            });
 
-            const element = document.querySelector('#noc-review-results');
+            if (searchCriteria.ids.length > 0) {
+                this.getCams(searchCriteria).subscribe(() => {
+                    // this.cams = response;
+                    this.matchedCountCursor = 0;
+                    this.calculateMatched();
+                    this.goto(0);
+                });
 
-            if (element) {
-                element.scrollTop = 0;
+                const element = document.querySelector('#noc-review-results');
+
+                if (element) {
+                    element.scrollTop = 0;
+                }
             }
         });
 
@@ -108,7 +111,7 @@ export class NoctuaReviewSearchService {
                     return cam.id;
                 });
 
-                this.searchCriteria['ids'] = ids;
+                this.searchCriteria.ids = ids;
             });
     }
 
@@ -133,9 +136,15 @@ export class NoctuaReviewSearchService {
 
         if (!metaCams || metaCams.length === 0) return;
 
-        const ids = metaCams.map((cam: Cam) => {
-            return cam.id;
-        });
+        const ids = metaCams.reduce((acc, x) => {
+
+            if (find(cams, { id: x.id })) {
+                acc.push(x.something);
+                return acc.id;
+            } else return acc;
+        }, []);
+
+        console.log(ids)
 
         self.searchCamsByIds(ids).pipe(
             switchMap((inCams: any[]) => {
@@ -147,7 +156,7 @@ export class NoctuaReviewSearchService {
 
                     inCam.expanded = true;
                     inCam.dateReviewAdded = metaCam ? metaCam.dateAdded : Date.now();
-                    inCam.title = metaCam.title;
+                    inCam.title = metaCam?.title;
                     cams.push(inCam);
                     self.camService.loadCamMeta(inCam);
 
@@ -164,6 +173,7 @@ export class NoctuaReviewSearchService {
                 self.camsService.sortCams();
                 self.camsService.updateDisplayNumber(cams);
                 self.camsService.onCamsChanged.next(cams);
+                self.updateSearch();
                 //self.camsService.resetLoading(cams);
             })).subscribe({
                 next: (response) => {
@@ -173,10 +183,18 @@ export class NoctuaReviewSearchService {
                     cam.loading.status = false;
                     self.camsService.onCamsChanged.next(cams);
                 },
-
             })
     }
 
+    removeCamFromReview(cam: Cam) {
+        remove(this.camsService.cams, { id: cam.id });
+        this.artBasket.removeCamFromBasket(cam.id);
+        localStorage.setItem('artBasket', JSON.stringify(this.artBasket));
+        this.camsService.updateDisplayNumber(this.camsService.cams);
+        this.camsService.onCamsChanged.next(this.camsService.cams);
+        this.onArtBasketChanged.next(this.artBasket);
+        this.updateSearch();
+    }
 
     populateStoredModel(cam: Cam, response) {
         const self = this;
@@ -195,7 +213,7 @@ export class NoctuaReviewSearchService {
         const self = this;
 
         const searchCriteria = new SearchCriteria();
-        searchCriteria['ids'] = ids;
+        searchCriteria.ids = ids;
         self.camsService.resetMatch();
 
         return self._noctuaSearchService.getCams(searchCriteria);
@@ -263,12 +281,10 @@ export class NoctuaReviewSearchService {
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
         this.camsService.currentMatch = this.currentMatchedEnity;
-
         this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.activityDisplayId);
 
         return this.currentMatchedEnity;
     }
-
 
     clear() {
         this.matchedEntities = [];
@@ -286,8 +302,15 @@ export class NoctuaReviewSearchService {
     }
 
     updateSearch(save: boolean = true) {
+        const ids = this.camsService.cams.map((cam: Cam) => {
+            return cam.id;
+        });
+        this.searchCriteria.ids = ids;
         this.searchCriteria.updateFiltersCount();
+
+
         this.onSearchCriteriaChanged.next(this.searchCriteria);
+
 
         if (save) {
             this.saveHistory();
@@ -327,12 +350,6 @@ export class NoctuaReviewSearchService {
     addToArtBasket(id: string, title: string) {
         this.artBasket.addCamToBasket(id, title);
 
-        localStorage.setItem('artBasket', JSON.stringify(this.artBasket));
-        this.onArtBasketChanged.next(this.artBasket);
-    }
-
-    removeFromArtBasket(id) {
-        this.artBasket.removeCamFromBasket(id);
         localStorage.setItem('artBasket', JSON.stringify(this.artBasket));
         this.onArtBasketChanged.next(this.artBasket);
     }
