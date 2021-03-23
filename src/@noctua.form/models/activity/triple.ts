@@ -13,16 +13,12 @@ export class Triple<T extends ActivityNode | Activity> {
   predicate: Predicate;
   subject: T;
 
-  private _grid: any[] = [];
-
   constructor(subject: T, predicate: Predicate, object: T) {
     this.id = uuid();
     this.subject = subject;
     this.object = object;
     this.predicate = predicate;
   }
-
-
 }
 
 export class ActivityTriple<T extends Activity> {

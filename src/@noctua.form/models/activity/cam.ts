@@ -75,13 +75,7 @@ export class Cam {
   modified = false;
   modifiedStats = new CamStats();
   matchedCount = 0;
-  filter = {
-    contributor: null,
-    uuids: [],
-    terms: []
-  };
 
-  goterms: Entity[] = [];
   queryMatch: CamQueryMatch = new CamQueryMatch();
 
   dateReviewAdded = Date.now();
@@ -196,12 +190,6 @@ export class Cam {
       return connectorActivity.upstreamNode.uuid === upstreamId &&
         connectorActivity.downstreamNode.uuid === downstreamId;
     });
-  }
-
-  configureDisplayType() {
-    if (this.filter.uuids.length > 0) {
-      this.displayType = noctuaFormConfig.camDisplayType.options.entity;
-    }
   }
 
   clearFilter() {

@@ -18,7 +18,6 @@ export {
     CamQueryMatch
 } from './cam';
 export { Evidence } from './evidence';
-export { SimpleActivity } from './simple-activity';
 export {
     ConnectorState,
     ConnectorType,

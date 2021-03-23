@@ -73,9 +73,6 @@ export class CamsService {
 
   loadCams() {
     const self = this;
-    each(this.cams, (cam: Cam) => {
-      // self.camService.loadCam(cam, filter);
-    });
 
     self.onCamsChanged.next(this.cams);
   }

@@ -1,6 +1,4 @@
-import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
@@ -12,11 +10,9 @@ import { Activity } from './../models/activity/activity';
 import { CamForm } from './../models/forms/cam-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { Evidence, compareEvidence } from './../models/activity/evidence';
-
-import { v4 as uuid } from 'uuid';
 import { Cam, CamStats } from './../models/activity/cam';
-import { uniqWith, each } from 'lodash';
-import { ActivityNodeType, ActivityNode, Entity } from './../models/activity';
+import { uniqWith } from 'lodash';
+import { ActivityNodeType, ActivityNode } from './../models/activity';
 import { compareTerm } from './../models/activity/activity-node';
 
 @Injectable({
@@ -30,12 +26,10 @@ export class CamService {
   onCamUpdated: BehaviorSubject<any>;
   onCamTermsChanged: BehaviorSubject<any>;
 
-
   public activity: Activity;
   private camForm: CamForm;
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
-
 
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
     private _fb: FormBuilder,
@@ -94,7 +88,7 @@ export class CamService {
   }
 
   //loads an existing cam
-  loadCam(cam: Cam, filter?: any) {
+  loadCam(cam: Cam) {
     cam.graph = null;
     cam.modifiedStats = new CamStats();
     cam.model = Object.assign({}, {
@@ -103,16 +97,13 @@ export class CamService {
       modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
     });
 
-    if (filter) {
-      cam.filter = filter;
-    }
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
     this.cam = cam;
 
     cam.manager.get_model(cam.id);
   }
 
-  loadCamMeta(cam: Cam, filter?: any) {
+  loadCamMeta(cam: Cam) {
     cam.graph = null;
     cam.modifiedStats = new CamStats();
     cam.model = Object.assign({}, {
@@ -121,9 +112,6 @@ export class CamService {
       modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
     });
 
-    if (filter) {
-      cam.filter = filter;
-    }
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
   }
 
