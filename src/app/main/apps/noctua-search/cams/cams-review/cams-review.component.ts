@@ -110,10 +110,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     cam.displayType = noctuaFormConfig.camDisplayType.options.entity;
   }
 
-  resetCam(cam: Cam) {
-    this.camService.loadCam(cam);
-  }
-
   selectMiddlePanel(panel) {
     this.noctuaSearchMenuService.selectMiddlePanel(panel);
 

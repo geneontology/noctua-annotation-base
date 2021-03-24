@@ -178,7 +178,7 @@ export class NoctuaGraphService {
   }
 
 
-  rebuildStoredGraph(cam: Cam, activeModel) {
+  rebuildFromStoredApi(cam: Cam, activeModel) {
     const self = this;
     const noctua_graph = model.graph;
 

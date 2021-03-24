@@ -178,12 +178,8 @@ export class CamsService {
     return from(cams).pipe(
       mergeMap((cam: Cam) => {
         return self._noctuaGraphService.storeCam(cam);
-      }),
-      map((response: any) => {
-        return find(cams, { id: response.data().id });
-      })
+      }));
 
-    )
   }
 
   bulkStoredModel(cams: Cam[]) {
@@ -247,9 +243,6 @@ export class CamsService {
     return from(cams).pipe(
       mergeMap((cam: Cam) => {
         return self._noctuaGraphService.resetModel(cam);
-      }),
-      map((response: any) => {
-        return find(cams, { id: response.data().id });
       }))
   }
 

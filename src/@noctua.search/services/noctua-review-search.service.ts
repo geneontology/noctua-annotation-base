@@ -1,8 +1,8 @@
 import { environment } from './../../environments/environment';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject, forkJoin, from, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, forkJoin, from, Observable } from 'rxjs';
 import { map, finalize, switchMap, mergeMap } from 'rxjs/operators';
 
 import {
@@ -14,6 +14,7 @@ import {
     NoctuaGraphService,
     CamStats,
     CamService,
+    CamLoadingIndicator,
 } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 import { saveAs } from 'file-saver';
@@ -25,6 +26,8 @@ import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaSearchMenuService } from './search-menu.service';
 import { NoctuaSearchService } from './noctua-search.service';
 import { LeftPanel, MiddlePanel } from './../models/menu-panels';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
+import { ReloadType } from './../models/review-mode';
 
 declare const require: any;
 
@@ -61,10 +64,12 @@ export class NoctuaReviewSearchService {
     };
 
     constructor(
+        private zone: NgZone,
         private noctuaUserService: NoctuaUserService,
         private _noctuaGraphService: NoctuaGraphService,
         private _noctuaSearchService: NoctuaSearchService,
         private noctuaSearchMenuService: NoctuaSearchMenuService,
+        private confirmDialogService: NoctuaConfirmDialogService,
         private httpClient: HttpClient,
         private camService: CamService,
         private camsService: CamsService,
@@ -169,16 +174,20 @@ export class NoctuaReviewSearchService {
                 return self.camsService.getStoredModel(cam);
             }),
             finalize(() => {
-                //cam.loading.status = false;
                 self.camsService.sortCams();
                 self.camsService.updateDisplayNumber(cams);
                 self.camsService.onCamsChanged.next(cams);
                 //self.camsService.resetLoading(cams);
             })).subscribe({
                 next: (response) => {
+                    if (!response || !response.storedModel || !response.activeModel) return;
+
                     const cam = find(cams, { id: response.activeModel.id });
-                    self._noctuaGraphService.rebuildStoredGraph(cam, response.activeModel);
-                    self.populateStoredModel(cam, response)
+
+                    if (!cam) return;
+
+                    self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
+                    self.populateStoredModel(cam, response.storedModel)
                     cam.loading.status = false;
                     self.camsService.sortCams();
                     self.camsService.updateDisplayNumber(cams);
@@ -197,7 +206,68 @@ export class NoctuaReviewSearchService {
         this.onArtBasketChanged.next(this.artBasket);
     }
 
-    updateCams(cams: Cam[], reviewCams: Cam[], reset = false) {
+    reloadCams(cams: Cam[], reviewCams: Cam[], reloadType: ReloadType, reset = false) {
+        const self = this;
+
+        if (!cams || cams.length === 0) return;
+
+        const ids = cams.map(cam => cam.id);
+
+        if (ids.length === 0) return;
+
+        from(cams).pipe(
+            mergeMap((cam: Cam) => {
+                cam.loading = new CamLoadingIndicator(true, 'Loading...');
+
+                if (reloadType === ReloadType.RESET) {
+                    return self.camsService.resetCams([cam]);
+                } else if (reloadType === ReloadType.STORE) {
+                    return self.camsService.storeCams([cam]);
+                } else {
+                    return EMPTY;
+                }
+            }),
+            finalize(() => {
+                self.camsService.updateDisplayNumber(reviewCams);
+                self.camsService.onCamsChanged.next(reviewCams);
+                self.camsService.resetLoading(cams);
+                self._noctuaSearchService.updateSearch();
+                self.onReplaceChanged.next(true);
+
+                if (reset) {
+                    self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
+                    self.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
+                    self.clear();
+                    self.camsService.clearCams();
+                    self.clearBasket();
+                    self.onResetReview.next(true);
+                }
+                self.updateSearch();
+
+                self.zone.run(() => {
+                    self.camsService.resetLoading(reviewCams);
+                    self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
+                });
+
+            })).subscribe({
+                next: (response) => {
+                    if (!response || !response.data()) return;
+
+                    const cam = find(reviewCams, { id: response.data().id });
+
+                    if (!cam) return;
+
+                    //self._noctuaGraphService.rebuild(cam, response);
+                    self.populateStoredModel(cam, response.data())
+                    cam.loading.status = false;
+                    self.camsService.updateDisplayNumber(reviewCams);
+                    self.camsService.onCamsChanged.next(reviewCams);
+                    self.updateSearch();
+                }
+            })
+    }
+
+    updateStoredCams(cams: Cam[], reviewCams: Cam[], reset = false) {
         const self = this;
 
         if (!cams || cams.length === 0) return;
@@ -222,10 +292,9 @@ export class NoctuaReviewSearchService {
                 return self.camsService.getStoredModel(cam);
             }),
             finalize(() => {
-                //cam.loading.status = false;
                 self.camsService.updateDisplayNumber(reviewCams);
                 self.camsService.onCamsChanged.next(reviewCams);
-                //self.camsService.resetLoading(cams);
+                self.camsService.resetLoading(cams);
                 self._noctuaSearchService.updateSearch();
                 self.onReplaceChanged.next(true);
 
@@ -239,30 +308,41 @@ export class NoctuaReviewSearchService {
                 }
                 self.updateSearch();
 
+                console.log('I am finalize')
+
             })).subscribe({
                 next: (response) => {
-                    const cam = find(reviewCams, { id: response.activeModel.id });
-                    self._noctuaGraphService.rebuildStoredGraph(cam, response.activeModel);
-                    self.populateStoredModel(cam, response)
+                    if (!response || !response.storedModel || !response.activeModel) return;
+
+                    const cam = find(reviewCams, { id: response.data().id });
+
+                    if (!cam) return;
+
+                    self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
+                    self.populateStoredModel(cam, response.storedModel)
                     cam.loading.status = false;
                     self.camsService.updateDisplayNumber(reviewCams);
                     self.camsService.onCamsChanged.next(reviewCams);
                     self.updateSearch();
                 },
+                complete: () => {
+                    console.log('I am complete')
+                    self.zone.run(() => {
+                        self.camsService.resetLoading(reviewCams);
+                    });
+                }
             })
     }
 
-    populateStoredModel(cam: Cam, response) {
+    populateStoredModel(cam: Cam, storedCam) {
         const self = this;
         const noctua_graph = model.graph;
 
         cam.storedGraph = new noctua_graph();
-        cam.storedGraph.load_data_basic(response.storedModel);
+        cam.storedGraph.load_data_basic(storedCam);
         cam.storedActivities = self._noctuaGraphService.graphToActivities(cam.storedGraph)
         cam.checkStored();
         cam.reviewCamChanges();
-
-        return response;
     }
 
     searchCamsByIds(ids: string[]) {
@@ -349,6 +429,8 @@ export class NoctuaReviewSearchService {
         this.currentMatchedEnity = undefined;
         this.camsService.currentMatch = new Entity(null, null);
         this.searchCriteria = new SearchCriteria();
+
+
     }
 
     getPage(pageNumber: number, pageSize: number) {

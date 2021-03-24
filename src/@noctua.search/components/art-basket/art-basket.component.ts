@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Cam, CamService, CamsService, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
+import { Cam, CamLoadingIndicator, CamService, CamsService, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { NoctuaReviewSearchService } from './../../services/noctua-review-search
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { LeftPanel, MiddlePanel } from './../../models/menu-panels';
 import { NoctuaSearchDialogService } from './../../services/dialog.service';
+import { ReloadType } from './../../models/review-mode';
 
 @Component({
   selector: 'noc-art-basket',
@@ -178,7 +179,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     const summary = self.camsService.reviewCamChanges(cam);
     const success = (ok) => {
       if (ok) {
-        self._storeCamsQuery([cam]);
+        self._resetCamsQuery([cam]);
       }
     }
 
@@ -202,7 +203,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
     const success = (ok) => {
       if (ok) {
-        self._storeCamsQuery(self.camsService.cams);
+        self._resetCamsQuery(self.camsService.cams);
       }
     }
     if (self.summary?.stats.totalChanges > 0) {
@@ -279,7 +280,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     if (summary?.stats.totalChanges > 0) {
       const success = (replace) => {
         if (replace) {
-          self._storeCamsQuery(self.camsService.cams);
+          self._storeCamsQuery([cam]);
         }
       };
 
@@ -298,34 +299,13 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   private _storeCamsQuery(cams: Cam[], reset = false) {
     const self = this;
 
-    self.camsService.storeCams(cams).pipe(
-      takeUntil(this._unsubscribeAll),
-      finalize(() => {
-        self.zone.run(() => {
-          self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
-        });
-      })).subscribe((cam: Cam) => {
-        if (!cam) {
-          return;
-        }
-        self.noctuaReviewSearchService.updateCams([cam], self.camsService.cams, reset)
-      })
+    self.noctuaReviewSearchService.reloadCams(cams, self.camsService.cams, ReloadType.STORE, reset)
+
   }
 
   private _resetCamsQuery(cams: Cam[], reset = false) {
     const self = this;
 
-    self.camsService.resetCams(cams).pipe(
-      takeUntil(this._unsubscribeAll),
-      finalize(() => {
-        self.zone.run(() => {
-          self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
-        });
-      })).subscribe((cam: Cam) => {
-        if (!cam) {
-          return;
-        }
-        self.noctuaReviewSearchService.updateCams([cam], self.camsService.cams, reset)
-      })
+    self.noctuaReviewSearchService.reloadCams(cams, self.camsService.cams, ReloadType.RESET, reset)
   }
 }
