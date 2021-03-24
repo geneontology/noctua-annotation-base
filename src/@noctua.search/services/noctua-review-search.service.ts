@@ -24,6 +24,7 @@ import { SearchHistory } from './../models/search-history';
 import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaSearchMenuService } from './search-menu.service';
 import { NoctuaSearchService } from './noctua-search.service';
+import { LeftPanel, MiddlePanel } from './../models/menu-panels';
 
 declare const require: any;
 
@@ -196,39 +197,7 @@ export class NoctuaReviewSearchService {
         this.onArtBasketChanged.next(this.artBasket);
     }
 
-    resetCams(cams: Cam[]) {
-        const self = this;
-
-        from(cams).pipe(
-            mergeMap((cam: Cam) => {
-                return self._noctuaGraphService.resetModel(cam);
-            }),
-        ).subscribe({
-            next: (response: any) => {
-                const cam = find(cams, { id: response.data().id });
-
-                if (cam) {
-                    self.updateCams([cam]);
-                }
-            }
-        })
-    }
-
-    storeCams(cams: Cam[]) {
-        const self = this;
-
-        return from(cams).pipe(
-            mergeMap((cam: Cam) => {
-                return self._noctuaGraphService.storeCam(cam);
-            }),
-            map((response: any) => {
-                return find(cams, { id: response.data().id });
-            })
-
-        )
-    }
-
-    updateCams(cams: Cam[]) {
+    updateCams(cams: Cam[], reviewCams: Cam[], reset = false) {
         const self = this;
 
         if (!cams || cams.length === 0) return;
@@ -254,18 +223,30 @@ export class NoctuaReviewSearchService {
             }),
             finalize(() => {
                 //cam.loading.status = false;
-                self.camsService.updateDisplayNumber(cams);
-                self.camsService.onCamsChanged.next(cams);
+                self.camsService.updateDisplayNumber(reviewCams);
+                self.camsService.onCamsChanged.next(reviewCams);
                 //self.camsService.resetLoading(cams);
+                self._noctuaSearchService.updateSearch();
                 self.onReplaceChanged.next(true);
+
+                if (reset) {
+                    self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
+                    self.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
+                    self.clear();
+                    self.camsService.clearCams();
+                    self.clearBasket();
+                    self.onResetReview.next(true);
+                }
+                self.updateSearch();
+
             })).subscribe({
                 next: (response) => {
-                    const cam = find(cams, { id: response.activeModel.id });
+                    const cam = find(reviewCams, { id: response.activeModel.id });
                     self._noctuaGraphService.rebuildStoredGraph(cam, response.activeModel);
                     self.populateStoredModel(cam, response)
                     cam.loading.status = false;
-                    self.camsService.updateDisplayNumber(cams);
-                    self.camsService.onCamsChanged.next(cams);
+                    self.camsService.updateDisplayNumber(reviewCams);
+                    self.camsService.onCamsChanged.next(reviewCams);
                     self.updateSearch();
                 },
             })

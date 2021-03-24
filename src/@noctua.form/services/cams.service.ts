@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, from } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
@@ -11,7 +11,7 @@ import { each, groupBy, find } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/activity/entity';
 import { HttpClient } from '@angular/common/http';
-import { finalize, map } from 'rxjs/operators';
+import { finalize, map, mergeMap } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
 import { ActivityNode } from './../models/activity/activity-node';
 import { noctuaFormConfig } from './../noctua-form-config';
@@ -174,13 +174,16 @@ export class CamsService {
 
   storeCams(cams: Cam[]): Observable<any> {
     const self = this;
-    const promises = [];
 
-    each(cams, (cam: Cam) => {
-      promises.push(self._noctuaGraphService.storeCam(cam));
-    });
+    return from(cams).pipe(
+      mergeMap((cam: Cam) => {
+        return self._noctuaGraphService.storeCam(cam);
+      }),
+      map((response: any) => {
+        return find(cams, { id: response.data().id });
+      })
 
-    return forkJoin(promises);
+    )
   }
 
   bulkStoredModel(cams: Cam[]) {
@@ -238,20 +241,18 @@ export class CamsService {
     this.onCamsChanged.next(this.cams);
   }
 
-  resetCam(cam: Cam) {
-    return forkJoin([this._noctuaGraphService.resetModel(cam)]);
-  }
-
-  resetCams() {
+  resetCams(cams: Cam[]): Observable<any> {
     const self = this;
-    const promises = [];
 
-    each(this.cams, (cam: Cam) => {
-      promises.push(self._noctuaGraphService.resetModel(cam));
-    });
-
-    return forkJoin(promises);
+    return from(cams).pipe(
+      mergeMap((cam: Cam) => {
+        return self._noctuaGraphService.resetModel(cam);
+      }),
+      map((response: any) => {
+        return find(cams, { id: response.data().id });
+      }))
   }
+
 
   resetMatch() {
     each(this.cams, (cam: Cam) => {

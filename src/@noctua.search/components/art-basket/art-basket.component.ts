@@ -178,7 +178,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     const summary = self.camsService.reviewCamChanges(cam);
     const success = (ok) => {
       if (ok) {
-        self.noctuaReviewSearchService.resetCams(self.camsService.cams);
+        self._storeCamsQuery([cam]);
       }
     }
 
@@ -202,7 +202,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
     const success = (ok) => {
       if (ok) {
-        self.noctuaReviewSearchService.resetCams(self.camsService.cams);
+        self._storeCamsQuery(self.camsService.cams);
       }
     }
     if (self.summary?.stats.totalChanges > 0) {
@@ -247,47 +247,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   submitChanges() {
     const self = this;
 
-    this.storeCams(self.camsService.cams, true)
-  }
-
-  submitChange(cam: Cam) {
-
-    const self = this;
-    const summary = self.camsService.reviewCamChanges(cam);
-
-    if (summary?.stats.totalChanges > 0) {
-      const success = (replace) => {
-        if (replace) {
-
-          self.noctuaReviewSearchService.storeCams([cam]).pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(cams => {
-              if (!cams) {
-                return;
-              }
-
-              self.noctuaSearchService.updateSearch();
-              self.noctuaReviewSearchService.updateSearch();
-              self.zone.run(() => {
-                self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
-              });
-            });
-        }
-      };
-
-      const options = {
-        title: 'Save Changes?',
-        message: `All your changes will be saved for model. Model Name:"${cam.title}"`,
-        cancelLabel: 'Go Back',
-        confirmLabel: 'Submit'
-      }
-
-      self.noctuaSearchDialogService.openCamReviewChangesDialog(success, summary, options)
-    }
-  }
-
-
-  private storeCams(cams: Cam[], reset = false) {
-    const self = this;
     const success = (replace) => {
       if (replace) {
         const element = document.querySelector('#noc-review-results');
@@ -295,30 +254,8 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
         if (element) {
           element.scrollTop = 0;
         }
-        self.noctuaReviewSearchService.storeCams(cams).pipe(
-          takeUntil(this._unsubscribeAll),
-          finalize(() => {
 
-            if (reset) {
-              self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
-              self.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
-              self.noctuaReviewSearchService.clear();
-              self.camsService.clearCams();
-              self.noctuaReviewSearchService.clearBasket();
-              self.noctuaReviewSearchService.onResetReview.next(true);
-            }
-            self.noctuaSearchService.updateSearch();
-            self.noctuaReviewSearchService.updateSearch();
-            self.zone.run(() => {
-              self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
-            });
-
-          })).subscribe((cam: Cam) => {
-            if (!cam) {
-              return;
-            }
-            self.noctuaReviewSearchService.updateCams([cam])
-          })
+        self._storeCamsQuery(self.camsService.cams, true);
       };
     }
 
@@ -334,4 +271,61 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     }
   }
 
+  submitChange(cam: Cam) {
+
+    const self = this;
+    const summary = self.camsService.reviewCamChanges(cam);
+
+    if (summary?.stats.totalChanges > 0) {
+      const success = (replace) => {
+        if (replace) {
+          self._storeCamsQuery(self.camsService.cams);
+        }
+      };
+
+      const options = {
+        title: 'Save Changes?',
+        message: `All your changes will be saved for model. Model Name:"${cam.title}"`,
+        cancelLabel: 'Go Back',
+        confirmLabel: 'Submit'
+      }
+
+      self.noctuaSearchDialogService.openCamReviewChangesDialog(success, summary, options)
+    }
+  }
+
+
+  private _storeCamsQuery(cams: Cam[], reset = false) {
+    const self = this;
+
+    self.camsService.storeCams(cams).pipe(
+      takeUntil(this._unsubscribeAll),
+      finalize(() => {
+        self.zone.run(() => {
+          self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
+        });
+      })).subscribe((cam: Cam) => {
+        if (!cam) {
+          return;
+        }
+        self.noctuaReviewSearchService.updateCams([cam], self.camsService.cams, reset)
+      })
+  }
+
+  private _resetCamsQuery(cams: Cam[], reset = false) {
+    const self = this;
+
+    self.camsService.resetCams(cams).pipe(
+      takeUntil(this._unsubscribeAll),
+      finalize(() => {
+        self.zone.run(() => {
+          self.confirmDialogService.openSuccessfulSaveToast('Changes successfully saved.', 'OK');
+        });
+      })).subscribe((cam: Cam) => {
+        if (!cam) {
+          return;
+        }
+        self.noctuaReviewSearchService.updateCams([cam], self.camsService.cams, reset)
+      })
+  }
 }
