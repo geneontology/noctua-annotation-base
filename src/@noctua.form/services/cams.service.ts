@@ -88,7 +88,6 @@ export class CamsService {
   updateModel(cams: Cam[], responses) {
     const self = this;
 
-    console.log("update called ", responses, cams);
     if (responses && responses.length > 0) {
       responses.forEach(response => {
         const cam: Cam = find(cams, { id: response.data().id });
@@ -99,8 +98,6 @@ export class CamsService {
       })
     }
   }
-
-
 
   expandMatch(nodeId: string) {
     const self = this;
@@ -246,7 +243,6 @@ export class CamsService {
       }))
   }
 
-
   resetMatch() {
     each(this.cams, (cam: Cam) => {
       cam.queryMatch = new CamQueryMatch();
@@ -261,6 +257,13 @@ export class CamsService {
 
   sortCams() {
     this.cams.sort(this._compareDateReviewAdded);
+  }
+
+  applyMatchWeights(cams: any[]) {
+    let weight = 1;
+    each(cams, (cam: Cam, key) => {
+      cam.applyWeights(weight);
+    });
   }
 
   updateDisplayNumber(cams: any[]) {

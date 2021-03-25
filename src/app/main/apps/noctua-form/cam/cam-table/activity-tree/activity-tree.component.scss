@@ -241,6 +241,13 @@ $accent: map-get($theme, accent);
       overflow: auto;
     }
 
+    .noc-cell-label {
+      @include deep-width(100%);
+      @include deep-height(20px);
+      font-size: 10px;
+      color: map-get($primary, default);
+    }
+
     tr.mat-footer-row,
     tr.mat-row {
       height: auto;

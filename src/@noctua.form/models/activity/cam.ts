@@ -308,6 +308,34 @@ export class Cam {
     }
   }
 
+  applyWeights(weight = 0) {
+    const self = this;
+
+    if (self.queryMatch && self.queryMatch.terms.length > 0) {
+
+      each(self.activities, (activity: Activity) => {
+        each(activity.nodes, (node: ActivityNode) => {
+          const matchNode = find(self.queryMatch.terms, { uuid: node.term.uuid }) as Entity;
+
+          if (matchNode) {
+            matchNode.weight = node.term.weight = weight;
+            weight++;
+          }
+
+          each(node.predicate.evidence, (evidence: Evidence) => {
+            const matchNode = find(self.queryMatch.terms, { uuid: evidence.referenceEntity.uuid }) as Entity;
+
+            if (matchNode) {
+              matchNode.weight = evidence.referenceEntity.weight = weight;
+              weight++;
+            }
+          });
+        });
+
+      });
+    }
+  }
+
   addPendingChanges(findEntities: Entity[], replaceWith: string, category) {
     const self = this;
 

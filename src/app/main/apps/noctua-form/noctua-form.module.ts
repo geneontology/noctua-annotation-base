@@ -53,10 +53,11 @@ import { SelectEvidenceComponent } from './components/select-evidence/select-evi
 import { MatTreeModule } from '@angular/material/tree';
 import { CamErrorsDialogComponent } from './dialogs/cam-errors/cam-errors.component';
 import { EvidenceTableComponent } from './cam/cam-table/activity-table/evidence-table/evidence-table.component';
+import { ActivityTreeComponent } from './cam/cam-table/activity-tree/activity-tree.component';
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];
@@ -112,6 +113,7 @@ const routes = [
     NodesContainerComponent,
     ActivityConnectorFormComponent,
     ActivityTableComponent,
+    ActivityTreeComponent,
     TripleTableComponent,
     CamPreviewComponent
   ],
@@ -142,26 +144,13 @@ const routes = [
     ActivityConnectorFormComponent,
     TripleTableComponent,
     ActivityTableComponent,
+    ActivityTreeComponent,
     EvidenceTableComponent,
     GraphPreviewComponent,
     CamPreviewComponent,
     CamGraphComponent,
     SelectEvidenceComponent,
   ],
-  /*  entryComponents: [
-     AddEvidenceDialogComponent,
-     ActivityErrorsDialogComponent,
-     CamErrorsDialogComponent,
-     BeforeSaveDialogComponent,
-     CreateFromExistingDialogComponent,
-     LinkToExistingDialogComponent,
-     SelectEvidenceDialogComponent,
-     SearchDatabaseDialogComponent,
-     SearchEvidenceDialogComponent,
-     PreviewActivityDialogComponent
-     //  NodeComponent,
-     // NodesContainerComponent
-   ] */
 })
 
 export class NoctuaFormModule {

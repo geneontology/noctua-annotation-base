@@ -43,9 +43,12 @@
     <div *ngFor="let activity of cam.activities" [attr.id]="activity.displayId" class="w-100-p"
       [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}">
 
-      <noc-activity-table [options]="options" [cam]="cam" [activity]="activity" class="noc-activities-table-body"
-        fxLayout="row" fxLayoutAlign="start center">
+      <noc-activity-table *ngIf="!options.treeTable" [options]="options" [cam]="cam" [activity]="activity"
+        class="noc-activities-table-body" fxLayout="row" fxLayoutAlign="start center">
       </noc-activity-table>
+      <noc-activity-tree *ngIf="options.treeTable" [options]="options" [cam]="cam" [activity]="activity"
+        class="noc-activities-table-body" fxLayout="row" fxLayoutAlign="start center">
+      </noc-activity-tree>
     </div>
   </div>
 </div>

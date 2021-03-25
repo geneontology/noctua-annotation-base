@@ -27,7 +27,6 @@ $accent: map-get($theme, accent);
   }
 
   .noc-form-container {
-    background-color: #EEE;
     padding: 20px 10px;
   }
 
@@ -69,6 +68,7 @@ $accent: map-get($theme, accent);
     table {
       // width: 800px; 
       overflow: auto;
+      background-color: transparent;
     }
 
     tr.mat-footer-row,

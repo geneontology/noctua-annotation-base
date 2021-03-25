@@ -96,6 +96,8 @@ export class ActivityNode implements ActivityNodeDisplay {
   linkedNode = false;
   familyNodes = [];
   displayId: string;
+  expandable: boolean = true;
+  expanded: boolean = false;
 
   private _id: string;
 

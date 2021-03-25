@@ -13,6 +13,7 @@ export class Entity implements EntityBase {
   termHistory: Entity[] = [];
   displayId: string;
   activityDisplayId: string;
+  weight = 1;
 
   private _uuid: string;
 
@@ -43,5 +44,15 @@ export class Entity implements EntityBase {
     const result = this.id !== null && this.id !== undefined && this.id.length > 0;
 
     return result;
+  }
+
+
+}
+
+export function _compareEntityWeight(a: Entity, b: Entity): number {
+  if (a.weight < b.weight) {
+    return -1;
+  } else {
+    return 1;
   }
 }

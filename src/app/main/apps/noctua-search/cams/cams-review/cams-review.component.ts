@@ -46,6 +46,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   artBasket: ArtBasket;
 
   tableOptions = {
+    treeTable: true,
     editableTerms: true,
     editableEvidence: true,
     editableReference: true,

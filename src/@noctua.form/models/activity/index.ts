@@ -26,7 +26,8 @@ export {
 export { EntityLookup } from './entity-lookup';
 export {
     EntityBase,
-    Entity
+    Entity,
+    _compareEntityWeight
 } from './entity';
 export { Predicate } from './predicate';
 export { Triple } from './triple';
