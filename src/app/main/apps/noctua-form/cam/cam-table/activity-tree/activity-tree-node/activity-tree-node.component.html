@@ -1,0 +1,50 @@
+<div class="w-100-p">
+  <div class="noc-activity-table w-100-p"
+    [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="row"
+    fxLayoutAlign="start start">
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="">
+      <div class="noc-column-flex" fxLayout="row" fxLayoutAlign="start center">Term</div>
+      <div class="noc-column-flex" fxLayout="column" fxLayoutAlign="start stretch" [attr.id]="entity.term?.displayId"
+        [ngClass]="{'noc-highlight-match': entity.term?.highlight,
+            'noc-highlight-modified': entity.term?.modified,
+            'noc-highlight-match-current': entity.term?.uuid===camsService.currentMatch?.uuid}">
+        <p class="noc-old-term" *ngIf="entity.term?.modified && entity.term?.termHistory?.length>0">
+          {{entity.term?.termHistory[0]?.label}}
+          <a (click)="$event.stopPropagation()" href="{{entity.term?.termHistory[0]?.url}}" target="_blank">
+            {{ entity.term?.termHistory[0]?.id }}
+          </a>
+        </p>
+        <p class="">
+          {{entity.term?.label}} <br>
+          <a (click)="$event.stopPropagation()" href="{{entity.term?.url}}" target="_blank">
+            {{ entity.term?.id }}
+          </a>
+        </p>
+        <noctua-inline-editor *ngIf="noctuaUserService.user && entity.term && options.editableTerms" [cam]="cam"
+          [activity]='activity' [entity]="entity" [category]="EditorCategory.term" class="noc-edit-button">
+        </noctua-inline-editor>
+      </div>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="30px">
+      <div fxLayout="row" fxLayoutAlign="start center">Asp</div>
+      <div>
+        <p class="">{{entity.aspect}}</p>
+      </div>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="30px">
+      <div fxLayout="row" fxLayoutAlign="start center">Ext</div>
+      <div>
+        <p *ngIf="entity.isExtension" class="">Yes</p>
+      </div>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="800px">
+      <div fxFlex="" fxLayout="row" fxLayoutAlign="center center">
+        Evidence
+      </div>
+      <div fxFlex="" class="p-0">
+        <noc-evidence-table class="w-100-p" [options]="optionsDisplay" [cam]="cam" [entity]="entity">
+        </noc-evidence-table>
+      </div>
+    </div>
+  </div>
+</div>

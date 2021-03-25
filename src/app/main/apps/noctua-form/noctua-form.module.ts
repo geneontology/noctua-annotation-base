@@ -54,6 +54,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { CamErrorsDialogComponent } from './dialogs/cam-errors/cam-errors.component';
 import { EvidenceTableComponent } from './cam/cam-table/activity-table/evidence-table/evidence-table.component';
 import { ActivityTreeComponent } from './cam/cam-table/activity-tree/activity-tree.component';
+import { ActivityTreeNodeComponent } from './cam/cam-table/activity-tree/activity-tree-node/activity-tree-node.component';
 
 const routes = [
   {
@@ -115,6 +116,7 @@ const routes = [
     ActivityTableComponent,
     ActivityTreeComponent,
     TripleTableComponent,
+    ActivityTreeNodeComponent,
     CamPreviewComponent
   ],
   providers: [
@@ -149,6 +151,7 @@ const routes = [
     GraphPreviewComponent,
     CamPreviewComponent,
     CamGraphComponent,
+    ActivityTreeNodeComponent,
     SelectEvidenceComponent,
   ],
 })

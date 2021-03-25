@@ -1,45 +1,30 @@
-<div class="annoq-tree-container" noctuaPerfectScrollbar>
+<div class="noc-tree-container" noctuaPerfectScrollbar>
   <mat-tree #tree *ngIf="dataSource?.data" [dataSource]="dataSource" [treeControl]="treeControl">
-    <mat-tree-node class="annoq-tree-node" *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding
+    <mat-tree-node class="noc-tree-node" *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding
       matTreeNodePaddingIndent="10" [ngClass]="{ 'background-highlight': activeAnnotation === node.uuid}">
       <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-        <button mat-icon-button disabled class="annoq-icon-button"></button>
-        <div class="annoq-annotation-row" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
-          <div class="annoq-title">
+        <button mat-icon-button disabled class="noc-icon-button"></button>
+        <div class="noc-annotation-row" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-title">
             {{node.label}}
           </div>
-          <span fxFlex></span>
-          <button mat-icon-button class="annoq-icon-button" (click)="selectAnnotation(node)">
-            <mat-icon class="s-18">
-              info
-            </mat-icon>
-          </button>
+          <noc-activity-tree-node [options]="options" [cam]="cam" [activity]="activity" [entity]="node" class="w-100-p">
+          </noc-activity-tree-node>
         </div>
       </div>
     </mat-tree-node>
-    <mat-tree-node fxLayout="row" class="annoq-tree-node" *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding
-      matTreeNodePaddingIndent="10" [ngClass]="{ 'background-highlight': activeAnnotation === node.short_name,
-          'annoq-hide':!node.visible }">
+    <mat-tree-node fxLayout="row" class="noc-tree-node" *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding
+      matTreeNodePaddingIndent="10" [ngClass]="{ 'background-highlight': activeAnnotation === node.uuid}">
       <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-        <button mat-icon-button matTreeNodeToggle class="annoq-icon-button">
-          <fa-icon *ngIf="!treeControl.isExpanded(node)" class="annoq-tree-icon" [icon]="['fas', 'caret-right']">
+        <button mat-icon-button matTreeNodeToggle class="noc-icon-button">
+          <fa-icon *ngIf="!treeControl.isExpanded(node)" class="noc-tree-icon" [icon]="['fas', 'caret-right']">
           </fa-icon>
-          <fa-icon *ngIf="treeControl.isExpanded(node)" class="annoq-tree-icon" [icon]="['fas', 'caret-down']">
+          <fa-icon *ngIf="treeControl.isExpanded(node)" class="noc-tree-icon" [icon]="['fas', 'caret-down']">
           </fa-icon>
-
         </button>
-        <div class="annoq-annotation-row" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
-          <div class="annoq-title">
-            {{node.label}}
-          </div>
-          <span fxFlex></span>
-          <div class="" fxFlex="30px" fxLayout="row" fxLayoutAlign="center center">
-            <button mat-icon-button class="annoq-icon-button" (click)="selectAnnotation(node)">
-              <mat-icon class="s-18">
-                info
-              </mat-icon>
-            </button>
-          </div>
+        <div class="noc-annotation-row" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
+          <noc-activity-tree-node [options]="options" [cam]="cam" [activity]="activity" [entity]="node" class="w-100-p">
+          </noc-activity-tree-node>
         </div>
       </div>
     </mat-tree-node>
@@ -99,94 +84,4 @@
     </div>
   </div>
 
-  <div *ngIf="activity.expanded" class="noc-activity-table w-100-p"
-    [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="column"
-    fxLayoutAlign="start start">
-    <table mat-table fxFlex="1 1 auto" class="" [dataSource]="dataSource" [@animateStagger]="{value:'50'}">
-      <ng-container matColumnDef="term">
-        <th mat-header-cell *matHeaderCellDef class="noc-column-flex" fxFlex="200px" fxLayout="row"
-          fxLayoutAlign="start center">Term</th>
-        <td mat-cell class="noc-column-flex" *matCellDef="let entity" fxFlex="200px" fxLayout="column"
-          fxLayoutAlign="start stretch" [attr.id]="entity.term?.displayId" [ngClass]="{'noc-highlight-match': entity.term?.highlight,
-            'noc-highlight-modified': entity.term?.modified,
-            'noc-highlight-match-current': entity.term?.uuid===camsService.currentMatch?.uuid}">
-          <div class="noc-cell-label">
-            {{entity.label}}
-          </div>
-          <p class="noc-old-term" *ngIf="entity.term?.modified && entity.term?.termHistory?.length>0">
-            {{entity.term?.termHistory[0]?.label}}
-            <a (click)="$event.stopPropagation()" href="{{entity.term?.termHistory[0]?.url}}" target="_blank">
-              {{ entity.term?.termHistory[0]?.id }}
-            </a>
-          </p>
-          <p class="">
-            {{entity.term?.label}} <br>
-            <a (click)="$event.stopPropagation()" href="{{entity.term?.url}}" target="_blank">
-              {{ entity.term?.id }}
-            </a>
-          </p>
-          <noctua-inline-editor *ngIf="noctuaUserService.user && entity.term && options.editableTerms" [cam]="cam"
-            [activity]='activity' [entity]="entity" [category]="EditorCategory.term" class="noc-edit-button">
-          </noctua-inline-editor>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="aspect">
-        <th mat-header-cell *matHeaderCellDef fxFlex="30px" fxLayout="row" fxLayoutAlign="start center">Asp</th>
-        <td mat-cell *matCellDef="let entity" fxFlex="30px">
-          <p class="">{{entity.aspect}}</p>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="extension">
-        <th mat-header-cell *matHeaderCellDef fxFlex="30px" fxLayout="row" fxLayoutAlign="start center">Ext</th>
-        <td mat-cell *matCellDef="let entity" fxFlex="30px">
-          <p *ngIf="entity.isExtension" class="">Yes</p>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="evidence">
-        <th mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row" fxLayoutAlign="center center">
-          Evidence
-        </th>
-        <td mat-cell *matCellDef="let entity; let i = index;" fxFlex="" class="p-0">
-          <noc-evidence-table *ngIf="i===0" class="w-100-p" [options]="options" [cam]="cam" [entity]="entity">
-          </noc-evidence-table>
-          <noc-evidence-table *ngIf="i>0" class="w-100-p" [options]="optionsDisplay" [cam]="cam" [entity]="entity">
-          </noc-evidence-table>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="actions" stickyEnd>
-        <th mat-header-cell *matHeaderCellDef fxFlex="50px" fxLayout="row" fxLayoutAlign="start center"></th>
-        <td mat-cell *matCellDef="let entity" fxFlex="50px" fxLayout="row" fxLayoutAlign="start center">
-          <span fxFlex=""></span>
-          <button mat-icon-button *ngIf="noctuaUserService.user" (click)="updateCurrentMenuEvent($event)"
-            class="noc-action-button" fxFlex="40px" [matMenuTriggerFor]="entityMenu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
-            <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
-              NOT Qualifier
-            </button>
-            <button mat-menu-item *ngIf="entity.insertMenuNodes" [matMenuTriggerFor]="addMenu">Add</button>
-            <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
-          </mat-menu>
-          <mat-menu #addMenu="matMenu">
-            <button mat-menu-item *ngFor="let insertMenuItem of entity.insertMenuNodes" class=""
-              (click)="insertEntity(entity, insertMenuItem)">
-              {{insertMenuItem.label}}
-            </button>
-          </mat-menu>
-          <mat-menu #evidenceMenu="matMenu">
-            <button mat-menu-item (click)="addEvidence(entity, entity.predicate?.evidenceIndex)" class="">
-              Add Evidence
-            </button>
-          </mat-menu>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let entity; columns: displayedColumns;" class="" matRipple [ngClass]="{'noc-row-term': entity.term,
-          'noc-row-selected': entity.uuid === noctuaActivityEntityService.termNode?.uuid}"></tr>
-    </table>
-    <div *ngIf="activity.nodes?.length===0" class="noc-no-info">
-      no results yet.
-    </div>
-  </div>
 </div>

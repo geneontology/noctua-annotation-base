@@ -7,41 +7,6 @@ $accent: map-get($theme, accent);
 :host {
   padding: 0px;
   width: 100%;
-  .noc-tree-container {
-    @include deep-width(100%);
-  }
-  .noc-tree-node {
-    font-size: 14px;
-    color: #000;
-    padding-right: 12px;
-
-    .noc-icon-button {
-      @include deep-height(25px);
-      @include deep-width(25px);
-      line-height: 25px;
-      color: #AAA;
-    }
-
-    .noc-tree-icon {
-      color: #000;
-      font-size: 14px;
-    }
-
-    .noc-annotation-row {
-      padding: 8px 5px;
-
-      .noc-title {
-        // font-weight: bold;
-        //font-size: 20px;
-        //margin-bottom: 5px;
-        word-break: break-all;
-      }
-    }
-
-    &:hover {
-      background-color: rgba(#000000, 0.10);
-    }
-  }
 
   mat-chip {
     &.default {
@@ -274,13 +239,6 @@ $accent: map-get($theme, accent);
     table {
       // width: 800px; 
       overflow: auto;
-    }
-
-    .noc-cell-label {
-      @include deep-width(100%);
-      @include deep-height(20px);
-      font-size: 10px;
-      color: map-get($primary, default);
     }
 
     tr.mat-footer-row,
