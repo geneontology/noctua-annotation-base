@@ -1,0 +1,37 @@
+.noctua-form-table {
+  .noc-cell {
+    padding: 0 10px;
+    font-size: 10px !important;
+    //color: #0F0; // map-get($primary, default);
+    font-weight: bold;
+    color: map-get($primary, default);
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .noc-term-cell {
+  }
+  .noc-aspect-cell {
+    @include deep-width(30px);
+  }
+
+  .noc-extension-cell {
+    @include deep-width(40px);
+  }
+
+  .noc-evidence-cell {
+    @include deep-width(600px);
+  }
+
+  .noc-evidence-code-cell {
+  }
+
+  .noc-with-cell {
+    @include deep-width(100px);
+  }
+  .noc-group-cell {
+    @include deep-width(100px);
+  }
+  .noc-contributor-cell {
+    @include deep-width(100px);
+  }
+}

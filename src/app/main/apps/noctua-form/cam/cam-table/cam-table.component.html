@@ -40,6 +40,37 @@
         {{cam?.loading.message}}
       </h3>
     </div>
+    <div *ngIf="options.treeTable" class="noctua-form-table noc-activity-heading w-100-p" fxLayout="row"
+      fxLayoutAlign="start center">
+      <div class="noc-cell noc-term-cell" fxFlex="">
+        Term
+      </div>
+      <div class="noc-cell noc-aspect-cell">
+        Asp
+      </div>
+      <div class="noc-cell noc-extension-cell">
+        Ext
+      </div>
+      <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-cell noc-evidence-code-cell" fxFlex="">
+          Evidence
+        </div>
+        <div class="noc-cell noc-reference-cell">
+          Reference
+        </div>
+        <div class="noc-cell noc-with-cell">
+          With
+        </div>
+        <div class="noc-cell noc-group-cell">
+          Assigned By
+        </div>
+        <div class="noc-cell noc-contributor-cell">
+          Contributor
+        </div>
+      </div>
+    </div>
+
+
     <div *ngFor="let activity of cam.activities" [attr.id]="activity.displayId" class="w-100-p"
       [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}">
 

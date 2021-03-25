@@ -1,5 +1,6 @@
 @import "src/@noctua/scss/noctua";
 @import "src/@noctua.common/scss/noctua.common";
+@import "src/@noctua.form/scss/noctua-form.common";
 
 $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
@@ -7,9 +8,7 @@ $accent: map-get($theme, accent);
 :host {
   padding: 0px;
   width: 100%;
-  .noc-tree-container {
-    @include deep-width(100%);
-  }
+
   .noc-tree-node {
     font-size: 14px;
     color: #000;
@@ -19,7 +18,7 @@ $accent: map-get($theme, accent);
       @include deep-height(25px);
       @include deep-width(25px);
       line-height: 25px;
-      color: #AAA;
+      color: #aaa;
     }
 
     .noc-tree-icon {
@@ -39,7 +38,7 @@ $accent: map-get($theme, accent);
     }
 
     &:hover {
-      background-color: rgba(#000000, 0.10);
+      background-color: rgba(#000000, 0.1);
     }
   }
 
@@ -103,7 +102,6 @@ $accent: map-get($theme, accent);
           color: #222;
           background-color: rgba(#000000, 0.2);
         }
-
       }
 
       @include noc-chip-color(#e28989);
@@ -111,11 +109,11 @@ $accent: map-get($theme, accent);
   }
 
   .noc-form-container {
-    background-color: #EEE;
+    background-color: #eee;
     padding: 20px 10px;
   }
 
-  .noc-activity-table-header {
+  .noc-activity-header {
     @include deep-height(50px);
     border-bottom: $noc-primary-color-light solid 1px;
 
@@ -131,7 +129,7 @@ $accent: map-get($theme, accent);
   .noc-group-side-heading {
     @include deep-width(25px);
     @include deep-height(100%);
-    background-color: #DDD;
+    background-color: #ddd;
     font-size: 8px;
     font-weight: bold;
     text-align: center;
@@ -139,12 +137,13 @@ $accent: map-get($theme, accent);
     overflow-wrap: anywhere;
   }
 
-  .noc-activity-table-heading {
+  .noc-activity-heading {
     position: relative;
     margin-bottom: 1px;
+    @include deep-width(100%);
     @include deep-height(55px);
     //min-height: 35px;
-    background-color: #FFF;
+    background-color: #fff;
     font-size: 14px;
     border-bottom: $noc-primary-color-light solid 1px;
 
@@ -165,11 +164,11 @@ $accent: map-get($theme, accent);
     }
 
     .noc-title-truncate {
-      max-width: 200px
+      max-width: 200px;
     }
 
     .noc-display-number {
-      background-color: #FFF;
+      background-color: #fff;
       z-index: 2;
     }
 
@@ -252,8 +251,8 @@ $accent: map-get($theme, accent);
     padding: 0px 20px;
     height: 40px;
     width: 100%;
-    background-color: #F2F2F2;
-    border-bottom: #BBB solid 1px;
+    background-color: #f2f2f2;
+    border-bottom: #bbb solid 1px;
 
     .noc-title {
       line-height: 38px;
@@ -263,22 +262,13 @@ $accent: map-get($theme, accent);
     }
   }
 
-  .noc-activity-table {
-
-    // position: relative;
-    //  flex: 1 1 auto;
-    //    border-bottom: 1px solid rgba(0, 0, 0, .12);
-    padding-left: 40px;
-    
-
-    table {
-      // width: 800px; 
-      overflow: auto;
-    }
+  .noc-tree-container {
+    @include deep-width(100%);
 
     .noc-cell-label {
       @include deep-width(100%);
       @include deep-height(20px);
+      padding: 4px 10px;
       font-size: 10px;
       color: map-get($primary, default);
     }
@@ -286,20 +276,6 @@ $accent: map-get($theme, accent);
     tr.mat-footer-row,
     tr.mat-row {
       height: auto;
-
-      &.noc-row-term {
-        &::before {
-          position: absolute;
-          left: 0px;
-          width: 20px;
-          height: 2px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: white;
-          background-color: $noc-tree-line-color;
-          content: "";
-        }
-      }
     }
 
     tr.mat-header-row,
@@ -310,7 +286,6 @@ $accent: map-get($theme, accent);
     .noc-column-flex {
       min-width: 150px !important;
     }
-
 
     .mat-header-cell {
       padding: 0 10px;
@@ -323,10 +298,8 @@ $accent: map-get($theme, accent);
     }
 
     .mat-header-row {
-
       @include deep-height(30px);
       border-bottom: $noc-primary-color-light solid 1px;
-
     }
 
     .noc-paginator {
@@ -340,7 +313,6 @@ $accent: map-get($theme, accent);
       font-size: 12px;
     }
 
-
     .mat-cell {
       min-width: 0;
       display: flex;
@@ -350,7 +322,7 @@ $accent: map-get($theme, accent);
       padding: 0 30px 0 10px;
       font-size: 12px !important;
       color: #000;
-      border-right: #AAA solid 1px;
+      border-right: #aaa solid 1px;
       position: relative;
       overflow-wrap: break-word;
 
@@ -397,9 +369,7 @@ $accent: map-get($theme, accent);
      } */
 
     &.noc-selected {
-      table {
-        background-color: rgba($noc-highlight-model-color, 0.3);
-      }
+      background-color: rgba($noc-highlight-model-color, 0.3);
     }
   }
 }

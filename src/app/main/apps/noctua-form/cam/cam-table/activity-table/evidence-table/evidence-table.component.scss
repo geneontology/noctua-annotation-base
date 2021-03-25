@@ -1,5 +1,6 @@
 @import "src/@noctua/scss/noctua";
 @import "src/@noctua.common/scss/noctua.common";
+@import "src/@noctua.form/scss/noctua-form.common";
 
 $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
@@ -43,13 +44,12 @@ $accent: map-get($theme, accent);
     }
   }
 
-
   .noc-toolbar {
     padding: 0px 20px;
     height: 40px;
     width: 100%;
-    background-color: #F2F2F2;
-    border-bottom: #BBB solid 1px;
+    background-color: #f2f2f2;
+    border-bottom: #bbb solid 1px;
 
     .noc-title {
       line-height: 38px;
@@ -60,13 +60,12 @@ $accent: map-get($theme, accent);
   }
 
   .noc-evidence-table {
-
     // position: relative;
     //  flex: 1 1 auto;
     //    border-bottom: 1px solid rgba(0, 0, 0, .12);
 
     table {
-      // width: 800px; 
+      // width: 800px;
       overflow: auto;
       background-color: transparent;
     }
@@ -95,11 +94,6 @@ $accent: map-get($theme, accent);
       padding-left: 15px;
     }
 
-    .noc-column-flex {
-      min-width: 150px !important;
-    }
-
-
     .mat-header-cell {
       padding: 0 10px;
       font-size: 10px !important;
@@ -111,7 +105,6 @@ $accent: map-get($theme, accent);
     }
 
     .mat-header-row {
-
       @include deep-height(30px);
       border-bottom: $noc-primary-color-light solid 1px;
 
@@ -122,7 +115,6 @@ $accent: map-get($theme, accent);
         overflow: hidden;
         border: none;
       }
-
     }
 
     .noc-paginator {
@@ -136,7 +128,6 @@ $accent: map-get($theme, accent);
       font-size: 12px;
     }
 
-
     .mat-cell {
       min-width: 0;
       display: flex;
@@ -146,9 +137,9 @@ $accent: map-get($theme, accent);
       padding: 0 30px 0 10px;
       font-size: 12px !important;
       color: #000;
-      border-right: #AAA solid 1px;
+      border-right: #aaa solid 1px;
       position: relative;
-      overflow-wrap: break-word;
+      overflow-wrap: anywhere;
 
       .noc-edit-button {
         position: absolute;

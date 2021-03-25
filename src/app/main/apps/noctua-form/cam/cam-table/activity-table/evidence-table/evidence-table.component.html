@@ -1,9 +1,9 @@
-<div class="noc-evidence-table w-100-p">
+<div class="noc-evidence-table noctua-form-table w-100-p">
   <table mat-table fxFlex="1 1 auto" class="w-100-p" #table [dataSource]="entity.predicate?.evidence">
     <ng-container matColumnDef="evidence">
-      <th mat-header-cell *matHeaderCellDef class="noc-column-flex" fxFlex="" fxLayout="row"
+      <th class="noc-cell noc-evidence-code-cell" mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row"
         fxLayoutAlign="start center">Evidence</th>
-      <td mat-cell *matCellDef="let evidence; let i = index;" class="noc-column-flex" fxFlex="" fxLayout="column"
+      <td class="noc-evidence-code-cell" mat-cell *matCellDef="let evidence; let i = index;" fxFlex="" fxLayout="column"
         fxLayoutAlign="start stretch" [ngClass]="{'noc-highlight-modified': evidence.evidence?.modified}">
         <p class="noc-old-term" *ngIf="evidence.evidence?.modified && evidence.evidence?.termHistory?.length>0">
           {{evidence.evidence?.termHistory[0]?.label}}
@@ -23,9 +23,10 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="reference">
-      <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Reference
+      <th class="noc-cell noc-reference-cell" mat-header-cell *matHeaderCellDef fxLayout="row"
+        fxLayoutAlign="start center">Reference
       </th>
-      <td mat-cell *matCellDef="let evidence; let i = index" fxFlex="120px" fxLayout="column"
+      <td class="noc-reference-cell" mat-cell *matCellDef="let evidence; let i = index" fxLayout="column"
         fxLayoutAlign="start stretch" [ngClass]="{'noc-highlight-match': evidence.referenceEntity?.highlight,
             'noc-highlight-modified': evidence.referenceEntity?.modified,
             'noc-highlight-match-current': evidence.referenceEntity?.uuid===camsService.currentMatch?.uuid}">
@@ -49,8 +50,9 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="with">
-      <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">With</th>
-      <td mat-cell *matCellDef="let evidence; let i = index;" fxFlex="120px" fxLayout="column"
+      <th class="noc-cell noc-with-cell" mat-header-cell *matHeaderCellDef fxLayout="row" fxLayoutAlign="start center">
+        With</th>
+      <td class="noc-with-cell" mat-cell *matCellDef="let evidence; let i = index;" xLayout="column"
         fxLayoutAlign="start stretch" [ngClass]="{'noc-highlight-modified': evidence.withEntity?.modified}">
         <p class="noc-old-term" *ngIf="evidence.withEntity?.modified && evidence.withEntity?.termHistory?.length>0">
           <a (click)="$event.stopPropagation()" href="{{evidence.withEntity?.termHistory[0]?.url}}" target="_blank">
@@ -69,9 +71,9 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="assignedBy">
-      <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Assigned By
-      </th>
-      <td mat-cell *matCellDef="let evidence; let i = index;" fxFlex="120px" fxLayout="row"
+      <th class="noc-cell noc-group-cell" mat-header-cell *matHeaderCellDef fxLayout="row" fxLayoutAlign="start center">
+        Assigned By </th>
+      <td class="noc-group-cell" mat-cell *matCellDef="let evidence; let i = index;" fxLayout="row"
         fxLayoutAlign="start center">
         <p class="">
           <span *ngFor="let group of evidence.groups; let i=index; let isLast=last">
@@ -84,9 +86,9 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="contributor">
-      <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Contributors
-      </th>
-      <td mat-cell *matCellDef="let evidence; let i = index;" fxFlex="120px" fxLayout="row"
+      <th class="noc-cell noc-contributor-cell" mat-header-cell *matHeaderCellDef fxLayout="row"
+        fxLayoutAlign="start center">Contributors </th>
+      <td class="noc-contributor-cell" mat-cell *matCellDef="let evidence; let i = index;" fxLayout="row"
         fxLayoutAlign="start center">
         <p class="">
           <span *ngFor="let contributor of evidence.contributors; let i=index; let isLast=last">

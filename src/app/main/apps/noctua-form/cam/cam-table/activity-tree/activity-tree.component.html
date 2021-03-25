@@ -1,11 +1,11 @@
-<div class="noc-tree-container" noctuaPerfectScrollbar>
+<div class="noc-tree-container">
   <mat-tree #tree *ngIf="dataSource?.data" [dataSource]="dataSource" [treeControl]="treeControl">
     <mat-tree-node class="noc-tree-node" *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding
       matTreeNodePaddingIndent="10" [ngClass]="{ 'background-highlight': activeAnnotation === node.uuid}">
       <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
         <button mat-icon-button disabled class="noc-icon-button"></button>
         <div class="noc-annotation-row" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-title">
+          <div class="noc-cell-label">
             {{node.label}}
           </div>
           <noc-activity-tree-node [options]="options" [cam]="cam" [activity]="activity" [entity]="node" class="w-100-p">
@@ -22,7 +22,10 @@
           <fa-icon *ngIf="treeControl.isExpanded(node)" class="noc-tree-icon" [icon]="['fas', 'caret-down']">
           </fa-icon>
         </button>
-        <div class="noc-annotation-row" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-annotation-row" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
+          <div class="noc-cell-label">
+            {{node.label}}
+          </div>
           <noc-activity-tree-node [options]="options" [cam]="cam" [activity]="activity" [entity]="node" class="w-100-p">
           </noc-activity-tree-node>
         </div>
