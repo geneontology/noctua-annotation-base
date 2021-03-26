@@ -63,8 +63,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   searchFormData: any = [];
   searchForm: FormGroup;
 
-
-
   cams: any[] = [];
 
   private _unsubscribeAll: Subject<any>;

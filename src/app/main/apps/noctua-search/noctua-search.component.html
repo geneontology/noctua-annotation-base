@@ -68,8 +68,13 @@
             It can be used to create standard GO annotations as well as more expressive models of biological processes,
             known as GO-CAMs (Gene Ontology Causal Activity Models)
           </h3>
-          <h4 *ngIf="!noctuaUserService.user">
-            You must Login to create or edit models. Models may be viewed without login.
+
+          <h4 *ngIf="!noctuaUserService.user" class="">
+            You must
+            <a mat-button href="{{noctuaFormConfigService.loginUrl}}" class="noc-login-button">
+              Login
+            </a>
+            to create or edit models. Models may be viewed without login.
           </h4>
           <div *ngIf="noctuaUserService.user" class="noc-create h-100-p" fxLayout="row" fxLayoutAlign="start center">
             <button mat-raised-button (click)="createModel('noctua-form')" color=""

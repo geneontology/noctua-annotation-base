@@ -2,7 +2,6 @@
   .noc-cell {
     padding: 0 10px;
     font-size: 10px !important;
-    //color: #0F0; // map-get($primary, default);
     font-weight: bold;
     color: map-get($primary, default);
     text-transform: uppercase;
@@ -25,6 +24,10 @@
   .noc-evidence-code-cell {
   }
 
+  .noc-reference-cell {
+    @include deep-width(100px);
+  }
+
   .noc-with-cell {
     @include deep-width(100px);
   }
@@ -33,5 +36,9 @@
   }
   .noc-contributor-cell {
     @include deep-width(100px);
+  }
+  .noc-action-cell {
+    padding: 0;
+    @include deep-width(40px);
   }
 }

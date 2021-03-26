@@ -58,7 +58,7 @@ import { ActivityTreeNodeComponent } from './cam/cam-table/activity-tree/activit
 
 const routes = [
   {
-    path: '',
+    path: 'f',
     component: NoctuaFormComponent
   }
 ];
