@@ -13,6 +13,8 @@ export {
 } from './activity';
 export {
     Cam,
+    CamRebuildSignal,
+    CamRebuildRule,
     CamLoadingIndicator,
     CamStats,
     CamQueryMatch

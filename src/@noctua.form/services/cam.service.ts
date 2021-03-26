@@ -87,10 +87,15 @@ export class CamService {
     return cam;
   }
 
+  reload(cam: Cam) {
+    this._noctuaGraphService.onCamRebuildChange.next(cam);
+  }
+
   //loads an existing cam
   loadCam(cam: Cam) {
     cam.graph = null;
     cam.modifiedStats = new CamStats();
+    cam.rebuildRule.reset();
     cam.model = Object.assign({}, {
       id: cam.id,
       title: '',

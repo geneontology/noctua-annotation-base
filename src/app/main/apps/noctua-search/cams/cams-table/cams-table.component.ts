@@ -79,6 +79,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   camPage: CamPage;
 
   tableOptions = {
+    treeTable: false,
     reviewMode: true,
     color: 'transparent'
   }
@@ -257,6 +258,8 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   }
 
   openCam(cam: Cam) {
+    //cam.rebuildRule.autoMerge = true;
+    //cam.rebuildRule.autoRebuild = true;
     this.camService.loadCam(cam);
     cam.expanded = true;
     this.camService.cam = cam;

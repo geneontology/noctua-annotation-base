@@ -89,7 +89,7 @@ $accent: map-get($theme, accent);
   .noc-activity-node {
     // position: relative;
     //  flex: 1 1 auto;
-    //    border-bottom: 1px solid rgba(0, 0, 0, .12);
+    border-bottom: 1px solid #ccc;
 
     table {
       // width: 800px;
@@ -152,12 +152,12 @@ $accent: map-get($theme, accent);
 
     .noc-entity-cell {
       height: 100%;
-      min-width: 0;
+      // min-width: 0;
       display: flex;
       align-items: center;
 
       //display: inline-block !important;
-      padding: 0 30px 0 10px;
+      padding: 0 5px 0 5px;
       font-size: 12px !important;
       color: #000;
       border-right: #aaa solid 1px;

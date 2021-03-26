@@ -15,7 +15,8 @@ import {
   NoctuaUserService,
   NoctuaFormMenuService,
   RightPanel,
-  CamsService
+  CamsService,
+  CamRebuildSignal
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
@@ -35,6 +36,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class CamTableComponent implements OnInit, OnDestroy {
   ActivityType = ActivityType;
+  CamRebuildSignal = CamRebuildSignal;
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;
@@ -92,6 +94,10 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.noctuaActivityFormService.mfLocation = location;
     this.noctuaActivityFormService.initializeForm();
     //this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.activityForm)
+  }
+
+  reload(cam: Cam) {
+    this.camService.reload(cam);
   }
 
   search() {

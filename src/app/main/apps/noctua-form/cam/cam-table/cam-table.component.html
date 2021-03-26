@@ -1,7 +1,18 @@
 <div class="w-100-p p-0 noc-cam-table">
   <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
     <span class='noc-title mr-12'>
-      ACTIVITIES
+      <span *ngIf="!cam.loading?.status">
+        ACTIVITIES
+      </span>
+      <span *ngIf="cam.loading?.status" class="noc-cam-progress-message">
+        {{cam.loading?.message}}
+      </span>
+      <span *ngIf="cam.rebuildRule?.signal !== CamRebuildSignal.NONE" class="noc-cam-rebuild">
+        {{cam.rebuildRule?.message}}
+        <button mat-button (click)="reload(cam)" class="" color="primary">
+          Reload
+        </button>
+      </span>
     </span>
     <div *ngIf="cam.violations?.length>0" class="noc-error" fxLayout="row" fxLayoutAlign="start center">
       <mat-chip class="noc-error-chip" fxLayout="row" fxLayoutAlign="start center" (click)="displayCamErrors()">
@@ -80,8 +91,8 @@
       <noc-activity-table *ngIf="!options.treeTable" [options]="options" [cam]="cam" [activity]="activity"
         class="noc-activities-table-body" fxLayout="row" fxLayoutAlign="start center">
       </noc-activity-table>
-      <noc-activity-tree *ngIf="options.treeTable" [options]="options" [cam]="cam" [activity]="activity"
-        class="noc-activities-table-body" fxLayout="row" fxLayoutAlign="start center">
+      <noc-activity-tree *ngIf="options.treeTable" [options]="options" [cam]="cam" [activity]="activity" class=""
+        fxLayout="row" fxLayoutAlign="start center">
       </noc-activity-tree>
     </div>
   </div>

@@ -13,7 +13,9 @@ import {
   ConnectorActivity,
   ConnectorType,
   ConnectorState,
-  Predicate
+  Predicate,
+  CamLoadingIndicator,
+  CamRebuildSignal
 } from './../models/activity/';
 
 import * as ModelDefinition from './../data/config/model-definition';
@@ -33,6 +35,7 @@ import { CurieService } from './../../@noctua.curie/services/curie.service';
 declare const require: any;
 
 const model = require('bbop-graph-noctua');
+const barista_client = require('bbop-client-barista');
 const amigo = require('amigo2');
 const barista_response = require('bbop-response-barista');
 const minerva_requests = require('minerva-requests');
@@ -49,12 +52,15 @@ export class NoctuaGraphService {
   linker = new amigo.linker();
   curieUtil: any;
 
+  onCamRebuildChange: BehaviorSubject<any>;
+
   constructor(
     private curieService: CurieService,
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaLookupService: NoctuaLookupService) {
     this.curieUtil = this.curieService.getCurieUtil();
+    this.onCamRebuildChange = new BehaviorSubject(null);
   }
 
   registerManager(useReasoner = true) {
@@ -66,6 +72,7 @@ export class NoctuaGraphService {
       this.minervaDefinitionName,
       this.noctuaUserService.baristaToken,
       engine, 'async');
+
 
     const managerError = (resp) => {
       console.log('There was a manager error (' +
@@ -108,19 +115,49 @@ export class NoctuaGraphService {
     return manager;
   }
 
+  registerBaristaClient(cam: Cam) {
+    const self = this;
+    const barclient = new barista_client(environment.globalBaristaLocation, this.noctuaUserService.baristaToken);
+    //barclient.register('connect', resFunc);
+    //barclient.register('initialization', resFunc);
+    // barclient.register('message', resFunc);
+    //barclient.register('broadcast', resFunc);
+    //barclient.register('clairvoyance', resFunc);
+    //barclient.register('telekinesis', resFunc);
+    barclient.register('merge', function (response) {
+      console.log('barista/merge response');
+      self.onCamMergeSignal(cam, response)
+    });
+    // _on_model_update);
+    barclient.register('rebuild', function (response) {
+      console.log('barista/rebuild response');
+      self.onCamRebuildSignal(cam, response)
+
+    });
+
+    barclient.connect(cam.id);
+
+    return barclient;
+  }
+
   getGraphInfo(cam: Cam, modelId) {
     const self = this;
 
-    cam.loading.status = true;
-    cam.loading.message = 'Getting Models...';
+    cam.loading = new CamLoadingIndicator(true, 'Loading Model Activities ...');
     cam.onGraphChanged = new BehaviorSubject(null);
     cam.id = modelId;
+    //cam.baristaClient = this.registerBaristaClient(cam);
     cam.manager = this.registerManager();
     cam.artManager = this.registerManager();
     cam.groupManager = this.registerManager();
     cam.replaceManager = this.registerManager(false);
     cam.manager.register('rebuild', function (resp) {
+      console.log('new ' + Date.now())
       self.rebuild(cam, resp);
+    }, 10);
+
+    cam.manager.register('merge', function (resp) {
+      console.log('merge ' + Date.now())
     }, 10);
   }
 
@@ -174,9 +211,24 @@ export class NoctuaGraphService {
     self.loadCam(cam);
     self.loadViolations(cam, response.data()['validation-results'])
     cam.loading.status = false;
-    cam.loading.message = '';
   }
 
+  onCamMergeSignal(cam: Cam, response: any) {
+    cam.rebuildRule.addMergeSignal();
+
+    if (cam.rebuildRule.autoRebuild) {
+      this.onCamRebuildChange.next(cam);
+    }
+  }
+
+  onCamRebuildSignal(cam: Cam, response: any) {
+    cam.rebuildRule.addRebuildSignal();
+
+    if (cam.rebuildRule.autoRebuild) {
+      this.onCamRebuildChange.next(cam);
+    }
+
+  }
 
   rebuildFromStoredApi(cam: Cam, activeModel) {
     const self = this;

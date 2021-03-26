@@ -16,10 +16,18 @@ import { environment } from './../../environments/environment';
 import { ActivityNode } from './../models/activity/activity-node';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Evidence } from './../models/activity/evidence';
+import { NoctuaUserService } from './user.service';
 
 declare const require: any;
 
 const model = require('bbop-graph-noctua');
+const barista_client = require('bbop-client-barista');
+const amigo = require('amigo2');
+const barista_response = require('bbop-response-barista');
+const minerva_requests = require('minerva-requests');
+const jquery_engine = require('bbop-rest-manager').jquery;
+const class_expression = require('class-expression');
+const minerva_manager = require('bbop-manager-minerva');
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +55,7 @@ export class CamsService {
 
   constructor(
     private httpClient: HttpClient,
+    private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private _noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
@@ -71,6 +80,28 @@ export class CamsService {
   }
 
   setup() {
+
+    const barclient = new barista_client(environment.globalBaristaLocation, this.noctuaUserService.baristaToken);
+    //barclient.register('connect', resFunc);
+    //barclient.register('initialization', resFunc);
+    // barclient.register('message', resFunc);
+    //barclient.register('broadcast', resFunc);
+    //barclient.register('clairvoyance', resFunc);
+    //barclient.register('telekinesis', resFunc);
+    barclient.register('merge', function (a, b) {
+      console.log('barista/merge response', a, b);
+    });
+    // _on_model_update);
+    barclient.register('rebuild', function (a, b) {
+      console.log('barista/rebuild response');
+    });
+    // _on_model_update);
+    barclient.register('query', function (a, b) {
+      console.log('barista/query response');
+    });
+    //barclient.connect("gomodel:6051581000000001");
+
+
   }
 
   loadCams() {
@@ -184,7 +215,7 @@ export class CamsService {
     const promises = [];
 
     each(cams, (cam: Cam) => {
-      cam.loading = new CamLoadingIndicator(true, 'Loading ...');
+      cam.loading = new CamLoadingIndicator(true, 'Calculating Pending Changes ...');
       promises.push(self.getStoredModel(cam));
     });
 

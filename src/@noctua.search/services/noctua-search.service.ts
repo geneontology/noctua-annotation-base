@@ -13,7 +13,9 @@ import {
     NoctuaFormConfigService,
     NoctuaUserService,
     Entity,
-    CamsService
+    CamsService,
+    NoctuaGraphService,
+    CamService
 } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 import { saveAs } from 'file-saver';
@@ -73,7 +75,9 @@ export class NoctuaSearchService {
     constructor(
         private httpClient: HttpClient,
         private noctuaDataService: NoctuaDataService,
+        private _noctuaGraphService: NoctuaGraphService,
         private camsService: CamsService,
+        private camService: CamService,
         public noctuaFormConfigService: NoctuaFormConfigService,
         public noctuaUserService: NoctuaUserService,
         private noctuaSearchMenuService: NoctuaSearchMenuService,
@@ -107,6 +111,8 @@ export class NoctuaSearchService {
                 this.noctuaSearchMenuService.resetResults();
             }
         });
+
+        this.loadCamRebuild();
     }
 
     // Get Users and Groups
@@ -129,6 +135,22 @@ export class NoctuaSearchService {
             } as Contributor;
         //  this.searchCriteria.contributors = [contributor];
         this.updateSearch();
+    }
+
+    loadCamRebuild() {
+        const self = this;
+        self._noctuaGraphService.onCamRebuildChange.subscribe((inCam: Cam) => {
+            if (!inCam) {
+                return;
+            }
+
+            const cam = find(self.cams, { id: inCam.id }) as Cam;
+
+            if (!cam || !cam.expanded) return;
+
+            this.camService.loadCam(cam);
+            this.camService.onCamChanged.next(cam);
+        })
     }
 
     search(searchCriteria) {

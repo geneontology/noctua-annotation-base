@@ -14,6 +14,11 @@ import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
 
+export enum CamRebuildSignal {
+  NONE = 'none',
+  MERGE = 'merge',
+  REBUILD = 'rebuild'
+}
 
 export class CamQueryMatch {
   modelId?: string;
@@ -59,6 +64,43 @@ export class CamLoadingIndicator {
   }
 }
 
+export class CamRebuildRule {
+  signal = CamRebuildSignal.NONE;
+  count = 0;
+  autoRebuild = false;
+  autoMerge = false;
+  message = ''
+  description = ''
+
+  addMergeSignal() {
+    this.count++;
+
+    if (this.count === 1) {
+      this.signal = CamRebuildSignal.MERGE;
+      this.message = 'new changes available. Please refresh Model';
+      this.description = 'Model has pending Changes. Please Reload'
+    } else {
+      this.signal = CamRebuildSignal.REBUILD;
+      this.message = 'another new changes available. Please reload Model';
+      this.description = 'Model has pending Changes. Please Reload'
+    }
+  }
+
+  addRebuildSignal() {
+    this.count++;
+    this.signal = CamRebuildSignal.REBUILD;
+    this.message = 'Model has been saved. Please reload Model';
+    this.description = 'Model has pending Changes. Please Reload'
+  }
+
+  reset() {
+    this.count = 0;
+    this.signal = CamRebuildSignal.NONE;
+    this.message = '';
+    this.description = ''
+  }
+}
+
 export class Cam {
   title: string;
   state: any;
@@ -75,10 +117,11 @@ export class Cam {
   modified = false;
   modifiedStats = new CamStats();
   matchedCount = 0;
-
-  queryMatch: CamQueryMatch = new CamQueryMatch();
-
+  queryMatch = new CamQueryMatch();
   dateReviewAdded = Date.now();
+
+  //rebuild
+  rebuildRule = new CamRebuildRule();
 
   //bbop graphs
   graph;
@@ -87,6 +130,7 @@ export class Cam {
   onGraphChanged;
 
   // bbop managers 
+  baristaClient;
   engine;
   manager;
   artManager;

@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { CamService } from './../services/cam.service';
-import { Cam } from './../models/activity/cam';
+import { Cam, CamLoadingIndicator } from './../models/activity/cam';
 import { EntityForm } from './../models/forms/entity-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { ActivityNode, Activity } from '../models';
@@ -97,7 +97,7 @@ export class NoctuaActivityEntityService {
     const self = this;
 
     if (addLoadingStatus) {
-      cam.loading.status = true;
+      cam.loading = new CamLoadingIndicator(true, 'Replacing  ...');
     }
 
     const oldEntity = cloneDeep(self.entity);

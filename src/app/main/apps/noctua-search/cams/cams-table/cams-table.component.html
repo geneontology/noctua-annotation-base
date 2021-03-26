@@ -1,7 +1,3 @@
-<div *ngIf="noctuaSearchService.loading" class="noc-loading-container" fxLayout="column" fxLayoutAlign="center center">
-  <mat-progress-spinner class="example-margin" [color]="loadingSpinner.color" [mode]="loadingSpinner.mode">
-  </mat-progress-spinner>
-</div>
 <div class="noc-cams-result noc-drawer-body" [ngClass]="{'noc-review-mode': isReviewMode}" fxLayout="column"
   fxLayoutAlign="start stretch">
   <div class="noc-summary-filter-bar" fxLayout="row" fxLayoutAlign="start center">
@@ -214,6 +210,9 @@
     <ng-container matColumnDef="expandedDetail">
       <td class="p-0" mat-cell *matCellDef="let cam" [attr.colspan]="displayedColumns.length">
         <div class="noc-cam-table-container">
+          <mat-progress-bar *ngIf="cam.loading.status" class="noc-cam-progress" [color]="loadingSpinner.color"
+            [mode]="loadingSpinner.mode">
+          </mat-progress-bar>
           <noc-cam-table *ngIf="cam.expanded" [cam]="cam" [options]="tableOptions"></noc-cam-table>
         </div>
       </td>
@@ -223,7 +222,8 @@
       id="{{cleanId(cam.id)}}">
     </tr>
     <tr mat-row *matRowDef="let cam; columns: ['expandedDetail']"
-      [@detailExpand]="cam.expanded ? 'expanded' : 'collapsed'" style="overflow: hidden"> </tr>
+      [@detailExpand]="cam.expanded ? 'expanded' : 'collapsed'" style="overflow: hidden">
+    </tr>
 
   </table>
   <div *ngIf="cams?.length===0" class="noc-no-info">

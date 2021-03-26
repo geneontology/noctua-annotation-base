@@ -123,6 +123,8 @@ export class NoctuaReviewSearchService {
 
                 this.searchCriteria.ids = ids;
             });
+
+        self.loadCamRebuild()
     }
 
     setup() {
@@ -139,6 +141,17 @@ export class NoctuaReviewSearchService {
             this.addCamsToReview(this.artBasket.cams, this.camsService.cams);
             this.onArtBasketChanged.next(this.artBasket);
         }
+    }
+
+    loadCamRebuild() {
+        const self = this;
+        self._noctuaGraphService.onCamRebuildChange.subscribe((cam: Cam) => {
+            if (!cam) {
+                return;
+            }
+
+            self.updateStoredCams([cam], self.camsService.cams);
+        })
     }
 
     addCamsToReview(metaCams: any[], cams: Cam[]) {
@@ -169,7 +182,7 @@ export class NoctuaReviewSearchService {
                     inCam.title = metaCam?.title;
                     cams.push(inCam);
                     self.camService.loadCamMeta(inCam);
-                    inCam.loading.status = true;
+                    inCam.loading = new CamLoadingIndicator(true, 'Loading Model Activities ...');
                     promises.push(inCam);
                 })
                 return from(promises);
@@ -222,11 +235,12 @@ export class NoctuaReviewSearchService {
 
         from(cams).pipe(
             mergeMap((cam: Cam) => {
-                cam.loading = new CamLoadingIndicator(true, 'Loading...');
 
                 if (reloadType === ReloadType.RESET) {
+                    cam.loading = new CamLoadingIndicator(true, 'Resetting Model ...');
                     return self.camsService.resetCams([cam]);
                 } else if (reloadType === ReloadType.STORE) {
+                    cam.loading = new CamLoadingIndicator(true, 'Saving Model ...');
                     return self.camsService.storeCams([cam]);
                 } else {
                     return EMPTY;
@@ -272,12 +286,14 @@ export class NoctuaReviewSearchService {
             })
     }
 
-    updateStoredCams(cams: Cam[], reviewCams: Cam[], reset = false) {
+    updateStoredCams(cams: Cam[], reviewCams: Cam[]) {
         const self = this;
 
         if (!cams || cams.length === 0) return;
 
-        const ids = cams.map(cam => cam.id);
+        const ids = cams.map(cam => {
+            return cam.id
+        });
 
         if (ids.length === 0) return;
 
@@ -294,47 +310,28 @@ export class NoctuaReviewSearchService {
                 return from(promises);
             }),
             mergeMap((cam: Cam) => {
+                const reviewCam = find(reviewCams, { id: cam.id });
+                reviewCam.loading = new CamLoadingIndicator(true, 'Reloading Model ...');
                 return self.camsService.getStoredModel(cam);
             }),
             finalize(() => {
-                self.camsService.updateDisplayNumber(reviewCams);
-                self.camsService.onCamsChanged.next(reviewCams);
-                self.camsService.resetLoading(cams);
-                self._noctuaSearchService.updateSearch();
-                self.onReplaceChanged.next(true);
-
-                if (reset) {
-                    self.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
-                    self.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
-                    self.clear();
-                    self.camsService.clearCams();
-                    self.clearBasket();
-                    self.onResetReview.next(true);
-                }
-                self.updateSearch();
-
-                console.log('I am finalize')
 
             })).subscribe({
                 next: (response) => {
                     if (!response || !response.storedModel || !response.activeModel) return;
 
-                    const cam = find(reviewCams, { id: response.data().id });
+                    const cam = find(reviewCams, { id: response.activeModel.id });
 
                     if (!cam) return;
-
+                    cam.rebuildRule.reset();
                     self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
                     self.populateStoredModel(cam, response.storedModel)
                     cam.loading.status = false;
+                    self.camsService.sortCams();
                     self.camsService.updateDisplayNumber(reviewCams);
                     self.camsService.onCamsChanged.next(reviewCams);
                     self.updateSearch();
-                },
-                complete: () => {
-                    console.log('I am complete')
-                    self.zone.run(() => {
-                        self.camsService.resetLoading(reviewCams);
-                    });
+
                 }
             })
     }

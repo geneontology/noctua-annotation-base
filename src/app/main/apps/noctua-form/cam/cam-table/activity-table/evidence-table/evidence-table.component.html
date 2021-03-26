@@ -1,5 +1,6 @@
 <div class="noc-evidence-table noctua-form-table w-100-p">
-  <table mat-table fxFlex="1 1 auto" class="w-100-p" #table [dataSource]="entity.predicate?.evidence">
+  <table *ngIf="entity.predicate?.evidence.length>0" mat-table fxFlex="1 1 auto" class="w-100-p" #table
+    [dataSource]="entity.predicate?.evidence">
     <ng-container matColumnDef="evidence">
       <th class="noc-cell noc-evidence-code-cell" mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row"
         fxLayoutAlign="start center">Evidence</th>

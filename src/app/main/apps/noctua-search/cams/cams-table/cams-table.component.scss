@@ -9,7 +9,16 @@ $rotate-graph: 235deg;
 :host {
   padding: 0px;
   width: 100%;
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
+
+  .noc-cam-progress {
+    position: absolute;
+    top: 0;
+    height: 5px;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+  }
 
   .noc-hide-column {
     visibility: hidden;
@@ -27,14 +36,15 @@ $rotate-graph: 235deg;
     @include deep-height(30px);
     @include deep-width(100%);
     //  min-height: 40px; //min-height: 35px;
-    background-color: #FFF;
+    background-color: #fff;
     font-size: 16px;
     overflow: hidden;
     z-index: 10;
 
     @include mat-elevation(2);
 
-    mat-chip-list {}
+    mat-chip-list {
+    }
 
     mat-chip {
       margin-right: 8px;
@@ -67,13 +77,12 @@ $rotate-graph: 235deg;
     padding: 0 10px 0 20px;
     @include deep-height(40px);
     //  min-height: 40px; //min-height: 35px;
-    background-color: #FFF;
+    background-color: #fff;
     font-size: 16px;
     overflow: hidden;
     z-index: 10;
 
     @include mat-elevation(2);
-
 
     .noc-art-tools {
       //background-color: ;
@@ -89,7 +98,6 @@ $rotate-graph: 235deg;
       font-weight: normal;
       @include deep-height(30px);
     }
-
   }
 
   .noc-search-table-header {
@@ -111,7 +119,7 @@ $rotate-graph: 235deg;
   }
 
   .noc-drawer-container {
-    background-color: #DDD;
+    background-color: #ddd;
   }
 
   .mat-drawer-content {
@@ -158,10 +166,9 @@ $rotate-graph: 235deg;
         border-radius: 50%;
         color: #888;
         font-size: 14px;
-
       }
 
-      @include noc-chip-color(#CCC);
+      @include noc-chip-color(#ccc);
 
       &.noc-user-chip {
         @include noc-chip-color(#bbc9cc);
@@ -173,7 +180,6 @@ $rotate-graph: 235deg;
             font-size: 10px;
             color: #000000;
           }
-
         }
       }
 
@@ -194,32 +200,29 @@ $rotate-graph: 235deg;
           @include noc-chip-color(#d8f6a3);
         }
       }
-
     }
   }
 
   .noc-cams-result {
-    background-color: #F7F7F7;
+    background-color: #f7f7f7;
     font-size: 12px;
 
     @include deep-width(100%);
     @include deep-height(100%);
     padding-bottom: 300px;
 
-
     .noc-edit-button {
       background-color: #ffffff;
       color: map-get($primary, default);
       border: rgba(map-get($primary, default), 0.5) solid 1px;
-      @include mat-elevation(1)
+      @include mat-elevation(1);
     }
-
 
     .noc-cams-table {
       @include deep-width(100%);
 
       .noc-display-number {
-        background-color: #FFF;
+        background-color: #fff;
       }
     }
 
@@ -241,12 +244,11 @@ $rotate-graph: 235deg;
       position: -webkit-sticky;
       position: sticky;
       top: 72px;
-      background-color: #FFF;
+      background-color: #fff;
       @include deep-height(30px);
       border-bottom: $noc-primary-color-light solid 1px;
       z-index: 10;
     }
-
 
     .mat-cell {
       min-width: 0;
@@ -269,18 +271,6 @@ $rotate-graph: 235deg;
           height: 30px;
           line-height: 12px;
         }
-
-        &::before {
-          position: absolute;
-          top: 0;
-          left: 52px;
-          bottom: 0;
-          width: 2px;
-          color: white;
-          background-color: $noc-tree-line-color;
-          content: "";
-          z-index: 0;
-        }
       }
     }
 
@@ -288,7 +278,6 @@ $rotate-graph: 235deg;
       width: 100%;
       position: relative;
       padding-left: 70px;
-
 
       &::before {
         position: absolute;
@@ -327,12 +316,9 @@ $rotate-graph: 235deg;
       font-size: 18px;
       padding-left: 12px;
     }
-
-
   }
 
   .noc-cams-result {
-
     &.noc-review-mode {
       .noc-summary-filter-bar {
         top: 101px;
@@ -353,8 +339,6 @@ $rotate-graph: 235deg;
           left: 82px;
         }
       }
-
     }
   }
-
 }
