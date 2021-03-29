@@ -54,10 +54,11 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.cam.onGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((activities: Activity[]) => {
-        if (!activities) {
+      .subscribe((cam: Cam) => {
+        if (!cam) {
           return;
         }
+        self.cam = cam;
         self.noctuaCamGraphService.addToCanvas(self.cam);
         this.cam.updateActivityDisplayNumber();
       });

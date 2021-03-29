@@ -151,18 +151,22 @@ $accent: map-get($theme, accent);
     }
 
     .noc-entity-cell {
-      height: 100%;
       // min-width: 0;
       display: flex;
       align-items: center;
 
       //display: inline-block !important;
       padding: 0 5px 0 5px;
-      font-size: 12px !important;
+      font-size: 12px;
       color: #000;
       border-right: #aaa solid 1px;
       position: relative;
       overflow-wrap: break-word;
+
+      &.noc-extension-cell {
+        padding-top: 10px;
+        font-size: 10px;
+      }
 
       .noc-edit-button {
         position: absolute;

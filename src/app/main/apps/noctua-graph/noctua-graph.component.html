@@ -129,8 +129,6 @@
         <div [ngSwitch]="noctuaCommonMenuService.selectedRightPanel" class="h-100-p">
           <noc-cam-form [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.camForm">
           </noc-cam-form>
-          <noc-activity-form [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.activityForm">
-          </noc-activity-form>
           <noc-cam-table *ngSwitchCase="RightPanel.camTable" [cam]="cam" [options]="tableOptions"></noc-cam-table>
 
         </div>

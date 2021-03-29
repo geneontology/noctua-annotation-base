@@ -66,6 +66,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   cams: any[] = [];
 
   tableOptions = {
+    treeTable: true,
     editableTerms: true,
     editableEvidence: true,
     editableReference: true,
@@ -113,8 +114,8 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.cam.onGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((activities: Activity[]) => {
-        if (!activities) {
+      .subscribe((cam: Cam) => {
+        if (!cam) {
           return;
         }
         this.cam.updateActivityDisplayNumber();

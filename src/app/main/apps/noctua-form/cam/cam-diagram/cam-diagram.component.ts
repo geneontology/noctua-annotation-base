@@ -46,11 +46,6 @@ export class CamDiagramComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cam.onGraphChanged.subscribe((activities) => {
-      if (activities) {
-
-      }
-    });
 
   }
 

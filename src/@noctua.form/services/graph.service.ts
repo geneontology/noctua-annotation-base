@@ -152,12 +152,7 @@ export class NoctuaGraphService {
     cam.groupManager = this.registerManager();
     cam.replaceManager = this.registerManager(false);
     cam.manager.register('rebuild', function (resp) {
-      console.log('new ' + Date.now())
       self.rebuild(cam, resp);
-    }, 10);
-
-    cam.manager.register('merge', function (resp) {
-      console.log('merge ' + Date.now())
     }, 10);
   }
 
@@ -268,7 +263,7 @@ export class NoctuaGraphService {
 
     cam.activities = self.graphToActivities(cam.graph);
     cam.applyFilter();
-    cam.onGraphChanged.next(cam.activities);
+    cam.onGraphChanged.next(cam);
     cam.connectorActivities = self.getConnectorActivities(cam);
     cam.setPreview();
   }

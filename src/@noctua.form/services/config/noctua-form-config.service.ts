@@ -290,8 +290,8 @@ export class NoctuaFormConfigService {
     }
   }
 
-  createActivityModel(modelType: ActivityType): Activity {
-    switch (modelType) {
+  createActivityModel(activityType: ActivityType): Activity {
+    switch (activityType) {
       case ActivityType.default:
         return ModelDefinition.createActivity(ModelDefinition.activityUnitDescription);
       case ActivityType.bpOnly:

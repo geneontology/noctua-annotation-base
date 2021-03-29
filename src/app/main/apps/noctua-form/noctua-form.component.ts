@@ -96,10 +96,11 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
     this.cam.onGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((activities: Activity[]) => {
-        if (!activities) {
+      .subscribe((cam: Cam) => {
+        if (!cam) {
           return;
         }
+        this.cam = cam;
         this.cam.updateActivityDisplayNumber();
       });
   }

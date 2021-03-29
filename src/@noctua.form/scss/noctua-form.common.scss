@@ -1,5 +1,7 @@
 .noctua-form-table {
-  padding-left: 40px;
+  &.noc-tree-header-row {
+    padding-left: 40px;
+  }
   .noc-cell {
     padding: 0 10px;
     font-size: 10px !important;
@@ -15,7 +17,7 @@
   }
 
   .noc-extension-cell {
-    @include deep-width(40px);
+    @include deep-width(30px);
   }
 
   .noc-evidence-cell {

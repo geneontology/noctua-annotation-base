@@ -13,7 +13,7 @@ import { SelectEvidenceDialogComponent } from './../dialogs/select-evidence/sele
 import { SearchDatabaseDialogComponent } from './../dialogs/search-database/search-database.component';
 
 import {
-    Evidence, ActivityNode
+    Evidence, ActivityNode, Activity
 } from 'noctua-form-base';
 
 import 'rxjs/add/operator/map';
@@ -21,6 +21,7 @@ import { NoctuaConfirmDialogComponent } from '@noctua/components/confirm-dialog/
 import { PreviewActivityDialogComponent } from '../dialogs/preview-activity/preview-activity.component';
 import { SearchEvidenceDialogComponent } from '../dialogs/search-evidence/search-evidence.component';
 import { CamErrorsDialogComponent } from '../dialogs/cam-errors/cam-errors.component';
+import { CreateActivityDialogComponent } from '../dialogs/create-activity/create-activity.component';
 
 
 @Injectable({
@@ -58,6 +59,19 @@ export class NoctuaFormDialogService {
             });
     }
 
+
+    openCreateActivityDialog(activity: Activity): void {
+        this.dialogRef = this._matDialog.open(CreateActivityDialogComponent, {
+            panelClass: 'activity-errors-dialog',
+            data: {
+                activity
+            }
+        });
+        this.dialogRef.afterClosed()
+            .subscribe(response => {
+
+            });
+    }
 
     openActivityErrorsDialog(errors: any[]): void {
         this.dialogRef = this._matDialog.open(ActivityErrorsDialogComponent, {

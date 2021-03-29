@@ -61,11 +61,6 @@ export class CamFormComponent implements OnInit, OnDestroy {
         }
 
         this.cam = cam;
-        this.sparqlService.getModelTerms(this.cam.id)
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe((terms: Entity[]) => {
-            this.camService.onCamTermsChanged.next(terms);
-          });
       });
   }
 

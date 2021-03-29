@@ -55,6 +55,7 @@ import { CamErrorsDialogComponent } from './dialogs/cam-errors/cam-errors.compon
 import { EvidenceTableComponent } from './cam/cam-table/activity-table/evidence-table/evidence-table.component';
 import { ActivityTreeComponent } from './cam/cam-table/activity-tree/activity-tree.component';
 import { ActivityTreeNodeComponent } from './cam/cam-table/activity-tree/activity-tree-node/activity-tree-node.component';
+import { CreateActivityDialogComponent } from './dialogs/create-activity/create-activity.component';
 
 const routes = [
   {
@@ -99,6 +100,7 @@ const routes = [
     EntityFormComponent,
     CamTableComponent,
     AddEvidenceDialogComponent,
+    CreateActivityDialogComponent,
     ActivityErrorsDialogComponent,
     CamErrorsDialogComponent,
     BeforeSaveDialogComponent,
@@ -130,6 +132,7 @@ const routes = [
     EntityFormComponent,
     CamTableComponent,
     AddEvidenceDialogComponent,
+    CreateActivityDialogComponent,
     ActivityErrorsDialogComponent,
     CamErrorsDialogComponent,
     BeforeSaveDialogComponent,
