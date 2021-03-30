@@ -75,14 +75,12 @@
     </div>
   </div>
 
-  <div *ngIf="activity.expanded" class="noc-activity-table w-100-p"
+  <div *ngIf="activity.expanded" class="noctua-form-table noc-activity-table w-100-p"
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="column"
     fxLayoutAlign="start start">
     <table mat-table fxFlex="1 1 auto" class="" [dataSource]="dataSource" [@animateStagger]="{value:'50'}">
       <ng-container matColumnDef="relationship" sticky>
-        <th mat-header-cell *matHeaderCellDef fxFlex="120px" fxLayout="row" fxLayoutAlign="start center">Relationship
-        </th>
-        <td mat-cell *matCellDef="let entity" fxFlex="120px" sticky
+        <td class="noc-relationship-cell" mat-cell *matCellDef="let entity"
           [ngStyle]="{'padding-left':(entity.treeLevel-1) * 10+'px'}">
           <p class="">
             <strong> {{entity.qualifier}} </strong>
@@ -95,21 +93,17 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="aspect">
-        <th mat-header-cell *matHeaderCellDef fxFlex="30px" fxLayout="row" fxLayoutAlign="start center">Asp</th>
-        <td mat-cell *matCellDef="let entity" fxFlex="30px">
+        <td class="noc-aspect-cell" mat-cell *matCellDef="let entity">
           <p class="">{{entity.aspect}}</p>
         </td>
       </ng-container>
       <ng-container matColumnDef="extension">
-        <th mat-header-cell *matHeaderCellDef fxFlex="30px" fxLayout="row" fxLayoutAlign="start center">Ext</th>
-        <td mat-cell *matCellDef="let entity" fxFlex="30px">
+        <td class="noc-extension-cell" mat-cell *matCellDef="let entity">
           <p *ngIf="entity.isExtension" class="">Yes</p>
         </td>
       </ng-container>
       <ng-container matColumnDef="term">
-        <th mat-header-cell *matHeaderCellDef class="noc-column-flex" fxFlex="200px" fxLayout="row"
-          fxLayoutAlign="start center">Term</th>
-        <td mat-cell class="noc-column-flex" *matCellDef="let entity" fxFlex="200px" fxLayout="column"
+        <td class="noc-term-cell" mat-cell class="noc-column-flex" *matCellDef="let entity" fxLayout="column"
           fxLayoutAlign="start stretch" [attr.id]="entity.term?.displayId" [ngClass]="{'noc-highlight-match': entity.term?.highlight,
             'noc-highlight-modified': entity.term?.modified,
             'noc-highlight-match-current': entity.term?.uuid===camsService.currentMatch?.uuid}">
@@ -131,19 +125,14 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="evidence">
-        <th mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row" fxLayoutAlign="center center">
-          Evidence
-        </th>
-        <td mat-cell *matCellDef="let entity; let i = index;" fxFlex="" class="p-0">
-          <noc-evidence-table *ngIf="i===0" class="w-100-p" [options]="options" [cam]="cam" [entity]="entity">
-          </noc-evidence-table>
-          <noc-evidence-table *ngIf="i>0" class="w-100-p" [options]="optionsDisplay" [cam]="cam" [entity]="entity">
+        <td class="noc-evidence-cell" mat-cell *matCellDef="let entity; let i = index;">
+          <noc-evidence-table class="w-100-p" [options]="options" [cam]="cam" [entity]="entity">
           </noc-evidence-table>
         </td>
       </ng-container>
       <ng-container matColumnDef="actions" stickyEnd>
-        <th mat-header-cell *matHeaderCellDef fxFlex="50px" fxLayout="row" fxLayoutAlign="start center"></th>
-        <td mat-cell *matCellDef="let entity" fxFlex="50px" fxLayout="row" fxLayoutAlign="start center">
+        <td class="noc-action-cell" mat-cell *matCellDef="let entity" fxFlex="50px" fxLayout="row"
+          fxLayoutAlign="start center">
           <span fxFlex=""></span>
           <button mat-icon-button *ngIf="noctuaUserService.user" (click)="updateCurrentMenuEvent($event)"
             class="noc-action-button" fxFlex="40px" [matMenuTriggerFor]="entityMenu">
@@ -172,7 +161,6 @@
           </mat-menu>
         </td>
       </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let entity; columns: displayedColumns;" class="" matRipple [ngClass]="{'noc-row-term': entity.term,
           'noc-row-selected': entity.uuid === noctuaActivityEntityService.termNode?.uuid}"></tr>
     </table>

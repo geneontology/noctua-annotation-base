@@ -2,8 +2,6 @@
   <table *ngIf="entity.predicate?.evidence.length>0" mat-table fxFlex="1 1 auto" class="w-100-p" #table
     [dataSource]="entity.predicate?.evidence">
     <ng-container matColumnDef="evidence">
-      <th class="noc-cell noc-evidence-code-cell" mat-header-cell *matHeaderCellDef fxFlex="" fxLayout="row"
-        fxLayoutAlign="start center">Evidence</th>
       <td class="noc-evidence-code-cell" mat-cell *matCellDef="let evidence; let i = index;" fxFlex="" fxLayout="column"
         fxLayoutAlign="start stretch" [ngClass]="{'noc-highlight-modified': evidence.evidence?.modified}">
         <p class="noc-old-term" *ngIf="evidence.evidence?.modified && evidence.evidence?.termHistory?.length>0">
@@ -24,9 +22,6 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="reference">
-      <th class="noc-cell noc-reference-cell" mat-header-cell *matHeaderCellDef fxLayout="row"
-        fxLayoutAlign="start center">Reference
-      </th>
       <td class="noc-reference-cell" mat-cell *matCellDef="let evidence; let i = index" fxLayout="column"
         fxLayoutAlign="start stretch" [ngClass]="{'noc-highlight-match': evidence.referenceEntity?.highlight,
             'noc-highlight-modified': evidence.referenceEntity?.modified,
@@ -51,8 +46,6 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="with">
-      <th class="noc-cell noc-with-cell" mat-header-cell *matHeaderCellDef fxLayout="row" fxLayoutAlign="start center">
-        With</th>
       <td class="noc-with-cell" mat-cell *matCellDef="let evidence; let i = index;" xLayout="column"
         fxLayoutAlign="start stretch" [ngClass]="{'noc-highlight-modified': evidence.withEntity?.modified}">
         <p class="noc-old-term" *ngIf="evidence.withEntity?.modified && evidence.withEntity?.termHistory?.length>0">
@@ -72,8 +65,6 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="assignedBy">
-      <th class="noc-cell noc-group-cell" mat-header-cell *matHeaderCellDef fxLayout="row" fxLayoutAlign="start center">
-        Assigned By </th>
       <td class="noc-group-cell" mat-cell *matCellDef="let evidence; let i = index;" fxLayout="row"
         fxLayoutAlign="start center">
         <p class="">
@@ -87,8 +78,6 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="contributor">
-      <th class="noc-cell noc-contributor-cell" mat-header-cell *matHeaderCellDef fxLayout="row"
-        fxLayoutAlign="start center">Contributors </th>
       <td class="noc-contributor-cell" mat-cell *matCellDef="let evidence; let i = index;" fxLayout="row"
         fxLayoutAlign="start center">
         <p class="">
@@ -101,7 +90,6 @@
         </p>
       </td>
     </ng-container>
-    <tr mat-header-row [ngClass]="{'noc-hide-header':options.hideHeader}" *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let evidence; columns: displayedColumns;" class="" matRipple></tr>
   </table>
   <div *ngIf="entity.predicate?.evidence.length===0" class="noc-no-info">

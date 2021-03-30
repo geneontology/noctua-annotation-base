@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, } from '@angular/router';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Activity, Cam, CamService } from 'noctua-form-base';
+import { Activity, Cam, CamService, NoctuaGraphService } from 'noctua-form-base';
 import { NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { noctuaStencil } from '@noctua.graph/data/cam-stencil';
 
@@ -34,6 +34,7 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public noctuaDataService: NoctuaDataService,
     // public noctuaCamEditorService: NoctuaCamEditorService,
+    private _noctuaGraphService: NoctuaGraphService,
     private _camService: CamService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaCamGraphService: CamGraphService,
@@ -50,17 +51,17 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     const self = this;
 
     self.noctuaCamGraphService.initializeGraph();
-    this.noctuaCamGraphService.initializeStencils();
+    self.noctuaCamGraphService.initializeStencils();
 
-    this.cam.onGraphChanged
-      .pipe(takeUntil(this._unsubscribeAll))
+    self._noctuaGraphService.onCamGraphChanged
+      .pipe(takeUntil(self._unsubscribeAll))
       .subscribe((cam: Cam) => {
-        if (!cam) {
+        if (!cam || cam.id !== self.cam.id) {
           return;
         }
         self.cam = cam;
         self.noctuaCamGraphService.addToCanvas(self.cam);
-        this.cam.updateActivityDisplayNumber();
+
       });
   }
 

@@ -10,6 +10,9 @@
     text-transform: uppercase;
     font-weight: bold;
   }
+  .noc-relationship-cell {
+    @include deep-width(120px);
+  }
   .noc-term-cell {
   }
   .noc-aspect-cell {

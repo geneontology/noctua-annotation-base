@@ -4,11 +4,11 @@ $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
 
 :host {
-  @include media-breakpoint('xs') {
+  @include media-breakpoint("xs") {
     width: 100%;
   }
 
-  @include media-breakpoint-up('sm') {
+  @include media-breakpoint-up("sm") {
     width: 600px;
   }
 
@@ -22,7 +22,8 @@ $accent: map-get($theme, accent);
     padding: 0;
   }
 
-  .mat-dialog-content {}
+  .mat-dialog-content {
+  }
 
   .dialog-content-wrapper {
     @include deep-width(100%);
@@ -30,10 +31,6 @@ $accent: map-get($theme, accent);
     display: flex;
     flex-direction: column;
   }
-
-
-
-
 
   .noc-summary-bar {
     position: -webkit-sticky;
@@ -43,13 +40,12 @@ $accent: map-get($theme, accent);
     padding: 0 10px 0 20px;
     @include deep-height(40px);
     //  min-height: 40px; //min-height: 35px;
-    background-color: #FFF;
+    background-color: #fff;
     font-size: 16px;
     overflow: hidden;
     z-index: 10;
 
     @include mat-elevation(2);
-
 
     .noc-art-tools {
       //background-color: ;
@@ -65,15 +61,14 @@ $accent: map-get($theme, accent);
       font-weight: normal;
       @include deep-height(30px);
     }
-
   }
 
   .noc-toolbar {
     padding: 0px 20px;
     height: 40px;
     width: 100%;
-    background-color: #F2F2F2;
-    border-bottom: #BBB solid 1px;
+    background-color: #f2f2f2;
+    border-bottom: #bbb solid 1px;
 
     .noc-title {
       line-height: 38px;
@@ -104,10 +99,10 @@ $accent: map-get($theme, accent);
     }
 
     .mat-cell {
-      padding: 0 30px 0 10px;
+      padding: 0 5px;
       font-size: 12px !important;
       color: #000;
-      border-right: #AAA solid 1px;
+      border-right: #aaa solid 1px;
       position: relative;
       overflow-wrap: break-word;
 
@@ -132,6 +127,5 @@ $accent: map-get($theme, accent);
       @include deep-height(30px);
       border-bottom: $noc-primary-color-light solid 1px;
     }
-
   }
 }

@@ -72,7 +72,10 @@ export class CamService {
   getCam(modelId): Cam {
     const cam: Cam = new Cam();
 
+    this.cam = cam;
+
     cam.graph = null;
+    cam.id = modelId;
     cam.model = Object.assign({}, {
       id: modelId,
       title: '',
@@ -81,7 +84,6 @@ export class CamService {
     cam.expanded = true;
     this.noctuaGraphService.getGraphInfo(cam, modelId);
     cam.manager.get_model(cam.id);
-    this.cam = cam;
     this.onCamChanged.next(cam);
 
     return cam;

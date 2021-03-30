@@ -139,7 +139,6 @@ $accent: map-get($theme, accent);
   .noc-activity-heading {
     position: relative;
     margin-bottom: 1px;
-    @include deep-width(100%);
     @include deep-height(55px);
     //min-height: 35px;
     background-color: #fff;
@@ -262,8 +261,6 @@ $accent: map-get($theme, accent);
   }
 
   .noc-tree-container {
-    @include deep-width(100%);
-
     .noc-cell-label {
       @include deep-width(100%);
       @include deep-height(20px);

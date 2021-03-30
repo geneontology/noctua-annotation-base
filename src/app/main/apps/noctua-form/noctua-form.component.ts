@@ -17,7 +17,8 @@ import {
   noctuaFormConfig,
   MiddlePanel,
   LeftPanel,
-  Activity
+  Activity,
+  NoctuaGraphService
 } from 'noctua-form-base';
 
 import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
@@ -61,6 +62,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private camService: CamService,
+    private _noctuaGraphService: NoctuaGraphService,
     private noctuaDataService: NoctuaDataService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -94,14 +96,13 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     self.noctuaFormMenuService.setLeftDrawer(self.leftDrawer);
     self.noctuaFormMenuService.setRightDrawer(self.rightDrawer);
 
-    this.cam.onGraphChanged
+    this._noctuaGraphService.onCamGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cam: Cam) => {
-        if (!cam) {
+        if (!cam || cam.id !== self.cam.id) {
           return;
         }
         this.cam = cam;
-        this.cam.updateActivityDisplayNumber();
       });
   }
 

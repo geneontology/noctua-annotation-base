@@ -81,11 +81,8 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
     public noctuaActivityFormService: NoctuaActivityFormService,
     private inlineEditorService: InlineEditorService) {
 
-
     this.dataSource = new MatTableDataSource<ActivityNode>();
     this.unsubscribeAll = new Subject();
-
-
   }
 
   ngOnInit(): void {

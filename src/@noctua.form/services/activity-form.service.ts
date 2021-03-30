@@ -22,6 +22,7 @@ export class NoctuaActivityFormService {
   public errors = [];
   public currentActivity: Activity;
   public activity: Activity;
+  public onActivityCreated: BehaviorSubject<Activity>
   public activityForm: ActivityForm;
   public activityFormGroup: BehaviorSubject<FormGroup | undefined>;
   public activityFormGroup$: Observable<FormGroup>;
@@ -40,6 +41,7 @@ export class NoctuaActivityFormService {
       this.cam = cam;
     });
     this.activity = this.noctuaFormConfigService.createActivityModel(ActivityType.default);
+    this.onActivityCreated = new BehaviorSubject(null);
     this.activityFormGroup = new BehaviorSubject(null);
     this.activityFormGroup$ = this.activityFormGroup.asObservable();
 

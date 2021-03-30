@@ -1,5 +1,5 @@
 import { environment } from '../../../../../environments/environment';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -32,15 +32,19 @@ export class NoctuaFormDialogService {
     dialogRef: any;
 
     constructor(private httpClient: HttpClient,
+        private zone: NgZone,
         private snackBar: MatSnackBar,
         private _matDialog: MatDialog) {
     }
 
     openSuccessfulSaveToast(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: 10000,
-            verticalPosition: 'top'
+        this.zone.run(() => {
+            this.snackBar.open(message, action, {
+                duration: 10000,
+                verticalPosition: 'top'
+            });
         });
+
     }
 
     openConfirmDialog(searchCriteria, success): void {

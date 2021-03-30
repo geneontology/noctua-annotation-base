@@ -53,6 +53,7 @@ export class NoctuaGraphService {
   curieUtil: any;
 
   onCamRebuildChange: BehaviorSubject<any>;
+  onCamGraphChanged: BehaviorSubject<any>;
 
   constructor(
     private curieService: CurieService,
@@ -61,6 +62,7 @@ export class NoctuaGraphService {
     private noctuaLookupService: NoctuaLookupService) {
     this.curieUtil = this.curieService.getCurieUtil();
     this.onCamRebuildChange = new BehaviorSubject(null);
+    this.onCamGraphChanged = new BehaviorSubject(null);
   }
 
   registerManager(useReasoner = true) {
@@ -263,9 +265,11 @@ export class NoctuaGraphService {
 
     cam.activities = self.graphToActivities(cam.graph);
     cam.applyFilter();
-    cam.onGraphChanged.next(cam);
     cam.connectorActivities = self.getConnectorActivities(cam);
     cam.setPreview();
+    cam.updateActivityDisplayNumber();
+    cam.onGraphChanged.next(cam.activities);
+    self.onCamGraphChanged.next(cam);
   }
 
   loadViolations(cam: Cam, validationResults) {
@@ -652,8 +656,8 @@ export class NoctuaGraphService {
     }
 
     reqs.store_model(cam.id);
-    return cam.manager.request_with(reqs);
 
+    return cam.manager.request_with(reqs);
   }
 
   editActivity(cam: Cam,

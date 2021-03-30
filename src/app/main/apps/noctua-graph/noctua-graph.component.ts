@@ -111,15 +111,6 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.noctuaCommonMenuService.setLeftDrawer(this.leftDrawer);
     this.noctuaCommonMenuService.setRightDrawer(this.rightDrawer);
-
-    this.cam.onGraphChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((cam: Cam) => {
-        if (!cam) {
-          return;
-        }
-        this.cam.updateActivityDisplayNumber();
-      });
   }
 
   ngAfterViewInit(): void {

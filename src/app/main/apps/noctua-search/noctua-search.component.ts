@@ -138,9 +138,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  loadCam(modelId) {
-    this.cam = this.camService.getCam(modelId);
-  }
 
   openLeftDrawer(panel) {
     this.noctuaSearchMenuService.selectLeftPanel(panel);

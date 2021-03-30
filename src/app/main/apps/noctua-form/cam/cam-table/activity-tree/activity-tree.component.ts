@@ -32,6 +32,7 @@ import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { MatTableDataSource } from '@angular/material/table';
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'noc-activity-tree',
@@ -76,6 +77,7 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
   constructor(
     private camService: CamService,
     public camsService: CamsService,
+    private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -104,10 +106,42 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
     this.dataSource.filter = this.gpNode?.id;
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
+  }
+
   hasChild = (_: number, node: ActivityNode) => node.expandable;
+
+  getParentNode(node: ActivityNode) {
+    const nodeIndex = this.dataSource.data.indexOf(node);
+
+    for (let i = nodeIndex - 1; i >= 0; i--) {
+      if (this.dataSource.data[i].treeLevel === node.treeLevel - 1) {
+        return this.dataSource.data[i];
+      }
+    }
+
+    return null;
+  }
+
+  shouldRender(node: ActivityNode) {
+    let parent = this.getParentNode(node);
+    while (parent) {
+      if (!parent.expanded) {
+        return false;
+      }
+      parent = this.getParentNode(parent);
+    }
+    return true;
+  }
 
   toggleExpand(activity: Activity) {
     activity.expanded = !activity.expanded;
+  }
+
+  toggleNodeExpand(node: ActivityNode) {
+    node.expanded = !node.expanded;
   }
 
   displayCamErrors() {
@@ -252,10 +286,27 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
     this.currentMenuEvent = event;
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
+  deleteActivity(activity: Activity) {
+    const self = this;
+
+    const success = () => {
+      this.camService.deleteActivity(activity).then(() => {
+        self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully deleted.', 'OK');
+      });
+    };
+
+    if (!self.noctuaUserService.user) {
+      this.confirmDialogService.openConfirmDialog('Not Logged In',
+        'Please log in to continue.',
+        null);
+    } else {
+      this.confirmDialogService.openConfirmDialog('Confirm Delete?',
+        'You are about to delete an activity.',
+        success);
+    }
   }
+
+
 
   cleanId(dirtyId: string) {
     return NoctuaUtils.cleanID(dirtyId);

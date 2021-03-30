@@ -82,7 +82,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this.cam.updateActivityDisplayNumber();
       });
   }
 
