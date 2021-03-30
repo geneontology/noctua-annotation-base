@@ -1,5 +1,6 @@
 @import "src/@noctua/scss/noctua";
 @import "src/@noctua.common/scss/noctua.common";
+@import "src/@noctua.form/scss/noctua-form.common";
 
 $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
@@ -232,9 +233,20 @@ $accent: map-get($theme, accent);
     //  flex: 1 1 auto;
     //    border-bottom: 1px solid rgba(0, 0, 0, .12);
 
+    noc-activity-tree-node {
+      padding-left: 40px;
+    }
+
     table {
       // width: 800px;
+      @include deep-width(100%);
       overflow: auto;
+      .mat-footer-row,
+      .mat-header-row,
+      .mat-row {
+        display: inline-flex;
+        min-width: 100%;
+      }
     }
 
     tr.mat-footer-row,
@@ -292,7 +304,6 @@ $accent: map-get($theme, accent);
     }
 
     .mat-cell {
-      min-width: 0;
       display: flex;
       align-items: center;
 

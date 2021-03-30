@@ -2,6 +2,16 @@
   <div class="noc-activity-node noctua-form-table w-100-p"
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="row"
     fxLayoutAlign="start stretch">
+    <div *ngIf="!options.treeTable" class="noc-relationship-cell noc-entity-cell"
+      [ngStyle]="{'padding-left':(entity.treeLevel-1) * 10+'px'}">
+      <p class="">
+        <strong> {{entity.qualifier}} </strong>
+        {{entity.predicate?.edge?.label}}
+      </p>
+      <noctua-inline-editor *ngIf="noctuaUserService.user && entity.relationEditable && !options.reviewMode" [cam]="cam"
+        [activity]='activity' [entity]="entity" [category]="EditorCategory.relationship" class="noc-edit-button">
+      </noctua-inline-editor>
+    </div>
     <div class="noc-term-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
       [attr.id]="entity.term?.displayId" [ngClass]="{'noc-highlight-match': entity.term?.highlight,
             'noc-highlight-modified': entity.term?.modified,
@@ -22,10 +32,12 @@
         [activity]='activity' [entity]="entity" [category]="EditorCategory.term" class="noc-edit-button">
       </noctua-inline-editor>
     </div>
+    <div *ngIf="!options.treeTable" class="noc-aspect-cell noc-entity-cell" fxLayout="column"
+      fxLayoutAlign="start stretch">
+      <p class="">{{entity.aspect}}</p>
+    </div>
     <div class="noc-extension-cell noc-entity-cell " fxLayout="column" fxLayoutAlign="start stretch">
-
       <p *ngIf="entity.isExtension" class="">Yes</p>
-
     </div>
     <div class="noc-evidence-cell" fxLayout="column" fxLayoutAlign="start stretch">
       <div fxFlex="" class="p-0">

@@ -75,11 +75,15 @@
     </div>
   </div>
 
-  <div *ngIf="activity.expanded" class="noctua-form-table noc-activity-table w-100-p"
+  <div *ngIf="activity.expanded" class="noc-activity-table w-100-p"
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="column"
     fxLayoutAlign="start start">
-    <table mat-table fxFlex="1 1 auto" class="" [dataSource]="dataSource" [@animateStagger]="{value:'50'}">
-      <ng-container matColumnDef="relationship" sticky>
+    <noc-activity-tree-node *ngFor="let node of dataSource.data" [options]="options" [cam]="cam" [activity]="activity"
+      [entity]="node" class="w-100-p">
+    </noc-activity-tree-node>
+    <!--     <table mat-table fxLayout="row" fxLayoutAlign="start start" class="w-100-p" [dataSource]="dataSource"
+      [@animateStagger]="{value:'50'}">
+      <ng-container matColumnDef="relationship">
         <td class="noc-relationship-cell" mat-cell *matCellDef="let entity"
           [ngStyle]="{'padding-left':(entity.treeLevel-1) * 10+'px'}">
           <p class="">
@@ -103,7 +107,7 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="term">
-        <td class="noc-term-cell" mat-cell class="noc-column-flex" *matCellDef="let entity" fxLayout="column"
+        <td class="noc-term-cell" mat-cell class="noc-column-flex" *matCellDef="let entity" fxFlex="" fxLayout="column"
           fxLayoutAlign="start stretch" [attr.id]="entity.term?.displayId" [ngClass]="{'noc-highlight-match': entity.term?.highlight,
             'noc-highlight-modified': entity.term?.modified,
             'noc-highlight-match-current': entity.term?.uuid===camsService.currentMatch?.uuid}">
@@ -130,7 +134,7 @@
           </noc-evidence-table>
         </td>
       </ng-container>
-      <ng-container matColumnDef="actions" stickyEnd>
+      <ng-container matColumnDef="actions">
         <td class="noc-action-cell" mat-cell *matCellDef="let entity" fxFlex="50px" fxLayout="row"
           fxLayoutAlign="start center">
           <span fxFlex=""></span>
@@ -155,15 +159,12 @@
             <button mat-menu-item (click)="addEvidence(entity, entity.predicate?.evidenceIndex)" class="">
               Add Evidence
             </button>
-            <!--   <button (click)="removeEvidence(entity,i)" mat-menu-item>
-                Remove Evidence
-              </button> -->
           </mat-menu>
         </td>
       </ng-container>
-      <tr mat-row *matRowDef="let entity; columns: displayedColumns;" class="" matRipple [ngClass]="{'noc-row-term': entity.term,
+      <tr mat-row *matRowDef="let entity; columns: displayedColumns;" class="w-100-p" matRipple [ngClass]="{'noc-row-term': entity.term,
           'noc-row-selected': entity.uuid === noctuaActivityEntityService.termNode?.uuid}"></tr>
-    </table>
+    </table> -->
     <div *ngIf="activity.nodes?.length===0" class="noc-no-info">
       no results yet.
     </div>
