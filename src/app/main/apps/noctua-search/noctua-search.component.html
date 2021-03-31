@@ -57,8 +57,8 @@
         <noc-art-basket [hidden]="noctuaSearchMenuService.selectedLeftPanel !== LeftPanel.artBasket"></noc-art-basket>
       </div>
     </mat-drawer>
-    <mat-drawer-content class="h-100-p">
-      <div id="noc-results" class="noc-section-body w-100-p" noctuaPerfectScrollbar>
+    <mat-drawer-content class="w-100-p">
+      <ng-scrollbar #scrollbarRef id="noc-results" class="noc-section-body w-100-p">
         <div class="header accent p-8 w-100-p" fxLayout="column" fxLayoutAlign="center center">
           <h1 [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
             WELCOME TO NOCTUA
@@ -126,7 +126,7 @@
             </div>
           </div>
         </div>
-        <div class="noc-middle-panel  w-100-p">
+        <div class="noc-middle-panel h-100-p w-100-p">
           <noc-cams-table class="w-100-p" [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.cams"
             [isReviewMode]="noctuaSearchMenuService.isReviewMode">
           </noc-cams-table>
@@ -138,7 +138,7 @@
         <div class="w-100-p">
           <app-footer></app-footer>
         </div>
-      </div>
+      </ng-scrollbar>
     </mat-drawer-content>
     <mat-drawer #rightDrawer class="noc-right-drawer" mode="over" position="end">
     </mat-drawer>

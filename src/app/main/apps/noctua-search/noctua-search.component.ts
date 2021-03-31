@@ -23,6 +23,7 @@ import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-p
 import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
+import { NgScrollbar } from 'ngx-scrollbar';
 
 @Component({
   selector: 'noc-noctua-search',
@@ -41,6 +42,8 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChildren(NoctuaPerfectScrollbarDirective)
   private _noctuaPerfectScrollbarDirectives: QueryList<NoctuaPerfectScrollbarDirective>;
+
+  @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
 
   loadingSpinner: any = {
     color: 'primary',
@@ -132,12 +135,10 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  ngAfterViewInit(): void {
-    this.noctuaSearchMenuService.resultsViewScrollbar = this._noctuaPerfectScrollbarDirectives.find((directive) => {
-      return directive.elementRef.nativeElement.id === 'noc-results';
-    });
-  }
 
+  ngAfterViewInit(): void {
+    this.noctuaSearchMenuService.resultsViewScrollbar = this.scrollbarRef;
+  }
 
   openLeftDrawer(panel) {
     this.noctuaSearchMenuService.selectLeftPanel(panel);
@@ -162,7 +163,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
     }
   }
-
 
   openRightDrawer(panel) {
     this.noctuaSearchMenuService.selectRightPanel(panel);

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
+import { NgScrollbar } from 'ngx-scrollbar';
 import { LeftPanel, MiddlePanel, RightPanel } from './../models/menu-panels';
 import { ReviewMode } from './../models/review-mode';
 
@@ -14,7 +15,7 @@ export class NoctuaSearchMenuService {
     selectedLeftPanel: LeftPanel;
     selectedMiddlePanel: MiddlePanel;
     selectedRightPanel: RightPanel;
-    resultsViewScrollbar: NoctuaPerfectScrollbarDirective;
+    resultsViewScrollbar: NgScrollbar;
 
     private leftDrawer: MatDrawer;
     private rightDrawer: MatDrawer;
@@ -89,7 +90,20 @@ export class NoctuaSearchMenuService {
                 this.resultsViewScrollbar.update();
 
                 setTimeout(() => {
-                    this.resultsViewScrollbar.scrollToTop(0);
+                    this.resultsViewScrollbar.scrollTo({ top: 0 });
+                });
+            }
+        });
+    }
+
+    scrollToElement(q: string) {
+
+        setTimeout(() => {
+            if (this.resultsViewScrollbar) {
+                // this.resultsViewScrollbar.update();
+
+                setTimeout(() => {
+                    this.resultsViewScrollbar.scrollToElement(q, { top: -140, duration: 1000 });
                 });
             }
         });
@@ -99,10 +113,10 @@ export class NoctuaSearchMenuService {
 
         setTimeout(() => {
             if (this.resultsViewScrollbar) {
-                this.resultsViewScrollbar.update();
+                //  this.resultsViewScrollbar.update();
 
                 setTimeout(() => {
-                    this.resultsViewScrollbar.scrollToElement(q, -140, 1000);
+                    this.resultsViewScrollbar.scrollToElement(q, { left: 0, top: -140, duration: 1000 });
                 });
             }
         });

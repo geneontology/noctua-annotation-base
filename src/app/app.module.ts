@@ -58,6 +58,7 @@ import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-ic
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { StartupService } from './startup.service';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 export function startup(startupService: StartupService) {
     return () => startupService.loadData();
@@ -78,6 +79,7 @@ const appRoutes: Routes = [
         BrowserModule,
         BrowserAnimationsModule,
         PerfectScrollbarModule,
+        NgScrollbarModule,
         HttpClientModule,
         HttpClientJsonpModule,
         RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),

@@ -19,14 +19,6 @@ $warn: map-get($theme, warn);
     z-index: 1000;
   }
 
-  #noc-results {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-
   .noc-sidemenu {
     padding: 0;
     @include deep-height(100%);
