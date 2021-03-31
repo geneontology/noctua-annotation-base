@@ -1,3 +1,17 @@
+$noc-breakpoints: (
+  noc-lg: "screen and (max-width: 1367px)",
+) !default;
+
+@mixin noc-media-breakpoint($breakpointName) {
+  $mediaQuery: map_get($noc-breakpoints, $breakpointName);
+
+  @if ($mediaQuery != null) {
+    @media #{$mediaQuery} {
+      @content;
+    }
+  }
+}
+
 .noctua-form-table {
   &.noc-tree-header-row {
     padding-left: 40px;
@@ -11,9 +25,10 @@
     font-weight: bold;
   }
   .noc-relationship-cell {
-    @include deep-width(120px);
+    @include deep-width(100px);
   }
   .noc-term-cell {
+    min-width: 100px;
   }
   .noc-aspect-cell {
     @include deep-width(30px);
@@ -25,6 +40,11 @@
 
   .noc-evidence-cell {
     @include deep-width(600px);
+
+    @include noc-media-breakpoint("noc-lg") {
+      @include deep-width(500px);
+      // background-color: aquamarine !important;
+    }
   }
 
   .noc-evidence-code-cell {

@@ -79,7 +79,7 @@ $accent: map-get($theme, accent);
   .noc-cam-rebuild {
     color: rgb(149, 99, 57);
   }
-  .noc-activity-heading {
+  .noc-activity-header {
     padding-left: 40px;
     position: relative;
     margin-bottom: 1px;
@@ -89,54 +89,6 @@ $accent: map-get($theme, accent);
     //background-color: #fff;
     font-size: 14px;
     border-bottom: $noc-primary-color-light solid 1px;
-
-    //border-bottom: rgba(#000, 0.4) solid 1px;
-    .noc-toggle-expand-button {
-      width: 30px;
-      height: 30px;
-      line-height: 12px;
-    }
-
-    .noc-title {
-      height: 100%;
-
-      small {
-        font-size: 12px;
-        font-style: italic;
-      }
-    }
-
-    .noc-title-truncate {
-      max-width: 200px;
-    }
-
-    .noc-display-number {
-      background-color: #fff;
-      z-index: 2;
-    }
-
-    &::before {
-      position: absolute;
-      top: 27px;
-      left: -15px;
-      width: 25px;
-      height: 2px;
-      color: white;
-      background-color: $noc-tree-line-color;
-      content: "";
-    }
-
-    &::after {
-      position: absolute;
-      top: 0;
-      left: 37px;
-      bottom: 0;
-      width: 2px;
-      color: white;
-      background-color: $noc-tree-line-color;
-      content: "";
-      z-index: 1;
-    }
   }
 
   .noc-gp {

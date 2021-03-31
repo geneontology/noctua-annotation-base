@@ -80,17 +80,16 @@ $accent: map-get($theme, accent);
     padding: 20px 10px;
   }
 
-  .noc-activity-table-header {
-    @include deep-height(50px);
+  .noc-activity-header {
+    padding-left: 40px;
+    position: relative;
+    margin-bottom: 1px;
+    @include deep-width(100%);
+    @include deep-height(30px);
+    //min-height: 35px;
+    //background-color: #fff;
+    font-size: 14px;
     border-bottom: $noc-primary-color-light solid 1px;
-
-    .noc-header-cell {
-      padding: 0 10px;
-      font-size: 10px;
-      color: map-get($primary, default);
-      text-transform: uppercase;
-      font-weight: bold;
-    }
   }
 
   .noc-group-side-heading {
@@ -104,7 +103,7 @@ $accent: map-get($theme, accent);
     overflow-wrap: anywhere;
   }
 
-  .noc-activity-table-heading {
+  .noc-activity-heading {
     position: relative;
     margin-bottom: 1px;
     @include deep-height(55px);

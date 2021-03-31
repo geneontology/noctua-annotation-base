@@ -7,6 +7,7 @@ import { ContextMenuModule } from 'ngx-contextmenu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NoctuaModule } from '@noctua/noctua.module';
 import { NoctuaProgressBarModule } from '@noctua/components';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 import { NoctuaSharedModule } from '@noctua/shared.module';
 import { noctuaConfig } from './noctua-config';
@@ -76,6 +77,7 @@ const appRoutes: Routes = [
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        PerfectScrollbarModule,
         HttpClientModule,
         HttpClientJsonpModule,
         RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),

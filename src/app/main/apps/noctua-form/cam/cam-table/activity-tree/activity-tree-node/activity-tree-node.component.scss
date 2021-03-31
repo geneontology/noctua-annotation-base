@@ -162,6 +162,10 @@ $accent: map-get($theme, accent);
       position: relative;
       overflow-wrap: break-word;
 
+      &.noc-relationship-cell {
+        font-size: 10px;
+      }
+
       &.noc-extension-cell {
         padding-top: 10px;
         font-size: 10px;

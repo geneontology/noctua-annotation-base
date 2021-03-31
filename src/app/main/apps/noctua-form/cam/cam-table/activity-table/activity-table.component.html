@@ -1,7 +1,7 @@
 <div class="w-100-p">
   <div [attr.id]="activity.displayId" class="w-100-p"
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}">
-    <div class="noc-activity-table-heading" fxLayout="row" fxLayoutAlign="start center">
+    <div class="noc-activity-heading" fxLayout="row" fxLayoutAlign="start center">
       <div fxFlex="25px" (click)="$event.stopPropagation()">
         <button mat-icon-button (click)="toggleExpand(activity)" color="primary" class="noc-toggle-expand-button">
           <fa-icon *ngIf="!activity.expanded" [icon]="['fas', 'caret-right']"></fa-icon>
@@ -78,6 +78,41 @@
   <div *ngIf="activity.expanded" class="noc-activity-table w-100-p"
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="column"
     fxLayoutAlign="start start">
+    <div class="noctua-form-table noc-activity-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <div *ngIf="!options.treeTable" class="noc-cell noc-relationship-cell">
+        Relationship
+      </div>
+      <div class="noc-cell noc-term-cell" fxFlex="">
+        Term
+      </div>
+      <div *ngIf="!options.treeTable" class="noc-cell noc-aspect-cell">
+        Asp
+      </div>
+      <div class="noc-cell noc-extension-cell">
+        Ext
+      </div>
+      <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-cell noc-evidence-code-cell" fxFlex="">
+          Evidence
+        </div>
+        <div class="noc-cell noc-reference-cell">
+          Reference
+        </div>
+        <div class="noc-cell noc-with-cell">
+          With
+        </div>
+        <div class="noc-cell noc-group-cell">
+          Assigned By
+        </div>
+        <div class="noc-cell noc-contributor-cell">
+          Contributor
+        </div>
+      </div>
+      <div class="noc-cell noc-action-cell">
+
+      </div>
+    </div>
+
     <noc-activity-tree-node *ngFor="let node of dataSource.data" [options]="options" [cam]="cam" [activity]="activity"
       [entity]="node" class="w-100-p">
     </noc-activity-tree-node>
