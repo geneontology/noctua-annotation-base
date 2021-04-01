@@ -374,12 +374,19 @@ export class NoctuaReviewSearchService {
             return;
         }
 
+
+
         // so it circulates
         this.matchedCountCursor = (this.matchedCountCursor + 1) % this.matchedCount;
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];
         this.camsService.expandMatch(this.currentMatchedEnity.uuid);
         this.camsService.currentMatch = this.currentMatchedEnity;
-        this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.activityDisplayId);
+
+        if (!this.currentMatchedEnity.activityDisplayId && this.matchedCountCursor < this.matchedCount) {
+            this.findNext();
+        } else {
+            this.noctuaSearchMenuService.scrollTo('#' + this.currentMatchedEnity.activityDisplayId);
+        }
 
         return this.currentMatchedEnity;
     }

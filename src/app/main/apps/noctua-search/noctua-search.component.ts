@@ -24,6 +24,7 @@ import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 
 @Component({
   selector: 'noc-noctua-search',
@@ -43,12 +44,19 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(NoctuaPerfectScrollbarDirective)
   private _noctuaPerfectScrollbarDirectives: QueryList<NoctuaPerfectScrollbarDirective>;
 
-  @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
+  @ViewChild(PerfectScrollbarDirective, { static: false })
+  scrollbarRef?: PerfectScrollbarDirective;
+
+  // @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
 
   loadingSpinner: any = {
     color: 'primary',
     mode: 'indeterminate'
   };
+
+  config = {
+    suppressScrollX: true
+  }
 
   ReviewMode = ReviewMode;
   LeftPanel = LeftPanel;

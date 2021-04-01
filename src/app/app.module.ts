@@ -7,7 +7,6 @@ import { ContextMenuModule } from 'ngx-contextmenu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NoctuaModule } from '@noctua/noctua.module';
 import { NoctuaProgressBarModule } from '@noctua/components';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 import { NoctuaSharedModule } from '@noctua/shared.module';
 import { noctuaConfig } from './noctua-config';
@@ -58,7 +57,6 @@ import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-ic
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { StartupService } from './startup.service';
-import { NgScrollbarModule } from 'ngx-scrollbar';
 
 export function startup(startupService: StartupService) {
     return () => startupService.loadData();
@@ -78,8 +76,6 @@ const appRoutes: Routes = [
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        PerfectScrollbarModule,
-        NgScrollbarModule,
         HttpClientModule,
         HttpClientJsonpModule,
         RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),

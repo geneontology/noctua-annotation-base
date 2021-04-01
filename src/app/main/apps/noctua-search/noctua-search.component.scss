@@ -60,6 +60,7 @@ $warn: map-get($theme, warn);
 
   .noc-section-body {
     //scroll
+    position: relative;
   }
 
   .header {
