@@ -61,8 +61,7 @@
   </div>
   <div *ngIf="activity.expanded" class="noc-tree-container">
     <div class="noc-tree">
-      <tree-root #tree (initialized)="onTreeLoad()" [nodes]="treeNodes" [options]="treeOptions"
-        (activate)="onSelectNode($event)">
+      <tree-root #tree (initialized)="onTreeLoad()" [nodes]="treeNodes" [options]="treeOptions">
         <ng-template #treeNodeWrapperTemplate let-node let-index="index">
           <div class="node-wrapper noc-tree-node" fxLayout="row" fxLayoutAlign="start center"
             [style.padding-left]="node.getNodePadding()">

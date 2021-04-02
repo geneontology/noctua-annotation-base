@@ -73,8 +73,8 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
     node => node.treeLevel, node => node.expandable);
 
   treeOptions = {
-    allowDrag: true,
-    allowDrop: true,
+    allowDrag: false,
+    allowDrop: false,
     // levelPadding: 15,
     getNodeClone: (node) => ({
       ...node.data,
@@ -107,8 +107,6 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
       this.editableTerms = this.options.editableTerms
     }
     this.gpNode = this.activity.getGPNode();
-
-    console.log(this.gpNode.predicate.edge)
 
     this.optionsDisplay = { ...this.options, hideHeader: true };
     this.dataSource.data = this.activity.nodes;

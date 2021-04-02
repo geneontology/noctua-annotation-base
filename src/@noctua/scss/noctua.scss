@@ -14,7 +14,7 @@ $noc-primary-color-text: #4a8bfc;
 $noc-tree-line-color: rgba(#798fb8, 0.3);
 
 //aspect
-$noc-mf: #cdf1d2;
+$noc-mf: #7cd488;
 $noc-bp: #f4c89c;
 $noc-cc: #d3b5f5;
 
@@ -283,6 +283,19 @@ input[type="text"] {
     margin-left: 10px;
     margin-right: 10px;
   }
+}
+
+.angular-tree-component {
+  width: 100%;
+  position: relative;
+  display: inline-block;
+  cursor: auto;
+  -webkit-touch-callout: auto; /* iOS Safari */
+  -webkit-user-select: auto; /* Chrome/Safari/Opera */
+  -khtml-user-select: auto; /* Konqueror */
+  -moz-user-select: auto; /* Firefox */
+  -ms-user-select: auto; /* IE/Edge */
+  user-select: auto; /* non-prefixed version, currently not supported by any browser */
 }
 
 .noc-tree {

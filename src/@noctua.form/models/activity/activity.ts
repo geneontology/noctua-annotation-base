@@ -121,7 +121,7 @@ export class Activity extends SaeGraph<ActivityNode> {
       if (mfNode && edge) {
         mfNode.predicate = edge.predicate;
         if (edge.predicate.edge) {
-          // edge.predicate.edge.label = ''
+          edge.predicate.edge.label = ''
         }
       }
     }

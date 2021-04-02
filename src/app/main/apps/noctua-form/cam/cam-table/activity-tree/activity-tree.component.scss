@@ -233,7 +233,7 @@ $accent: map-get($theme, accent);
 
   .noc-tree-container {
     position: relative;
-    padding-left: 50px;
+    padding-left: 45px;
     padding-right: 10px;
     .noc-cell-label {
       @include deep-width(100%);
@@ -258,7 +258,7 @@ $accent: map-get($theme, accent);
         border-left: 1px solid $noc-tree-line-color;
         height: 100%;
         top: 0;
-        left: 60px;
+        left: 55px;
       }
     }
 
