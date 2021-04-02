@@ -6,7 +6,7 @@ import { Activity } from './activity';
 import { ActivityNode } from './activity-node';
 import { Predicate } from './predicate';
 
-export class Triple<T extends ActivityNode | Activity> {
+export class Triple<T extends ActivityNode | Activity>  {
 
   id
   object: T;

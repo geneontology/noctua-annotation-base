@@ -9,7 +9,8 @@ export {
     ActivityType,
     ActivityState,
     ActivitySize,
-    ActivityPosition
+    ActivityPosition,
+    ActivityTreeNode,
 } from './activity';
 export {
     Cam,

@@ -14,6 +14,7 @@ import * as ShapeDescription from './../../data/config/shape-definition';
 import { each, filter } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
+import { NodeType } from 'scard-graph-ts';
 
 export enum ActivityState {
   creation = 1,
@@ -45,6 +46,7 @@ export class ActivityPosition {
 }
 
 export class Activity extends SaeGraph<ActivityNode> {
+  nodeType: NodeType = NodeType.node;
   gp;
   label: string;
   activityRows;
@@ -119,7 +121,7 @@ export class Activity extends SaeGraph<ActivityNode> {
       if (mfNode && edge) {
         mfNode.predicate = edge.predicate;
         if (edge.predicate.edge) {
-          edge.predicate.edge.label = ''
+          // edge.predicate.edge.label = ''
         }
       }
     }
@@ -429,6 +431,42 @@ export class Activity extends SaeGraph<ActivityNode> {
     return title;
   }
 
+  buildTrees() {
+    const self = this;
+
+    return [self._buildTree(self.edges, self.rootNode)];
+  }
+
+  count = 0
+
+
+  private _buildTree(triples: Triple<ActivityNode>[], rootNode: ActivityNode): ActivityTreeNode {
+    const self = this;
+    const result: ActivityTreeNode[] = [new ActivityTreeNode(rootNode)]
+    const getNestedChildren = (arr: ActivityTreeNode[]) => {
+
+
+      for (const i in arr) {
+        const children = []
+        for (const j in triples) {
+          self.count++;
+          if (triples[j].subject.id === arr[i].node.id) {
+            children.push(new ActivityTreeNode(triples[j].object));
+          }
+        }
+
+        if (children.length > 0) {
+          arr[i].children = children;
+          getNestedChildren(children);
+        }
+      }
+    }
+
+    getNestedChildren(result);
+
+    return result[0]
+  }
+
   get presentation() {
     const self = this;
 
@@ -623,4 +661,18 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     return result;
   }
+}
+
+export class ActivityTreeNode {
+  parentId: string;
+  id: string;
+  node: ActivityNode;
+  children: ActivityTreeNode[];
+
+  constructor(node: ActivityNode, children: ActivityTreeNode[] = []) {
+    this.node = node;
+    this.id = node.id
+    this.children = children;
+  }
+
 }

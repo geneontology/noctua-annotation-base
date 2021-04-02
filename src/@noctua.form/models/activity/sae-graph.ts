@@ -19,12 +19,18 @@ import {
 } from './noctua-form-graph';
 import { each, find } from 'lodash';
 
+import { Graph as Graphlib } from 'graphlib';
+import { CardGraph, NodeType } from 'scard-graph-ts';
+
 export class SaeGraph<T extends ActivityNode> {
   numberOfEdges: number;
   graph: Graph<T, Triple<T>>;
 
+  protected graphlib: Graphlib;
+
   constructor() {
     this.graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
+    this.graphlib = new Graphlib();
   }
 
   get nodes(): T[] {
@@ -41,7 +47,17 @@ export class SaeGraph<T extends ActivityNode> {
     return findNode(this.graph, id);
   }
 
+  getNodes(ids: string[]): T[] {
+    const self = this;
+    const result: T[] = ids.map((id: string) => {
+      return self.getNode(id);
+    });
+
+    return result;
+  }
+
   addNode(node: T) {
+    this.graphlib.setNode(node.id);
     return addNode(this.graph, node, node.id);
   }
 
@@ -54,6 +70,7 @@ export class SaeGraph<T extends ActivityNode> {
   }
 
   removeNode(node: T) {
+    this.graphlib.removeNode(node.id);
     removeNode(this.graph, node.id);
   }
 
@@ -62,6 +79,7 @@ export class SaeGraph<T extends ActivityNode> {
     const triple = new Triple(subjectNode, predicate, objectNode);
     const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple }
 
+    this.graphlib.setEdge(triple.subject.id, triple.object.id);
     addEdge(this.graph, edge);
   }
 
@@ -97,21 +115,19 @@ export class SaeGraph<T extends ActivityNode> {
     const triple = new Triple(subjectNode, predicate, objectNode);
     const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple };
 
+    this.graphlib.removeEdge(subjectNode.id, objectNode.id)
     removeEdge(this.graph, edge);
   }
 
-  addSubGraph(graph: Graph<T, Triple<T>>, toNodeId: string, fromNodeId: string): Graph<T, Triple<T>> {
-    const self = this;
+  sourceNodes() {
+    const ids = this.graphlib.sources();
+    return this.getNodes(ids);
+  }
 
-    const fromEdges = self.getEdges(fromNodeId);
-    const fromNode = self.getNode(fromNodeId);
-    const startingEdges = self.getEdges(toNodeId);
 
-    each(startingEdges, (triple: Triple<T>) => {
-      self._subgraphGraphDFS(self.graph, triple.subject, triple.object, triple.predicate, triple.predicate);
-    });
-
-    return self.graph;
+  successors(id: string): T[] {
+    const ids = this.graphlib.successors(id) as string[];
+    return this.getNodes(ids);
   }
 
   getTrimmedGraph(startNodeId: string): Graph<T, Triple<T>> {
@@ -144,9 +160,7 @@ export class SaeGraph<T extends ActivityNode> {
     return result;
   }
 
-  resetGraph() {
-    this.graph = this.graph = <Graph<T, Triple<T>>>{ _nodes: {}, _edges: {} };
-  }
+
 
   private _trimGraphDFS(graph: Graph<T, Triple<T>>,
     subjectNode: T,
@@ -172,27 +186,5 @@ export class SaeGraph<T extends ActivityNode> {
     });
   }
 
-  private _subgraphGraphDFS(graph: Graph<T, Triple<T>>,
-    subjectNode: T,
-    objectNode: T,
-    subjectPredicate: Predicate,
-    objectPredicate: Predicate) {
-    const self = this;
-    if (objectNode.hasValue()) {
-      const destPredicate = new Predicate(subjectPredicate.edge, objectPredicate.evidence);
-      const triple = new Triple(subjectNode, destPredicate, objectNode);
-      const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple };
 
-      addNode(graph, objectNode, objectNode.id);
-      addEdge(graph, edge);
-    }
-
-    each(self.getEdges(objectNode.id), (triple: Triple<T>) => {
-      self._subgraphGraphDFS(graph,
-        objectNode.hasValue() ? objectNode : subjectNode,
-        triple.object,
-        objectNode.hasValue() ? triple.predicate : subjectPredicate,
-        triple.predicate);
-    });
-  }
 }
