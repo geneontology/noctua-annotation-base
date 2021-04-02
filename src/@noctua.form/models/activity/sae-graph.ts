@@ -1,7 +1,6 @@
 
 import { ActivityNode, ActivityNodeType } from './activity-node';
 import { Triple } from './triple';
-import { Evidence } from './evidence';
 import { Predicate } from './predicate';
 
 import {
@@ -20,7 +19,6 @@ import {
 import { each, find } from 'lodash';
 
 import { Graph as Graphlib } from 'graphlib';
-import { CardGraph, NodeType } from 'scard-graph-ts';
 
 export class SaeGraph<T extends ActivityNode> {
   numberOfEdges: number;

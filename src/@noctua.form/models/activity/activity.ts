@@ -14,7 +14,6 @@ import * as ShapeDescription from './../../data/config/shape-definition';
 import { each, filter } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
-import { NodeType } from 'scard-graph-ts';
 
 export enum ActivityState {
   creation = 1,
@@ -46,7 +45,6 @@ export class ActivityPosition {
 }
 
 export class Activity extends SaeGraph<ActivityNode> {
-  nodeType: NodeType = NodeType.node;
   gp;
   label: string;
   activityRows;

@@ -6,7 +6,6 @@ import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { each, find, some } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
-import * as EntityDefinition from './../../data/config/entity-definition';
 import { Predicate } from './predicate';
 import { PendingChange } from './pending-change';
 import { CamStats } from './cam';
@@ -215,7 +214,7 @@ export class ActivityNode implements ActivityNodeDisplay {
     let modified = false;
 
     if (self.term.modified) {
-      if (self.id === EntityDefinition.GoMolecularEntity.id) {
+      if (self.id === ActivityNodeType.GoMolecularEntity) {
         modifiedStats.gpsCount++;
         stat.gpsCount++;
       } else {

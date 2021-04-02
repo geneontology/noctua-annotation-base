@@ -1,7 +1,7 @@
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { Entity, ActivityNodeDisplay } from './../../models/activity';
+import { Entity } from './../../models/activity/entity';
 import * as EntityDefinition from './entity-definition';
-import { ActivityNodeType } from './../../models/activity/activity-node';
+import { ActivityNodeDisplay, ActivityNodeType } from './../../models/activity/activity-node';
 import { each } from 'lodash';
 
 export enum CardinalityType {
