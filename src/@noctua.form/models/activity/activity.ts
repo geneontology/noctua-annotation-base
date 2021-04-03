@@ -193,6 +193,21 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   }
 
+  edgeList(node: ActivityNode, object: ActivityNode) {
+    const self = this;
+    const canInsertNodes = ShapeDescription.canInsertEntity[node.type] || [];
+
+    const insertNodes: ShapeDescription.ShapeDescription[] = [];
+
+    each(canInsertNodes, (nodeDescription: ShapeDescription.ShapeDescription) => {
+      if (nodeDescription.node.category === object.category) {
+        insertNodes.push(nodeDescription);
+      }
+    });
+
+    return insertNodes;
+  }
+
   getNodesByType(type: ActivityNodeType): ActivityNode[] {
     const self = this;
     const result = filter(self.nodes, (activityNode: ActivityNode) => {

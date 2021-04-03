@@ -978,6 +978,7 @@ export class NoctuaGraphService {
     }
   }
 
+
   bulkEditEvidence(reqs, camId: string, evidence: Evidence) {
     if (evidence.hasValue() && evidence.pendingEvidenceChanges) {
       reqs.remove_type_from_individual(

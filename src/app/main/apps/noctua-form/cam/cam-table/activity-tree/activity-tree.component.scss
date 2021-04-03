@@ -236,12 +236,15 @@ $accent: map-get($theme, accent);
     padding-left: 45px;
     padding-right: 10px;
     .noc-cell-label {
+      position: relative;
       @include deep-width(100%);
       @include deep-height(20px);
       padding: 4px 10px 4px 5px;
       font-size: 10px;
       color: map-get($primary, default);
       border-bottom: $noc-primary-color-light solid 1px;
+      .noc-edit-button {
+      }
     }
 
     .noc-tree {

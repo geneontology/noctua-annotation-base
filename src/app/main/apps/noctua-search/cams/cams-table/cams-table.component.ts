@@ -79,7 +79,7 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   camPage: CamPage;
 
   tableOptions = {
-    treeTable: false,
+    treeTable: true,
     reviewMode: true,
     color: 'transparent'
   }

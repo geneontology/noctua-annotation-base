@@ -27,6 +27,7 @@ const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
             node: <ActivityNodeDisplay>{
                 type: ActivityNodeType.GoBiologicalProcess,
                 category: [EntityDefinition.GoBiologicalProcess],
+                label: `MF ${edge.label} BP`,
                 aspect: 'P',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.bp,
@@ -413,6 +414,68 @@ export const canInsertEntity = {
     ]
 };
 
+/* export const canEditEdge = {
 
+    [ActivityNodeType.GoMolecularFunction]: [
+        <ShapeDescription>{
+            label: 'Add Has Input (Chemical/Protein Containing Complex)',
+            id: ActivityNodeType.GoChemicalEntityHasInput,
+            node: <ActivityNodeDisplay>{
+                category: [EntityDefinition.GoChemicalEntity, EntityDefinition.GoProteinContainingComplex],
+                type: ActivityNodeType.GoChemicalEntityHasInput,
+                label: 'Has Input (Chemical/Protein Containing Complex)',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.mf,
+                isExtension: true,
+                weight: 4,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.hasInput,
+            cardinality: CardinalityType.oneToMany
+        },
+        <ShapeDescription>{
+            label: 'Add Has Output (Chemical/Protein Containing Complex)',
+            id: ActivityNodeType.GoChemicalEntityHasOutput,
+            node: <ActivityNodeDisplay>{
+                category: [EntityDefinition.GoChemicalEntity, EntityDefinition.GoProteinContainingComplex],
+                type: ActivityNodeType.GoChemicalEntityHasOutput,
+                label: 'Has Output (Chemical/Protein Containing Complex)',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.mf,
+                isExtension: true,
+                weight: 5,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.hasOutput,
+            cardinality: CardinalityType.oneToMany
+        },
+        <ShapeDescription>{
+            label: 'Add Happens During (Biological Phase)',
+            id: ActivityNodeType.GoBiologicalPhase,
+            node: <ActivityNodeDisplay>{
+                category: [EntityDefinition.GoBiologicalPhase],
+                type: ActivityNodeType.GoBiologicalPhase,
+                label: 'Happens During (Biological Phase)',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.mf,
+                isExtension: true,
+                weight: 3,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.happensDuring,
+            cardinality: CardinalityType.oneToOne
+        },
+
+        // Causal Edges
+        ...addCausalEdges([
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfOrWithin),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOf),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfOrWithinPositiveEffect),
+            Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfOrWithinNegativeEffect),
+        ])
+    ],
+}; */
 
 

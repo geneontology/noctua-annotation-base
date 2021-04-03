@@ -102,6 +102,7 @@ export class ActivityNode implements ActivityNodeDisplay {
 
   //For Save 
   pendingEntityChanges: PendingChange;
+  pendingRelationChanges: PendingChange;
 
   constructor(activityNode?: Partial<ActivityNodeDisplay>) {
     if (activityNode) {
@@ -253,6 +254,10 @@ export class ActivityNode implements ActivityNodeDisplay {
 
     if (self.term.id !== oldNode.term.id) {
       self.pendingEntityChanges = new PendingChange(self.uuid, oldNode.term, self.term);
+    }
+
+    if (self.predicate.edge.id !== oldNode.predicate.edge.id) {
+      self.pendingRelationChanges = new PendingChange(self.uuid, oldNode.predicate.edge, self.predicate.edge);
     }
 
     each(self.predicate.evidence, (evidence: Evidence, key) => {
