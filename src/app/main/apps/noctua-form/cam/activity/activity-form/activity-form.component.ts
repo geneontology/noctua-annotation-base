@@ -31,6 +31,8 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
+  @Input() public closeDialog: () => void;
+
   cam: Cam;
   activityFormGroup: FormGroup;
   activityFormSub: Subscription;
@@ -108,7 +110,14 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   }
 
   close() {
-    this.panelDrawer.close();
+
+    if (this.panelDrawer) {
+      this.panelDrawer.close();
+    }
+    if (this.closeDialog) {
+      this.closeDialog();
+    }
+
   }
 
   ngOnDestroy(): void {

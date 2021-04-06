@@ -24,7 +24,7 @@
       <span>{{activityTypeOptions[activity.activityType]?.label}}</span>
     </mat-chip>
     <div *ngIf="activity.hasViolations" class="noc-error" fxLayout="row" fxLayoutAlign="start center">
-      <mat-chip class="noc-error-chip" fxLayout="row" fxLayoutAlign="start center"
+      <mat-chip class="noc-error-chip noc-chip-xs ml-8" fxLayout="row" fxLayoutAlign="start center"
         (click)="displayActivityErrors(activity)">
         <div class="noc-icon">
           <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>

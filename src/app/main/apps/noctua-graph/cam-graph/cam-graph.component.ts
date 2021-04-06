@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, } from '@angular/router';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Activity, Cam, CamService, NoctuaGraphService } from 'noctua-form-base';
+import { Activity, Cam, CamOperation, CamService, NoctuaGraphService } from 'noctua-form-base';
 import { NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { noctuaStencil } from '@noctua.graph/data/cam-stencil';
 
@@ -57,8 +57,12 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
         self.cam = cam;
-        if (cam.operation)
+        if (cam.operation === CamOperation.ADD_ACTIVITY) {
+
+        } else {
           self.noctuaCamGraphService.addToCanvas(self.cam);
+        }
+
 
       });
   }

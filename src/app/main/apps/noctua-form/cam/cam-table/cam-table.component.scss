@@ -26,7 +26,6 @@ $accent: map-get($theme, accent);
     &.noc-error-chip {
       font-size: 10px;
       font-weight: normal;
-      @include deep-height(25px);
       text-overflow: ellipsis;
       white-space: nowrap;
       padding: 0;
@@ -54,11 +53,11 @@ $accent: map-get($theme, accent);
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 25px;
-        width: 25px;
+        height: 20px;
+        width: 20px;
         border-radius: 50%;
         color: #777;
-        font-size: 14px;
+        font-size: 10px;
       }
 
       .noc-icon-action {

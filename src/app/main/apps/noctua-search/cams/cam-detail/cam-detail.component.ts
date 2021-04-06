@@ -1,6 +1,6 @@
 
 
-import { Component, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
@@ -9,14 +9,11 @@ import { Subject } from 'rxjs';
 import {
   Cam,
   ActivityType,
-  Contributor,
   NoctuaUserService,
   NoctuaFormConfigService,
   NoctuaFormMenuService,
-  NoctuaActivityFormService,
   CamService,
-  noctuaFormConfig,
-  CamsService
+  noctuaFormConfig
 } from 'noctua-form-base';
 
 import { takeUntil } from 'rxjs/operators';
@@ -60,7 +57,6 @@ export class CamDetailComponent implements OnInit, OnDestroy {
       public noctuaSearchService: NoctuaSearchService,
       public noctuaUserService: NoctuaUserService,
       public noctuaFormConfigService: NoctuaFormConfigService,
-      public noctuaActivityFormService: NoctuaActivityFormService,
       public noctuaFormMenuService: NoctuaFormMenuService) {
 
     this._unsubscribeAll = new Subject();

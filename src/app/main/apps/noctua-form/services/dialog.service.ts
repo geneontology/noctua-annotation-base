@@ -66,7 +66,7 @@ export class NoctuaFormDialogService {
 
     openCreateActivityDialog(activity: Activity): void {
         this.dialogRef = this._matDialog.open(CreateActivityDialogComponent, {
-            panelClass: 'activity-errors-dialog',
+            panelClass: 'noc-activity-create-dialog',
             data: {
                 activity
             }
