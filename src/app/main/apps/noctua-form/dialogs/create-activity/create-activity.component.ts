@@ -5,8 +5,6 @@ import { Subject } from 'rxjs';
 
 import { ErrorLevel, ErrorType, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
 
-
-
 @Component({
   selector: 'app-create-activity-dialog',
   templateUrl: './create-activity.component.html',

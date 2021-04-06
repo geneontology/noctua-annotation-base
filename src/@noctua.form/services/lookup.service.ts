@@ -2,13 +2,15 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { ActivityNode, Entity, Evidence, Predicate, ActivityNodeType } from './../models/activity/';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each, uniqWith } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
-import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith } from './../models/activity/evidence';
+import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence } from './../models/activity/evidence';
 import { Group } from './../models/group';
+import { ActivityNode, ActivityNodeType } from './../models/activity/activity-node';
+import { Entity } from './../models/activity/entity';
+import { Predicate } from './../models/activity/predicate';
 
 declare const require: any;
 

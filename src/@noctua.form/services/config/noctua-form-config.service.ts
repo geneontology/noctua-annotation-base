@@ -4,20 +4,17 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import * as ModelDefinition from './../../data/config/model-definition';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
-import {
-  ActivityNode,
-  Activity,
-  Evidence,
-  ConnectorActivity,
-  Entity,
-  Predicate
-} from './../../models';
-import { ActivityType } from './../../models/activity/activity';
+import { Activity, ActivityType } from './../../models/activity/activity';
 import { find, filter, each } from 'lodash';
 import { HttpParams } from '@angular/common/http';
 import * as EntityDefinition from './../../data/config/entity-definition';
 import { NoctuaUserService } from '../user.service';
 import { BehaviorSubject } from 'rxjs';
+import { ActivityNode } from './../../models/activity/activity-node';
+import { ConnectorActivity } from './../../models/activity/connector-activity';
+import { Entity } from './../../models/activity/entity';
+import { Evidence } from './../../models/activity/evidence';
+import { Predicate } from './../../models/activity/predicate';
 
 @Injectable({
   providedIn: 'root'

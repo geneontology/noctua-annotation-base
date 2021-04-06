@@ -3,20 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import {
-  Cam,
-  Activity,
-  Triple,
-  ActivityNode,
-  Evidence,
-  Entity,
-  ConnectorActivity,
-  ConnectorType,
-  ConnectorState,
-  Predicate,
-  CamLoadingIndicator,
-  CamRebuildSignal
-} from './../models/activity/';
+
 
 import * as ModelDefinition from './../data/config/model-definition';
 import * as EntityDefinition from './../data/config/entity-definition';
@@ -25,12 +12,17 @@ import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
-import { ActivityType } from './../models/activity/activity';
-import { Contributor } from './../models/contributor';
+import { Activity, ActivityType } from './../models/activity/activity';
 import { find, each } from 'lodash';
-import { Group } from './../models';
 import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
+import { ActivityNode } from './../models/activity/activity-node';
+import { Cam, CamLoadingIndicator, CamOperation } from './../models/activity/cam';
+import { ConnectorActivity, ConnectorState, ConnectorType } from './../models/activity/connector-activity';
+import { Entity } from './../models/activity/entity';
+import { Evidence } from './../models/activity/evidence';
+import { Predicate } from './../models/activity/predicate';
+import { Triple } from './../models/activity/triple';
 
 declare const require: any;
 
@@ -267,7 +259,9 @@ export class NoctuaGraphService {
     cam.connectorActivities = self.getConnectorActivities(cam);
     cam.setPreview();
     cam.updateActivityDisplayNumber();
+
     self.onCamGraphChanged.next(cam);
+    cam.operation = CamOperation.NONE;
   }
 
   loadViolations(cam: Cam, validationResults) {
@@ -639,7 +633,7 @@ export class NoctuaGraphService {
     cam.manager.request_with(reqs);
   }
 
-  saveActivity(cam: Cam, triples: Triple<ActivityNode>[], title) {
+  addActivity(cam: Cam, triples: Triple<ActivityNode>[], title) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
 
@@ -652,6 +646,8 @@ export class NoctuaGraphService {
     if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
+
+    cam.operation = CamOperation.ADD_ACTIVITY;
 
     reqs.store_model(cam.id);
 

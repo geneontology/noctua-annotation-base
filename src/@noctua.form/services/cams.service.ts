@@ -11,7 +11,7 @@ import { each, groupBy, find } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/activity/entity';
 import { HttpClient } from '@angular/common/http';
-import { finalize, map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
 import { ActivityNode } from './../models/activity/activity-node';
 import { noctuaFormConfig } from './../noctua-form-config';
@@ -20,14 +20,7 @@ import { NoctuaUserService } from './user.service';
 
 declare const require: any;
 
-const model = require('bbop-graph-noctua');
 const barista_client = require('bbop-client-barista');
-const amigo = require('amigo2');
-const barista_response = require('bbop-response-barista');
-const minerva_requests = require('minerva-requests');
-const jquery_engine = require('bbop-rest-manager').jquery;
-const class_expression = require('class-expression');
-const minerva_manager = require('bbop-manager-minerva');
 
 @Injectable({
   providedIn: 'root'

@@ -12,6 +12,7 @@ import { CamService } from './cam.service';
 import { Entity } from '../models/activity/entity';
 import { Evidence } from '../models/activity/evidence';
 import { cloneDeep, each } from 'lodash';
+import { Cam } from '../models/activity/cam';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class NoctuaActivityFormService {
   public activityForm: ActivityForm;
   public activityFormGroup: BehaviorSubject<FormGroup | undefined>;
   public activityFormGroup$: Observable<FormGroup>;
-  public cam: any;
+  public cam: Cam;
 
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
@@ -140,6 +141,8 @@ export class NoctuaActivityFormService {
     const self = this;
     self.activityFormToActivity();
 
+
+
     if (self.state === ActivityState.editing) {
       const saveData = self.activity.createEdit(self.currentActivity);
 
@@ -152,7 +155,7 @@ export class NoctuaActivityFormService {
         saveData.removeTriples);
     } else { // creation
       const saveData = self.activity.createSave();
-      return self.noctuaGraphService.saveActivity(self.cam, saveData.triples, saveData.title);
+      return self.noctuaGraphService.addActivity(self.cam, saveData.triples, saveData.title);
     }
   }
 

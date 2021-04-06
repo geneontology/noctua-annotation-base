@@ -7,18 +7,14 @@ import { NoctuaLookupService } from './lookup.service';
 import { CamService } from './cam.service';
 import { NoctuaGraphService } from './graph.service';
 
-import {
-  Cam,
-  Activity,
-  ActivityNode,
-  ConnectorActivity,
-  ConnectorState,
-  ActivityType
-} from './../models/activity';
 
 import { ActivityConnectorForm } from './../models/forms/activity-connector-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { each } from 'lodash';
+import { Activity, ActivityType } from './../models/activity/activity';
+import { ActivityNode } from './../models/activity/activity-node';
+import { Cam } from './../models/activity/cam';
+import { ConnectorActivity, ConnectorState } from './../models/activity/connector-activity';
 
 @Injectable({
   providedIn: 'root'
@@ -143,7 +139,7 @@ export class NoctuaActivityConnectorService {
         saveData.removeTriples);
     } else { // creation
       const saveData = self.connectorActivity.createSave();
-      return self.noctuaGraphService.saveActivity(self.cam, saveData.triples, saveData.title);
+      return self.noctuaGraphService.addActivity(self.cam, saveData.triples, saveData.title);
     }
   }
 
