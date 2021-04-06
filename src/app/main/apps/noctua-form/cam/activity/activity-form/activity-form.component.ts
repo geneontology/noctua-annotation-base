@@ -72,19 +72,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         this.molecularEntity = <FormGroup>this.activityFormGroup.get('molecularEntity');
       });
 
-    this.camService.onCamChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((cam) => {
-        if (!cam) {
-          return;
-        }
 
-        this.cam = cam;
-        this.cam.onGraphChanged
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(() => {
-          });
-      });
   }
 
   checkErrors() {

@@ -146,7 +146,6 @@ export class NoctuaGraphService {
     const self = this;
 
     cam.loading = new CamLoadingIndicator(true, 'Loading Model Activities ...');
-    cam.onGraphChanged = new BehaviorSubject(null);
     cam.id = modelId;
     //cam.baristaClient = this.registerBaristaClient(cam);
     cam.manager = this.registerManager();
@@ -268,7 +267,6 @@ export class NoctuaGraphService {
     cam.connectorActivities = self.getConnectorActivities(cam);
     cam.setPreview();
     cam.updateActivityDisplayNumber();
-    cam.onGraphChanged.next(cam.activities);
     self.onCamGraphChanged.next(cam);
   }
 

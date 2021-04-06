@@ -25,9 +25,6 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input('cam')
   public cam: Cam;
 
-  camId: string;
-
-
   private _unsubscribeAll: Subject<any>;
   stencils = [];
 
@@ -60,7 +57,8 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
         self.cam = cam;
-        self.noctuaCamGraphService.addToCanvas(self.cam);
+        if (cam.operation)
+          self.noctuaCamGraphService.addToCanvas(self.cam);
 
       });
   }

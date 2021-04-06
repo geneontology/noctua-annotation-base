@@ -75,14 +75,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.cam.onGraphChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((activities: Activity[]) => {
-        if (!activities) {
-          return;
-        }
 
-      });
   }
 
   addActivity() {

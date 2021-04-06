@@ -20,6 +20,11 @@ export enum CamRebuildSignal {
   REBUILD = 'rebuild'
 }
 
+export enum CamOperation {
+  NONE = 'none',
+  ADD_ACTIVITY = 'add_activity',
+}
+
 export class CamQueryMatch {
   modelId?: string;
   terms?: Entity[] = [];
@@ -120,6 +125,8 @@ export class Cam {
   queryMatch = new CamQueryMatch();
   dateReviewAdded = Date.now();
 
+
+  operation = CamOperation.NONE;
   //rebuild
   rebuildRule = new CamRebuildRule();
 
@@ -127,7 +134,6 @@ export class Cam {
   graph;
   storedGraph;
   pendingGraph;
-  onGraphChanged;
 
   // bbop managers 
   baristaClient;

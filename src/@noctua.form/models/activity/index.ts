@@ -15,6 +15,7 @@ export {
 export {
     Cam,
     CamRebuildSignal,
+    CamOperation,
     CamRebuildRule,
     CamLoadingIndicator,
     CamStats,
