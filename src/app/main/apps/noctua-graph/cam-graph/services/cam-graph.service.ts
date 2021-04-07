@@ -6,7 +6,7 @@ import { CamCanvas } from '../models/cam-canvas';
 import { CamStencil } from '../models/cam-stencil';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Activity, ActivityType, Cam, CamService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
+import { Activity, ActivityType, Cam, CamService, CamsService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
 import { NodeLink, NodeCell, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
@@ -24,6 +24,8 @@ export class CamGraphService {
     paper: joint.dia.Paper;
     graph: joint.dia.Graph;
   }[] = [];
+
+
   selectedElement: joint.shapes.noctua.NodeCell | joint.shapes.noctua.NodeLink;
   selectedStencilElement: joint.shapes.noctua.NodeCell;
 
@@ -34,6 +36,7 @@ export class CamGraphService {
 
   constructor(
     private _camService: CamService,
+    private _camsService: CamsService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     private noctuaDataService: NoctuaDataService,
     private noctuaFormConfigService: NoctuaFormConfigService,
@@ -127,6 +130,11 @@ export class CamGraphService {
     // activity.type = element.get('type');
     this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
     this.noctuaCommonMenuService.openRightDrawer();
+
+    activity.expanded = true;
+    this._camsService.currentMatch.activityDisplayId = activity.displayId;
+    const q = `#${activity.displayId}`;
+    this.noctuaCommonMenuService.scrollTo(q);
   }
 
   save() {

@@ -66,7 +66,7 @@ export class Activity extends SaeGraph<ActivityNode> {
    * Used for HTML id attribute
    */
   displayId: string;
-  displayNumber = '0';
+  displayNumber = '1';
 
   hasViolations = false;
   violations: Violation[] = [];

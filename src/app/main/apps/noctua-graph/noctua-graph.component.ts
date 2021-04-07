@@ -23,6 +23,7 @@ import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.common/models/menu-p
 import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
+import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 
 @Component({
   selector: 'noc-noctua-graph',
@@ -39,8 +40,8 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('rightDrawer', { static: true })
   rightDrawer: MatDrawer;
 
-  @ViewChildren(NoctuaPerfectScrollbarDirective)
-  private _noctuaPerfectScrollbarDirectives: QueryList<NoctuaPerfectScrollbarDirective>;
+  @ViewChild(PerfectScrollbarDirective, { static: false })
+  scrollbarRef?: PerfectScrollbarDirective;
 
   loadingSpinner: any = {
     color: 'primary',
@@ -114,9 +115,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.noctuaCommonMenuService.resultsViewScrollbar = this._noctuaPerfectScrollbarDirectives.find((directive) => {
-      return directive.elementRef.nativeElement.id === 'noc-results';
-    });
+    this.noctuaCommonMenuService.resultsViewScrollbar = this.scrollbarRef;
   }
 
   loadCam(modelId) {

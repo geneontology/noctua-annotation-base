@@ -1,5 +1,5 @@
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { NoctuaFormDialogService } from './../../services/dialog.service';
@@ -13,14 +13,13 @@ import {
   Activity,
   ActivityType,
   NoctuaUserService,
-  NoctuaFormMenuService,
-  RightPanel,
   CamsService,
   CamRebuildSignal
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
-import { takeUntil } from 'rxjs/operators';
+import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 
 @Component({
   selector: 'noc-cam-table',
@@ -49,24 +48,27 @@ export class CamTableComponent implements OnInit, OnDestroy {
   @Input('options')
   public options: any = {};
 
+
   searchResults = [];
   modelId: '';
   loadingSpinner: any = {
     color: 'primary',
     mode: 'indeterminate'
   };
+  scrollbarConfig = {
+    suppressScrollX: true
+  }
 
   private _unsubscribeAll: Subject<any>;
 
   constructor(
     public camService: CamService,
     public camsService: CamsService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
+    public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private confirmDialogService: NoctuaConfirmDialogService,
     private noctuaActivityConnectorService: NoctuaActivityConnectorService,
-    //  public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaActivityFormService: NoctuaActivityFormService,
     private noctuaFormDialogService: NoctuaFormDialogService,
   ) {
@@ -78,6 +80,8 @@ export class CamTableComponent implements OnInit, OnDestroy {
 
   }
 
+
+
   addActivity() {
     this.openForm(location);
   }
@@ -85,7 +89,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
   openForm(location?) {
     this.noctuaActivityFormService.mfLocation = location;
     this.noctuaActivityFormService.initializeForm();
-    //this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.activityForm)
   }
 
   reload(cam: Cam) {
@@ -112,14 +115,12 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.noctuaActivityConnectorService.activity = activity;
     this.noctuaActivityConnectorService.onActivityChanged.next(activity);
     this.noctuaActivityConnectorService.getConnections();
-    // this.noctuaFormMenuService.openRightDrawer(RightPanel.connectorForm);
   }
 
   openActivityForm(activity: Activity) {
     this.camService.onCamChanged.next(this.cam);
     this.camService.activity = activity;
     this.noctuaActivityFormService.initializeForm(activity);
-    // this.noctuaFormMenuService.openRightDrawer(RightPanel.activityForm)
   }
 
   sortBy(sortCriteria) {

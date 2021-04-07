@@ -42,7 +42,6 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   rightDrawer: MatDrawer;
 
   @ViewChildren(NoctuaPerfectScrollbarDirective)
-  private _noctuaPerfectScrollbarDirectives: QueryList<NoctuaPerfectScrollbarDirective>;
 
   @ViewChild(PerfectScrollbarDirective, { static: false })
   scrollbarRef?: PerfectScrollbarDirective;
@@ -54,7 +53,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     mode: 'indeterminate'
   };
 
-  config = {
+  scrollbarConfig = {
     suppressScrollX: true
   }
 
