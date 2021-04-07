@@ -11,8 +11,8 @@ import { CamForm } from './../models/forms/cam-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { Evidence, compareEvidence } from './../models/activity/evidence';
 import { Cam, CamStats } from './../models/activity/cam';
-import { uniqWith } from 'lodash';
-import { ActivityNodeType, ActivityNode } from './../models/activity';
+import { differenceWith, uniqWith } from 'lodash';
+import { ActivityNodeType, ActivityNode, compareActivity } from './../models/activity';
 import { compareTerm } from './../models/activity/activity-node';
 
 @Injectable({
@@ -122,7 +122,6 @@ export class CamService {
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
   }
 
-
   bulkEdit(cam: Cam): Observable<any> {
     const self = this;
     const promises = [];
@@ -131,8 +130,6 @@ export class CamService {
 
     return forkJoin(promises);
   }
-
-
 
   deleteActivity(activity: Activity) {
     const self = this;

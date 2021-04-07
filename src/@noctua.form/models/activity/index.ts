@@ -11,6 +11,7 @@ export {
     ActivitySize,
     ActivityPosition,
     ActivityTreeNode,
+    compareActivity
 } from './activity';
 export {
     Cam,

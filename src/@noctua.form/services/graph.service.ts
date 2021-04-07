@@ -12,8 +12,8 @@ import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
-import { Activity, ActivityType } from './../models/activity/activity';
-import { find, each } from 'lodash';
+import { Activity, ActivityType, compareActivity } from './../models/activity/activity';
+import { find, each, differenceWith } from 'lodash';
 import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { ActivityNode } from './../models/activity/activity-node';
@@ -45,16 +45,19 @@ export class NoctuaGraphService {
   curieUtil: any;
 
   onCamRebuildChange: BehaviorSubject<any>;
-  onCamGraphChanged: BehaviorSubject<any>;
+  onCamGraphChanged: BehaviorSubject<Cam>;
+  onActivityAdded: BehaviorSubject<Activity>;
 
   constructor(
     private curieService: CurieService,
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaLookupService: NoctuaLookupService) {
+
     this.curieUtil = this.curieService.getCurieUtil();
     this.onCamRebuildChange = new BehaviorSubject(null);
     this.onCamGraphChanged = new BehaviorSubject(null);
+    this.onActivityAdded = new BehaviorSubject(null);
   }
 
   registerManager(useReasoner = true) {
@@ -253,8 +256,14 @@ export class NoctuaGraphService {
 
   loadCam(cam: Cam) {
     const self = this;
+    const activities = self.graphToActivities(cam.graph);
+    let activity;
 
-    cam.activities = self.graphToActivities(cam.graph);
+    if (cam.operation === CamOperation.ADD_ACTIVITY) {
+      activity = self.getAddedActivity(activities, cam.activities);
+      self.onActivityAdded.next(activity);
+    }
+    cam.activities = activities
     cam.applyFilter();
     cam.connectorActivities = self.getConnectorActivities(cam);
     cam.setPreview();
@@ -262,6 +271,17 @@ export class NoctuaGraphService {
 
     self.onCamGraphChanged.next(cam);
     cam.operation = CamOperation.NONE;
+  }
+
+  getAddedActivity(a: Activity[], b: Activity[]): Activity {
+    const activities = differenceWith(a, b, compareActivity);
+
+    if (activities && activities.length > 0) {
+      return activities[0];
+    }
+
+    return null;
+
   }
 
   loadViolations(cam: Cam, validationResults) {

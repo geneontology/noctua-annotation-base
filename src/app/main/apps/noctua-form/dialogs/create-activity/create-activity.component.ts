@@ -16,7 +16,6 @@ export class CreateActivityDialogComponent implements OnInit, OnDestroy {
 
   closeDialog: () => void;
   private _unsubscribeAll: Subject<any>;
-  activity
 
   options = {
     hideHeader: false,
@@ -30,12 +29,10 @@ export class CreateActivityDialogComponent implements OnInit, OnDestroy {
     public noctuaFormConfigService: NoctuaFormConfigService) {
     this.closeDialog = this.close.bind(this);
     this._unsubscribeAll = new Subject();
-
-    this.activity = this._data.activity;
   }
 
   ngOnInit() {
-    this.activityFormService.initializeForm(this.activity);
+    this.activityFormService.initializeForm();
   }
 
   close() {

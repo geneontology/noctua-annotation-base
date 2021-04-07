@@ -64,12 +64,10 @@ export class NoctuaFormDialogService {
     }
 
 
-    openCreateActivityDialog(activity: Activity): void {
+    openCreateActivityDialog(): void {
         this.dialogRef = this._matDialog.open(CreateActivityDialogComponent, {
             panelClass: 'noc-activity-create-dialog',
-            data: {
-                activity
-            }
+            data: {}
         });
         this.dialogRef.afterClosed()
             .subscribe(response => {

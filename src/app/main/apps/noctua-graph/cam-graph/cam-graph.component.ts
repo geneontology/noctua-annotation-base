@@ -41,7 +41,6 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.stencils = noctuaStencil.camStencil
 
-    console.log(this.stencils)
   }
 
   ngAfterViewInit() {
@@ -57,21 +56,25 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
         self.cam = cam;
-        if (cam.operation === CamOperation.ADD_ACTIVITY) {
-
-        } else {
+        if (cam.operation !== CamOperation.ADD_ACTIVITY) {
           self.noctuaCamGraphService.addToCanvas(self.cam);
         }
 
       });
   }
 
-  loadCam(camId: string): void {
-    this._camService.getCam(camId);
-  }
-
   ngOnInit() {
     const self = this;
+
+    self._noctuaGraphService.onActivityAdded
+      .pipe(takeUntil(self._unsubscribeAll))
+      .subscribe((activity: Activity) => {
+        if (!activity) {
+          return;
+        }
+        self.noctuaCamGraphService.addActivity(activity);
+
+      });
   }
 
   ngOnDestroy(): void {

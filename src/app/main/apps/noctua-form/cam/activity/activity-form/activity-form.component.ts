@@ -73,8 +73,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         this.state = this.noctuaActivityFormService.state;
         this.molecularEntity = <FormGroup>this.activityFormGroup.get('molecularEntity');
       });
-
-
   }
 
   checkErrors() {
@@ -88,6 +86,9 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     self.noctuaActivityFormService.saveActivity().then(() => {
       self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully created.', 'OK');
       self.noctuaActivityFormService.clearForm();
+      if (this.closeDialog) {
+        this.closeDialog();
+      }
     });
   }
 

@@ -36,8 +36,8 @@ export class ActivitySize {
 }
 
 export class ActivityPosition {
-  width: number = 0;
-  height: number = 0;
+  x: number = 0;
+  y: number = 0;
 
   constructor() {
 
@@ -689,3 +689,9 @@ export class ActivityTreeNode {
   }
 
 }
+
+export function compareActivity(a: Activity, b: Activity) {
+  return a.id === b.id;
+}
+
+

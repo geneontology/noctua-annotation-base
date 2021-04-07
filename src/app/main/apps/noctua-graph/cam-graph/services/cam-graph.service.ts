@@ -10,7 +10,7 @@ import { Activity, ActivityType, Cam, CamService, NoctuaActivityFormService, Noc
 import { NodeLink, NodeCell, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
-import { noctuaStencil } from '@noctua.graph/data/cam-stencil';
+import { noctuaStencil, StencilItemNode } from '@noctua.graph/data/cam-stencil';
 import { RightPanel } from '@noctua.common/models/menu-panels';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 
@@ -26,6 +26,9 @@ export class CamGraphService {
   }[] = [];
   selectedElement: joint.shapes.noctua.NodeCell | joint.shapes.noctua.NodeLink;
   selectedStencilElement: joint.shapes.noctua.NodeCell;
+
+  placeholderElement: joint.shapes.noctua.NodeCell = new NodeCell();
+
   camCanvas: CamCanvas;
   camStencil: CamStencil;
 
@@ -64,13 +67,14 @@ export class CamGraphService {
 
     self.camCanvas = new CamCanvas();
     self.camCanvas.elementOnClick = self.openTable.bind(self);
-    self.camCanvas.onElementAdd = self.createActivity.bind(self);
+
   }
 
   initializeStencils() {
     const self = this;
 
     self.camStencil = new CamStencil(self.camCanvas, noctuaStencil.camStencil);
+    self.camStencil.onAddElement = self.createActivity.bind(self);
   }
 
   addToCanvas(cam: Cam) {
@@ -86,14 +90,24 @@ export class CamGraphService {
     this.camCanvas.resetZoom();
   }
 
-  createActivity(activityType: ActivityType) {
+  createActivity(element: joint.shapes.noctua.NodeCell, x: number, y: number) {
     const self = this;
-    const activity = self.noctuaFormConfigService.createActivityModel(activityType);
+    const node = element.get('node') as StencilItemNode;
+    const activity = self.noctuaFormConfigService.createActivityModel(node.type);
 
+    self.placeholderElement.position(x, y);
     self.openForm(activity);
-    return activity;
   }
 
+  addActivity(activity: Activity) {
+    const self = this;
+
+    const el = self.camCanvas.createNode(activity)
+    const position = self.placeholderElement.prop('position') as joint.dia.Point
+
+    el.position(position.x, position.y);
+    self.camCanvas.canvasGraph.addCell(el);
+  }
 
   openForm(activity: Activity) {
     // const activity = element.prop('activity') as Activity
@@ -103,7 +117,7 @@ export class CamGraphService {
     // this.noctuaCommonMenuService.selectRightPanel(RightPanel.activityForm);
     // this.noctuaCommonMenuService.openRightDrawer();
 
-    this.noctuaFormDialogService.openCreateActivityDialog(activity)
+    this.noctuaFormDialogService.openCreateActivityDialog()
 
   }
 
