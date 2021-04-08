@@ -112,7 +112,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   openActivityConnector(activity: Activity) {
     this.camService.onCamChanged.next(this.cam);
     this.camService.activity = activity;
-    this.noctuaActivityConnectorService.activity = activity;
+    this.noctuaActivityConnectorService.subjectActivity = activity;
     this.noctuaActivityConnectorService.onActivityChanged.next(activity);
     this.noctuaActivityConnectorService.getConnections();
   }

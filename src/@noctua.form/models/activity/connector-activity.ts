@@ -23,10 +23,15 @@ export enum ConnectorType {
   intermediate
 }
 
+export enum ConnectorPanel {
+  SELECT = 'select',
+  FORM = 'form',
+};
+
 export class ConnectorActivity extends SaeGraph<ActivityNode> {
   id: string;
-  upstreamActivity: Activity;
-  downstreamActivity: Activity;
+  subjectActivity: Activity;
+  objectActivity: Activity;
   upstreamNode: ActivityNode;
   downstreamNode: ActivityNode;
   processNode: ActivityNode;

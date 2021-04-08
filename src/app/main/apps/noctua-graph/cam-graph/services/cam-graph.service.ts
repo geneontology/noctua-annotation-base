@@ -6,7 +6,7 @@ import { CamCanvas } from '../models/cam-canvas';
 import { CamStencil } from '../models/cam-stencil';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Activity, ActivityType, Cam, CamService, CamsService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
+import { Activity, ActivityType, Cam, CamService, CamsService, ConnectorPanel, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
 import { NodeLink, NodeCell, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
@@ -40,7 +40,8 @@ export class CamGraphService {
     private noctuaFormDialogService: NoctuaFormDialogService,
     private noctuaDataService: NoctuaDataService,
     private noctuaFormConfigService: NoctuaFormConfigService,
-    private activityFormService: NoctuaActivityFormService,
+    private _activityFormService: NoctuaActivityFormService,
+    private _activityConnectorService: NoctuaActivityConnectorService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     private noctuaShapesService: NoctuaShapesService) {
 
@@ -70,6 +71,7 @@ export class CamGraphService {
 
     self.camCanvas = new CamCanvas();
     self.camCanvas.elementOnClick = self.openTable.bind(self);
+    self.camCanvas.onLinkCreated = self.createActivityConnector.bind(self);
 
   }
 
@@ -99,7 +101,21 @@ export class CamGraphService {
     const activity = self.noctuaFormConfigService.createActivityModel(node.type);
 
     self.placeholderElement.position(x, y);
-    self.openForm(activity);
+    this._activityFormService.initializeForm();
+    this.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
+  }
+
+  createActivityConnector(
+    sourceId: string,
+    targetId: string,
+    link: joint.shapes.noctua.NodeLink) {
+    const self = this;
+
+    console.log(link)
+
+    this._activityConnectorService.initializeForm(sourceId, targetId);
+    this._activityConnectorService.selectPanel(ConnectorPanel.FORM)
+    this.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY_CONNECTOR);
   }
 
   addActivity(activity: Activity) {
@@ -112,17 +128,6 @@ export class CamGraphService {
     self.camCanvas.canvasGraph.addCell(el);
   }
 
-  openForm(activity: Activity) {
-    // const activity = element.prop('activity') as Activity
-    //  this.selectedElement = element;
-    // activity.type = element.get('type');
-    //this.activityFormService.initializeForm(activity);
-    // this.noctuaCommonMenuService.selectRightPanel(RightPanel.activityForm);
-    // this.noctuaCommonMenuService.openRightDrawer();
-
-    this.noctuaFormDialogService.openCreateActivityDialog()
-
-  }
 
   openTable(element: joint.shapes.noctua.NodeCell) {
     const activity = element.prop('activity') as Activity

@@ -26,7 +26,8 @@ export { Evidence } from './evidence';
 export {
     ConnectorState,
     ConnectorType,
-    ConnectorActivity
+    ConnectorActivity,
+    ConnectorPanel
 } from './connector-activity';
 export { EntityLookup } from './entity-lookup';
 export {

@@ -6,15 +6,13 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { CamService } from './cam.service';
 import { NoctuaGraphService } from './graph.service';
-
-
 import { ActivityConnectorForm } from './../models/forms/activity-connector-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { each } from 'lodash';
 import { Activity, ActivityType } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
 import { Cam } from './../models/activity/cam';
-import { ConnectorActivity, ConnectorState } from './../models/activity/connector-activity';
+import { ConnectorActivity, ConnectorPanel, ConnectorState } from './../models/activity/connector-activity';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +20,8 @@ import { ConnectorActivity, ConnectorState } from './../models/activity/connecto
 export class NoctuaActivityConnectorService {
 
   cam: Cam;
-  public activity: Activity;
+  public subjectActivity: Activity;
+  public objectActivity: Activity;
   public connectors: any = [];
   private connectorForm: ActivityConnectorForm;
   private connectorFormGroup: BehaviorSubject<FormGroup | undefined>;
@@ -31,15 +30,9 @@ export class NoctuaActivityConnectorService {
   public connectorActivity: ConnectorActivity;
   public onActivityChanged: BehaviorSubject<any>;
 
-  panel = {
-    selectConnector: {
-      id: 1
-    }, activityConnectorForm: {
-      id: 2
-    },
-  };
 
-  selectedPanel: any;
+
+  selectedPanel: ConnectorPanel;
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
     private noctuaLookupService: NoctuaLookupService,
@@ -55,7 +48,7 @@ export class NoctuaActivityConnectorService {
       }
 
       this.cam = cam;
-      if (this.activity) {
+      if (this.subjectActivity) {
         this.getConnections();
       }
     });
@@ -70,11 +63,11 @@ export class NoctuaActivityConnectorService {
     const connectors = [];
 
     each(this.cam.activities, (activity: Activity) => {
-      if (self.activity.id !== activity.id && activity.activityType !== ActivityType.ccOnly) {
+      if (self.subjectActivity.id !== activity.id && activity.activityType !== ActivityType.ccOnly) {
         connectors.push(
           Object.assign({
             activity: activity,
-            connectorActivity: this.cam.getConnectorActivity(self.activity.id, activity.id)
+            connectorActivity: this.cam.getConnectorActivity(self.subjectActivity.id, activity.id)
           })
         );
       }
@@ -84,10 +77,12 @@ export class NoctuaActivityConnectorService {
   }
 
   initializeForm(upstreamId: string, downstreamId: string) {
-    const upstreamActivity = this.cam.getActivityByConnectionId(upstreamId);
-    const downstreamActivity = this.cam.getActivityByConnectionId(downstreamId);
+    const self = this;
 
-    this.connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(upstreamActivity, downstreamActivity);
+    self.subjectActivity = this.cam.getActivityByConnectionId(upstreamId);
+    self.objectActivity = this.cam.getActivityByConnectionId(downstreamId);
+
+    this.connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(self.subjectActivity, self.objectActivity);
     this.currentConnectorActivity = this.cam.getConnectorActivity(upstreamId, downstreamId);
 
     if (this.currentConnectorActivity) {
@@ -103,7 +98,7 @@ export class NoctuaActivityConnectorService {
 
     // just to trigger the on Changes event
     this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
-    this.selectPanel(this.panel.activityConnectorForm);
+    this.selectPanel(ConnectorPanel.FORM);
   }
 
   updateEvidence(node: ActivityNode) {

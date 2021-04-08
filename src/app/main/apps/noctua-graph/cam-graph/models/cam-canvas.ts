@@ -19,7 +19,10 @@ export class CamCanvas {
     canvasGraph: joint.dia.Graph;
     selectedStencilElement;
     elementOnClick: (element: joint.shapes.noctua.NodeCell) => void;
-    //  onElementAdd: (modelType: ActivityType) => Activity;
+    onLinkCreated: (
+        sourceId: string,
+        targetId: string,
+        link: joint.shapes.noctua.NodeLink) => void;
     cam: Cam;
 
     constructor() {
@@ -166,10 +169,14 @@ export class CamCanvas {
             const targetId = link.get('target').id;
 
             if (targetId && sourceId) {
-                self.canvasGraph.getCell(targetId);
-                self.canvasGraph.getCell(targetId);
-            }
+                // const source = self.canvasGraph.getCell(sourceId) as NodeCell;
+                // const target = self.canvasGraph.getCell(targetId) as NodeCell;
 
+                //  console.log(targetId)
+                //  console.log(sourceId)
+
+                self.onLinkCreated(sourceId, targetId, link)
+            }
         });
     }
 

@@ -564,8 +564,8 @@ export class NoctuaGraphService {
 
         if (causalEdge) {
           if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
-            const downstreamActivity = cam.getActivityByConnectionId(objectId);
-            const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, downstreamActivity);
+            const objectActivity = cam.getActivityByConnectionId(objectId);
+            const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, objectActivity);
 
             connectorActivity.state = ConnectorState.editing;
             connectorActivity.type = ConnectorType.basic;
@@ -580,12 +580,12 @@ export class NoctuaGraphService {
             const processNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoBiologicalProcess], { id: 'process', isKey: true });
             const connectorActivityDTO = this._getConnectActivityIntermediate(cam, objectId);
 
-            if (connectorActivityDTO.downstreamActivity) {
+            if (connectorActivityDTO.objectActivity) {
               processNode.uuid = objectId;
               processNode.term = processNodeInfo.term;
               // processNode.setEvidence(self.edgeToEvidence(cam.graph, e));
 
-              const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, connectorActivityDTO.downstreamActivity, processNode, connectorActivityDTO.hasInputNode);
+              const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, connectorActivityDTO.objectActivity, processNode, connectorActivityDTO.hasInputNode);
 
               connectorActivity.state = ConnectorState.editing;
               connectorActivity.type = ConnectorType.intermediate;
@@ -865,10 +865,10 @@ export class NoctuaGraphService {
 
       if (causalEdge) {
         if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
-          const downstreamActivity = cam.getActivityByConnectionId(objectId);
+          const objectActivity = cam.getActivityByConnectionId(objectId);
 
           connectorActivity.rule.r2Edge = new Entity(causalEdge.id, causalEdge.label);;
-          connectorActivity.downstreamActivity = downstreamActivity;
+          connectorActivity.objectActivity = objectActivity;
         }
       }
 

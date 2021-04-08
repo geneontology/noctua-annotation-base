@@ -1,3 +1,4 @@
+export { FormType } from './form-type';
 export { ActivityConnectorForm } from './activity-connector-form';
 export { ActivityForm } from './activity-form';
 export { ActivityFormMetadata } from './activity-form-metadata';

@@ -248,10 +248,10 @@ export class NoctuaFormConfigService {
     return modelInfo;
   }
 
-  createActivityConnectorModel(upstreamActivity: Activity, downstreamActivity: Activity, srcProcessNode?: ActivityNode, srcHasInputNode?: ActivityNode) {
+  createActivityConnectorModel(subjectActivity: Activity, objectActivity: Activity, srcProcessNode?: ActivityNode, srcHasInputNode?: ActivityNode) {
     const self = this;
-    const srcUpstreamNode = upstreamActivity.getMFNode();
-    const srcDownstreamNode = downstreamActivity ? downstreamActivity.getMFNode() : new ActivityNode();
+    const srcUpstreamNode = subjectActivity.getMFNode();
+    const srcDownstreamNode = objectActivity ? objectActivity.getMFNode() : new ActivityNode();
     const upstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
     const downstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
     const processNode = srcProcessNode ?
@@ -268,8 +268,8 @@ export class NoctuaFormConfigService {
     const connectorActivity = new ConnectorActivity(upstreamNode, downstreamNode);
     connectorActivity.predicate = new Predicate(null);
     connectorActivity.predicate.setEvidence(srcUpstreamNode.predicate.evidence);
-    connectorActivity.upstreamActivity = upstreamActivity;
-    connectorActivity.downstreamActivity = downstreamActivity;
+    connectorActivity.subjectActivity = subjectActivity;
+    connectorActivity.objectActivity = objectActivity;
     connectorActivity.processNode = processNode;
     connectorActivity.hasInputNode = hasInputNode;
 

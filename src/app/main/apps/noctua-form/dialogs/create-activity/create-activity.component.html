@@ -19,4 +19,6 @@
   </div>
 </div> -->
 
-<noc-activity-form [closeDialog]="closeDialog"> </noc-activity-form>
+<noc-activity-form *ngIf="formType===FormType.ACTIVITY" [closeDialog]="closeDialog"> </noc-activity-form>
+<noc-activity-connector *ngIf="formType===FormType.ACTIVITY_CONNECTOR" [closeDialog]="closeDialog">
+</noc-activity-connector>
