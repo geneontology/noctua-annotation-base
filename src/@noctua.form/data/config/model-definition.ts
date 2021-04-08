@@ -90,6 +90,7 @@ export const activityUnitDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
             termRequired: true,
+            skipEvidence: true,
             weight: 1
         },
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
@@ -97,7 +98,6 @@ export const activityUnitDescription: ActivityDescription = {
             type: ActivityNodeType.GoMolecularEntity,
             category: [EntityDefinition.GoMolecularEntity],
             label: 'enabled by Gene Product',
-            skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             termRequired: true,
@@ -151,6 +151,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
             visible: false,
+            skipEvidence: true,
             weight: 1
         },
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
@@ -158,7 +159,6 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             type: ActivityNodeType.GoMolecularEntity,
             category: [EntityDefinition.GoMolecularEntity],
             label: 'enabled by Gene Product',
-            skipEvidence: true,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             termRequired: true,
@@ -266,7 +266,7 @@ export const createActivity = (activityDescription: ActivityDescription): Activi
         activity.addEdgeById(triple.subject, triple.object, predicate);
     });
 
-    activity.postRunUpdate();
+    //activity.postRunUpdate();
     activity.updateEntityInsertMenu();
     activity.enableSubmit();
     return activity;

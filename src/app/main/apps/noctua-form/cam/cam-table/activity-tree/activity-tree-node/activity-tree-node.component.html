@@ -13,9 +13,10 @@
       </noctua-inline-editor>
     </div>
     <div class="noc-term-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
-      [attr.id]="entity.term?.displayId" [ngClass]="{'noc-highlight-match': entity.term?.highlight,
+      [attr.id]="entity.term?.displayId"
+      [ngClass]="{'noc-highlight-match': entity.term?.highlight,
             'noc-highlight-modified': entity.term?.modified,
-            'noc-highlight-match-current': entity.term?.uuid===camsService.currentMatch?.uuid}">
+            'noc-highlight-match-current': camsService.currentMatch?.uuid && entity.term?.uuid===camsService.currentMatch?.uuid}">
       <span class="noc-old-term" *ngIf="entity.term?.modified && entity.term?.termHistory?.length>0">
         {{entity.term?.termHistory[0]?.label}}
         <a (click)="$event.stopPropagation()" href="{{entity.term?.termHistory[0]?.url}}" target="_blank">

@@ -6,7 +6,6 @@ export interface EntityBase {
 }
 
 export class Entity implements EntityBase {
-
   classExpression: any;
   highlight: boolean;
   modified: boolean;
@@ -15,7 +14,7 @@ export class Entity implements EntityBase {
   activityDisplayId: string;
   weight = 1;
 
-  private _uuid: string;
+  private _uuid: string = null;
 
   constructor(public id: string,
     public label: string,
@@ -36,7 +35,9 @@ export class Entity implements EntityBase {
   }
 
   set uuid(uuid: string) {
-    this._uuid = uuid;
+    if (uuid) {
+      this._uuid = uuid;
+    }
     this.displayId = 'noc-node-' + NoctuaFormUtils.cleanID(uuid);
   }
 

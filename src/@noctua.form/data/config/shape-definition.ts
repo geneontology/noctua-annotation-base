@@ -71,7 +71,6 @@ export const canInsertEntity = {
                 type: ActivityNodeType.GoMolecularEntity,
                 category: [EntityDefinition.GoMolecularEntity],
                 label: 'MF enabled by Gene Product',
-                skipEvidence: true,
                 displaySection: noctuaFormConfig.displaySection.gp,
                 displayGroup: noctuaFormConfig.displayGroup.gp,
                 termRequired: true,
