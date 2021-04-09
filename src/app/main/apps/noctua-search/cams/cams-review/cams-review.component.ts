@@ -10,7 +10,8 @@ import {
   NoctuaFormMenuService,
   noctuaFormConfig,
   CamsService,
-  CamService
+  CamService,
+  ActivityDisplayType
 } from 'noctua-form-base';
 
 import { takeUntil } from 'rxjs/operators';
@@ -20,6 +21,7 @@ import { ArtBasket } from '@noctua.search/models/art-basket';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { ReviewMode } from '@noctua.search/models/review-mode';
+import { TableOptions } from '@noctua.common/models/table-options';
 
 @Component({
   selector: 'noc-cams-review',
@@ -43,13 +45,13 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   };
   artBasket: ArtBasket;
 
-  tableOptions = {
-    treeTable: true,
+  tableOptions: TableOptions = {
+    displayType: ActivityDisplayType.TREE_TABLE,
+    slimViewer: true,
     editableTerms: true,
     editableEvidence: true,
     editableReference: true,
     editableWith: true,
-    reviewMode: true,
   };
 
   loadingSpinner: any = {

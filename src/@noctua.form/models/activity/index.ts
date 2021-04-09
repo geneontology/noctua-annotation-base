@@ -7,6 +7,7 @@ export {
 export {
     Activity,
     ActivityType,
+    ActivityDisplayType,
     ActivityState,
     ActivitySize,
     ActivityPosition,

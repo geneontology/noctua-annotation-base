@@ -10,7 +10,8 @@ import {
   NoctuaFormConfigService,
   CamService,
   CamsService,
-  Activity
+  Activity,
+  ActivityDisplayType
 } from 'noctua-form-base';
 
 import { FormGroup } from '@angular/forms';
@@ -24,6 +25,7 @@ import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
 import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
+import { TableOptions } from '@noctua.common/models/table-options';
 
 @Component({
   selector: 'noc-noctua-graph',
@@ -66,8 +68,9 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
 
   cams: any[] = [];
 
-  tableOptions = {
-    treeTable: true,
+  tableOptions: TableOptions = {
+    displayType: ActivityDisplayType.TREE,
+    slimViewer: true,
     editableTerms: true,
     editableEvidence: true,
     editableReference: true,

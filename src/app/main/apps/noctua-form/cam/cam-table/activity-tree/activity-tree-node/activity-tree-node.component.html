@@ -2,14 +2,14 @@
   <div class="noc-activity-node noctua-form-table w-100-p"
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="row"
     fxLayoutAlign="start stretch">
-    <div *ngIf="!options.treeTable" class="noc-relationship-cell noc-entity-cell"
+    <div *ngIf="!options.slimViewer" class="noc-relationship-cell noc-entity-cell"
       [ngStyle]="{'padding-left':(entity.treeLevel-1) * 10+'px'}">
       <span class="">
         <strong> {{entity.qualifier}} </strong>
         {{entity.predicate?.edge?.label}}
       </span>
-      <noctua-inline-editor *ngIf="noctuaUserService.user && entity.relationEditable && !options.reviewMode" [cam]="cam"
-        [activity]='activity' [entity]="entity" [category]="EditorCategory.relationship" class="noc-edit-button">
+      <noctua-inline-editor *ngIf="noctuaUserService.user && entity.relationEditable" [cam]="cam" [activity]='activity'
+        [entity]="entity" [category]="EditorCategory.relationship" class="noc-edit-button">
       </noctua-inline-editor>
     </div>
     <div class="noc-term-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""

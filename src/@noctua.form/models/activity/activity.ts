@@ -3,9 +3,9 @@ import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
 import { ActivityError, ErrorLevel, ErrorType } from './parser/activity-error';
-import { ActivityNode, ActivityNodeType } from './activity-node';
+import { ActivityNode, ActivityNodeType, compareNodeWeight } from './activity-node';
 import { Evidence } from './evidence';
-import { Triple } from './triple';
+import { compareTripleWeight, Triple } from './triple';
 import { Entity } from './entity';
 import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
@@ -18,6 +18,12 @@ import { Violation } from './error/violation-error';
 export enum ActivityState {
   creation = 1,
   editing
+}
+
+export enum ActivityDisplayType {
+  TABLE = 'table',
+  TREE = 'tree',
+  TREE_TABLE = 'tree_table' //for ART
 }
 
 export enum ActivityType {
@@ -447,7 +453,9 @@ export class Activity extends SaeGraph<ActivityNode> {
   buildTrees() {
     const self = this;
 
-    return [self._buildTree(self.edges, self.rootNode)];
+    const sortedEdges = self.edges.sort(compareTripleWeight);
+
+    return [self._buildTree(sortedEdges, self.rootNode)];
   }
 
   count = 0
@@ -457,7 +465,6 @@ export class Activity extends SaeGraph<ActivityNode> {
     const self = this;
     const result: ActivityTreeNode[] = [new ActivityTreeNode(rootNode)]
     const getNestedChildren = (arr: ActivityTreeNode[]) => {
-
 
       for (const i in arr) {
         const children = []
@@ -511,7 +518,7 @@ export class Activity extends SaeGraph<ActivityNode> {
       extra: []
     };
 
-    const sortedNodes = self.nodes.sort(self._compareNodeWeight);
+    const sortedNodes = self.nodes.sort(compareNodeWeight);
 
     each(sortedNodes, function (node: ActivityNode) {
       if (node.displaySection && node.displayGroup) {
@@ -644,14 +651,6 @@ export class Activity extends SaeGraph<ActivityNode> {
     }
   }
 
-  private _compareNodeWeight(a: ActivityNode, b: ActivityNode): number {
-    if (a.weight < b.weight) {
-      return -1;
-    } else {
-      return 1;
-    }
-  }
-
   print() {
     const result = []
     this.nodes.forEach((node) => {
@@ -693,5 +692,6 @@ export class ActivityTreeNode {
 export function compareActivity(a: Activity, b: Activity) {
   return a.id === b.id;
 }
+
 
 

@@ -14,11 +14,11 @@ import {
   ActivityType,
   NoctuaUserService,
   CamsService,
-  CamRebuildSignal
+  CamRebuildSignal,
+  ActivityDisplayType
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
-import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 
 @Component({
@@ -34,6 +34,7 @@ import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-m
   ],
 })
 export class CamTableComponent implements OnInit, OnDestroy {
+  ActivityDisplayType = ActivityDisplayType;
   ActivityType = ActivityType;
   CamRebuildSignal = CamRebuildSignal;
   searchCriteria: any = {};

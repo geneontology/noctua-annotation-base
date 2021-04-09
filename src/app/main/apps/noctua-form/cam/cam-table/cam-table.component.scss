@@ -119,6 +119,7 @@ $accent: map-get($theme, accent);
 
   .noc-cam-table-body {
     position: relative;
+    min-height: 80px;
 
     .noc-loading-container {
       background-color: rgba(#555, 0.4);

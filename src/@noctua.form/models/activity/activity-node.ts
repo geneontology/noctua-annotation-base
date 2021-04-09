@@ -308,3 +308,12 @@ export function categoryToClosure(categories) {
 export function compareTerm(a: ActivityNode, b: ActivityNode) {
   return a.term.id === b.term.id;
 }
+
+export function compareNodeWeight(a: ActivityNode, b: ActivityNode): number {
+  if (a.weight < b.weight) {
+    return -1;
+  } else {
+    return 1;
+  }
+}
+

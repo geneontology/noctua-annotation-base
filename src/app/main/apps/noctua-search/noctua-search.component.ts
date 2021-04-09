@@ -178,6 +178,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleLeftDrawer(panel) {
     this.noctuaSearchMenuService.toggleLeftDrawer(panel);
+    this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
   }
 
   createModel(type: 'graph-editor' | 'noctua-form') {

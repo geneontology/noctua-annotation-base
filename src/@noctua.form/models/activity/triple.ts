@@ -50,3 +50,11 @@ export class ActivityTriple<T extends Activity> {
   }
 
 }
+
+export function compareTripleWeight(a: Triple<ActivityNode>, b: Triple<ActivityNode>): number {
+  if (a.object.weight < b.object.weight) {
+    return -1;
+  } else {
+    return 1;
+  }
+}

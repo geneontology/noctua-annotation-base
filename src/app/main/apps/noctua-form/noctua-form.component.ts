@@ -18,11 +18,13 @@ import {
   MiddlePanel,
   LeftPanel,
   Activity,
-  NoctuaGraphService
+  NoctuaGraphService,
+  ActivityDisplayType
 } from 'noctua-form-base';
 
 import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
+import { TableOptions } from '@noctua.common/models/table-options';
 
 @Component({
   selector: 'app-noctua-form',
@@ -49,8 +51,9 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   noctuaFormConfig = noctuaFormConfig;
 
-  tableOptions = {
-    treeTable: true,
+  tableOptions: TableOptions = {
+    displayType: ActivityDisplayType.TREE_TABLE,
+    slimViewer: true,
     editableTerms: true,
     editableEvidence: true,
     editableReference: true,
