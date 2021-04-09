@@ -82,13 +82,9 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
     const success = (cancel) => {
       if (cancel) {
-        const element = document.querySelector('#noc-review-results');
-
-        if (element) {
-          element.scrollTop = 0;
-        }
-        this.noctuaReviewSearchService.clear();
-        this.noctuaReviewSearchService.onResetReview.next(true);
+        self.noctuaSearchMenuService.scrollToTop()
+        self.noctuaReviewSearchService.clear();
+        self.noctuaReviewSearchService.onResetReview.next(true);
       }
     };
 
@@ -97,7 +93,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       confirmLabel: 'Yes'
     };
 
-    this.confirmDialogService.openConfirmDialog('Confirm Cancel?',
+    self.confirmDialogService.openConfirmDialog('Confirm Cancel?',
       'You are about to cancel annotation review. All your unsaved changes will be lost.',
       success, options);
   }
@@ -250,13 +246,10 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
     const success = (replace) => {
       if (replace) {
-        const element = document.querySelector('#noc-review-results');
-
-        if (element) {
-          element.scrollTop = 0;
-        }
+        self.noctuaSearchMenuService.scrollToTop();
 
         self._storeCamsQuery(self.camsService.cams, true);
+        this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.camsReview);
       };
     }
 

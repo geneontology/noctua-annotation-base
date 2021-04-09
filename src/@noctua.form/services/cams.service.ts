@@ -142,7 +142,7 @@ export class CamsService {
     const cams: Cam[] = []
     let replaceWith
 
-    if (category === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+    if (category && category.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
       replaceWith = Evidence.formatReference(replaceWithTerm);
     } else {
       replaceWith = replaceWithTerm?.id;

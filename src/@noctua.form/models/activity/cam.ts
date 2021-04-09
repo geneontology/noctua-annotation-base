@@ -395,10 +395,10 @@ export class Cam {
           if (category.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
             each(node.predicate.evidence, (evidence: Evidence, key) => {
               if (evidence.uuid === entity.uuid) {
-                const oldRefence = new Entity(evidence.reference, evidence.reference);
+                const oldReference = new Entity(evidence.reference, evidence.reference);
                 const newReference = new Entity(replaceWith, replaceWith);
 
-                evidence.pendingReferenceChanges = new PendingChange(evidence.uuid, oldRefence, newReference);
+                evidence.pendingReferenceChanges = new PendingChange(evidence.uuid, oldReference, newReference);
                 evidence.pendingReferenceChanges.uuid = evidence.uuid;
               }
             });
