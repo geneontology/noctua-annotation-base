@@ -3,7 +3,7 @@
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="row"
     fxLayoutAlign="start stretch">
     <div *ngIf="!options.slimViewer" class="noc-relationship-cell noc-entity-cell"
-      [ngStyle]="{'padding-left':(entity.treeLevel-1) * 10+'px'}">
+      fxFlex="{{150-(entity.treeLevel) * 20+'px'}}">
       <span class="">
         <strong> {{entity.qualifier}} </strong>
         {{entity.predicate?.edge?.label}}

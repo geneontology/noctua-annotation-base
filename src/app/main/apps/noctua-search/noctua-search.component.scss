@@ -4,9 +4,9 @@ $primary: map-get($theme, primary);
 $accent: map-get($theme, accent);
 $warn: map-get($theme, warn);
 
-$noc-art-active: mat-color($mat-green, 400);
-$noc-art-visited: mat-color($mat-green, 200);
-$noc-art-badge: mat-color($mat-green, 500);
+$noc-art-active: mat-color($primary, 400);
+$noc-art-visited: mat-color($primary, 200);
+$noc-art-badge: mat-color($primary, 500);
 
 :host {
   padding: 0px;
@@ -50,7 +50,7 @@ $noc-art-badge: mat-color($mat-green, 500);
         width: 20px;
         height: 20px;
         color: #fff;
-        background-color: map-get($warn, default);
+        background-color: $noc-art-badge;
         font-size: 10px;
         text-align: center;
         line-height: 20px;

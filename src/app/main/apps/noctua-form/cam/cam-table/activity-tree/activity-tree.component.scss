@@ -10,9 +10,9 @@ $accent: map-get($theme, accent);
   width: 100%;
 
   .noc-gp {
-    width: 350px;
+    width: 500px;
     line-height: 12px;
-    @include deep-height(55px);
+    @include deep-height(30px);
     // display: inline-block !important;
     padding: 4px 8px;
     font-size: 12px !important;
@@ -172,7 +172,7 @@ $accent: map-get($theme, accent);
   .noc-activity-heading {
     position: relative;
     margin-bottom: 1px;
-    @include deep-height(55px);
+    @include deep-height(30px);
     //min-height: 35px;
     background-color: #fff;
     font-size: 14px;
@@ -233,7 +233,7 @@ $accent: map-get($theme, accent);
 
   .noc-tree-container {
     position: relative;
-    padding-left: 45px;
+    padding-left: 30px;
     padding-right: 10px;
     .noc-cell-label {
       position: relative;
@@ -255,14 +255,14 @@ $accent: map-get($theme, accent);
         padding: 0 !important;
       }
 
-      &::before {
+      /*   &::before {
         content: "";
         position: absolute;
         border-left: 1px solid $noc-tree-line-color;
         height: 100%;
         top: 0;
         left: 55px;
-      }
+      } */
     }
 
     &.noc-selected {

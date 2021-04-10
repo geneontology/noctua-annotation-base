@@ -79,7 +79,7 @@
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="column"
     fxLayoutAlign="start start">
     <div class="noctua-form-table noc-activity-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
-      <div *ngIf="!options.slimViewer" class="noc-cell noc-relationship-cell">
+      <div *ngIf="!options.slimViewer" fxFlex="" class="noc-cell noc-relationship-cell">
         Relationship
       </div>
       <div class="noc-cell noc-term-cell" fxFlex="">

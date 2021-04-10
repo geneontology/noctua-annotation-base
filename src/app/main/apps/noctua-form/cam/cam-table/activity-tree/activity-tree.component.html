@@ -10,15 +10,13 @@
     <div class="noc-display-number noc-sm" (click)="$event.stopPropagation()">
       {{activity.displayNumber}}
     </div>
-    <div class="noc-title mr-12" fxLayout="row" fxLayoutAlign="start center">
-      <div class="noc-gp" *ngIf="gpNode" fxLayout="column" fxLayoutAlign="center start">
-        <span class="text-truncate">
-          {{gpNode.term?.label}}
-        </span>
-        <a class="text-truncate" (click)="$event.stopPropagation()" href="{{gpNode.term?.url}}" target="_blank">
-          {{ gpNode.term?.id }}
-        </a>
-      </div>
+    <div class="noc-title mr-12" fxLayout="row" fxLayoutAlign="center start">
+      <span class="text-truncate">
+        {{gpNode.term?.label}}
+      </span>
+      <a class="text-truncate" (click)="$event.stopPropagation()" href="{{gpNode.term?.url}}" target="_blank">
+        {{ gpNode.term?.id }}
+      </a>
     </div>
     <mat-chip class="noc-chip-xs" [ngClass]="activity.activityType">
       <span>{{activityTypeOptions[activity.activityType]?.label}}</span>
@@ -79,14 +77,14 @@
               [treeAllowDrop]="node.allowDrop" [treeDrag]="node" [treeDragEnabled]="node.allowDrag()">
 
               <div class="noc-annotation-row" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
-                <div class="noc-cell-label" fxLayout="row" fxLayoutAlign="start center">
+                <!--  <div class="noc-cell-label" fxLayout="row" fxLayoutAlign="start center">
                   {{ node.data.node.label }}
                   <noctua-inline-editor
                     *ngIf="noctuaUserService.user && node.data.node.relationEditable && options.editableRelation"
                     [cam]="cam" [activity]='activity' [entity]="node.data.node" [category]="EditorCategory.relationship"
                     class="noc-edit-button ml-12">
                   </noctua-inline-editor>
-                </div>
+                </div> -->
                 <noc-activity-tree-node [options]="options" [cam]="cam" [activity]="activity" [entity]="node.data.node"
                   class="w-100-p">
                 </noc-activity-tree-node>
