@@ -12,7 +12,7 @@
         {{activity.displayNumber}}
       </div>
       <div class="noc-title  mr-12" fxLayout="row" fxLayoutAlign="start center">
-        <div class="noc-relationship mr-12"> <small>{{gpNode?.predicate?.edge?.label}}</small> </div>
+        <div class="noc-relation mr-12"> <small>{{gpNode?.predicate?.edge?.label}}</small> </div>
         <div class="noc-gp" *ngIf="gpNode" [attr.id]="gpNode.term?.displayId"
           [ngClass]="{'noc-highlight-match': gpNode.term?.highlight,
         'noc-highlight-modified': gpNode.term?.modified,
@@ -79,7 +79,7 @@
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="column"
     fxLayoutAlign="start start">
     <div class="noctua-form-table noc-activity-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
-      <div *ngIf="!options.slimViewer" fxFlex="" class="noc-cell noc-relationship-cell">
+      <div *ngIf="!options.slimViewer" fxFlex="" class="noc-cell noc-relation-cell">
         Relationship
       </div>
       <div class="noc-cell noc-term-cell" fxFlex="">

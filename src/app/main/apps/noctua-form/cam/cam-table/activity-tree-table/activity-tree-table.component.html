@@ -11,13 +11,13 @@
       {{activity.displayNumber}}
     </div>
     <div class="noc-title mr-12" fxLayout="row" fxLayoutAlign="start center">
-      <div class="noc-gp" *ngIf="gpNode" fxLayout="column" fxLayoutAlign="center start">
+      <div class="noc-gp" *ngIf="gpNode" fxLayout="row" fxLayoutAlign="start center">
         <span class="text-truncate">
           {{gpNode.term?.label}}
+          <a class="ml-4" (click)="$event.stopPropagation()" href="{{gpNode.term?.url}}" target="_blank">
+            {{ gpNode.term?.id }}
+          </a>
         </span>
-        <a class="text-truncate" (click)="$event.stopPropagation()" href="{{gpNode.term?.url}}" target="_blank">
-          {{ gpNode.term?.id }}
-        </a>
       </div>
     </div>
     <mat-chip class="noc-chip-xs" [ngClass]="activity.activityType">
@@ -37,13 +37,45 @@
     <span fxFlex=""></span>
   </div>
   <div *ngIf="activity.expanded" class="noc-tree-container">
+    <div class="noctua-form-table noc-activity-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <div *ngIf="!options.slimViewer" class="noc-cell noc-relation-cell">
+        Relationship
+      </div>
+      <div class="noc-cell noc-term-cell" fxFlex="">
+        Term
+      </div>
+      <div class="noc-cell noc-aspect-cell">
+        Asp
+      </div>
+      <div class="noc-cell noc-extension-cell">
+        Ext
+      </div>
+      <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-cell noc-evidence-code-cell" fxFlex="">
+          Evidence
+        </div>
+        <div class="noc-cell noc-reference-cell">
+          Reference
+        </div>
+        <div class="noc-cell noc-with-cell">
+          With
+        </div>
+        <div class="noc-cell noc-group-cell">
+          Assigned By
+        </div>
+        <div class="noc-cell noc-contributor-cell">
+          Contributor
+        </div>
+      </div>
+      <div class="noc-cell noc-action-cell"> </div>
+    </div>
     <mat-tree #tree *ngIf="dataSource?.data" [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node class="noc-tree-node" *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding
         matTreeNodePaddingIndent="16" [ngClass]="{ 'background-highlight': activeAnnotation === node.uuid}">
         <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
           <button mat-icon-button disabled class="noc-icon-button"></button>
           <div class="noc-annotation-row" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-cell-label">
+            <div *ngIf="options.slimViewer" class="noc-cell-label">
               {{node.label}}
             </div>
             <noc-activity-tree-node [options]="options" [cam]="cam" [activity]="activity" [entity]="node"
@@ -56,7 +88,7 @@
         matTreeNodePaddingIndent="16" [ngClass]="{ 'background-highlight': activeAnnotation === node.uuid}">
         <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-annotation-row" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
-            <div class="noc-cell-label">
+            <div *ngIf="options.slimViewer" class="noc-cell-label">
               {{node.label}}
             </div>
             <noc-activity-tree-node [options]="options" [cam]="cam" [activity]="activity" [entity]="node"

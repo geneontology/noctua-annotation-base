@@ -2,8 +2,7 @@
   <div class="noc-activity-node noctua-form-table w-100-p"
     [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}" fxLayout="row"
     fxLayoutAlign="start stretch">
-    <div *ngIf="!options.slimViewer" class="noc-relationship-cell noc-entity-cell"
-      fxFlex="{{150-(entity.treeLevel) * 20+'px'}}">
+    <div *ngIf="!options.slimViewer" class="noc-relation-cell noc-entity-cell" fxFlex="{{relationWidth}}">
       <span class="">
         <strong> {{entity.qualifier}} </strong>
         {{entity.predicate?.edge?.label}}

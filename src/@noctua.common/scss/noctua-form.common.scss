@@ -25,7 +25,8 @@ $noc-breakpoints: (
     font-weight: bold;
   }
 
-  .noc-relationship-cell {
+  .noc-relation-cell {
+    @include deep-width(150px);
   }
   .noc-term-cell {
     min-width: 100px;

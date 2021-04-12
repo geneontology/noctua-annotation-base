@@ -10,13 +10,15 @@
     <div class="noc-display-number noc-sm" (click)="$event.stopPropagation()">
       {{activity.displayNumber}}
     </div>
-    <div class="noc-title mr-12" fxLayout="row" fxLayoutAlign="center start">
-      <span class="text-truncate">
-        {{gpNode.term?.label}}
-      </span>
-      <a class="text-truncate" (click)="$event.stopPropagation()" href="{{gpNode.term?.url}}" target="_blank">
-        {{ gpNode.term?.id }}
-      </a>
+    <div class="noc-title mr-12">
+      <div class="noc-gp" *ngIf="gpNode" fxLayout="row" fxLayoutAlign="start center">
+        <span class="text-truncate">
+          {{gpNode.term?.label}}
+          <a class="ml-4" (click)="$event.stopPropagation()" href="{{gpNode.term?.url}}" target="_blank">
+            {{ gpNode.term?.id }}
+          </a>
+        </span>
+      </div>
     </div>
     <mat-chip class="noc-chip-xs" [ngClass]="activity.activityType">
       <span>{{activityTypeOptions[activity.activityType]?.label}}</span>
@@ -58,6 +60,38 @@
 </div>-->
   </div>
   <div *ngIf="activity.expanded" class="noc-tree-container">
+    <div class="noctua-form-table noc-activity-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <div *ngIf="!options.slimViewer" class="noc-cell noc-relation-cell">
+        Relationship
+      </div>
+      <div class="noc-cell noc-term-cell" fxFlex="">
+        Term
+      </div>
+      <div class="noc-cell noc-aspect-cell">
+        Asp
+      </div>
+      <div class="noc-cell noc-extension-cell">
+        Ext
+      </div>
+      <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-cell noc-evidence-code-cell" fxFlex="">
+          Evidence
+        </div>
+        <div class="noc-cell noc-reference-cell">
+          Reference
+        </div>
+        <div class="noc-cell noc-with-cell">
+          With
+        </div>
+        <div class="noc-cell noc-group-cell">
+          Assigned By
+        </div>
+        <div class="noc-cell noc-contributor-cell">
+          Contributor
+        </div>
+      </div>
+      <div class="noc-cell noc-action-cell"> </div>
+    </div>
     <div class="noc-tree">
       <tree-root #tree (initialized)="onTreeLoad()" [nodes]="treeNodes" [options]="treeOptions">
         <ng-template #treeNodeWrapperTemplate let-node let-index="index">
@@ -77,14 +111,14 @@
               [treeAllowDrop]="node.allowDrop" [treeDrag]="node" [treeDragEnabled]="node.allowDrag()">
 
               <div class="noc-annotation-row" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
-                <!--  <div class="noc-cell-label" fxLayout="row" fxLayoutAlign="start center">
+                <div *ngIf="options.slimViewer" class="noc-cell-label" fxLayout="row" fxLayoutAlign="start center">
                   {{ node.data.node.label }}
                   <noctua-inline-editor
                     *ngIf="noctuaUserService.user && node.data.node.relationEditable && options.editableRelation"
                     [cam]="cam" [activity]='activity' [entity]="node.data.node" [category]="EditorCategory.relationship"
                     class="noc-edit-button ml-12">
                   </noctua-inline-editor>
-                </div> -->
+                </div>
                 <noc-activity-tree-node [options]="options" [cam]="cam" [activity]="activity" [entity]="node.data.node"
                   class="w-100-p">
                 </noc-activity-tree-node>

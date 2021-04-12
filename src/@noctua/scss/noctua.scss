@@ -316,6 +316,12 @@ input[type="text"] {
   padding-left: 0;
   //margin-left: -5px;
 
+  .node-drop-slot {
+    display: none;
+    visibility: hidden;
+    @include deep-height(0);
+  }
+
   .tree-children::before {
     content: "";
     position: absolute;

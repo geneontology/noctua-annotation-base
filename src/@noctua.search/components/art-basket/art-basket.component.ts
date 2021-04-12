@@ -116,7 +116,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     if (self.summary?.stats.totalChanges > 0) {
       const options = {
         title: 'Confirm Clear Basket?',
-        message: 'You are about to remove all items from the basket. All your unsaved changes will be lost. Please save changes or undo changes.',
+        message: 'You are about to remove all items from the basket. Please save changes or undo changes.',
         cancelLabel: 'Go Back',
         confirmLabel: 'Clear Anyway'
       };

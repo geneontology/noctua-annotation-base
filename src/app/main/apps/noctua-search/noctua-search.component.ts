@@ -187,6 +187,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openBasketPanel() {
     this.openLeftDrawer(LeftPanel.artBasket);
+    this.camsService.reviewChanges();
     this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.camsReview);
     this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
     this.noctuaSearchMenuService.isReviewMode = true;
