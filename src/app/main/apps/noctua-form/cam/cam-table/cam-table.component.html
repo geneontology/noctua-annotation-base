@@ -45,39 +45,6 @@
     </mat-menu>
   </div>
   <div class="w-100-p noc-cam-table-body">
-    <div *ngIf="options.slimViewer" class="noctua-form-table noc-activity-header w-100-p" fxLayout="row"
-      fxLayoutAlign="start center">
-      <div *ngIf="!options.slimViewer" class="noc-cell noc-relation-cell">
-        Relationship
-      </div>
-      <div class="noc-cell noc-term-cell" fxFlex="">
-        Term
-      </div>
-      <div class="noc-cell noc-aspect-cell">
-        Asp
-      </div>
-      <div class="noc-cell noc-extension-cell">
-        Ext
-      </div>
-      <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
-        <div class="noc-cell noc-evidence-code-cell" fxFlex="">
-          Evidence
-        </div>
-        <div class="noc-cell noc-reference-cell">
-          Reference
-        </div>
-        <div class="noc-cell noc-with-cell">
-          With
-        </div>
-        <div class="noc-cell noc-group-cell">
-          Assigned By
-        </div>
-        <div class="noc-cell noc-contributor-cell">
-          Contributor
-        </div>
-      </div>
-      <div class="noc-cell noc-action-cell"> </div>
-    </div>
     <div *ngFor="let activity of cam.activities" [attr.id]="activity.displayId" class="w-100-p"
       [ngClass]="{'noc-selected': activity.displayId===camsService.currentMatch?.activityDisplayId}">
 

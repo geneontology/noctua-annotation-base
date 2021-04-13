@@ -452,7 +452,6 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   buildTrees() {
     const self = this;
-
     const sortedEdges = self.edges.sort(compareTripleWeight);
 
     return [self._buildTree(sortedEdges, self.rootNode)];

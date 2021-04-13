@@ -3,6 +3,7 @@ export {
     ActivityNode,
     ActivityNodeType,
     ActivityNodeDisplay,
+    compareNodeWeight
 } from './activity-node';
 export {
     Activity,
