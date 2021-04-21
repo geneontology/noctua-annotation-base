@@ -237,8 +237,8 @@ export class Cam {
     const self = this;
 
     return find(self.connectorActivities, (connectorActivity: ConnectorActivity) => {
-      return connectorActivity.upstreamNode.uuid === upstreamId &&
-        connectorActivity.downstreamNode.uuid === downstreamId;
+      return connectorActivity.subjectNode.uuid === upstreamId &&
+        connectorActivity.objectNode.uuid === downstreamId;
     });
   }
 
@@ -528,8 +528,8 @@ export class Cam {
       if (connectorActivity.type === ConnectorType.basic) {
         self.graphPreview.edges.push(
           <NgxEdge>{
-            source: connectorActivity.upstreamNode.uuid,
-            target: connectorActivity.downstreamNode.uuid,
+            source: connectorActivity.subjectNode.uuid,
+            target: connectorActivity.objectNode.uuid,
             label: connectorActivity.rule.r1Edge.label,
             data: {
               connectorActivity: connectorActivity
@@ -545,7 +545,7 @@ export class Cam {
         });
         self.graphPreview.edges.push(
           <NgxEdge>{
-            source: connectorActivity.upstreamNode.uuid,
+            source: connectorActivity.subjectNode.uuid,
             target: connectorActivity.processNode.uuid,
             label: connectorActivity.rule.r1Edge.label,
             data: {
@@ -555,7 +555,7 @@ export class Cam {
         self.graphPreview.edges.push(
           <NgxEdge>{
             source: connectorActivity.processNode.uuid,
-            target: connectorActivity.downstreamNode.uuid,
+            target: connectorActivity.objectNode.uuid,
             label: connectorActivity.rule.r2Edge.label,
             data: {
               connectorActivity: connectorActivity

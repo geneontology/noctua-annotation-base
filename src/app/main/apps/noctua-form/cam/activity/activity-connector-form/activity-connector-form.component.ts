@@ -129,15 +129,15 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
   addEvidence() {
     const self = this;
 
-    self.connectorActivity.upstreamNode.predicate.addEvidence();
-    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
+    self.connectorActivity.subjectNode.predicate.addEvidence();
+    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.subjectNode);
   }
 
   removeEvidence(index: number) {
     const self = this;
 
-    self.connectorActivity.upstreamNode.predicate.removeEvidence(index);
-    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
+    self.connectorActivity.subjectNode.predicate.removeEvidence(index);
+    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.subjectNode);
   }
 
   addNDEvidence() {
@@ -148,15 +148,15 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
       noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
     evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference;
-    self.connectorActivity.upstreamNode.predicate.setEvidence([evidence]);
-    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
+    self.connectorActivity.subjectNode.predicate.setEvidence([evidence]);
+    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.subjectNode);
   }
 
   clearValues() {
     const self = this;
 
-    self.connectorActivity.upstreamNode.clearValues();
-    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
+    self.connectorActivity.subjectNode.clearValues();
+    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.subjectNode);
   }
 
   openSelectEvidenceDialog() {
@@ -166,8 +166,8 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
 
     const success = (selected) => {
       if (selected.evidences && selected.evidences.length > 0) {
-        self.connectorActivity.upstreamNode.predicate.setEvidence(selected.evidences);
-        this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
+        self.connectorActivity.subjectNode.predicate.setEvidence(selected.evidences);
+        this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.subjectNode);
       }
     };
 

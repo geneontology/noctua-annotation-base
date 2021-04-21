@@ -250,10 +250,10 @@ export class NoctuaFormConfigService {
 
   createActivityConnectorModel(subjectActivity: Activity, objectActivity: Activity, srcProcessNode?: ActivityNode, srcHasInputNode?: ActivityNode) {
     const self = this;
-    const srcUpstreamNode = subjectActivity.getMFNode();
-    const srcDownstreamNode = objectActivity ? objectActivity.getMFNode() : new ActivityNode();
-    const upstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
-    const downstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
+    const srcSubjectNode = subjectActivity.getMFNode();
+    const srcObjectNode = objectActivity ? objectActivity.getMFNode() : new ActivityNode();
+    const subjectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
+    const objectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
     const processNode = srcProcessNode ?
       srcProcessNode :
       EntityDefinition.generateBaseTerm([EntityDefinition.GoBiologicalProcess], { id: 'process', isKey: true });
@@ -262,12 +262,12 @@ export class NoctuaFormConfigService {
       EntityDefinition.generateBaseTerm([EntityDefinition.GoChemicalEntity], { id: 'has-input', isKey: true });
 
 
-    upstreamNode.copyValues(srcUpstreamNode);
-    downstreamNode.copyValues(srcDownstreamNode);
+    subjectNode.copyValues(srcSubjectNode);
+    objectNode.copyValues(srcObjectNode);
 
-    const connectorActivity = new ConnectorActivity(upstreamNode, downstreamNode);
+    const connectorActivity = new ConnectorActivity(subjectNode, objectNode);
     connectorActivity.predicate = new Predicate(null);
-    connectorActivity.predicate.setEvidence(srcUpstreamNode.predicate.evidence);
+    connectorActivity.predicate.setEvidence(srcSubjectNode.predicate.evidence);
     connectorActivity.subjectActivity = subjectActivity;
     connectorActivity.objectActivity = objectActivity;
     connectorActivity.processNode = processNode;

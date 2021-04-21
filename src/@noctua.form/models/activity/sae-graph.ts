@@ -74,7 +74,7 @@ export class SaeGraph<T extends ActivityNode> {
 
   addEdge(subjectNode: T, objectNode: T, predicate: Predicate) {
 
-    const triple = new Triple(subjectNode, predicate, objectNode);
+    const triple = new Triple(subjectNode, objectNode, predicate);
     const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple }
 
     this.graphlib.setEdge(triple.subject.id, triple.object.id);
@@ -110,7 +110,7 @@ export class SaeGraph<T extends ActivityNode> {
 
   removeEdge(subjectNode: T, objectNode: T, predicate: Predicate) {
 
-    const triple = new Triple(subjectNode, predicate, objectNode);
+    const triple = new Triple(subjectNode, objectNode, predicate);
     const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple };
 
     this.graphlib.removeEdge(subjectNode.id, objectNode.id)
@@ -168,7 +168,7 @@ export class SaeGraph<T extends ActivityNode> {
     const self = this;
     if (objectNode.hasValue()) {
       const destPredicate = new Predicate(subjectPredicate.edge, objectPredicate.evidence);
-      const triple = new Triple(subjectNode, destPredicate, objectNode);
+      const triple = new Triple(subjectNode, objectNode, destPredicate);
       const edge: Edge<Triple<T>> = { subjectId: subjectNode.id, objectId: objectNode.id, metadata: triple };
 
       addNode(graph, objectNode, objectNode.id);

@@ -32,8 +32,8 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   id: string;
   subjectActivity: Activity;
   objectActivity: Activity;
-  upstreamNode: ActivityNode;
-  downstreamNode: ActivityNode;
+  subjectNode: ActivityNode;
+  objectNode: ActivityNode;
   processNode: ActivityNode;
   hasInputNode: ActivityNode;
   predicate: Predicate;
@@ -46,18 +46,18 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     edges: []
   };
 
-  constructor(upstreamNode?: ActivityNode, downstreamNode?: ActivityNode, state?: ConnectorState) {
+  constructor(subjectNode?: ActivityNode, objectNode?: ActivityNode, state?: ConnectorState) {
     super();
     this.id = uuid();
 
-    this.upstreamNode = upstreamNode;
-    this.downstreamNode = downstreamNode;
+    this.subjectNode = subjectNode;
+    this.objectNode = objectNode;
     this.state = state ? state : ConnectorState.creation;
     this.rule = new ConnectorRule();
 
-    if (upstreamNode) {
-      this.rule.subjectMFCatalyticActivity.condition = upstreamNode.isCatalyticActivity;
-      this.rule.objectMFCatalyticActivity.condition = downstreamNode.isCatalyticActivity;
+    if (subjectNode) {
+      this.rule.subjectMFCatalyticActivity.condition = subjectNode.isCatalyticActivity;
+      this.rule.objectMFCatalyticActivity.condition = objectNode.isCatalyticActivity;
     }
   }
 
@@ -137,7 +137,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const self = this;
     let nodes: NgxNode[] = [];
 
-    let activityNodes = [self.upstreamNode, self.downstreamNode];
+    let activityNodes = [self.subjectNode, self.objectNode];
 
     if (self.type === ConnectorType.intermediate) {
       activityNodes.push(self.processNode);
@@ -219,7 +219,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     };
 
     if (this.type === ConnectorType.basic) {
-      deleteData.triples.push(new Triple(self.upstreamNode, self.predicate, self.downstreamNode));
+      deleteData.triples.push(new Triple(self.subjectNode, self.objectNode, self.predicate));
     } else if (this.type === ConnectorType.intermediate) {
       uuids.push(self.processNode.uuid);
       if (self.hasInputNode.hasValue()) {
@@ -237,12 +237,12 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const evidence = srcEvidence ? srcEvidence : self.predicate.evidence;
 
     if (this.type === ConnectorType.basic) {
-      this.addNodes(self.upstreamNode, self.downstreamNode);
-      self.addEdge(self.upstreamNode, self.downstreamNode, new Predicate(this.rule.r1Edge, evidence));
+      this.addNodes(self.subjectNode, self.objectNode);
+      self.addEdge(self.subjectNode, self.objectNode, new Predicate(this.rule.r1Edge, evidence));
     } else if (this.type === ConnectorType.intermediate) {
-      self.addNodes(self.upstreamNode, self.downstreamNode, self.processNode);
-      self.addEdge(self.upstreamNode, self.processNode, new Predicate(this.rule.r1Edge, evidence));
-      self.addEdge(self.processNode, self.downstreamNode, new Predicate(this.rule.r2Edge, evidence));
+      self.addNodes(self.subjectNode, self.objectNode, self.processNode);
+      self.addEdge(self.subjectNode, self.processNode, new Predicate(this.rule.r1Edge, evidence));
+      self.addEdge(self.processNode, self.objectNode, new Predicate(this.rule.r2Edge, evidence));
       if (this.hasInputNode.hasValue()) {
         self.addNodes(self.hasInputNode);
         self.addEdge(self.processNode, self.hasInputNode, new Predicate(new Entity(noctuaFormConfig.edge.hasInput.id, noctuaFormConfig.edge.hasInput.label), evidence));

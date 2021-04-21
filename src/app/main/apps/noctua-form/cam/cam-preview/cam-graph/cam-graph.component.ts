@@ -209,7 +209,7 @@ export class CamGraphComponent implements OnInit, OnDestroy {
   }
 
   openActivityConnector(activityConnector: ConnectorActivity) {
-    this.noctuaActivityConnectorService.initializeForm(activityConnector.upstreamNode.uuid, activityConnector.downstreamNode.uuid);
+    this.noctuaActivityConnectorService.initializeForm(activityConnector.subjectNode.uuid, activityConnector.objectNode.uuid);
     // this.noctuaFormMenuService.openRightDrawer(LeftPanel.connectorForm);
   }
 

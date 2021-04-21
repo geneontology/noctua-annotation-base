@@ -214,7 +214,7 @@ export class CamCanvas {
 
     createLink(subject: Activity, predicate: Predicate, object: Activity) {
         const self = this;
-        const triple = new Triple(subject, predicate, object);
+        const triple = new Triple(subject, object, predicate);
 
         ///self.cam.addNode(predicate);
         //self.cam.addTriple(triple);

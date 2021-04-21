@@ -446,8 +446,20 @@ export class NoctuaGraphService {
         const contributorAnnotations = annotationNode.get_annotations_by_key('contributor');
         const groupAnnotations = annotationNode.get_annotations_by_key('providedBy');
 
+        let compareSources = (a: any, b: any) => {
+          return (a.value() > b.value()) ? -1 : 1;
+        }
+
+
+
         if (sources.length > 0) {
-          evidence.reference = sources[0].value();
+          //if('MGI:MGI:2675247') 
+          const sorted = sources.sort(compareSources)
+          console.log('not sorted', sources)
+          console.log('sorted', sorted)
+          evidence.reference = sorted.reduce((acc, x) => {
+            return `${acc}, ${x.value()}`;
+          }, '')
           const referenceUrl = self.noctuaLookupService.getTermURL(evidence.reference);
           evidence.referenceEntity = new Entity(evidence.reference, evidence.reference, referenceUrl, evidence.uuid)
         }
@@ -547,6 +559,61 @@ export class NoctuaGraphService {
     return activities;
   }
 
+  getActivityTriples(cam: Cam) {
+    const self = this;
+    const connectorActivities: ConnectorActivity[] = [];
+
+    each(cam.activities, (subjectActivity: Activity) => {
+      each(cam.graph.get_edges_by_subject(subjectActivity.id), (bbopEdge) => {
+        const predicateId = bbopEdge.predicate_id();
+        const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
+        const objectId = bbopEdge.object_id();
+        const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
+        const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
+          id: predicateId
+        });
+
+        if (causalEdge) {
+          if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
+            const objectActivity = cam.getActivityByConnectionId(objectId);
+            const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, objectActivity);
+
+
+            connectorActivity.state = ConnectorState.editing;
+            connectorActivity.type = ConnectorType.basic;
+            connectorActivity.rule.r1Edge = causalEdge;
+            connectorActivity.predicate = new Predicate(causalEdge, evidence);
+            connectorActivities.push(connectorActivity);
+          } else if (objectInfo.hasRootType(EntityDefinition.GoBiologicalProcess)) {
+            const processNodeInfo = self.nodeToActivityNode(cam.graph, objectId);
+
+            const processNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoBiologicalProcess], { id: 'process', isKey: true });
+            const connectorActivityDTO = this._getConnectActivityIntermediate(cam, objectId);
+
+            if (connectorActivityDTO.objectActivity) {
+              processNode.uuid = objectId;
+              processNode.term = processNodeInfo.term;
+              // processNode.setEvidence(self.edgeToEvidence(cam.graph, e));
+
+              const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, connectorActivityDTO.objectActivity, processNode, connectorActivityDTO.hasInputNode);
+
+              connectorActivity.state = ConnectorState.editing;
+              connectorActivity.type = ConnectorType.intermediate;
+              connectorActivity.rule.r1Edge = new Entity(causalEdge.id, causalEdge.label);
+              connectorActivity.rule.r2Edge = connectorActivityDTO.rule.r2Edge;
+              connectorActivity.predicate = new Predicate(causalEdge, evidence);
+              connectorActivity.setRule();
+              connectorActivity.createGraph();
+              connectorActivities.push(connectorActivity);
+            }
+          }
+        }
+      });
+    });
+
+    return connectorActivities;
+  }
+
   getConnectorActivities(cam: Cam) {
     const self = this;
     const connectorActivities: ConnectorActivity[] = [];
@@ -557,7 +624,6 @@ export class NoctuaGraphService {
         const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
         const objectId = bbopEdge.object_id();
         const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
-
         const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
           id: predicateId
         });

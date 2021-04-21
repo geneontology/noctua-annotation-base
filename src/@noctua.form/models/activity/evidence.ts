@@ -190,7 +190,7 @@ export class Evidence {
       return false;
     }
 
-    const DBAccession = reference.split(':');
+    const DBAccession = reference.split(':', 1);
     const db = DBAccession[0].trim().toLowerCase();
     const accession = DBAccession[1].trim().toLowerCase();
 
@@ -215,7 +215,7 @@ export class Evidence {
   }
 
   public static formatReference(reference: string) {
-    const DBAccession = reference.split(':');
+    const DBAccession = reference.split(':', 1);
     const db = DBAccession[0].trim();
     const accession = DBAccession[1].trim();
 
@@ -226,7 +226,7 @@ export class Evidence {
     let result = false;
 
     if (reference.includes(':')) {
-      const DBAccession = reference.split(':');
+      const DBAccession = reference.split(':', 1);
       const db = DBAccession[0].trim().toUpperCase();
       const accession = DBAccession[1].trim();
       const dbs = [

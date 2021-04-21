@@ -30,8 +30,6 @@ export class NoctuaActivityConnectorService {
   public connectorActivity: ConnectorActivity;
   public onActivityChanged: BehaviorSubject<any>;
 
-
-
   selectedPanel: ConnectorPanel;
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
