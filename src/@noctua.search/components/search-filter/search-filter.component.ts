@@ -6,7 +6,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable, Subject } from 'rxjs';
 import { startWith, map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { NoctuaFormConfigService, NoctuaUserService, Group, Contributor, Organism, EntityDefinition, ActivityNode, EntityLookup } from 'noctua-form-base';
-import { NoctuaLookupService } from 'noctua-form-base';
+import { NoctuaLookupService, NoctuaFormUtils } from 'noctua-form-base';
 import { NoctuaSearchService } from './../../services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
@@ -18,6 +18,7 @@ import * as _moment from 'moment';
 import { default as _rollupMoment } from 'moment';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
+
 
 const moment = _rollupMoment || _moment;
 
@@ -51,7 +52,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   @ViewChildren('searchInput')
   searchInput: QueryList<ElementRef>;
   searchCriteria: any = {};
-  isExactDate = true;
+  isDateRange = false;
   filterForm: FormGroup;
   selectedOrganism = {};
   searchFormData: any = [];
@@ -106,7 +107,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       organisms: new FormControl(),
       titles: new FormControl(),
       states: new FormControl(),
-      isExactDate: new FormControl(),
+      isDateRange: new FormControl(),
       exactdates: new FormControl(),
       startdates: new FormControl(),
       enddates: new FormControl(),
@@ -160,7 +161,13 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
     if (this.noctuaSearchService.searchCriteria[filterType].length >= limit) {
       this.confirmDialogService.openInfoToast(`Reached maximum number of ${filterType} filters allowed`, 'OK');
     } else if ((value || '').trim()) {
-      this.noctuaSearchService.searchCriteria[filterType].push(value.trim());
+
+      if (filterType === this.noctuaSearchService.filterType.ids) {
+        this.noctuaSearchService.searchCriteria[filterType].push(
+          NoctuaFormUtils.cleanModelId(value.trim()));
+      } else {
+        this.noctuaSearchService.searchCriteria[filterType].push(value.trim());
+      }
       this.noctuaSearchService.updateSearch();
       this.searchInput.forEach((item) => {
         item.nativeElement.value = null;
@@ -234,6 +241,13 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       });
     });
 
+    this.filterForm.get('isDateRange').valueChanges.pipe(
+      distinctUntilChanged(),
+      debounceTime(400)
+    ).subscribe(value => {
+      this.isDateRange = value;
+    });
+
     this.filteredOrganisms = this.filterForm.controls.organisms.valueChanges
       .pipe(
         startWith(''),
@@ -257,12 +271,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
         map(group => group ? this.noctuaUserService.filterGroups(group) : this.noctuaUserService.groups.slice())
       );
 
-    this.filterForm.get('isExactDate').valueChanges.pipe(
-      distinctUntilChanged(),
-      debounceTime(400)
-    ).subscribe(value => {
-      this.isExactDate = value;
-    });
+
 
     this.filteredStates = this.filterForm.controls.states.valueChanges
       .pipe(

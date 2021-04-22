@@ -25,4 +25,16 @@ export class NoctuaFormUtils {
             .replace(new RegExp("/^-+/"), '')             // Trim - from start of text
             .replace(new RegExp("/-+$/"), '');            // Trim - from end of text
     }
+
+    public static cleanModelId(dirtyId: string) {
+        if (!dirtyId) return dirtyId
+
+        const prefix = 'gomodel:'
+
+        let cleanId = dirtyId.trim();
+        if (!cleanId.includes(prefix)) {
+            cleanId = prefix + cleanId;
+        }
+        return cleanId;
+    }
 }
