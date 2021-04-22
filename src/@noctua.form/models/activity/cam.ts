@@ -115,7 +115,7 @@ export class Cam {
   expanded = false;
   model: any;
   connectorActivities: ConnectorActivity[] = [];
-  triples: Triple<Activity>[] = [];
+  causalRelations: Triple<Activity>[] = [];
   sort;
   error = false;
   date;

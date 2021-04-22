@@ -349,10 +349,10 @@
                 </div>
                 <mat-icon matChipRemove>cancel</mat-icon>
               </mat-chip>
-              <input #searchInput formControlName="titles" placeholder="Add Title Filter" #titleInput
+              <input #searchInput formControlName="titles" placeholder="Add Title Filter (only one allowed)" #titleInput
                 [matChipInputFor]="titleChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 [matChipInputAddOnBlur]="false"
-                (matChipInputTokenEnd)="add($event, noctuaSearchService.filterType.titles)">
+                (matChipInputTokenEnd)="add($event, noctuaSearchService.filterType.titles, 1)">
             </mat-chip-list>
           </mat-form-field>
         </div>

@@ -342,7 +342,7 @@ export class CamCanvas {
             }
         });
 
-        each(cam.triples, (triple: Triple<Activity>) => {
+        each(cam.causalRelations, (triple: Triple<Activity>) => {
             if (triple.predicate.visible) {
                 const link = NodeLink.create();
                 link.setText(triple.predicate.edge.label);

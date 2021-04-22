@@ -17,6 +17,7 @@ import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
 import { default as _rollupMoment } from 'moment';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 const moment = _rollupMoment || _moment;
 
@@ -69,6 +70,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   constructor(
     public noctuaUserService: NoctuaUserService,
+    private confirmDialogService: NoctuaConfirmDialogService,
     private inlineReferenceService: InlineReferenceService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -151,11 +153,13 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
     this.unsubscribeAll.complete();
   }
 
-  add(event: MatChipInputEvent, filterType): void {
+  add(event: MatChipInputEvent, filterType, limit = 10): void {
     const input = event.input;
     const value = event.value;
 
-    if ((value || '').trim()) {
+    if (this.noctuaSearchService.searchCriteria[filterType].length >= limit) {
+      this.confirmDialogService.openInfoToast(`Reached maximum number of ${filterType} filters allowed`, 'OK');
+    } else if ((value || '').trim()) {
       this.noctuaSearchService.searchCriteria[filterType].push(value.trim());
       this.noctuaSearchService.updateSearch();
       this.searchInput.forEach((item) => {
