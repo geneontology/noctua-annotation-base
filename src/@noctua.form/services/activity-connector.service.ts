@@ -29,6 +29,7 @@ export class NoctuaActivityConnectorService {
   public currentConnectorActivity: ConnectorActivity;
   public connectorActivity: ConnectorActivity;
   public onActivityChanged: BehaviorSubject<any>;
+  public onLinkChanged: BehaviorSubject<any>;
 
   selectedPanel: ConnectorPanel;
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
@@ -37,6 +38,7 @@ export class NoctuaActivityConnectorService {
     private noctuaGraphService: NoctuaGraphService) {
 
     this.onActivityChanged = new BehaviorSubject(null);
+    this.onLinkChanged = new BehaviorSubject(null);
     this.connectorFormGroup = new BehaviorSubject(null);
     this.connectorFormGroup$ = this.connectorFormGroup.asObservable();
 

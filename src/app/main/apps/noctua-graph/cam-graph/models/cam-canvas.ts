@@ -81,9 +81,9 @@ export class CamCanvas {
             sorting: joint.dia.Paper.sorting.APPROX,
             // markAvailable: true,
             defaultLink: function () {
-                return self.addLink();
+                return NodeLink.create();
             },
-            perpendicularLinks: true,
+            perpendicularLinks: false,
             // defaultRouter: {
             //   name: 'manhattan',
             //   args: {
@@ -180,12 +180,8 @@ export class CamCanvas {
         });
     }
 
-
-
-    addLink(): NodeLink {
+    addLink(link: NodeLink, predicate: Predicate) {
         const self = this;
-        const link = NodeLink.create();
-        const predicate: Predicate = new Predicate(Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOf));
 
         link.set({
             activity: predicate,
@@ -194,13 +190,9 @@ export class CamCanvas {
 
         link.setText(predicate.edge.label);
 
-        // Add remove button to the link.
-        const tools = new joint.dia.ToolsView({
-            tools: [new joint.linkTools.Remove()]
-        });
+
         // link.findView(this).addTools(tools);
 
-        return link;
     }
 
     createLinkFromElements(source: joint.shapes.noctua.NodeCell, target: joint.shapes.noctua.NodeCell) {
@@ -345,6 +337,7 @@ export class CamCanvas {
         each(cam.causalRelations, (triple: Triple<Activity>) => {
             if (triple.predicate.visible) {
                 const link = NodeLink.create();
+                // link.set('connector', { name: 'jumpover', args: { type: 'gap' } })
                 link.setText(triple.predicate.edge.label);
                 link.set({
                     activity: triple.predicate,
@@ -358,6 +351,8 @@ export class CamCanvas {
                         port: 'left'
                     }
                 });
+
+                link.addColor()
 
                 nodes.push(link);
             }

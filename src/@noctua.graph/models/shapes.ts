@@ -101,7 +101,7 @@ export const StencilNode = joint.dia.Element.define('noctua.StencilNode', {
 export const NodeCell = joint.dia.Element.define('noctua.NodeCell', {
   attrs: {
     root: {
-      magnet: false,
+      magnet: true,
     },
     wrapper: {
       //magnet: true,

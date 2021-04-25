@@ -128,6 +128,16 @@ export class CamGraphService {
     self.camCanvas.canvasGraph.addCell(el);
   }
 
+  addLink(activity: Activity) {
+    const self = this;
+
+    const el = self.camCanvas.createNode(activity)
+    const position = self.placeholderElement.prop('position') as joint.dia.Point
+
+    el.position(position.x, position.y);
+    self.camCanvas.canvasGraph.addCell(el);
+  }
+
 
   openTable(element: joint.shapes.noctua.NodeCell) {
     const activity = element.prop('activity') as Activity

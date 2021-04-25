@@ -77,7 +77,6 @@ export class NodeLink extends shapes.NodeLink {
         }],
         attrs: {
           labelText: {
-            text: 'First',
             fill: '#7c68fc',
             fontSize: 10,
             fontFamily: 'sans-serif',
@@ -100,10 +99,11 @@ export class NodeLink extends shapes.NodeLink {
           }
         },
         position: {
-          distance: -100,
+          distance: 0.5,
           args: {
-            // keepGradient: true,
+            //keepGradient: true,
             ensureLegibility: true,
+            absoluteOffset: true
           }
         }
       }],
@@ -128,6 +128,15 @@ export class NodeLink extends shapes.NodeLink {
         }
       }
     });
+
+    return this;
+  }
+
+  addColor(colorKey: string): this {
+    const self = this;
+    const deep = getColor(colorKey, 600);
+
+    self.attr('line/stroke', deep);
 
     return this;
   }

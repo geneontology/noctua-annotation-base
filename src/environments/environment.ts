@@ -18,10 +18,10 @@ const baristaLocation = typeof global_barista_location !== 'undefined' ? global_
 const minervaDefinitionName = typeof global_minerva_definition_name !== 'undefined' ? global_minerva_definition_name : 'minerva_public_dev';
 const golrNeoServer = typeof global_golr_neo_server !== 'undefined'
   ? global_golr_neo_server
-  : 'http://noctua-golr.berkeleybop.org/';
+  : 'http://golr-aux.geneontology.io/solr/' //'http://noctua-golr.berkeleybop.org/';
 const golrServer = typeof global_golr_server !== 'undefined'
   ? global_golr_server
-  : 'http://golr.berkeleybop.org/';
+  : 'http://golr-aux.geneontology.io/solr/' // 'http://golr.berkeleybop.org/';
 
 const globalWorkbenchesModel = typeof global_workbenches_model !== 'undefined'
   ? global_workbenches_model
