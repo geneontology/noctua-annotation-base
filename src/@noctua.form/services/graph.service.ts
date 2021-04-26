@@ -18,7 +18,7 @@ import { CardinalityViolation, RelationViolation } from './../models/activity/er
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { ActivityNode } from './../models/activity/activity-node';
 import { Cam, CamLoadingIndicator, CamOperation } from './../models/activity/cam';
-import { ConnectorActivity, ConnectorState, ConnectorType } from './../models/activity/connector-activity';
+import { ConnectorActivity, ConnectorState } from './../models/activity/connector-activity';
 import { Entity } from './../models/activity/entity';
 import { Evidence } from './../models/activity/evidence';
 import { Predicate } from './../models/activity/predicate';
@@ -599,34 +599,11 @@ export class NoctuaGraphService {
             const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, objectActivity);
 
             connectorActivity.state = ConnectorState.editing;
-            connectorActivity.type = ConnectorType.basic;
             connectorActivity.rule.r1Edge = causalEdge;
             connectorActivity.predicate = new Predicate(causalEdge, evidence);
             connectorActivity.setRule();
             connectorActivity.createGraph();
             connectorActivities.push(connectorActivity);
-          } else if (objectInfo.hasRootType(EntityDefinition.GoBiologicalProcess)) {
-            const processNodeInfo = self.nodeToActivityNode(cam.graph, objectId);
-
-            const processNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoBiologicalProcess], { id: 'process', isKey: true });
-            const connectorActivityDTO = this._getConnectActivityIntermediate(cam, objectId);
-
-            if (connectorActivityDTO.objectActivity) {
-              processNode.uuid = objectId;
-              processNode.term = processNodeInfo.term;
-              // processNode.setEvidence(self.edgeToEvidence(cam.graph, e));
-
-              const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, connectorActivityDTO.objectActivity, processNode, connectorActivityDTO.hasInputNode);
-
-              connectorActivity.state = ConnectorState.editing;
-              connectorActivity.type = ConnectorType.intermediate;
-              connectorActivity.rule.r1Edge = new Entity(causalEdge.id, causalEdge.label);
-              connectorActivity.rule.r2Edge = connectorActivityDTO.rule.r2Edge;
-              connectorActivity.predicate = new Predicate(causalEdge, evidence);
-              connectorActivity.setRule();
-              connectorActivity.createGraph();
-              connectorActivities.push(connectorActivity);
-            }
           }
         }
       });
@@ -1049,44 +1026,6 @@ export class NoctuaGraphService {
     });
 
     return objectNode;
-  }
-
-  private _getConnectActivityIntermediate(cam: Cam, bpSubjectId: string): ConnectorActivity {
-    const self = this;
-    const connectorActivity = new ConnectorActivity();
-
-    each(cam.graph.get_edges_by_subject(bpSubjectId), (e) => {
-      const predicateId = e.predicate_id();
-      const objectId = e.object_id();
-      const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
-
-      const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
-        id: predicateId
-      });
-
-      if (causalEdge) {
-        if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
-          const objectActivity = cam.getActivityByConnectionId(objectId);
-
-          connectorActivity.rule.r2Edge = new Entity(causalEdge.id, causalEdge.label);;
-          connectorActivity.objectActivity = objectActivity;
-        }
-      }
-
-      if (e.predicate_id() === noctuaFormConfig.edge.hasInput.id) {
-        if (objectInfo.hasRootType(EntityDefinition.GoChemicalEntity)) {
-          const hasInputNodeInfo = self.nodeToActivityNode(cam.graph, objectId);
-          const hasInputNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoChemicalEntity], { id: 'has-input', isKey: true });
-
-          hasInputNode.uuid = objectId;
-          hasInputNode.term = hasInputNodeInfo.term;
-          hasInputNode.predicate.setEvidence(self.edgeToEvidence(cam.graph, e));
-          connectorActivity.hasInputNode = hasInputNode;
-        }
-      }
-    });
-
-    return connectorActivity;
   }
 
   private _compareSources(a: any, b: any) {

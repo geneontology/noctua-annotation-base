@@ -10,7 +10,6 @@ import {
   Activity,
   ConnectorActivity,
   ConnectorState,
-  ConnectorType,
   ActivityNode,
   Evidence,
   NoctuaActivityConnectorService,
@@ -40,7 +39,6 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
 
   @Input() public closeDialog: () => void;
 
-  connectorType = ConnectorType;
   connectorState = ConnectorState;
   currentConnectorActivity: ConnectorActivity;
   connectorActivity: ConnectorActivity;

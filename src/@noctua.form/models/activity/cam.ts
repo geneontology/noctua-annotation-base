@@ -8,7 +8,7 @@ import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
-import { ConnectorActivity, ConnectorType } from './connector-activity';
+import { ConnectorActivity } from './connector-activity';
 import { each, find, filter } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
@@ -525,43 +525,15 @@ export class Cam {
     });
 
     each(self.connectorActivities, (connectorActivity: ConnectorActivity) => {
-      if (connectorActivity.type === ConnectorType.basic) {
-        self.graphPreview.edges.push(
-          <NgxEdge>{
-            source: connectorActivity.subjectNode.uuid,
-            target: connectorActivity.objectNode.uuid,
-            label: connectorActivity.rule.r1Edge.label,
-            data: {
-              connectorActivity: connectorActivity
-            }
-          });
-      } else if (connectorActivity.type === ConnectorType.intermediate) {
-        self.graphPreview.nodes.push({
-          id: connectorActivity.processNode.uuid,
-          label: connectorActivity.processNode.term.label,
+      self.graphPreview.edges.push(
+        <NgxEdge>{
+          source: connectorActivity.subjectNode.uuid,
+          target: connectorActivity.objectNode.uuid,
+          label: connectorActivity.rule.r1Edge.label,
           data: {
             connectorActivity: connectorActivity
           }
         });
-        self.graphPreview.edges.push(
-          <NgxEdge>{
-            source: connectorActivity.subjectNode.uuid,
-            target: connectorActivity.processNode.uuid,
-            label: connectorActivity.rule.r1Edge.label,
-            data: {
-              connectorActivity: connectorActivity
-            }
-          });
-        self.graphPreview.edges.push(
-          <NgxEdge>{
-            source: connectorActivity.processNode.uuid,
-            target: connectorActivity.objectNode.uuid,
-            label: connectorActivity.rule.r2Edge.label,
-            data: {
-              connectorActivity: connectorActivity
-            }
-          });
-      }
     });
 
     /*

@@ -111,8 +111,7 @@ export class NoctuaActivityConnectorService {
     const formMetadata = new ActivityFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
     const connectorForm = new ActivityConnectorForm(formMetadata);
 
-    connectorForm.createEntityForms(self.connectorActivity.predicate, self.connectorActivity.hasInputNode);
-    connectorForm.onValueChanges(self.connectorActivity.hasInputNode.termLookup);
+    connectorForm.createEntityForms(self.connectorActivity.predicate);
 
     return connectorForm;
   }

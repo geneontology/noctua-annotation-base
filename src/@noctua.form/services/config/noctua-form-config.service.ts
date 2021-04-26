@@ -248,18 +248,12 @@ export class NoctuaFormConfigService {
     return modelInfo;
   }
 
-  createActivityConnectorModel(subjectActivity: Activity, objectActivity: Activity, srcProcessNode?: ActivityNode, srcHasInputNode?: ActivityNode) {
+  createActivityConnectorModel(subjectActivity: Activity, objectActivity: Activity) {
     const self = this;
     const srcSubjectNode = subjectActivity.getMFNode();
     const srcObjectNode = objectActivity ? objectActivity.getMFNode() : new ActivityNode();
     const subjectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
     const objectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
-    const processNode = srcProcessNode ?
-      srcProcessNode :
-      EntityDefinition.generateBaseTerm([EntityDefinition.GoBiologicalProcess], { id: 'process', isKey: true });
-    const hasInputNode = srcHasInputNode ?
-      srcHasInputNode :
-      EntityDefinition.generateBaseTerm([EntityDefinition.GoChemicalEntity], { id: 'has-input', isKey: true });
 
 
     subjectNode.copyValues(srcSubjectNode);
@@ -270,8 +264,6 @@ export class NoctuaFormConfigService {
     connectorActivity.predicate.setEvidence(srcSubjectNode.predicate.evidence);
     connectorActivity.subjectActivity = subjectActivity;
     connectorActivity.objectActivity = objectActivity;
-    connectorActivity.processNode = processNode;
-    connectorActivity.hasInputNode = hasInputNode;
 
     return connectorActivity;
   }

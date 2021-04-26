@@ -27,7 +27,6 @@ export {
 export { Evidence } from './evidence';
 export {
     ConnectorState,
-    ConnectorType,
     ConnectorActivity,
     ConnectorPanel
 } from './connector-activity';

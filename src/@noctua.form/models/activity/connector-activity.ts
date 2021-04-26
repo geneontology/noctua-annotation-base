@@ -18,11 +18,6 @@ export enum ConnectorState {
   editing
 }
 
-export enum ConnectorType {
-  basic = 1,
-  intermediate
-}
-
 export enum ConnectorPanel {
   SELECT = 'select',
   FORM = 'form',
@@ -34,11 +29,8 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   objectActivity: Activity;
   subjectNode: ActivityNode;
   objectNode: ActivityNode;
-  processNode: ActivityNode;
-  hasInputNode: ActivityNode;
   predicate: Predicate;
   state: ConnectorState;
-  type: ConnectorType = ConnectorType.basic;
   rule: ConnectorRule;
 
   graphPreview = {
@@ -54,11 +46,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     this.objectNode = objectNode;
     this.state = state ? state : ConnectorState.creation;
     this.rule = new ConnectorRule();
-
-    if (subjectNode) {
-      this.rule.subjectMFCatalyticActivity.condition = subjectNode.isCatalyticActivity;
-      this.rule.objectMFCatalyticActivity.condition = objectNode.isCatalyticActivity;
-    }
   }
 
   setRule() {
@@ -68,12 +55,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     self.rule.effectDirection.direction = question.effectDirection;
     self.rule.mechanism.mechanism = question.mechanism;
-
-    if (self.type === ConnectorType.basic) {
-      self.rule.displaySection.process = false;
-    } else if (self.type === ConnectorType.intermediate) {
-      self.rule.displaySection.process = true;
-    }
   }
 
   checkConnection(value: any) {
@@ -81,19 +62,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     self.rule.mechanism.mechanism = value.mechanism;
     self.rule.displaySection.causalEffect = true;
-
-    if (value.mechanism === noctuaFormConfig.mechanism.options.known) {
-      self.rule.displaySection.process = true;
-      self.type = ConnectorType.intermediate;
-    } else {
-      self.rule.displaySection.process = false;
-      self.type = ConnectorType.basic;
-    }
-
-    if (value.process) {
-      self.processNode.term = new Entity(value.process.id, value.process.label);
-      self.rule.r2Edge = value.process.edge;
-    }
 
     self.rule.r1Edge = this.getCausalConnectorEdge(
       value.causalEffect,
@@ -139,13 +107,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     let activityNodes = [self.subjectNode, self.objectNode];
 
-    if (self.type === ConnectorType.intermediate) {
-      activityNodes.push(self.processNode);
-
-      if (self.hasInputNode.hasValue()) {
-        activityNodes.push(self.hasInputNode)
-      }
-    }
 
     nodes = <NgxNode[]>activityNodes.map((node: ActivityNode) => {
       return {
@@ -160,10 +121,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   copyValues(currentConnectorActivity: ConnectorActivity) {
     const self = this;
 
-    self.processNode.term = cloneDeep(currentConnectorActivity.processNode.term);
-    self.hasInputNode.term = cloneDeep(currentConnectorActivity.hasInputNode.term);
     self.rule = cloneDeep(currentConnectorActivity.rule);
-    self.type = currentConnectorActivity.type;
     self.state = currentConnectorActivity.state;
   }
 
@@ -218,14 +176,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       nodes: []
     };
 
-    if (this.type === ConnectorType.basic) {
-      deleteData.triples.push(new Triple(self.subjectNode, self.objectNode, self.predicate));
-    } else if (this.type === ConnectorType.intermediate) {
-      uuids.push(self.processNode.uuid);
-      if (self.hasInputNode.hasValue()) {
-        uuids.push(self.hasInputNode.uuid);
-      }
-    }
+    deleteData.triples.push(new Triple(self.subjectNode, self.objectNode, self.predicate));
 
     deleteData.uuids = uuids;
 
@@ -236,18 +187,8 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const self = this;
     const evidence = srcEvidence ? srcEvidence : self.predicate.evidence;
 
-    if (this.type === ConnectorType.basic) {
-      this.addNodes(self.subjectNode, self.objectNode);
-      self.addEdge(self.subjectNode, self.objectNode, new Predicate(this.rule.r1Edge, evidence));
-    } else if (this.type === ConnectorType.intermediate) {
-      self.addNodes(self.subjectNode, self.objectNode, self.processNode);
-      self.addEdge(self.subjectNode, self.processNode, new Predicate(this.rule.r1Edge, evidence));
-      self.addEdge(self.processNode, self.objectNode, new Predicate(this.rule.r2Edge, evidence));
-      if (this.hasInputNode.hasValue()) {
-        self.addNodes(self.hasInputNode);
-        self.addEdge(self.processNode, self.hasInputNode, new Predicate(new Entity(noctuaFormConfig.edge.hasInput.id, noctuaFormConfig.edge.hasInput.label), evidence));
-      }
-    }
+    this.addNodes(self.subjectNode, self.objectNode);
+    self.addEdge(self.subjectNode, self.objectNode, new Predicate(this.rule.r1Edge, evidence));
   }
 
   prepareSave(value) {
@@ -264,11 +205,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       return result;
     });
 
-    if (this.type === ConnectorType.intermediate) {
-      self.processNode.term = new Entity(value.process.id, value.process.label);
-      self.hasInputNode.term = new Entity(value.hasInput.id, value.hasInput.label);
-    }
-
     this.createGraph(evidence);
   }
 
@@ -277,32 +213,12 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     let edges: NgxEdge[] = [];
 
-    if (self.type === ConnectorType.basic) {
-      edges = <NgxEdge[]>[
-        {
-          source: 'upstream',
-          target: 'downstream',
-          label: self.rule.r1Edge ? self.rule.r1Edge.label : ''
-        }];
-    } else if (self.type === ConnectorType.intermediate) {
-      edges = <NgxEdge[]>[
-        {
-          source: 'upstream',
-          target: 'process',
-          label: self.rule.r1Edge ? self.rule.r1Edge.label : ''
-        }, {
-          source: 'process',
-          target: 'downstream',
-          label: self.rule.r2Edge ? self.rule.r2Edge.label : ''
-        }];
-      if (this.hasInputNode.hasValue()) {
-        edges.push({
-          source: 'process',
-          target: 'has-input',
-          label: noctuaFormConfig.edge.hasInput.label
-        });
-      }
-    }
+    edges = <NgxEdge[]>[
+      {
+        source: 'upstream',
+        target: 'downstream',
+        label: self.rule.r1Edge ? self.rule.r1Edge.label : ''
+      }];
 
     return edges;
   }
