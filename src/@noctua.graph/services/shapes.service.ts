@@ -26,7 +26,7 @@ export class StencilNode extends shapes.StencilNode {
     const self = this;
 
     if (iconUrl) {
-      self.attr('icon/xlink:href', `./assets/icons/core/SVG/${iconUrl}.svg`);
+      self.attr('icon/xlink:href', `${iconUrl}`);
     }
 
     return this;
@@ -108,12 +108,12 @@ export class NodeLink extends shapes.NodeLink {
         }
       }],
     });
-    link.router('manhattan', {
-      step: 10,
-      padding: 0,
+    link.router('normal', {
+      // step: 10,
+      // padding: 0,
       //  startDirections: ['bottom'],
       //   endDirections: ['top'],
-    }).connector('jumpover', { size: 10 });
+    }).connector('smooth');
 
     return link;
   }

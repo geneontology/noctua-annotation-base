@@ -67,7 +67,8 @@ export class CamCanvas {
             },
 
             // connectionStrategy: joint.connectionStrategies.pinAbsolute,
-            // defaultConnectionPoint: { name: 'boundary', args: { selector: 'border' } },
+            defaultConnectionPoint: { name: 'boundary', args: { selector: 'border' } },
+            defaultConnector: { name: 'smooth' },
             async: true,
             interactive: { labelMove: false },
             linkPinning: false,
@@ -337,14 +338,11 @@ export class CamCanvas {
                 link.setText(triple.predicate.edge.label);
                 link.set({
                     activity: triple.predicate,
-                    id: triple.predicate.edge.id,
                     source: {
                         id: triple.subject.id,
-                        port: 'right'
                     },
                     target: {
                         id: triple.object.id,
-                        port: 'left'
                     }
                 });
 

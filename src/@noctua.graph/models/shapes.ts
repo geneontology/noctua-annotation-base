@@ -51,13 +51,13 @@ export const StencilNode = joint.dia.Element.define('noctua.StencilNode', {
       ref: 'icon',
       refWidth: '100%',
       refHeight: '100%',
-      fill: '#FF0'
+      fill: 'transparent'
     },
     icon: {
       x: 5,
       y: 5,
       refWidth: '100%',
-      height: 70,
+      height: 60,
     },
     label: {
       y: 85,
@@ -116,18 +116,11 @@ export const NodeCell = joint.dia.Element.define('noctua.NodeCell', {
       fill: '#FFFFFF',
       stroke: 'rgba(0,0,255,0.3)',
     },
-    statusLine: {
-      x: 0,
-      y: 0,
-      width: 3,
-      refHeight: '100%',
-      fill: '#6871AC'
-    },
 
     noctuaTitle: {
       x: 0,
-      refX: '5px',
-      refY: '5px',
+      refX: '10px',
+      refY: '10px',
       fill: '#000000',
       textAnchor: 'left',
       textVerticalAnchor: 'top',
@@ -196,9 +189,6 @@ export const NodeCell = joint.dia.Element.define('noctua.NodeCell', {
   }, {
     tagName: 'rect',
     selector: 'body'
-  }, {
-    tagName: 'rect',
-    selector: 'statusLine'
   }, {
     tagName: 'text',
     selector: 'noctuaTitle'

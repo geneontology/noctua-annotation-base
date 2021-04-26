@@ -107,10 +107,11 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       organisms: new FormControl(),
       titles: new FormControl(),
       states: new FormControl(),
-      isDateRange: new FormControl(),
       exactdates: new FormControl(),
       startdates: new FormControl(),
       enddates: new FormControl(),
+      isDateRange: new FormControl(),
+      exactTerm: new FormControl(),
     });
   }
 
@@ -246,6 +247,14 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       debounceTime(400)
     ).subscribe(value => {
       this.isDateRange = value;
+    });
+
+    this.filterForm.get('exactTerm').valueChanges.pipe(
+      distinctUntilChanged(),
+      debounceTime(400)
+    ).subscribe(value => {
+      this.noctuaSearchService.searchCriteria.expand = !value
+      this.noctuaSearchService.updateSearch();
     });
 
     this.filteredOrganisms = this.filterForm.controls.organisms.valueChanges

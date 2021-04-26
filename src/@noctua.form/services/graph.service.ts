@@ -265,7 +265,8 @@ export class NoctuaGraphService {
     }
     cam.activities = activities
     cam.applyFilter();
-    cam.causalRelations = self.getCausalRelations(cam);
+    //cam.causalRelations = self.getCausalRelations(cam);
+    //cam.connectorActivities = self.getConnectorActivities(cam)
     cam.setPreview();
     cam.updateActivityDisplayNumber();
 

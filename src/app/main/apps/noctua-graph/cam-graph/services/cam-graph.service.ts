@@ -112,11 +112,9 @@ export class CamGraphService {
     link: joint.shapes.noctua.NodeLink) {
     const self = this;
 
-    console.log(link)
-
-    this._activityConnectorService.initializeForm(sourceId, targetId);
-    this._activityConnectorService.selectPanel(ConnectorPanel.FORM)
-    this.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY_CONNECTOR);
+    self._activityConnectorService.initializeForm(sourceId, targetId);
+    self._activityConnectorService.selectPanel(ConnectorPanel.FORM)
+    self.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY_CONNECTOR);
   }
 
   addActivity(activity: Activity) {
@@ -144,16 +142,18 @@ export class CamGraphService {
   }
 
   openConnector(element: joint.shapes.noctua.NodeLink) {
-    const activity = element.prop('activity') as Activity
+    const self = this;
     this.selectedElement = element;
-    // activity.type = element.get('type');
-    this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
+    const source = element.get('source');
+    const target = element.get('source');
+
+    if (!source || !target) return
+    self._activityConnectorService.initializeForm(source.id, target.id);
+    self._activityConnectorService.selectPanel(ConnectorPanel.FORM)
+
+    this.noctuaCommonMenuService.selectRightPanel(RightPanel.connectorForm);
     this.noctuaCommonMenuService.openRightDrawer();
 
-    activity.expanded = true;
-    this._camsService.currentMatch.activityDisplayId = activity.displayId;
-    const q = `#${activity.displayId}`;
-    this.noctuaCommonMenuService.scrollTo(q);
   }
 
   save() {

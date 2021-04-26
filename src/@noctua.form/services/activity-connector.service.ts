@@ -76,14 +76,14 @@ export class NoctuaActivityConnectorService {
     self.connectors = connectors;
   }
 
-  initializeForm(upstreamId: string, downstreamId: string) {
+  initializeForm(subjectId: string, objectId: string) {
     const self = this;
 
-    self.subjectActivity = this.cam.getActivityByConnectionId(upstreamId);
-    self.objectActivity = this.cam.getActivityByConnectionId(downstreamId);
+    self.subjectActivity = this.cam.getActivityByConnectionId(subjectId);
+    self.objectActivity = this.cam.getActivityByConnectionId(objectId);
 
     this.connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(self.subjectActivity, self.objectActivity);
-    this.currentConnectorActivity = this.cam.getConnectorActivity(upstreamId, downstreamId);
+    this.currentConnectorActivity = this.cam.getConnectorActivity(subjectId, objectId);
 
     if (this.currentConnectorActivity) {
       this.currentConnectorActivity.setPreview();
