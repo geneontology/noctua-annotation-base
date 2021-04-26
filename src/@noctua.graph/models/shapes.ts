@@ -104,7 +104,7 @@ export const NodeCell = joint.dia.Element.define('noctua.NodeCell', {
       magnet: true,
     },
     wrapper: {
-      //magnet: true,
+      magnet: true,
       refWidth: '100%',
       refHeight: '100%',
       // fill: '#FF0000',
@@ -114,6 +114,7 @@ export const NodeCell = joint.dia.Element.define('noctua.NodeCell', {
       refWidth: '100%',
       refHeight: '100%',
       fill: '#FFFFFF',
+      stroke: 'rgba(0,0,255,0.3)',
     },
     statusLine: {
       x: 0,
@@ -122,48 +123,30 @@ export const NodeCell = joint.dia.Element.define('noctua.NodeCell', {
       refHeight: '100%',
       fill: '#6871AC'
     },
-    nodeType: {
-      x: 0,
-      refX: '50%',
-      y: 20,
-      fill: '#6871AC',
-      textAnchor: 'middle',
-      textVerticalAnchor: 'middle',
-      fontWeight: 'bold',
-      fontFamily: 'sans-serif',
-      fontSize: 12,
-      style: 'text-transform: uppercase'
-    },
+
     noctuaTitle: {
       x: 0,
-      refX: '50%',
-      refY: '35px',
+      refX: '5px',
+      refY: '5px',
       fill: '#000000',
-      textAnchor: 'middle',
+      textAnchor: 'left',
       textVerticalAnchor: 'top',
       // fontFamily: 'sans-serif',
       fontSize: 12,
       text: '',
       textWrap: {
-        width: -50,
-        height: -40,
+        //width: -50,
+        //height: -40,
         ellipsis: true
       }
     }
   },
+  /*
   inPorts: ['top', 'bottom', 'left',],
   outPorts: ['right'],
 
-  /*  ports: {
-     groups: {
-       left: { position: 'left', attrs: portAttrs },
-       top: { position: 'top', attrs: portAttrs },
-       bottom: { position: 'bottom', attrs: portAttrs },
-       right: { position: 'right', attrs: portAttrs }
-     }
-   } */
 
-  ports: {
+   ports: {
     groups: {
       left: {
         position: 'left',
@@ -205,7 +188,7 @@ export const NodeCell = joint.dia.Element.define('noctua.NodeCell', {
       id: 'left',
       group: 'left'
     }],
-  },
+  }, */
 }, {
   markup: [{
     tagName: 'rect',
@@ -216,9 +199,6 @@ export const NodeCell = joint.dia.Element.define('noctua.NodeCell', {
   }, {
     tagName: 'rect',
     selector: 'statusLine'
-  }, {
-    tagName: 'text',
-    selector: 'nodeType'
   }, {
     tagName: 'text',
     selector: 'noctuaTitle'
@@ -336,7 +316,8 @@ export const NodeLink = joint.shapes.devs.Link.define('noctua.NodeLink', {
        }, */
       targetMarker: {
         type: 'path',
-        fill: '#005580',
+        stroke: 'black',
+        fill: 'black',
         d: 'M 10 -5 0 0 10 5 Z'
       }
     },
@@ -372,12 +353,6 @@ export const NodeLink = joint.shapes.devs.Link.define('noctua.NodeLink', {
           refY: '-10%'
         }
       },
-      position: {
-        distance: 100, // default absolute position
-        args: {
-          absoluteDistance: true
-        }
-      }
     }
   }
 }, {

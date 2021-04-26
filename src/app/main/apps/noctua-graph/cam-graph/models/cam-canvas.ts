@@ -12,6 +12,7 @@ import { NodeCell, NodeLink, StencilNode } from '@noctua.graph/services/shapes.s
 import * as joint from 'jointjs';
 import { each, cloneDeep } from 'lodash';
 import { StencilItemNode } from '@noctua.graph/data/cam-stencil';
+import { getEdgeColor } from '@noctua.graph/data/edge-display';
 
 export class CamCanvas {
 
@@ -19,6 +20,7 @@ export class CamCanvas {
     canvasGraph: joint.dia.Graph;
     selectedStencilElement;
     elementOnClick: (element: joint.shapes.noctua.NodeCell) => void;
+    linkOnClick: (element: joint.shapes.noctua.NodeLink) => void;
     onLinkCreated: (
         sourceId: string,
         targetId: string,
@@ -140,18 +142,11 @@ export class CamCanvas {
         });
 
 
-        this.canvasPaper.on('link:pointerclick', function (linkView) {
+        this.canvasPaper.on('link:pointerdblclick', function (linkView) {
             const link = linkView.model;
 
-            self.elementOnClick(link);
-            link.attr('line/stroke', 'orange');
-            link.label(0, {
-                attrs: {
-                    body: {
-                        stroke: 'orange'
-                    }
-                }
-            });
+            self.linkOnClick(link);
+
         });
 
         this.canvasPaper.on('element:expand:pointerdown', function (elementView: joint.dia.ElementView, evt) {
@@ -336,6 +331,7 @@ export class CamCanvas {
 
         each(cam.causalRelations, (triple: Triple<Activity>) => {
             if (triple.predicate.visible) {
+                const color = getEdgeColor(triple.predicate.edge.id);
                 const link = NodeLink.create();
                 // link.set('connector', { name: 'jumpover', args: { type: 'gap' } })
                 link.setText(triple.predicate.edge.label);
@@ -352,7 +348,7 @@ export class CamCanvas {
                     }
                 });
 
-                link.addColor()
+                link.setColor(color)
 
                 nodes.push(link);
             }

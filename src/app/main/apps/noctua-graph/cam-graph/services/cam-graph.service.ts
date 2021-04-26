@@ -71,6 +71,7 @@ export class CamGraphService {
 
     self.camCanvas = new CamCanvas();
     self.camCanvas.elementOnClick = self.openTable.bind(self);
+    self.camCanvas.linkOnClick = self.openConnector.bind(self);
     self.camCanvas.onLinkCreated = self.createActivityConnector.bind(self);
 
   }
@@ -128,18 +129,21 @@ export class CamGraphService {
     self.camCanvas.canvasGraph.addCell(el);
   }
 
-  addLink(activity: Activity) {
-    const self = this;
-
-    const el = self.camCanvas.createNode(activity)
-    const position = self.placeholderElement.prop('position') as joint.dia.Point
-
-    el.position(position.x, position.y);
-    self.camCanvas.canvasGraph.addCell(el);
-  }
-
 
   openTable(element: joint.shapes.noctua.NodeCell) {
+    const activity = element.prop('activity') as Activity
+    this.selectedElement = element;
+    // activity.type = element.get('type');
+    this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
+    this.noctuaCommonMenuService.openRightDrawer();
+
+    activity.expanded = true;
+    this._camsService.currentMatch.activityDisplayId = activity.displayId;
+    const q = `#${activity.displayId}`;
+    this.noctuaCommonMenuService.scrollTo(q);
+  }
+
+  openConnector(element: joint.shapes.noctua.NodeLink) {
     const activity = element.prop('activity') as Activity
     this.selectedElement = element;
     // activity.type = element.get('type');

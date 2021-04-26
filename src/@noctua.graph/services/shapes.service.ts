@@ -78,7 +78,7 @@ export class NodeLink extends shapes.NodeLink {
         attrs: {
           labelText: {
             fill: '#7c68fc',
-            fontSize: 10,
+            fontSize: 8,
             fontFamily: 'sans-serif',
             textAnchor: 'middle',
             textVerticalAnchor: 'middle'
@@ -113,7 +113,7 @@ export class NodeLink extends shapes.NodeLink {
       padding: 0,
       //  startDirections: ['bottom'],
       //   endDirections: ['top'],
-    }).connector('normal');
+    }).connector('jumpover', { size: 10 });
 
     return link;
   }
@@ -132,11 +132,27 @@ export class NodeLink extends shapes.NodeLink {
     return this;
   }
 
-  addColor(colorKey: string): this {
+  setColor(colorKey: string): this {
     const self = this;
-    const deep = getColor(colorKey, 600);
+    const deep = getColor(colorKey, 800);
+    const light = getColor(colorKey, 600);
 
-    self.attr('line/stroke', deep);
+    const lineColor = light ? light : colorKey;
+    const textColor = deep ? deep : colorKey;
+
+    self.attr('line/stroke', lineColor);
+    self.attr('line/targetMarker/stroke', lineColor);
+    self.attr('line/targetMarker/fill', lineColor);
+    self.label(0, {
+      attrs: {
+        labelText: {
+          fill: textColor
+        },
+        labelBody: {
+          stroke: lineColor
+        }
+      }
+    });
 
     return this;
   }
