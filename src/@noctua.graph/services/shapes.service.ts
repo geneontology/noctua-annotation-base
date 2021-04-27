@@ -62,6 +62,35 @@ export class NodeCell extends shapes.NodeCell {
   }
 }
 
+export class NodeCellList extends shapes.NodeCellList {
+
+  addNodePorts(): this {
+    const self = this;
+
+    return this;
+  }
+
+  addColor(colorKey: string): this {
+    const self = this;
+    const deep = getColor(colorKey, 800);
+    const light = getColor(colorKey, 100);
+
+    self.attr('body/stroke', light);
+    self.attr('statusLine/fill', deep);
+    self.attr('statusType/fill', deep);
+
+    return this;
+  }
+
+
+  hover(on: boolean): this {
+    const self = this;
+    self.attr('wrapper/strokeWidth', on ? 20 : 0);
+
+    return this;
+  }
+}
+
 export class NodeLink extends shapes.NodeLink {
   static create() {
     const link = new NodeLink();
@@ -174,7 +203,7 @@ export class NoctuaShapesService {
       noctua: {
         StencilNode: StencilNode,
         NodeCell: NodeCell,
-        NodeCellList: shapes.NodeCellList,
+        NodeCellList: NodeCellList,
         NodeLink: NodeLink
       }
     });

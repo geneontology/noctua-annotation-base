@@ -208,9 +208,23 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
   attrs: {
     'rect': { width: 200 },
 
-    '.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#3400db' },
-    '.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#FF80b9' },
-    '.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#0080b9' },
+    '.uml-class-name-rect': {
+      fill: '#ff8450',
+      stroke: '#fff',
+      'stroke-width': 0.5
+    },
+    '.uml-class-mf-rect': {
+      fill: '#fe976a',
+      stroke: '#fff',
+      'stroke-width': 0.5
+    },
+    '.uml-class-gp-rect': {
+      fill: '#fe976a',
+      stroke: '#fff',
+      'stroke-width': 0.5
+    },
+
+
 
     '.uml-class-name-text': {
       'ref': '.uml-class-name-rect',
@@ -223,32 +237,38 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       'font-size': 12,
       'font-family': 'Times New Roman'
     },
-    '.uml-class-attrs-text': {
-      'ref': '.uml-class-attrs-rect', 'ref-y': 5, 'ref-x': 5,
-      'fill': 'black', 'font-size': 12, 'font-family': 'Times New Roman'
+    '.uml-class-mf-text': {
+      'ref': '.uml-class-mf-rect',
+      'ref-y': 5, 'ref-x': 5,
+      'fill': 'black',
+      'font-size': 12,
+      'font-family': 'Times New Roman',
+      textWrap: {
+        ellipsis: false,
+      },
     },
-    '.uml-class-methods-text': {
-      'ref': '.uml-class-methods-rect', 'ref-y': 5, 'ref-x': 5,
+    '.uml-class-gp-text': {
+      'ref': '.uml-class-gp-rect', 'ref-y': 5, 'ref-x': 5,
       'fill': 'black', 'font-size': 12, 'font-family': 'Times New Roman'
     }
   },
 
   name: [],
   attributes: [],
-  methods: []
+  gp: []
 }, {
   markup: [
     '<g class="rotatable">',
     '<g class="scalable">',
-    '<rect class="uml-class-name-rect"/><rect class="uml-class-attrs-rect"/><rect class="uml-class-methods-rect"/>',
+    '<rect class="uml-class-name-rect"/><rect class="uml-class-mf-rect"/><rect class="uml-class-gp-rect"/>',
     '</g>',
-    '<text class="uml-class-name-text"/><text class="uml-class-attrs-text"/><text class="uml-class-methods-text"/>',
+    '<text class="uml-class-name-text"/><text class="uml-class-mf-text"/><text class="uml-class-gp-text"/>',
     '</g>'
   ].join(''),
 
   initialize: function () {
 
-    this.on('change:name change:attributes change:methods', function () {
+    this.on('change:name change:attributes change:gp', function () {
       this.updateRectangles();
       this.trigger('uml-update');
     }, this);
@@ -268,8 +288,8 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
 
     const rects = [
       { type: 'name', text: this.getClassName() },
-      { type: 'attrs', text: this.get('attributes') },
-      { type: 'methods', text: this.get('methods') }
+      { type: 'mf', text: this.get('mf') },
+      { type: 'gp', text: this.get('gp') }
     ];
 
     let offsetY = 0;

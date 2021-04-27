@@ -8,7 +8,7 @@ import {
     Triple
 } from 'noctua-form-base';
 import { NodeCellType } from '@noctua.graph/models/shapes';
-import { NodeCell, NodeLink, StencilNode } from '@noctua.graph/services/shapes.service';
+import { NodeCellList, NodeLink, StencilNode } from '@noctua.graph/services/shapes.service';
 import * as joint from 'jointjs';
 import { each, cloneDeep } from 'lodash';
 import { StencilItemNode } from '@noctua.graph/data/cam-stencil';
@@ -19,7 +19,7 @@ export class CamCanvas {
     canvasPaper: joint.dia.Paper;
     canvasGraph: joint.dia.Graph;
     selectedStencilElement;
-    elementOnClick: (element: joint.shapes.noctua.NodeCell) => void;
+    elementOnClick: (element: joint.shapes.noctua.NodeCellList) => void;
     linkOnClick: (element: joint.shapes.noctua.NodeLink) => void;
     onLinkCreated: (
         sourceId: string,
@@ -105,7 +105,7 @@ export class CamCanvas {
             'element:mouseover': function (cellView) {
                 const element = cellView.model;
                 if (element.get('type') === NodeCellType.cell) {
-                    (element as NodeCell).hover(true);
+                    (element as NodeCellList).hover(true);
                 }
             },
 
@@ -113,7 +113,7 @@ export class CamCanvas {
                 cellView.removeTools();
                 const element = cellView.model;
                 if (element.get('type') === NodeCellType.cell) {
-                    (element as NodeCell).hover(false);
+                    (element as NodeCellList).hover(false);
                 }
             },
             /* 'element:pointerup': function (elementView, evt, x, y) {
@@ -191,7 +191,7 @@ export class CamCanvas {
 
     }
 
-    createLinkFromElements(source: joint.shapes.noctua.NodeCell, target: joint.shapes.noctua.NodeCell) {
+    createLinkFromElements(source: joint.shapes.noctua.NodeCellList, target: joint.shapes.noctua.NodeCellList) {
         const self = this;
 
         const subject = source.get('activity') as Activity;
@@ -291,14 +291,24 @@ export class CamCanvas {
         //  self.canvasPaper.
     }
 
-    createNode(activity: Activity): NodeCell {
-        const el = new NodeCell()
+    createNode(activity: Activity): NodeCellList {
+        const el = new NodeCellList()
         //.addActivityPorts()
         // .addColor(activity.backgroundColor)
         //.setSuccessorCount(activity.successorCount)
+        const gpNode = activity.getGPNode();
+        const mfNode = activity.getMFNode();
 
-        el.attr({ nodeType: { text: activity.id ? activity.activityType : 'Activity Unity' } });
-        el.attr({ noctuaTitle: { text: activity.id ? activity.title : 'New Activity' } });
+        el.prop({ 'name': [activity.id ? activity.activityType : 'Activity Unity'] });
+
+        if (mfNode) {
+            el.prop({ 'mf': [mfNode.term.label] });
+        }
+
+        if (gpNode) {
+            el.prop({ 'gp': [gpNode.term.label, `(${gpNode.term.id})`] });
+        }
+
         el.attr({
             expand: {
                 event: 'element:expand:pointerdown',

@@ -7,7 +7,7 @@ import { CamStencil } from '../models/cam-stencil';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { Activity, ActivityType, Cam, CamService, CamsService, ConnectorPanel, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
-import { NodeLink, NodeCell, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
+import { NodeLink, NodeCellList, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
 import { noctuaStencil, StencilItemNode } from '@noctua.graph/data/cam-stencil';
@@ -26,10 +26,10 @@ export class CamGraphService {
   }[] = [];
 
 
-  selectedElement: joint.shapes.noctua.NodeCell | joint.shapes.noctua.NodeLink;
-  selectedStencilElement: joint.shapes.noctua.NodeCell;
+  selectedElement: joint.shapes.noctua.NodeCellList | joint.shapes.noctua.NodeLink;
+  selectedStencilElement: joint.shapes.noctua.NodeCellList;
 
-  placeholderElement: joint.shapes.noctua.NodeCell = new NodeCell();
+  placeholderElement: joint.shapes.noctua.NodeCellList = new NodeCellList();
 
   camCanvas: CamCanvas;
   camStencil: CamStencil;
@@ -96,7 +96,7 @@ export class CamGraphService {
     this.camCanvas.resetZoom();
   }
 
-  createActivity(element: joint.shapes.noctua.NodeCell, x: number, y: number) {
+  createActivity(element: joint.shapes.noctua.NodeCellList, x: number, y: number) {
     const self = this;
     const node = element.get('node') as StencilItemNode;
     const activity = self.noctuaFormConfigService.createActivityModel(node.type);
@@ -128,7 +128,7 @@ export class CamGraphService {
   }
 
 
-  openTable(element: joint.shapes.noctua.NodeCell) {
+  openTable(element: joint.shapes.noctua.NodeCellList) {
     const activity = element.prop('activity') as Activity
     this.selectedElement = element;
     // activity.type = element.get('type');
