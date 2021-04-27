@@ -37,4 +37,9 @@ export class NoctuaFormUtils {
         }
         return cleanId;
     }
+
+    public static splitAndAppend(str, delim, count) {
+        const arr = str.split(delim);
+        return [...arr.splice(0, count), arr.join(delim)];
+    }
 }
