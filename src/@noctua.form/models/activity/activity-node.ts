@@ -97,6 +97,7 @@ export class ActivityNode implements ActivityNodeDisplay {
   displayId: string;
   expandable: boolean = true;
   expanded: boolean = false;
+  causalNode: boolean = false;
 
   private _id: string;
 

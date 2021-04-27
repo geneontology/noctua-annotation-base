@@ -132,8 +132,8 @@
           </noc-cam-form>
           <noc-cam-table [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.camTable" [cam]="cam"
             [options]="tableOptions"></noc-cam-table>
-          <noc-activity-connector [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.connectorForm">
-          </noc-activity-connector>
+          <noc-triple-table [panelDrawer]="rightDrawer" [cam]="cam" *ngSwitchCase="RightPanel.tripleTable">
+          </noc-triple-table>
         </div>
       </mat-drawer>
     </mat-drawer-container>

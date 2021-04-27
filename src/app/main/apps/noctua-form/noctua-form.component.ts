@@ -52,8 +52,8 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   noctuaFormConfig = noctuaFormConfig;
 
   tableOptions: TableOptions = {
-    displayType: ActivityDisplayType.TREE_TABLE,
-    slimViewer: false,
+    displayType: ActivityDisplayType.TREE,
+    slimViewer: true,
     editableTerms: true,
     editableEvidence: true,
     editableReference: true,

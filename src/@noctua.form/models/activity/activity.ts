@@ -34,7 +34,7 @@ export enum ActivityType {
 
 export class ActivitySize {
   width: number = 150;
-  height: number = 100;
+  height: number = 120;
 
   constructor() {
 
@@ -129,6 +129,10 @@ export class Activity extends SaeGraph<ActivityNode> {
         }
       }
     }
+  }
+
+  getActivityTypeDetail() {
+    return noctuaFormConfig.activityType.options[this.activityType];
   }
 
   get rootNode(): ActivityNode {
@@ -444,7 +448,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     if (self.activityType === ActivityType.ccOnly) {
       title = gpText;
     } else {
-      title = `enabled by ${gpText}`;
+      title = `enabled by (${gpText})`;
     }
 
     return title;

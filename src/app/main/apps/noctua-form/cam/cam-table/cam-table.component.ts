@@ -15,7 +15,8 @@ import {
   NoctuaUserService,
   CamsService,
   CamRebuildSignal,
-  ActivityDisplayType
+  ActivityDisplayType,
+  CamDisplayType
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
@@ -35,6 +36,7 @@ import { MatDrawer } from '@angular/material/sidenav';
   ],
 })
 export class CamTableComponent implements OnInit, OnDestroy {
+  CamDisplayType = CamDisplayType;
   ActivityDisplayType = ActivityDisplayType;
   ActivityType = ActivityType;
   CamRebuildSignal = CamRebuildSignal;
@@ -90,6 +92,9 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
+  filterBy(camDisplayType: CamDisplayType) {
+    this.camService.onCamDisplayChanged.next(camDisplayType);
+  }
 
   addActivity() {
     this.openForm(location);
@@ -178,6 +183,5 @@ export class CamTableComponent implements OnInit, OnDestroy {
       this.panelDrawer.close();
     }
   }
-
 
 }

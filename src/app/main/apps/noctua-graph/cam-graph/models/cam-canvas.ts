@@ -299,14 +299,16 @@ export class CamCanvas {
         const gpNode = activity.getGPNode();
         const mfNode = activity.getMFNode();
 
-        el.prop({ 'name': [activity.id ? activity.activityType : 'Activity Unity'] });
+        const activityType = activity.getActivityTypeDetail();
+
+        el.prop({ 'name': [activityType ? activityType.label : 'Activity Unity'] });
 
         if (mfNode) {
-            el.prop({ 'mf': [mfNode.term.label] });
+            el.prop({ 'mf': [mfNode.term.label,] });
         }
 
         if (gpNode) {
-            el.prop({ 'gp': [gpNode.term.label, `(${gpNode.term.id})`] });
+            el.prop({ 'gp': [activity.title] });
         }
 
         el.attr({

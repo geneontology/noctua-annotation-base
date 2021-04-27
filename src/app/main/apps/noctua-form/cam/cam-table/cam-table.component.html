@@ -32,6 +32,7 @@
     <button mat-button class="" color="primary" (click)="storedModel(cam)">
       Stored
     </button> -->
+
     <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
       <mat-icon>more_vert</mat-icon>
     </button>
@@ -41,6 +42,12 @@
       </button>
       <button mat-menu-item class="" (click)="expandAll(false)">
         Collapse All
+      </button>
+      <button mat-menu-item class="" (click)="filterBy(CamDisplayType.CAUSAL_RELATIONS)">
+        Causal Connections
+      </button>
+      <button mat-menu-item class="" (click)="filterBy(CamDisplayType.ACTIVITY)">
+        Activities
       </button>
     </mat-menu>
 

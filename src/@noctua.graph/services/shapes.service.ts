@@ -85,7 +85,7 @@ export class NodeCellList extends shapes.NodeCellList {
 
   hover(on: boolean): this {
     const self = this;
-    self.attr('wrapper/strokeWidth', on ? 20 : 0);
+    self.attr('.wrapper/strokeWidth', on ? 20 : 0);
 
     return this;
   }

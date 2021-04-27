@@ -17,6 +17,7 @@ export {
 } from './activity';
 export {
     Cam,
+    CamDisplayType,
     CamRebuildSignal,
     CamOperation,
     CamRebuildRule,

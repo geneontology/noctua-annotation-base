@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-
-
 import * as ModelDefinition from './../data/config/model-definition';
 import * as EntityDefinition from './../data/config/entity-definition';
 
@@ -13,7 +11,7 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
 import { Activity, ActivityType, compareActivity } from './../models/activity/activity';
-import { find, each, differenceWith } from 'lodash';
+import { find, each, differenceWith, cloneDeep } from 'lodash';
 import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { ActivityNode } from './../models/activity/activity-node';
@@ -23,6 +21,7 @@ import { Entity } from './../models/activity/entity';
 import { Evidence } from './../models/activity/evidence';
 import { Predicate } from './../models/activity/predicate';
 import { Triple } from './../models/activity/triple';
+import { NoctuaFormUtils } from './../utils/noctua-form-utils';
 
 declare const require: any;
 
@@ -266,7 +265,7 @@ export class NoctuaGraphService {
     cam.activities = activities
     cam.applyFilter();
     cam.causalRelations = self.getCausalRelations(cam);
-    cam.connectorActivities = self.getConnectorActivities(cam)
+    //cam.connectorActivities = self.getConnectorActivities(cam)
     cam.setPreview();
     cam.updateActivityDisplayNumber();
 
@@ -568,8 +567,15 @@ export class NoctuaGraphService {
         if (causalEdge) {
           if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
             const objectActivity = cam.getActivityByConnectionId(objectId);
+            const subjectMF = subjectActivity.getMFNode();
+            const objectMF = cloneDeep(objectActivity.getMFNode())
             const predicate = new Predicate(causalEdge, evidence)
             const triple = new Triple<Activity>(subjectActivity, objectActivity, predicate);
+
+            objectMF.id = `${objectMF.type}'@@'${NoctuaFormUtils.generateGUID()}`;
+            objectMF.predicate = predicate;
+            subjectActivity.addNode(objectMF);
+            subjectActivity.addEdgeById(subjectMF.id, objectMF.id, predicate);
 
             triples.push(triple);
           }

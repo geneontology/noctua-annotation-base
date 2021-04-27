@@ -14,6 +14,11 @@ import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
 
+export enum CamDisplayType {
+  ACTIVITY = 'activity',
+  CAUSAL_RELATIONS = 'causal_relations',
+}
+
 export enum CamRebuildSignal {
   NONE = 'none',
   MERGE = 'merge',

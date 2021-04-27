@@ -19,5 +19,6 @@ export enum RightPanel {
     activityForm = 'activityForm',
     camForm = 'camForm',
     camTable = 'camTable',
+    tripleTable = 'tripleTable',
     connectorForm = 'connectorForm'
 }
