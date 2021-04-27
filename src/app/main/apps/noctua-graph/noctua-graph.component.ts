@@ -69,8 +69,8 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   cams: any[] = [];
 
   tableOptions: TableOptions = {
-    displayType: ActivityDisplayType.TREE,
-    slimViewer: true,
+    displayType: ActivityDisplayType.SLIM_TREE,
+    slimViewer: false,
     editableTerms: true,
     editableEvidence: true,
     editableReference: true,

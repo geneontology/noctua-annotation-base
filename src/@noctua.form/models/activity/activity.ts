@@ -23,7 +23,8 @@ export enum ActivityState {
 export enum ActivityDisplayType {
   TABLE = 'table',
   TREE = 'tree',
-  TREE_TABLE = 'tree_table' //for ART
+  TREE_TABLE = 'tree_table', //for ART
+  SLIM_TREE = 'slim_tree',
 }
 
 export enum ActivityType {
@@ -83,6 +84,8 @@ export class Activity extends SaeGraph<ActivityNode> {
   //Graph
   position: ActivityPosition = new ActivityPosition();
   size: ActivitySize = new ActivitySize();
+  private _backgroundColor = 'green'
+
 
   private _presentation: any;
   private _grid: any[] = [];
@@ -103,6 +106,17 @@ export class Activity extends SaeGraph<ActivityNode> {
   set id(id: string) {
     this._id = id;
     this.displayId = NoctuaFormUtils.cleanID(id) + 'activity';
+  }
+
+  get backgroundColor() {
+    switch (this.activityType) {
+      case ActivityType.ccOnly:
+        return 'purple'
+      case ActivityType.bpOnly:
+        return 'brown'
+      default:
+        return this._backgroundColor;
+    }
   }
 
   get activityConnections() {

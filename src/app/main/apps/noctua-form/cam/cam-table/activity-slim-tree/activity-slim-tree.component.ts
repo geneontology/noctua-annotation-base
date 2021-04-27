@@ -37,12 +37,12 @@ import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/co
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'noc-activity-tree',
-  templateUrl: './activity-tree.component.html',
-  styleUrls: ['./activity-tree.component.scss'],
+  selector: 'noc-activity-slim-tree',
+  templateUrl: './activity-slim-tree.component.html',
+  styleUrls: ['./activity-slim-tree.component.scss'],
   animations: noctuaAnimations
 })
-export class ActivityTreeComponent implements OnInit, OnDestroy {
+export class ActivitySlimTreeComponent implements OnInit, OnDestroy {
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
   camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;

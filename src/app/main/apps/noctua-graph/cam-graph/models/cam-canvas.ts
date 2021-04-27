@@ -294,7 +294,7 @@ export class CamCanvas {
     createNode(activity: Activity): NodeCellList {
         const el = new NodeCellList()
         //.addActivityPorts()
-        // .addColor(activity.backgroundColor)
+        el.addColor(activity.backgroundColor)
         //.setSuccessorCount(activity.successorCount)
         const gpNode = activity.getGPNode();
         const mfNode = activity.getMFNode();

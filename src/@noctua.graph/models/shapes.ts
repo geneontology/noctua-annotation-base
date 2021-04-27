@@ -39,7 +39,7 @@ const portAttrs = {
 };
 
 export const StencilNode = joint.dia.Element.define('noctua.StencilNode', {
-  size: { width: 90, height: 110 },
+  size: { width: 90, height: 100 },
   attrs: {
     body: {
       refWidth: '100%',
@@ -213,23 +213,23 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       magnet: true,
       refWidth: '100%',
       refHeight: '100%',
-      // fill: '#FF0000',
+      fill: 'transparent',
       stroke: 'rgba(0,0,255,0.3)',
     },
     'rect': { width: 300 },
 
     '.activity-name-rect': {
-      fill: '#ff8450',
+      fill: '#d5d2d5',
       stroke: '#fff',
       'stroke-width': 0.5
     },
     '.activity-mf-rect': {
-      fill: '#fe976a',
+      fill: '#d5fdd5',
       stroke: '#fff',
       'stroke-width': 0.5
     },
     '.activity-gp-rect': {
-      fill: '#fe976a',
+      fill: '#d5fdd5',
       stroke: '#fff',
       'stroke-width': 0.5
     },
@@ -273,8 +273,8 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
 }, {
   markup: [
 
-    '<g class="rotatable">',
     '<rect class="wrapper"/>',
+    '<g class="rotatable">',
     '<g class="scalable">',
     '<rect class="activity-name-rect"/><rect class="activity-mf-rect"/><rect class="activity-gp-rect"/>',
     '</g>',

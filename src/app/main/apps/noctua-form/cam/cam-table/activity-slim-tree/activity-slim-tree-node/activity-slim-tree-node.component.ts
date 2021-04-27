@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { noctuaAnimations } from './../../../../../../../@noctua/animations';
-import { NoctuaFormDialogService } from './../../../services/dialog.service';
+import { noctuaAnimations } from './../../../../../../../../@noctua/animations';
+import { NoctuaFormDialogService } from './../../../../services/dialog.service';
 
 import {
   NoctuaFormConfigService,
@@ -15,10 +15,7 @@ import {
   NoctuaUserService,
   NoctuaFormMenuService,
   CamsService,
-  ActivityType,
-  ActivityTreeNode,
-  CamDisplayType,
-  ActivityNodeType
+  ActivityType
 } from 'noctua-form-base';
 
 import {
@@ -32,60 +29,45 @@ import { EditorCategory } from '@noctua.editor/models/editor-category';
 import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
-import { takeUntil } from 'rxjs/operators';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'noc-activity-tree',
-  templateUrl: './activity-tree.component.html',
-  styleUrls: ['./activity-tree.component.scss'],
+  selector: 'noc-activity-slim-tree-node',
+  templateUrl: './activity-slim-tree-node.component.html',
+  styleUrls: ['./activity-slim-tree-node.component.scss'],
   animations: noctuaAnimations
 })
-export class ActivityTreeComponent implements OnInit, OnDestroy {
+export class ActivitySlimTreeNodeComponent implements OnInit, OnDestroy {
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
   camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
   activityTypeOptions = noctuaFormConfig.activityType.options;
 
-  treeNodes: ActivityTreeNode[] = [];
-
-  @ViewChild('tree') tree;
 
   @Input('cam')
-  cam: Cam
+  cam: Cam;
 
   @Input('activity')
-  activity: Activity
+  activity: Activity;
+
+  @Input('entity')
+  entity: ActivityNode;
 
   @Input('options')
   options: any = {};
 
+  relationWidth = '0px';
+
   optionsDisplay: any = {}
 
-  gpNode: ActivityNode;
   editableTerms = false;
   currentMenuEvent: any = {};
-  treeControl = new FlatTreeControl<ActivityNode>(
-    node => node.treeLevel, node => node.expandable);
 
-  treeOptions = {
-    allowDrag: false,
-    allowDrop: false,
-    // levelPadding: 15,
-    getNodeClone: (node) => ({
-      ...node.data,
-      //id: uuid.v4(),
-      name: `Copy of ${node.data.name}`
-    })
-  };
-
-  private _unsubscribeAll: Subject<any>;
+  private unsubscribeAll: Subject<any>;
 
   constructor(
     private camService: CamService,
     public camsService: CamsService,
-    private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -93,74 +75,21 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
     public noctuaActivityEntityService: NoctuaActivityEntityService,
     public noctuaActivityFormService: NoctuaActivityFormService,
     private inlineEditorService: InlineEditorService) {
-
-    this._unsubscribeAll = new Subject();
+    this.unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
 
-    this.camService.onCamDisplayChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((camDisplayType: CamDisplayType) => {
-        if (!camDisplayType || !this.tree) {
-          return;
-        }
-        this.filterByDisplayType(camDisplayType)
-      });
-
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }
-    this.gpNode = this.activity.getGPNode();
 
     this.optionsDisplay = { ...this.options, hideHeader: true };
-
-    this.treeNodes = this.activity.buildTrees();
+    this.relationWidth = 150 - (this.entity.treeLevel) * 16 + 'px';
   }
-
-  filterByDisplayType(camDisplayType: CamDisplayType) {
-    const self = this;
-
-    switch (camDisplayType) {
-      case CamDisplayType.ACTIVITY:
-        self.tree.treeModel.filterNodes((node) => {
-          const activityNode = node.data.node as ActivityNode
-          return !activityNode.causalNode;
-        });
-        break;
-      case CamDisplayType.CAUSAL_RELATIONS:
-        self.tree.treeModel.filterNodes((node) => {
-          const activityNode = node.data.node as ActivityNode
-          return activityNode.type === ActivityNodeType.GoMolecularFunction;
-        });
-        break;
-      case CamDisplayType.ALL:
-        self.tree.treeModel.filterNodes((node) => {
-          return true
-        });
-        break;
-    }
-  }
-
-
-  ngOnDestroy(): void {
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
-  }
-
-  onTreeLoad() {
-    this.tree.treeModel.expandAll();
-  }
-
-  hasChild = (_: number, node: ActivityNode) => node.expandable;
-
 
   toggleExpand(activity: Activity) {
     activity.expanded = !activity.expanded;
-  }
-
-  toggleNodeExpand(node: ActivityNode) {
-    node.expanded = !node.expanded;
   }
 
   displayCamErrors() {
@@ -305,27 +234,10 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
     this.currentMenuEvent = event;
   }
 
-  deleteActivity(activity: Activity) {
-    const self = this;
-
-    const success = () => {
-      this.camService.deleteActivity(activity).then(() => {
-        self.noctuaFormDialogService.openInfoToast('Activity successfully deleted.', 'OK');
-      });
-    };
-
-    if (!self.noctuaUserService.user) {
-      this.confirmDialogService.openConfirmDialog('Not Logged In',
-        'Please log in to continue.',
-        null);
-    } else {
-      this.confirmDialogService.openConfirmDialog('Confirm Delete?',
-        'You are about to delete an activity.',
-        success);
-    }
+  ngOnDestroy(): void {
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
   }
-
-
 
   cleanId(dirtyId: string) {
     return NoctuaUtils.cleanID(dirtyId);

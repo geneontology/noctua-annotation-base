@@ -72,12 +72,12 @@ export class NodeCellList extends shapes.NodeCellList {
 
   addColor(colorKey: string): this {
     const self = this;
-    const deep = getColor(colorKey, 800);
+    const deep = getColor(colorKey, 200);
     const light = getColor(colorKey, 100);
 
-    self.attr('body/stroke', light);
-    self.attr('statusLine/fill', deep);
-    self.attr('statusType/fill', deep);
+    self.attr('.activity-name-rect/fill', deep);
+    self.attr('.activity-mf-rect/fill', light);
+    self.attr('.activity-gp-rect/fill', light);
 
     return this;
   }

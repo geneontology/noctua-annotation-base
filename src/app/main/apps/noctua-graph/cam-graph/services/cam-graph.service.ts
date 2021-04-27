@@ -6,7 +6,7 @@ import { CamCanvas } from '../models/cam-canvas';
 import { CamStencil } from '../models/cam-stencil';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Activity, ActivityType, Cam, CamService, CamsService, ConnectorPanel, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
+import { Activity, ActivityType, Cam, CamDisplayType, CamService, CamsService, ConnectorPanel, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
 import { NodeLink, NodeCellList, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
@@ -135,9 +135,12 @@ export class CamGraphService {
     this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
     this.noctuaCommonMenuService.openRightDrawer();
 
+
     activity.expanded = true;
     this._camsService.currentMatch.activityDisplayId = activity.displayId;
     const q = `#${activity.displayId}`;
+
+    this._camService.onCamDisplayChanged.next(CamDisplayType.ACTIVITY);
     this.noctuaCommonMenuService.scrollTo(q);
   }
 
@@ -147,12 +150,20 @@ export class CamGraphService {
     const source = element.get('source');
     const target = element.get('source');
 
-    if (!source || !target) return
-    self._activityConnectorService.initializeForm(source.id, target.id);
-    self._activityConnectorService.selectPanel(ConnectorPanel.FORM)
 
-    this.noctuaCommonMenuService.selectRightPanel(RightPanel.tripleTable);
+
+    if (!source || !target) return
+    const subjectActivity = this.cam.getActivityByConnectionId(source.id);
+
+    this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
     this.noctuaCommonMenuService.openRightDrawer();
+
+    subjectActivity.expanded = true;
+    this._camsService.currentMatch.activityDisplayId = subjectActivity.displayId;
+    const q = `#${subjectActivity.displayId}`;
+
+    this._camService.onCamDisplayChanged.next(CamDisplayType.CAUSAL_RELATIONS);
+    this.noctuaCommonMenuService.scrollTo(q);
 
   }
 

@@ -17,6 +17,7 @@ import { PendingChange } from './pending-change';
 export enum CamDisplayType {
   ACTIVITY = 'activity',
   CAUSAL_RELATIONS = 'causal_relations',
+  ALL = 'all'
 }
 
 export enum CamRebuildSignal {
