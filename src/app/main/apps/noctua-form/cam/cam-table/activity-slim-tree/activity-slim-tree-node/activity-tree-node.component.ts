@@ -30,6 +30,7 @@ import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { MatTableDataSource } from '@angular/material/table';
+import { SettingsOptions } from '@noctua.common/models/graph-settings';
 
 @Component({
   selector: 'noc-activity-slim-tree-node',
@@ -43,6 +44,8 @@ export class ActivitySlimTreeNodeComponent implements OnInit, OnDestroy {
   camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
   activityTypeOptions = noctuaFormConfig.activityType.options;
 
+  @Input('settings')
+  settings: SettingsOptions
 
   @Input('cam')
   cam: Cam;

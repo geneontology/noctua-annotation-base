@@ -28,6 +28,7 @@ import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review
 import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
 import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { TableOptions } from '@noctua.common/models/table-options';
+import { NoctuaGraphDialogService } from './services/dialog.service';
 
 @Component({
   selector: 'noc-noctua-graph',
@@ -90,6 +91,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private camService: CamService,
     public camsService: CamsService,
+    private graphDialogService: NoctuaGraphDialogService,
     public noctuaActivityFormService: NoctuaActivityFormService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -169,6 +171,11 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     this.noctuaCommonMenuService.createModel(type);
   }
 
+  openSettings() {
+    this.graphDialogService.openGraphSettingsDialog()
+  }
+
+
 
 
   search() {
@@ -187,12 +194,14 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   openCamForm() {
     this.camService.initializeForm(this.cam);
     this.noctuaCommonMenuService.selectedLeftPanel(LeftPanel.camForm);
+    this.noctuaCommonMenuService.closeRightDrawer();
     this.noctuaCommonMenuService.openLeftDrawer();
   }
 
   openActivityForm(activityType: ActivityType) {
     this.noctuaActivityFormService.setActivityType(activityType);
     this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.activityForm);
+    this.noctuaCommonMenuService.closeRightDrawer();
     this.noctuaCommonMenuService.openLeftDrawer();
   }
 

@@ -133,6 +133,7 @@ export class CamGraphService {
     this.selectedElement = element;
     // activity.type = element.get('type');
     this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
+    this.noctuaCommonMenuService.closeLeftDrawer();
     this.noctuaCommonMenuService.openRightDrawer();
 
 
@@ -156,6 +157,7 @@ export class CamGraphService {
     const subjectActivity = this.cam.getActivityByConnectionId(source.id);
 
     this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
+    this.noctuaCommonMenuService.closeLeftDrawer();
     this.noctuaCommonMenuService.openRightDrawer();
 
     subjectActivity.expanded = true;

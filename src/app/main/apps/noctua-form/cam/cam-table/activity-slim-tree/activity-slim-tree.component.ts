@@ -35,6 +35,8 @@ import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { takeUntil } from 'rxjs/operators';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { SettingsOptions } from '@noctua.common/models/graph-settings';
 
 @Component({
   selector: 'noc-activity-slim-tree',
@@ -49,6 +51,8 @@ export class ActivitySlimTreeComponent implements OnInit, OnDestroy {
   activityTypeOptions = noctuaFormConfig.activityType.options;
 
   treeNodes: ActivityTreeNode[] = [];
+
+  settings: SettingsOptions = new SettingsOptions()
 
   @ViewChild('tree') tree;
 
@@ -85,6 +89,7 @@ export class ActivitySlimTreeComponent implements OnInit, OnDestroy {
   constructor(
     private camService: CamService,
     public camsService: CamsService,
+    private noctuaCommonMenuService: NoctuaCommonMenuService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
@@ -106,6 +111,15 @@ export class ActivitySlimTreeComponent implements OnInit, OnDestroy {
           return;
         }
         this.filterByDisplayType(camDisplayType)
+      });
+
+    this.noctuaCommonMenuService.onCamSettingsChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((settings: SettingsOptions) => {
+        if (!settings) {
+          return;
+        }
+        this.settings = settings;
       });
 
     if (this.options?.editableTerms) {

@@ -5,11 +5,14 @@ import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
 import { NoctuaGraphService, NoctuaUserService } from 'noctua-form-base';
 import { LeftPanel, MiddlePanel, RightPanel } from './../models/menu-panels';
 import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaCommonMenuService {
+
+  onCamSettingsChanged: BehaviorSubject<any>;
   selectedLeftPanel;
   selectedMiddlePanel;
   selectedRightPanel;
@@ -23,6 +26,7 @@ export class NoctuaCommonMenuService {
     private _noctuaGraphService: NoctuaGraphService,
     private noctuaUserService: NoctuaUserService) {
 
+    this.onCamSettingsChanged = new BehaviorSubject(null);
   }
 
   createModel(type: 'graph-editor' | 'noctua-form') {

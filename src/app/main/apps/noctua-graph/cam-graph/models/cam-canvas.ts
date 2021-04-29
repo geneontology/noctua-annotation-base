@@ -97,15 +97,25 @@ export class CamCanvas {
 
         });
 
+        self.canvasPaper.on('blank:pointerclick', function () {
+            // Remove all Highlighters from all cells
+            self.unhighlightAll();
+        });
+
         this.canvasPaper.on({
             'element:pointerdblclick': function (cellView) {
                 const element = cellView.model;
                 self.elementOnClick(element);
+
+                self.unhighlightAll();
+
             },
             'element:mouseover': function (cellView) {
                 const element = cellView.model;
                 if (element.get('type') === NodeCellType.cell) {
-                    (element as NodeCellList).hover(true);
+                    const cell = element as NodeCellList
+                    cell.hover(true);
+                    self.highlightSuccessorNodes(cell)
                 }
             },
 
@@ -114,6 +124,7 @@ export class CamCanvas {
                 const element = cellView.model;
                 if (element.get('type') === NodeCellType.cell) {
                     (element as NodeCellList).hover(false);
+                    self.unhighlightAllNodes()
                 }
             },
             /* 'element:pointerup': function (elementView, evt, x, y) {
@@ -147,7 +158,7 @@ export class CamCanvas {
             const link = linkView.model;
 
             self.linkOnClick(link);
-
+            self.unhighlightAll();
         });
 
         this.canvasPaper.on('element:expand:pointerdown', function (elementView: joint.dia.ElementView, evt) {
@@ -189,6 +200,37 @@ export class CamCanvas {
 
         // link.findView(this).addTools(tools);
 
+    }
+
+    highlightSuccessorNodes(node: NodeCellList) {
+        const self = this;
+
+        self.unhighlightAllNodes()
+
+        const successors = self.canvasGraph.getSuccessors(node)
+
+        node.addColor('teal')
+        each(successors, (successor: NodeCellList) => {
+            successor.addColor('teal')
+        })
+
+    }
+
+    unhighlightAllNodes() {
+        const self = this;
+        each(self.canvasGraph.getCells(), (cell: NodeCellList) => {
+            if (cell.get('type') === NodeCellType.cell) {
+                const activity = cell.prop('activity') as Activity
+                cell.addColor(activity.backgroundColor);
+            }
+
+        })
+    }
+
+    unhighlightAll() {
+        const self = this;
+        self.canvasGraph.getCells().forEach(function (cell) {
+        });
     }
 
     createLinkFromElements(source: joint.shapes.noctua.NodeCellList, target: joint.shapes.noctua.NodeCellList) {
@@ -260,6 +302,8 @@ export class CamCanvas {
     resetZoom() {
         this.zoom(1);
     };
+
+
 
     toggleActivityVisibility(cell: joint.dia.Element, activity: Activity) {
         const self = this;
@@ -370,6 +414,22 @@ export class CamCanvas {
         self._layoutGraph(self.canvasGraph);
         self.canvasPaper.unfreeze();
         self.canvasPaper.render();
+
+        /*    each(self.canvasGraph.getCells(), (cell: any) => {
+   
+               self.mask.add(
+                   cell.findView(self.canvasPaper),
+                   { selector: 'body' },
+                   'example-id',
+                   {
+                       layer: 'back',
+                       attrs: {
+                           'stroke': '#4666E5',
+                           'stroke-width': 3,
+                           'stroke-linejoin': 'round'
+                       }
+                   });
+           }); */
     }
 
     addStencilGraph(graph: joint.dia.Graph, activities: Activity[]) {
