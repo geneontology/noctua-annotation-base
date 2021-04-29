@@ -27,7 +27,9 @@ export class NoctuaCommonMenuService {
     private _noctuaGraphService: NoctuaGraphService,
     private noctuaUserService: NoctuaUserService) {
 
-    this.onCamSettingsChanged = new BehaviorSubject(new SettingsOptions());
+    const settings = new SettingsOptions()
+    settings.graphSettings()
+    this.onCamSettingsChanged = new BehaviorSubject(settings);
   }
 
   createModel(type: 'graph-editor' | 'noctua-form') {

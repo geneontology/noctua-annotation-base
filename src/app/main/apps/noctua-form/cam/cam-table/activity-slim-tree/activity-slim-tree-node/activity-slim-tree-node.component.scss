@@ -26,15 +26,26 @@ $accent: map-get($theme, accent);
       @include deep-width(initial);
     }
     .noc-term-cell {
-      @include deep-width(400px);
-      color: #d5fdd5;
+      @include deep-width(200px);
+    }
+
+    .evidence-summary-cell {
+      @include deep-width(80px);
+      text-align: center;
+      font-size: 10px;
+      .noc-no-info {
+        padding: 3px 8px;
+        font-size: 10px;
+        font-style: italic;
+        color: #aaa;
+      }
     }
 
     .noc-evidence-cell {
-      @include deep-width(600px);
+      @include deep-width(initial);
 
       @include noc-media-breakpoint("noc-lg") {
-        @include deep-width(450px);
+        @include deep-width(initial);
       }
     }
 

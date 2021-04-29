@@ -15,7 +15,7 @@ $accent: map-get($theme, accent);
     }
   }
   .noc-gp {
-    width: 500px;
+    width: 250px;
     line-height: 12px;
     @include deep-height(30px);
     // display: inline-block !important;

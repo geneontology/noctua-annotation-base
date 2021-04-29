@@ -29,6 +29,7 @@ import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfe
 import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { TableOptions } from '@noctua.common/models/table-options';
 import { NoctuaGraphDialogService } from './services/dialog.service';
+import { SettingsOptions } from '@noctua.common/models/graph-settings';
 
 @Component({
   selector: 'noc-noctua-graph',
@@ -48,10 +49,14 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(PerfectScrollbarDirective, { static: false })
   scrollbarRef?: PerfectScrollbarDirective;
 
+  settings: SettingsOptions;
+  tableWidth = "500px";
+
   loadingSpinner: any = {
     color: 'primary',
     mode: 'indeterminate'
   };
+
 
   ActivityType = ActivityType;
   ReviewMode = ReviewMode;
@@ -125,6 +130,16 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.noctuaCommonMenuService.setLeftDrawer(this.leftDrawer);
     this.noctuaCommonMenuService.setRightDrawer(this.rightDrawer);
+
+    this.noctuaCommonMenuService.onCamSettingsChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((settings: SettingsOptions) => {
+        if (!settings) {
+          return;
+        }
+        this.settings = settings;
+        this.tableWidth = this.getTableWidth(settings);
+      });
   }
 
   ngAfterViewInit(): void {
@@ -175,7 +190,20 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     this.graphDialogService.openGraphSettingsDialog()
   }
 
+  getTableWidth(settings: SettingsOptions) {
+    let width = 500;
 
+    if (settings.showEvidence) {
+      width += settings.showEvidenceCode ? 150 : 0
+      width += settings.showReference ? 100 : 0
+      width += settings.showWith ? 100 : 0
+      width += settings.showGroup ? 100 : 0
+      width += settings.showContributor ? 100 : 0
+
+    }
+
+    return width + 'px'
+  }
 
 
   search() {

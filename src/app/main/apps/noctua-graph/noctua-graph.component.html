@@ -130,8 +130,10 @@
           [perfectScrollbar]="scrollbarConfig">
           <noc-cam-form [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.camForm">
           </noc-cam-form>
-          <noc-cam-table [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.camTable" [cam]="cam"
-            [options]="tableOptions"></noc-cam-table>
+          <noc-cam-table [ngStyle]="{width:tableWidth}" [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.camTable"
+            [cam]="cam" [options]="tableOptions"></noc-cam-table>
+
+
           <noc-triple-table [panelDrawer]="rightDrawer" [cam]="cam" *ngSwitchCase="RightPanel.tripleTable">
           </noc-triple-table>
         </div>

@@ -12,9 +12,18 @@
   <div class="noc-dialog-body noc-form-section" noctuaPerfectScrollbar>
     <form *ngIf="settingsForm" fxLayout="column" fxLayoutAlign="start stretch" name="settingsForm"
       [formGroup]="settingsForm">
+      <h2>Columns</h2>
       <mat-checkbox formControlName="showEvidence" class="noc-checkbox" color="primary">Show Evidence
       </mat-checkbox>
+      <mat-checkbox formControlName="showEvidenceCode" class="noc-checkbox" color="primary">Show Evidence Code
+      </mat-checkbox>
       <mat-checkbox formControlName="showReference" class="noc-checkbox" color="primary">Show Reference
+      </mat-checkbox>
+      <mat-checkbox formControlName="showWith" class="noc-checkbox" color="primary">Show With/From
+      </mat-checkbox>
+      <mat-checkbox formControlName="showGroup" class="noc-checkbox" color="primary">Show Group
+      </mat-checkbox>
+      <mat-checkbox formControlName="showContributor" class="noc-checkbox" color="primary">Show Contributor
       </mat-checkbox>
     </form>
   </div>
