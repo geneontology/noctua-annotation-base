@@ -11,7 +11,9 @@ import {
   CamService,
   CamsService,
   Activity,
-  ActivityDisplayType
+  ActivityDisplayType,
+  ActivityType,
+  NoctuaActivityFormService
 } from 'noctua-form-base';
 
 import { FormGroup } from '@angular/forms';
@@ -50,6 +52,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     mode: 'indeterminate'
   };
 
+  ActivityType = ActivityType;
   ReviewMode = ReviewMode;
   LeftPanel = LeftPanel;
   MiddlePanel = MiddlePanel;
@@ -87,6 +90,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private camService: CamService,
     public camsService: CamsService,
+    public noctuaActivityFormService: NoctuaActivityFormService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
@@ -178,6 +182,18 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
 
   reset() {
     this.noctuaSearchService.clearSearchCriteria();
+  }
+
+  openCamForm() {
+    this.camService.initializeForm(this.cam);
+    this.noctuaCommonMenuService.selectedLeftPanel(LeftPanel.camForm);
+    this.noctuaCommonMenuService.openLeftDrawer();
+  }
+
+  openActivityForm(activityType: ActivityType) {
+    this.noctuaActivityFormService.setActivityType(activityType);
+    this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.activityForm);
+    this.noctuaCommonMenuService.openLeftDrawer();
   }
 
   ngOnDestroy(): void {

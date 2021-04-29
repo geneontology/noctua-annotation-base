@@ -6,7 +6,9 @@ export enum LeftPanel {
     organism = 'organism',
     history = 'history',
     replace = 'replace',
-    artBasket = 'artBasket'
+    artBasket = 'artBasket',
+    activityForm = 'activityForm',
+    camForm = 'camForm'
 };
 
 export enum MiddlePanel {

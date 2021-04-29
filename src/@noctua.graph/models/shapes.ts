@@ -39,13 +39,13 @@ const portAttrs = {
 };
 
 export const StencilNode = joint.dia.Element.define('noctua.StencilNode', {
-  size: { width: 90, height: 100 },
+  size: { width: 80, height: 80 },
   attrs: {
     body: {
       refWidth: '100%',
       refHeight: '100%',
       fill: '#FFFFFF',
-      stroke: 'black'
+      stroke: '#AAAAAA'
     },
     iconBackground: {
       ref: 'icon',
@@ -54,26 +54,26 @@ export const StencilNode = joint.dia.Element.define('noctua.StencilNode', {
       fill: 'transparent'
     },
     icon: {
-      x: 5,
-      y: 5,
+      x: 0,
+      y: 10,
       refWidth: '100%',
-      height: 60,
+      height: 50,
     },
     label: {
-      y: 85,
+      y: 70,
       height: '30px',
       refX: '50%',
       // refY: '50%',
       // refY2: 10,
-      fill: '#555555',
+      fill: '#000',
       textAnchor: 'middle',
       textVerticalAnchor: 'middle',
       //fontWeight: 'bold',
       fontFamily: 'sans-serif',
-      fontSize: 12,
+      fontSize: 8,
       textWrap: {
         ellipsis: false,
-        width: '90%'
+        width: '95%'
       }
     }
   }
@@ -233,9 +233,6 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       stroke: '#fff',
       'stroke-width': 0.5
     },
-
-
-
     '.activity-name-text': {
       'ref': '.activity-name-rect',
       'ref-y': .5,

@@ -115,7 +115,10 @@
       autosize>
       <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>
         <div [ngSwitch]="noctuaCommonMenuService.selectedLeftPanel" class="h-100-p">
-
+          <noc-cam-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.camForm">
+          </noc-cam-form>
+          <noc-activity-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.activityForm">
+          </noc-activity-form>
         </div>
       </mat-drawer>
       <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">

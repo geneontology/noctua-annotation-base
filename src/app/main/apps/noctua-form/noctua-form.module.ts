@@ -59,7 +59,7 @@ import { ActivityTreeNodeComponent } from './cam/cam-table/activity-tree/activit
 import { CreateActivityDialogComponent } from './dialogs/create-activity/create-activity.component';
 import { ActivityTreeTableComponent } from './cam/cam-table/activity-tree-table/activity-tree-table.component';
 import { ActivitySlimTreeComponent } from './cam/cam-table/activity-slim-tree/activity-slim-tree.component';
-import { ActivitySlimTreeNodeComponent } from './cam/cam-table/activity-slim-tree/activity-slim-tree-node/activity-slim-tree-node.component';
+import { ActivitySlimTreeNodeComponent } from './cam/cam-table/activity-slim-tree/activity-slim-tree-node/activity-tree-node.component';
 
 const routes = [
   {
