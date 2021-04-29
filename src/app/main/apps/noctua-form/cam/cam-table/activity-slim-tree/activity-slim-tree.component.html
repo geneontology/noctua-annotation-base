@@ -35,6 +35,11 @@
       </mat-chip>
     </div>
     <span fxFlex=""></span>
+    <button mat-icon-button (click)="setActivityDisplayType(ActivityDisplayType.GRAPH)"
+      class="noc-rounded-button noc-sm " matTooltip="Activity Graph Preview" [matTooltipPosition]="'after'"
+      [matTooltipShowDelay]="1000">
+      <fa-icon [icon]="['fas', 'sitemap']"></fa-icon>
+    </button>
     <!--
 <div *ngIf="!options.reviewMode" class="" fxFlex="200px" fxLayout="row" fxLayoutAlign="end center">
   <button *ngIf="activity.activityType !==ActivityType.ccOnly" mat-stroked-button
@@ -60,7 +65,7 @@
 </div>-->
   </div>
   <div *ngIf="activity.expanded" class="noc-tree-container">
-    <div class="noc-tree">
+    <div *ngIf="activity.activityDisplayType!==ActivityDisplayType.GRAPH" class="noc-tree">
       <tree-root #tree (initialized)="onTreeLoad()" [nodes]="treeNodes" [options]="treeOptions">
         <ng-template #treeNodeWrapperTemplate let-node let-index="index">
           <div class="node-wrapper noc-tree-node" fxLayout="row" fxLayoutAlign="start center"
@@ -95,6 +100,10 @@
           </div>
         </ng-template>
       </tree-root>
+    </div>
+    <div *ngIf="activity.activityDisplayType===ActivityDisplayType.GRAPH">
+      <noc-preview-activity [activity]='activity'>
+      </noc-preview-activity>
     </div>
   </div>
 </div>

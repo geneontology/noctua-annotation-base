@@ -575,6 +575,7 @@ export class NoctuaGraphService {
             objectMF.id = `${objectMF.type}'@@'${NoctuaFormUtils.generateGUID()}`;
             objectMF.predicate = predicate;
             objectMF.causalNode = true;
+            objectMF.treeLevel = 2;
             subjectActivity.addNode(objectMF);
             subjectActivity.addEdgeById(subjectMF.id, objectMF.id, predicate);
 

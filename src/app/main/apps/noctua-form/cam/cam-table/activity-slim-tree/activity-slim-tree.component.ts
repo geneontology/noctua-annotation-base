@@ -18,7 +18,8 @@ import {
   ActivityType,
   ActivityTreeNode,
   CamDisplayType,
-  ActivityNodeType
+  ActivityNodeType,
+  ActivityDisplayType
 } from 'noctua-form-base';
 
 import {
@@ -45,6 +46,7 @@ import { SettingsOptions } from '@noctua.common/models/graph-settings';
   animations: noctuaAnimations
 })
 export class ActivitySlimTreeComponent implements OnInit, OnDestroy {
+  ActivityDisplayType = ActivityDisplayType;
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
   camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
@@ -166,8 +168,9 @@ export class ActivitySlimTreeComponent implements OnInit, OnDestroy {
     this.tree.treeModel.expandAll();
   }
 
-  hasChild = (_: number, node: ActivityNode) => node.expandable;
-
+  setActivityDisplayType(displayType: ActivityDisplayType) {
+    this.activity.activityDisplayType = displayType;
+  }
 
   toggleExpand(activity: Activity) {
     activity.expanded = !activity.expanded;

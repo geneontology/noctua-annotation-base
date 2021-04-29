@@ -25,6 +25,7 @@ export enum ActivityDisplayType {
   TREE = 'tree',
   TREE_TABLE = 'tree_table', //for ART
   SLIM_TREE = 'slim_tree',
+  GRAPH = 'graph'
 }
 
 export enum ActivityType {
@@ -72,6 +73,7 @@ export class Activity extends SaeGraph<ActivityNode> {
   /**
    * Used for HTML id attribute
    */
+  activityDisplayType: ActivityDisplayType = ActivityDisplayType.TREE;
   displayId: string;
   displayNumber = '1';
 

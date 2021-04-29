@@ -216,7 +216,14 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       fill: 'transparent',
       stroke: 'rgba(0,0,255,0.3)',
     },
-    'rect': { width: 300 },
+    '.highlighter': {
+      refWidth: '100%',
+      refHeight: '100%',
+      fill: 'none',
+      stroke: 'transparent',
+      'stroke-width': 10,
+    },
+    'rect': { width: 300, },
 
     '.activity-name-rect': {
       fill: '#d5d2d5',
@@ -271,6 +278,7 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
   markup: [
 
     '<rect class="wrapper"/>',
+    '<rect class="highlighter"/>',
     '<g class="rotatable">',
     '<g class="scalable">',
     '<rect class="activity-name-rect"/><rect class="activity-mf-rect"/><rect class="activity-gp-rect"/>',

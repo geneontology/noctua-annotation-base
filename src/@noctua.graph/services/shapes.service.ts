@@ -70,10 +70,10 @@ export class NodeCellList extends shapes.NodeCellList {
     return this;
   }
 
-  addColor(colorKey: string): this {
+  setColor(colorKey: string, low?: number, high?: number): this {
     const self = this;
-    const deep = getColor(colorKey, 200);
-    const light = getColor(colorKey, 100);
+    const deep = getColor(colorKey, low ? low : 200);
+    const light = getColor(colorKey, high ? high : 100);
 
     self.attr('.activity-name-rect/fill', deep);
     self.attr('.activity-mf-rect/fill', light);
@@ -83,9 +83,27 @@ export class NodeCellList extends shapes.NodeCellList {
   }
 
 
+  setBorder(colorKey: string, hue?: number): this {
+    const self = this;
+    const deep = getColor(colorKey, hue ? hue : 500);
+
+    self.attr('.highlighter/stroke', deep);
+
+    return this;
+  }
+
+  unsetBorder(): this {
+    const self = this;
+
+    self.attr('.highlighter/stroke', 'transparent');
+
+    return this;
+  }
+
+
   hover(on: boolean): this {
     const self = this;
-    self.attr('.wrapper/strokeWidth', on ? 20 : 0);
+    self.attr('.wrapper/strokeWidth', on ? 30 : 0);
 
     return this;
   }

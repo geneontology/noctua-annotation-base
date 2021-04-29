@@ -60,6 +60,7 @@ import { CreateActivityDialogComponent } from './dialogs/create-activity/create-
 import { ActivityTreeTableComponent } from './cam/cam-table/activity-tree-table/activity-tree-table.component';
 import { ActivitySlimTreeComponent } from './cam/cam-table/activity-slim-tree/activity-slim-tree.component';
 import { ActivitySlimTreeNodeComponent } from './cam/cam-table/activity-slim-tree/activity-slim-tree-node/activity-tree-node.component';
+import { PreviewActivityComponent } from './cam/activity/preview-activity/preview-activity.component';
 
 const routes = [
   {
@@ -127,7 +128,8 @@ const routes = [
     ActivityTreeNodeComponent,
     ActivitySlimTreeComponent,
     ActivitySlimTreeNodeComponent,
-    CamPreviewComponent
+    CamPreviewComponent,
+    PreviewActivityComponent
   ],
   providers: [
     NoctuaFormDialogService,
@@ -168,6 +170,7 @@ const routes = [
     ActivitySlimTreeComponent,
     ActivitySlimTreeNodeComponent,
     SelectEvidenceComponent,
+    PreviewActivityComponent
   ],
 })
 

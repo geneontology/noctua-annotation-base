@@ -131,6 +131,7 @@ export class CamGraphService {
   openTable(element: joint.shapes.noctua.NodeCellList) {
     const activity = element.prop('activity') as Activity
     this.selectedElement = element;
+    this._activityFormService.onActivityChanged.next(activity);
     // activity.type = element.get('type');
     this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
     this.noctuaCommonMenuService.closeLeftDrawer();

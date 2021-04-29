@@ -50,7 +50,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   scrollbarRef?: PerfectScrollbarDirective;
 
   settings: SettingsOptions;
-  tableWidth = "500px";
+  tableWidth = "550px";
 
   loadingSpinner: any = {
     color: 'primary',
@@ -84,6 +84,15 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     editableEvidence: true,
     editableReference: true,
     editableWith: true,
+  };
+  noctuaFormOptions: TableOptions = {
+    displayType: ActivityDisplayType.TREE,
+    slimViewer: false,
+    editableTerms: true,
+    editableEvidence: true,
+    editableReference: true,
+    editableWith: true,
+    showMenu: true
   };
 
   scrollbarConfig = {

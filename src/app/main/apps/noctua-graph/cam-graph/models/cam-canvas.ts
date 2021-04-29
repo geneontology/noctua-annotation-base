@@ -97,9 +97,9 @@ export class CamCanvas {
 
         });
 
-        self.canvasPaper.on('blank:pointerclick', function () {
+        self.canvasPaper.on('blank:pointerdblclick', function () {
             // Remove all Highlighters from all cells
-            self.unhighlightAll();
+            self.unselectAll();
         });
 
         this.canvasPaper.on({
@@ -107,8 +107,10 @@ export class CamCanvas {
                 const element = cellView.model;
                 self.elementOnClick(element);
 
-                self.unhighlightAll();
-
+                if (element.get('type') === NodeCellType.cell) {
+                    const cell = element as NodeCellList
+                    self.selectNode(cell)
+                }
             },
             'element:mouseover': function (cellView) {
                 const element = cellView.model;
@@ -158,7 +160,7 @@ export class CamCanvas {
             const link = linkView.model;
 
             self.linkOnClick(link);
-            self.unhighlightAll();
+            self.unselectAll();
         });
 
         this.canvasPaper.on('element:expand:pointerdown', function (elementView: joint.dia.ElementView, evt) {
@@ -207,12 +209,35 @@ export class CamCanvas {
 
         self.unhighlightAllNodes()
 
+        const predecessors = self.canvasGraph.getPredecessors(node)
         const successors = self.canvasGraph.getSuccessors(node)
 
-        node.addColor('teal')
-        each(successors, (successor: NodeCellList) => {
-            successor.addColor('teal')
+
+        each(self.canvasGraph.getCells(), (cell: NodeCellList) => {
+            if (cell.get('type') === NodeCellType.cell) {
+                cell.setColor('grey', 200, 300);
+            }
         })
+        each(successors, (cell: NodeCellList) => {
+            if (cell.get('type') === NodeCellType.cell) {
+                cell.setColor('amber', 200, 300)
+            }
+        })
+
+        each(predecessors, (cell: NodeCellList) => {
+            if (cell.get('type') === NodeCellType.cell) {
+                cell.setColor('yellow', 50, 100)
+            }
+        })
+        node.setColor('yellow', 100, 200)
+    }
+
+    selectNode(node: NodeCellList) {
+        const self = this;
+
+        self.unselectAll()
+
+        node.setBorder('orange', 500,)
 
     }
 
@@ -221,16 +246,18 @@ export class CamCanvas {
         each(self.canvasGraph.getCells(), (cell: NodeCellList) => {
             if (cell.get('type') === NodeCellType.cell) {
                 const activity = cell.prop('activity') as Activity
-                cell.addColor(activity.backgroundColor);
+                cell.setColor(activity.backgroundColor);
             }
-
         })
     }
 
-    unhighlightAll() {
+    unselectAll() {
         const self = this;
-        self.canvasGraph.getCells().forEach(function (cell) {
-        });
+        each(self.canvasGraph.getCells(), (cell: NodeCellList) => {
+            if (cell.get('type') === NodeCellType.cell) {
+                cell.unsetBorder();
+            }
+        })
     }
 
     createLinkFromElements(source: joint.shapes.noctua.NodeCellList, target: joint.shapes.noctua.NodeCellList) {
@@ -338,7 +365,7 @@ export class CamCanvas {
     createNode(activity: Activity): NodeCellList {
         const el = new NodeCellList()
         //.addActivityPorts()
-        el.addColor(activity.backgroundColor)
+        el.setColor(activity.backgroundColor)
         //.setSuccessorCount(activity.successorCount)
         const gpNode = activity.getGPNode();
         const mfNode = activity.getMFNode();
