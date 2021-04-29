@@ -11,7 +11,9 @@ import {
 import { noctuaAnimations } from '@noctua/animations';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormControl } from '@angular/forms';
-import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import { distinctUntilChanged, debounceTime, takeUntil } from 'rxjs/operators';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { SettingsOptions } from '@noctua.common/models/graph-settings';
 
 @Component({
   selector: 'noc-graph-settings-dialog',
@@ -26,15 +28,18 @@ export class GraphSettingsDialogComponent implements OnInit, OnDestroy {
     'count'
   ];
 
+  settings: SettingsOptions;
   settingsForm: FormGroup;
 
   private _unsubscribeAll: Subject<any>;
+
 
   constructor(
     private _matDialogRef: MatDialogRef<GraphSettingsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private _data: any,
     public camsService: CamsService,
     public camService: CamService,
+    private noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaActivityFormService: NoctuaActivityFormService,
@@ -44,25 +49,31 @@ export class GraphSettingsDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.settingsForm = this.createAnswerForm();
-    this._onValueChanges();
+    this.noctuaCommonMenuService.onCamSettingsChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((settings: SettingsOptions) => {
+        if (!settings) {
+          return;
+        }
+        this.settings = settings;
+        this.settingsForm = this.settings.createSettingsForm();
+        this._onValueChanges();
+      });
   }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
-
-
   }
 
 
-  createAnswerForm() {
-    return new FormGroup({
-      showEvidence: new FormControl(),
-      showEvidenceCode: new FormControl(),
-      showReference: new FormControl(),
-      showWith: new FormControl(),
-    });
+  createSettingsForm(settings: SettingsOptions) {
+
+  }
+
+  populateSettings(value) {
+    this.settings.populateSettings(value);
+    this.noctuaCommonMenuService.onCamSettingsChanged.next(this.settings);
   }
 
   private _onValueChanges() {
@@ -71,9 +82,10 @@ export class GraphSettingsDialogComponent implements OnInit, OnDestroy {
 
     this.settingsForm.valueChanges.pipe(
       distinctUntilChanged(),
-      debounceTime(400)
+      debounceTime(400),
+      takeUntil(this._unsubscribeAll)
     ).subscribe(value => {
-      console.log(value)
+      self.populateSettings(value)
     });
   }
 

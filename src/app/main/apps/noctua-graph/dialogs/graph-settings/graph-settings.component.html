@@ -10,7 +10,8 @@
     </mat-toolbar-row>
   </mat-toolbar>
   <div class="noc-dialog-body noc-form-section" noctuaPerfectScrollbar>
-    <form fxLayout="column" fxLayoutAlign="start stretch" name="settingsForm" [formGroup]="settingsForm">
+    <form *ngIf="settingsForm" fxLayout="column" fxLayoutAlign="start stretch" name="settingsForm"
+      [formGroup]="settingsForm">
       <mat-checkbox formControlName="showEvidence" class="noc-checkbox" color="primary">Show Evidence
       </mat-checkbox>
       <mat-checkbox formControlName="showReference" class="noc-checkbox" color="primary">Show Reference

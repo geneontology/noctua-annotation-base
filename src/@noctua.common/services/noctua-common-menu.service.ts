@@ -6,13 +6,14 @@ import { NoctuaGraphService, NoctuaUserService } from 'noctua-form-base';
 import { LeftPanel, MiddlePanel, RightPanel } from './../models/menu-panels';
 import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { BehaviorSubject } from 'rxjs';
+import { SettingsOptions } from './../models/graph-settings';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaCommonMenuService {
 
-  onCamSettingsChanged: BehaviorSubject<any>;
+  onCamSettingsChanged: BehaviorSubject<SettingsOptions>;
   selectedLeftPanel;
   selectedMiddlePanel;
   selectedRightPanel;
@@ -26,7 +27,7 @@ export class NoctuaCommonMenuService {
     private _noctuaGraphService: NoctuaGraphService,
     private noctuaUserService: NoctuaUserService) {
 
-    this.onCamSettingsChanged = new BehaviorSubject(null);
+    this.onCamSettingsChanged = new BehaviorSubject(new SettingsOptions());
   }
 
   createModel(type: 'graph-editor' | 'noctua-form') {
