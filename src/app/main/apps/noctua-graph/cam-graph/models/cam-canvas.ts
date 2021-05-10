@@ -322,12 +322,13 @@ export class CamCanvas {
             this.paperScale(delta, e);
         } else {
             this.canvasPaper.translate(0, 0);
-            this.canvasPaper.scale(delta, delta)
+            this.canvasPaper.scale(this.canvasPaper.scale().sx + delta, this.canvasPaper.scale().sx + delta)
         }
     }
 
     resetZoom() {
-        this.zoom(1);
+        this.canvasPaper.scale(1, 1)
+
     };
 
 
