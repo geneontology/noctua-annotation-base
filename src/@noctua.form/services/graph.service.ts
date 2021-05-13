@@ -572,12 +572,13 @@ export class NoctuaGraphService {
             const predicate = new Predicate(causalEdge, evidence)
             const triple = new Triple<Activity>(subjectActivity, objectActivity, predicate);
 
-            objectMF.id = `${objectMF.type}'@@'${NoctuaFormUtils.generateGUID()}`;
-            objectMF.predicate = predicate;
-            objectMF.causalNode = true;
-            objectMF.treeLevel = 2;
-            subjectActivity.addNode(objectMF);
-            subjectActivity.addEdgeById(subjectMF.id, objectMF.id, predicate);
+            // Show everything
+            /*  objectMF.id = `${objectMF.type}'@@'${NoctuaFormUtils.generateGUID()}`;
+             objectMF.predicate = predicate;
+             objectMF.causalNode = true;
+             objectMF.treeLevel = 2;
+             subjectActivity.addNode(objectMF);
+             subjectActivity.addEdgeById(subjectMF.id, objectMF.id, predicate); */
 
             triples.push(triple);
           }

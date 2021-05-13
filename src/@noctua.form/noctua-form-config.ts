@@ -111,22 +111,6 @@ export const noctuaFormConfig = {
       }
     }
   },
-  'camDisplayType': {
-    'options': {
-      'triple': {
-        'name': 'triple',
-        'label': 'Simple Triple View'
-      },
-      'entity': {
-        'name': 'entity',
-        'label': 'Annotated Entity View'
-      },
-      'model': {
-        'name': 'model',
-        'label': 'Activity View'
-      }
-    }
-  },
   'evidenceDB': {
     'options': {
       'pmid': {

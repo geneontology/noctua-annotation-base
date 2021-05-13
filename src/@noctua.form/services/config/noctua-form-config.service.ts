@@ -101,19 +101,6 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get camDisplayType() {
-    const options = [
-      noctuaFormConfig.camDisplayType.options.model,
-      noctuaFormConfig.camDisplayType.options.triple,
-      noctuaFormConfig.camDisplayType.options.entity
-    ];
-
-    return {
-      options: options,
-      selected: options[0]
-    };
-  }
-
   get causalEffect() {
     const options = [
       noctuaFormConfig.causalEffect.options.positive,

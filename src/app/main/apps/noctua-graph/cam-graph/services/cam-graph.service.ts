@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import 'jqueryui';
 import * as joint from 'jointjs';
-import { each, cloneDeep } from 'lodash';
+import { each } from 'lodash';
 import { CamCanvas } from '../models/cam-canvas';
 import { CamStencil } from '../models/cam-stencil';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Activity, ActivityType, Cam, CamDisplayType, CamService, CamsService, ConnectorPanel, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
+import { Activity, Cam, CamService, CamsService, ConnectorPanel, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
 import { NodeLink, NodeCellList, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
@@ -71,6 +71,7 @@ export class CamGraphService {
 
     self.camCanvas = new CamCanvas();
     self.camCanvas.elementOnClick = self.openTable.bind(self);
+    self.camCanvas.editOnClick = self.editActivity.bind(self);
     self.camCanvas.linkOnClick = self.openConnector.bind(self);
     self.camCanvas.onLinkCreated = self.createActivityConnector.bind(self);
 
@@ -127,6 +128,14 @@ export class CamGraphService {
     self.camCanvas.canvasGraph.addCell(el);
   }
 
+  editActivity(element: joint.shapes.noctua.NodeCellList) {
+    const self = this;
+    const activity = element.get('activity') as Activity;
+
+    self._activityFormService.initializeForm(activity);
+    self.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
+  }
+
 
   openTable(element: joint.shapes.noctua.NodeCellList) {
     const activity = element.prop('activity') as Activity
@@ -142,7 +151,6 @@ export class CamGraphService {
     this._camsService.currentMatch.activityDisplayId = activity.displayId;
     const q = `#${activity.displayId}`;
 
-    this._camService.onCamDisplayChanged.next(CamDisplayType.ACTIVITY);
     this.noctuaCommonMenuService.scrollTo(q);
   }
 
@@ -165,7 +173,6 @@ export class CamGraphService {
     this._camsService.currentMatch.activityDisplayId = subjectActivity.displayId;
     const q = `#${subjectActivity.displayId}`;
 
-    this._camService.onCamDisplayChanged.next(CamDisplayType.CAUSAL_RELATIONS);
     this.noctuaCommonMenuService.scrollTo(q);
 
   }

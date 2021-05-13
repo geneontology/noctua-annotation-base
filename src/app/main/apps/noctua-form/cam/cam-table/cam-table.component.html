@@ -43,15 +43,6 @@
       <button mat-menu-item class="" (click)="expandAll(false)">
         Collapse All
       </button>
-      <button mat-menu-item class="" (click)="filterBy(CamDisplayType.CAUSAL_RELATIONS)">
-        Causal Connections
-      </button>
-      <button mat-menu-item class="" (click)="filterBy(CamDisplayType.ACTIVITY)">
-        Activities
-      </button>
-      <button mat-menu-item class="" (click)="filterBy(CamDisplayType.ALL)">
-        All Nodes
-      </button>
     </mat-menu>
 
     <button mat-stroked-button *ngIf="panelDrawer" (click)="close()" class="noc-rounded-button noc-sm" color="primary"

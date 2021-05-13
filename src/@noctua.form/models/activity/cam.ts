@@ -14,11 +14,6 @@ import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
 
-export enum CamDisplayType {
-  ACTIVITY = 'activity',
-  CAUSAL_RELATIONS = 'causal_relations',
-  ALL = 'all'
-}
 
 export enum CamRebuildSignal {
   NONE = 'none',
@@ -178,7 +173,6 @@ export class Cam {
   private _id: string;
 
   constructor() {
-    this.displayType = noctuaFormConfig.camDisplayType.options.model;
   }
 
   get id() {
@@ -191,12 +185,7 @@ export class Cam {
   }
 
   get activities() {
-    switch (this.displayType) {
-      case noctuaFormConfig.camDisplayType.options.entity:
-        return this._filteredActivities.sort(this._compareMolecularFunction);
-      default:
-        return this._activities.sort(this._compareMolecularFunction);
-    }
+    return this._activities.sort(this._compareMolecularFunction);
   }
 
   set activities(srcActivities: Activity[]) {
@@ -327,7 +316,6 @@ export class Cam {
     if (self.queryMatch && self.queryMatch.terms.length > 0) {
       self._filteredActivities = [];
       self.matchedCount = 0;
-      //  this.displayType = noctuaFormConfig.camDisplayType.options.entity;
 
       each(self._activities, (activity: Activity) => {
         let match = false;

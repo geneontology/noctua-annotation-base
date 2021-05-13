@@ -17,7 +17,6 @@ import {
   CamsService,
   ActivityType,
   ActivityTreeNode,
-  CamDisplayType,
   ActivityNodeType,
   ActivityDisplayType
 } from 'noctua-form-base';
@@ -49,7 +48,6 @@ export class ActivitySlimTreeComponent implements OnInit, OnDestroy {
   ActivityDisplayType = ActivityDisplayType;
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
-  camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
   activityTypeOptions = noctuaFormConfig.activityType.options;
 
   treeNodes: ActivityTreeNode[] = [];
@@ -106,15 +104,6 @@ export class ActivitySlimTreeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.camService.onCamDisplayChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((camDisplayType: CamDisplayType) => {
-        if (!camDisplayType || !this.tree) {
-          return;
-        }
-        this.filterByDisplayType(camDisplayType)
-      });
-
     this.noctuaCommonMenuService.onCamSettingsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((settings: SettingsOptions) => {
@@ -132,30 +121,6 @@ export class ActivitySlimTreeComponent implements OnInit, OnDestroy {
     this.optionsDisplay = { ...this.options, hideHeader: true };
 
     this.treeNodes = this.activity.buildTrees();
-  }
-
-  filterByDisplayType(camDisplayType: CamDisplayType) {
-    const self = this;
-
-    switch (camDisplayType) {
-      case CamDisplayType.ACTIVITY:
-        self.tree.treeModel.filterNodes((node) => {
-          const activityNode = node.data.node as ActivityNode
-          return !activityNode.causalNode;
-        });
-        break;
-      case CamDisplayType.CAUSAL_RELATIONS:
-        self.tree.treeModel.filterNodes((node) => {
-          const activityNode = node.data.node as ActivityNode
-          return activityNode.type === ActivityNodeType.GoMolecularFunction;
-        });
-        break;
-      case CamDisplayType.ALL:
-        self.tree.treeModel.filterNodes((node) => {
-          return true
-        });
-        break;
-    }
   }
 
 

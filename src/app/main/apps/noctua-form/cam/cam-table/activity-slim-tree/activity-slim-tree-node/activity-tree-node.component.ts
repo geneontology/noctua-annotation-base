@@ -41,7 +41,6 @@ import { SettingsOptions } from '@noctua.common/models/graph-settings';
 export class ActivitySlimTreeNodeComponent implements OnInit, OnDestroy {
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
-  camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
   activityTypeOptions = noctuaFormConfig.activityType.options;
 
   @Input('settings')

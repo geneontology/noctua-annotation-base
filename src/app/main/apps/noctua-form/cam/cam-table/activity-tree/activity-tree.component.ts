@@ -17,7 +17,6 @@ import {
   CamsService,
   ActivityType,
   ActivityTreeNode,
-  CamDisplayType,
   ActivityNodeType
 } from 'noctua-form-base';
 
@@ -45,7 +44,6 @@ import { takeUntil } from 'rxjs/operators';
 export class ActivityTreeComponent implements OnInit, OnDestroy {
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
-  camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
   activityTypeOptions = noctuaFormConfig.activityType.options;
 
   treeNodes: ActivityTreeNode[] = [];
@@ -99,15 +97,6 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.camService.onCamDisplayChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((camDisplayType: CamDisplayType) => {
-        if (!camDisplayType || !this.tree) {
-          return;
-        }
-        this.filterByDisplayType(camDisplayType)
-      });
-
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }
@@ -117,31 +106,6 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
 
     this.treeNodes = this.activity.buildTrees();
   }
-
-  filterByDisplayType(camDisplayType: CamDisplayType) {
-    const self = this;
-
-    switch (camDisplayType) {
-      case CamDisplayType.ACTIVITY:
-        self.tree.treeModel.filterNodes((node) => {
-          const activityNode = node.data.node as ActivityNode
-          return !activityNode.causalNode;
-        });
-        break;
-      case CamDisplayType.CAUSAL_RELATIONS:
-        self.tree.treeModel.filterNodes((node) => {
-          const activityNode = node.data.node as ActivityNode
-          return activityNode.type === ActivityNodeType.GoMolecularFunction;
-        });
-        break;
-      case CamDisplayType.ALL:
-        self.tree.treeModel.filterNodes((node) => {
-          return true
-        });
-        break;
-    }
-  }
-
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();

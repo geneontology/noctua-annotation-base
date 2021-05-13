@@ -228,7 +228,20 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
     '.activity-name-rect': {
       fill: '#d5d2d5',
       stroke: '#fff',
+      height: 50,
       'stroke-width': 0.5
+    },
+    '.icon': {
+      event: 'element:.icon:pointerdown',
+      'xlink:href': './../../assets/images/activity/bpOnlyk.png',
+      // ref: '.activity-name-rect',
+      refX: '100%',
+      refX2: -30,
+      refY: 10,
+      width: 50,
+      refHeight: '100%',
+      stroke: 'blue',
+      cursor: 'pointer'
     },
     '.activity-mf-rect': {
       fill: '#d5fdd5',
@@ -243,8 +256,8 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
     '.activity-name-text': {
       'ref': '.activity-name-rect',
       'ref-y': .5,
-      'ref-x': .5,
-      'text-anchor': 'middle',
+      'ref-x': 5,
+      'text-anchor': 'left',
       'y-alignment': 'middle',
       'font-weight': 'bold',
       'fill': 'black',
@@ -281,7 +294,9 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
     '<rect class="highlighter"/>',
     '<g class="rotatable">',
     '<g class="scalable">',
-    '<rect class="activity-name-rect"/><rect class="activity-mf-rect"/><rect class="activity-gp-rect"/>',
+    '<rect class="activity-name-rect"/><rect class="icon"/>',
+    '<rect class="activity-mf-rect"/>',
+    '<rect class="activity-gp-rect"/>',
     '</g>',
     '<text class="activity-name-text"/><text class="activity-mf-text"/><text class="activity-gp-text"/>',
     '</g>'

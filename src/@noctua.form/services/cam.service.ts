@@ -23,7 +23,6 @@ export class CamService {
   loading = false;
   cam: Cam;
   onCamChanged: BehaviorSubject<any>;
-  onCamDisplayChanged: BehaviorSubject<any>;
   onCamUpdated: BehaviorSubject<any>;
   onCamTermsChanged: BehaviorSubject<any>;
 
@@ -42,7 +41,6 @@ export class CamService {
     this.onCamChanged = new BehaviorSubject(null);
     this.onCamUpdated = new BehaviorSubject(null);
     this.onCamTermsChanged = new BehaviorSubject(null);
-    this.onCamDisplayChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
     this.camFormGroup = new BehaviorSubject(null);
     this.camFormGroup$ = this.camFormGroup.asObservable();

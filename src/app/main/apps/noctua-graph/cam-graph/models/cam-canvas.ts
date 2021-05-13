@@ -20,6 +20,7 @@ export class CamCanvas {
     canvasGraph: joint.dia.Graph;
     selectedStencilElement;
     elementOnClick: (element: joint.shapes.noctua.NodeCellList) => void;
+    editOnClick: (element: joint.shapes.noctua.NodeCellList) => void;
     linkOnClick: (element: joint.shapes.noctua.NodeLink) => void;
     onLinkCreated: (
         sourceId: string,
@@ -163,8 +164,16 @@ export class CamCanvas {
             self.unselectAll();
         });
 
+        this.canvasPaper.on('element:.icon:pointerdown', function (elementView: joint.dia.ElementView, evt) {
+            evt.stopPropagation();
+
+            const element = elementView.model;
+            self.editOnClick(element);
+
+        });
+
         this.canvasPaper.on('element:expand:pointerdown', function (elementView: joint.dia.ElementView, evt) {
-            evt.stopPropagation(); // stop any further actions with the element view (e.g. dragging)
+            evt.stopPropagation();
 
             const model = elementView.model;
             const activity = model.prop('activity') as Activity;
