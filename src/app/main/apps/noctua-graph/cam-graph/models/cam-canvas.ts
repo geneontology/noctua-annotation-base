@@ -307,7 +307,7 @@ export class CamCanvas {
 
         link.addTo(self.canvasGraph);
         if (autoLayout) {
-            self._layoutGraph(self.canvasGraph);
+            self.autoLayoutGraph(self.canvasGraph);
             // self.addCanvasGraph(self.activity);
         }
     }
@@ -365,7 +365,7 @@ export class CamCanvas {
         cell.attr('./visibility', 'visible');
         activity.expanded = !activity.expanded;
 
-        self._layoutGraph(self.canvasGraph);
+        self.autoLayoutGraph(self.canvasGraph);
 
         self.canvasPaper.translate(0, 0);
 
@@ -448,7 +448,7 @@ export class CamCanvas {
         self.canvasPaper.scaleContentToFit({ minScaleX: 0.3, minScaleY: 0.3, maxScaleX: 1, maxScaleY: 1 });
         self.canvasPaper.setDimensions('10000px', '10000px')
         self.canvasGraph.resetCells(nodes);
-        self._layoutGraph(self.canvasGraph);
+        //self.autoLayoutGraph(self.canvasGraph);
         self.canvasPaper.unfreeze();
         self.canvasPaper.render();
 
@@ -497,7 +497,7 @@ export class CamCanvas {
         });
     }
 
-    private _layoutGraph(graph) {
+    autoLayoutGraph(graph) {
         const autoLayoutElements = [];
         const manualLayoutElements = [];
         graph.getElements().forEach((el) => {

@@ -265,6 +265,7 @@ export class NoctuaGraphService {
     cam.activities = activities
     cam.applyFilter();
     cam.causalRelations = self.getCausalRelations(cam);
+    self.getActivityLocations(cam)
     //cam.connectorActivities = self.getConnectorActivities(cam)
     cam.setPreview();
     cam.updateActivityDisplayNumber();
@@ -992,6 +993,32 @@ export class NoctuaGraphService {
     }
   }
 
+  getActivityLocations(cam: Cam) {
+    const locations = localStorage.getItem('activityLocations');
+
+    if (locations) {
+      const activityLocations = JSON.parse(locations)
+      cam.activities.forEach((activity: Activity) => {
+        const activityLocation = find(activityLocations, { id: activity.id })
+        if (activityLocation) {
+          activity.position.x = activityLocation.x;
+          activity.position.y = activityLocation.y
+        }
+      })
+    }
+  }
+
+  setActivityLocations(cam: Cam) {
+    const locations = cam.activities.map((activity: Activity) => {
+      return {
+        id: activity.id,
+        x: activity.position.x,
+        y: activity.position.y
+      }
+    })
+    localStorage.setItem('activityLocation', JSON.stringify(locations));
+  }
+
   private _graphToActivityDFS(camGraph, activity: Activity, bbopEdges, subjectNode: ActivityNode) {
     const self = this;
 
@@ -1037,6 +1064,9 @@ export class NoctuaGraphService {
 
     return objectNode;
   }
+
+
+
 
   private _compareSources(a: any, b: any) {
     return (a.value() > b.value()) ? -1 : 1;

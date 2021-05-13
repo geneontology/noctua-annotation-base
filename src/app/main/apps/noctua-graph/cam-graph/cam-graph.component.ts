@@ -86,8 +86,8 @@ export class CamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     return e.indexOf('Disabled') === -1;
   }
 
-  save() {
-    this.noctuaCamGraphService.save();
+  automaticLayout() {
+    this.noctuaCamGraphService.autoLayoutGraph();
   }
 
   zoomIn() {

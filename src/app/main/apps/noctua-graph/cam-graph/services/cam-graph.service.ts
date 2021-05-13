@@ -177,6 +177,10 @@ export class CamGraphService {
 
   }
 
+  autoLayoutGraph() {
+    this.camCanvas.autoLayoutGraph(this.camCanvas.canvasGraph);
+  }
+
   save() {
     const self = this;
     const cells: joint.dia.Cell[] = this.camCanvas.canvasGraph.getCells();
