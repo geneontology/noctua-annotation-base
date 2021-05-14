@@ -568,8 +568,8 @@ export class NoctuaGraphService {
         if (causalEdge) {
           if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
             const objectActivity = cam.getActivityByConnectionId(objectId);
-            const subjectMF = subjectActivity.getMFNode();
-            const objectMF = cloneDeep(objectActivity.getMFNode())
+            // const subjectMF = subjectActivity.getMFNode();
+            //const objectMF = cloneDeep(objectActivity.getMFNode())
             const predicate = new Predicate(causalEdge, evidence)
             const triple = new Triple<Activity>(subjectActivity, objectActivity, predicate);
 
@@ -997,6 +997,7 @@ export class NoctuaGraphService {
     const locations = localStorage.getItem('activityLocations');
 
     if (locations) {
+      cam.manualLayout = true;
       const activityLocations = JSON.parse(locations)
       cam.activities.forEach((activity: Activity) => {
         const activityLocation = find(activityLocations, { id: activity.id })
@@ -1016,7 +1017,7 @@ export class NoctuaGraphService {
         y: activity.position.y
       }
     })
-    localStorage.setItem('activityLocation', JSON.stringify(locations));
+    localStorage.setItem('activityLocations', JSON.stringify(locations));
   }
 
   private _graphToActivityDFS(camGraph, activity: Activity, bbopEdges, subjectNode: ActivityNode) {

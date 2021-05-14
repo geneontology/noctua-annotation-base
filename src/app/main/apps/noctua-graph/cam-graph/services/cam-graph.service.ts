@@ -6,7 +6,7 @@ import { CamCanvas } from '../models/cam-canvas';
 import { CamStencil } from '../models/cam-stencil';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Activity, Cam, CamService, CamsService, ConnectorPanel, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService } from 'noctua-form-base';
+import { Activity, Cam, CamService, CamsService, ConnectorPanel, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService, NoctuaGraphService } from 'noctua-form-base';
 import { NodeLink, NodeCellList, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
@@ -37,6 +37,7 @@ export class CamGraphService {
   constructor(
     private _camService: CamService,
     private _camsService: CamsService,
+    private _noctuaGraphService: NoctuaGraphService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     private noctuaDataService: NoctuaDataService,
     private noctuaFormConfigService: NoctuaFormConfigService,
@@ -74,6 +75,7 @@ export class CamGraphService {
     self.camCanvas.editOnClick = self.editActivity.bind(self);
     self.camCanvas.linkOnClick = self.openConnector.bind(self);
     self.camCanvas.onLinkCreated = self.createActivityConnector.bind(self);
+    self.camCanvas.onUpdateCamLocations = self.updateCamLocations.bind(self);
 
   }
 
@@ -95,6 +97,11 @@ export class CamGraphService {
 
   reset() {
     this.camCanvas.resetZoom();
+  }
+
+  updateCamLocations(cam: Cam) {
+    console.log(cam.activities.map(x => x.position))
+    this._noctuaGraphService.setActivityLocations(cam);
   }
 
   createActivity(element: joint.shapes.noctua.NodeCellList, x: number, y: number) {

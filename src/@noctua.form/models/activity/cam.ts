@@ -154,7 +154,7 @@ export class Cam {
   displayNumber = '0';
 
   displayType;
-  grid: any = [];
+
   graphPreview = {
     nodes: [],
     edges: []
@@ -166,6 +166,10 @@ export class Cam {
   isReasoned = false;
   hasViolations = false;
   violations: Violation[];
+
+  //Graph
+  manualLayout = false;
+  layoutChanged = false;
 
   private _filteredActivities: Activity[] = [];
   private _activities: Activity[] = [];
@@ -551,23 +555,6 @@ export class Cam {
           activity.violations.push(violation);
         });
       }
-    });
-  }
-
-  generateGridRow(activity: Activity, node: ActivityNode) {
-    const self = this;
-    const term = node.getTerm();
-
-    self.grid.push({
-      displayEnabledBy: self.tableCanDisplayEnabledBy(node),
-      treeLevel: node.treeLevel,
-      relationship: node.isExtension ? '' : self.tableDisplayExtension(node),
-      relationshipExt: node.isExtension ? node.predicate.edge.label : '',
-      term: node.isExtension ? {} : term,
-      extension: node.isExtension ? term : {},
-      aspect: node.aspect,
-      activity: activity,
-      node: node
     });
   }
 
