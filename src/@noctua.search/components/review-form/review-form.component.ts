@@ -252,6 +252,25 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     return term && term.id ? `${term.label} (${term.id})` : undefined;
   }
 
+  clearFind() {
+    const self = this;
+    self.searchForm.patchValue({
+      findWhat: null,
+      replaceWith: null
+    });
+
+    self.calculateEnableReplace(self.selectedCategory);
+  }
+
+  clearReplace() {
+    const self = this;
+    self.searchForm.patchValue({
+      replaceWith: null
+    });
+
+    self.calculateEnableReplace(self.selectedCategory);
+  }
+
   onValueChanges() {
     const self = this;
 
