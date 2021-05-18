@@ -293,7 +293,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     const self = this;
 
     self.noctuaReviewSearchService.reloadCams(cams, self.camsService.cams, ReloadType.STORE, reset)
-
   }
 
   private _resetCamsQuery(cams: Cam[], reset = false) {

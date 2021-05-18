@@ -258,6 +258,8 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
       findWhat: null,
       replaceWith: null
     });
+    self.noctuaReviewSearchService.clear();
+    self.camsService.clearHighlight();
 
     self.calculateEnableReplace(self.selectedCategory);
   }

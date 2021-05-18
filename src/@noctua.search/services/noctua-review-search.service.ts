@@ -254,6 +254,7 @@ export class NoctuaReviewSearchService {
                 self.zone.run(() => {
                     self.camsService.resetLoading(reviewCams);
                     self.confirmDialogService.openInfoToast('Changes successfully saved.', 'OK');
+                    self.camsService.reviewChanges();
 
                     if (reset) {
                         self.confirmAfterSave();
@@ -574,7 +575,7 @@ export class NoctuaReviewSearchService {
         const result: Array<Cam> = [];
 
         each(self.camsService.cams, (cam: Cam) => {
-            return cam.clearFilter();
+            return cam.clearHighlight();
         });
 
         res.models.forEach((response) => {

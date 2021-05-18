@@ -241,7 +241,7 @@ export class Cam {
     });
   }
 
-  clearFilter() {
+  clearHighlight() {
     const self = this;
 
     each(self._activities, (activity: Activity) => {
@@ -315,7 +315,7 @@ export class Cam {
   applyFilter() {
     const self = this;
 
-    self.clearFilter();
+    self.clearHighlight();
 
     if (self.queryMatch && self.queryMatch.terms.length > 0) {
       self._filteredActivities = [];

@@ -253,6 +253,12 @@ export class CamsService {
     return result
   }
 
+  clearHighlight() {
+    each(this.cams, (cam: Cam) => {
+      return cam.clearHighlight();
+    });
+  }
+
   clearCams() {
     this.cams = [];
     this.onCamsChanged.next(this.cams);
