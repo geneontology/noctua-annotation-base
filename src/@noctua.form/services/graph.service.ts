@@ -610,7 +610,7 @@ export class NoctuaGraphService {
             const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, objectActivity);
 
             connectorActivity.state = ConnectorState.editing;
-            connectorActivity.rule.r1Edge = causalEdge;
+            connectorActivity.rule.rEdge = causalEdge;
             connectorActivity.predicate = new Predicate(causalEdge, evidence);
             connectorActivity.setRule();
             connectorActivity.createGraph();

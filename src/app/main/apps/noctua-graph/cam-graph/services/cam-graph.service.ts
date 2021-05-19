@@ -100,7 +100,6 @@ export class CamGraphService {
   }
 
   updateCamLocations(cam: Cam) {
-    console.log(cam.activities.map(x => x.position))
     this._noctuaGraphService.setActivityLocations(cam);
   }
 
@@ -133,6 +132,7 @@ export class CamGraphService {
 
     el.position(position.x, position.y);
     self.camCanvas.canvasGraph.addCell(el);
+    self.updateCamLocations(self.cam);
   }
 
   editActivity(element: joint.shapes.noctua.NodeCellList) {
@@ -166,8 +166,6 @@ export class CamGraphService {
     this.selectedElement = element;
     const source = element.get('source');
     const target = element.get('source');
-
-
 
     if (!source || !target) return
     const subjectActivity = this.cam.getActivityByConnectionId(source.id);

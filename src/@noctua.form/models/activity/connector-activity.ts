@@ -51,9 +51,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   setRule() {
     const self = this;
 
-    const question = self.getEffectDirectionByEdge(self.rule.r1Edge);
+    const question = self.edgeToConnectorQuestion(self.rule.rEdge);
 
-    self.rule.effectDirection.direction = question.effectDirection;
+    self.rule.effectDirection.direction = question.causalEffect;
     self.rule.mechanism.mechanism = question.mechanism;
   }
 
@@ -63,37 +63,69 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     self.rule.mechanism.mechanism = value.mechanism;
     self.rule.displaySection.causalEffect = true;
 
-    self.rule.r1Edge = this.getCausalConnectorEdge(
+    self.rule.rEdge = this.getCausalConnectorEdge(
       value.causalEffect,
       value.mechanism);
 
     self.setPreview();
   }
 
-  getEffectDirectionByEdge(edge) {
-    let effectDirection = null;
-    let mechanism = null;
 
-    const index = findIndex(noctuaFormConfig.causalEdges, { id: edge.id }) + 1;
+  getCausalConnectorEdge(causalEffect, mechanism): Entity {
 
-    if (index < 10 && index > 0) {
-      const x = (index % 3) - 3;
-      const y = (index - x) / 3;
-      effectDirection = find(noctuaFormConfig.causalEffect.options, { scalar: x });
-      mechanism = find(noctuaFormConfig.mechanism.options, { scalar: y });
+    let edge = noctuaFormConfig.edge.directlyProvidesInput
+    if (causalEffect.name === noctuaFormConfig.causalEffect.options.positive.name) {
+      if (mechanism.name === noctuaFormConfig.mechanism.options.known.name) {
+        edge = noctuaFormConfig.edge.positivelyRegulates;
+      } else {
+        edge = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
+      }
+
+    } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.negative.name) {
+      if (mechanism.name === noctuaFormConfig.mechanism.options.known.name) {
+        edge = noctuaFormConfig.edge.negativelyRegulates;
+      } else {
+        edge = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
+      }
+
+    } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.neutral.name) {
+      if (mechanism.name === noctuaFormConfig.mechanism.options.known.name) {
+        edge = noctuaFormConfig.edge.regulates;
+      } else {
+        edge = noctuaFormConfig.edge.causallyUpstreamOf;
+      }
     }
 
-    return { effectDirection, mechanism };
+    if (mechanism.name === noctuaFormConfig.mechanism.options.inputFor.name) {
+      edge = noctuaFormConfig.edge.directlyProvidesInput;
+    }
+
+    return Entity.createEntity(edge);
   }
 
-  getCausalConnectorEdge(causalEffect, mechanism) {
-    const self = this;
-    let result;
+  edgeToConnectorQuestion(edge: Entity) {
+    let mechanism = noctuaFormConfig.mechanism.options.known;
+    let causalEffect = noctuaFormConfig.causalEffect.options.positive;
 
-    const index = causalEffect.scalar + (mechanism.scalar * 3) - 1;
+    switch (edge.id) {
+      case noctuaFormConfig.edge.causallyUpstreamOf.id:
+      case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
+      case noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id:
+        mechanism = noctuaFormConfig.mechanism.options.unknown
+      case noctuaFormConfig.edge.regulates.id:
+      case noctuaFormConfig.edge.causallyUpstreamOf.id:
+        causalEffect = noctuaFormConfig.causalEffect.options.neutral;
+      case noctuaFormConfig.edge.negativelyRegulates.id:
+      case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
+        causalEffect = noctuaFormConfig.causalEffect.options.negative;
+      case noctuaFormConfig.edge.directlyProvidesInput.id:
+        mechanism = noctuaFormConfig.mechanism.options.inputFor;
+    }
 
-    result = noctuaFormConfig.causalEdges[index];
-    return result;
+    return {
+      mechanism,
+      causalEffect
+    }
   }
 
   setPreview() {
@@ -188,7 +220,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const evidence = srcEvidence ? srcEvidence : self.predicate.evidence;
 
     this.addNodes(self.subjectNode, self.objectNode);
-    self.addEdge(self.subjectNode, self.objectNode, new Predicate(this.rule.r1Edge, evidence));
+    self.addEdge(self.subjectNode, self.objectNode, new Predicate(this.rule.rEdge, evidence));
   }
 
   prepareSave(value) {
@@ -208,6 +240,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     this.createGraph(evidence);
   }
 
+
+
+
   private _getPreviewEdges(): NgxEdge[] {
     const self = this;
 
@@ -217,7 +252,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       {
         source: 'upstream',
         target: 'downstream',
-        label: self.rule.r1Edge ? self.rule.r1Edge.label : ''
+        label: self.rule.rEdge ? self.rule.rEdge.label : ''
       }];
 
     return edges;

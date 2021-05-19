@@ -189,21 +189,18 @@ export const noctuaFormConfig = {
   },
   'mechanism': {
     'options': {
-      'direct': {
-        'name': 'direct',
-        'label': 'direct (via direct binding or catalysis)',
-        'scalar': 1
-      },
       'known': {
         'name': 'known',
-        'label': 'via known regulatory process (e.g. transcription)',
-        'scalar': 2
+        'label': 'Known(regulatory)',
       },
       'unknown': {
         'name': 'unknown',
-        'label': 'Unknown/neutral',
-        'scalar': 3
-      }
+        'label': 'Unknown/Indirect',
+      },
+      'inputFor': {
+        'name': 'inputFor',
+        'label': 'Provides Input For'
+      },
     }
   },
   'displaySection': {
@@ -351,8 +348,19 @@ export const noctuaFormConfig = {
     id: 'GO:0051170',
     label: 'nuclear import',
     edge: edge.positivelyRegulates
-  }]
-
-
-
+  }],
+  causalEdgeBuckets: [
+    [
+      edge.negativelyRegulates,
+      edge.causallyUpstreamOfNegativeEffect,
+    ],
+    [
+      edge.regulates,
+      edge.causallyUpstreamOf,
+    ],
+    [
+      edge.positivelyRegulates,
+      edge.causallyUpstreamOfPositiveEffect,
+    ]
+  ]
 };

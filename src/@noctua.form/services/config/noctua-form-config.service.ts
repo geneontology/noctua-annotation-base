@@ -129,9 +129,9 @@ export class NoctuaFormConfigService {
 
   get mechanism() {
     const options = [
-      noctuaFormConfig.mechanism.options.direct,
       noctuaFormConfig.mechanism.options.known,
-      noctuaFormConfig.mechanism.options.unknown
+      noctuaFormConfig.mechanism.options.unknown,
+      noctuaFormConfig.mechanism.options.inputFor,
     ];
 
     return {
@@ -147,6 +147,8 @@ export class NoctuaFormConfigService {
       selected: options[0]
     };
   }
+
+
 
   setupUrls() {
     const self = this;
@@ -241,7 +243,6 @@ export class NoctuaFormConfigService {
     const srcObjectNode = objectActivity ? objectActivity.getMFNode() : new ActivityNode();
     const subjectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
     const objectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
-
 
     subjectNode.copyValues(srcSubjectNode);
     objectNode.copyValues(srcObjectNode);

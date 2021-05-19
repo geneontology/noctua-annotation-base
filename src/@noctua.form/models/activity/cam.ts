@@ -527,7 +527,7 @@ export class Cam {
         <NgxEdge>{
           source: connectorActivity.subjectNode.uuid,
           target: connectorActivity.objectNode.uuid,
-          label: connectorActivity.rule.r1Edge.label,
+          label: connectorActivity.rule.rEdge.label,
           data: {
             connectorActivity: connectorActivity
           }
