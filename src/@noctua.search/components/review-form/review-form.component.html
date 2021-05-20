@@ -17,12 +17,12 @@
         class="noc-sm noc-review-input">
         <mat-label>Find What <strong>(Ontology Term)</strong>
         </mat-label>
-        <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="findAuto" rows="2"></textarea>
+        <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="findAuto"></textarea>
       </mat-form-field>
       <mat-form-field *ngIf="selectedCategory?.name === ArtReplaceCategory.gp" appearance="outline"
         class="noc-sm  noc-review-input">
         <mat-label>Find What <strong>(Gene Product)</strong></mat-label>
-        <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="findAuto" rows="2"></textarea>
+        <textarea type="text" matInput formControlName="findWhat" [matAutocomplete]="findAuto"></textarea>
       </mat-form-field>
       <mat-form-field *ngIf="selectedCategory?.name === ArtReplaceCategory.reference" appearance="outline"
         class="noc-sm  noc-review-input">
