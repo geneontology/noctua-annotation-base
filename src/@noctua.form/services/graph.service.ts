@@ -59,7 +59,7 @@ export class NoctuaGraphService {
     this.onActivityAdded = new BehaviorSubject(null);
   }
 
-  registerManager(useReasoner = true) {
+  registerManager(useReasoner = false) {
     const engine = new jquery_engine(barista_response);
     engine.method('POST');
 
@@ -264,9 +264,9 @@ export class NoctuaGraphService {
     }
     cam.activities = activities
     cam.applyFilter();
-    cam.causalRelations = self.getCausalRelations(cam);
-    self.getActivityLocations(cam)
-    //cam.connectorActivities = self.getConnectorActivities(cam)
+    //cam.causalRelations = self.getCausalRelations(cam);
+    //self.getActivityLocations(cam)
+    // cam.connectorActivities = self.getConnectorActivities(cam)
     cam.setPreview();
     cam.updateActivityDisplayNumber();
 

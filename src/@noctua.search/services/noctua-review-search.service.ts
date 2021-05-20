@@ -50,6 +50,7 @@ export class NoctuaReviewSearchService {
     // onCamsChanged: BehaviorSubject<any>;
     onArtBasketChanged: BehaviorSubject<any>;
     onResetReview: BehaviorSubject<boolean>;
+    onClearForm: BehaviorSubject<boolean>;
     onReplaceChanged: BehaviorSubject<boolean>;
     onCamsPageChanged: BehaviorSubject<any>;
     onCamChanged: BehaviorSubject<any>;
@@ -79,6 +80,7 @@ export class NoctuaReviewSearchService {
 
         this.onArtBasketChanged = new BehaviorSubject(null);
         this.onResetReview = new BehaviorSubject(false);
+        this.onClearForm = new BehaviorSubject(false);
         this.onReplaceChanged = new BehaviorSubject(false);
         this.onCamsPageChanged = new BehaviorSubject(null);
         this.onCamChanged = new BehaviorSubject([]);

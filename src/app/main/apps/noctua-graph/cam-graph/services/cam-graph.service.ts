@@ -163,22 +163,19 @@ export class CamGraphService {
 
   openConnector(element: joint.shapes.noctua.NodeLink) {
     const self = this;
-    this.selectedElement = element;
+
+    self.selectedElement = element;
     const source = element.get('source');
-    const target = element.get('source');
+    const target = element.get('target');
 
-    if (!source || !target) return
-    const subjectActivity = this.cam.getActivityByConnectionId(source.id);
+    if (!source || !target) return;
 
-    this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
-    this.noctuaCommonMenuService.closeLeftDrawer();
-    this.noctuaCommonMenuService.openRightDrawer();
+    self._activityConnectorService.initializeForm(source.id, target.id);
+    self._activityConnectorService.selectPanel(ConnectorPanel.FORM)
 
-    subjectActivity.expanded = true;
-    this._camsService.currentMatch.activityDisplayId = subjectActivity.displayId;
-    const q = `#${subjectActivity.displayId}`;
-
-    this.noctuaCommonMenuService.scrollTo(q);
+    self.noctuaCommonMenuService.selectRightPanel(RightPanel.connectorForm);
+    self.noctuaCommonMenuService.closeLeftDrawer();
+    self.noctuaCommonMenuService.openRightDrawer();
 
   }
 
