@@ -143,8 +143,6 @@ export class NoctuaActivityFormService {
     const self = this;
     self.activityFormToActivity();
 
-
-
     if (self.state === ActivityState.editing) {
       const saveData = self.activity.createEdit(self.currentActivity);
 

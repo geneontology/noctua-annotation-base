@@ -115,7 +115,7 @@ export class Cam {
   groupId: any;
   expanded = false;
   model: any;
-  connectorActivities: ConnectorActivity[] = [];
+  //connectorActivities: ConnectorActivity[] = [];
   causalRelations: Triple<Activity>[] = [];
   sort;
   error = false;
@@ -232,13 +232,12 @@ export class Cam {
     });
   }
 
-  getConnectorActivity(upstreamId: string, downstreamId: string): ConnectorActivity {
+  getCausalRelation(subjectId: string, objectId: string): Triple<Activity> {
     const self = this;
 
-    return find(self.connectorActivities, (connectorActivity: ConnectorActivity) => {
-      return connectorActivity.subjectNode.uuid === upstreamId &&
-        connectorActivity.objectNode.uuid === downstreamId;
-    });
+    return self.causalRelations.find((triple: Triple<Activity>) => {
+      return triple.subject.id === subjectId && triple.object.id === objectId;
+    })
   }
 
   clearHighlight() {
@@ -428,15 +427,6 @@ export class Cam {
     return modified;
   }
 
-  getActivityByConnectionId(connectionId) {
-    const self = this;
-    let result = find(self.activities, (activity: Activity) => {
-      return activity.id === connectionId;
-    })
-
-    return result;
-  }
-
   getNodesByType(type: ActivityNodeType): any[] {
     const self = this;
     const result = [];
@@ -509,40 +499,6 @@ export class Cam {
     return result;
   }
 
-  setPreview() {
-    const self = this;
-    self.graphPreview.edges = [];
-    self.graphPreview.nodes = <NgxNode[]>self.activities.map((activity: Activity) => {
-      return {
-        id: activity.id,
-        label: activity.presentation.mfText,
-        data: {
-          activity: activity
-        }
-      };
-    });
-
-    each(self.connectorActivities, (connectorActivity: ConnectorActivity) => {
-      self.graphPreview.edges.push(
-        <NgxEdge>{
-          source: connectorActivity.subjectNode.uuid,
-          target: connectorActivity.objectNode.uuid,
-          label: connectorActivity.rule.rEdge.label,
-          data: {
-            connectorActivity: connectorActivity
-          }
-        });
-    });
-
-    /*
-        self.graphPreview.edges = <NgxEdge[]>triples.map((triple: Triple<ActivityNode>) => {
-          return {
-            source: triple.subject.id,
-            target: triple.object.id,
-            label: triple.predicate.edge.label
-          };
-        });*/
-  }
 
   setViolations() {
     const self = this;

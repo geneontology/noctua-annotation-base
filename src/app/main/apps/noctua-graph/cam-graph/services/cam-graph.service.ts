@@ -106,11 +106,10 @@ export class CamGraphService {
   createActivity(element: joint.shapes.noctua.NodeCellList, x: number, y: number) {
     const self = this;
     const node = element.get('node') as StencilItemNode;
-    const activity = self.noctuaFormConfigService.createActivityModel(node.type);
 
     self.placeholderElement.position(x, y);
-    this._activityFormService.initializeForm();
-    this.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
+    self._activityFormService.setActivityType(node.type)
+    self.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
   }
 
   createActivityConnector(

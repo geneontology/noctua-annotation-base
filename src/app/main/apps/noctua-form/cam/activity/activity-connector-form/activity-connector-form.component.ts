@@ -71,7 +71,6 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
           return;
         }
         this.connectorFormGroup = connectorFormGroup;
-        this.currentConnectorActivity = this.noctuaActivityConnectorService.currentConnectorActivity;
         this.connectorActivity = this.noctuaActivityConnectorService.connectorActivity;
       });
 
@@ -86,7 +85,6 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
     const self = this;
     this.noctuaActivityConnectorService.saveActivity().then(() => {
       self.noctuaActivityConnectorService.selectPanel(ConnectorPanel.SELECT);
-      self.noctuaActivityConnectorService.getConnections();
       self.noctuaFormDialogService.openInfoToast('Causal relation successfully created.', 'OK');
       if (this.closeDialog) {
         this.closeDialog();
@@ -99,7 +97,6 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
     const success = () => {
       self.noctuaActivityConnectorService.saveActivity().then(() => {
         self.noctuaActivityConnectorService.selectPanel(ConnectorPanel.SELECT);
-        self.noctuaActivityConnectorService.getConnections();
         self.noctuaFormDialogService.openInfoToast('Causal relation successfully updated.', 'OK');
       });
     };
@@ -114,7 +111,6 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
     const success = () => {
       self.noctuaActivityConnectorService.deleteActivity(connectorActivity).then(() => {
         self.noctuaActivityConnectorService.selectPanel(ConnectorPanel.SELECT);
-        self.noctuaActivityConnectorService.getConnections();
         self.noctuaFormDialogService.openInfoToast('Causal relation successfully deleted.', 'OK');
       });
     };

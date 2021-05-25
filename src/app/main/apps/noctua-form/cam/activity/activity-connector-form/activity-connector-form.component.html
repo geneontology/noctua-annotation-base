@@ -65,7 +65,7 @@
                 <div class="noc-note" fxLayout="row" fxLayoutAlign="start center">
                   <mat-icon class="green-500-fg">check_circle</mat-icon>
                   <span class="noc-description">
-                    {{connector.connectorActivity?.rule.rEdge?.label}}
+                    {{connector.connectorActivity?.predicate.edge?.label}}
                   </span>
                 </div>
               </div>
@@ -287,7 +287,7 @@
           <div class="noc-note mb-4" fxLayout="row" fxLayoutAlign="start center">
             <mat-icon class="green-500-fg">check_circle</mat-icon>
             <span class="noc-description">
-              {{currentConnectorActivity?.rule.rEdge?.label}}
+              {{currentConnectorActivity?.predicate.edge?.label}}
             </span>
           </div>
           <noc-graph-preview [nodes]="currentConnectorActivity?.graphPreview.nodes"
@@ -301,7 +301,7 @@
         <div class="noc-note mb-4" fxLayout="row" fxLayoutAlign="start center">
           <mat-icon class="green-500-fg">check_circle</mat-icon>
           <span class="noc-description">
-            {{connectorActivity?.rule.rEdge?.label}}
+            {{connectorActivity?.predicate.edge?.label}}
           </span>
         </div>
         <noc-graph-preview [nodes]="connectorActivity?.graphPreview.nodes"

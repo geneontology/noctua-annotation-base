@@ -25,11 +25,10 @@ export enum ConnectorPanel {
 
 export class ConnectorActivity extends SaeGraph<ActivityNode> {
   id: string;
-  subjectActivity: Activity;
-  objectActivity: Activity;
-  subjectNode: ActivityNode;
-  objectNode: ActivityNode;
+  subject: Activity;
+  object: Activity;
   predicate: Predicate;
+  originalPredicate: Predicate;
   state: ConnectorState;
   rule: ConnectorRule;
 
@@ -38,20 +37,22 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     edges: []
   };
 
-  constructor(subjectNode?: ActivityNode, objectNode?: ActivityNode, state?: ConnectorState) {
+  constructor(subject: Activity, object: Activity, predicate: Predicate) {
     super();
     this.id = uuid();
 
-    this.subjectNode = subjectNode;
-    this.objectNode = objectNode;
-    this.state = state ? state : ConnectorState.creation;
+    this.subject = subject;
+    this.object = object;
+    this.predicate = predicate;
     this.rule = new ConnectorRule();
+    this.setRule();
+    // this.createGraph();
   }
 
   setRule() {
     const self = this;
 
-    const question = self.edgeToConnectorQuestion(self.rule.rEdge);
+    const question = self.edgeToConnectorQuestion(self.predicate.edge);
 
     self.rule.effectDirection.direction = question.causalEffect;
     self.rule.mechanism.mechanism = question.mechanism;
@@ -60,10 +61,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   checkConnection(value: any) {
     const self = this;
 
-    self.rule.mechanism.mechanism = value.mechanism;
     self.rule.displaySection.causalEffect = true;
 
-    self.rule.rEdge = this.getCausalConnectorEdge(
+    self.predicate.edge = this.getCausalConnectorEdge(
       value.causalEffect,
       value.mechanism);
 
@@ -111,15 +111,21 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       case noctuaFormConfig.edge.causallyUpstreamOf.id:
       case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
       case noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id:
-        mechanism = noctuaFormConfig.mechanism.options.unknown
+        mechanism = noctuaFormConfig.mechanism.options.unknown;
+        break;
+      case noctuaFormConfig.edge.directlyProvidesInput.id:
+        mechanism = noctuaFormConfig.mechanism.options.inputFor;
+        break;
+    }
+    switch (edge.id) {
       case noctuaFormConfig.edge.regulates.id:
       case noctuaFormConfig.edge.causallyUpstreamOf.id:
         causalEffect = noctuaFormConfig.causalEffect.options.neutral;
+        break;
       case noctuaFormConfig.edge.negativelyRegulates.id:
       case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
         causalEffect = noctuaFormConfig.causalEffect.options.negative;
-      case noctuaFormConfig.edge.directlyProvidesInput.id:
-        mechanism = noctuaFormConfig.mechanism.options.inputFor;
+        break;
     }
 
     return {
@@ -137,13 +143,14 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const self = this;
     let nodes: NgxNode[] = [];
 
-    let activityNodes = [self.subjectNode, self.objectNode];
+    let activityNodes = [self.subject, self.object];
 
 
-    nodes = <NgxNode[]>activityNodes.map((node: ActivityNode) => {
+    nodes = <NgxNode[]>activityNodes.map((activity: Activity) => {
+      const node = activity.getMFNode()
       return {
-        id: node.id,
-        label: node.term.label ? node.term.label : '',
+        id: activity.id,
+        label: node ? node?.term.label : '',
       };
     });
 
@@ -198,7 +205,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     return saveData;
   }
 
-  createDelete() {
+  /* createDelete() {
     const self = this;
     const uuids: string[] = [];
 
@@ -219,9 +226,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const self = this;
     const evidence = srcEvidence ? srcEvidence : self.predicate.evidence;
 
-    this.addNodes(self.subjectNode, self.objectNode);
-    self.addEdge(self.subjectNode, self.objectNode, new Predicate(this.rule.rEdge, evidence));
-  }
+    self.addNodes(self.subjectNode, self.objectNode);
+    self.addEdge(self.subjectNode, self.objectNode, new Predicate(self.predicate.edge, evidence));
+  } 
 
   prepareSave(value) {
     const self = this;
@@ -239,7 +246,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     this.createGraph(evidence);
   }
-
+*/
 
 
 
@@ -252,7 +259,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       {
         source: 'upstream',
         target: 'downstream',
-        label: self.rule.rEdge ? self.rule.rEdge.label : ''
+        label: self.predicate.edge ? self.predicate.edge.label : ''
       }];
 
     return edges;

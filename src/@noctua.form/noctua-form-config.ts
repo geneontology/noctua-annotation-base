@@ -156,17 +156,14 @@ export const noctuaFormConfig = {
       'positive': {
         'name': 'positive',
         'label': 'Positive',
-        'scalar': 0
       },
       'neutral': {
         'name': 'neutral',
         'label': 'Unknown/neutral',
-        'scalar': -1
       },
       'negative': {
         'name': 'negative',
         'label': 'Negative',
-        'scalar': -2
       },
 
     }

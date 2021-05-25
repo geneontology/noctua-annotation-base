@@ -264,10 +264,9 @@ export class NoctuaGraphService {
     }
     cam.activities = activities
     cam.applyFilter();
-    //cam.causalRelations = self.getCausalRelations(cam);
-    //self.getActivityLocations(cam)
-    // cam.connectorActivities = self.getConnectorActivities(cam)
-    cam.setPreview();
+    cam.causalRelations = self.getCausalRelations(cam);
+    self.getActivityLocations(cam)
+    //cam.connectorActivities = self.getConnectorActivities(cam)
     cam.updateActivityDisplayNumber();
 
     self.onCamGraphChanged.next(cam);
@@ -567,7 +566,7 @@ export class NoctuaGraphService {
 
         if (causalEdge) {
           if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
-            const objectActivity = cam.getActivityByConnectionId(objectId);
+            const objectActivity = cam.findActivityById(objectId);
             // const subjectMF = subjectActivity.getMFNode();
             //const objectMF = cloneDeep(objectActivity.getMFNode())
             const predicate = new Predicate(causalEdge, evidence)
@@ -589,40 +588,39 @@ export class NoctuaGraphService {
 
     return triples;
   }
-
-  getConnectorActivities(cam: Cam) {
-    const self = this;
-    const connectorActivities: ConnectorActivity[] = [];
-
-    each(cam.activities, (subjectActivity: Activity) => {
-      each(cam.graph.get_edges_by_subject(subjectActivity.id), (bbopEdge) => {
-        const predicateId = bbopEdge.predicate_id();
-        const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
-        const objectId = bbopEdge.object_id();
-        const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
-        const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
-          id: predicateId
-        });
-
-        if (causalEdge) {
-          if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
-            const objectActivity = cam.getActivityByConnectionId(objectId);
-            const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, objectActivity);
-
-            connectorActivity.state = ConnectorState.editing;
-            connectorActivity.rule.rEdge = causalEdge;
-            connectorActivity.predicate = new Predicate(causalEdge, evidence);
-            connectorActivity.setRule();
-            connectorActivity.createGraph();
-            connectorActivities.push(connectorActivity);
+  /* 
+    getConnectorActivities(cam: Cam) {
+      const self = this;
+      const connectorActivities: ConnectorActivity[] = [];
+  
+      each(cam.activities, (subjectActivity: Activity) => {
+        each(cam.graph.get_edges_by_subject(subjectActivity.id), (bbopEdge) => {
+          const predicateId = bbopEdge.predicate_id();
+          const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
+          const objectId = bbopEdge.object_id();
+          const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
+          const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
+            id: predicateId
+          });
+  
+          if (causalEdge) {
+            if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
+              const objectActivity = cam.getActivityByConnectionId(objectId);
+              const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, objectActivity);
+  
+              connectorActivity.state = ConnectorState.editing;
+              connectorActivity.predicate = new Predicate(causalEdge, evidence);
+              connectorActivity.setRule();
+              connectorActivity.createGraph();
+              connectorActivities.push(connectorActivity);
+            }
           }
-        }
+        });
       });
-    });
-
-    return connectorActivities;
-  }
-
+  
+      return connectorActivities;
+    }
+   */
   saveModelGroup(cam: Cam, groupId) {
     cam.manager.use_groups([groupId]);
     cam.groupId = groupId;

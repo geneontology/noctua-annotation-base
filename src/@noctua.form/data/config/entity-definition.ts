@@ -181,3 +181,14 @@ export const generateGOTerm = (): ActivityNode => {
     return activityNode;
 };
 
+export const setEvidenceLookup = (predicate: Predicate): void => {
+    const fqEvidenceCategory = categoryToClosure([GoEvidence]);
+
+    predicate.setEvidenceMeta('eco', Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
+        fq: [
+            'document_category:"ontology_class"',
+            fqEvidenceCategory
+        ],
+    }));
+};
+
