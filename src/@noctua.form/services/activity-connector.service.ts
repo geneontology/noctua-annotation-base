@@ -15,6 +15,7 @@ import { ConnectorActivity, ConnectorPanel, ConnectorState } from './../models/a
 import { Entity } from '../models/activity/entity';
 import { noctuaFormConfig } from '../noctua-form-config';
 import { Triple } from '../models/activity/triple';
+import { cloneDeep } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -68,12 +69,13 @@ export class NoctuaActivityConnectorService {
 
     self.causalConnection = self.cam.getCausalRelation(subjectId, objectId);
 
-    const predicate = self.noctuaFormConfigService.createPredicate(Entity.createEntity(noctuaFormConfig.edge.positivelyRegulates))
-    self.connectorActivity = new ConnectorActivity(self.subjectActivity, self.objectActivity, predicate);
 
     if (this.causalConnection) {
-      self.connectorActivity.predicate = this.causalConnection.predicate
-      this.connectorActivity.setPreview();
+      const predicate = cloneDeep(this.causalConnection.predicate)
+      self.connectorActivity = new ConnectorActivity(self.subjectActivity, self.objectActivity, predicate);
+    } else {
+      const predicate = self.noctuaFormConfigService.createPredicate(Entity.createEntity(noctuaFormConfig.edge.positivelyRegulates))
+      self.connectorActivity = new ConnectorActivity(self.subjectActivity, self.objectActivity, predicate);
     }
 
     this.connectorForm = this.createConnectorForm();
@@ -119,9 +121,9 @@ export class NoctuaActivityConnectorService {
 
   deleteActivity(connectorActivity: ConnectorActivity) {
     const self = this;
-    //const deleteData = connectorActivity.createDelete();
+    const deleteData = connectorActivity.createDelete();
 
-    //  return self.noctuaGraphService.deleteActivity(self.cam, deleteData.uuids, deleteData.triples);
+    return self.noctuaGraphService.deleteActivity(self.cam, deleteData.uuids, deleteData.triples);
   }
 
   private _onActivityFormChanges(): void {

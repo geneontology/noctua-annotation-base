@@ -27,6 +27,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   id: string;
   subject: Activity;
   object: Activity;
+  subjectNode: ActivityNode;
+  objectNode: ActivityNode;
+
   predicate: Predicate;
   originalPredicate: Predicate;
   state: ConnectorState;
@@ -45,8 +48,11 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     this.object = object;
     this.predicate = predicate;
     this.rule = new ConnectorRule();
+    this.subjectNode = this.subject.getMFNode();
+    this.objectNode = this.object.getMFNode()
     this.setRule();
-    // this.createGraph();
+    this.createGraph();
+    this.setPreview();
   }
 
   setRule() {
@@ -173,16 +179,11 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       graph: null
     };
 
-    const graph = self.getTrimmedGraph('upstream');
-    const keyNodes = getNodes(graph);
-    const edges: Edge<Triple<ActivityNode>>[] = getEdges(graph);
-    const triples: Triple<ActivityNode>[] = edges.map((edge: Edge<Triple<ActivityNode>>) => {
-      return edge.metadata;
-    });
+    const triples: Triple<ActivityNode>[] = [new Triple<ActivityNode>(
+      self.subjectNode, self.objectNode, self.predicate)
+    ]
 
-    saveData.nodes = Object.values(keyNodes);
     saveData.triples = triples;
-    saveData.graph = graph;
 
     return saveData;
   }
@@ -205,7 +206,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     return saveData;
   }
 
-  /* createDelete() {
+  createDelete() {
     const self = this;
     const uuids: string[] = [];
 
@@ -228,7 +229,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     self.addNodes(self.subjectNode, self.objectNode);
     self.addEdge(self.subjectNode, self.objectNode, new Predicate(self.predicate.edge, evidence));
-  } 
+  }
 
   prepareSave(value) {
     const self = this;
@@ -246,9 +247,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     this.createGraph(evidence);
   }
-*/
-
-
 
   private _getPreviewEdges(): NgxEdge[] {
     const self = this;
@@ -257,8 +255,8 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     edges = <NgxEdge[]>[
       {
-        source: 'upstream',
-        target: 'downstream',
+        source: self.subject.id,
+        target: self.object.id,
         label: self.predicate.edge ? self.predicate.edge.label : ''
       }];
 
