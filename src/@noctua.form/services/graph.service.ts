@@ -670,7 +670,7 @@ export class NoctuaGraphService {
     cam.manager.request_with(reqs);
   }
 
-  addActivity(cam: Cam, triples: Triple<ActivityNode>[], title) {
+  addActivity(cam: Cam, triples: Triple<ActivityNode>[], title, operation = CamOperation.ADD_ACTIVITY) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
 
@@ -684,7 +684,7 @@ export class NoctuaGraphService {
       reqs.use_groups([self.noctuaUserService.user.group.id]);
     }
 
-    cam.operation = CamOperation.ADD_ACTIVITY;
+    cam.operation = operation;
 
     reqs.store_model(cam.id);
 

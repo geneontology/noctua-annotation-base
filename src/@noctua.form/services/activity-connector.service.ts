@@ -10,7 +10,7 @@ import { ActivityConnectorForm } from './../models/forms/activity-connector-form
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { Activity, ActivityType } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
-import { Cam } from './../models/activity/cam';
+import { Cam, CamOperation } from './../models/activity/cam';
 import { ConnectorActivity, ConnectorPanel, ConnectorState } from './../models/activity/connector-activity';
 import { Entity } from '../models/activity/entity';
 import { noctuaFormConfig } from '../noctua-form-config';
@@ -66,9 +66,7 @@ export class NoctuaActivityConnectorService {
 
     self.subjectActivity = this.cam.findActivityById(subjectId);
     self.objectActivity = this.cam.findActivityById(objectId);
-
     self.causalConnection = self.cam.getCausalRelation(subjectId, objectId);
-
 
     if (this.causalConnection) {
       const predicate = cloneDeep(this.causalConnection.predicate)
@@ -81,7 +79,6 @@ export class NoctuaActivityConnectorService {
     this.connectorForm = this.createConnectorForm();
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
 
-    console.log(this.connectorActivity.rule.effectDirection.direction, this.connectorActivity.rule.mechanism.mechanism)
     this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
     this.connectorForm.mechanism.setValue(this.connectorActivity.rule.mechanism.mechanism);
     this._onActivityFormChanges();
@@ -115,7 +112,7 @@ export class NoctuaActivityConnectorService {
 
     } else { // creation
       const saveData = self.connectorActivity.createSave();
-      return self.noctuaGraphService.addActivity(self.cam, saveData.triples, saveData.title);
+      return self.noctuaGraphService.addActivity(self.cam, saveData.triples, '', CamOperation.ADD_CAUSAL_RELATION);
     }
   }
 

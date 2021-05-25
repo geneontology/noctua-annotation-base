@@ -24,6 +24,7 @@ export enum CamRebuildSignal {
 export enum CamOperation {
   NONE = 'none',
   ADD_ACTIVITY = 'add_activity',
+  ADD_CAUSAL_RELATION = 'add_causal_relation'
 }
 
 export class CamQueryMatch {
