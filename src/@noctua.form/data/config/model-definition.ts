@@ -10,7 +10,6 @@ import { ActivityType, Activity } from '../../models/activity/activity';
 import { v4 as uuid } from 'uuid';
 
 
-
 export interface ActivityDescription {
     type: ActivityType;
     nodes: { [key: string]: ActivityNodeDisplay };

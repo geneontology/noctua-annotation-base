@@ -992,11 +992,12 @@ export class NoctuaGraphService {
   }
 
   getActivityLocations(cam: Cam) {
-    const locations = localStorage.getItem('activityLocations');
+    const locations = localStorage.getItem(`activityLocations-${cam.id}`);
 
     if (locations) {
       cam.manualLayout = true;
       const activityLocations = JSON.parse(locations)
+      console.log(activityLocations)
       cam.activities.forEach((activity: Activity) => {
         const activityLocation = find(activityLocations, { id: activity.id })
         if (activityLocation) {
@@ -1015,7 +1016,7 @@ export class NoctuaGraphService {
         y: activity.position.y
       }
     })
-    localStorage.setItem('activityLocations', JSON.stringify(locations));
+    localStorage.setItem(`activityLocations-${cam.id}`, JSON.stringify(locations));
   }
 
   private _graphToActivityDFS(camGraph, activity: Activity, bbopEdges, subjectNode: ActivityNode) {
