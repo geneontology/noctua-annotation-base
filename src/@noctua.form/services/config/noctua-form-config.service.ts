@@ -271,6 +271,8 @@ export class NoctuaFormConfigService {
         return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationBaseDescription);
       case ActivityType.ccOnly:
         return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationBaseDescription);
+      case ActivityType.molecule:
+        return ModelDefinition.createActivity(ModelDefinition.moleculeBaseDescription);
     }
   }
 
@@ -282,6 +284,8 @@ export class NoctuaFormConfigService {
         return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationDescription);
       case ActivityType.ccOnly:
         return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationDescription);
+      case ActivityType.molecule:
+        return ModelDefinition.createActivity(ModelDefinition.moleculeDescription);
     }
   }
 

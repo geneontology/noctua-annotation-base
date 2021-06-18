@@ -670,7 +670,7 @@ export class NoctuaGraphService {
     cam.manager.request_with(reqs);
   }
 
-  addActivity(cam: Cam, triples: Triple<ActivityNode>[], title, operation = CamOperation.ADD_ACTIVITY) {
+  addActivity(cam: Cam, nodes: ActivityNode[], triples: Triple<ActivityNode>[], title, operation = CamOperation.ADD_ACTIVITY) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
 
@@ -678,7 +678,14 @@ export class NoctuaGraphService {
       reqs.add_annotation_to_model('title', title);
     }
 
+    each(nodes, function (node: ActivityNode) {
+      self.addIndividual(reqs, node);
+    });
+
     self.addFact(reqs, triples);
+
+
+
 
     if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
       reqs.use_groups([self.noctuaUserService.user.group.id]);

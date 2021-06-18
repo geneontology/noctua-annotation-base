@@ -108,6 +108,10 @@ export const noctuaFormConfig = {
       'bpOnly': {
         'name': 'bpOnly',
         'label': 'BP Annotation'
+      },
+      'molecule': {
+        'name': 'molecule',
+        'label': 'Molecule'
       }
     }
   },

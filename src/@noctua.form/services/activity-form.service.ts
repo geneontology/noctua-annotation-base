@@ -155,7 +155,7 @@ export class NoctuaActivityFormService {
         saveData.removeTriples);
     } else { // creation
       const saveData = self.activity.createSave();
-      return self.noctuaGraphService.addActivity(self.cam, saveData.triples, saveData.title);
+      return self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title);
     }
   }
 

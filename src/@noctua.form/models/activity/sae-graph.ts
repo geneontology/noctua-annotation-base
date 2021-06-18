@@ -103,7 +103,7 @@ export class SaeGraph<T extends ActivityNode> {
   getEdges(id: string): Triple<T>[] {
     const edges: Edge<Triple<T>>[] = getEdges(this.graph, id);
 
-    return edges.map((edge: Edge<Triple<T>>) => {
+    return edges?.map((edge: Edge<Triple<T>>) => {
       return edge.metadata;
     });
   }

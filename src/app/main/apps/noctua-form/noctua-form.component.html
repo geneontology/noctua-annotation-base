@@ -21,6 +21,9 @@
         <a mat-menu-item (click)="openActivityForm(ActivityType.ccOnly)">
           Create New CC Annotation
         </a>
+        <a mat-menu-item (click)="openActivityForm(ActivityType.molecule)">
+          Create New Molecule
+        </a>
       </mat-menu>
     </div>
     <div *ngIf="cam.title" class="noc-title" fxLayout="row" fxLayoutAlign="start center">

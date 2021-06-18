@@ -31,7 +31,8 @@ export enum ActivityDisplayType {
 export enum ActivityType {
   default = 'default',
   bpOnly = 'bpOnly',
-  ccOnly = 'ccOnly'
+  ccOnly = 'ccOnly',
+  molecule = 'molecule'
 }
 
 export class ActivitySize {
@@ -126,7 +127,8 @@ export class Activity extends SaeGraph<ActivityNode> {
   }
 
   get rootNodeType(): ActivityNodeType {
-    return this.activityType === ActivityType.ccOnly ?
+    return this.activityType === ActivityType.ccOnly ||
+      this.activityType === ActivityType.molecule ?
       ActivityNodeType.GoMolecularEntity :
       ActivityNodeType.GoMolecularFunction;
   }
@@ -357,7 +359,7 @@ export class Activity extends SaeGraph<ActivityNode> {
   createSave() {
     const self = this;
     const saveData = {
-      title: 'enabled by ' + self.getNode(ActivityNodeType.GoMolecularEntity).term.label,
+      title: 'enabled by ' + self.getNode(ActivityNodeType.GoMolecularEntity)?.term.label,
       triples: [],
       nodes: [],
       graph: null
@@ -461,7 +463,8 @@ export class Activity extends SaeGraph<ActivityNode> {
     const gpText = gp ? gp.getTerm().label : '';
     let title = '';
 
-    if (self.activityType === ActivityType.ccOnly) {
+    if (self.activityType === ActivityType.ccOnly ||
+      self.activityType === ActivityType.molecule) {
       title = gpText;
     } else {
       title = `enabled by (${gpText})`;
@@ -521,6 +524,8 @@ export class Activity extends SaeGraph<ActivityNode> {
     let title = '';
 
     if (self.activityType === ActivityType.ccOnly) {
+      title = gpText;
+    } else if (self.activityType === ActivityType.molecule) {
       title = gpText;
     } else {
       qualifier = mf.isComplement ? 'NOT' : '';

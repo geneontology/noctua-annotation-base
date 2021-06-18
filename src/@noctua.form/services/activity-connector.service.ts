@@ -112,7 +112,7 @@ export class NoctuaActivityConnectorService {
 
     } else { // creation
       const saveData = self.connectorActivity.createSave();
-      return self.noctuaGraphService.addActivity(self.cam, saveData.triples, '', CamOperation.ADD_CAUSAL_RELATION);
+      return self.noctuaGraphService.addActivity(self.cam, [], saveData.triples, '', CamOperation.ADD_CAUSAL_RELATION);
     }
   }
 
