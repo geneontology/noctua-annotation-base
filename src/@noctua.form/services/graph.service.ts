@@ -520,6 +520,20 @@ export class NoctuaGraphService {
     return self.noctuaFormConfigService.createActivityBaseModel(activityType);
   }
 
+  /* graphToMolecules(camGraph): Activity[] {
+    const self = this;
+    const activities: Activity[] = [];
+
+    each(camGraph.nodes(), (bbopNode) => {
+      const node = self.nodeToActivityNode(camGraph, bbopSubjectId);
+
+      if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
+        (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
+          subjectNode.hasRootType(EntityDefinition.GoMolecularEntity)) 
+    }
+    });
+  } */
+
   graphToActivities(camGraph): Activity[] {
     const self = this;
     const activities: Activity[] = [];
