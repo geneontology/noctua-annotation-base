@@ -14,7 +14,7 @@ import { GraphSettingsDialogComponent } from './dialogs/graph-settings/graph-set
 
 const routes = [
   {
-    path: '',
+    path: 'ggg',
     component: NoctuaGraphComponent
   }
 ];

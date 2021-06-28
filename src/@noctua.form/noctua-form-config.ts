@@ -34,6 +34,10 @@ const edge = {
     id: 'BFO:0000050',
     label: 'part of'
   },
+  isActiveIn: {
+    id: 'RO:0002432',
+    label: 'is active in'
+  },
   hasPart: {
     id: 'BFO:0000051',
     label: 'has part'

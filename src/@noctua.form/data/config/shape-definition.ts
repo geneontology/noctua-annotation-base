@@ -46,19 +46,53 @@ const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
 export const canInsertEntity = {
     [ActivityNodeType.GoMolecularEntity]: [
         <ShapeDescription>{
-            label: 'Add part of (CC)',
+            label: 'Add part of (Protein Complex)',
+            id: ActivityNodeType.GoProteinContainingComplex,
+            node: <ActivityNodeDisplay>{
+                type: ActivityNodeType.GoProteinContainingComplex,
+                category: [EntityDefinition.GoProteinContainingComplex],
+                label: '(GP) part of (Protein Complex)',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                weight: 3,
+                isKey: true,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.partOf,
+            cardinality: CardinalityType.oneToOne
+        },
+        <ShapeDescription>{
+            label: 'Add located in (CC)',
             id: ActivityNodeType.GoCellularComponent,
             node: <ActivityNodeDisplay>{
                 type: ActivityNodeType.GoCellularComponent,
                 category: [EntityDefinition.GoCellularComponent],
-                label: '(MF) part of (CC)',
+                label: '(GP) located in (CC)',
                 aspect: 'C',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 weight: 10,
                 isKey: true,
+                showInMenu: true,
             },
-            predicate: noctuaFormConfig.edge.partOf,
+            predicate: noctuaFormConfig.edge.locatedIn,
+            cardinality: CardinalityType.oneToOne
+        },
+        <ShapeDescription>{
+            label: 'Add is active in (CC)',
+            id: ActivityNodeType.GoCellularComponent,
+            node: <ActivityNodeDisplay>{
+                type: ActivityNodeType.GoCellularComponent,
+                category: [EntityDefinition.GoCellularComponent],
+                label: '(GP) is active in (CC)',
+                aspect: 'C',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                weight: 10,
+                isKey: true,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.isActiveIn,
             cardinality: CardinalityType.oneToOne
         },
     ],

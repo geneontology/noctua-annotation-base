@@ -244,7 +244,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             displayGroup: noctuaFormConfig.displayGroup.gp,
             weight: 1
         },
-        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
+        /*[ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
             type: ActivityNodeType.GoCellularComponent,
             category: [EntityDefinition.GoCellularComponent],
@@ -255,13 +255,14 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             displayGroup: noctuaFormConfig.displayGroup.cc,
 
             weight: 2
-        }
+        }*/
     },
-    triples: [{
+    triples: [
+        /*{
         subject: ActivityNodeType.GoMolecularEntity,
         object: ActivityNodeType.GoCellularComponent,
         predicate: noctuaFormConfig.edge.partOf
-    }],
+    }*/],
 };
 
 export const moleculeDescription: ActivityDescription = {

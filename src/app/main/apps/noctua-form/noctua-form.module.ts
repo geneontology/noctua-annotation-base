@@ -64,7 +64,7 @@ import { PreviewActivityComponent } from './cam/activity/preview-activity/previe
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];

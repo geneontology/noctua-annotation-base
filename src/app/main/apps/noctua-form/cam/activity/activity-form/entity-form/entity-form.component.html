@@ -196,6 +196,16 @@
           </div>
         </div>
       </div>
+      <span fxFlex=""></span>
+      <button mat-icon-button class="noc-action-button" fxFlex="40px" [matMenuTriggerFor]="ccOnlyAddMenu">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+      <mat-menu #ccOnlyAddMenu="matMenu">
+        <button mat-menu-item *ngFor="let insertMenuItem of entity.insertMenuNodes" class=""
+          (click)="insertEntity(insertMenuItem)">
+          {{insertMenuItem.label}}
+        </button>
+      </mat-menu>
     </div>
   </div>
 </div>

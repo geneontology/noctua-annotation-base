@@ -101,6 +101,19 @@ export class NoctuaFormConfigService {
     };
   }
 
+  get ccOnlyEdges() {
+    const options = [
+      noctuaFormConfig.edge.partOf,
+      noctuaFormConfig.edge.locatedIn,
+      noctuaFormConfig.edge.isActiveIn,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
   get causalEffect() {
     const options = [
       noctuaFormConfig.causalEffect.options.positive,

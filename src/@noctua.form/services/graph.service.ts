@@ -256,13 +256,14 @@ export class NoctuaGraphService {
   loadCam(cam: Cam) {
     const self = this;
     const activities = self.graphToActivities(cam.graph);
+    const molecules = self.graphToMolecules(cam.graph);
     let activity;
 
     if (cam.operation === CamOperation.ADD_ACTIVITY) {
       activity = self.getAddedActivity(activities, cam.activities);
       self.onActivityAdded.next(activity);
     }
-    cam.activities = activities
+    cam.activities = [...activities, ...molecules]
     cam.applyFilter();
     cam.causalRelations = self.getCausalRelations(cam);
     self.getActivityLocations(cam)
@@ -520,19 +521,32 @@ export class NoctuaGraphService {
     return self.noctuaFormConfigService.createActivityBaseModel(activityType);
   }
 
-  /* graphToMolecules(camGraph): Activity[] {
+  graphToMolecules(camGraph): Activity[] {
     const self = this;
     const activities: Activity[] = [];
 
-    each(camGraph.nodes(), (bbopNode) => {
-      const node = self.nodeToActivityNode(camGraph, bbopSubjectId);
+    each(camGraph.all_nodes(), (bbopNode) => {
+      const subjectNode = self.nodeToActivityNode(camGraph, bbopNode.id());
 
-      if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
-        (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
-          subjectNode.hasRootType(EntityDefinition.GoMolecularEntity)) 
-    }
+
+      if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity)) {
+        const subjectEdges = camGraph.get_edges_by_subject(bbopNode.id());
+        const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
+        const subjectActivityNode = activity.rootNode;
+
+        subjectActivityNode.term = subjectNode.term;
+        subjectActivityNode.classExpression = subjectNode.classExpression;
+        subjectActivityNode.uuid = bbopNode.id();
+        self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
+        activity.id = bbopNode.id();
+        //activity.postRunUpdate();
+        activities.push(activity);
+      }
+
     });
-  } */
+
+    return activities
+  }
 
   graphToActivities(camGraph): Activity[] {
     const self = this;

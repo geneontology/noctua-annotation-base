@@ -83,6 +83,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
 
   bpOnlyEdge: Entity;
+  ccOnlyEdge: Entity;
 
   //Graph
   position: ActivityPosition = new ActivityPosition();
