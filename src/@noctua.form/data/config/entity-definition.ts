@@ -54,6 +54,13 @@ export const GoCellularComponent = {
     id: ActivityNodeType.GoCellularComponent,
     category: 'GO:0005575',
     categoryType: 'isa_closure',
+    suffix: `OR NOT ${GoProteinContainingComplex.categoryType}:"${GoProteinContainingComplex.category}"`,
+} as GoCategory;
+
+export const GoCellularAnatomical = {
+    id: ActivityNodeType.GoCellularAnatomical,
+    category: 'GO:0110165',
+    categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoBiologicalProcess = {
@@ -119,6 +126,7 @@ export const GoCatalyticActivity = {
 export const EntityCategories = [
     [GoProteinContainingComplex],
     [GoCellularComponent],
+    [GoCellularAnatomical],
     [GoBiologicalProcess],
     [GoMolecularFunction],
     [GoMolecularEntity],

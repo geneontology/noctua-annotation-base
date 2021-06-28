@@ -14,11 +14,13 @@ export interface GoCategory {
   id: ActivityNodeType;
   category: string;
   categoryType: string;
+  suffix: string;
 }
 
 export enum ActivityNodeType {
   GoProteinContainingComplex = 'GoProteinContainingComplex',
   GoCellularComponent = 'GoCellularComponent',
+  GoCellularAnatomical = 'GoCellularAnatomical',
   GoBiologicalProcess = 'GoBiologicalProcess',
   GoMolecularFunction = 'GoMolecularFunction',
   GoMolecularEntity = 'GoMolecularEntity',
@@ -302,7 +304,11 @@ export class ActivityNode implements ActivityNodeDisplay {
 
 export function categoryToClosure(categories) {
   return categories.map((category) => {
-    return `${category.categoryType}:"${category.category}"`;
+    let result = `${category.categoryType}:"${category.category}"`;
+    if (category.suffix) {
+      result += ' ' + category.suffix;
+    }
+    return result
   }).join(' OR ');
 }
 
