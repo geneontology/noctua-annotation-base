@@ -84,14 +84,14 @@ export class NoctuaActivityFormService {
 
     const activityForm = new ActivityForm(formMetadata);
 
-    activityForm.createFunctionDescriptionForm(self.activity.presentation.fd);
-    activityForm.createMolecularEntityForm(self.activity.presentation.gp);
+    activityForm.createEntityForms(self.activity.nodes);
+    //activityForm.createMolecularEntityForm(self.activity.presentation.gp);
 
     return activityForm;
   }
 
   activityFormToActivity() {
-    this.activityForm.populateActivity(this.activity);
+    this.activityForm.populateActivityNodes(this.activity);
   }
 
   private _onActivityFormChanges(): void {

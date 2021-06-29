@@ -538,25 +538,24 @@ export class Activity extends SaeGraph<ActivityNode> {
       title: title,
       gpText: gpText,
       mfText: mfText,
-      gp: {},
-      fd: {},
+      gp: [],
+      fd: [],
       extra: []
     };
 
     const sortedNodes = self.nodes.sort(compareNodeWeight);
 
     each(sortedNodes, function (node: ActivityNode) {
-      if (node.displaySection && node.displayGroup) {
-        if (!result[node.displaySection.id][node.displayGroup.id]) {
-          result[node.displaySection.id][node.displayGroup.id] = {
-            shorthand: node.displayGroup.shorthand,
-            label: node.displayGroup.label,
+      if (node.displaySection) {
+        if (!result[node.displaySection.id]) {
+          result[node.displaySection.id] = {
+            label: node.displaySection.label,
             nodes: []
           };
         }
 
-        result[node.displaySection.id][node.displayGroup.id].nodes.push(node);
-        node.nodeGroup = result[node.displaySection.id][node.displayGroup.id];
+        result[node.displaySection.id].push(node);
+        // node.nodeGroup = result[node.displaySection.id][node.displayGroup.id];
 
         if (node.isComplement) {
           node.nodeGroup.isComplement = true;

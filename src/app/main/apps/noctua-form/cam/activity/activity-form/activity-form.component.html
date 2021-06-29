@@ -78,6 +78,31 @@
         <span fxFlex></span>
       </div>
       <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
+        <mat-tree #tree *ngIf="formEntities" [dataSource]="formEntities" [treeControl]="treeControl">
+          <mat-tree-node class="noc-tree-node" *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding
+            matTreeNodePaddingIndent="16" [ngClass]="{ 'background-highlight': activeAnnotation === node.uuid}">
+            <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+              <button mat-icon-button disabled class="noc-icon-button"></button>
+              <div class="noc-annotation-row" fxFlex="" fxLayout="row" fxLayoutAlign="start center">
+
+                <noc-entity-form [entityFormGroup]="node" fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
+                </noc-entity-form>
+              </div>
+            </div>
+          </mat-tree-node>
+          <mat-tree-node fxLayout="row" class="noc-tree-node" *matTreeNodeDef="let node;when: hasChild"
+            matTreeNodePadding matTreeNodePaddingIndent="16"
+            [ngClass]="{ 'background-highlight': activeAnnotation === node.uuid}">
+            <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+              <div class="noc-annotation-row" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
+
+                <noc-entity-form [entityFormGroup]="node" fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
+                </noc-entity-form>
+              </div>
+            </div>
+          </mat-tree-node>
+        </mat-tree>
+
         <div *ngIf="noctuaActivityFormService.activity.activityType===ActivityType.bpOnly"
           class="mat-elevation-z1 noc-term-group mb-4 px-8 mf" fxLayout="row" fxLayoutAlign="start center">
           <div class="p-4" fxFlex fxLayout="row" fxLayoutAlign="start stretch">
@@ -111,6 +136,7 @@
               </noc-entity-form>
             </ng-container>
           </div>
+
         </div>
       </div>
     </div>

@@ -300,6 +300,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   openAddReference(event, evidence: FormGroup, name: string) {
+    event.stopPropagation();
     const data = {
       formControl: evidence.controls[name] as FormControl,
     };
@@ -307,6 +308,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   openAddWith(event, evidence: FormGroup, name: string) {
+    event.stopPropagation();
     const data = {
       formControl: evidence.controls[name] as FormControl,
     };

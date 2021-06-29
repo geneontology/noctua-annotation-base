@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subscription, Subject } from 'rxjs';
@@ -16,7 +16,9 @@ import {
   ActivityType,
   NoctuaUserService,
   NoctuaFormMenuService,
+  ActivityNode,
 } from 'noctua-form-base';
+import { FlatTreeControl } from '@angular/cdk/tree';
 
 @Component({
   selector: 'noc-activity-form',
@@ -28,11 +30,14 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   ActivityState = ActivityState;
   ActivityType = ActivityType;
 
+  @ViewChild('tree') tree;
+
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
   @Input() public closeDialog: () => void;
 
+  formEntities: FormArray;
   cam: Cam;
   activityFormGroup: FormGroup;
   activityFormSub: Subscription;
@@ -44,6 +49,8 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   activity: Activity;
   currentActivity: Activity;
   state: ActivityState;
+  treeControl = new FlatTreeControl<ActivityNode>(
+    node => node.treeLevel, node => node.expandable);
 
   private _unsubscribeAll: Subject<any>;
 
@@ -72,8 +79,15 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         this.activity = this.noctuaActivityFormService.activity;
         this.state = this.noctuaActivityFormService.state;
         this.molecularEntity = <FormGroup>this.activityFormGroup.get('molecularEntity');
+
+
+
+        this.formEntities = <FormArray>activityFormGroup.get('entityFormArray')['controls']
+
       });
   }
+
+  hasChild = (_: number, node: ActivityNode) => node.expandable;
 
   checkErrors() {
     const errors = this.noctuaActivityFormService.activity.submitErrors;

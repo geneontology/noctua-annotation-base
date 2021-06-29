@@ -5,13 +5,14 @@ import { ActivityFormMetadata } from './../forms/activity-form-metadata';
 import { EntityGroupForm } from './entity-group-form';
 import { Entity } from './../../models/activity/entity';
 import { each } from 'lodash';
+import { ActivityNode } from '../activity';
+import { EntityForm } from './entity-form';
 
 export class ActivityForm {
-  entityGroupForms: EntityGroupForm[] = [];
+  entityForms: EntityForm[] = [];
   bpOnlyEdge = new FormControl();
   ccOnlyEdge = new FormControl();
-  gp = new FormArray([]);
-  fd = new FormArray([]);
+  entityFormArray = new FormArray([]);
 
   private _metadata: ActivityFormMetadata;
   private _fb = new FormBuilder();
@@ -20,37 +21,27 @@ export class ActivityForm {
     this._metadata = metadata;
   }
 
-  createMolecularEntityForm(gpData) {
+  createEntityForms(entities: ActivityNode[]) {
     const self = this;
 
-    each(gpData, (nodeGroup, nodeKey) => {
-      const entityGroupForm = new EntityGroupForm(this._metadata);
-
-      this.entityGroupForms.push(entityGroupForm);
-      entityGroupForm.name = nodeKey;
-      entityGroupForm.createEntityForms(nodeGroup.nodes);
-      self.gp.push(self._fb.group(entityGroupForm));
+    this.entityForms = [];
+    entities.forEach((entity: ActivityNode) => {
+      if (entity.visible) {
+        const entityForm = new EntityForm(self._metadata, entity);
+        if (!entity.skipEvidence) {
+          entityForm.createEvidenceForms(entity);
+        }
+        self.entityForms.push(entityForm);
+        self.entityFormArray.push(self._fb.group(entityForm))
+      }
     });
   }
 
-  createFunctionDescriptionForm(fdData) {
+  populateActivityNodes(activity: Activity) {
     const self = this;
 
-    each(fdData, (nodeGroup, nodeKey) => {
-      const entityGroupForm = new EntityGroupForm(this._metadata);
-
-      this.entityGroupForms.push(entityGroupForm);
-      entityGroupForm.name = nodeKey;
-      entityGroupForm.isComplement = nodeGroup.isComplement;
-      entityGroupForm.createEntityForms(nodeGroup.nodes);
-      self.fd.push(self._fb.group(entityGroupForm));
-    });
-  }
-
-  populateActivity(activity: Activity) {
-
-    this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
-      entityGroupForm.populateActivityNodes(activity);
+    self.entityForms.forEach((entityForm: EntityForm) => {
+      entityForm.populateTerm();
     });
 
     if (this.bpOnlyEdge.value) {
@@ -59,8 +50,11 @@ export class ActivityForm {
   }
 
   getErrors(error) {
-    this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
-      entityGroupForm.getErrors(error);
+    const self = this;
+
+    self.entityForms.forEach((entityForm: EntityForm) => {
+      entityForm.getErrors(error);
     });
   }
+
 }
