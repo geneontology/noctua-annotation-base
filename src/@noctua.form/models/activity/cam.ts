@@ -152,7 +152,7 @@ export class Cam {
    */
   displayId: string;
   moreDetail = false;
-  displayNumber = '0';
+  displayNumber = '1';
 
   displayType;
 
