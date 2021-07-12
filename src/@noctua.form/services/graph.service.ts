@@ -559,6 +559,7 @@ export class NoctuaGraphService {
 
       if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
         (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
+
           subjectNode.hasRootType(EntityDefinition.GoMolecularEntity))) {
 
         const subjectEdges = camGraph.get_edges_by_subject(bbopSubjectId);
@@ -712,9 +713,6 @@ export class NoctuaGraphService {
     });
 
     self.addFact(reqs, triples);
-
-
-
 
     if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
       reqs.use_groups([self.noctuaUserService.user.group.id]);

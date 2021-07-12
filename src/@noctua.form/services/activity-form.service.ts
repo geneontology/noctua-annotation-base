@@ -13,6 +13,7 @@ import { Entity } from '../models/activity/entity';
 import { Evidence } from '../models/activity/evidence';
 import { cloneDeep, each } from 'lodash';
 import { Cam } from '../models/activity/cam';
+import { Triple } from '../models//activity/triple';
 
 @Injectable({
   providedIn: 'root'
@@ -157,6 +158,22 @@ export class NoctuaActivityFormService {
       const saveData = self.activity.createSave();
       return self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title);
     }
+  }
+
+  createCCAnnotations(srcActivity: Activity) {
+    const self = this;
+    const ccEdges: Triple<ActivityNode>[] = srcActivity.getEdges(srcActivity.rootNode.id);
+    const activities = []
+
+    each(ccEdges, (ccEdge: Triple<ActivityNode>) => {
+      const activity = new Activity();
+      activity.addNode(ccEdge.subject);
+      activity.addEdge(ccEdge.subject, ccEdge.object, ccEdge.predicate);
+
+      activities.push(activity)
+    });
+
+    return activities;
   }
 
   clearForm() {

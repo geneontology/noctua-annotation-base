@@ -75,7 +75,7 @@ export const canInsertEntity = {
                 showInMenu: true,
             },
             predicate: noctuaFormConfig.edge.locatedIn,
-            cardinality: CardinalityType.oneToOne
+            cardinality: CardinalityType.oneToMany
         },
         <ShapeDescription>{
             label: 'Add is active in (CC)',
@@ -91,7 +91,7 @@ export const canInsertEntity = {
                 showInMenu: true,
             },
             predicate: noctuaFormConfig.edge.isActiveIn,
-            cardinality: CardinalityType.oneToOne
+            cardinality: CardinalityType.oneToMany
         },
     ],
     [ActivityNodeType.GoMolecularFunction]: [

@@ -384,6 +384,17 @@ export class Activity extends SaeGraph<ActivityNode> {
     return saveData;
   }
 
+  createCCSave() {
+    const self = this;
+    const ccEdges: Triple<ActivityNode>[] = self.getEdges(self.rootNode.id);
+
+    each(ccEdges, (ccEdge: Triple<ActivityNode>) => {
+      const activity = new Activity()
+      activity.addNode(self.rootNode)
+      activity.addEdge(ccEdge.subject, ccEdge.object, ccEdge.predicate)
+    });
+  }
+
   createEdit(srcActivity: Activity) {
     const self = this;
     const srcSaveData = srcActivity.createSave();
