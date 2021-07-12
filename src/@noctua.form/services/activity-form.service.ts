@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
@@ -155,8 +155,20 @@ export class NoctuaActivityFormService {
         saveData.removeIds,
         saveData.removeTriples);
     } else { // creation
-      const saveData = self.activity.createSave();
-      return self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title);
+      if (this.activity.activityType === ActivityType.ccOnly) {
+        const promises = []
+        const activities = self.createCCAnnotations(self.activity);
+        each(activities, (activity: Activity) => {
+          const saveData = activity.createSave();
+          promises.push(self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title))
+        })
+
+        return forkJoin(promises)
+
+      } else {
+        const saveData = self.activity.createSave();
+        return forkJoin(self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title));
+      }
     }
   }
 
@@ -167,8 +179,14 @@ export class NoctuaActivityFormService {
 
     each(ccEdges, (ccEdge: Triple<ActivityNode>) => {
       const activity = new Activity();
-      activity.addNode(ccEdge.subject);
-      activity.addEdge(ccEdge.subject, ccEdge.object, ccEdge.predicate);
+      const subject = cloneDeep(ccEdge.subject)
+      const object = cloneDeep(ccEdge.object)
+      const predicate = cloneDeep(ccEdge.predicate)
+      activity.activityType = srcActivity.activityType
+
+      activity.addNode(subject);
+      activity.addNodes(object);
+      activity.addEdge(subject, object, predicate);
 
       activities.push(activity)
     });

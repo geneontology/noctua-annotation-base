@@ -83,7 +83,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   save() {
     const self = this;
 
-    self.noctuaActivityFormService.saveActivity().then(() => {
+    self.noctuaActivityFormService.saveActivity().subscribe(() => {
       self.noctuaFormDialogService.openInfoToast('Activity successfully created.', 'OK');
       self.noctuaActivityFormService.clearForm();
       if (this.closeDialog) {
