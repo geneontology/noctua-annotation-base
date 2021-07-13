@@ -504,12 +504,24 @@ export class NoctuaGraphService {
       }));
   }
 
+  isStartEdge(subjectNode, predicateId) {
+    return predicateId === noctuaFormConfig.edge.enabledBy.id ||
+      ((predicateId === noctuaFormConfig.edge.partOf.id ||
+        predicateId === noctuaFormConfig.edge.locatedIn.id ||
+        predicateId === noctuaFormConfig.edge.isActiveIn.id) &&
+
+        subjectNode.hasRootType(EntityDefinition.GoMolecularEntity))
+  }
+
   getActivityPreset(subjectNode: Partial<ActivityNode>, predicateId, bbopSubjectEdges): Activity {
     const self = this;
     let activityType = ActivityType.default;
 
-    if (predicateId === noctuaFormConfig.edge.partOf.id &&
+    if ((predicateId === noctuaFormConfig.edge.partOf.id ||
+      predicateId === noctuaFormConfig.edge.locatedIn.id ||
+      predicateId === noctuaFormConfig.edge.isActiveIn.id) &&
       subjectNode.hasRootType(EntityDefinition.GoMolecularEntity)) {
+
       activityType = ActivityType.ccOnly;
     } else if (subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(bbopSubjectEdges, function (subjectEdge) {
@@ -557,10 +569,7 @@ export class NoctuaGraphService {
       const bbopSubjectId = bbopEdge.subject_id();
       const subjectNode = self.nodeToActivityNode(camGraph, bbopSubjectId);
 
-      if (bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id ||
-        (bbopEdge.predicate_id() === noctuaFormConfig.edge.partOf.id &&
-
-          subjectNode.hasRootType(EntityDefinition.GoMolecularEntity))) {
+      if (self.isStartEdge(subjectNode, bbopEdge.predicate_id())) {
 
         const subjectEdges = camGraph.get_edges_by_subject(bbopSubjectId);
         const activity: Activity = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
