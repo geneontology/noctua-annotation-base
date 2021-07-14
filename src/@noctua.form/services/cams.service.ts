@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, forkJoin, from } from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { BehaviorSubject, Observable, forkJoin, from, EMPTY } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
@@ -11,12 +11,14 @@ import { each, groupBy, find } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/activity/entity';
 import { HttpClient } from '@angular/common/http';
-import { map, mergeMap } from 'rxjs/operators';
+import { finalize, map, mergeMap } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
 import { ActivityNode } from './../models/activity/activity-node';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Evidence } from './../models/activity/evidence';
 import { NoctuaUserService } from './user.service';
+import { ReloadType } from '@noctua.search/models/review-mode';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 declare const require: any;
 
@@ -47,9 +49,11 @@ export class CamsService {
   public camFormGroup$: Observable<FormGroup>;
 
   constructor(
+    private zone: NgZone,
     private httpClient: HttpClient,
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
+    private confirmDialogService: NoctuaConfirmDialogService,
     private _noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
     private curieService: CurieService) {
@@ -277,6 +281,43 @@ export class CamsService {
     each(cams, (cam: Cam) => {
       cam.loading = camLoadingIndicator;
     });
+  }
+
+  reloadCam(cam: Cam, reloadType: ReloadType) {
+    const self = this;
+
+    from([cam]).pipe(
+      mergeMap((cam: Cam) => {
+        if (reloadType === ReloadType.RESET) {
+          cam.loading = new CamLoadingIndicator(true, 'Resetting Model ...');
+          return self.resetCams([cam]);
+        } else if (reloadType === ReloadType.STORE) {
+          cam.loading = new CamLoadingIndicator(true, 'Saving Model ...');
+          return self.storeCams([cam]);
+        } else {
+          return EMPTY;
+        }
+      }),
+      finalize(() => {
+        self.resetLoading([cam]);
+
+        self.zone.run(() => {
+          self.confirmDialogService.openInfoToast('Changes successfully saved.', 'OK');
+        });
+
+      })).subscribe({
+        next: (response) => {
+          if (!response || !response.data()) return;
+
+          //self._noctuaGraphService.rebuild(cam, response);
+          self.camService.populateStoredModel(cam, response.data())
+
+
+          const storedCam = this.camService.getCam(cam.id);
+          this.camService.addCamEdit(storedCam)
+          cam.loading.status = false;
+        }
+      })
   }
 
   sortCams() {

@@ -2,6 +2,17 @@
   <div *ngIf="!noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
     Not Logged In: You can only view existing annotations
   </div>
+  <div *ngIf="noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
+    Not Saved
+    <button mat-raised-button fxFlex="100px" (click)="resetCam(cam)" color="warn"
+      class="noc-rounded-button noc-half-button noc-r noc-sm">
+      Reset
+    </button>
+    <button mat-raised-button fxFlex="100px" color="primary" (click)="storeCam(cam)"
+      class="noc-rounded-button noc-half-button noc-l noc-sm mr-8 p-0">
+      Save
+    </button>
+  </div>
 
   <div *ngIf="cam" class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
     [@animateStagger]="{value:'50'}">

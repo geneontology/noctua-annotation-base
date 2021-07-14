@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, from, Observable } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
@@ -16,7 +16,8 @@ import { ActivityNodeType, ActivityNode, compareActivity } from './../models/act
 import { compareTerm } from './../models/activity/activity-node';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { finalize } from 'rxjs/operators';
+import { finalize, mergeMap } from 'rxjs/operators';
+import { ReloadType } from '@noctua.search/models/review-mode';
 
 declare const require: any;
 
@@ -234,4 +235,6 @@ export class CamService {
         },
       })
   }
+
+
 }
