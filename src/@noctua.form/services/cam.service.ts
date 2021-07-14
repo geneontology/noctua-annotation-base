@@ -14,6 +14,13 @@ import { Cam, CamStats } from './../models/activity/cam';
 import { differenceWith, uniqWith } from 'lodash';
 import { ActivityNodeType, ActivityNode, compareActivity } from './../models/activity';
 import { compareTerm } from './../models/activity/activity-node';
+import { environment } from './../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
+
+declare const require: any;
+
+const model = require('bbop-graph-noctua');
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +38,10 @@ export class CamService {
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
 
+  searchApi = environment.searchApi;
+
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
+    private httpClient: HttpClient,
     private _fb: FormBuilder,
     private noctuaUserService: NoctuaUserService,
     private noctuaGraphService: NoctuaGraphService,
@@ -122,6 +132,12 @@ export class CamService {
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
   }
 
+  getStoredModel(cam: Cam): Observable<any> {
+    const url = `${this.searchApi}/stored?id=${cam.id}`;
+
+    return this.httpClient.get(url)
+  }
+
   bulkEdit(cam: Cam): Observable<any> {
     const self = this;
     const promises = [];
@@ -189,5 +205,33 @@ export class CamService {
 
   reviewChanges(cam: Cam, stats: CamStats): boolean {
     return cam.reviewCamChanges(stats);
+  }
+
+  populateStoredModel(cam: Cam, storedCam) {
+    const self = this;
+    const noctua_graph = model.graph;
+
+    cam.storedGraph = new noctua_graph();
+    cam.storedGraph.load_data_basic(storedCam);
+    cam.storedActivities = self._noctuaGraphService.graphToActivities(cam.storedGraph)
+    cam.checkStored();
+    cam.reviewCamChanges();
+  }
+
+  addCamEdit(cam: Cam) {
+    const self = this;
+    cam.loading.status = true;
+    self.getStoredModel(cam).pipe(
+      finalize(() => {
+        cam.loading.status = false;
+      })).subscribe({
+        next: (response) => {
+          if (!response || !response.storedModel || !response.activeModel) return;
+
+          self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
+          self.populateStoredModel(cam, response.storedModel)
+          cam.loading.status = false;
+        },
+      })
   }
 }

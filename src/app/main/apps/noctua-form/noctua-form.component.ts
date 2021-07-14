@@ -92,6 +92,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         this.noctuaFormConfigService.setupUrls();
         this.noctuaFormConfigService.setUniversalUrls();
         this.loadCam(this.modelId);
+
       });
   }
 
@@ -113,6 +114,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   loadCam(modelId) {
     this.cam = this.camService.getCam(modelId);
+    this.camService.addCamEdit(this.cam)
   }
 
   openCamForm() {

@@ -186,7 +186,7 @@ export class NoctuaReviewSearchService {
                 return from(promises);
             }),
             mergeMap((cam: Cam) => {
-                return self.camsService.getStoredModel(cam);
+                return self.camService.getStoredModel(cam);
             }),
             finalize(() => {
                 self.camsService.sortCams();
@@ -202,7 +202,7 @@ export class NoctuaReviewSearchService {
                     if (!cam) return;
 
                     self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
-                    self.populateStoredModel(cam, response.storedModel)
+                    self.camService.populateStoredModel(cam, response.storedModel)
                     cam.loading.status = false;
                     self.camsService.sortCams();
                     self.camsService.updateDisplayNumber(cams);
@@ -272,7 +272,7 @@ export class NoctuaReviewSearchService {
                     if (!cam) return;
 
                     //self._noctuaGraphService.rebuild(cam, response);
-                    self.populateStoredModel(cam, response.data())
+                    self.camService.populateStoredModel(cam, response.data())
                     cam.loading.status = false;
                     self.camsService.updateDisplayNumber(reviewCams);
                     self.camsService.onCamsChanged.next(reviewCams);
@@ -307,7 +307,7 @@ export class NoctuaReviewSearchService {
             mergeMap((cam: Cam) => {
                 const reviewCam = find(reviewCams, { id: cam.id });
                 reviewCam.loading = new CamLoadingIndicator(true, 'Reloading Model ...');
-                return self.camsService.getStoredModel(cam);
+                return self.camService.getStoredModel(cam);
             }),
             finalize(() => {
 
@@ -320,7 +320,7 @@ export class NoctuaReviewSearchService {
                     if (!cam) return;
                     cam.rebuildRule.reset();
                     self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
-                    self.populateStoredModel(cam, response.storedModel)
+                    self.camService.populateStoredModel(cam, response.storedModel)
                     cam.loading.status = false;
                     self.camsService.sortCams();
                     self.camsService.updateDisplayNumber(reviewCams);
@@ -356,16 +356,7 @@ export class NoctuaReviewSearchService {
             success, options);
     }
 
-    populateStoredModel(cam: Cam, storedCam) {
-        const self = this;
-        const noctua_graph = model.graph;
 
-        cam.storedGraph = new noctua_graph();
-        cam.storedGraph.load_data_basic(storedCam);
-        cam.storedActivities = self._noctuaGraphService.graphToActivities(cam.storedGraph)
-        cam.checkStored();
-        cam.reviewCamChanges();
-    }
 
     searchCamsByIds(ids: string[]) {
         const self = this;

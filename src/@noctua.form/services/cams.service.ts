@@ -103,12 +103,6 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
-  getStoredModel(cam: Cam): Observable<any> {
-    const url = `${this.searchApi}/stored?id=${cam.id}`;
-
-    return this.httpClient.get(url)
-  }
-
   updateModel(cams: Cam[], responses) {
     const self = this;
 
@@ -209,7 +203,7 @@ export class CamsService {
 
     each(cams, (cam: Cam) => {
       cam.loading = new CamLoadingIndicator(true, 'Calculating Pending Changes ...');
-      promises.push(self.getStoredModel(cam));
+      promises.push(self.camService.getStoredModel(cam));
     });
 
     return forkJoin(promises);
