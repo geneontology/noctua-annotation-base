@@ -269,15 +269,29 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     cam.expanded = true;
     this.camService.cam = cam;
     this.camService.onCamChanged.next(cam);
-    //this.openRightDrawer(RightPanel.camDetail);
   }
 
-  openLeftDrawer(panel) {
+  openCamForm(cam: Cam) {
+    this.camService.cam = cam;
+    this.camService.initializeForm(cam);
+    this.camService.onCamChanged.next(cam);
+
+    this.openRightDrawer(RightPanel.camForm)
+  }
+
+  openDuplicateCamForm(cam: Cam) {
+    this.camService.cam = cam;
+    this.camService.onCamChanged.next(cam);
+
+    this.openRightDrawer(RightPanel.duplicateCamForm)
+  }
+
+  openLeftDrawer(panel: LeftPanel) {
     this.noctuaSearchMenuService.selectLeftPanel(panel);
     this.noctuaSearchMenuService.openLeftDrawer();
   }
 
-  openRightDrawer(panel) {
+  openRightDrawer(panel: RightPanel) {
     this.noctuaSearchMenuService.selectRightPanel(panel);
     this.noctuaSearchMenuService.openRightDrawer();
   }
