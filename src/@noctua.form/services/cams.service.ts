@@ -233,23 +233,7 @@ export class CamsService {
     this.onCamsCheckoutChanged.next(result);
   }
 
-  reviewCamChanges(cam: Cam) {
-    const self = this;
-    const stats = new CamStats();
 
-    const changes = self.camService.reviewChanges(cam, stats);
-    if (changes) {
-      stats.camsCount++;
-    }
-
-    stats.updateTotal();
-
-    const result = {
-      stats: stats,
-    };
-
-    return result
-  }
 
   clearHighlight() {
     each(this.cams, (cam: Cam) => {
@@ -309,12 +293,11 @@ export class CamsService {
         next: (response) => {
           if (!response || !response.data()) return;
 
-          //self._noctuaGraphService.rebuild(cam, response);
+          //Now stored == Active
           self.camService.populateStoredModel(cam, response.data())
 
-
-          const storedCam = this.camService.getCam(cam.id);
-          this.camService.addCamEdit(storedCam)
+          const summary = self.camService.reviewCamChanges(cam);
+          self.camService.onCamCheckoutChanged.next(summary);
           cam.loading.status = false;
         }
       })

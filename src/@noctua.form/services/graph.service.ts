@@ -665,6 +665,12 @@ export class NoctuaGraphService {
     cam.groupId = groupId;
   }
 
+  duplicateModel(cam: Cam) {
+    const self = this;
+
+    return cam.manager.async_duplicate_model(cam.id, cam.title + ' - Copy');
+  }
+
   resetModel(cam: Cam) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);

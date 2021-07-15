@@ -32,6 +32,7 @@ export class CamService {
   cam: Cam;
   onCamChanged: BehaviorSubject<any>;
   onCamUpdated: BehaviorSubject<any>;
+  onCamCheckoutChanged: BehaviorSubject<any>;
   onCamTermsChanged: BehaviorSubject<any>;
 
   public activity: Activity;
@@ -50,6 +51,7 @@ export class CamService {
     private _noctuaGraphService: NoctuaGraphService,
     private curieService: CurieService) {
     this.onCamChanged = new BehaviorSubject(null);
+    this.onCamCheckoutChanged = new BehaviorSubject(null);
     this.onCamUpdated = new BehaviorSubject(null);
     this.onCamTermsChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
@@ -198,6 +200,12 @@ export class CamService {
     return result;
   }
 
+  duplicateModel(cam: Cam) {
+    const self = this;
+
+    return self._noctuaGraphService.duplicateModel(cam);
+  }
+
   resetModel(cam: Cam) {
     const self = this;
 
@@ -206,6 +214,24 @@ export class CamService {
 
   reviewChanges(cam: Cam, stats: CamStats): boolean {
     return cam.reviewCamChanges(stats);
+  }
+
+  reviewCamChanges(cam: Cam) {
+    const self = this;
+    const stats = new CamStats();
+
+    const changes = self.reviewChanges(cam, stats);
+    if (changes) {
+      stats.camsCount++;
+    }
+
+    stats.updateTotal();
+
+    const result = {
+      stats: stats,
+    };
+
+    return result
   }
 
   populateStoredModel(cam: Cam, storedCam) {
@@ -231,6 +257,8 @@ export class CamService {
 
           self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
           self.populateStoredModel(cam, response.storedModel)
+          const summary = self.reviewCamChanges(cam);
+          self.onCamCheckoutChanged.next(summary);
           cam.loading.status = false;
         },
       })

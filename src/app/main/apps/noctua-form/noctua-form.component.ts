@@ -29,6 +29,7 @@ import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { TableOptions } from '@noctua.common/models/table-options';
 import { NoctuaSearchDialogService } from '@noctua.search/services/dialog.service';
 import { ReloadType } from '@noctua.search/models/review-mode';
+import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 
 @Component({
   selector: 'app-noctua-form',
@@ -75,6 +76,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     private camService: CamService,
     private _noctuaGraphService: NoctuaGraphService,
     private noctuaDataService: NoctuaDataService,
+    private noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaSearchDialogService: NoctuaSearchDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -137,6 +139,8 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   loadCam(modelId) {
     this.cam = this.camService.getCam(modelId);
     this.camService.addCamEdit(this.cam)
+    this.camsService.cams = [this.cam]
+    this.noctuaReviewSearchService.addCamsToReview([this.cam], this.camsService.cams);
   }
 
   openCamForm() {
@@ -149,10 +153,18 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     this.noctuaFormMenuService.openLeftDrawer(LeftPanel.activityForm);
   }
 
+  openSearch() {
+    this.noctuaFormMenuService.openLeftDrawer(LeftPanel.findReplace);
+  }
+
+  duplicateModel() {
+    this.camService.duplicateModel(this.cam)
+  }
+
   resetCam(cam: Cam) {
     const self = this;
 
-    const summary = self.camsService.reviewCamChanges(cam);
+    const summary = self.camService.reviewCamChanges(cam);
     const success = (ok) => {
       if (ok) {
         cam.loading = new CamLoadingIndicator(true, 'Resetting Model ...');
@@ -176,7 +188,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   storeCam(cam: Cam) {
 
     const self = this;
-    const summary = self.camsService.reviewCamChanges(cam);
+    const summary = self.camService.reviewCamChanges(cam);
 
     if (summary?.stats.totalChanges > 0) {
       const success = (replace) => {

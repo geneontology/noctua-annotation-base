@@ -121,7 +121,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
   remove(cam: Cam) {
     const self = this;
-    const summary = self.camsService.reviewCamChanges(cam)
+    const summary = self.camService.reviewCamChanges(cam)
     const success = (ok) => {
       if (ok) {
         this.noctuaReviewSearchService.removeCamFromReview(cam);
@@ -152,7 +152,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   resetCam(cam: Cam) {
     const self = this;
 
-    const summary = self.camsService.reviewCamChanges(cam);
+    const summary = self.camService.reviewCamChanges(cam);
     const success = (ok) => {
       if (ok) {
         self._resetCamsQuery([cam]);
@@ -210,7 +210,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     const success = (done) => {
     }
 
-    const summary = self.camsService.reviewCamChanges(cam)
+    const summary = self.camService.reviewCamChanges(cam)
     self.noctuaSearchDialogService.openCamReviewChangesDialog(success, summary)
 
   }
@@ -248,7 +248,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   submitChange(cam: Cam) {
 
     const self = this;
-    const summary = self.camsService.reviewCamChanges(cam);
+    const summary = self.camService.reviewCamChanges(cam);
 
     if (summary?.stats.totalChanges > 0) {
       const success = (replace) => {

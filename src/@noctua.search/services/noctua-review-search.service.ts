@@ -385,8 +385,6 @@ export class NoctuaReviewSearchService {
             return;
         }
 
-
-
         // so it circulates
         this.matchedCountCursor = (this.matchedCountCursor + 1) % this.matchedCount;
         this.currentMatchedEnity = this.matchedEntities[this.matchedCountCursor];

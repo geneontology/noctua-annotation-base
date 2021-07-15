@@ -61,6 +61,7 @@ import { ActivityTreeTableComponent } from './cam/cam-table/activity-tree-table/
 import { ActivitySlimTreeComponent } from './cam/cam-table/activity-slim-tree/activity-slim-tree.component';
 import { ActivitySlimTreeNodeComponent } from './cam/cam-table/activity-slim-tree/activity-slim-tree-node/activity-tree-node.component';
 import { PreviewActivityComponent } from './cam/activity/preview-activity/preview-activity.component';
+import { NoctuaSearchBaseModule } from '@noctua.search';
 
 const routes = [
   {
@@ -79,6 +80,7 @@ const routes = [
     ContextMenuModule.forRoot(),
     NoctuaConfirmDialogModule,
     NoctuaEditorModule,
+    NoctuaSearchBaseModule,
 
     //Material
     MatAutocompleteModule,
