@@ -1,7 +1,8 @@
 export enum LeftPanel {
     activityForm = 'activityForm',
     camForm = 'camForm',
-    findReplace = 'findReplace'
+    findReplace = 'findReplace',
+    duplicateCamForm = 'duplicateCamForm'
 };
 
 export enum MiddlePanel {

@@ -157,8 +157,8 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     this.noctuaFormMenuService.openLeftDrawer(LeftPanel.findReplace);
   }
 
-  duplicateModel() {
-    this.camService.duplicateModel(this.cam)
+  openDuplicateCamForm() {
+    this.noctuaFormMenuService.openLeftDrawer(LeftPanel.duplicateCamForm);
   }
 
   resetCam(cam: Cam) {

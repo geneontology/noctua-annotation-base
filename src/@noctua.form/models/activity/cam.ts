@@ -141,6 +141,7 @@ export class Cam {
   baristaClient;
   engine;
   manager;
+  duplicateManager;
   artManager;
   groupManager;
   replaceManager;

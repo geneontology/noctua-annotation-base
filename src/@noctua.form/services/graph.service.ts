@@ -143,6 +143,7 @@ export class NoctuaGraphService {
     cam.id = modelId;
     //cam.baristaClient = this.registerBaristaClient(cam);
     cam.manager = this.registerManager();
+    cam.duplicateManager = this.registerManager();
     cam.artManager = this.registerManager();
     cam.groupManager = this.registerManager();
     cam.replaceManager = this.registerManager(false);
@@ -665,17 +666,19 @@ export class NoctuaGraphService {
     cam.groupId = groupId;
   }
 
-  duplicateModel(cam: Cam) {
+  duplicateModel(cam: Cam, destTitle?: string) {
     const self = this;
 
-    return cam.manager.async_duplicate_model(cam.id, cam.title + ' - Copy');
+    const title = destTitle ? destTitle : cam.title + ' - Copy';
+
+    return cam.duplicateManager.async_duplicate_model(cam.id, title);
   }
 
   resetModel(cam: Cam) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
-
     const req = new minerva_requests.request('model', 'reset');
+
     req.model(cam.id);
     reqs.add(req, 'query');
     return cam.manager.request_with(reqs);

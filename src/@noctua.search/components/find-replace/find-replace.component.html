@@ -15,10 +15,6 @@
     <div *ngIf="!noctuaUserService.user" class="noc-draw-body-disabled" fxLayoutAlign="center center">
       Log in to Continue
     </div>
-    <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
-      <span class="noc-header-title">
-        Review and submit changes</span>
-    </div>
     <div class="noc-stats-results" fxLayout="column" fxLayoutAlign="start center">
       <div class="noc-stat-summary">
         <span class="noc-number">
@@ -28,10 +24,10 @@
       </div>
       <table fxFlex="1 1 auto" mat-table class="noc-summary-table" [dataSource]="stats">
         <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef fxFlex="250px" fxLayout="row" fxLayoutAlign="start center">
+          <th mat-header-cell *matHeaderCellDef fxFlex="200px" fxLayout="row" fxLayoutAlign="start center">
             Category
           </th>
-          <td mat-cell *matCellDef="let stat" fxFlex="250px" class="noc-title" fxLayout="row"
+          <td mat-cell *matCellDef="let stat" fxFlex="200px" class="noc-title" fxLayout="row"
             fxLayoutAlign="start center">
             {{stat.category }}
           </td>
@@ -46,48 +42,14 @@
         <tr mat-row (click)="$event.stopPropagation()" *matRowDef="let stat; columns: displayedColumns;">
         </tr>
       </table>
-      <!--   <div fxLayout="row" fxLayoutAlign="start center">
-          <div fxFlex="200px">
-            Summary
-          </div>
-          <div fxFlex>
-            Details
-          </div>
-        </div>
-        <div fxLayout="row" fxLayoutAlign="start center">
-          <div fxFlex="200px">
-            Terms
-          </div>
-          <div fxFlex>
-            <div *ngFor="let modelSummary of summary">
-              <div *ngFor="let term of modelSummary.changes?.terms">
-                <div *ngFor="let termHistory of term.termHistory">
-                  {{term.label}} -> {{termHistory.label}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
-    <ng-container *ngIf="noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.cams">
-      <button (click)="clear()" type="button" mat-raised-button>Clear List</button>
-    </ng-container>
-    <ng-container *ngIf="noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.camsReview">
-      <button (click)="clear()" type="button" mat-raised-button>Clear List</button>
-      <span fxFlex=""></span>
-      <button (click)='resetCams()' type="button" mat-raised-button color="" class="mr-8">Undo Changes</button>
-      <button (click)="reviewChanges()" type="submit" class="" mat-raised-button color="primary">
-        Review Changes
-      </button>
-    </ng-container>
-    <ng-container *ngIf="noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.reviewChanges">
-      <span fxFlex=""></span>
-      <button (click)='backToReview()' type="button" mat-raised-button color="" class="mr-8">Back</button>
-      <button (click)="submitChanges()" type="submit" class="" mat-raised-button color="primary">
-        Submit
-      </button>
-    </ng-container>
+    <span fxFlex=""></span>
+    <button (click)='resetCams()' type="button" mat-raised-button color="warn" class="mr-8">Undo Changes</button>
+
+    <button (click)="submitChanges()" type="submit" class="" mat-raised-button color="primary">
+      Submit
+    </button>
   </div>
 </div>

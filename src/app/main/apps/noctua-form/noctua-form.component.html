@@ -27,8 +27,9 @@
       (click)="openSearch()" matTooltip="Find and replace" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'search']"></fa-icon>
     </button>
-    <button mat-icon-button color="" class="noc-rounded-button" (click)="duplicateModel()" matTooltip="Find and replace"
-      [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
+    <button mat-icon-button color="" class="noc-rounded-button" (click)="openDuplicateCamForm()"
+      [ngClass]="{'noc-active': noctuaFormMenuService.selectedLeftPanel === LeftPanel.duplicateCamForm}"
+      matTooltip="Make a copy of this model" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'clone']"></fa-icon>
     </button>
   </div>
@@ -170,6 +171,8 @@
         <div [ngSwitch]="noctuaFormMenuService.selectedLeftPanel" class="h-100-p">
           <noc-cam-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.camForm">
           </noc-cam-form>
+          <noc-duplicate-cam-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.duplicateCamForm">
+          </noc-duplicate-cam-form>
           <noc-activity-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.activityForm">
           </noc-activity-form>
           <noc-find-replace [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.findReplace">

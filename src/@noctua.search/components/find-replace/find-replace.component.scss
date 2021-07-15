@@ -174,10 +174,10 @@ $accent: map-get($theme, accent);
   }
 
   .noc-summary-table {
-    @include deep-width(400px);
+    @include deep-width(100%);
 
     .noc-column-flex {
-      min-width: 150px !important;
+      min-width: 100px !important;
     }
 
     .mat-cell {

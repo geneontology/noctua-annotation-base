@@ -200,10 +200,10 @@ export class CamService {
     return result;
   }
 
-  duplicateModel(cam: Cam) {
+  duplicateModel(cam: Cam, destTitle?: string) {
     const self = this;
 
-    return self._noctuaGraphService.duplicateModel(cam);
+    return self._noctuaGraphService.duplicateModel(cam, destTitle);
   }
 
   resetModel(cam: Cam) {

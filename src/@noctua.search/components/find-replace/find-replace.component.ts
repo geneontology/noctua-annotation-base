@@ -27,6 +27,11 @@ export class FindReplaceComponent implements OnInit, OnDestroy {
     mode: 'indeterminate'
   };
 
+  displayedColumns = [
+    'category',
+    'count'
+  ];
+
   private _unsubscribeAll: Subject<any>;
 
   constructor(
