@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Cam, CamLoadingIndicator, CamService, CamsService, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
+import { Cam, CamLoadingIndicator, CamService, CamsService, NoctuaFormConfigService, NoctuaUserService, ReloadType } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -9,7 +9,6 @@ import { NoctuaReviewSearchService } from './../../services/noctua-review-search
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { LeftPanel, MiddlePanel } from './../../models/menu-panels';
 import { NoctuaSearchDialogService } from './../../services/dialog.service';
-import { ReloadType } from './../../models/review-mode';
 
 @Component({
   selector: 'noc-art-basket',
@@ -77,40 +76,16 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
-  cancel() {
-    const self = this;
-
-    const success = (cancel) => {
-      if (cancel) {
-        const element = document.querySelector('#noc-review-results');
-
-        if (element) {
-          element.scrollTop = 0;
-        }
-        this.noctuaReviewSearchService.clear();
-        this.noctuaReviewSearchService.onResetReview.next(true);
-      }
-    };
-
-    const options = {
-      cancelLabel: 'No',
-      confirmLabel: 'Yes'
-    };
-
-    this.confirmDialogService.openConfirmDialog('Confirm Cancel?',
-      'You are about to cancel annotation review. All your unsaved changes will be lost.',
-      success, options);
-  }
-
   backToReview() {
     this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.camsReview);
   }
 
   clear() {
     const self = this;
-    const success = (cancel) => {
-      if (cancel) {
+    const success = (clear) => {
+      if (clear) {
 
+        this.noctuaReviewSearchService.onClearForm.next(true);
         this.noctuaReviewSearchService.clear();
         this.camsService.clearCams();
         this.noctuaReviewSearchService.clearBasket();
@@ -120,7 +95,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     if (self.summary?.stats.totalChanges > 0) {
       const options = {
         title: 'Confirm Clear Basket?',
-        message: 'You are about to remove all items from the basket. All your unsaved changes will be lost. Please save changes or undo changes.',
+        message: 'You are about to remove all items from the basket. Please save changes or undo changes.',
         cancelLabel: 'Go Back',
         confirmLabel: 'Clear Anyway'
       };
@@ -133,7 +108,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
       };
 
       this.confirmDialogService.openConfirmDialog('Confirm Clear Basket?',
-        'You are about to remove all items from the basket. All your unsaved changes will be lost.',
+        'You are about to remove all items from the basket.',
         success, options);
     }
   }
@@ -145,7 +120,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
   remove(cam: Cam) {
     const self = this;
-    const summary = self.camsService.reviewCamChanges(cam)
+    const summary = self.camService.reviewCamChanges(cam)
     const success = (ok) => {
       if (ok) {
         this.noctuaReviewSearchService.removeCamFromReview(cam);
@@ -176,7 +151,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   resetCam(cam: Cam) {
     const self = this;
 
-    const summary = self.camsService.reviewCamChanges(cam);
+    const summary = self.camService.reviewCamChanges(cam);
     const success = (ok) => {
       if (ok) {
         self._resetCamsQuery([cam]);
@@ -234,7 +209,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     const success = (done) => {
     }
 
-    const summary = self.camsService.reviewCamChanges(cam)
+    const summary = self.camService.reviewCamChanges(cam)
     self.noctuaSearchDialogService.openCamReviewChangesDialog(success, summary)
 
   }
@@ -250,13 +225,10 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
 
     const success = (replace) => {
       if (replace) {
-        const element = document.querySelector('#noc-review-results');
-
-        if (element) {
-          element.scrollTop = 0;
-        }
+        self.noctuaSearchMenuService.scrollToTop();
 
         self._storeCamsQuery(self.camsService.cams, true);
+        this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.camsReview);
       };
     }
 
@@ -275,7 +247,7 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
   submitChange(cam: Cam) {
 
     const self = this;
-    const summary = self.camsService.reviewCamChanges(cam);
+    const summary = self.camService.reviewCamChanges(cam);
 
     if (summary?.stats.totalChanges > 0) {
       const success = (replace) => {
@@ -300,7 +272,6 @@ export class ArtBasketComponent implements OnInit, OnDestroy {
     const self = this;
 
     self.noctuaReviewSearchService.reloadCams(cams, self.camsService.cams, ReloadType.STORE, reset)
-
   }
 
   private _resetCamsQuery(cams: Cam[], reset = false) {

@@ -5,7 +5,7 @@ import { EntityLookup } from './entity-lookup';
 
 export class Predicate {
   uuid: string;
-  edge: Entity;
+  _edge: Entity = new Entity('', '');
   evidence: Evidence[];
   // Because there is one predicate and multiple evidence
   evidenceLookup: EntityLookup = new EntityLookup();
@@ -22,6 +22,18 @@ export class Predicate {
   constructor(edge: Entity, evidence?: Evidence[]) {
     this.edge = edge;
     this.evidence = evidence ? evidence : [];
+  }
+
+  get edge() {
+    return this._edge;
+  }
+
+  set edge(edge: Entity) {
+    if (!edge) {
+      this._edge = new Entity('', '');
+    } else {
+      this._edge = edge;
+    }
   }
 
   setEvidenceMeta(ontologyClass, lookupBase) {

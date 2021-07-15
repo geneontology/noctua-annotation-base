@@ -64,6 +64,9 @@
     </mat-chip>
   </div>
   <div class="noc-summary-results-bar" fxLayout="row" fxLayoutAlign="start center">
+    <mat-progress-bar *ngIf="noctuaSearchService.loading" class="noc-cam-progress" [color]="loadingSpinner.color"
+      [mode]="loadingSpinner.mode">
+    </mat-progress-bar>
     <small>Results:</small>
     <div class="ml-8 mr-16" fxLayout="row" fxLayoutAlign="start center">
       <button mat-stroked-button color="" class="noc-rounded-button mr-4 noc-half-button noc-sm noc-r">
@@ -193,10 +196,22 @@
     <ng-container matColumnDef="export">
       <th mat-header-cell *matHeaderCellDef fxFlex="115px" fxLayout="row" fxLayoutAlign="start center">Export</th>
       <td mat-cell *matCellDef="let cam" fxFlex="115px" fxLayout="row" fxLayoutAlign="start center">
-        <button mat-stroked-button [matMenuTriggerFor]="exportMenu" class="noc-edit-button noc-rounded-button noc-sm"
+        <button mat-stroked-button [matMenuTriggerFor]="optionsMenu" class="noc-edit-button noc-rounded-button noc-sm"
           color="primary">
-          EXPORT AS
+          <mat-icon>more_horiz</mat-icon>
         </button>
+        <mat-menu #optionsMenu="matMenu">
+          <button mat-menu-item (click)="openCamForm(cam)" class="">
+            Model Info
+          </button>
+          <button mat-menu-item (click)="openDuplicateCamForm(cam)" class="">
+            Duplicate Model
+          </button>
+          <button mat-menu-item [matMenuTriggerFor]="exportMenu" class="">
+            Export As
+          </button>
+        </mat-menu>
+
         <mat-menu #exportMenu="matMenu">
           <a [href]='cam?.model?.modelInfo?.gpadUrl' target="_blank" mat-menu-item>
             GPAD

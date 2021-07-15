@@ -8,16 +8,27 @@ import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
-import { ConnectorActivity, ConnectorType } from './connector-activity';
+import { ConnectorActivity } from './connector-activity';
 import { each, find, filter } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
 
+export enum ReloadType {
+  RESET = 'reset',
+  STORE = 'store'
+}
+
 export enum CamRebuildSignal {
   NONE = 'none',
   MERGE = 'merge',
   REBUILD = 'rebuild'
+}
+
+export enum CamOperation {
+  NONE = 'none',
+  ADD_ACTIVITY = 'add_activity',
+  ADD_CAUSAL_RELATION = 'add_causal_relation'
 }
 
 export class CamQueryMatch {
@@ -109,8 +120,8 @@ export class Cam {
   groupId: any;
   expanded = false;
   model: any;
-  connectorActivities: ConnectorActivity[] = [];
-  triples: Triple<Activity>[] = [];
+  //connectorActivities: ConnectorActivity[] = [];
+  causalRelations: Triple<Activity>[] = [];
   sort;
   error = false;
   date;
@@ -120,6 +131,8 @@ export class Cam {
   queryMatch = new CamQueryMatch();
   dateReviewAdded = Date.now();
 
+
+  operation = CamOperation.NONE;
   //rebuild
   rebuildRule = new CamRebuildRule();
 
@@ -127,12 +140,12 @@ export class Cam {
   graph;
   storedGraph;
   pendingGraph;
-  onGraphChanged;
 
   // bbop managers 
   baristaClient;
   engine;
   manager;
+  duplicateManager;
   artManager;
   groupManager;
   replaceManager;
@@ -144,10 +157,10 @@ export class Cam {
    */
   displayId: string;
   moreDetail = false;
-  displayNumber = '0';
+  displayNumber = '1';
 
   displayType;
-  grid: any = [];
+
   graphPreview = {
     nodes: [],
     edges: []
@@ -160,13 +173,16 @@ export class Cam {
   hasViolations = false;
   violations: Violation[];
 
+  //Graph
+  manualLayout = false;
+  layoutChanged = false;
+
   private _filteredActivities: Activity[] = [];
   private _activities: Activity[] = [];
   private _storedActivities: Activity[] = [];
   private _id: string;
 
   constructor() {
-    this.displayType = noctuaFormConfig.camDisplayType.options.model;
   }
 
   get id() {
@@ -179,12 +195,7 @@ export class Cam {
   }
 
   get activities() {
-    switch (this.displayType) {
-      case noctuaFormConfig.camDisplayType.options.entity:
-        return this._filteredActivities.sort(this._compareMolecularFunction);
-      default:
-        return this._activities.sort(this._compareMolecularFunction);
-    }
+    return this._activities.sort(this._compareMolecularFunction);
   }
 
   set activities(srcActivities: Activity[]) {
@@ -227,16 +238,15 @@ export class Cam {
     });
   }
 
-  getConnectorActivity(upstreamId: string, downstreamId: string): ConnectorActivity {
+  getCausalRelation(subjectId: string, objectId: string): Triple<Activity> {
     const self = this;
 
-    return find(self.connectorActivities, (connectorActivity: ConnectorActivity) => {
-      return connectorActivity.upstreamNode.uuid === upstreamId &&
-        connectorActivity.downstreamNode.uuid === downstreamId;
-    });
+    return self.causalRelations.find((triple: Triple<Activity>) => {
+      return triple.subject.id === subjectId && triple.object.id === objectId;
+    })
   }
 
-  clearFilter() {
+  clearHighlight() {
     const self = this;
 
     each(self._activities, (activity: Activity) => {
@@ -310,12 +320,11 @@ export class Cam {
   applyFilter() {
     const self = this;
 
-    self.clearFilter();
+    self.clearHighlight();
 
     if (self.queryMatch && self.queryMatch.terms.length > 0) {
       self._filteredActivities = [];
       self.matchedCount = 0;
-      //  this.displayType = noctuaFormConfig.camDisplayType.options.entity;
 
       each(self._activities, (activity: Activity) => {
         let match = false;
@@ -389,10 +398,10 @@ export class Cam {
           if (category.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
             each(node.predicate.evidence, (evidence: Evidence, key) => {
               if (evidence.uuid === entity.uuid) {
-                const oldRefence = new Entity(evidence.reference, evidence.reference);
+                const oldReference = new Entity(evidence.reference, evidence.reference);
                 const newReference = new Entity(replaceWith, replaceWith);
 
-                evidence.pendingReferenceChanges = new PendingChange(evidence.uuid, oldRefence, newReference);
+                evidence.pendingReferenceChanges = new PendingChange(evidence.uuid, oldReference, newReference);
                 evidence.pendingReferenceChanges.uuid = evidence.uuid;
               }
             });
@@ -422,15 +431,6 @@ export class Cam {
 
     self.modifiedStats.updateTotal();
     return modified;
-  }
-
-  getActivityByConnectionId(connectionId) {
-    const self = this;
-    let result = find(self.activities, (activity: Activity) => {
-      return activity.id === connectionId;
-    })
-
-    return result;
   }
 
   getNodesByType(type: ActivityNodeType): any[] {
@@ -505,68 +505,6 @@ export class Cam {
     return result;
   }
 
-  setPreview() {
-    const self = this;
-    self.graphPreview.edges = [];
-    self.graphPreview.nodes = <NgxNode[]>self.activities.map((activity: Activity) => {
-      return {
-        id: activity.id,
-        label: activity.presentation.mfText,
-        data: {
-          activity: activity
-        }
-      };
-    });
-
-    each(self.connectorActivities, (connectorActivity: ConnectorActivity) => {
-      if (connectorActivity.type === ConnectorType.basic) {
-        self.graphPreview.edges.push(
-          <NgxEdge>{
-            source: connectorActivity.upstreamNode.uuid,
-            target: connectorActivity.downstreamNode.uuid,
-            label: connectorActivity.rule.r1Edge.label,
-            data: {
-              connectorActivity: connectorActivity
-            }
-          });
-      } else if (connectorActivity.type === ConnectorType.intermediate) {
-        self.graphPreview.nodes.push({
-          id: connectorActivity.processNode.uuid,
-          label: connectorActivity.processNode.term.label,
-          data: {
-            connectorActivity: connectorActivity
-          }
-        });
-        self.graphPreview.edges.push(
-          <NgxEdge>{
-            source: connectorActivity.upstreamNode.uuid,
-            target: connectorActivity.processNode.uuid,
-            label: connectorActivity.rule.r1Edge.label,
-            data: {
-              connectorActivity: connectorActivity
-            }
-          });
-        self.graphPreview.edges.push(
-          <NgxEdge>{
-            source: connectorActivity.processNode.uuid,
-            target: connectorActivity.downstreamNode.uuid,
-            label: connectorActivity.rule.r2Edge.label,
-            data: {
-              connectorActivity: connectorActivity
-            }
-          });
-      }
-    });
-
-    /*
-        self.graphPreview.edges = <NgxEdge[]>triples.map((triple: Triple<ActivityNode>) => {
-          return {
-            source: triple.subject.id,
-            target: triple.object.id,
-            label: triple.predicate.edge.label
-          };
-        });*/
-  }
 
   setViolations() {
     const self = this;
@@ -579,23 +517,6 @@ export class Cam {
           activity.violations.push(violation);
         });
       }
-    });
-  }
-
-  generateGridRow(activity: Activity, node: ActivityNode) {
-    const self = this;
-    const term = node.getTerm();
-
-    self.grid.push({
-      displayEnabledBy: self.tableCanDisplayEnabledBy(node),
-      treeLevel: node.treeLevel,
-      relationship: node.isExtension ? '' : self.tableDisplayExtension(node),
-      relationshipExt: node.isExtension ? node.predicate.edge.label : '',
-      term: node.isExtension ? {} : term,
-      extension: node.isExtension ? term : {},
-      aspect: node.aspect,
-      activity: activity,
-      node: node
     });
   }
 

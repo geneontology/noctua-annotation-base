@@ -3,9 +3,9 @@ import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
 import { ActivityError, ErrorLevel, ErrorType } from './parser/activity-error';
-import { ActivityNode, ActivityNodeType } from './activity-node';
+import { ActivityNode, ActivityNodeType, compareNodeWeight } from './activity-node';
 import { Evidence } from './evidence';
-import { Triple } from './triple';
+import { compareTripleWeight, Triple } from './triple';
 import { Entity } from './entity';
 import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
@@ -20,15 +20,24 @@ export enum ActivityState {
   editing
 }
 
+export enum ActivityDisplayType {
+  TABLE = 'table',
+  TREE = 'tree',
+  TREE_TABLE = 'tree_table', //for ART
+  SLIM_TREE = 'slim_tree',
+  GRAPH = 'graph'
+}
+
 export enum ActivityType {
   default = 'default',
   bpOnly = 'bpOnly',
-  ccOnly = 'ccOnly'
+  ccOnly = 'ccOnly',
+  molecule = 'molecule'
 }
 
 export class ActivitySize {
   width: number = 150;
-  height: number = 100;
+  height: number = 120;
 
   constructor() {
 
@@ -36,8 +45,8 @@ export class ActivitySize {
 }
 
 export class ActivityPosition {
-  width: number = 0;
-  height: number = 0;
+  x: number = 0;
+  y: number = 0;
 
   constructor() {
 
@@ -65,18 +74,22 @@ export class Activity extends SaeGraph<ActivityNode> {
   /**
    * Used for HTML id attribute
    */
+  activityDisplayType: ActivityDisplayType = ActivityDisplayType.TREE;
   displayId: string;
-  displayNumber = '0';
+  displayNumber = '1';
 
   hasViolations = false;
   violations: Violation[] = [];
 
 
   bpOnlyEdge: Entity;
+  ccOnlyEdge: Entity;
 
   //Graph
   position: ActivityPosition = new ActivityPosition();
   size: ActivitySize = new ActivitySize();
+  private _backgroundColor = 'green'
+
 
   private _presentation: any;
   private _grid: any[] = [];
@@ -99,12 +112,24 @@ export class Activity extends SaeGraph<ActivityNode> {
     this.displayId = NoctuaFormUtils.cleanID(id) + 'activity';
   }
 
+  get backgroundColor() {
+    switch (this.activityType) {
+      case ActivityType.ccOnly:
+        return 'purple'
+      case ActivityType.bpOnly:
+        return 'brown'
+      default:
+        return this._backgroundColor;
+    }
+  }
+
   get activityConnections() {
     throw new Error('Method not implemented');
   }
 
   get rootNodeType(): ActivityNodeType {
-    return this.activityType === ActivityType.ccOnly ?
+    return this.activityType === ActivityType.ccOnly ||
+      this.activityType === ActivityType.molecule ?
       ActivityNodeType.GoMolecularEntity :
       ActivityNodeType.GoMolecularFunction;
   }
@@ -123,6 +148,10 @@ export class Activity extends SaeGraph<ActivityNode> {
         }
       }
     }
+  }
+
+  getActivityTypeDetail() {
+    return noctuaFormConfig.activityType.options[this.activityType];
   }
 
   get rootNode(): ActivityNode {
@@ -331,7 +360,7 @@ export class Activity extends SaeGraph<ActivityNode> {
   createSave() {
     const self = this;
     const saveData = {
-      title: 'enabled by ' + self.getNode(ActivityNodeType.GoMolecularEntity).term.label,
+      title: 'enabled by ' + self.getNode(ActivityNodeType.GoMolecularEntity)?.term.label,
       triples: [],
       nodes: [],
       graph: null
@@ -353,6 +382,17 @@ export class Activity extends SaeGraph<ActivityNode> {
     saveData.graph = graph;
 
     return saveData;
+  }
+
+  createCCSave() {
+    const self = this;
+    const ccEdges: Triple<ActivityNode>[] = self.getEdges(self.rootNode.id);
+
+    each(ccEdges, (ccEdge: Triple<ActivityNode>) => {
+      const activity = new Activity()
+      activity.addNode(self.rootNode)
+      activity.addEdge(ccEdge.subject, ccEdge.object, ccEdge.predicate)
+    });
   }
 
   createEdit(srcActivity: Activity) {
@@ -435,10 +475,11 @@ export class Activity extends SaeGraph<ActivityNode> {
     const gpText = gp ? gp.getTerm().label : '';
     let title = '';
 
-    if (self.activityType === ActivityType.ccOnly) {
+    if (self.activityType === ActivityType.ccOnly ||
+      self.activityType === ActivityType.molecule) {
       title = gpText;
     } else {
-      title = `enabled by ${gpText}`;
+      title = `enabled by (${gpText})`;
     }
 
     return title;
@@ -446,8 +487,9 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   buildTrees() {
     const self = this;
+    const sortedEdges = self.edges.sort(compareTripleWeight);
 
-    return [self._buildTree(self.edges, self.rootNode)];
+    return [self._buildTree(sortedEdges, self.rootNode)];
   }
 
   count = 0
@@ -457,7 +499,6 @@ export class Activity extends SaeGraph<ActivityNode> {
     const self = this;
     const result: ActivityTreeNode[] = [new ActivityTreeNode(rootNode)]
     const getNestedChildren = (arr: ActivityTreeNode[]) => {
-
 
       for (const i in arr) {
         const children = []
@@ -496,6 +537,8 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     if (self.activityType === ActivityType.ccOnly) {
       title = gpText;
+    } else if (self.activityType === ActivityType.molecule) {
+      title = gpText;
     } else {
       qualifier = mf.isComplement ? 'NOT' : '';
       title = `enabled by ${gpText}`;
@@ -511,7 +554,7 @@ export class Activity extends SaeGraph<ActivityNode> {
       extra: []
     };
 
-    const sortedNodes = self.nodes.sort(self._compareNodeWeight);
+    const sortedNodes = self.nodes.sort(compareNodeWeight);
 
     each(sortedNodes, function (node: ActivityNode) {
       if (node.displaySection && node.displayGroup) {
@@ -644,14 +687,6 @@ export class Activity extends SaeGraph<ActivityNode> {
     }
   }
 
-  private _compareNodeWeight(a: ActivityNode, b: ActivityNode): number {
-    if (a.weight < b.weight) {
-      return -1;
-    } else {
-      return 1;
-    }
-  }
-
   print() {
     const result = []
     this.nodes.forEach((node) => {
@@ -689,3 +724,10 @@ export class ActivityTreeNode {
   }
 
 }
+
+export function compareActivity(a: Activity, b: Activity) {
+  return a.id === b.id;
+}
+
+
+

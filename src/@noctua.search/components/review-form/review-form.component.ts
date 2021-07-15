@@ -87,7 +87,10 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
         this.cams = cams;
       });
 
-    this.gpNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity]);
+    this.gpNode = EntityDefinition.generateBaseTerm([
+      EntityDefinition.GoMolecularEntity,
+      // EntityDefinition.GoChemicalEntity
+    ]);
     this.termNode = EntityDefinition.generateBaseTerm([
       EntityDefinition.GoMolecularFunction,
       EntityDefinition.GoBiologicalProcess,
@@ -100,7 +103,16 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.selectedCategory = this.categories.selected;
-    this.resetForm(this.selectedCategory)
+    this.resetForm(this.selectedCategory);
+
+    this.noctuaReviewSearchService.onClearForm
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(clear => {
+        if (!clear) {
+          return;
+        }
+        this.clearFind();
+      });
   }
 
   ngOnDestroy(): void {
@@ -110,6 +122,10 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
   resetForm(selectedCategory): void {
     this.searchForm = this.createSearchForm(selectedCategory);
+    this.noctuaReviewSearchService.clear();
+    this.camsService.clearHighlight();
+
+    this.calculateEnableReplace(this.selectedCategory);
     this.onValueChanges();
     this.onNodeValueChange(selectedCategory)
   }
@@ -135,7 +151,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   }
 
   getClosure(rootTypes: Entity[]) {
-    const s = [
+    const range = [
       EntityDefinition.GoMolecularEntity,
       EntityDefinition.GoMolecularFunction,
       EntityDefinition.GoBiologicalProcess,
@@ -144,13 +160,13 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
       EntityDefinition.GoAnatomicalEntity,
       EntityDefinition.GoCellTypeEntity,
       EntityDefinition.GoProteinContainingComplex,
-      EntityDefinition.GoChemicalEntity,
+      //EntityDefinition.GoChemicalEntity,
       EntityDefinition.GoOrganism,
       EntityDefinition.GoEvidence
     ];
 
-    const closures = s.filter(x => {
-      return rootTypes.find(y => y.id === x.category);
+    const closures = range.filter(closure => {
+      return rootTypes.find(rootType => rootType.id === closure.category);
     });
 
     return closures;
@@ -229,7 +245,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     this.noctuaReviewSearchService.goto(step);
   }
 
-  findSelected(value) {
+  findSelected(value: any) {
     const closures = this.getClosure(value.rootTypes);
     this.findNode!.termLookup.results = []
 
@@ -247,6 +263,27 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
   termDisplayFn(term): string | undefined {
     return term && term.id ? `${term.label} (${term.id})` : undefined;
+  }
+
+  clearFind() {
+    const self = this;
+    self.searchForm.patchValue({
+      findWhat: null,
+      replaceWith: null
+    });
+    self.noctuaReviewSearchService.clear();
+    self.camsService.clearHighlight();
+
+    self.calculateEnableReplace(self.selectedCategory);
+  }
+
+  clearReplace() {
+    const self = this;
+    self.searchForm.patchValue({
+      replaceWith: null
+    });
+
+    self.calculateEnableReplace(self.selectedCategory);
   }
 
   onValueChanges() {

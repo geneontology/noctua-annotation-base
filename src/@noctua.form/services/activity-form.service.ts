@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
@@ -12,6 +12,8 @@ import { CamService } from './cam.service';
 import { Entity } from '../models/activity/entity';
 import { Evidence } from '../models/activity/evidence';
 import { cloneDeep, each } from 'lodash';
+import { Cam } from '../models/activity/cam';
+import { Triple } from '../models//activity/triple';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +25,11 @@ export class NoctuaActivityFormService {
   public currentActivity: Activity;
   public activity: Activity;
   public onActivityCreated: BehaviorSubject<Activity>
+  public onActivityChanged: BehaviorSubject<Activity>
   public activityForm: ActivityForm;
   public activityFormGroup: BehaviorSubject<FormGroup | undefined>;
   public activityFormGroup$: Observable<FormGroup>;
-  public cam: any;
+  public cam: Cam;
 
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
@@ -42,6 +45,7 @@ export class NoctuaActivityFormService {
     });
     this.activity = this.noctuaFormConfigService.createActivityModel(ActivityType.default);
     this.onActivityCreated = new BehaviorSubject(null);
+    this.onActivityChanged = new BehaviorSubject(null);
     this.activityFormGroup = new BehaviorSubject(null);
     this.activityFormGroup$ = this.activityFormGroup.asObservable();
 
@@ -151,9 +155,43 @@ export class NoctuaActivityFormService {
         saveData.removeIds,
         saveData.removeTriples);
     } else { // creation
-      const saveData = self.activity.createSave();
-      return self.noctuaGraphService.saveActivity(self.cam, saveData.triples, saveData.title);
+      if (this.activity.activityType === ActivityType.ccOnly) {
+        const promises = []
+        const activities = self.createCCAnnotations(self.activity);
+        each(activities, (activity: Activity) => {
+          const saveData = activity.createSave();
+          promises.push(self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title))
+        })
+
+        return forkJoin(promises)
+
+      } else {
+        const saveData = self.activity.createSave();
+        return forkJoin(self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title));
+      }
     }
+  }
+
+  createCCAnnotations(srcActivity: Activity) {
+    const self = this;
+    const ccEdges: Triple<ActivityNode>[] = srcActivity.getEdges(srcActivity.rootNode.id);
+    const activities = []
+
+    each(ccEdges, (ccEdge: Triple<ActivityNode>) => {
+      const activity = new Activity();
+      const subject = cloneDeep(ccEdge.subject)
+      const object = cloneDeep(ccEdge.object)
+      const predicate = cloneDeep(ccEdge.predicate)
+      activity.activityType = srcActivity.activityType
+
+      activity.addNode(subject);
+      activity.addNodes(object);
+      activity.addEdge(subject, object, predicate);
+
+      activities.push(activity)
+    });
+
+    return activities;
   }
 
   clearForm() {

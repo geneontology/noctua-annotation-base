@@ -7,10 +7,11 @@ import { CamService } from './../services/cam.service';
 import { Cam, CamLoadingIndicator } from './../models/activity/cam';
 import { EntityForm } from './../models/forms/entity-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
-import { ActivityNode, Activity } from '../models';
 import { NoctuaGraphService } from './graph.service';
 import { cloneDeep } from 'lodash';
 import { CamsService } from './cams.service';
+import { Activity } from './../models/activity/activity';
+import { ActivityNode } from './../models/activity/activity-node';
 
 @Injectable({
   providedIn: 'root'

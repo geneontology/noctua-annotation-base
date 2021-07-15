@@ -6,7 +6,12 @@ import { takeUntil } from 'rxjs/internal/operators';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 
 import {
-  NoctuaFormConfigService, NoctuaUserService, CamService, Contributor, CamsService, Cam,
+  NoctuaFormConfigService,
+  NoctuaUserService,
+  CamService,
+  CamsService,
+  Cam,
+  ActivityDisplayType,
 } from 'noctua-form-base';
 
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
@@ -20,6 +25,7 @@ import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
 import { each, find } from 'lodash';
+import { TableOptions } from '@noctua.common/models/table-options';
 
 
 export function CustomPaginator() {
@@ -78,10 +84,9 @@ export class CamsTableComponent implements OnInit, OnDestroy {
   cams: any[] = [];
   camPage: CamPage;
 
-  tableOptions = {
-    treeTable: true,
-    reviewMode: true,
-    color: 'transparent'
+  tableOptions: TableOptions = {
+    displayType: ActivityDisplayType.TREE,
+    slimViewer: false,
   }
 
   selection = new SelectionModel<Cam>(true, []);
@@ -264,15 +269,29 @@ export class CamsTableComponent implements OnInit, OnDestroy {
     cam.expanded = true;
     this.camService.cam = cam;
     this.camService.onCamChanged.next(cam);
-    //this.openRightDrawer(RightPanel.camDetail);
   }
 
-  openLeftDrawer(panel) {
+  openCamForm(cam: Cam) {
+    this.camService.cam = cam;
+    this.camService.initializeForm(cam);
+    this.camService.onCamChanged.next(cam);
+
+    this.openRightDrawer(RightPanel.camForm)
+  }
+
+  openDuplicateCamForm(cam: Cam) {
+    this.camService.cam = cam;
+    this.camService.onCamChanged.next(cam);
+
+    this.openRightDrawer(RightPanel.duplicateCamForm)
+  }
+
+  openLeftDrawer(panel: LeftPanel) {
     this.noctuaSearchMenuService.selectLeftPanel(panel);
     this.noctuaSearchMenuService.openLeftDrawer();
   }
 
-  openRightDrawer(panel) {
+  openRightDrawer(panel: RightPanel) {
     this.noctuaSearchMenuService.selectRightPanel(panel);
     this.noctuaSearchMenuService.openRightDrawer();
   }

@@ -8,10 +8,10 @@ import {
   NoctuaUserService,
   NoctuaFormConfigService,
   NoctuaFormMenuService,
-  NoctuaActivityFormService,
   noctuaFormConfig,
   CamsService,
-  CamService
+  CamService,
+  ActivityDisplayType
 } from 'noctua-form-base';
 
 import { takeUntil } from 'rxjs/operators';
@@ -21,7 +21,7 @@ import { ArtBasket } from '@noctua.search/models/art-basket';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { ReviewMode } from '@noctua.search/models/review-mode';
-import { SearchCriteria } from '@noctua.search/models/search-criteria';
+import { TableOptions } from '@noctua.common/models/table-options';
 
 @Component({
   selector: 'noc-cams-review',
@@ -45,13 +45,13 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   };
   artBasket: ArtBasket;
 
-  tableOptions = {
-    treeTable: true,
+  tableOptions: TableOptions = {
+    displayType: ActivityDisplayType.TREE_TABLE,
+    slimViewer: false,
     editableTerms: true,
     editableEvidence: true,
     editableReference: true,
     editableWith: true,
-    reviewMode: true,
   };
 
   loadingSpinner: any = {
@@ -66,13 +66,11 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
-    private camService: CamService,
     public camsService: CamsService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaActivityFormService: NoctuaActivityFormService,
     public noctuaFormMenuService: NoctuaFormMenuService) {
 
     this._unsubscribeAll = new Subject();
@@ -103,13 +101,6 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
-  viewAsModel(cam: Cam) {
-    cam.displayType = noctuaFormConfig.camDisplayType.options.model;
-  }
-
-  viewAsActivities(cam: Cam) {
-    cam.displayType = noctuaFormConfig.camDisplayType.options.entity;
-  }
 
   selectMiddlePanel(panel) {
     this.noctuaSearchMenuService.selectMiddlePanel(panel);

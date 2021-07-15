@@ -10,7 +10,6 @@ import {
   Activity,
   ConnectorActivity,
   ConnectorState,
-  ConnectorType,
   ActivityNode,
   Evidence,
   NoctuaActivityConnectorService,
@@ -20,7 +19,8 @@ import {
   noctuaFormConfig,
   Entity,
   NoctuaUserService,
-  NoctuaFormMenuService
+  NoctuaFormMenuService,
+  ConnectorPanel
 } from 'noctua-form-base';
 import { NoctuaFormDialogService } from '../../../services/dialog.service';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
@@ -32,17 +32,17 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./activity-connector-form.component.scss']
 })
 export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
+  ConnectorPanel = ConnectorPanel;
 
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
 
-  connectorType = ConnectorType;
+  @Input() public closeDialog: () => void;
+
   connectorState = ConnectorState;
-  activity: Activity;
   currentConnectorActivity: ConnectorActivity;
   connectorActivity: ConnectorActivity;
   mfNode: ActivityNode;
-  cam: Cam;
   connectorFormGroup: FormGroup;
   connectorFormSub: Subscription;
   searchCriteria: any = {};
@@ -71,41 +71,24 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
           return;
         }
         this.connectorFormGroup = connectorFormGroup;
-        this.currentConnectorActivity = this.noctuaActivityConnectorService.currentConnectorActivity;
         this.connectorActivity = this.noctuaActivityConnectorService.connectorActivity;
       });
 
-    this.camService.onCamChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((cam) => {
-        if (!cam) {
-          return;
-        }
-
-        this.cam = cam;
-      });
-
-    this.noctuaActivityConnectorService.onActivityChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((activity) => {
-        this.activity = activity;
-        this.noctuaActivityConnectorService.selectPanel(this.noctuaActivityConnectorService.panel.selectConnector);
-      });
-
-    this.noctuaActivityConnectorService.selectPanel(this.noctuaActivityConnectorService.panel.selectConnector);
   }
 
   openActivityConnector(connector: Activity) {
-    this.noctuaActivityConnectorService.initializeForm(this.noctuaActivityConnectorService.activity.id, connector.id);
-    this.noctuaActivityConnectorService.selectPanel(this.noctuaActivityConnectorService.panel.activityConnectorForm);
+    this.noctuaActivityConnectorService.initializeForm(this.noctuaActivityConnectorService.objectActivity.id, connector.id);
+    this.noctuaActivityConnectorService.selectPanel(ConnectorPanel.FORM);
   }
 
   save() {
     const self = this;
     this.noctuaActivityConnectorService.saveActivity().then(() => {
-      self.noctuaActivityConnectorService.selectPanel(self.noctuaActivityConnectorService.panel.selectConnector);
-      self.noctuaActivityConnectorService.getConnections();
-      self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully created.', 'OK');
+      self.noctuaActivityConnectorService.selectPanel(ConnectorPanel.SELECT);
+      self.noctuaFormDialogService.openInfoToast('Causal relation successfully created.', 'OK');
+      if (this.closeDialog) {
+        this.closeDialog();
+      }
     });
   }
 
@@ -113,9 +96,8 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
     const self = this;
     const success = () => {
       self.noctuaActivityConnectorService.saveActivity().then(() => {
-        self.noctuaActivityConnectorService.selectPanel(self.noctuaActivityConnectorService.panel.selectConnector);
-        self.noctuaActivityConnectorService.getConnections();
-        self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully updated.', 'OK');
+        self.noctuaActivityConnectorService.selectPanel(ConnectorPanel.SELECT);
+        self.noctuaFormDialogService.openInfoToast('Causal relation successfully updated.', 'OK');
       });
     };
 
@@ -128,9 +110,8 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
     const self = this;
     const success = () => {
       self.noctuaActivityConnectorService.deleteActivity(connectorActivity).then(() => {
-        self.noctuaActivityConnectorService.selectPanel(self.noctuaActivityConnectorService.panel.selectConnector);
-        self.noctuaActivityConnectorService.getConnections();
-        self.noctuaFormDialogService.openSuccessfulSaveToast('Causal relation successfully deleted.', 'OK');
+        self.noctuaActivityConnectorService.selectPanel(ConnectorPanel.SELECT);
+        self.noctuaFormDialogService.openInfoToast('Causal relation successfully deleted.', 'OK');
       });
     };
 
@@ -139,60 +120,18 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
       success);
   }
 
-  addEvidence() {
-    const self = this;
-
-    self.connectorActivity.upstreamNode.predicate.addEvidence();
-    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
-  }
-
-  removeEvidence(index: number) {
-    const self = this;
-
-    self.connectorActivity.upstreamNode.predicate.removeEvidence(index);
-    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
-  }
-
-  addNDEvidence() {
-    const self = this;
-
-    const evidence = new Evidence();
-    evidence.setEvidence(new Entity(
-      noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
-      noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
-    evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference;
-    self.connectorActivity.upstreamNode.predicate.setEvidence([evidence]);
-    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
-  }
-
-  clearValues() {
-    const self = this;
-
-    self.connectorActivity.upstreamNode.clearValues();
-    this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
-  }
-
-  openSelectEvidenceDialog() {
-    const self = this;
-
-    const evidences: Evidence[] = this.camService.getUniqueEvidence();
-
-    const success = (selected) => {
-      if (selected.evidences && selected.evidences.length > 0) {
-        self.connectorActivity.upstreamNode.predicate.setEvidence(selected.evidences);
-        this.noctuaActivityConnectorService.updateEvidence(self.connectorActivity.upstreamNode);
-      }
-    };
-
-    self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
-  }
 
   clear() {
     this.noctuaActivityFormService.clearForm();
   }
 
   close() {
-    this.panelDrawer.close();
+    if (this.panelDrawer) {
+      this.panelDrawer.close();
+    }
+    if (this.closeDialog) {
+      this.closeDialog();
+    }
   }
 
   termDisplayFn(term): string | undefined {

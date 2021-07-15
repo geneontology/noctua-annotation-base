@@ -14,11 +14,13 @@ export interface GoCategory {
   id: ActivityNodeType;
   category: string;
   categoryType: string;
+  suffix: string;
 }
 
 export enum ActivityNodeType {
   GoProteinContainingComplex = 'GoProteinContainingComplex',
   GoCellularComponent = 'GoCellularComponent',
+  GoCellularAnatomical = 'GoCellularAnatomical',
   GoBiologicalProcess = 'GoBiologicalProcess',
   GoMolecularFunction = 'GoMolecularFunction',
   GoMolecularEntity = 'GoMolecularEntity',
@@ -97,6 +99,7 @@ export class ActivityNode implements ActivityNodeDisplay {
   displayId: string;
   expandable: boolean = true;
   expanded: boolean = false;
+  causalNode: boolean = false;
 
   private _id: string;
 
@@ -301,10 +304,23 @@ export class ActivityNode implements ActivityNodeDisplay {
 
 export function categoryToClosure(categories) {
   return categories.map((category) => {
-    return `${category.categoryType}:"${category.category}"`;
+    let result = `${category.categoryType}:"${category.category}"`;
+    if (category.suffix) {
+      result += ' ' + category.suffix;
+    }
+    return result
   }).join(' OR ');
 }
 
 export function compareTerm(a: ActivityNode, b: ActivityNode) {
   return a.term.id === b.term.id;
 }
+
+export function compareNodeWeight(a: ActivityNode, b: ActivityNode): number {
+  if (a.weight < b.weight) {
+    return -1;
+  } else {
+    return 1;
+  }
+}
+

@@ -3,28 +3,33 @@ export {
     ActivityNode,
     ActivityNodeType,
     ActivityNodeDisplay,
+    compareNodeWeight
 } from './activity-node';
 export {
     Activity,
     ActivityType,
+    ActivityDisplayType,
     ActivityState,
     ActivitySize,
     ActivityPosition,
     ActivityTreeNode,
+    compareActivity
 } from './activity';
 export {
     Cam,
     CamRebuildSignal,
+    CamOperation,
     CamRebuildRule,
     CamLoadingIndicator,
     CamStats,
-    CamQueryMatch
+    CamQueryMatch,
+    ReloadType
 } from './cam';
 export { Evidence } from './evidence';
 export {
     ConnectorState,
-    ConnectorType,
-    ConnectorActivity
+    ConnectorActivity,
+    ConnectorPanel
 } from './connector-activity';
 export { EntityLookup } from './entity-lookup';
 export {

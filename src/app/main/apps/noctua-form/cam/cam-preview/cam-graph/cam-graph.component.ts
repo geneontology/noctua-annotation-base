@@ -33,7 +33,6 @@ export class CamGraphComponent implements OnInit, OnDestroy {
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;
-  camDisplayType = noctuaFormConfig.camDisplayType.options;
 
   @Input('cam')
   public cam: Cam;
@@ -195,9 +194,8 @@ export class CamGraphComponent implements OnInit, OnDestroy {
   openActivityConnectorList(activity: Activity) {
     this.camService.onCamChanged.next(this.cam);
     this.camService.activity = activity;
-    this.noctuaActivityConnectorService.activity = activity;
+    this.noctuaActivityConnectorService.subjectActivity = activity;
     this.noctuaActivityConnectorService.onActivityChanged.next(activity);
-    this.noctuaActivityConnectorService.getConnections();
     // this.noctuaFormMenuService.openRightDrawer(LeftPanel.connectorForm);
   }
 
@@ -208,10 +206,6 @@ export class CamGraphComponent implements OnInit, OnDestroy {
     //this.noctuaFormMenuService.openRightDrawer(LeftPanel.activityForm);
   }
 
-  openActivityConnector(activityConnector: ConnectorActivity) {
-    this.noctuaActivityConnectorService.initializeForm(activityConnector.upstreamNode.uuid, activityConnector.downstreamNode.uuid);
-    // this.noctuaFormMenuService.openRightDrawer(LeftPanel.connectorForm);
-  }
 
 
   deleteActivity(activity: Activity) {
@@ -219,7 +213,7 @@ export class CamGraphComponent implements OnInit, OnDestroy {
 
     const success = () => {
       this.camService.deleteActivity(activity).then(() => {
-        self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully deleted.', 'OK');
+        self.noctuaFormDialogService.openInfoToast('Activity successfully deleted.', 'OK');
       });
     };
 

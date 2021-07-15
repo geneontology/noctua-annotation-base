@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, forkJoin, from } from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { BehaviorSubject, Observable, forkJoin, from, EMPTY } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
 import { Activity } from './../models/activity/activity';
 
-import { Cam, CamLoadingIndicator, CamQueryMatch, CamStats } from './../models/activity/cam';
+import { Cam, CamLoadingIndicator, CamQueryMatch, CamStats, ReloadType } from './../models/activity/cam';
 import { each, groupBy, find } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/activity/entity';
@@ -20,14 +20,7 @@ import { NoctuaUserService } from './user.service';
 
 declare const require: any;
 
-const model = require('bbop-graph-noctua');
 const barista_client = require('bbop-client-barista');
-const amigo = require('amigo2');
-const barista_response = require('bbop-response-barista');
-const minerva_requests = require('minerva-requests');
-const jquery_engine = require('bbop-rest-manager').jquery;
-const class_expression = require('class-expression');
-const minerva_manager = require('bbop-manager-minerva');
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +47,7 @@ export class CamsService {
   public camFormGroup$: Observable<FormGroup>;
 
   constructor(
+    private zone: NgZone,
     private httpClient: HttpClient,
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -110,12 +104,6 @@ export class CamsService {
     self.onCamsChanged.next(this.cams);
   }
 
-  getStoredModel(cam: Cam): Observable<any> {
-    const url = `${this.searchApi}/stored?id=${cam.id}`;
-
-    return this.httpClient.get(url)
-  }
-
   updateModel(cams: Cam[], responses) {
     const self = this;
 
@@ -149,7 +137,7 @@ export class CamsService {
     const cams: Cam[] = []
     let replaceWith
 
-    if (category === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+    if (category && category.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
       replaceWith = Evidence.formatReference(replaceWithTerm);
     } else {
       replaceWith = replaceWithTerm?.id;
@@ -216,7 +204,7 @@ export class CamsService {
 
     each(cams, (cam: Cam) => {
       cam.loading = new CamLoadingIndicator(true, 'Calculating Pending Changes ...');
-      promises.push(self.getStoredModel(cam));
+      promises.push(self.camService.getStoredModel(cam));
     });
 
     return forkJoin(promises);
@@ -242,22 +230,12 @@ export class CamsService {
     this.onCamsCheckoutChanged.next(result);
   }
 
-  reviewCamChanges(cam: Cam) {
-    const self = this;
-    const stats = new CamStats();
 
-    const changes = self.camService.reviewChanges(cam, stats);
-    if (changes) {
-      stats.camsCount++;
-    }
 
-    stats.updateTotal();
-
-    const result = {
-      stats: stats,
-    };
-
-    return result
+  clearHighlight() {
+    each(this.cams, (cam: Cam) => {
+      return cam.clearHighlight();
+    });
   }
 
   clearCams() {
@@ -284,6 +262,40 @@ export class CamsService {
     each(cams, (cam: Cam) => {
       cam.loading = camLoadingIndicator;
     });
+  }
+
+  reloadCam(cam: Cam, reloadType: ReloadType) {
+    const self = this;
+
+    from([cam]).pipe(
+      mergeMap((cam: Cam) => {
+        if (reloadType === ReloadType.RESET) {
+          cam.loading = new CamLoadingIndicator(true, 'Resetting Model ...');
+          return self.resetCams([cam]);
+        } else if (reloadType === ReloadType.STORE) {
+          cam.loading = new CamLoadingIndicator(true, 'Saving Model ...');
+          return self.storeCams([cam]);
+        } else {
+          return EMPTY;
+        }
+      }),
+      finalize(() => {
+        self.resetLoading([cam]);
+
+
+
+      })).subscribe({
+        next: (response) => {
+          if (!response || !response.data()) return;
+
+          //Now stored == Active
+          self.camService.populateStoredModel(cam, response.data())
+
+          const summary = self.camService.reviewCamChanges(cam);
+          self.camService.onCamCheckoutChanged.next(summary);
+          cam.loading.status = false;
+        }
+      })
   }
 
   sortCams() {

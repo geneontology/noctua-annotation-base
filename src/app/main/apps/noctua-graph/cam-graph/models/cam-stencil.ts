@@ -1,7 +1,6 @@
 
 import { StencilItem, StencilItemNode } from '@noctua.graph/data/cam-stencil';
-import { StencilNode } from '@noctua.graph/models/shapes';
-import { NodeCell } from '@noctua.graph/services/shapes.service';
+import { StencilNode, NodeCellList } from '@noctua.graph/services/shapes.service';
 import * as joint from 'jointjs';
 import { cloneDeep, each } from "lodash";
 import { CamCanvas } from "./cam-canvas";
@@ -13,15 +12,13 @@ export class CamStencil {
     stencilEl
     selectedStencilElement;
 
-    onAddElement: (element: joint.shapes.noctua.NodeCell) => NodeCell;
+    onAddElement: (element: joint.shapes.noctua.NodeCellList, x: number, y: number) => NodeCellList;
 
     constructor(camCanvas: CamCanvas, stencils: StencilItem[]) {
         const self = this;
 
         self.camCanvas = camCanvas;
         self.stencils = stencils;
-
-        self.onAddElement = camCanvas.addElement.bind(self.camCanvas);
         self._initializeStencils(stencils);
     }
 
@@ -53,7 +50,7 @@ export class CamStencil {
             const el = new StencilNode();
             // .size(120, 80)
             // .setColor(cam.backgroundColor)
-            // .setIcon(cam.iconUrl);
+            el.setIcon(stencilItemNode.iconUrl);
             el.attr('label/text', stencilItemNode.label);
             el.set({ node: cloneDeep(stencilItemNode) });
 
@@ -115,8 +112,8 @@ export class CamStencil {
 
                 // Dropped over paper?
                 if (x1 > target.left && x1 < target.left + canvasPaper.$el.width() && y1 > target.top && y1 < target.top + canvasPaper.$el.height()) {
-                    const el = self.onAddElement(self.selectedStencilElement);
-                    el.position(x1 - target.left - offset.x, y1 - target.top - offset.y);
+                    self.onAddElement(self.selectedStencilElement, x1 - target.left - offset.x, y1 - target.top - offset.y);
+                    //  el.position(x1 - target.left - offset.x, y1 - target.top - offset.y);
                 }
                 $('#noc-canvas').off('mousemove.fly').off('mouseup.fly');
                 flyShape.remove();

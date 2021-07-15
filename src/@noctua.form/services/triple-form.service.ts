@@ -1,28 +1,19 @@
-import { Injector, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Observable, BehaviorSubject } from 'rxjs'
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
+import { FormGroup, FormBuilder } from '@angular/forms'
 
 //Config
-import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { CamService } from './../services/cam.service';
 
-
-declare const require: any;
-const each = require('lodash/forEach');
-
-import {
-  Cam,
-  Triple,
-  ActivityNode
-} from './../models/activity';
-import { } from './../models/activity/activity-node';
-
+import { ActivityNode } from './../models/activity/activity-node';
 
 import { TripleForm } from './../models/forms';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
+import { Cam } from './../models/activity/cam';
+import { Triple } from './../models/activity/triple';
 
 @Injectable({
   providedIn: 'root'

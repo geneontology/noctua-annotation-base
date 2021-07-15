@@ -13,8 +13,6 @@ export class ActivityConnectorForm {
   causalEffect = new FormControl();
   evidenceForms: EvidenceForm[] = [];
   evidenceFormArray = new FormArray([]);
-  process = new FormControl();
-  hasInput = new FormControl();
   _metadata: ActivityFormMetadata;
 
   private _fb = new FormBuilder();
@@ -23,10 +21,8 @@ export class ActivityConnectorForm {
     this._metadata = metadata;
   }
 
-  createEntityForms(predicate: Predicate, hasInput: ActivityNode) {
+  createEntityForms(predicate: Predicate) {
     const self = this;
-
-    this.hasInput.setValue(hasInput.getTerm());
 
     predicate.evidence.forEach((evidence: Evidence) => {
       const evidenceForm = new EvidenceForm(self._metadata, null, evidence);
@@ -61,16 +57,5 @@ export class ActivityConnectorForm {
     });
   }
 
-  onValueChanges(lookup: EntityLookup) {
-    const self = this;
 
-    self.hasInput.valueChanges.pipe(
-      distinctUntilChanged(),
-      debounceTime(400)
-    ).subscribe(data => {
-      self._metadata.lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
-        lookup.results = response;
-      });
-    });
-  }
 }

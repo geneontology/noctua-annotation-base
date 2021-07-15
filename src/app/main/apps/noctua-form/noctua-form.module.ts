@@ -57,10 +57,16 @@ import { EvidenceTableComponent } from './cam/cam-table/activity-table/evidence-
 import { ActivityTreeComponent } from './cam/cam-table/activity-tree/activity-tree.component';
 import { ActivityTreeNodeComponent } from './cam/cam-table/activity-tree/activity-tree-node/activity-tree-node.component';
 import { CreateActivityDialogComponent } from './dialogs/create-activity/create-activity.component';
+import { ActivityTreeTableComponent } from './cam/cam-table/activity-tree-table/activity-tree-table.component';
+import { ActivitySlimTreeComponent } from './cam/cam-table/activity-slim-tree/activity-slim-tree.component';
+import { ActivitySlimTreeNodeComponent } from './cam/cam-table/activity-slim-tree/activity-slim-tree-node/activity-tree-node.component';
+import { PreviewActivityComponent } from './cam/activity/preview-activity/preview-activity.component';
+import { NoctuaSearchBaseModule } from '@noctua.search';
+import { DuplicateCamFormComponent } from './cam/duplicate-cam-form/duplicate-cam-form.component';
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];
@@ -75,6 +81,7 @@ const routes = [
     ContextMenuModule.forRoot(),
     NoctuaConfirmDialogModule,
     NoctuaEditorModule,
+    NoctuaSearchBaseModule,
 
     //Material
     MatAutocompleteModule,
@@ -114,14 +121,19 @@ const routes = [
     PreviewActivityDialogComponent,
     CamDiagramComponent,
     CamFormComponent,
+    DuplicateCamFormComponent,
     NodeComponent,
     NodesContainerComponent,
     ActivityConnectorFormComponent,
     ActivityTableComponent,
     ActivityTreeComponent,
+    ActivityTreeTableComponent,
     TripleTableComponent,
     ActivityTreeNodeComponent,
-    CamPreviewComponent
+    ActivitySlimTreeComponent,
+    ActivitySlimTreeNodeComponent,
+    CamPreviewComponent,
+    PreviewActivityComponent
   ],
   providers: [
     NoctuaFormDialogService,
@@ -146,18 +158,23 @@ const routes = [
     SearchEvidenceDialogComponent,
     CamDiagramComponent,
     CamFormComponent,
+    DuplicateCamFormComponent,
     NodeComponent,
     NodesContainerComponent,
     ActivityConnectorFormComponent,
     TripleTableComponent,
     ActivityTableComponent,
-    ActivityTreeComponent,
+    ActivityTreeTableComponent,
     EvidenceTableComponent,
     GraphPreviewComponent,
     CamPreviewComponent,
     CamGraphComponent,
+    ActivityTreeComponent,
     ActivityTreeNodeComponent,
+    ActivitySlimTreeComponent,
+    ActivitySlimTreeNodeComponent,
     SelectEvidenceComponent,
+    PreviewActivityComponent
   ],
 })
 

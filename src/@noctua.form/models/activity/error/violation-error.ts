@@ -21,7 +21,7 @@ export class CardinalityViolation extends Violation {
   subject: Partial<ActivityNode>;
   constructor(public node: Partial<ActivityNode>,
     public predicate: Entity,
-    public nobjects: Number,
+    public nobjects: number,
     public cardinality: string) {
     super(node, ViolationType.cardinality);
     this.subject = node;

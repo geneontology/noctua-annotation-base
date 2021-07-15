@@ -9,6 +9,7 @@ import { each } from 'lodash';
 export class ActivityForm {
   entityGroupForms: EntityGroupForm[] = [];
   bpOnlyEdge = new FormControl();
+  ccOnlyEdge = new FormControl();
   gp = new FormArray([]);
   fd = new FormArray([]);
 

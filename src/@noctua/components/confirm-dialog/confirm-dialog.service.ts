@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { NoctuaConfirmDialogComponent } from '@noctua/components/confirm-dialog/confirm-dialog.component';
+import { NoctuaConfirmDialogComponent } from './../../components/confirm-dialog/confirm-dialog.component';
 
 
 @Injectable({
@@ -19,7 +18,7 @@ export class NoctuaConfirmDialogService {
         private _matDialog: MatDialog) {
     }
 
-    openSuccessfulSaveToast(message: string, action: string) {
+    openInfoToast(message: string, action: string) {
         this.snackBar.open(message, action, {
             duration: 5000,
             verticalPosition: 'top'

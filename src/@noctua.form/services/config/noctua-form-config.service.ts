@@ -4,20 +4,17 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import * as ModelDefinition from './../../data/config/model-definition';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
-import {
-  ActivityNode,
-  Activity,
-  Evidence,
-  ConnectorActivity,
-  Entity,
-  Predicate
-} from './../../models';
-import { ActivityType } from './../../models/activity/activity';
+import { Activity, ActivityType } from './../../models/activity/activity';
 import { find, filter, each } from 'lodash';
 import { HttpParams } from '@angular/common/http';
 import * as EntityDefinition from './../../data/config/entity-definition';
 import { NoctuaUserService } from '../user.service';
 import { BehaviorSubject } from 'rxjs';
+import { ActivityNode } from './../../models/activity/activity-node';
+import { ConnectorActivity } from './../../models/activity/connector-activity';
+import { Entity } from './../../models/activity/entity';
+import { Evidence } from './../../models/activity/evidence';
+import { Predicate } from './../../models/activity/predicate';
 
 @Injectable({
   providedIn: 'root'
@@ -104,11 +101,11 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get camDisplayType() {
+  get ccOnlyEdges() {
     const options = [
-      noctuaFormConfig.camDisplayType.options.model,
-      noctuaFormConfig.camDisplayType.options.triple,
-      noctuaFormConfig.camDisplayType.options.entity
+      noctuaFormConfig.edge.partOf,
+      noctuaFormConfig.edge.locatedIn,
+      noctuaFormConfig.edge.isActiveIn,
     ];
 
     return {
@@ -145,9 +142,9 @@ export class NoctuaFormConfigService {
 
   get mechanism() {
     const options = [
-      noctuaFormConfig.mechanism.options.direct,
       noctuaFormConfig.mechanism.options.known,
-      noctuaFormConfig.mechanism.options.unknown
+      noctuaFormConfig.mechanism.options.unknown,
+      noctuaFormConfig.mechanism.options.inputFor,
     ];
 
     return {
@@ -163,6 +160,8 @@ export class NoctuaFormConfigService {
       selected: options[0]
     };
   }
+
+
 
   setupUrls() {
     const self = this;
@@ -251,34 +250,32 @@ export class NoctuaFormConfigService {
     return modelInfo;
   }
 
-  createActivityConnectorModel(upstreamActivity: Activity, downstreamActivity: Activity, srcProcessNode?: ActivityNode, srcHasInputNode?: ActivityNode) {
-    const self = this;
-    const srcUpstreamNode = upstreamActivity.getMFNode();
-    const srcDownstreamNode = downstreamActivity ? downstreamActivity.getMFNode() : new ActivityNode();
-    const upstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
-    const downstreamNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
-    const processNode = srcProcessNode ?
-      srcProcessNode :
-      EntityDefinition.generateBaseTerm([EntityDefinition.GoBiologicalProcess], { id: 'process', isKey: true });
-    const hasInputNode = srcHasInputNode ?
-      srcHasInputNode :
-      EntityDefinition.generateBaseTerm([EntityDefinition.GoChemicalEntity], { id: 'has-input', isKey: true });
+  /*   createActivityConnectorModel(subjectActivity: Activity, objectActivity: Activity) {
+      const self = this;
+      const srcSubjectNode = subjectActivity.getMFNode();
+      const srcObjectNode = objectActivity ? objectActivity.getMFNode() : new ActivityNode();
+      const subjectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
+      const objectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
+  
+      subjectNode.copyValues(srcSubjectNode);
+      objectNode.copyValues(srcObjectNode);
+  
+      const connectorActivity = new ConnectorActivity(subjectNode, objectNode);
+      connectorActivity.predicate = new Predicate(null);
+      connectorActivity.predicate.setEvidence(srcSubjectNode.predicate.evidence);
+      connectorActivity.subjectActivity = subjectActivity;
+      connectorActivity.objectActivity = objectActivity;
+  
+      return connectorActivity;
+    } */
 
+  createPredicate(edge: Entity, evidence?: Evidence[]): Predicate {
+    const predicate = new Predicate(edge, evidence);
 
-    upstreamNode.copyValues(srcUpstreamNode);
-    downstreamNode.copyValues(srcDownstreamNode);
+    EntityDefinition.setEvidenceLookup(predicate);
 
-    const connectorActivity = new ConnectorActivity(upstreamNode, downstreamNode);
-    connectorActivity.predicate = new Predicate(null);
-    connectorActivity.predicate.setEvidence(srcUpstreamNode.predicate.evidence);
-    connectorActivity.upstreamActivity = upstreamActivity;
-    connectorActivity.downstreamActivity = downstreamActivity;
-    connectorActivity.processNode = processNode;
-    connectorActivity.hasInputNode = hasInputNode;
-
-    return connectorActivity;
+    return predicate;
   }
-
   createActivityBaseModel(modelType: ActivityType): Activity {
     switch (modelType) {
       case ActivityType.default:
@@ -287,6 +284,8 @@ export class NoctuaFormConfigService {
         return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationBaseDescription);
       case ActivityType.ccOnly:
         return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationBaseDescription);
+      case ActivityType.molecule:
+        return ModelDefinition.createActivity(ModelDefinition.moleculeBaseDescription);
     }
   }
 
@@ -298,6 +297,8 @@ export class NoctuaFormConfigService {
         return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationDescription);
       case ActivityType.ccOnly:
         return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationDescription);
+      case ActivityType.molecule:
+        return ModelDefinition.createActivity(ModelDefinition.moleculeDescription);
     }
   }
 

@@ -22,7 +22,6 @@ import { ReviewMode } from '@noctua.search/models/review-mode';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
 import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
-import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 
@@ -41,10 +40,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('rightDrawer', { static: true })
   rightDrawer: MatDrawer;
 
-  @ViewChildren(NoctuaPerfectScrollbarDirective)
-  private _noctuaPerfectScrollbarDirectives: QueryList<NoctuaPerfectScrollbarDirective>;
-
-  @ViewChild(PerfectScrollbarDirective, { static: false })
+  @ViewChild(PerfectScrollbarDirective)
   scrollbarRef?: PerfectScrollbarDirective;
 
   // @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
@@ -54,7 +50,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     mode: 'indeterminate'
   };
 
-  config = {
+  scrollbarConfig = {
     suppressScrollX: true
   }
 
@@ -179,6 +175,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleLeftDrawer(panel) {
     this.noctuaSearchMenuService.toggleLeftDrawer(panel);
+    this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
   }
 
   createModel(type: 'graph-editor' | 'noctua-form') {
@@ -187,6 +184,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openBasketPanel() {
     this.openLeftDrawer(LeftPanel.artBasket);
+    this.camsService.reviewChanges();
     this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.camsReview);
     this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
     this.noctuaSearchMenuService.isReviewMode = true;
@@ -198,6 +196,7 @@ export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
       this.noctuaSearchMenuService.isReviewMode = true;
       // this.noctuaSearchMenuService.closeLeftDrawer();
     } else if (this.noctuaSearchMenuService.reviewMode === ReviewMode.on) {
+      this.noctuaReviewSearchService.onClearForm.next(true);
       this.noctuaSearchMenuService.reviewMode = ReviewMode.off;
       this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
       this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);

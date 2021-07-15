@@ -13,7 +13,7 @@ export class Triple<T extends ActivityNode | Activity>  {
   predicate: Predicate;
   subject: T;
 
-  constructor(subject: T, predicate: Predicate, object: T) {
+  constructor(subject: T, object: T, predicate: Predicate) {
     this.id = uuid();
     this.subject = subject;
     this.object = object;
@@ -32,8 +32,7 @@ export class ActivityTriple<T extends Activity> {
   predicate: T;
   subject: T;
 
-  constructor(subject: T, predicate: T, object: T) {
-    // super(subject, predicate, object);
+  constructor(subject: T, object: T, predicate: T) {
 
     this.id = uuid();
     this.subject = subject;
@@ -49,4 +48,12 @@ export class ActivityTriple<T extends Activity> {
     }
   }
 
+}
+
+export function compareTripleWeight(a: Triple<ActivityNode>, b: Triple<ActivityNode>): number {
+  if (a.object.weight < b.object.weight) {
+    return -1;
+  } else {
+    return 1;
+  }
 }

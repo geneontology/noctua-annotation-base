@@ -54,6 +54,13 @@ export const GoCellularComponent = {
     id: ActivityNodeType.GoCellularComponent,
     category: 'GO:0005575',
     categoryType: 'isa_closure',
+    suffix: `OR NOT ${GoProteinContainingComplex.categoryType}:"${GoProteinContainingComplex.category}"`,
+} as GoCategory;
+
+export const GoCellularAnatomical = {
+    id: ActivityNodeType.GoCellularAnatomical,
+    category: 'GO:0110165',
+    categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoBiologicalProcess = {
@@ -119,6 +126,7 @@ export const GoCatalyticActivity = {
 export const EntityCategories = [
     [GoProteinContainingComplex],
     [GoCellularComponent],
+    [GoCellularAnatomical],
     [GoBiologicalProcess],
     [GoMolecularFunction],
     [GoMolecularEntity],
@@ -179,5 +187,16 @@ export const generateGOTerm = (): ActivityNode => {
     );
 
     return activityNode;
+};
+
+export const setEvidenceLookup = (predicate: Predicate): void => {
+    const fqEvidenceCategory = categoryToClosure([GoEvidence]);
+
+    predicate.setEvidenceMeta('eco', Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
+        fq: [
+            'document_category:"ontology_class"',
+            fqEvidenceCategory
+        ],
+    }));
 };
 

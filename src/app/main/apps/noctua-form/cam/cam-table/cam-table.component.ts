@@ -1,5 +1,5 @@
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { NoctuaFormDialogService } from './../../services/dialog.service';
@@ -13,14 +13,14 @@ import {
   Activity,
   ActivityType,
   NoctuaUserService,
-  NoctuaFormMenuService,
-  RightPanel,
   CamsService,
-  CamRebuildSignal
+  CamRebuildSignal,
+  ActivityDisplayType
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
-import { takeUntil } from 'rxjs/operators';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
   selector: 'noc-cam-table',
@@ -35,13 +35,16 @@ import { takeUntil } from 'rxjs/operators';
   ],
 })
 export class CamTableComponent implements OnInit, OnDestroy {
+  ActivityDisplayType = ActivityDisplayType;
   ActivityType = ActivityType;
   CamRebuildSignal = CamRebuildSignal;
   searchCriteria: any = {};
   searchFormData: any = [];
   searchForm: FormGroup;
-  camDisplayTypeOptions = noctuaFormConfig.camDisplayType.options;
   activityTypeOptions = noctuaFormConfig.activityType.options;
+
+  @Input('panelDrawer')
+  panelDrawer: MatDrawer;
 
   @Input('cam')
   public cam: Cam;
@@ -49,24 +52,27 @@ export class CamTableComponent implements OnInit, OnDestroy {
   @Input('options')
   public options: any = {};
 
+
   searchResults = [];
   modelId: '';
   loadingSpinner: any = {
     color: 'primary',
     mode: 'indeterminate'
   };
+  scrollbarConfig = {
+    suppressScrollX: true
+  }
 
   private _unsubscribeAll: Subject<any>;
 
   constructor(
     public camService: CamService,
     public camsService: CamsService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
+    public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private confirmDialogService: NoctuaConfirmDialogService,
     private noctuaActivityConnectorService: NoctuaActivityConnectorService,
-    //  public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaActivityFormService: NoctuaActivityFormService,
     private noctuaFormDialogService: NoctuaFormDialogService,
   ) {
@@ -75,14 +81,12 @@ export class CamTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.cam.onGraphChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((activities: Activity[]) => {
-        if (!activities) {
-          return;
-        }
 
-      });
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 
   addActivity() {
@@ -92,7 +96,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
   openForm(location?) {
     this.noctuaActivityFormService.mfLocation = location;
     this.noctuaActivityFormService.initializeForm();
-    //this.noctuaFormMenuService.openRightDrawer(this.noctuaFormMenuService.panel.activityForm)
   }
 
   reload(cam: Cam) {
@@ -101,7 +104,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
 
   search() {
     let searchCriteria = this.searchForm.value;
-    console.dir(searchCriteria)
     // this.noctuaSearchService.search(searchCriteria);
   }
 
@@ -116,17 +118,14 @@ export class CamTableComponent implements OnInit, OnDestroy {
   openActivityConnector(activity: Activity) {
     this.camService.onCamChanged.next(this.cam);
     this.camService.activity = activity;
-    this.noctuaActivityConnectorService.activity = activity;
+    this.noctuaActivityConnectorService.subjectActivity = activity;
     this.noctuaActivityConnectorService.onActivityChanged.next(activity);
-    this.noctuaActivityConnectorService.getConnections();
-    // this.noctuaFormMenuService.openRightDrawer(RightPanel.connectorForm);
   }
 
   openActivityForm(activity: Activity) {
     this.camService.onCamChanged.next(this.cam);
     this.camService.activity = activity;
     this.noctuaActivityFormService.initializeForm(activity);
-    // this.noctuaFormMenuService.openRightDrawer(RightPanel.activityForm)
   }
 
   sortBy(sortCriteria) {
@@ -138,7 +137,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
 
     const success = () => {
       this.camService.deleteActivity(activity).then(() => {
-        self.noctuaFormDialogService.openSuccessfulSaveToast('Activity successfully deleted.', 'OK');
+        self.noctuaFormDialogService.openInfoToast('Activity successfully deleted.', 'OK');
       });
     };
 
@@ -170,8 +169,10 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.noctuaFormDialogService.openCamErrorsDialog(errors);
   }
 
-  ngOnDestroy(): void {
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
+  close() {
+    if (this.panelDrawer) {
+      this.panelDrawer.close();
+    }
   }
+
 }

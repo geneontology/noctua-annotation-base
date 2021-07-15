@@ -16,7 +16,8 @@ import {
   ActivityNodeType,
   Activity,
   ErrorLevel,
-  ErrorType
+  ErrorType,
+  ActivityType
 } from 'noctua-form-base';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 import { each, find, flatten } from 'lodash';
@@ -46,6 +47,8 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   activityNodeType = ActivityNodeType;
 
+  displayAddButton;
+
   private unsubscribeAll: Subject<any>;
 
   constructor(
@@ -62,6 +65,8 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.entity = this.noctuaActivityFormService.activity.getNode(this.entityFormGroup.get('id').value);
     this.friendNodes = this.camService.getNodesByType(this.entity.type);
+    this.displayAddButton = this.noctuaActivityFormService.activity.activityType === ActivityType.ccOnly
+      && this.entity.type === ActivityNodeType.GoMolecularEntity
     //  this.friendNodesFlat = this.camService.getNodesByTypeFlat(this.entity.type);
   }
 
@@ -300,6 +305,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   openAddReference(event, evidence: FormGroup, name: string) {
+    event.stopPropagation();
     const data = {
       formControl: evidence.controls[name] as FormControl,
     };
@@ -307,6 +313,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   }
 
   openAddWith(event, evidence: FormGroup, name: string) {
+    event.stopPropagation();
     const data = {
       formControl: evidence.controls[name] as FormControl,
     };

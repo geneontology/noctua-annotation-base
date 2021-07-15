@@ -26,7 +26,7 @@ export class StencilNode extends shapes.StencilNode {
     const self = this;
 
     if (iconUrl) {
-      self.attr('icon/xlink:href', `./assets/icons/core/SVG/${iconUrl}.svg`);
+      self.attr('icon/xlink:href', `${iconUrl}`);
     }
 
     return this;
@@ -62,6 +62,60 @@ export class NodeCell extends shapes.NodeCell {
   }
 }
 
+export class NodeCellList extends shapes.NodeCellList {
+
+  constructor() {
+    super();
+
+  }
+
+  addNodePorts(): this {
+    const self = this;
+
+    return this;
+  }
+
+  setColor(colorKey: string, low?: number, high?: number): this {
+    const self = this;
+    const deep = getColor(colorKey, low ? low : 200);
+    const light = getColor(colorKey, high ? high : 100);
+
+    self.attr('.activity-name-rect/fill', deep);
+    self.attr('.activity-mf-rect/fill', light);
+    self.attr('.activity-gp-rect/fill', light);
+
+    //this.attr('.icon/height', 200);
+
+    return this;
+  }
+
+
+  setBorder(colorKey: string, hue?: number): this {
+    const self = this;
+    const deep = getColor(colorKey, hue ? hue : 500);
+
+    self.attr('.highlighter/stroke', deep);
+
+    return this;
+  }
+
+  unsetBorder(): this {
+    const self = this;
+
+    self.attr('.highlighter/stroke', 'transparent');
+
+    return this;
+  }
+
+
+  hover(on: boolean): this {
+    const self = this;
+    self.attr('.wrapper/strokeWidth', on ? 30 : 0);
+
+    return this;
+  }
+}
+
 export class NodeLink extends shapes.NodeLink {
   static create() {
     const link = new NodeLink();
@@ -77,9 +131,8 @@ export class NodeLink extends shapes.NodeLink {
         }],
         attrs: {
           labelText: {
-            text: 'First',
             fill: '#7c68fc',
-            fontSize: 10,
+            fontSize: 8,
             fontFamily: 'sans-serif',
             textAnchor: 'middle',
             textVerticalAnchor: 'middle'
@@ -100,20 +153,21 @@ export class NodeLink extends shapes.NodeLink {
           }
         },
         position: {
-          distance: -100,
+          distance: 0.5,
           args: {
-            // keepGradient: true,
+            //keepGradient: true,
             ensureLegibility: true,
+            absoluteOffset: true
           }
         }
       }],
     });
-    link.router('manhattan', {
-      step: 10,
-      padding: 0,
+    link.router('normal', {
+      // step: 10,
+      // padding: 0,
       //  startDirections: ['bottom'],
       //   endDirections: ['top'],
-    }).connector('normal');
+    }).connector('smooth');
 
     return link;
   }
@@ -131,6 +185,31 @@ export class NodeLink extends shapes.NodeLink {
 
     return this;
   }
+
+  setColor(colorKey: string): this {
+    const self = this;
+    const deep = getColor(colorKey, 800);
+    const light = getColor(colorKey, 600);
+
+    const lineColor = light ? light : colorKey;
+    const textColor = deep ? deep : colorKey;
+
+    self.attr('line/stroke', lineColor);
+    self.attr('line/targetMarker/stroke', lineColor);
+    self.attr('line/targetMarker/fill', lineColor);
+    self.label(0, {
+      attrs: {
+        labelText: {
+          fill: textColor
+        },
+        labelBody: {
+          stroke: lineColor
+        }
+      }
+    });
+
+    return this;
+  }
 }
 
 @Injectable({
@@ -138,10 +217,10 @@ export class NodeLink extends shapes.NodeLink {
 })
 export class NoctuaShapesService {
   constructor() {
-    this.initialize();
+    this._initialize();
   }
 
-  initialize() {
+  private _initialize() {
 
     const self = this;
 
@@ -149,7 +228,7 @@ export class NoctuaShapesService {
       noctua: {
         StencilNode: StencilNode,
         NodeCell: NodeCell,
-        NodeCellList: shapes.NodeCellList,
+        NodeCellList: NodeCellList,
         NodeLink: NodeLink
       }
     });

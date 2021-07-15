@@ -34,6 +34,10 @@ const edge = {
     id: 'BFO:0000050',
     label: 'part of'
   },
+  isActiveIn: {
+    id: 'RO:0002432',
+    label: 'is active in'
+  },
   hasPart: {
     id: 'BFO:0000051',
     label: 'has part'
@@ -108,22 +112,10 @@ export const noctuaFormConfig = {
       'bpOnly': {
         'name': 'bpOnly',
         'label': 'BP Annotation'
-      }
-    }
-  },
-  'camDisplayType': {
-    'options': {
-      'triple': {
-        'name': 'triple',
-        'label': 'Simple Triple View'
       },
-      'entity': {
-        'name': 'entity',
-        'label': 'Annotated Entity View'
-      },
-      'model': {
-        'name': 'model',
-        'label': 'Activity View'
+      'molecule': {
+        'name': 'molecule',
+        'label': 'Molecule'
       }
     }
   },
@@ -172,17 +164,14 @@ export const noctuaFormConfig = {
       'positive': {
         'name': 'positive',
         'label': 'Positive',
-        'scalar': 0
       },
       'neutral': {
         'name': 'neutral',
         'label': 'Unknown/neutral',
-        'scalar': -1
       },
       'negative': {
         'name': 'negative',
         'label': 'Negative',
-        'scalar': -2
       },
 
     }
@@ -205,21 +194,18 @@ export const noctuaFormConfig = {
   },
   'mechanism': {
     'options': {
-      'direct': {
-        'name': 'direct',
-        'label': 'direct (via direct binding or catalysis)',
-        'scalar': 1
-      },
       'known': {
         'name': 'known',
-        'label': 'via known regulatory process (e.g. transcription)',
-        'scalar': 2
+        'label': 'Known(regulatory)',
       },
       'unknown': {
         'name': 'unknown',
-        'label': 'Unknown/neutral',
-        'scalar': 3
-      }
+        'label': 'Unknown/Indirect',
+      },
+      'inputFor': {
+        'name': 'inputFor',
+        'label': 'Provides Input For'
+      },
     }
   },
   'displaySection': {
@@ -367,8 +353,19 @@ export const noctuaFormConfig = {
     id: 'GO:0051170',
     label: 'nuclear import',
     edge: edge.positivelyRegulates
-  }]
-
-
-
+  }],
+  causalEdgeBuckets: [
+    [
+      edge.negativelyRegulates,
+      edge.causallyUpstreamOfNegativeEffect,
+    ],
+    [
+      edge.regulates,
+      edge.causallyUpstreamOf,
+    ],
+    [
+      edge.positivelyRegulates,
+      edge.causallyUpstreamOfPositiveEffect,
+    ]
+  ]
 };

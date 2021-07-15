@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, from, Observable } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
@@ -11,9 +11,16 @@ import { CamForm } from './../models/forms/cam-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { Evidence, compareEvidence } from './../models/activity/evidence';
 import { Cam, CamStats } from './../models/activity/cam';
-import { uniqWith } from 'lodash';
-import { ActivityNodeType, ActivityNode } from './../models/activity';
+import { differenceWith, uniqWith } from 'lodash';
+import { ActivityNodeType, ActivityNode, compareActivity } from './../models/activity';
 import { compareTerm } from './../models/activity/activity-node';
+import { environment } from './../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { finalize, mergeMap } from 'rxjs/operators';
+
+declare const require: any;
+
+const model = require('bbop-graph-noctua');
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +31,7 @@ export class CamService {
   cam: Cam;
   onCamChanged: BehaviorSubject<any>;
   onCamUpdated: BehaviorSubject<any>;
+  onCamCheckoutChanged: BehaviorSubject<any>;
   onCamTermsChanged: BehaviorSubject<any>;
 
   public activity: Activity;
@@ -31,7 +39,10 @@ export class CamService {
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   public camFormGroup$: Observable<FormGroup>;
 
+  searchApi = environment.searchApi;
+
   constructor(public noctuaFormConfigService: NoctuaFormConfigService,
+    private httpClient: HttpClient,
     private _fb: FormBuilder,
     private noctuaUserService: NoctuaUserService,
     private noctuaGraphService: NoctuaGraphService,
@@ -39,6 +50,7 @@ export class CamService {
     private _noctuaGraphService: NoctuaGraphService,
     private curieService: CurieService) {
     this.onCamChanged = new BehaviorSubject(null);
+    this.onCamCheckoutChanged = new BehaviorSubject(null);
     this.onCamUpdated = new BehaviorSubject(null);
     this.onCamTermsChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
@@ -122,6 +134,11 @@ export class CamService {
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
   }
 
+  getStoredModel(cam: Cam): Observable<any> {
+    const url = `${this.searchApi}/stored?id=${cam.id}`;
+
+    return this.httpClient.get(url)
+  }
 
   bulkEdit(cam: Cam): Observable<any> {
     const self = this;
@@ -131,8 +148,6 @@ export class CamService {
 
     return forkJoin(promises);
   }
-
-
 
   deleteActivity(activity: Activity) {
     const self = this;
@@ -184,6 +199,12 @@ export class CamService {
     return result;
   }
 
+  duplicateModel(cam: Cam, destTitle?: string) {
+    const self = this;
+
+    return self._noctuaGraphService.duplicateModel(cam, destTitle);
+  }
+
   resetModel(cam: Cam) {
     const self = this;
 
@@ -193,4 +214,54 @@ export class CamService {
   reviewChanges(cam: Cam, stats: CamStats): boolean {
     return cam.reviewCamChanges(stats);
   }
+
+  reviewCamChanges(cam: Cam) {
+    const self = this;
+    const stats = new CamStats();
+
+    const changes = self.reviewChanges(cam, stats);
+    if (changes) {
+      stats.camsCount++;
+    }
+
+    stats.updateTotal();
+
+    const result = {
+      stats: stats,
+    };
+
+    return result
+  }
+
+  populateStoredModel(cam: Cam, storedCam) {
+    const self = this;
+    const noctua_graph = model.graph;
+
+    cam.storedGraph = new noctua_graph();
+    cam.storedGraph.load_data_basic(storedCam);
+    cam.storedActivities = self._noctuaGraphService.graphToActivities(cam.storedGraph)
+    cam.checkStored();
+    cam.reviewCamChanges();
+  }
+
+  addCamEdit(cam: Cam) {
+    const self = this;
+    cam.loading.status = true;
+    self.getStoredModel(cam).pipe(
+      finalize(() => {
+        cam.loading.status = false;
+      })).subscribe({
+        next: (response) => {
+          if (!response || !response.storedModel || !response.activeModel) return;
+
+          self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
+          self.populateStoredModel(cam, response.storedModel)
+          const summary = self.reviewCamChanges(cam);
+          self.onCamCheckoutChanged.next(summary);
+          cam.loading.status = false;
+        },
+      })
+  }
+
+
 }
