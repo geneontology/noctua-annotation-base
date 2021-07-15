@@ -14,6 +14,10 @@ import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
 
+export enum ReloadType {
+  RESET = 'reset',
+  STORE = 'store'
+}
 
 export enum CamRebuildSignal {
   NONE = 'none',

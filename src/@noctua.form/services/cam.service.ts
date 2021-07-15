@@ -17,7 +17,6 @@ import { compareTerm } from './../models/activity/activity-node';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { finalize, mergeMap } from 'rxjs/operators';
-import { ReloadType } from '@noctua.search/models/review-mode';
 
 declare const require: any;
 

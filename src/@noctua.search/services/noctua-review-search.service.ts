@@ -16,6 +16,7 @@ import {
     CamService,
     CamLoadingIndicator,
     _compareEntityWeight,
+    ReloadType,
 } from 'noctua-form-base';
 import { SearchCriteria } from './../models/search-criteria';
 import { saveAs } from 'file-saver';
@@ -28,11 +29,8 @@ import { NoctuaSearchMenuService } from './search-menu.service';
 import { NoctuaSearchService } from './noctua-search.service';
 import { LeftPanel, MiddlePanel } from './../models/menu-panels';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
-import { ReloadType } from './../models/review-mode';
 
-declare const require: any;
 
-const model = require('bbop-graph-noctua');
 
 @Injectable({
     providedIn: 'root'

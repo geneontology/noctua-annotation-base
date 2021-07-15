@@ -4,12 +4,10 @@ import { Cam, CamLoadingIndicator, CamService, CamsService, CamStats, NoctuaForm
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { ArtBasket, ArtBasketItem } from './../..//models/art-basket';
 import { NoctuaReviewSearchService } from './../../services/noctua-review-search.service';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { LeftPanel, MiddlePanel } from './../../models/menu-panels';
 import { NoctuaSearchDialogService } from './../../services/dialog.service';
-import { ReloadType } from './../../models/review-mode';
 
 @Component({
   selector: 'noc-find-replace',

@@ -22,7 +22,8 @@ export {
     CamRebuildRule,
     CamLoadingIndicator,
     CamStats,
-    CamQueryMatch
+    CamQueryMatch,
+    ReloadType
 } from './cam';
 export { Evidence } from './evidence';
 export {

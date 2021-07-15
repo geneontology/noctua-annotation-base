@@ -21,14 +21,14 @@ import {
   Activity,
   NoctuaGraphService,
   ActivityDisplayType,
-  CamLoadingIndicator
+  CamLoadingIndicator,
+  ReloadType
 } from 'noctua-form-base';
 
 import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { TableOptions } from '@noctua.common/models/table-options';
 import { NoctuaSearchDialogService } from '@noctua.search/services/dialog.service';
-import { ReloadType } from '@noctua.search/models/review-mode';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 
 @Component({

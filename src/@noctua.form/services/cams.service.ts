@@ -6,7 +6,7 @@ import { NoctuaGraphService } from './../services/graph.service';
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
 import { Activity } from './../models/activity/activity';
 
-import { Cam, CamLoadingIndicator, CamQueryMatch, CamStats } from './../models/activity/cam';
+import { Cam, CamLoadingIndicator, CamQueryMatch, CamStats, ReloadType } from './../models/activity/cam';
 import { each, groupBy, find } from 'lodash';
 import { CamService } from './cam.service';
 import { Entity } from './../models/activity/entity';
@@ -17,8 +17,6 @@ import { ActivityNode } from './../models/activity/activity-node';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Evidence } from './../models/activity/evidence';
 import { NoctuaUserService } from './user.service';
-import { ReloadType } from '@noctua.search/models/review-mode';
-import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 declare const require: any;
 
@@ -53,7 +51,6 @@ export class CamsService {
     private httpClient: HttpClient,
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    private confirmDialogService: NoctuaConfirmDialogService,
     private _noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
     private curieService: CurieService) {
@@ -285,9 +282,7 @@ export class CamsService {
       finalize(() => {
         self.resetLoading([cam]);
 
-        self.zone.run(() => {
-          self.confirmDialogService.openInfoToast('Changes successfully saved.', 'OK');
-        });
+
 
       })).subscribe({
         next: (response) => {
