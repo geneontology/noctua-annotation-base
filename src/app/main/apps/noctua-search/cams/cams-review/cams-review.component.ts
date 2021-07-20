@@ -65,7 +65,7 @@ export class CamsReviewComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
-    private camService: CamService,
+    public camService: CamService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaUserService: NoctuaUserService,

@@ -47,8 +47,7 @@ export class EvidenceTableComponent implements OnInit, OnDestroy {
   private unsubscribeAll: Subject<any>;
 
   constructor(
-    private camService: CamService,
-
+    public camService: CamService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaFormConfigService: NoctuaFormConfigService,

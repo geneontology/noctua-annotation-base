@@ -68,7 +68,7 @@ export class ActivitySlimTreeNodeComponent implements OnInit, OnDestroy {
   private unsubscribeAll: Subject<any>;
 
   constructor(
-    private camService: CamService,
+    public camService: CamService,
 
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,

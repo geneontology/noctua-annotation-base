@@ -81,8 +81,7 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
-    private camService: CamService,
-
+    public camService: CamService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
