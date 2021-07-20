@@ -12,7 +12,6 @@ import {
   NoctuaFormMenuService,
   Predicate,
   NoctuaUserService,
-  CamsService
 } from 'noctua-form-base';
 
 import {
@@ -49,7 +48,7 @@ export class EvidenceTableComponent implements OnInit, OnDestroy {
 
   constructor(
     private camService: CamService,
-    public camsService: CamsService,
+
     public noctuaUserService: NoctuaUserService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaFormConfigService: NoctuaFormConfigService,

@@ -9,7 +9,6 @@ import { EntityForm } from './../models/forms/entity-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { NoctuaGraphService } from './graph.service';
 import { cloneDeep } from 'lodash';
-import { CamsService } from './cams.service';
 import { Activity } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
 
@@ -30,7 +29,7 @@ export class NoctuaActivityEntityService {
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
-    private camsService: CamsService,
+
     private noctuaLookupService: NoctuaLookupService) {
 
     this.entityFormGroup = new BehaviorSubject(null);
@@ -104,7 +103,7 @@ export class NoctuaActivityEntityService {
     const oldEntity = cloneDeep(self.entity);
     self.activityEntityFormToActivity();
     self.entity.addPendingChanges(oldEntity);
-    return self.camsService.bulkEditActivityNode(cam, self.entity);
+    return self.camService.bulkEditActivityNode(cam, self.entity);
 
   }
 }

@@ -14,7 +14,7 @@ import {
   noctuaFormConfig,
   NoctuaUserService,
   NoctuaFormMenuService,
-  CamsService,
+
   ActivityType
 } from 'noctua-form-base';
 
@@ -62,7 +62,7 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
 
   constructor(
     private camService: CamService,
-    public camsService: CamsService,
+
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,

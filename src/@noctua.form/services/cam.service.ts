@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin, from, Observable } from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { BehaviorSubject, EMPTY, forkJoin, from, Observable } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaGraphService } from './../services/graph.service';
@@ -11,12 +11,13 @@ import { CamForm } from './../models/forms/cam-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { Evidence, compareEvidence } from './../models/activity/evidence';
 import { Cam, CamStats } from './../models/activity/cam';
-import { differenceWith, uniqWith } from 'lodash';
-import { ActivityNodeType, ActivityNode, compareActivity } from './../models/activity';
+import { differenceWith, each, find, groupBy, uniqWith } from 'lodash';
+import { ActivityNodeType, ActivityNode, compareActivity, Entity, CamLoadingIndicator, CamQueryMatch, ReloadType } from './../models/activity';
 import { compareTerm } from './../models/activity/activity-node';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { finalize, mergeMap } from 'rxjs/operators';
+import { finalize, map, mergeMap } from 'rxjs/operators';
+import { noctuaFormConfig } from './../noctua-form-config';
 
 declare const require: any;
 
@@ -27,7 +28,6 @@ const model = require('bbop-graph-noctua');
 })
 export class CamService {
   curieUtil: any;
-  loading = false;
   cam: Cam;
   onCamChanged: BehaviorSubject<any>;
   onCamUpdated: BehaviorSubject<any>;
@@ -41,14 +41,32 @@ export class CamService {
 
   searchApi = environment.searchApi;
 
-  constructor(public noctuaFormConfigService: NoctuaFormConfigService,
+  cams: Cam[] = [];
+  onCamsChanged: BehaviorSubject<any>;
+  onCamsCheckoutChanged: BehaviorSubject<any>;
+  onSelectedCamChanged: BehaviorSubject<any>;
+  onSelectedNodeChanged: BehaviorSubject<any>;
+  _selectedNodeUuid: string;
+  _selectedCamUuid;
+
+  loading = {
+    status: false,
+    message: ''
+  };
+
+  currentMatch: Entity = new Entity(null, null);
+
+  constructor(
+    public noctuaFormConfigService: NoctuaFormConfigService,
+    private zone: NgZone,
     private httpClient: HttpClient,
-    private _fb: FormBuilder,
     private noctuaUserService: NoctuaUserService,
+    private _fb: FormBuilder,
     private noctuaGraphService: NoctuaGraphService,
     private noctuaLookupService: NoctuaLookupService,
     private _noctuaGraphService: NoctuaGraphService,
     private curieService: CurieService) {
+
     this.onCamChanged = new BehaviorSubject(null);
     this.onCamCheckoutChanged = new BehaviorSubject(null);
     this.onCamUpdated = new BehaviorSubject(null);
@@ -56,6 +74,24 @@ export class CamService {
     this.curieUtil = this.curieService.getCurieUtil();
     this.camFormGroup = new BehaviorSubject(null);
     this.camFormGroup$ = this.camFormGroup.asObservable();
+
+    this.onCamsChanged = new BehaviorSubject(null);
+    this.onCamsCheckoutChanged = new BehaviorSubject(null);
+    this.onSelectedCamChanged = new BehaviorSubject(null);
+    this.onSelectedNodeChanged = new BehaviorSubject(null);
+    this.curieUtil = this.curieService.getCurieUtil();
+
+    this.onSelectedCamChanged.subscribe((uuid: string) => {
+      if (uuid) {
+        this.currentMatch.modelId = uuid;
+      }
+    });
+
+    this.onSelectedNodeChanged.subscribe((uuid: string) => {
+      if (uuid) {
+        this.currentMatch.uuid = uuid;
+      }
+    });
   }
 
   initializeForm(cam?: Cam) {
@@ -140,7 +176,7 @@ export class CamService {
     return this.httpClient.get(url)
   }
 
-  bulkEdit(cam: Cam): Observable<any> {
+  bulkEditCam(cam: Cam): Observable<any> {
     const self = this;
     const promises = [];
 
@@ -211,7 +247,7 @@ export class CamService {
     return self._noctuaGraphService.resetModel(cam);
   }
 
-  reviewChanges(cam: Cam, stats: CamStats): boolean {
+  reviewChangesCam(cam: Cam, stats: CamStats): boolean {
     return cam.reviewCamChanges(stats);
   }
 
@@ -219,7 +255,7 @@ export class CamService {
     const self = this;
     const stats = new CamStats();
 
-    const changes = self.reviewChanges(cam, stats);
+    const changes = self.reviewChangesCam(cam, stats);
     if (changes) {
       stats.camsCount++;
     }
@@ -261,6 +297,234 @@ export class CamService {
           cam.loading.status = false;
         },
       })
+  }
+
+
+  loadCams() {
+    const self = this;
+
+    self.onCamsChanged.next(this.cams);
+  }
+
+  updateModel(cams: Cam[], responses) {
+    const self = this;
+
+    if (responses && responses.length > 0) {
+      responses.forEach(response => {
+        const cam: Cam = find(cams, { id: response.data().id });
+        if (cam) {
+          self._noctuaGraphService.rebuild(cam, response);
+          cam.checkStored()
+        }
+      })
+    }
+  }
+
+  expandMatch(nodeId: string) {
+    const self = this;
+
+    each(self.cams, (cam: Cam) => {
+      cam.expanded = true;
+      const activities = cam.findActivityByNodeUuid(nodeId);
+
+      each(activities, (activity: Activity) => {
+        activity.expanded = true;
+      });
+    });
+  }
+
+  getReplaceObject(entities: Entity[], replaceWithTerm: any, category) {
+    const self = this;
+    const groupedEntities = groupBy(entities, 'modelId') as { string: Entity[] };
+    const cams: Cam[] = []
+    let replaceWith
+
+    if (category && category.name === noctuaFormConfig.findReplaceCategory.options.reference.name) {
+      replaceWith = Evidence.formatReference(replaceWithTerm);
+    } else {
+      replaceWith = replaceWithTerm?.id;
+    }
+
+    each(groupedEntities, (values: Entity[], key) => {
+      const cam: Cam = find(this.cams, { id: key });
+
+      if (cam) {
+        cam.addPendingChanges(entities, replaceWith, category);
+        cams.push(cam)
+      }
+    });
+
+    self.reviewChangesCams();
+    return cams;
+  }
+
+  replace(cams: Cam[]) {
+    const self = this;
+
+    self.reviewChangesCams();
+    return self.bulkEditCams(cams);
+  }
+
+
+  bulkEditActivityNode(cam: Cam, node: ActivityNode): Observable<any> {
+    const self = this;
+    const promises = [];
+
+    promises.push(self._noctuaGraphService.bulkEditActivityNode(cam, node));
+
+    return forkJoin(promises).pipe(
+      map(res => self.updateModel([cam], res)),
+    );
+  }
+
+  bulkEditCams(cams: Cam[]): Observable<any> {
+    const self = this;
+    const promises = [];
+
+    each(cams, (cam: Cam) => {
+      promises.push(self._noctuaGraphService.bulkEditActivity(cam));
+    });
+
+    return forkJoin(promises).pipe(
+      map(res => self.updateModel(cams, res)),
+    );;
+  }
+
+  storeCams(cams: Cam[]): Observable<any> {
+    const self = this;
+
+    return from(cams).pipe(
+      mergeMap((cam: Cam) => {
+        return self._noctuaGraphService.storeCam(cam);
+      }));
+
+  }
+
+  bulkStoredModel(cams: Cam[]) {
+    const self = this;
+    const promises = [];
+
+    each(cams, (cam: Cam) => {
+      cam.loading = new CamLoadingIndicator(true, 'Calculating Pending Changes ...');
+      promises.push(self.getStoredModel(cam));
+    });
+
+    return forkJoin(promises);
+  }
+
+  reviewChangesCams() {
+    const self = this;
+    const stats = new CamStats();
+
+    each(this.cams, (cam: Cam) => {
+      const changes = self.reviewChangesCam(cam, stats);
+      if (changes) {
+        stats.camsCount++;
+      }
+    });
+
+    stats.updateTotal();
+
+    const result = {
+      stats: stats,
+    };
+
+    this.onCamsCheckoutChanged.next(result);
+  }
+
+
+
+  clearHighlight() {
+    each(this.cams, (cam: Cam) => {
+      return cam.clearHighlight();
+    });
+  }
+
+  clearCams() {
+    this.cams = [];
+    this.onCamsChanged.next(this.cams);
+  }
+
+  resetCams(cams: Cam[]): Observable<any> {
+    const self = this;
+
+    return from(cams).pipe(
+      mergeMap((cam: Cam) => {
+        return self._noctuaGraphService.resetModel(cam);
+      }))
+  }
+
+  resetMatch() {
+    each(this.cams, (cam: Cam) => {
+      cam.queryMatch = new CamQueryMatch();
+    });
+  }
+
+  resetLoading(cams: Cam[], camLoadingIndicator = new CamLoadingIndicator) {
+    each(cams, (cam: Cam) => {
+      cam.loading = camLoadingIndicator;
+    });
+  }
+
+  reloadCam(cam: Cam, reloadType: ReloadType) {
+    const self = this;
+
+    from([cam]).pipe(
+      mergeMap((cam: Cam) => {
+        if (reloadType === ReloadType.RESET) {
+          cam.loading = new CamLoadingIndicator(true, 'Resetting Model ...');
+          return self.resetCams([cam]);
+        } else if (reloadType === ReloadType.STORE) {
+          cam.loading = new CamLoadingIndicator(true, 'Saving Model ...');
+          return self.storeCams([cam]);
+        } else {
+          return EMPTY;
+        }
+      }),
+      finalize(() => {
+        self.resetLoading([cam]);
+
+
+
+      })).subscribe({
+        next: (response) => {
+          if (!response || !response.data()) return;
+
+          //Now stored == Active
+          self.populateStoredModel(cam, response.data())
+
+          const summary = self.reviewCamChanges(cam);
+          self.onCamCheckoutChanged.next(summary);
+          cam.loading.status = false;
+        }
+      })
+  }
+
+  sortCams() {
+    this.cams.sort(this._compareDateReviewAdded);
+  }
+
+  applyMatchWeights(cams: any[]) {
+    let weight = 1;
+    each(cams, (cam: Cam, key) => {
+      cam.applyWeights(weight);
+    });
+  }
+
+  updateDisplayNumber(cams: any[]) {
+    each(cams, (cam: Cam, key) => {
+      cam.displayNumber = (key + 1).toString();
+      cam.updateActivityDisplayNumber();
+    });
+
+  }
+
+  private _compareDateReviewAdded(a: Cam, b: Cam): number {
+    if (a.dateReviewAdded < b.dateReviewAdded) {
+      return 1;
+    } else {
+      return -1;
+    }
   }
 
 

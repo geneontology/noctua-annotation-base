@@ -14,7 +14,7 @@ import {
   NoctuaFormMenuService,
   NoctuaActivityFormService,
   CamService,
-  CamsService,
+
   noctuaFormConfig,
   MiddlePanel,
   LeftPanel,
@@ -72,7 +72,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private camsService: CamsService,
+
     private camService: CamService,
     private _noctuaGraphService: NoctuaGraphService,
     private noctuaDataService: NoctuaDataService,
@@ -120,7 +120,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         this.cam = cam;
       });
 
-    this.camsService.onCamsCheckoutChanged
+    this.camService.onCamsCheckoutChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(summary => {
         if (!summary) {
@@ -128,6 +128,16 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         }
 
         this.summary = summary;
+      });
+
+    this.camService.onCamCheckoutChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(summary => {
+        if (!summary) {
+          return;
+        }
+
+        this.summary = summary
       });
   }
 
@@ -138,9 +148,9 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   loadCam(modelId) {
     this.cam = this.camService.getCam(modelId);
-    this.camService.addCamEdit(this.cam)
-    this.camsService.cams = [this.cam]
-    this.noctuaReviewSearchService.addCamsToReview([this.cam], this.camsService.cams);
+    //this.camService.addCamEdit(this.cam)
+    this.camService.cams = []
+    this.noctuaReviewSearchService.addCamsToReview([this.cam], this.camService.cams);
   }
 
   openCamForm() {
@@ -168,7 +178,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
     const success = (ok) => {
       if (ok) {
         cam.loading = new CamLoadingIndicator(true, 'Resetting Model ...');
-        self.camsService.reloadCam(cam, ReloadType.RESET)
+        self.camService.reloadCam(cam, ReloadType.RESET)
       }
     }
 
@@ -194,7 +204,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
       const success = (replace) => {
         if (replace) {
           cam.loading = new CamLoadingIndicator(true, 'Saving Model ...');
-          self.camsService.reloadCam(cam, ReloadType.STORE)
+          self.camService.reloadCam(cam, ReloadType.STORE)
         }
       };
 

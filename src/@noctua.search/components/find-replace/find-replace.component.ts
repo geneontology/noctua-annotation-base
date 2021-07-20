@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Cam, CamLoadingIndicator, CamService, CamsService, CamStats, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
+import { Cam, CamLoadingIndicator, CamService, CamStats, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -34,7 +34,7 @@ export class FindReplaceComponent implements OnInit, OnDestroy {
 
   constructor(
     private zone: NgZone,
-    public camsService: CamsService,
+
     public camService: CamService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaSearchDialogService: NoctuaSearchDialogService,
@@ -55,6 +55,17 @@ export class FindReplaceComponent implements OnInit, OnDestroy {
         }
         this.cam = cam;
 
+      });
+
+    this.camService.onCamsCheckoutChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(summary => {
+        if (!summary) {
+          return;
+        }
+
+        this.summary = summary
+        this.stats = this.generateStats(this.summary.stats);
       });
 
     this.camService.onCamCheckoutChanged

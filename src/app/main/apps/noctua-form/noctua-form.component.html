@@ -27,11 +27,11 @@
       (click)="openSearch()" matTooltip="Find and replace" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'search']"></fa-icon>
     </button>
-    <button mat-icon-button color="" class="noc-rounded-button" (click)="openDuplicateCamForm()"
+    <!--    <button mat-icon-button color="" class="noc-rounded-button" (click)="openDuplicateCamForm()"
       [ngClass]="{'noc-active': noctuaFormMenuService.selectedLeftPanel === LeftPanel.duplicateCamForm}"
       matTooltip="Make a copy of this model" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'clone']"></fa-icon>
-    </button>
+    </button> -->
   </div>
 
   <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
@@ -39,7 +39,8 @@
     <div *ngIf="!noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
       Not Logged In: You can only view existing annotations
     </div>
-    <div *ngIf="noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
+    <div *ngIf="noctuaUserService.user && cam.modified" class="noc-not-loggedin" fxLayout="row"
+      fxLayoutAlign="center center">
       Not Saved
       <button mat-raised-button fxFlex="100px" (click)="resetCam(cam)" color="warn"
         class="noc-rounded-button noc-half-button noc-r noc-sm">

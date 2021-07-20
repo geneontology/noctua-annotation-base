@@ -14,7 +14,7 @@ import {
   noctuaFormConfig,
   NoctuaUserService,
   NoctuaFormMenuService,
-  CamsService,
+
   ActivityType,
   ActivityTreeNode,
   ActivityNodeType
@@ -82,7 +82,7 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
 
   constructor(
     private camService: CamService,
-    public camsService: CamsService,
+
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
