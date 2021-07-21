@@ -67,17 +67,6 @@ export class FindReplaceComponent implements OnInit, OnDestroy {
         this.summary = summary
         this.stats = this.generateStats(this.summary.stats);
       });
-
-    this.camService.onCamCheckoutChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(summary => {
-        if (!summary) {
-          return;
-        }
-
-        this.summary = summary
-        this.stats = this.generateStats(this.summary.stats);
-      });
   }
 
   ngOnDestroy(): void {

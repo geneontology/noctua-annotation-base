@@ -27,32 +27,23 @@ const model = require('bbop-graph-noctua');
   providedIn: 'root'
 })
 export class CamService {
+  searchApi = environment.searchApi;
   curieUtil: any;
+  cams: Cam[] = [];
   cam: Cam;
   onCamChanged: BehaviorSubject<any>;
-  onCamUpdated: BehaviorSubject<any>;
-  onCamCheckoutChanged: BehaviorSubject<any>;
-  onCamTermsChanged: BehaviorSubject<any>;
-
-  public activity: Activity;
-  private camForm: CamForm;
-  private camFormGroup: BehaviorSubject<FormGroup | undefined>;
-  public camFormGroup$: Observable<FormGroup>;
-
-  searchApi = environment.searchApi;
-
-  cams: Cam[] = [];
   onCamsChanged: BehaviorSubject<any>;
   onCamsCheckoutChanged: BehaviorSubject<any>;
   onSelectedCamChanged: BehaviorSubject<any>;
   onSelectedNodeChanged: BehaviorSubject<any>;
+
+  activity: Activity;
+  private camForm: CamForm;
+  private camFormGroup: BehaviorSubject<FormGroup | undefined>;
+  camFormGroup$: Observable<FormGroup>;
+
   _selectedNodeUuid: string;
   _selectedCamUuid;
-
-  loading = {
-    status: false,
-    message: ''
-  };
 
   currentMatch: Entity = new Entity(null, null);
 
@@ -68,9 +59,6 @@ export class CamService {
     private curieService: CurieService) {
 
     this.onCamChanged = new BehaviorSubject(null);
-    this.onCamCheckoutChanged = new BehaviorSubject(null);
-    this.onCamUpdated = new BehaviorSubject(null);
-    this.onCamTermsChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
     this.camFormGroup = new BehaviorSubject(null);
     this.camFormGroup$ = this.camFormGroup.asObservable();
@@ -293,7 +281,7 @@ export class CamService {
           self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
           self.populateStoredModel(cam, response.storedModel)
           const summary = self.reviewCamChanges(cam);
-          self.onCamCheckoutChanged.next(summary);
+          self.onCamsCheckoutChanged.next(summary);
           cam.loading.status = false;
         },
       })
@@ -494,7 +482,7 @@ export class CamService {
           self.populateStoredModel(cam, response.data())
 
           const summary = self.reviewCamChanges(cam);
-          self.onCamCheckoutChanged.next(summary);
+          self.onCamsCheckoutChanged.next(summary);
           cam.loading.status = false;
         }
       })

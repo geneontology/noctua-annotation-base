@@ -118,19 +118,12 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
           return;
         }
         this.cam = cam;
+        console.log(cam)
+
       });
+
 
     this.camService.onCamsCheckoutChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(summary => {
-        if (!summary) {
-          return;
-        }
-
-        this.summary = summary;
-      });
-
-    this.camService.onCamCheckoutChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(summary => {
         if (!summary) {
@@ -148,7 +141,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   loadCam(modelId) {
     this.cam = this.camService.getCam(modelId);
-    //this.camService.addCamEdit(this.cam)
+    //this.camService.addCamEdit(this.cam) 
     this.camService.cams = []
     this.noctuaReviewSearchService.addCamsToReview([this.cam], this.camService.cams);
   }

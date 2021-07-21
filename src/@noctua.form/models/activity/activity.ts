@@ -289,22 +289,29 @@ export class Activity extends SaeGraph<ActivityNode> {
   adjustActivity() {
     const self = this;
 
-    switch (self.activityType) {
-      case noctuaFormConfig.activityType.options.bpOnly.name:
-        const rootMF = noctuaFormConfig.rootNode.mf;
-        const mfNode = self.getMFNode();
-        const bpNode = self.getNode(ActivityNodeType.GoBiologicalProcess);
-        const bpEdge = this.getEdge(mfNode.id, bpNode.id);
+    if (self.activityType !== ActivityType.ccOnly && self.activityType !== ActivityType.molecule) {
+      const mfNode = self.getMFNode();
+      const edge = self.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
 
-        mfNode.term = new Entity(rootMF.id, rootMF.label);
-        mfNode.predicate.evidence = bpNode.predicate.evidence;
+      if (mfNode && edge) {
+        edge.predicate.evidence = mfNode.predicate.evidence;
+      }
+    }
 
-        if (this.bpOnlyEdge) {
-          bpEdge.predicate.edge.id = bpNode.predicate.edge.id = this.bpOnlyEdge.id;
-          bpEdge.predicate.edge.label = bpNode.predicate.edge.label = this.bpOnlyEdge.label;
-        }
+    if (self.activityType === noctuaFormConfig.activityType.options.bpOnly.name) {
+      const rootMF = noctuaFormConfig.rootNode.mf;
+      const mfNode = self.getMFNode();
+      const bpNode = self.getNode(ActivityNodeType.GoBiologicalProcess);
+      const bpEdge = self.getEdge(mfNode.id, bpNode.id);
 
-        break;
+      mfNode.term = new Entity(rootMF.id, rootMF.label);
+      mfNode.predicate.evidence = bpNode.predicate.evidence;
+
+      if (self.bpOnlyEdge) {
+        bpEdge.predicate.edge.id = bpNode.predicate.edge.id = self.bpOnlyEdge.id;
+        bpEdge.predicate.edge.label = bpNode.predicate.edge.label = self.bpOnlyEdge.label;
+      }
+
     }
   }
 
