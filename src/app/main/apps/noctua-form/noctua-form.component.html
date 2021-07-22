@@ -35,7 +35,6 @@
   </div>
 
   <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
-
     <div *ngIf="!noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
       Not Logged In: You can only view existing annotations
     </div>
@@ -181,8 +180,8 @@
         </div>
       </mat-drawer>
       <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">
-        <div [ngSwitch]="noctuaFormMenuService.selectedMiddlePanel" class="w-100-p h-100-p" noctuaPerfectScrollbar>
-          <noc-cam-preview *ngSwitchCase="MiddlePanel.camPreview" [cam]="cam"></noc-cam-preview>
+        <div *ngIf="cam" [ngSwitch]="noctuaFormMenuService.selectedMiddlePanel" class="w-100-p h-100-p"
+          noctuaPerfectScrollbar>
           <noc-cam-table *ngSwitchCase="MiddlePanel.camTable" [cam]="cam" [options]="tableOptions"></noc-cam-table>
         </div>
       </mat-drawer-content>

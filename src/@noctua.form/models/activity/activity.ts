@@ -289,15 +289,6 @@ export class Activity extends SaeGraph<ActivityNode> {
   adjustActivity() {
     const self = this;
 
-    if (self.activityType !== ActivityType.ccOnly && self.activityType !== ActivityType.molecule) {
-      const mfNode = self.getMFNode();
-      const edge = self.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
-
-      if (mfNode && edge) {
-        edge.predicate.evidence = mfNode.predicate.evidence;
-      }
-    }
-
     if (self.activityType === noctuaFormConfig.activityType.options.bpOnly.name) {
       const rootMF = noctuaFormConfig.rootNode.mf;
       const mfNode = self.getMFNode();
@@ -312,6 +303,15 @@ export class Activity extends SaeGraph<ActivityNode> {
         bpEdge.predicate.edge.label = bpNode.predicate.edge.label = self.bpOnlyEdge.label;
       }
 
+    }
+
+    if (self.activityType !== ActivityType.ccOnly && self.activityType !== ActivityType.molecule) {
+      const mfNode = self.getMFNode();
+      const edge = self.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
+
+      if (mfNode && edge) {
+        edge.predicate.evidence = mfNode.predicate.evidence;
+      }
     }
   }
 

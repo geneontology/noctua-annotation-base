@@ -251,10 +251,10 @@ export class NoctuaGraphService {
       cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
     }
 
-    self.loadCam(cam);
+    self.loadCam(cam, false);
   }
 
-  loadCam(cam: Cam) {
+  loadCam(cam: Cam, publish = true) {
     const self = this;
     const activities = self.graphToActivities(cam.graph);
     // const molecules = self.graphToMolecules(cam.graph);
@@ -271,9 +271,11 @@ export class NoctuaGraphService {
     //self.getActivityLocations(cam)
     //cam.connectorActivities = self.getConnectorActivities(cam)
     cam.updateActivityDisplayNumber();
-
-    self.onCamGraphChanged.next(cam);
     cam.operation = CamOperation.NONE;
+
+    if (publish) {
+      self.onCamGraphChanged.next(cam);
+    }
   }
 
   getAddedActivity(a: Activity[], b: Activity[]): Activity {

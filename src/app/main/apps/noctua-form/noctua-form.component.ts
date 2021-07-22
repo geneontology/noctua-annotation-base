@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
@@ -72,7 +72,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-
+    private changeDetector: ChangeDetectorRef,
     private camService: CamService,
     private _noctuaGraphService: NoctuaGraphService,
     private noctuaDataService: NoctuaDataService,
@@ -98,9 +98,14 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
       distinctUntilChanged(this.noctuaUserService.distinctUser),
       takeUntil(this._unsubscribeAll))
       .subscribe((user: Contributor) => {
+
+        if (user === undefined) return;
+
         this.noctuaFormConfigService.setupUrls();
         this.noctuaFormConfigService.setUniversalUrls();
         this.loadCam(this.modelId);
+
+        console.log('loading', user)
 
       });
   }
@@ -119,6 +124,12 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         }
         this.cam = cam;
         console.log(cam)
+
+        if (cam.activities.length > 0) {
+          this.camService.addCamEdit(this.cam)
+          this.camService.cams = [cam]
+        }
+        //this.noctuaReviewSearchService.addCamsToReview([this.cam], this.camService.cams);
 
       });
 
@@ -141,9 +152,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   loadCam(modelId) {
     this.cam = this.camService.getCam(modelId);
-    //this.camService.addCamEdit(this.cam) 
-    this.camService.cams = []
-    this.noctuaReviewSearchService.addCamsToReview([this.cam], this.camService.cams);
+
   }
 
   openCamForm() {
