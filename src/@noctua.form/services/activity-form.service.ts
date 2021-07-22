@@ -188,10 +188,26 @@ export class NoctuaActivityFormService {
       activity.addNodes(object);
       activity.addEdge(subject, object, predicate);
 
+      self._createCCAnnotationsDFS(srcActivity, activity, object)
+
       activities.push(activity)
     });
 
     return activities;
+  }
+
+  private _createCCAnnotationsDFS(srcActivity: Activity, destActivity: Activity, subjectNode: ActivityNode) {
+    const self = this;
+    const ccEdges: Triple<ActivityNode>[] = srcActivity.getEdges(subjectNode.id);
+    each(ccEdges, (ccEdge: Triple<ActivityNode>) => {
+      const object = cloneDeep(ccEdge.object)
+      const predicate = cloneDeep(ccEdge.predicate)
+
+      destActivity.addNodes(object);
+      destActivity.addEdge(subjectNode, object, predicate);
+
+      self._createCCAnnotationsDFS(srcActivity, destActivity, object)
+    });
   }
 
   clearForm() {

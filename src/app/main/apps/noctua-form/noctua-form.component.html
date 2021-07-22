@@ -38,8 +38,8 @@
     <div *ngIf="!noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
       Not Logged In: You can only view existing annotations
     </div>
-    <div *ngIf="noctuaUserService.user && cam.modified" class="noc-not-loggedin" fxLayout="row"
-      fxLayoutAlign="center center">
+    <div *ngIf="noctuaUserService.user && cam?.modified && cam?.activities.length>0" class="noc-not-loggedin"
+      fxLayout="row" fxLayoutAlign="center center">
       <small class="mr-16">Not Saved</small>
       <button mat-raised-button fxFlex="100px" (click)="resetCam(cam)" color="warn"
         class="noc-rounded-button noc-half-button noc-r noc-sm">
@@ -50,7 +50,6 @@
         Save
       </button>
     </div>
-
     <div *ngIf="cam" class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
       [@animateStagger]="{value:'50'}">
       <div class="" fxFlex="180px">
@@ -164,7 +163,6 @@
       </button>
     </div> -->
     </div>
-
     <mat-drawer-container class="noc-drawer-container w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start"
       autosize>
       <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start">
@@ -175,7 +173,8 @@
           </noc-duplicate-cam-form>
           <noc-activity-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.activityForm">
           </noc-activity-form>
-          <noc-find-replace [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.findReplace">
+          <noc-find-replace [panelDrawer]="leftDrawer"
+            [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.findReplace">
           </noc-find-replace>
         </div>
       </mat-drawer>

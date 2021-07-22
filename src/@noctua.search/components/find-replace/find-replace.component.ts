@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Cam, CamLoadingIndicator, CamService, CamStats, NoctuaFormConfigService, NoctuaUserService } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
@@ -8,6 +8,7 @@ import { NoctuaReviewSearchService } from './../../services/noctua-review-search
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { LeftPanel, MiddlePanel } from './../../models/menu-panels';
 import { NoctuaSearchDialogService } from './../../services/dialog.service';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
   selector: 'noc-find-replace',
@@ -16,6 +17,9 @@ import { NoctuaSearchDialogService } from './../../services/dialog.service';
 })
 export class FindReplaceComponent implements OnInit, OnDestroy {
   MiddlePanel = MiddlePanel;
+
+  @Input('panelDrawer')
+  panelDrawer: MatDrawer;
   cam: Cam;
   summary;
   stats
@@ -78,11 +82,9 @@ export class FindReplaceComponent implements OnInit, OnDestroy {
     this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.camsReview);
   }
 
-
   close() {
-    this.noctuaSearchMenuService.closeLeftDrawer();
+    this.panelDrawer.close();
   }
-
 
   reviewCamChanges(cam: Cam) {
     const self = this;

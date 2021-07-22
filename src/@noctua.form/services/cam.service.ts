@@ -42,9 +42,6 @@ export class CamService {
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   camFormGroup$: Observable<FormGroup>;
 
-  _selectedNodeUuid: string;
-  _selectedCamUuid;
-
   currentMatch: Entity = new Entity(null, null);
 
   constructor(
@@ -278,7 +275,7 @@ export class CamService {
         next: (response) => {
           if (!response || !response.storedModel || !response.activeModel) return;
 
-          self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
+          //self._noctuaGraphService.rebuildFromStoredApi(cam, response.activeModel);
           self.populateStoredModel(cam, response.storedModel)
           const summary = self.reviewCamChanges(cam);
           self.onCamsCheckoutChanged.next(summary);
@@ -471,9 +468,6 @@ export class CamService {
       }),
       finalize(() => {
         self.resetLoading([cam]);
-
-
-
       })).subscribe({
         next: (response) => {
           if (!response || !response.data()) return;
