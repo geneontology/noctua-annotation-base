@@ -361,6 +361,12 @@ export class Activity extends SaeGraph<ActivityNode> {
       }
     }
 
+    if (self.nodes.length < 2) {
+      const error = new ActivityError(ErrorLevel.error, ErrorType.general, `At least 2 nodes are required`);
+      self.submitErrors.push(error);
+      result = false;
+    }
+
     return result;
   }
 

@@ -15,20 +15,9 @@ const baseRequestParams = {
     wt: 'json',
     rows: '50',
     start: '0',
-    fl: '*,score',
-    'facet': true,
-    'facet.mincount': 1,
-    'facet.sort': 'count',
-    'facet.limit': '50',
-    'json.nl': 'arrarr',
     packet: '1',
     callback_type: 'search',
-    'facet.field': [
-        'source',
-        'subset',
-        'isa_closure_label',
-        'is_obsolete'
-    ],
+    //fl: ['annotation_class'],
     qf: [
         'annotation_class^3',
         'annotation_class_label_searchable^5.5',
