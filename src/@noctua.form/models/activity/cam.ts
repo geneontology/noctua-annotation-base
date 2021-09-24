@@ -553,6 +553,14 @@ export class Cam {
     });
   }
 
+  updateActivitySummary() {
+    const self = this;
+
+    each(self.activities, (activity: Activity, key) => {
+      activity.updateSummary()
+    });
+  }
+
   private _compareMolecularFunction(a: Activity, b: Activity): number {
     if (a.presentation.gpText.toLowerCase() < b.presentation.gpText.toLowerCase()) {
       return -1;

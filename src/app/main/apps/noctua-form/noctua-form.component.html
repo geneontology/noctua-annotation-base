@@ -166,6 +166,7 @@
     <mat-drawer-container class="noc-drawer-container w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start"
       autosize>
       <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start">
+        <div class="resize-handle-right" mwlResizeHandle [resizeEdges]="{ right: true }"></div>
         <div [ngSwitch]="noctuaFormMenuService.selectedLeftPanel" class="h-100-p">
           <noc-cam-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.camForm">
           </noc-cam-form>

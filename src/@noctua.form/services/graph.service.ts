@@ -257,20 +257,24 @@ export class NoctuaGraphService {
   loadCam(cam: Cam, publish = true) {
     const self = this;
     const activities = self.graphToActivities(cam.graph);
-    // const molecules = self.graphToMolecules(cam.graph);
-    let activity;
 
-    if (cam.operation === CamOperation.ADD_ACTIVITY) {
-      activity = self.getAddedActivity(activities, cam.activities);
-      self.onActivityAdded.next(activity);
+    if (environment.isGraph) {
+      const molecules = self.graphToMolecules(cam.graph);
+      let activity;
+
+      if (cam.operation === CamOperation.ADD_ACTIVITY) {
+        activity = self.getAddedActivity(activities, cam.activities);
+        self.onActivityAdded.next(activity);
+      }
+      cam.activities = [...activities, ...molecules]
+      cam.causalRelations = self.getCausalRelations(cam);
+      self.getActivityLocations(cam)
+      //cam.connectorActivities = self.getConnectorActivities(cam)
     }
-    //cam.activities = [...activities, ...molecules]
     cam.activities = activities;
     cam.applyFilter();
-    //cam.causalRelations = self.getCausalRelations(cam);
-    //self.getActivityLocations(cam)
-    //cam.connectorActivities = self.getConnectorActivities(cam)
     cam.updateActivityDisplayNumber();
+    cam.updateActivitySummary()
     cam.operation = CamOperation.NONE;
 
     if (publish) {

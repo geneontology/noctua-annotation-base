@@ -169,7 +169,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       } else {
         this.noctuaSearchService.searchCriteria[filterType].push(value.trim());
       }
-      this.noctuaSearchService.updateSearch();
+      this.noctuaSearchService.updateSearch(true);
       this.searchInput.forEach((item) => {
         item.nativeElement.value = null;
       });

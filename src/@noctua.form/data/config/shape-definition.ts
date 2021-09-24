@@ -77,22 +77,22 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.locatedIn,
             cardinality: CardinalityType.oneToMany
         },
-        <ShapeDescription>{
-            label: 'Add is active in (CC)',
-            id: ActivityNodeType.GoCellularComponent,
-            node: <ActivityNodeDisplay>{
-                type: ActivityNodeType.GoCellularComponent,
-                category: [EntityDefinition.GoCellularComponent],
-                label: '(GP) is active in (CC)',
-                aspect: 'C',
-                displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.cc,
-                weight: 12,
-                showInMenu: true,
-            },
-            predicate: noctuaFormConfig.edge.isActiveIn,
-            cardinality: CardinalityType.oneToMany
-        },
+        /*         <ShapeDescription>{
+                    label: 'Add is active in (CC)',
+                    id: ActivityNodeType.GoCellularComponent,
+                    node: <ActivityNodeDisplay>{
+                        type: ActivityNodeType.GoCellularComponent,
+                        category: [EntityDefinition.GoCellularComponent],
+                        label: '(GP) is active in (CC)',
+                        aspect: 'C',
+                        displaySection: noctuaFormConfig.displaySection.fd,
+                        displayGroup: noctuaFormConfig.displayGroup.cc,
+                        weight: 12,
+                        showInMenu: true,
+                    },
+                    predicate: noctuaFormConfig.edge.isActiveIn,
+                    cardinality: CardinalityType.oneToMany
+                }, */
     ],
     [ActivityNodeType.GoMolecularFunction]: [
         <ShapeDescription>{

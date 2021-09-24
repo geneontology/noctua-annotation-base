@@ -44,6 +44,7 @@ import { takeUntil } from 'rxjs/operators';
 export class ActivityTreeComponent implements OnInit, OnDestroy {
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
+  ActivityNodeType = ActivityNodeType;
   activityTypeOptions = noctuaFormConfig.activityType.options;
 
   treeNodes: ActivityTreeNode[] = [];

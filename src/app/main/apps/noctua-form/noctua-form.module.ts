@@ -63,6 +63,8 @@ import { ActivitySlimTreeNodeComponent } from './cam/cam-table/activity-slim-tre
 import { PreviewActivityComponent } from './cam/activity/preview-activity/preview-activity.component';
 import { NoctuaSearchBaseModule } from '@noctua.search';
 import { DuplicateCamFormComponent } from './cam/duplicate-cam-form/duplicate-cam-form.component';
+import { ResizableModule } from 'angular-resizable-element';
+import { NoctuaTermDetailComponent } from './components/term-detail/term-detail.component';
 
 const routes = [
   {
@@ -103,6 +105,7 @@ const routes = [
     MatTableModule,
     MatTooltipModule,
     MatTreeModule,
+    ResizableModule,
   ],
   exports: [
     ActivityFormComponent,
@@ -174,7 +177,8 @@ const routes = [
     ActivitySlimTreeComponent,
     ActivitySlimTreeNodeComponent,
     SelectEvidenceComponent,
-    PreviewActivityComponent
+    PreviewActivityComponent,
+    NoctuaTermDetailComponent
   ],
 })
 

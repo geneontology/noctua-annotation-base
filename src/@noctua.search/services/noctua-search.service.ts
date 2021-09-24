@@ -180,34 +180,51 @@ export class NoctuaSearchService {
     }
 
     paramsToSearch(param) {
-        this.searchCriteria = new SearchCriteria();
-
-        param.title ? this.searchCriteria.titles.push(param.title) : null;
-        param.id ? this.searchCriteria.ids.push(param.id) : null;
-        param.contributor ? this.searchCriteria.contributors.push(param.contributor) : null;
-        param.group ? this.searchCriteria.groups.push(param.group) : null;
-        param.pmid ? this.searchCriteria.pmids.push(param.pmid) : null;
-        param.term ? this.searchCriteria.terms.push(
-            new Entity(param.term, '')) : null;
-        param.gp ? this.searchCriteria.gps.push(
-            new Entity(param.gp, '')) : null;
-        param.organism ? this.searchCriteria.organisms.push(param.organism) : null;
-        param.state ? this.searchCriteria.states.push(param.state) : null;
-        param.exactdate ? this.searchCriteria.exactdates.push(param.exactdate) : null;
-        param.startdate ? this.searchCriteria.exactdates.push(param.startdate) : null;
-        param.enddate ? this.searchCriteria.exactdates.push(param.enddate) : null;
-
-        this.updateSearch();
+        this.searchCriteria.titles = this.makeArray(param.title)
+        this.searchCriteria.contributors = this.makeArray(param.contributor).map((orcid) => {
+            return this.noctuaUserService.getContributorDetails(orcid);
+        })
+        this.searchCriteria.groups = this.makeArray(param.group)
+        this.searchCriteria.pmids = this.makeArray(param.pmid)
+        this.searchCriteria.terms = this.makeArray(param.term)
+        this.searchCriteria.gps = this.makeArray(param.gp)
+        this.searchCriteria.organisms = this.makeArray(param.organism)
+        this.searchCriteria.states = this.makeArray(param.state)
+        this.searchCriteria.exactdates = this.makeArray(param.exactdate)
+        this.searchCriteria.startdates = this.makeArray(param.startdate)
+        this.searchCriteria.enddates = this.makeArray(param.enddate)
     }
 
-    updateSearch(save: boolean = true) {
+    makeArray(val) {
+        if (Array.isArray(val)) return val
+        if (typeof val === 'string') {
+            return [val]
+        }
+        return []
+    }
+
+    updateSearch(pushState = true, save = true) {
         this.searchCriteria.updateFiltersCount();
         this.onSearchCriteriaChanged.next(this.searchCriteria);
 
         if (save) {
             this.saveHistory();
         }
+
+        if (pushState) {
+            if (this.searchCriteria.filtersCount > 0) {
+                const query = this.searchCriteria.build();
+                const url = `${window.location.origin}${window.location.pathname}?${query}`
+                history.pushState({}, '', url)
+            } else {
+                const url = `${window.location.origin}${window.location.pathname}`
+                history.replaceState({}, '', url)
+            }
+
+        }
     }
+
+
 
     filter(filterType, filter) {
         this.searchCriteria[filterType].push(filter);

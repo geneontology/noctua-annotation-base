@@ -246,7 +246,7 @@ export class NoctuaReviewSearchService {
                 self.camService.updateDisplayNumber(reviewCams);
                 self.camService.onCamsChanged.next(reviewCams);
                 self.camService.resetLoading(cams);
-                self._noctuaSearchService.updateSearch();
+                self._noctuaSearchService.updateSearch(false, false);
                 self.onReplaceChanged.next(true);
 
                 self.updateSearch();

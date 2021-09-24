@@ -338,6 +338,10 @@ export const insertNode = (activity: Activity, subjectNode: ActivityNode, nodeDe
     activity.addNode(objectNode);
     objectNode.treeLevel = subjectNode.treeLevel + 1;
 
+    /*   if (activity.activityType === ActivityType.ccOnly && objectNode.treeLevel < 3) {
+          objectNode.termRequired = true
+      } */
+
     const predicate: Predicate = activity.getNode(objectNode.id).predicate;
     predicate.edge = Entity.createEntity(nodeDescription.predicate);
 

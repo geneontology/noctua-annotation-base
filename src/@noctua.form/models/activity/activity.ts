@@ -11,9 +11,38 @@ import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
-import { each, filter } from 'lodash';
+import { chain, Dictionary, each, filter, groupBy } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
+
+class TermSummary {
+  label: string
+  count: number = 0;
+  nodes: Entity[] = []
+
+  constructor(label?: string) {
+    if (label) {
+      this.label = label
+    }
+  }
+}
+
+export class ActivitySummary {
+  bp = new TermSummary('BP');
+  cc = new TermSummary('CC');
+  mf = new TermSummary('MF');
+  gp = new TermSummary('GP');
+  other = new TermSummary();
+
+  nodes = []
+
+  constructor() {
+    this.nodes = [
+      this.bp, this.cc, this.mf, this.other
+    ]
+  }
+
+}
 
 export enum ActivityState {
   creation = 1,
@@ -70,6 +99,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   molecularEntityNode: ActivityNode;
   molecularFunctionNode: ActivityNode;
+  summary: ActivitySummary = new ActivitySummary()
 
   /**
    * Used for HTML id attribute
@@ -80,7 +110,6 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   hasViolations = false;
   violations: Violation[] = [];
-
 
   bpOnlyEdge: Entity;
   ccOnlyEdge: Entity;
@@ -156,6 +185,37 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   get rootNode(): ActivityNode {
     return this.getNode(this.rootNodeType);
+  }
+
+  updateSummary() {
+    const self = this;
+    let summary = new ActivitySummary()
+    const filteredNodes = self.nodes.filter(node => node.term.hasValue())
+
+    /*  summary.nodes = chain(self.nodes)
+       .filter(node => node.term.hasValue())
+       .groupBy(node => node.type)
+       .value(); */
+
+
+    each(filteredNodes, (node: ActivityNode) => {
+      if (node.type === ActivityNodeType.GoMolecularFunction) {
+        summary.mf.count++
+        summary.mf.nodes.push(node.term)
+      } else if (node.type === ActivityNodeType.GoBiologicalPhase) {
+        summary.bp.count++
+        summary.bp.nodes.push(node.term)
+      } else if (node.type === ActivityNodeType.GoCellularComponent) {
+        summary.cc.count++
+        summary.cc.nodes.push(node.term)
+      } else {
+        summary.other.count++
+        summary.other.nodes.push(node.term)
+      }
+    })
+
+    console.log(summary)
+    this.summary = summary
   }
 
   updateEntityInsertMenu() {

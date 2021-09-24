@@ -30,9 +30,10 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/jsplumb/dist/js/jsplumb.min.js",
               "node_modules/jointjs/css/layout.css",
               "node_modules/jointjs/css/themes/material.css",
+              "node_modules/reveal.js/dist/reveal.css",
+              "node_modules/reveal.js/dist/theme/black.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
