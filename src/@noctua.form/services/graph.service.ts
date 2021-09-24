@@ -527,6 +527,7 @@ export class NoctuaGraphService {
 
     each(camGraph.all_nodes(), (bbopNode) => {
       const node = self.nodeToActivityNode(camGraph, bbopNode.id());
+      node.id = node.uuid;
       nodes.push(node)
     });
 
@@ -541,11 +542,13 @@ export class NoctuaGraphService {
       .value();
 
     each(uniqueNodes, (node: ActivityNode) => {
-      if (node.type === ActivityNodeType.GoMolecularFunction) {
+      if (node.hasRootType(EntityDefinition.GoMolecularEntity)) {
+        termsSummary.gp.append(node)
+      } else if (node.hasRootType(EntityDefinition.GoMolecularFunction)) {
         termsSummary.mf.append(node)
-      } else if (node.type === ActivityNodeType.GoBiologicalProcess) {
+      } else if (node.hasRootType(EntityDefinition.GoBiologicalProcess)) {
         termsSummary.bp.append(node)
-      } else if (node.type === ActivityNodeType.GoCellularComponent) {
+      } else if (node.hasRootType(EntityDefinition.GoCellularComponent)) {
         termsSummary.cc.append(node)
       } else {
         termsSummary.other.append(node)

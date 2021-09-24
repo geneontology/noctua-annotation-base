@@ -34,7 +34,7 @@ export class TermsSummary {
 
   constructor() {
     this.nodes = [
-      this.bp, this.cc, this.mf
+      this.mf, this.bp, this.cc,
     ]
   }
 

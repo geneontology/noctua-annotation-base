@@ -297,6 +297,52 @@ export class NoctuaLookupService {
       }));
   }
 
+  getTermDetail(a: string) {
+    const self = this;
+
+    const requestParams = {
+      q: self.buildQ(a),
+      defType: 'edismax',
+      indent: 'on',
+      qt: 'standard',
+      wt: 'json',
+      rows: '2',
+      start: '0',
+      fl: '*,score',
+      'facet': 'true',
+      'facet.mincount': '1',
+      'facet.sort': 'count',
+      'facet.limit': '25',
+      'json.nl': 'arrarr',
+      packet: '1',
+      callback_type: 'search',
+      'facet.field': [
+        'source',
+        'subset',
+        'idspace',
+        'is_obsolete'
+      ],
+      fq: [
+        'document_category:"ontology_class"',
+        `regulates_closure:"${a}"`
+      ],
+      qf: [
+        'annotation_class^3',
+        'isa_closure^1',
+      ]
+    };
+
+    const params = new HttpParams({
+      fromObject: requestParams
+    });
+
+    const url = this.golrURLBase + params.toString();
+
+    return this.httpClient.jsonp(url, 'json.wrf').pipe(
+      map(response => self._lookupMap(response))
+    );
+  }
+
 
   getTermURL(id: string) {
     const self = this;

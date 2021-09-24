@@ -17,6 +17,8 @@ import { CamsReviewChangesDialogComponent } from './components/dialogs/cams-revi
 import { CamsUnsavedDialogComponent } from './components/dialogs/cams-unsaved/cams-unsaved.component';
 import { FindReplaceComponent } from './components/find-replace/find-replace.component';
 import { CamTermsComponent } from './components/cam-terms/cam-terms.component';
+import { TreeModule } from '@circlon/angular-tree-component';
+import { TermDetailComponent } from './components/term-detail/term-detail.component';
 
 @NgModule({
     declarations: [
@@ -32,7 +34,8 @@ import { CamTermsComponent } from './components/cam-terms/cam-terms.component';
         ReviewFormComponent,
         CamsReviewChangesDialogComponent,
         CamsUnsavedDialogComponent,
-        CamTermsComponent
+        CamTermsComponent,
+        TermDetailComponent,
     ],
     imports: [
         CommonModule,
@@ -40,6 +43,7 @@ import { CamTermsComponent } from './components/cam-terms/cam-terms.component';
         FormsModule,
         ReactiveFormsModule,
         NoctuaSharedModule,
+        TreeModule,
         NoctuaEditorModule
     ],
     exports: [
@@ -55,7 +59,8 @@ import { CamTermsComponent } from './components/cam-terms/cam-terms.component';
         ReviewFormComponent,
         CamsReviewChangesDialogComponent,
         CamsUnsavedDialogComponent,
-        CamTermsComponent
+        CamTermsComponent,
+        TermDetailComponent
     ]
 })
 export class NoctuaSearchBaseModule {

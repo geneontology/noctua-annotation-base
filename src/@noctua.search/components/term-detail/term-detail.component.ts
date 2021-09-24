@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone, Input, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ActivityNode, Cam, CamLoadingIndicator, CamService, CamStats, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaUserService, RightPanel, TermsSummary, TermSummary } from 'noctua-form-base';
+import { ActivityNode, Cam, CamLoadingIndicator, CamService, CamStats, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, TermsSummary, TermSummary } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -11,44 +11,30 @@ import { NoctuaSearchDialogService } from './../../services/dialog.service';
 import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
-  selector: 'noc-cam-terms',
-  templateUrl: './cam-terms.component.html',
-  styleUrls: ['./cam-terms.component.scss']
+  selector: 'noc-term-detail',
+  templateUrl: './term-detail.component.html',
+  styleUrls: ['./term-detail.component.scss']
 })
-export class CamTermsComponent implements OnInit, OnDestroy {
-  MiddlePanel = MiddlePanel;
+export class TermDetailComponent implements OnInit, OnDestroy {
 
-  @ViewChild('tree') tree;
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
-  cam: Cam;
-  termsSummary: TermsSummary;
-  stats
 
   loadingSpinner: any = {
     color: 'primary',
     mode: 'indeterminate'
   };
 
-  displayedColumns = [
-    'category',
-    'count'
-  ];
+  termDetail = {}
 
 
-
-  treeOptions = {
-    allowDrag: false,
-    allowDrop: false,
-    // levelPadding: 15,
-  };
 
   private _unsubscribeAll: Subject<any>;
-  treeNodes
 
   constructor(
     private zone: NgZone,
     private _noctuaGraphService: NoctuaGraphService,
+    private noctuaLookupService: NoctuaLookupService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public camService: CamService,
     private confirmDialogService: NoctuaConfirmDialogService,
@@ -62,19 +48,13 @@ export class CamTermsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.camService.onCamChanged
+    this.noctuaLookupService.getTermDetail('GO:0019438')
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((cam: Cam) => {
-        if (!cam) {
-          return;
-        }
-        this.cam = cam;
+      .subscribe((res) => {
+        console.log(res)
 
-        this.termsSummary = this._noctuaGraphService.getTerms(this.cam.graph)
-        this.treeNodes = this._buildTree(this.termsSummary)
-
-      });
-
+        this.termDetail = res[0]
+      })
   }
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
@@ -85,36 +65,6 @@ export class CamTermsComponent implements OnInit, OnDestroy {
     this.noctuaFormMenuService.openLeftDrawer(LeftPanel.findReplace);
   }
 
-
-  openTermDetail(term) {
-    this.noctuaFormMenuService.openRightDrawer(RightPanel.termDetail);
-  }
-
-  private _buildTree(termsSummary: TermsSummary) {
-
-    termsSummary.other.label = 'Other';
-
-    const allTerms = [termsSummary.mf, termsSummary.bp, termsSummary.cc, termsSummary.gp, termsSummary.other]
-
-    const treeNodes = allTerms.map((termSummary: TermSummary) => {
-      return {
-        id: termSummary.label,
-        isCategory: true,
-        label: termSummary.label,
-        children: termSummary.nodes
-      }
-    })
-
-    console.log(treeNodes)
-
-    return treeNodes
-  }
-
-
-
-  onTreeLoad() {
-    // this.tree.treeModel.expandAll();
-  }
 
   close() {
     this.panelDrawer.close();

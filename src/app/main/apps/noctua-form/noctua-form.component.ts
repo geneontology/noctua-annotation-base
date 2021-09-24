@@ -22,7 +22,8 @@ import {
   NoctuaGraphService,
   ActivityDisplayType,
   CamLoadingIndicator,
-  ReloadType
+  ReloadType,
+  RightPanel
 } from 'noctua-form-base';
 
 import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
@@ -43,6 +44,7 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
   ActivityType = ActivityType;
   LeftPanel = LeftPanel;
   MiddlePanel = MiddlePanel;
+  RightPanel = RightPanel;
 
 
   @ViewChild('leftDrawer', { static: true })

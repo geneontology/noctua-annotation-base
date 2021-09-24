@@ -11,10 +11,54 @@
     </div>
   </div>
   <div class="noc-drawer-body" noctuaPerfectScrollbar>
-    <div class="noc-stats-results" fxLayout="column" fxLayoutAlign="start center">
-      <div *ngFor="let node of termsSummary.allTerms" class="">
-        {{node.term.label}}
+    <div class="noc-tree-container">
+
+      <div class="noc-tree">
+        <tree-root #tree (initialized)="onTreeLoad()" [nodes]="treeNodes" [options]="treeOptions">
+          <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+            <div class="node-wrapper noc-tree-node" fxLayout="row" fxLayoutAlign="start center"
+              [style.padding-left]="node.getNodePadding()">
+              <button mat-icon-button class="noc-node-expander-button" color="primary" (click)="node.toggleExpanded()"
+                *ngIf="node.hasChildren">
+                <fa-icon *ngIf="node?.isCollapsed" [icon]="['fas', 'caret-right']"></fa-icon>
+                <fa-icon *ngIf="node?.isExpanded" [icon]="['fas', 'caret-down']"></fa-icon>
+              </button>
+              <div class="noc-expander-placeholder" *ngIf="!node.hasChildren">
+              </div>
+              <div class="node-content-wrapper" fxFlex="" fxLayout="row" fxLayoutAlign="start center"
+                [class.node-content-wrapper-active]="node.isActive"
+                [class.node-content-wrapper-focused]="node.isFocused" (click)="node.mouseAction('click', $event)"
+                (dblclick)="node.mouseAction('dblClick', $event)"
+                (contextmenu)="node.mouseAction('contextMenu', $event)" (treeDrop)="node.onDrop($event)"
+                [treeAllowDrop]="node.allowDrop" [treeDrag]="node" [treeDragEnabled]="node.allowDrag()">
+
+                <div *ngIf="node.data.isCategory" class="noc-term-row" fxFlex="" fxLayout="row"
+                  fxLayoutAlign="start center">
+                  <div>
+                    {{node.data.label}}
+                  </div>
+                </div>
+
+                <div *ngIf="!node.data.isCategory" class="noc-term-row" fxFlex="" fxLayout="row"
+                  fxLayoutAlign="start center">
+                  <div *ngIf="!node.data.isCategory" (click)="openSearch()">
+                    {{node.data.term?.label}}
+                  </div>
+                  <span fxFlex=""></span>
+                  <div fxFlex="50px" (click)="openTermDetail(node.data.term)">
+                    <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </tree-root>
       </div>
+    </div>
+    <div class="noc-stats-results" fxLayout="column" fxLayoutAlign="start center">
+      <!--  <div *ngFor="let node of termsSummary.allTerms" class="">
+        {{node.term.label}}
+      </div> -->
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">

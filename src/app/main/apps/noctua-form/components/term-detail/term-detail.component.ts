@@ -9,7 +9,7 @@ import {
 
 
 @Component({
-  selector: 'noc-term-detail',
+  selector: 'noc-term-details',
   templateUrl: './term-detail.component.html',
   styleUrls: ['./term-detail.component.scss']
 })

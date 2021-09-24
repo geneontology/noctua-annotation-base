@@ -13,5 +13,6 @@ export enum MiddlePanel {
 
 export enum RightPanel {
     activityForm = 'activityForm',
-    camForm = 'camForm'
+    camForm = 'camForm',
+    termDetail = 'termDetail'
 }
