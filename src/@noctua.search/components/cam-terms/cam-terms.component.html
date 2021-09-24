@@ -1,0 +1,23 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" class="noc-drawer h-100-p">
+  <div class="noc-drawer-header" fxLayout="column" fxLayoutAlign="start stretch">
+    <div class="noc-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+      <span class="noc-drawer-header-title">
+        Find and Replace</span>
+      <span fxFlex></span>
+      <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+        aria-label="Close dialog">
+        <mat-icon>close</mat-icon> CLOSE
+      </button>
+    </div>
+  </div>
+  <div class="noc-drawer-body" noctuaPerfectScrollbar>
+    <div class="noc-stats-results" fxLayout="column" fxLayoutAlign="start center">
+      <div *ngFor="let node of termsSummary.allTerms" class="">
+        {{node.term.label}}
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
+
+  </div>
+</div>

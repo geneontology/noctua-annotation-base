@@ -27,6 +27,14 @@
       (click)="openSearch()" matTooltip="Find and replace" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'search']"></fa-icon>
     </button>
+
+
+    <button mat-icon-button color="" class="noc-rounded-button"
+      [ngClass]="{'noc-active': noctuaFormMenuService.selectedLeftPanel === LeftPanel.camTermsSummary}"
+      (click)="openTermsSummary()" matTooltip="terms summary" [matTooltipPosition]="'after'"
+      [matTooltipShowDelay]="1500">
+      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon>
+    </button>
     <!--    <button mat-icon-button color="" class="noc-rounded-button" (click)="openDuplicateCamForm()"
       [ngClass]="{'noc-active': noctuaFormMenuService.selectedLeftPanel === LeftPanel.duplicateCamForm}"
       matTooltip="Make a copy of this model" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
@@ -177,6 +185,8 @@
           <noc-find-replace [panelDrawer]="leftDrawer"
             [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.findReplace">
           </noc-find-replace>
+
+          <noc-cam-terms [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.camTermsSummary"></noc-cam-terms>
         </div>
       </mat-drawer>
       <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">

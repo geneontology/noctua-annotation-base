@@ -37,6 +37,8 @@ export class CamQueryMatch {
   reference?: Entity[] = [];
 }
 
+
+
 export class CamStats {
   totalChanges = 0;
   camsCount = 0;

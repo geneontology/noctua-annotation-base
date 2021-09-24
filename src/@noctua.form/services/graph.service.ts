@@ -11,17 +11,16 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
 import { Activity, ActivityType, compareActivity } from './../models/activity/activity';
-import { find, each, differenceWith, cloneDeep } from 'lodash';
+import { find, each, differenceWith, cloneDeep, uniqWith, chain } from 'lodash';
 import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
-import { ActivityNode } from './../models/activity/activity-node';
+import { ActivityNode, ActivityNodeType, compareTerm } from './../models/activity/activity-node';
 import { Cam, CamLoadingIndicator, CamOperation } from './../models/activity/cam';
-import { ConnectorActivity, ConnectorState } from './../models/activity/connector-activity';
 import { Entity } from './../models/activity/entity';
 import { Evidence } from './../models/activity/evidence';
 import { Predicate } from './../models/activity/predicate';
 import { Triple } from './../models/activity/triple';
-import { NoctuaFormUtils } from './../utils/noctua-form-utils';
+import { TermsSummary } from './../models/activity/summary';
 
 declare const require: any;
 
@@ -519,6 +518,47 @@ export class NoctuaGraphService {
 
         subjectNode.hasRootType(EntityDefinition.GoMolecularEntity))
   }
+
+  getTerms(camGraph): TermsSummary {
+    const self = this;
+    const termsSummary = new TermsSummary()
+    const nodes = []
+    const evidences = []
+
+    each(camGraph.all_nodes(), (bbopNode) => {
+      const node = self.nodeToActivityNode(camGraph, bbopNode.id());
+      nodes.push(node)
+    });
+
+    each(camGraph.all_edges(), (bbopEdge) => {
+      const evidence = self.edgeToEvidence(camGraph, bbopEdge);
+      evidence.push(evidence)
+
+    });
+
+    const uniqueNodes = chain(nodes)
+      .uniqWith(compareTerm)
+      .value();
+
+    each(uniqueNodes, (node: ActivityNode) => {
+      if (node.type === ActivityNodeType.GoMolecularFunction) {
+        termsSummary.mf.append(node)
+      } else if (node.type === ActivityNodeType.GoBiologicalProcess) {
+        termsSummary.bp.append(node)
+      } else if (node.type === ActivityNodeType.GoCellularComponent) {
+        termsSummary.cc.append(node)
+      } else {
+        termsSummary.other.append(node)
+      }
+    })
+
+    termsSummary.allTerms = uniqueNodes
+
+    return termsSummary
+  }
+
+
+
 
   getActivityPreset(subjectNode: Partial<ActivityNode>, predicateId, bbopSubjectEdges): Activity {
     const self = this;

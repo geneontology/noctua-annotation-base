@@ -311,11 +311,18 @@ $accent: map-get($theme, accent);
         align-items: center;
         justify-content: center;
         height: 20px;
-        width: 20px;
+        min-width: 20px;
+        max-width: 40px;
         border-radius: 50%;
         color: #777;
-        font-size: 12px;
+        font-size: 10px;
         font-weight: bold;
+
+        .noc-count {
+          margin-right: 5px;
+          font-size: 10px;
+          font-weight: normal;
+        }
       }
 
       .noc-icon-action {
@@ -327,6 +334,15 @@ $accent: map-get($theme, accent);
           color: #222;
           background-color: rgba(#000000, 0.2);
         }
+      }
+
+      .noc-chip-label {
+        padding: 0 8px 0 4px;
+        max-width: 100px;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       @include noc-chip-color(#ddd);

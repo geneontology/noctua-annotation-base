@@ -16,6 +16,7 @@ import { ReviewFormComponent } from './components/review-form/review-form.compon
 import { CamsReviewChangesDialogComponent } from './components/dialogs/cams-review-changes/cams-review-changes.component';
 import { CamsUnsavedDialogComponent } from './components/dialogs/cams-unsaved/cams-unsaved.component';
 import { FindReplaceComponent } from './components/find-replace/find-replace.component';
+import { CamTermsComponent } from './components/cam-terms/cam-terms.component';
 
 @NgModule({
     declarations: [
@@ -31,6 +32,7 @@ import { FindReplaceComponent } from './components/find-replace/find-replace.com
         ReviewFormComponent,
         CamsReviewChangesDialogComponent,
         CamsUnsavedDialogComponent,
+        CamTermsComponent
     ],
     imports: [
         CommonModule,
@@ -53,6 +55,7 @@ import { FindReplaceComponent } from './components/find-replace/find-replace.com
         ReviewFormComponent,
         CamsReviewChangesDialogComponent,
         CamsUnsavedDialogComponent,
+        CamTermsComponent
     ]
 })
 export class NoctuaSearchBaseModule {

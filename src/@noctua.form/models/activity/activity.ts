@@ -14,35 +14,9 @@ import * as ShapeDescription from './../../data/config/shape-definition';
 import { chain, Dictionary, each, filter, groupBy } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
+import { TermsSummary } from './summary';
 
-class TermSummary {
-  label: string
-  count: number = 0;
-  nodes: Entity[] = []
 
-  constructor(label?: string) {
-    if (label) {
-      this.label = label
-    }
-  }
-}
-
-export class ActivitySummary {
-  bp = new TermSummary('BP');
-  cc = new TermSummary('CC');
-  mf = new TermSummary('MF');
-  gp = new TermSummary('GP');
-  other = new TermSummary();
-
-  nodes = []
-
-  constructor() {
-    this.nodes = [
-      this.bp, this.cc, this.mf, this.other
-    ]
-  }
-
-}
 
 export enum ActivityState {
   creation = 1,
@@ -99,7 +73,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   molecularEntityNode: ActivityNode;
   molecularFunctionNode: ActivityNode;
-  summary: ActivitySummary = new ActivitySummary()
+  summary: TermsSummary = new TermsSummary()
 
   /**
    * Used for HTML id attribute
@@ -189,7 +163,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   updateSummary() {
     const self = this;
-    let summary = new ActivitySummary()
+    let summary = new TermsSummary()
     const filteredNodes = self.nodes.filter(node => node.term.hasValue())
 
     /*  summary.nodes = chain(self.nodes)
@@ -200,17 +174,13 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     each(filteredNodes, (node: ActivityNode) => {
       if (node.type === ActivityNodeType.GoMolecularFunction) {
-        summary.mf.count++
-        summary.mf.nodes.push(node.term)
-      } else if (node.type === ActivityNodeType.GoBiologicalPhase) {
-        summary.bp.count++
-        summary.bp.nodes.push(node.term)
+        summary.mf.append(node)
+      } else if (node.type === ActivityNodeType.GoBiologicalProcess) {
+        summary.bp.append(node)
       } else if (node.type === ActivityNodeType.GoCellularComponent) {
-        summary.cc.count++
-        summary.cc.nodes.push(node.term)
+        summary.cc.append(node)
       } else {
-        summary.other.count++
-        summary.other.nodes.push(node.term)
+        summary.other.append(node)
       }
     })
 
