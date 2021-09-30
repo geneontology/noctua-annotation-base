@@ -100,6 +100,7 @@ export class ActivityNode implements ActivityNodeDisplay {
   expandable: boolean = true;
   expanded: boolean = false;
   causalNode: boolean = false;
+  frequency: number;
 
   private _id: string;
 

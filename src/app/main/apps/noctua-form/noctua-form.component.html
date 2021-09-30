@@ -195,7 +195,7 @@
           <noc-cam-table *ngSwitchCase="MiddlePanel.camTable" [cam]="cam" [options]="tableOptions"></noc-cam-table>
         </div>
       </mat-drawer-content>
-      <mat-drawer #rightDrawer class="noc-right-drawer" mode="over" position="end">
+      <mat-drawer #rightDrawer class="noc-right-drawer" mode="side" position="end">
         <div [ngSwitch]="noctuaFormMenuService.selectedRightPanel" class="h-100-p">
           <!--    <noc-activity-connector [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormMenuService.panel.connectorForm.id">
         </noc-activity-connector>  -->

@@ -25,16 +25,13 @@
         <span>{{activityTypeOptions[activity.activityType]?.label}}</span>
       </mat-chip>
     </div>
-    <div fxFlex="" class="scard-title-summary" fxLayout="row" fxLayoutAlign="end center">
+    <div fxFlex="" class="scard-title-summary" fxLayout="row" fxLayoutAlign="end start">
       <mat-chip-list>
         <ng-container *ngFor="let summaryNode of activity.summary.nodes">
           <mat-chip *ngIf="summaryNode.nodes.length>0" class="noc-chip-xs noc-summary-chip noc-type-chip" fxLayout="row"
             fxLayoutAlign="start center" matTooltip="{{summaryNode.tooltip}}" [matTooltipPosition]="'below'"
             [matTooltipShowDelay]="1000">
             <div class="noc-icon noc-icon-initials">
-              <span class="noc-count" *ngIf="summaryNode.count > 1">
-                {{summaryNode.count }}
-              </span>
               {{summaryNode.label}}
             </div>
             <div fxFlex="" class="noc-chip-label">
@@ -53,9 +50,7 @@
             </span>
           </div>
         </mat-chip>
-
       </mat-chip-list>
-
     </div>
 
     <div *ngIf="activity.hasViolations" class="noc-error" fxLayout="row" fxLayoutAlign="start center">

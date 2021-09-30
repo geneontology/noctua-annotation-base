@@ -45,8 +45,15 @@
                     {{node.data.term?.label}}
                   </div>
                   <span fxFlex=""></span>
-                  <div fxFlex="50px" (click)="openTermDetail(node.data.term)">
-                    <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+                  <div class="noc-badge" (click)="openSearch(node.data)" fxLayout="row" fxLayoutAlign="center center">
+                    {{node.data.frequency}}
+                  </div>
+                  <div class="noc-icon" (click)="openSearch(node.data)" fxLayout="row" fxLayoutAlign="center center">
+                    <fa-icon [icon]="['fas', 'search']"></fa-icon>
+                  </div>
+                  <div class="noc-icon" (click)="openTermDetail(node.data)" fxLayout="row"
+                    fxLayoutAlign="center center">
+                    <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
                   </div>
                 </div>
               </div>

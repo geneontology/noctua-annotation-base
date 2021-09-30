@@ -524,11 +524,13 @@ export class NoctuaGraphService {
     const termsSummary = new TermsSummary()
     const nodes = []
     const evidences = []
+    const frequency = {}
 
     each(camGraph.all_nodes(), (bbopNode) => {
       const node = self.nodeToActivityNode(camGraph, bbopNode.id());
       node.id = node.uuid;
       nodes.push(node)
+      frequency[node.term.id] = frequency[node.term.id] ? frequency[node.term.id] + 1 : 1;
     });
 
     each(camGraph.all_edges(), (bbopEdge) => {
@@ -542,6 +544,8 @@ export class NoctuaGraphService {
       .value();
 
     each(uniqueNodes, (node: ActivityNode) => {
+      node.frequency = frequency[node.term.id]
+
       if (node.hasRootType(EntityDefinition.GoMolecularEntity)) {
         termsSummary.gp.append(node)
       } else if (node.hasRootType(EntityDefinition.GoMolecularFunction)) {

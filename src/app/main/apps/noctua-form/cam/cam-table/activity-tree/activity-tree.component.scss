@@ -12,7 +12,7 @@ $accent: map-get($theme, accent);
   .scard-title-summary {
     //max-width: 400px;
     line-height: 12px;
-    @include deep-height(30px);
+    //@include deep-height(30px);
     // display: inline-block !important;
     padding: 4px 8px;
     font-size: 12px !important;
@@ -64,7 +64,7 @@ $accent: map-get($theme, accent);
   .noc-activity-heading {
     position: relative;
     margin-bottom: 1px;
-    @include deep-height(30px);
+    // @include deep-height(30px);
     // @include deep-width(100%);
     //min-height: 35px;
     background-color: #fff;

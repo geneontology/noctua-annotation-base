@@ -11,6 +11,7 @@ import { Group } from './../models/group';
 import { ActivityNode, ActivityNodeType } from './../models/activity/activity-node';
 import { Entity } from './../models/activity/entity';
 import { Predicate } from './../models/activity/predicate';
+import { NoctuaUserService } from './user.service';
 
 declare const require: any;
 
@@ -37,6 +38,7 @@ export class NoctuaLookupService {
   localClosures;
 
   constructor(private httpClient: HttpClient,
+    private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService) {
     this.name = 'DefaultLookupName';
     this.linker = new amigo.linker();
@@ -144,6 +146,7 @@ export class NoctuaLookupService {
 
 
   companionLookup(gp, aspect, extraParams) {
+    const self = this;
     const golrUrl = environment.globalGolrServer + `select?`;
 
     const requestParams = {
@@ -217,7 +220,7 @@ export class NoctuaLookupService {
             evidence.with = doc.evidence_with.join(' | ');
           }
 
-          evidence.groups = [new Group(doc.assigned_by)];
+          evidence.groups = self.noctuaUserService.getGroupsFromNames([doc.assigned_by]);
 
           activityNode = find(result, (srcActivityNode: ActivityNode) => {
             return srcActivityNode.getTerm().id === doc.annotation_class;
@@ -324,7 +327,6 @@ export class NoctuaLookupService {
       ],
       fq: [
         'document_category:"ontology_class"',
-        `regulates_closure:"${a}"`
       ],
       qf: [
         'annotation_class^3',

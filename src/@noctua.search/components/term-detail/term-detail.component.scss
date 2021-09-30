@@ -20,7 +20,7 @@ $accent: map-get($theme, accent);
   }
 
   .noc-drawer {
-    @include deep-width(380px);
+    @include deep-width(300px);
 
     .noc-drawer-header {
       padding: 0;
@@ -50,8 +50,7 @@ $accent: map-get($theme, accent);
   }
 
   .noc-item-details {
-    max-height: 500px;
-    min-height: 400px;
+    padding: 12px 8px;
     background-color: #faf9e9;
 
     .noc-header {
@@ -70,7 +69,6 @@ $accent: map-get($theme, accent);
 
     .noc-body {
       padding: 10px 8px;
-      height: 400px;
     }
 
     .noc-footer {

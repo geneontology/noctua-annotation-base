@@ -87,6 +87,7 @@ export class CamTermsComponent implements OnInit, OnDestroy {
 
 
   openTermDetail(term) {
+    this.noctuaSearchService.onDetailTermChanged.next(term)
     this.noctuaFormMenuService.openRightDrawer(RightPanel.termDetail);
   }
 

@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Contributor } from '../models/contributor';
 import { Group } from '../models/group';
 import { find } from 'lodash';
+import { CurieService } from '@noctua.curie/services/curie.service';
 
 
 @Injectable({
@@ -12,6 +13,7 @@ import { find } from 'lodash';
 })
 export class NoctuaUserService {
   private _baristaToken: string;
+  private curieUtil
   baristaUrl = environment.globalBaristaLocation;
   onUserChanged: BehaviorSubject<any>;
   user: Contributor;
@@ -19,8 +21,12 @@ export class NoctuaUserService {
   groups: Group[] = [];
 
   constructor(
-    private httpClient: HttpClient) {
+    private httpClient: HttpClient,
+    private curieService: CurieService
+  ) {
     this.onUserChanged = new BehaviorSubject(undefined);
+
+    this.curieUtil = this.curieService.getCurieUtil();
   }
 
   set baristaToken(value) {
@@ -126,6 +132,17 @@ export class NoctuaUserService {
 
     return group
   }
+
+  getGroupDetailsByName(name: string): Group {
+    const self = this;
+
+    const group = find(self.groups, (inGroup: Group) => {
+      return inGroup.name === name;
+    });
+
+    return group
+  }
+
   getGroupInfo(uri: string): Observable<any> {
     const self = this;
 
@@ -137,13 +154,36 @@ export class NoctuaUserService {
     const self = this;
 
     const groups = <Group[]>annotations.map((annotation) => {
-      const orcid = annotation.value();
+      const url = annotation.value();
       const group = self.getGroupDetails(annotation.value())
-      return group ? group : { orcid: orcid };
+      return group ? group : new Group(null, url);
     });
 
     return groups
   }
+
+  getGroupsFromUrls(urls: string[]): Group[] {
+    const self = this;
+
+    const groups = <Group[]>urls.map((url) => {
+      const group = self.getGroupDetails(url)
+      return group ? group : new Group(null, url);
+    });
+
+    return groups
+  }
+
+  getGroupsFromNames(names: string[]): Group[] {
+    const self = this;
+
+    const groups = <Group[]>names.map((name) => {
+      const group = self.getGroupDetailsByName(name)
+      return group ? group : new Group(null, name);
+    });
+
+    return groups
+  }
+
 
   filterContributors(value: string): any[] {
     const filterValue = value.toLowerCase();

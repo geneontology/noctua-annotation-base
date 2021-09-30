@@ -48,7 +48,23 @@ export class TermDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.noctuaLookupService.getTermDetail('GO:0019438')
+    this.noctuaSearchService.onDetailTermChanged.pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((term: ActivityNode) => {
+        if (!term) {
+          return;
+        }
+        this.loadTerm(term.term.id)
+      })
+  }
+
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
+
+  loadTerm(termId) {
+    this.noctuaLookupService.getTermDetail(termId)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
         console.log(res)
@@ -56,11 +72,6 @@ export class TermDetailComponent implements OnInit, OnDestroy {
         this.termDetail = res[0]
       })
   }
-  ngOnDestroy(): void {
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
-  }
-
   openSearch() {
     this.noctuaFormMenuService.openLeftDrawer(LeftPanel.findReplace);
   }
