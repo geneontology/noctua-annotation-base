@@ -58,20 +58,7 @@ export class NoctuaSearchService {
     onContributorFilterChanged: BehaviorSubject<any>;
     searchSummary: any = {};
 
-    filterType = {
-        ids: 'ids',
-        titles: 'titles',
-        gps: 'gps',
-        terms: 'terms',
-        pmids: 'pmids',
-        contributors: 'contributors',
-        groups: 'groups',
-        organisms: 'organisms',
-        states: 'states',
-        exactdates: 'exactdates',
-        startdates: 'startdates',
-        enddates: 'enddates',
-    };
+
 
     constructor(
         private httpClient: HttpClient,
@@ -197,7 +184,7 @@ export class NoctuaSearchService {
         this.searchCriteria.enddates = this.makeArray(param.enddate)
     }
 
-    makeArray(val) {
+    makeArray(val,) {
         if (Array.isArray(val)) return val
         if (typeof val === 'string') {
             return [val]
