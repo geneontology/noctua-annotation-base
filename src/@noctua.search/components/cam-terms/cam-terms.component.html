@@ -32,16 +32,21 @@
                 (contextmenu)="node.mouseAction('contextMenu', $event)" (treeDrop)="node.onDrop($event)"
                 [treeAllowDrop]="node.allowDrop" [treeDrag]="node" [treeDragEnabled]="node.allowDrag()">
 
-                <div *ngIf="node.data.isCategory" class="noc-term-row" fxFlex="" fxLayout="row"
+                <div *ngIf="node.data.isCategory" class="noc-term-row noc-category-row" fxFlex="" fxLayout="row"
                   fxLayoutAlign="start center">
                   <div>
                     {{node.data.label}}
+                  </div>
+                  <span fxFlex=""></span>
+                  <div class="noc-aspect-badge" (click)="openSearch(node.data)" fxLayout="row"
+                    fxLayoutAlign="center center">
+                    {{node.data.frequency}}
                   </div>
                 </div>
 
                 <div *ngIf="!node.data.isCategory" class="noc-term-row" fxFlex="" fxLayout="row"
                   fxLayoutAlign="start center">
-                  <div *ngIf="!node.data.isCategory" (click)="openSearch()">
+                  <div *ngIf="!node.data.isCategory" (click)="openSearch()" class="noc-title">
                     {{node.data.term?.label}}
                   </div>
                   <span fxFlex=""></span>

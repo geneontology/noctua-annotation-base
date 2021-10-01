@@ -184,7 +184,6 @@ export class Activity extends SaeGraph<ActivityNode> {
       }
     })
 
-    console.log(summary)
     this.summary = summary
   }
 

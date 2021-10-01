@@ -62,20 +62,19 @@ export class CamTermsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.camService.onCamChanged
+    this._noctuaGraphService.onCamGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cam: Cam) => {
         if (!cam) {
           return;
         }
         this.cam = cam;
-
         this.termsSummary = this._noctuaGraphService.getTerms(this.cam.graph)
         this.treeNodes = this._buildTree(this.termsSummary)
-
       });
 
   }
+
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
@@ -100,6 +99,7 @@ export class CamTermsComponent implements OnInit, OnDestroy {
     const treeNodes = allTerms.map((termSummary: TermSummary) => {
       return {
         id: termSummary.label,
+        frequency: termSummary.frequency,
         isCategory: true,
         label: termSummary.label,
         children: termSummary.nodes

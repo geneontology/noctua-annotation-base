@@ -186,7 +186,8 @@
             [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.findReplace">
           </noc-find-replace>
 
-          <noc-cam-terms [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.camTermsSummary"></noc-cam-terms>
+          <noc-cam-terms [panelDrawer]="leftDrawer"
+            [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.camTermsSummary"></noc-cam-terms>
         </div>
       </mat-drawer>
       <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">

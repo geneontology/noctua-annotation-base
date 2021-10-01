@@ -25,14 +25,14 @@
         <span>{{activityTypeOptions[activity.activityType]?.label}}</span>
       </mat-chip>
     </div>
-    <div fxFlex="" class="scard-title-summary" fxLayout="row" fxLayoutAlign="end start">
+    <div fxFlex="" class="scard-title-summary" fxLayout="row" fxLayoutAlign="start start">
       <mat-chip-list>
         <ng-container *ngFor="let summaryNode of activity.summary.nodes">
           <mat-chip *ngIf="summaryNode.nodes.length>0" class="noc-chip-xs noc-summary-chip noc-type-chip" fxLayout="row"
             fxLayoutAlign="start center" matTooltip="{{summaryNode.tooltip}}" [matTooltipPosition]="'below'"
             [matTooltipShowDelay]="1000">
             <div class="noc-icon noc-icon-initials">
-              {{summaryNode.label}}
+              {{summaryNode.shorthand}}
             </div>
             <div fxFlex="" class="noc-chip-label">
               <span>
@@ -41,18 +41,8 @@
             </div>
           </mat-chip>
         </ng-container>
-        <mat-chip *ngIf="activity.summary.other.nodes.length>0" class="noc-chip-xs noc-summary-chip noc-type-chip"
-          fxLayout="row" fxLayoutAlign="start center" matTooltip="{{activity.summary.other.tooltip}}"
-          [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">
-          <div fxFlex="" class="noc-chip-label">
-            <span>
-              more
-            </span>
-          </div>
-        </mat-chip>
       </mat-chip-list>
     </div>
-
     <div *ngIf="activity.hasViolations" class="noc-error" fxLayout="row" fxLayoutAlign="start center">
       <mat-chip class="noc-error-chip noc-chip-xs ml-8" fxLayout="row" fxLayoutAlign="start center"
         (click)="displayActivityErrors(activity)">

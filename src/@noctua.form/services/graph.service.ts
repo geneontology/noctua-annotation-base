@@ -531,6 +531,18 @@ export class NoctuaGraphService {
       node.id = node.uuid;
       nodes.push(node)
       frequency[node.term.id] = frequency[node.term.id] ? frequency[node.term.id] + 1 : 1;
+
+      if (node.hasRootType(EntityDefinition.GoMolecularEntity)) {
+        termsSummary.gp.frequency++;
+      } else if (node.hasRootType(EntityDefinition.GoMolecularFunction)) {
+        termsSummary.mf.frequency++;
+      } else if (node.hasRootType(EntityDefinition.GoBiologicalProcess)) {
+        termsSummary.bp.frequency++;
+      } else if (node.hasRootType(EntityDefinition.GoCellularComponent)) {
+        termsSummary.cc.frequency++;
+      } else {
+        termsSummary.other.frequency++;
+      }
     });
 
     each(camGraph.all_edges(), (bbopEdge) => {

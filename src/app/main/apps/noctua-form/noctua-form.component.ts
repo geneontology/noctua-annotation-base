@@ -128,7 +128,6 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
           return;
         }
         this.cam = cam;
-        console.log(cam)
 
         if (cam.activities.length > 0) {
           this.camService.addCamEdit(this.cam)
@@ -186,7 +185,6 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   loadCam(modelId) {
     this.cam = this.camService.getCam(modelId);
-
   }
 
   openCamForm() {
