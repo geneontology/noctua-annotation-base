@@ -2,7 +2,7 @@
   <div class="noc-drawer-header" fxLayout="column" fxLayoutAlign="start stretch">
     <div class="noc-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
       <span class="noc-drawer-header-title">
-        Find and Replace</span>
+        Terms</span>
       <span fxFlex></span>
       <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
         aria-label="Close dialog">
@@ -43,23 +43,36 @@
                     {{node.data.frequency}}
                   </div>
                 </div>
-
                 <div *ngIf="!node.data.isCategory" class="noc-term-row" fxFlex="" fxLayout="row"
                   fxLayoutAlign="start center">
-                  <div *ngIf="!node.data.isCategory" (click)="openSearch()" class="noc-title">
+                  <div (click)="search(node.data)" class="noc-title">
                     {{node.data.term?.label}}
                   </div>
                   <span fxFlex=""></span>
                   <div class="noc-badge" (click)="openSearch(node.data)" fxLayout="row" fxLayoutAlign="center center">
                     {{node.data.frequency}}
                   </div>
-                  <div class="noc-icon" (click)="openSearch(node.data)" fxLayout="row" fxLayoutAlign="center center">
+                  <!--  <div class="noc-icon" (click)="openSearch(node.data)" fxLayout="row" fxLayoutAlign="center center">
                     <fa-icon [icon]="['fas', 'search']"></fa-icon>
-                  </div>
+                  </div> -->
                   <div class="noc-icon" (click)="openTermDetail(node.data)" fxLayout="row"
                     fxLayoutAlign="center center">
                     <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
                   </div>
+                  <button mat-icon-button class="noc-icon-button" [matMenuTriggerFor]="optionMenu">
+                    <fa-icon [icon]="['fas', 'bars']"></fa-icon>
+                  </button>
+                  <mat-menu #optionMenu="matMenu" class="noc-dropdown-menu">
+                    <button mat-menu-item class="" (click)="openSearch(node.data)">
+                      Find in Model
+                    </button>
+                    <button mat-menu-item class="" (click)="searchModels(node.data)">
+                      Search Models
+                    </button>
+                    <button mat-menu-item class="" (click)="searchModelsByContributor(node.data)">
+                      Search My Models
+                    </button>
+                  </mat-menu>
                 </div>
               </div>
             </div>

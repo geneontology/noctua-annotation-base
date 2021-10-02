@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Contributor } from '../models/contributor';
 import { Group } from '../models/group';
 import { find } from 'lodash';
-import { CurieService } from '@noctua.curie/services/curie.service';
 
 
 @Injectable({
@@ -13,7 +12,6 @@ import { CurieService } from '@noctua.curie/services/curie.service';
 })
 export class NoctuaUserService {
   private _baristaToken: string;
-  private curieUtil
   baristaUrl = environment.globalBaristaLocation;
   onUserChanged: BehaviorSubject<any>;
   user: Contributor;
@@ -21,12 +19,9 @@ export class NoctuaUserService {
   groups: Group[] = [];
 
   constructor(
-    private httpClient: HttpClient,
-    private curieService: CurieService
+    private httpClient: HttpClient
   ) {
     this.onUserChanged = new BehaviorSubject(undefined);
-
-    this.curieUtil = this.curieService.getCurieUtil();
   }
 
   set baristaToken(value) {
@@ -51,6 +46,7 @@ export class NoctuaUserService {
           if (response) {
             if (response.token) {
               this.user = new Contributor();
+              this.user.orcid = response.uri;
               this.user.name = response.nickname;
               this.user.groups = response.groups;
               this.user.token = this.baristaToken = response.token;

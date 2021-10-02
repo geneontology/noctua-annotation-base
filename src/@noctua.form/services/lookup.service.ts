@@ -341,7 +341,14 @@ export class NoctuaLookupService {
     const url = this.golrURLBase + params.toString();
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
-      map(response => self._lookupMap(response))
+      map(response => self._lookupMap(response)),
+      map(response => {
+        if (response.length > 0) {
+          return response[0]
+        } else {
+          return response
+        }
+      })
     );
   }
 
@@ -412,6 +419,7 @@ export class NoctuaLookupService {
         link: self.getTermURL(item.annotation_class),
         description: item.description,
         isObsolete: item.is_obsolete,
+        replacedBy: item.replaced_by,
         rootTypes: self._makeEntitiesArray(item.isa_closure, item.isa_closure_label),
         xref: xref
       };
@@ -422,8 +430,13 @@ export class NoctuaLookupService {
 
   private _makeEntitiesArray(ids: string[], labels: string[]): Entity[] {
     let result = [];
-
-    if (ids.length === labels.length) {
+    if (!labels && !ids) {
+      return []
+    } else if (!labels) {
+      result = ids.map((id, key) => {
+        return new Entity(id, id);
+      });
+    } else if (ids.length === labels.length) {
       result = ids.map((id, key) => {
         return new Entity(id, labels[key]);
       });

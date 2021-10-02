@@ -9,6 +9,8 @@ import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/co
 import { MiddlePanel } from './../../models/menu-panels';
 import { NoctuaSearchDialogService } from './../../services/dialog.service';
 import { MatDrawer } from '@angular/material/sidenav';
+import { SearchCriteria } from '@noctua.search/models/search-criteria';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'noc-term-detail',
@@ -25,7 +27,7 @@ export class TermDetailComponent implements OnInit, OnDestroy {
     mode: 'indeterminate'
   };
 
-  termDetail = {}
+  termDetail: any = {}
 
 
 
@@ -67,13 +69,52 @@ export class TermDetailComponent implements OnInit, OnDestroy {
     this.noctuaLookupService.getTermDetail(termId)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
-        console.log(res)
-
-        this.termDetail = res[0]
+        this.termDetail = res
       })
   }
-  openSearch() {
-    this.noctuaFormMenuService.openLeftDrawer(LeftPanel.findReplace);
+
+
+  search(id) {
+    this.noctuaReviewSearchService.searchCriteria['terms'] = [{ id }];
+    this.noctuaReviewSearchService.updateSearch();
+  }
+
+  openSearchReplace(replaceBy) {
+    this.noctuaLookupService.getTermDetail(this.termDetail.id)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((term) => {
+        if (!term) return;
+        this.noctuaReviewSearchService.onCamTermSearch.next(term)
+        this.noctuaFormMenuService.openLeftDrawer(LeftPanel.findReplace);
+      })
+
+    this.noctuaLookupService.getTermDetail(replaceBy)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((term) => {
+        if (!term) return;
+
+        this.noctuaReviewSearchService.onCamReplaceTermSearch.next(term)
+      })
+
+
+  }
+
+  searchModels(node: ActivityNode) {
+    const searchCriteria = new SearchCriteria()
+    searchCriteria.terms = [node.term]
+    const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
+    console.log(url)
+    window.open(url, '_blank');
+  }
+
+  searchModelsByContributor(node: ActivityNode) {
+    const searchCriteria = new SearchCriteria()
+    searchCriteria.terms = [node.term]
+    searchCriteria.contributors = [this.noctuaUserService.user]
+    const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
+    console.log(url)
+    window.open(url, '_blank')
+
   }
 
 

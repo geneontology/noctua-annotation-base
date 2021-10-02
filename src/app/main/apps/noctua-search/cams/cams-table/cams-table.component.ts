@@ -14,7 +14,7 @@ import {
   ActivityDisplayType,
 } from 'noctua-form-base';
 
-import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CamPage } from '@noctua.search/models/cam-page';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { SelectionModel } from '@angular/cdk/collections';
