@@ -303,6 +303,7 @@ $accent: map-get($theme, accent);
     &.noc-summary-chip {
       padding: 0;
       @include deep-height(20px);
+      max-width: 220px;
       font-size: 10px;
 
       .noc-icon,
@@ -311,8 +312,7 @@ $accent: map-get($theme, accent);
         align-items: center;
         justify-content: center;
         height: 20px;
-        min-width: 20px;
-        max-width: 40px;
+        @include deep-width(20px);
         border-radius: 50%;
         color: #777;
         font-size: 10px;
