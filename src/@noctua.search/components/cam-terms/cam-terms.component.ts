@@ -102,7 +102,6 @@ export class CamTermsComponent implements OnInit, OnDestroy {
     const searchCriteria = new SearchCriteria()
     searchCriteria.terms = [node.term]
     const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
-    console.log(url)
     window.open(url, '_blank');
   }
 
@@ -111,7 +110,6 @@ export class CamTermsComponent implements OnInit, OnDestroy {
     searchCriteria.terms = [node.term]
     searchCriteria.contributors = [this.noctuaUserService.user]
     const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
-    console.log(url)
     window.open(url, '_blank')
 
   }

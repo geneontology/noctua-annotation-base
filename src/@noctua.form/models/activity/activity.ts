@@ -59,6 +59,7 @@ export class ActivityPosition {
 export class Activity extends SaeGraph<ActivityNode> {
   gp;
   label: string;
+  date: string;
   activityRows;
   activityType;
   errors;
@@ -159,6 +160,14 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   get rootNode(): ActivityNode {
     return this.getNode(this.rootNodeType);
+  }
+
+  updateDate() {
+    const rootNode = this.rootNode;
+
+    if (rootNode) {
+      this.date = rootNode.date
+    }
   }
 
   updateSummary() {

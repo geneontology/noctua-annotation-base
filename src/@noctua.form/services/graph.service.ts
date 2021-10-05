@@ -363,6 +363,7 @@ export class NoctuaGraphService {
     return result;
   }
 
+
   getNodeRootInfo(node): Entity[] {
     const result = node.root_types().map((srcType) => {
       const type = srcType.type() === 'complement' ? srcType.complement_class_expression() : srcType;
@@ -370,6 +371,17 @@ export class NoctuaGraphService {
     });
 
     return result;
+  }
+
+  getNodeDate(node) {
+
+    const date = node.get_annotations_by_key('date');
+
+    if (date.length > 0) {
+      return date[0].value();
+    }
+
+    return null;
   }
 
   getNodeLocation(node) {
@@ -415,6 +427,7 @@ export class NoctuaGraphService {
     const nodeInfo = self.getNodeInfo(node);
     const result = {
       uuid: objectId,
+      date: self.getNodeDate(node),
       term: new Entity(nodeInfo.id, nodeInfo.label, self.linker.url(nodeInfo.id), objectId),
       rootTypes: self.getNodeRootInfo(node),
       classExpression: nodeInfo.classExpression,
@@ -483,21 +496,6 @@ export class NoctuaGraphService {
     return result;
   }
 
-
-  graphPostParse(cam: Cam) {
-    const self = this;
-    const promises = [];
-
-    each(cam.activities, function (activity: Activity) {
-      const mfNode = activity.getMFNode();
-
-      if (mfNode && mfNode.hasValue()) {
-        promises.push(self.isaClosurePostParse(mfNode.getTerm().id, [EntityDefinition.GoCatalyticActivity], mfNode));
-      }
-    });
-
-    return forkJoin(promises);
-  }
 
   isaClosurePostParse(a: string, b: any[], node: ActivityNode) {
     const self = this;
@@ -642,6 +640,7 @@ export class NoctuaGraphService {
         const subjectActivityNode = activity.rootNode;
 
         subjectActivityNode.term = subjectNode.term;
+        subjectActivityNode.date = subjectNode.date;
         subjectActivityNode.classExpression = subjectNode.classExpression;
         subjectActivityNode.setIsComplement(subjectNode.isComplement);
         subjectActivityNode.uuid = bbopSubjectId;
@@ -1153,6 +1152,7 @@ export class NoctuaGraphService {
         if (triple) {
           triple.object.uuid = partialObjectNode.uuid;
           triple.object.term = partialObjectNode.term;
+          triple.object.date = partialObjectNode.date;
           triple.object.classExpression = partialObjectNode.classExpression;
           triple.object.setIsComplement(partialObjectNode.isComplement);
           triple.predicate.evidence = evidence;

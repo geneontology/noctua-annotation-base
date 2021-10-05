@@ -109,9 +109,6 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
         this.noctuaFormConfigService.setupUrls();
         this.noctuaFormConfigService.setUniversalUrls();
         this.loadCam(this.modelId);
-
-        console.log('loading', user)
-
       });
   }
 

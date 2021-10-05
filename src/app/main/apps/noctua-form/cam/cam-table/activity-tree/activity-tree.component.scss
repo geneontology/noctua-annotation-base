@@ -80,7 +80,7 @@ $accent: map-get($theme, accent);
 
     .noc-title {
       height: 100%;
-      @include deep-width(300px);
+      @include deep-width(350px);
       small {
         font-size: 12px;
         font-style: italic;
@@ -89,9 +89,9 @@ $accent: map-get($theme, accent);
 
     .noc-gp {
       position: relative;
-      width: 190px;
-      line-height: 12px;
       @include deep-height(30px);
+      @include deep-width(170px);
+      line-height: 12px;
       // display: inline-block !important;
       padding: 4px 8px;
       font-size: 12px !important;

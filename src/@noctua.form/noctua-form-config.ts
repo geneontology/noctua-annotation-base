@@ -42,6 +42,14 @@ const edge = {
     id: 'BFO:0000051',
     label: 'has part'
   },
+  existenceOverlaps: {
+    id: 'RO:0002490',
+    label: 'existence overlaps'
+  },
+  existenceStartsEndsDuring: {
+    id: 'RO:0002491',
+    label: 'existence starts and ends during'
+  },
   causallyUpstreamOf: {
     id: 'RO:0002411',
     label: 'causally upstream of',

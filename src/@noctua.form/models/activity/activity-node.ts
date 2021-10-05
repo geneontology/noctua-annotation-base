@@ -17,23 +17,36 @@ export interface GoCategory {
   suffix: string;
 }
 
+
+
+
+
+
+
+
 export enum ActivityNodeType {
-  GoProteinContainingComplex = 'GoProteinContainingComplex',
+
   GoCellularComponent = 'GoCellularComponent',
-  GoCellularAnatomical = 'GoCellularAnatomical',
   GoBiologicalProcess = 'GoBiologicalProcess',
   GoMolecularFunction = 'GoMolecularFunction',
   GoMolecularEntity = 'GoMolecularEntity',
+  // extensions 
+  GoCellularAnatomical = 'GoCellularAnatomical',
+  GoProteinContainingComplex = 'GoProteinContainingComplex',
+  GoBiologicalPhase = 'GoBiologicalPhase',
   GoChemicalEntity = 'GoChemicalEntity',
-  GoEvidence = 'GoEvidence',
   GoCellTypeEntity = 'GoCellTypeEntity',
   GoAnatomicalEntity = 'GoAnatomicalEntity',
   GoOrganism = 'GoOrganism',
-  GoBiologicalPhase = 'GoBiologicalPhase',
+  WormLifeStage = "WormLifeStage",
+  ZebrafishStage = "ZebrafishStage",
   // extra internal use
-  GoCatalyticActivity = 'GoCatalyticActivity',
   GoChemicalEntityHasInput = 'GoChemicalEntityHasInput',
   GoChemicalEntityHasOutput = 'GoChemicalEntityHasOutput',
+
+  // evidence
+  GoEvidence = 'GoEvidence',
+  BPPhaseStageExistenceOverlaps = "BPPhaseStageExistenceOverlaps"
 }
 
 export interface ActivityNodeDisplay {
@@ -59,13 +72,13 @@ export interface ActivityNodeDisplay {
 }
 
 export class ActivityNode implements ActivityNodeDisplay {
-
   type: ActivityNodeType;
   label: string;
   uuid: string;
   category: GoCategory[];
   rootTypes: Entity[] = [];
   term: Entity = new Entity('', '');
+  date: string;
   termLookup: EntityLookup = new EntityLookup();
   isExtension = false;
   aspect: string;

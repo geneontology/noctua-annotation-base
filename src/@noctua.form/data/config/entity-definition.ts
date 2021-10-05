@@ -31,8 +31,6 @@ const baseRequestParams = {
     _: Date.now()
 };
 
-
-
 export const GoProteinContainingComplex = {
     id: ActivityNodeType.GoProteinContainingComplex,
     category: 'GO:0032991',
@@ -106,13 +104,19 @@ export const GoBiologicalPhase = {
     categoryType: 'isa_closure',
 } as GoCategory;
 
-export const GoCatalyticActivity = {
-    id: ActivityNodeType.GoCatalyticActivity,
-    category: 'GO:0003824',
+export const WormLifeStage = {
+    id: ActivityNodeType.WormLifeStage,
+    category: 'WBls:0000075',
     categoryType: 'isa_closure',
 } as GoCategory;
 
-export const EntityCategories = [
+export const ZebrafishStage = {
+    id: ActivityNodeType.ZebrafishStage,
+    category: 'ZFS:0100000',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
+/* export const EntityCategories = [
     [GoProteinContainingComplex],
     [GoCellularComponent],
     [GoCellularAnatomical],
@@ -128,7 +132,7 @@ export const EntityCategories = [
     [GoChemicalEntity, GoProteinContainingComplex],
     [GoChemicalEntity, GoAnatomicalEntity, GoProteinContainingComplex]
     // [GoCatalyticActivity]
-];
+]; */
 
 export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
     const activityNode = new ActivityNode();

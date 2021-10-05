@@ -43,6 +43,7 @@ const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
     return causalShapeDescriptions;
 };
 
+//What can you insert
 export const canInsertEntity = {
     [ActivityNodeType.GoMolecularEntity]: [
         <ShapeDescription>{
@@ -389,7 +390,47 @@ export const canInsertEntity = {
             },
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
-        }
+        },
+        <ShapeDescription>{
+            label: 'Add Existence Overlaps (BP/Phase/Stage)',
+            id: ActivityNodeType.BPPhaseStageExistenceOverlaps,
+            node: <ActivityNodeDisplay>{
+                category: [
+                    EntityDefinition.GoBiologicalProcess,
+                    EntityDefinition.WormLifeStage,
+                    EntityDefinition.ZebrafishStage,
+                ],
+                type: ActivityNodeType.BPPhaseStageExistenceOverlaps,
+                label: 'existence overlaps  (BP/Phase/Stage)',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                isExtension: true,
+                weight: 60,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.existenceOverlaps,
+            cardinality: CardinalityType.oneToMany
+        },
+        <ShapeDescription>{
+            label: 'Add Existence Starts and Ends During (BP/Phase/Stage)',
+            id: ActivityNodeType.BPPhaseStageExistenceOverlaps,
+            node: <ActivityNodeDisplay>{
+                category: [
+                    EntityDefinition.GoBiologicalProcess,
+                    EntityDefinition.WormLifeStage,
+                    EntityDefinition.ZebrafishStage,
+                ],
+                type: ActivityNodeType.BPPhaseStageExistenceOverlaps,
+                label: 'existence overlaps (BP/Phase/Stage)',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                isExtension: true,
+                weight: 61,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.existenceStartsEndsDuring,
+            cardinality: CardinalityType.oneToMany
+        },
     ],
     [ActivityNodeType.GoCellTypeEntity]: [
         <ShapeDescription>{

@@ -560,6 +560,7 @@ export class Cam {
 
     each(self.activities, (activity: Activity, key) => {
       activity.updateSummary()
+      activity.updateDate()
     });
   }
 

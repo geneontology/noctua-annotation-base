@@ -21,8 +21,16 @@
           </a>
         </span>
       </div>
-      <mat-chip class="noc-chip-xs" [ngClass]="activity.activityType">
+      <mat-chip class="noc-chip-xs mr-4" [ngClass]="activity.activityType">
         <span>{{activityTypeOptions[activity.activityType]?.label}}</span>
+      </mat-chip>
+      <mat-chip class="noc-chip-xs noc-date-chip" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-icon">
+          <fa-icon [icon]="['fas', 'calendar-day']"></fa-icon>
+        </div>
+        <div fxFlex="" class="noc-chip-label">
+          {{activity.date}}
+        </div>
       </mat-chip>
     </div>
     <div fxFlex="" class="scard-title-summary" fxLayout="row" fxLayoutAlign="start start">
