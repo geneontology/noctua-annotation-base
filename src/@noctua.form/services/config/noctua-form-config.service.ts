@@ -85,6 +85,19 @@ export class NoctuaFormConfigService {
     };
   }
 
+  get activitySortBy() {
+    const options = [
+      noctuaFormConfig.activitySortBy.options.gp,
+      noctuaFormConfig.activitySortBy.options.mf,
+      noctuaFormConfig.activitySortBy.options.date,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
   get bpOnlyEdges() {
     const options = [
       noctuaFormConfig.edge.causallyUpstreamOfOrWithin,

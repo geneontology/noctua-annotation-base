@@ -1,18 +1,28 @@
 <div class="w-100-p p-0 noc-cam-table">
-  <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
+  <div *ngIf="cam.loading?.status" class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
+    <span class="noc-cam-progress-message">
+      {{cam.loading?.message}}
+    </span>
+  </div>
+  <div *ngIf="!cam.loading?.status" class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
     <span class='noc-title mr-12'>
-      <span *ngIf="!cam.loading?.status">
-        ACTIVITIES
-      </span>
-      <span *ngIf="cam.loading?.status" class="noc-cam-progress-message">
-        {{cam.loading?.message}}
-      </span>
-      <span *ngIf="cam.rebuildRule?.signal !== CamRebuildSignal.NONE" class="noc-cam-rebuild">
-        {{cam.rebuildRule?.message}}
-        <button mat-button (click)="reload(cam)" class="" color="primary">
-          Reload
-        </button>
-      </span>
+      <strong>{{cam.activities.length}}</strong> Activities
+    </span>
+    Sort By
+    <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="sortByOptionMenu">
+      GP
+    </button>
+    <mat-menu #sortByOptionMenu="matMenu" class="noc-dropdown-menu">
+      <button mat-menu-item *ngFor="let sortByOption of noctuaFormConfigService.activitySortBy.options" class=""
+        (click)="sortBy(sortByOption.id)">
+        {{sortByOption.label}}
+      </button>
+    </mat-menu>
+    <span *ngIf="cam.rebuildRule?.signal !== CamRebuildSignal.NONE" class="noc-cam-rebuild">
+      {{cam.rebuildRule?.message}}
+      <button mat-button (click)="reload(cam)" class="" color="primary">
+        Reload
+      </button>
     </span>
     <div *ngIf="cam.violations?.length>0" class="noc-error" fxLayout="row" fxLayoutAlign="start center">
       <mat-chip class="noc-error-chip  noc-chip-xs ml-8" fxLayout="row" fxLayoutAlign="start center"

@@ -107,6 +107,22 @@ const edge = {
 
 
 export const noctuaFormConfig = {
+  'activitySortBy': {
+    'options': {
+      'gp': {
+        'id': 'gp',
+        'label': 'Gene Product (default)'
+      },
+      'mf': {
+        'id': 'mf',
+        'label': 'Molecular Function'
+      },
+      'date': {
+        'id': 'date',
+        'label': 'Date'
+      }
+    }
+  },
   'activityType': {
     'options': {
       'default': {

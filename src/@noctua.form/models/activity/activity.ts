@@ -23,6 +23,12 @@ export enum ActivityState {
   editing
 }
 
+export enum ActivitySortBy {
+  GP = 'gp',
+  MF = 'mf',
+  DATE = 'date'
+}
+
 export enum ActivityDisplayType {
   TABLE = 'table',
   TREE = 'tree',
@@ -76,6 +82,12 @@ export class Activity extends SaeGraph<ActivityNode> {
   molecularFunctionNode: ActivityNode;
   summary: TermsSummary = new TermsSummary()
 
+  //For Display Only
+  gpNode: ActivityNode;
+  mfNode: ActivityNode;
+  bpNode: ActivityNode;
+  ccNode: ActivityNode;
+
   /**
    * Used for HTML id attribute
    */
@@ -105,6 +117,16 @@ export class Activity extends SaeGraph<ActivityNode> {
     this.id = uuid();
     this.errors = [];
     this.submitErrors = [];
+  }
+
+  updateProperties() {
+    this.updateSummary()
+    this.updateDate()
+
+    this.gpNode = this.getGPNode()
+    this.mfNode = this.getMFNode()
+    this.bpNode = this.getNode(ActivityNodeType.GoBiologicalProcess)
+    this.ccNode = this.getNode(ActivityNodeType.GoCellularComponent)
   }
 
   get id() {
@@ -161,6 +183,8 @@ export class Activity extends SaeGraph<ActivityNode> {
   get rootNode(): ActivityNode {
     return this.getNode(this.rootNodeType);
   }
+
+
 
   updateDate() {
     const rootNode = this.rootNode;

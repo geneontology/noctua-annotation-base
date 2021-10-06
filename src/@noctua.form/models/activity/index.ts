@@ -7,6 +7,7 @@ export {
     compareNodeWeight
 } from './activity-node';
 export {
+    ActivitySortBy,
     Activity,
     ActivityType,
     ActivityDisplayType,

@@ -273,7 +273,7 @@ export class NoctuaGraphService {
     cam.activities = activities;
     cam.applyFilter();
     cam.updateActivityDisplayNumber();
-    cam.updateActivitySummary()
+    cam.updateProperties()
     cam.operation = CamOperation.NONE;
 
     if (publish) {

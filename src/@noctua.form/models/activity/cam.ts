@@ -1,7 +1,7 @@
 import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { Activity } from './activity'
+import { Activity, ActivitySortBy } from './activity'
 import { ActivityNode, ActivityNodeType } from './activity-node';
 import { Group } from '../group';
 import { Contributor } from '../contributor';
@@ -37,6 +37,30 @@ export class CamQueryMatch {
   reference?: Entity[] = [];
 }
 
+
+export function _compareGP(a: Activity, b: Activity): number {
+  const aGP = a.presentation.gpText.toLowerCase()
+  const bGP = b.presentation.gpText.toLowerCase()
+
+  if (aGP < bGP) {
+    return -1;
+  } else {
+    return 1;
+  }
+}
+
+export function _compareDate(a: Activity, b: Activity): number {
+
+  if (a.date === b.date) {
+    return _compareGP(a, b)
+  }
+
+  if (a.date < b.date) {
+    return -1;
+  } else {
+    return 1;
+  }
+}
 
 
 export class CamStats {
@@ -124,7 +148,7 @@ export class Cam {
   model: any;
   //connectorActivities: ConnectorActivity[] = [];
   causalRelations: Triple<Activity>[] = [];
-  sort;
+  sort = ActivitySortBy.DATE;
   error = false;
   date;
   modified = false;
@@ -197,7 +221,13 @@ export class Cam {
   }
 
   get activities() {
-    return this._activities.sort(this._compareMolecularFunction);
+    switch (this.sort) {
+      case ActivitySortBy.DATE:
+        return this._activities.sort(_compareDate);
+      default:
+        return this._activities.sort(_compareGP);
+    }
+
   }
 
   set activities(srcActivities: Activity[]) {
@@ -213,7 +243,12 @@ export class Cam {
   }
 
   get storedActivities() {
-    return this._storedActivities.sort(this._compareMolecularFunction);
+    switch (this.sort) {
+      case ActivitySortBy.DATE:
+        return this._storedActivities.sort(_compareDate);
+      default:
+        return this._storedActivities.sort(_compareGP);
+    }
   }
 
   set storedActivities(srcActivities: Activity[]) {
@@ -555,21 +590,14 @@ export class Cam {
     });
   }
 
-  updateActivitySummary() {
+  updateProperties() {
     const self = this;
 
     each(self.activities, (activity: Activity, key) => {
-      activity.updateSummary()
-      activity.updateDate()
+      activity.updateProperties()
     });
   }
 
-  private _compareMolecularFunction(a: Activity, b: Activity): number {
-    if (a.presentation.gpText.toLowerCase() < b.presentation.gpText.toLowerCase()) {
-      return -1;
-    } else {
-      return 1;
-    }
-  }
+
 }
 

@@ -15,7 +15,8 @@ import {
   NoctuaUserService,
 
   CamRebuildSignal,
-  ActivityDisplayType
+  ActivityDisplayType,
+  NoctuaGraphService
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
@@ -42,6 +43,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   searchFormData: any = [];
   searchForm: FormGroup;
   activityTypeOptions = noctuaFormConfig.activityType.options;
+  sortByOptions = noctuaFormConfig.activitySortBy.options;
 
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
@@ -67,6 +69,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
 
   constructor(
     public camService: CamService,
+    private _noctuaGraphService: NoctuaGraphService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
