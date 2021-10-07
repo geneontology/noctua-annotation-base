@@ -34,16 +34,44 @@
       </mat-chip>
     </div>
     <div fxFlex="" class="scard-title-summary" fxLayout="row" fxLayoutAlign="start start">
-      <div *ngFor="let summaryNode of activity.summary.nodes" fxFlex="33%">
-        <mat-chip *ngIf="summaryNode.nodes.length>0" class="noc-chip-xs noc-summary-chip noc-type-chip" fxLayout="row"
-          fxLayoutAlign="start center" matTooltip="{{summaryNode.tooltip}}" [matTooltipPosition]="'below'"
+      <div fxFlex="33%">
+        <mat-chip *ngIf="activity.mfNode" class="noc-chip-xs noc-summary-chip noc-type-chip" fxLayout="row"
+          fxLayoutAlign="start center" matTooltip="{{activity.summary['mf'].tooltip}}" [matTooltipPosition]="'below'"
           [matTooltipShowDelay]="1000">
           <div class="noc-icon noc-icon-initials">
-            {{summaryNode.shorthand}}
+            {{activity.summary['mf'].shorthand}}
           </div>
           <div fxFlex="" class="noc-chip-label">
             <span>
-              {{summaryNode.nodes[0].term?.label}}
+              {{activity.mfNode.term?.label}}
+            </span>
+          </div>
+        </mat-chip>
+      </div>
+      <div fxFlex="33%">
+        <mat-chip *ngIf="activity.bpNode" class="noc-chip-xs noc-summary-chip noc-type-chip" fxLayout="row"
+          fxLayoutAlign="start center" matTooltip="{{activity.summary['bp'].tooltip}}" [matTooltipPosition]="'below'"
+          [matTooltipShowDelay]="1000">
+          <div class="noc-icon noc-icon-initials">
+            {{activity.summary['bp'].shorthand}}
+          </div>
+          <div fxFlex="" class="noc-chip-label">
+            <span>
+              {{activity.bpNode.term?.label}}
+            </span>
+          </div>
+        </mat-chip>
+      </div>
+      <div fxFlex="33%">
+        <mat-chip *ngIf="activity.ccNode" class="noc-chip-xs noc-summary-chip noc-type-chip" fxLayout="row"
+          fxLayoutAlign="start center" matTooltip="{{activity.summary['cc'].tooltip}}" [matTooltipPosition]="'below'"
+          [matTooltipShowDelay]="1000">
+          <div class="noc-icon noc-icon-initials">
+            {{activity.summary['cc'].shorthand}}
+          </div>
+          <div fxFlex="" class="noc-chip-label">
+            <span>
+              {{activity.ccNode.term?.label}}
             </span>
           </div>
         </mat-chip>

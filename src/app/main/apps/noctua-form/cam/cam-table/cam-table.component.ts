@@ -16,7 +16,8 @@ import {
 
   CamRebuildSignal,
   ActivityDisplayType,
-  NoctuaGraphService
+  NoctuaGraphService,
+  ActivitySortField
 } from 'noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
@@ -43,7 +44,7 @@ export class CamTableComponent implements OnInit, OnDestroy {
   searchFormData: any = [];
   searchForm: FormGroup;
   activityTypeOptions = noctuaFormConfig.activityType.options;
-  sortByOptions = noctuaFormConfig.activitySortBy.options;
+  sortByOptions = noctuaFormConfig.activitySortField.options;
 
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
@@ -130,8 +131,12 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.noctuaActivityFormService.initializeForm(activity);
   }
 
-  sortBy(sortCriteria) {
-    this.cam.sort = sortCriteria;
+  sortBy(sortCriteria: { id, label }) {
+    this.cam.updateSortBy(sortCriteria.id, sortCriteria.label);
+  }
+
+  toggleSortDirection() {
+    this.cam.sortBy.ascending = !this.cam.sortBy.ascending
   }
 
   deleteActivity(activity: Activity) {

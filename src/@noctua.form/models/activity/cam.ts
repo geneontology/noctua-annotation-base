@@ -1,15 +1,12 @@
-import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
-
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { Activity, ActivitySortBy } from './activity'
+import { Activity, ActivitySortField } from './activity'
 import { ActivityNode, ActivityNodeType } from './activity-node';
 import { Group } from '../group';
 import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
-import { ConnectorActivity } from './connector-activity';
-import { each, find, filter } from 'lodash';
+import { each, find, orderBy } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
@@ -37,29 +34,10 @@ export class CamQueryMatch {
   reference?: Entity[] = [];
 }
 
-
-export function _compareGP(a: Activity, b: Activity): number {
-  const aGP = a.presentation.gpText.toLowerCase()
-  const bGP = b.presentation.gpText.toLowerCase()
-
-  if (aGP < bGP) {
-    return -1;
-  } else {
-    return 1;
-  }
-}
-
-export function _compareDate(a: Activity, b: Activity): number {
-
-  if (a.date === b.date) {
-    return _compareGP(a, b)
-  }
-
-  if (a.date < b.date) {
-    return -1;
-  } else {
-    return 1;
-  }
+export class CamSortBy {
+  field: ActivitySortField = ActivitySortField.GP
+  label = "";
+  ascending = true;
 }
 
 
@@ -148,7 +126,7 @@ export class Cam {
   model: any;
   //connectorActivities: ConnectorActivity[] = [];
   causalRelations: Triple<Activity>[] = [];
-  sort = ActivitySortBy.DATE;
+  sortBy: CamSortBy = new CamSortBy();
   error = false;
   date;
   modified = false;
@@ -221,13 +199,19 @@ export class Cam {
   }
 
   get activities() {
-    switch (this.sort) {
-      case ActivitySortBy.DATE:
-        return this._activities.sort(_compareDate);
+    const direction = this.sortBy.ascending ? 'asc' : 'desc';
+    switch (this.sortBy?.field) {
+      case ActivitySortField.DATE:
+        return orderBy(this._activities, ['date', this._getGPText], [direction, direction]);
+      case ActivitySortField.MF:
+        return orderBy(this._activities, [this._getMFText, this._getGPText], [direction, direction]);
+      case ActivitySortField.BP:
+        return orderBy(this._activities, [this._getBPText, this._getGPText], [direction, direction]);
+      case ActivitySortField.CC:
+        return orderBy(this._activities, [this._getCCText, this._getGPText], [direction, direction]);
       default:
-        return this._activities.sort(_compareGP);
+        return orderBy(this._activities, [this._getGPText], [direction, direction])
     }
-
   }
 
   set activities(srcActivities: Activity[]) {
@@ -243,12 +227,7 @@ export class Cam {
   }
 
   get storedActivities() {
-    switch (this.sort) {
-      case ActivitySortBy.DATE:
-        return this._storedActivities.sort(_compareDate);
-      default:
-        return this._storedActivities.sort(_compareGP);
-    }
+    return this._storedActivities
   }
 
   set storedActivities(srcActivities: Activity[]) {
@@ -261,6 +240,11 @@ export class Cam {
     });
 
     this._storedActivities = srcActivities;
+  }
+
+  updateSortBy(field: ActivitySortField, label: string) {
+    this.sortBy.field = field
+    this.sortBy.label = label
   }
 
   toggleExpand() {
@@ -596,6 +580,25 @@ export class Cam {
     each(self.activities, (activity: Activity, key) => {
       activity.updateProperties()
     });
+
+    this.sortBy.label = noctuaFormConfig.activitySortField.options[this.sortBy.field]?.label
+  }
+
+  private _getGPText(a: Activity): string {
+    return a.presentation.gpText.toLowerCase()
+  }
+
+  private _getMFText(a: Activity): string {
+    if (!a.mfNode) return ''
+    return a.mfNode.term.label;
+  }
+  private _getBPText(a: Activity): string {
+    if (!a.bpNode) return ''
+    return a.bpNode.term.label;
+  }
+  private _getCCText(a: Activity): string {
+    if (!a.ccNode) return ''
+    return a.ccNode.term.label;
   }
 
 

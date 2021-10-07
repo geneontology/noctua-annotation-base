@@ -11,7 +11,7 @@ import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
-import { chain, Dictionary, each, filter, groupBy } from 'lodash';
+import { chain, Dictionary, each, filter, find, groupBy } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { TermsSummary } from './summary';
@@ -23,9 +23,11 @@ export enum ActivityState {
   editing
 }
 
-export enum ActivitySortBy {
+export enum ActivitySortField {
   GP = 'gp',
   MF = 'mf',
+  BP = 'bp',
+  CC = 'cc',
   DATE = 'date'
 }
 
@@ -125,8 +127,9 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     this.gpNode = this.getGPNode()
     this.mfNode = this.getMFNode()
-    this.bpNode = this.getNode(ActivityNodeType.GoBiologicalProcess)
-    this.ccNode = this.getNode(ActivityNodeType.GoCellularComponent)
+    this.bpNode = this.getRootNodeByType(ActivityNodeType.GoBiologicalProcess)
+    this.ccNode = this.getRootNodeByType(ActivityNodeType.GoCellularComponent)
+
   }
 
   get id() {
@@ -318,6 +321,18 @@ export class Activity extends SaeGraph<ActivityNode> {
     const self = this;
 
     return self.getNode(ActivityNodeType.GoMolecularFunction);
+  }
+
+  getRootNodeByType(type: ActivityNodeType): ActivityNode {
+    const self = this;
+    const rootEdges = this.getEdges(this.rootNode.id)
+    const found = find(rootEdges, ((node: Triple<ActivityNode>) => {
+      return node.object.type === type
+    }))
+
+    if (!found) return null
+
+    return found.object;
   }
 
   adjustCC() {

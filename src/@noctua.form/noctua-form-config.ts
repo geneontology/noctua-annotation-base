@@ -107,7 +107,7 @@ const edge = {
 
 
 export const noctuaFormConfig = {
-  'activitySortBy': {
+  'activitySortField': {
     'options': {
       'gp': {
         'id': 'gp',
@@ -117,9 +117,17 @@ export const noctuaFormConfig = {
         'id': 'mf',
         'label': 'Molecular Function'
       },
+      'bp': {
+        'id': 'bp',
+        'label': 'Biological Process'
+      },
+      'cc': {
+        'id': 'cc',
+        'label': 'Cellular Component'
+      },
       'date': {
         'id': 'date',
-        'label': 'Date'
+        'label': 'Activity Date'
       }
     }
   },

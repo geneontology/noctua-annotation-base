@@ -85,11 +85,13 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get activitySortBy() {
+  get activitySortField() {
     const options = [
-      noctuaFormConfig.activitySortBy.options.gp,
-      noctuaFormConfig.activitySortBy.options.mf,
-      noctuaFormConfig.activitySortBy.options.date,
+      noctuaFormConfig.activitySortField.options.gp,
+      noctuaFormConfig.activitySortField.options.date,
+      noctuaFormConfig.activitySortField.options.mf,
+      noctuaFormConfig.activitySortField.options.bp,
+      noctuaFormConfig.activitySortField.options.cc,
     ];
 
     return {
