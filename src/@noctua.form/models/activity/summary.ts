@@ -2,56 +2,44 @@ import { ActivityNode } from "./activity-node";
 import { Entity } from "./entity";
 import { Evidence } from "./evidence";
 
-class Summary {
+export class CamSummary<T extends Entity | Evidence | ActivityNode> {
   label: string
   shorthand: string
   count: number = 0;
   frequency = 0
   tooltip = ''
+  nodes: T[] = [];
 
   constructor(label?: string, shorthand?: string) {
     this.label = label ? label : null
     this.shorthand = shorthand ? shorthand : null
   }
-}
 
-export class TermSummary extends Summary {
-  nodes: ActivityNode[] = []
-
-  constructor(label?: string, shorthand?: string) {
-    super(label, shorthand)
-  }
-
-  append(node: ActivityNode) {
+  append(node: T) {
     this.nodes.push(node)
     this.count = this.nodes.length
-    this.tooltip += `${node.term.label} (${node.term.id}) \n`
+    if (node instanceof ActivityNode) {
+      this.tooltip += `${node.term.label} (${node.term.id}) \n`
+    } else if (node instanceof Evidence) {
+      this.tooltip += `${node.evidence.label} (${node.evidence.id}) \n
+                        ${node.referenceEntity.label} \n
+                        ${node.withEntity.label} \n`
+    }
   }
 }
 
-export class EvidenceSummary extends Summary {
-  nodes: Evidence[] = []
 
-  constructor(label?: string, shorthand?: string) {
-    super(label, shorthand)
-  }
-
-  append(node: Evidence) {
-    this.nodes.push(node)
-    this.count = this.nodes.length
-    this.tooltip += `${node.evidence.label} (${node.evidence.id}) \n`
-  }
-}
 
 export class TermsSummary {
-  bp = new TermSummary('Biological Process', 'BP');
-  cc = new TermSummary('Cellular Component', 'CC');
-  mf = new TermSummary('Molecular Function', 'MF');
-  gp = new TermSummary('Gene Product', 'GP');
-  other = new TermSummary('Other');
-  evidence = new EvidenceSummary('Evidence');
-  reference = new TermSummary('Reference');
-  withs = new TermSummary('With/From');
+  bp = new CamSummary<ActivityNode>('Biological Process', 'BP');
+  cc = new CamSummary<ActivityNode>('Cellular Component', 'CC');
+  mf = new CamSummary<ActivityNode>('Molecular Function', 'MF');
+  gp = new CamSummary<ActivityNode>('Gene Product', 'GP');
+  other = new CamSummary<ActivityNode>('Other');
+  evidences = new CamSummary<Evidence>('Evidence');
+  evidenceEcos = new CamSummary<Entity>('Evidence Eco Codes');
+  references = new CamSummary<Entity>('Reference');
+  withs = new CamSummary<Entity>('With/From');
 
 
 

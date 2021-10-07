@@ -17,7 +17,7 @@ import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { ActivityNode, ActivityNodeType, compareTerm } from './../models/activity/activity-node';
 import { Cam, CamLoadingIndicator, CamOperation } from './../models/activity/cam';
 import { Entity } from './../models/activity/entity';
-import { compareEvidence, Evidence } from './../models/activity/evidence';
+import { compareEvidence, compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence } from './../models/activity/evidence';
 import { Predicate } from './../models/activity/predicate';
 import { Triple } from './../models/activity/triple';
 import { TermsSummary } from './../models/activity/summary';
@@ -529,6 +529,7 @@ export class NoctuaGraphService {
       nodes.push(node)
       frequency[node.term.id] = frequency[node.term.id] ? frequency[node.term.id] + 1 : 1;
 
+
       if (node.hasRootType(EntityDefinition.GoMolecularEntity)) {
         termsSummary.gp.frequency++;
       } else if (node.hasRootType(EntityDefinition.GoMolecularFunction)) {
@@ -537,6 +538,8 @@ export class NoctuaGraphService {
         termsSummary.bp.frequency++;
       } else if (node.hasRootType(EntityDefinition.GoCellularComponent)) {
         termsSummary.cc.frequency++;
+      } else if (node.hasRootType(EntityDefinition.GoEvidenceNode)) {
+        // continue
       } else {
         termsSummary.other.frequency++;
       }
@@ -557,41 +560,83 @@ export class NoctuaGraphService {
         termsSummary.bp.append(node)
       } else if (node.hasRootType(EntityDefinition.GoCellularComponent)) {
         termsSummary.cc.append(node)
+      } else if (node.hasRootType(EntityDefinition.GoEvidenceNode)) {
+        // continue
       } else {
         termsSummary.other.append(node)
       }
     })
 
     termsSummary.allTerms = uniqueNodes
-    this.addEvidencesToSummary(camGraph, termsSummary)
+    this.addSummaryEvidences(camGraph, termsSummary)
 
     return termsSummary
   }
 
-  addEvidencesToSummary(camGraph, termsSummary) {
+  addSummaryEvidences(camGraph, termsSummary: TermsSummary) {
     const self = this;
     const evidences = []
     const frequency = {}
 
-
     each(camGraph.all_edges(), (bbopEdge) => {
       const evidence = self.edgeToEvidence(camGraph, bbopEdge);
-      evidences.push(...evidence)
 
+      evidence.forEach((evidence: Evidence) => {
+        evidences.push(evidence)
+        frequency[evidence.evidence.id] = frequency[evidence.evidence.id] ? frequency[evidence.evidence.id] + 1 : 1;
+        frequency['eco' + evidence.evidence.id] = frequency['eco' + evidence.evidence.id] ? frequency['eco' + evidence.evidence.id] + 1 : 1;
+        frequency[evidence.referenceEntity.id] = frequency[evidence.referenceEntity.id] ? frequency[evidence.referenceEntity.id] + 1 : 1;
+        frequency[evidence.withEntity.id] = frequency[evidence.withEntity.id] ? frequency[evidence.withEntity.id] + 1 : 1;
+
+        termsSummary.evidences.frequency++
+        termsSummary.evidenceEcos.frequency++
+
+        if (evidence.referenceEntity.id) {
+          termsSummary.references.frequency++;
+        }
+
+        if (evidence.withEntity.id) {
+          termsSummary.withs.frequency++;
+        }
+      })
     });
 
     const uniqueEvidence = chain(evidences)
       .uniqWith(compareEvidence)
       .value();
 
+    const uniqueEvidenceEco = chain(evidences)
+      .uniqWith(compareEvidenceEvidence)
+      .value();
+
+    const uniqueReference = chain(evidences)
+      .uniqWith(compareEvidenceReference)
+      .value();
+
+    const uniqueWith = chain(evidences)
+      .uniqWith(compareEvidenceWith)
+      .value();
+
     each(uniqueEvidence, (evidence: Evidence) => {
       evidence.frequency = frequency[evidence.evidence.id]
-      termsSummary.evidence.append(evidence)
+      termsSummary.evidences.append(evidence)
+    })
+
+    each(uniqueEvidenceEco, (evidence: Evidence) => {
+      evidence.evidence.frequency = frequency['eco' + evidence.evidence.id]
+      termsSummary.evidenceEcos.append(evidence.evidence)
+    })
+
+    each(uniqueReference, (evidence: Evidence) => {
+      evidence.referenceEntity.frequency = frequency[evidence.evidence.id]
+      termsSummary.references.append(evidence.referenceEntity)
+    })
+
+    each(uniqueWith, (evidence: Evidence) => {
+      evidence.withEntity.frequency = frequency[evidence.evidence.id]
+      termsSummary.references.append(evidence.withEntity)
     })
   }
-
-
-
 
   getActivityPreset(subjectNode: Partial<ActivityNode>, predicateId, bbopSubjectEdges): Activity {
     const self = this;

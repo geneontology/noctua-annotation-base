@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone, Input, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ActivityNode, Cam, CamLoadingIndicator, CamService, CamStats, EntityType, EvidenceSummary, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary, TermSummary } from 'noctua-form-base';
+import { ActivityNode, Cam, CamLoadingIndicator, CamService, CamStats, CamSummary, EntityType, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -112,9 +112,7 @@ export class CamTermsComponent implements OnInit, OnDestroy {
     searchCriteria.contributors = [this.noctuaUserService.user]
     const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
     window.open(url, '_blank')
-
   }
-
 
   openTermDetail(term) {
     this.noctuaSearchService.onDetailTermChanged.next(term)
@@ -131,15 +129,19 @@ export class CamTermsComponent implements OnInit, OnDestroy {
       termsSummary.cc,
       termsSummary.gp,
       termsSummary.other,
-      termsSummary.evidence]
+      termsSummary.evidences,
+      termsSummary.evidenceEcos,
+      termsSummary.references,
+      termsSummary.withs,
+    ]
 
-    const treeNodes = allTerms.map((termSummary: TermSummary | EvidenceSummary) => {
+    const treeNodes = allTerms.map((camSummary) => {
       return {
-        id: termSummary.label,
-        frequency: termSummary.frequency,
+        id: camSummary.label,
+        frequency: camSummary.frequency,
         isCategory: true,
-        label: termSummary.label,
-        children: termSummary.nodes
+        label: camSummary.label,
+        children: camSummary.nodes
       }
     })
 

@@ -43,7 +43,7 @@ export { Triple } from './triple';
 export { Rule } from './rules/rule';
 export { ConnectorRule } from './rules/connector-rule';
 export { PendingChange } from './pending-change';
-export { TermSummary, EvidenceSummary, TermsSummary } from './summary';
+export { CamSummary, TermsSummary } from './summary';
 
 
 export * from './parser';

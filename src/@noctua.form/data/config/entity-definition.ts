@@ -80,6 +80,12 @@ export const GoEvidence = {
     categoryType: 'isa_closure',
 } as GoCategory;
 
+export const GoEvidenceNode = {
+    id: ActivityNodeType.GoEvidence,
+    category: 'ECO:0000000',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
 export const GoCellTypeEntity = {
     id: ActivityNodeType.GoCellTypeEntity,
     category: 'CL:0000003',
