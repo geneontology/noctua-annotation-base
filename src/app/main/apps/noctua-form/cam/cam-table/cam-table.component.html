@@ -27,7 +27,6 @@
       </button>
     </mat-menu>
 
-
     <span *ngIf="cam.rebuildRule?.signal !== CamRebuildSignal.NONE" class="noc-cam-rebuild">
       {{cam.rebuildRule?.message}}
       <button mat-button (click)="reload(cam)" class="" color="primary">

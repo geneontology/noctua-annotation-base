@@ -1,5 +1,5 @@
 import { ActivityError, ErrorLevel, ErrorType } from "./parser/activity-error";
-import { Entity } from './entity';
+import { Entity, EntityType } from './entity';
 import { ActivityNode } from './activity-node';
 import { find, includes, isEqual } from 'lodash';
 
@@ -11,7 +11,7 @@ import { PendingChange } from "./pending-change";
 import { NoctuaFormUtils } from "../../utils/noctua-form-utils";
 
 export class Evidence {
-
+  entityType = EntityType.EVIDENCE;
   edge: Entity;
   evidence: Entity = new Entity('', '');
   referenceEntity: Entity = new Entity('', '');
@@ -29,6 +29,7 @@ export class Evidence {
   pendingEvidenceChanges: PendingChange;
   pendingReferenceChanges: PendingChange;
   pendingWithChanges: PendingChange;
+  frequency: number;
 
   constructor() {
 

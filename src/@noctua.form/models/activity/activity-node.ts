@@ -1,7 +1,7 @@
 import { Evidence } from './evidence';
 import { ActivityError, ErrorLevel, ErrorType } from './parser/activity-error';
 import { Activity } from './activity';
-import { Entity } from './entity';
+import { Entity, EntityType } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { each, find, some } from 'lodash';
@@ -16,6 +16,14 @@ export interface GoCategory {
   categoryType: string;
   suffix: string;
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -46,7 +54,8 @@ export enum ActivityNodeType {
 
   // evidence
   GoEvidence = 'GoEvidence',
-  BPPhaseStageExistenceOverlaps = "BPPhaseStageExistenceOverlaps"
+  BPPhaseStageExistenceOverlaps = "BPPhaseStageExistenceOverlaps",
+  BPPhaseStageExistenceStartsEnds = "BPPhaseStageExistenceStartsEnds"
 }
 
 export interface ActivityNodeDisplay {
@@ -72,6 +81,7 @@ export interface ActivityNodeDisplay {
 }
 
 export class ActivityNode implements ActivityNodeDisplay {
+  entityType = EntityType.ACTIVITY_NODE
   type: ActivityNodeType;
   label: string;
   uuid: string;

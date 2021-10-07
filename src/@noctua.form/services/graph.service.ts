@@ -17,7 +17,7 @@ import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { ActivityNode, ActivityNodeType, compareTerm } from './../models/activity/activity-node';
 import { Cam, CamLoadingIndicator, CamOperation } from './../models/activity/cam';
 import { Entity } from './../models/activity/entity';
-import { Evidence } from './../models/activity/evidence';
+import { compareEvidence, Evidence } from './../models/activity/evidence';
 import { Predicate } from './../models/activity/predicate';
 import { Triple } from './../models/activity/triple';
 import { TermsSummary } from './../models/activity/summary';
@@ -442,7 +442,7 @@ export class NoctuaGraphService {
     return new ActivityNode(result);
   }
 
-  edgeToEvidence(graph, edge) {
+  edgeToEvidence(graph, edge): Evidence[] {
 
     const self = this;
     const evidenceAnnotations = edge.get_annotations_by_key('evidence');
@@ -521,7 +521,6 @@ export class NoctuaGraphService {
     const self = this;
     const termsSummary = new TermsSummary()
     const nodes = []
-    const evidences = []
     const frequency = {}
 
     each(camGraph.all_nodes(), (bbopNode) => {
@@ -541,12 +540,6 @@ export class NoctuaGraphService {
       } else {
         termsSummary.other.frequency++;
       }
-    });
-
-    each(camGraph.all_edges(), (bbopEdge) => {
-      const evidence = self.edgeToEvidence(camGraph, bbopEdge);
-      evidence.push(evidence)
-
     });
 
     const uniqueNodes = chain(nodes)
@@ -570,8 +563,31 @@ export class NoctuaGraphService {
     })
 
     termsSummary.allTerms = uniqueNodes
+    this.addEvidencesToSummary(camGraph, termsSummary)
 
     return termsSummary
+  }
+
+  addEvidencesToSummary(camGraph, termsSummary) {
+    const self = this;
+    const evidences = []
+    const frequency = {}
+
+
+    each(camGraph.all_edges(), (bbopEdge) => {
+      const evidence = self.edgeToEvidence(camGraph, bbopEdge);
+      evidences.push(...evidence)
+
+    });
+
+    const uniqueEvidence = chain(evidences)
+      .uniqWith(compareEvidence)
+      .value();
+
+    each(uniqueEvidence, (evidence: Evidence) => {
+      evidence.frequency = frequency[evidence.evidence.id]
+      termsSummary.evidence.append(evidence)
+    })
   }
 
 

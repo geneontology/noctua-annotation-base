@@ -120,6 +120,11 @@ $accent: map-get($theme, accent);
           // word-break: break-all;
         }
 
+        .noc-subtitle {
+          font-size: 10px;
+          color: #777;
+        }
+
         .noc-badge,
         .noc-aspect-badge {
           margin: 2px 5px;

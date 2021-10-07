@@ -1,5 +1,3 @@
-
-
 export {
     ActivityNode,
     ActivityNodeType,
@@ -35,6 +33,7 @@ export {
 } from './connector-activity';
 export { EntityLookup } from './entity-lookup';
 export {
+    EntityType,
     EntityBase,
     Entity,
     _compareEntityWeight
@@ -44,7 +43,7 @@ export { Triple } from './triple';
 export { Rule } from './rules/rule';
 export { ConnectorRule } from './rules/connector-rule';
 export { PendingChange } from './pending-change';
-export { TermSummary, TermsSummary } from './summary';
+export { TermSummary, EvidenceSummary, TermsSummary } from './summary';
 
 
 export * from './parser';

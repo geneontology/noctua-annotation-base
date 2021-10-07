@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone, Input, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ActivityNode, Cam, CamLoadingIndicator, CamService, CamStats, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary, TermSummary } from 'noctua-form-base';
+import { ActivityNode, Cam, CamLoadingIndicator, CamService, CamStats, EntityType, EvidenceSummary, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary, TermSummary } from 'noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -19,6 +19,7 @@ import { environment } from 'environments/environment';
 })
 export class CamTermsComponent implements OnInit, OnDestroy {
   MiddlePanel = MiddlePanel;
+  EntityType = EntityType;
 
   @ViewChild('tree') tree;
   @Input('panelDrawer')
@@ -124,9 +125,15 @@ export class CamTermsComponent implements OnInit, OnDestroy {
 
     termsSummary.other.label = 'Other';
 
-    const allTerms = [termsSummary.mf, termsSummary.bp, termsSummary.cc, termsSummary.gp, termsSummary.other]
+    const allTerms = [
+      termsSummary.mf,
+      termsSummary.bp,
+      termsSummary.cc,
+      termsSummary.gp,
+      termsSummary.other,
+      termsSummary.evidence]
 
-    const treeNodes = allTerms.map((termSummary: TermSummary) => {
+    const treeNodes = allTerms.map((termSummary: TermSummary | EvidenceSummary) => {
       return {
         id: termSummary.label,
         frequency: termSummary.frequency,

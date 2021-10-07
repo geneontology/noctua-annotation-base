@@ -401,7 +401,7 @@ export const canInsertEntity = {
                     EntityDefinition.ZebrafishStage,
                 ],
                 type: ActivityNodeType.BPPhaseStageExistenceOverlaps,
-                label: 'existence overlaps  (BP/Phase/Stage)',
+                label: 'existence overlaps (BP/Phase/Stage)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 isExtension: true,
@@ -413,15 +413,15 @@ export const canInsertEntity = {
         },
         <ShapeDescription>{
             label: 'Add Existence Starts and Ends During (BP/Phase/Stage)',
-            id: ActivityNodeType.BPPhaseStageExistenceOverlaps,
+            id: ActivityNodeType.BPPhaseStageExistenceStartsEnds,
             node: <ActivityNodeDisplay>{
                 category: [
                     EntityDefinition.GoBiologicalProcess,
                     EntityDefinition.WormLifeStage,
                     EntityDefinition.ZebrafishStage,
                 ],
-                type: ActivityNodeType.BPPhaseStageExistenceOverlaps,
-                label: 'existence overlaps (BP/Phase/Stage)',
+                type: ActivityNodeType.BPPhaseStageExistenceStartsEnds,
+                label: 'Add Existence Starts and Ends During (BP/Phase/Stage)',
                 displaySection: noctuaFormConfig.displaySection.fd,
                 displayGroup: noctuaFormConfig.displayGroup.cc,
                 isExtension: true,

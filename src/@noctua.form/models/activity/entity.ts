@@ -1,5 +1,10 @@
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
+export enum EntityType {
+  ACTIVITY_NODE = 'activity_node',
+  EVIDENCE = 'Evidence'
+}
+
 export interface EntityBase {
   id: string;
   label: string;

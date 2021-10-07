@@ -15,6 +15,7 @@ import { chain, Dictionary, each, filter, find, groupBy } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { TermsSummary } from './summary';
+import moment from 'moment';
 
 
 
@@ -106,9 +107,10 @@ export class Activity extends SaeGraph<ActivityNode> {
   //Graph
   position: ActivityPosition = new ActivityPosition();
   size: ActivitySize = new ActivitySize();
+
+  formattedDate: string
+
   private _backgroundColor = 'green'
-
-
   private _presentation: any;
   private _grid: any[] = [];
   private _id: string;
@@ -193,7 +195,9 @@ export class Activity extends SaeGraph<ActivityNode> {
     const rootNode = this.rootNode;
 
     if (rootNode) {
+      const date = moment(rootNode.date, 'YYYY-MM-DD')
       this.date = rootNode.date
+      this.formattedDate = date.format('ll');
     }
   }
 
