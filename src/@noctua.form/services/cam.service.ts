@@ -162,12 +162,14 @@ export class CamService {
       termsSummary.cc,
       termsSummary.gp,
       termsSummary.other,
+      termsSummary.relations,
       termsSummary.evidences,
       termsSummary.evidenceEcos,
       termsSummary.references,
       termsSummary.withs,
       termsSummary.papers,
-      termsSummary.contributors
+      termsSummary.contributors,
+      termsSummary.dates
     ]
 
     const treeNodes = allTerms.map((camSummary) => {

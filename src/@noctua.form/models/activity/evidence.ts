@@ -30,6 +30,7 @@ export class Evidence {
   pendingReferenceChanges: PendingChange;
   pendingWithChanges: PendingChange;
   frequency: number;
+  date: string;
 
   constructor() {
 

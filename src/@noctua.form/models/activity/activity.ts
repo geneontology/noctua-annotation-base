@@ -15,7 +15,10 @@ import { chain, Dictionary, each, filter, find, groupBy } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { TermsSummary } from './summary';
-import moment from 'moment';
+
+
+import * as moment_ from 'moment';
+const moment = moment_;
 
 
 
@@ -195,7 +198,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     const rootNode = this.rootNode;
 
     if (rootNode) {
-      const date = moment(rootNode.date, 'YYYY-MM-DD')
+      const date = (moment as any)(rootNode.date, 'YYYY-MM-DD')
       this.date = rootNode.date
       this.formattedDate = date.format('ll');
     }

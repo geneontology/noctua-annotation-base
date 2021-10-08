@@ -11,7 +11,7 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
 import { Activity, ActivityType, compareActivity } from './../models/activity/activity';
-import { find, each, differenceWith, cloneDeep, uniqWith, chain, filter } from 'lodash';
+import { find, each, differenceWith, cloneDeep, uniqWith, chain, filter, uniq } from 'lodash';
 import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { ActivityNode, ActivityNodeType, compareTerm } from './../models/activity/activity-node';
@@ -469,6 +469,8 @@ export class NoctuaGraphService {
         const contributorAnnotations = annotationNode.get_annotations_by_key('contributor');
         const groupAnnotations = annotationNode.get_annotations_by_key('providedBy');
 
+        evidence.date = self.getNodeDate(annotationNode);
+
         if (sources.length > 0) {
           const sorted = sources.sort(self._compareSources)
           evidence.reference = sorted.map((source) => {
@@ -577,27 +579,37 @@ export class NoctuaGraphService {
 
   addSummaryEvidences(camGraph, termsSummary: TermsSummary) {
     const self = this;
-    const evidences = []
-    const frequency = {}
-    const contributors = []
+    const evidences = [];
+    const frequency = {};
+    const contributors = [];
+    const relations = [];
+    const dates = [];
 
     each(camGraph.all_edges(), (bbopEdge) => {
+      const bbopPredicateId = bbopEdge.predicate_id();
       const evidence = self.edgeToEvidence(camGraph, bbopEdge);
+
+      relations.push(bbopPredicateId)
+      frequency[bbopPredicateId] = frequency[bbopPredicateId] ? frequency[bbopPredicateId] + 1 : 1;
+      termsSummary.relations.frequency++;
 
       evidence.forEach((evidence: Evidence) => {
         evidences.push(evidence)
+        dates.push(evidence.date)
         frequency[evidence.evidence.id] = frequency[evidence.evidence.id] ? frequency[evidence.evidence.id] + 1 : 1;
         frequency['eco' + evidence.evidence.id] = frequency['eco' + evidence.evidence.id] ? frequency['eco' + evidence.evidence.id] + 1 : 1;
         frequency[evidence.referenceEntity.id] = frequency[evidence.referenceEntity.id] ? frequency[evidence.referenceEntity.id] + 1 : 1;
         frequency[evidence.withEntity.id] = frequency[evidence.withEntity.id] ? frequency[evidence.withEntity.id] + 1 : 1;
+        frequency[evidence.date] = frequency[evidence.date] ? frequency[evidence.date] + 1 : 1;
         evidence.contributors.map((contributor: Contributor) => {
           frequency[contributor.orcid] = frequency[contributor.orcid] ? frequency[contributor.orcid] + 1 : 1;
           termsSummary.contributors.frequency++;
           contributors.push(contributor)
         });
 
-        termsSummary.evidences.frequency++
-        termsSummary.evidenceEcos.frequency++
+        termsSummary.evidences.frequency++;
+        termsSummary.evidenceEcos.frequency++;
+        termsSummary.dates.frequency++;
 
 
         if (evidence.referenceEntity.id) {
@@ -611,9 +623,11 @@ export class NoctuaGraphService {
         if (evidence.referenceEntity?.label.trim().startsWith('PMID')) {
           termsSummary.papers.frequency++;
         }
-
       })
     });
+
+    const uniqueRelations = uniq(relations)
+    const uniqueDates = uniq(dates)
 
     const uniqueEvidence = chain(evidences)
       .uniqWith(compareEvidence)
@@ -635,6 +649,18 @@ export class NoctuaGraphService {
       .uniqWith(equalContributor)
       .value();
 
+    each(uniqueDates, (date: string) => {
+      const dateEntity = new Entity(date, date)
+      dateEntity.frequency = frequency[date]
+      termsSummary.dates.append(dateEntity)
+    })
+
+    each(uniqueRelations, (relationId: string) => {
+      const edge = self.noctuaFormConfigService.findEdge(relationId);
+      edge.frequency = frequency[relationId]
+      termsSummary.relations.append(edge)
+    })
+
     each(uniqueEvidence, (evidence: Evidence) => {
       evidence.frequency = frequency[evidence.evidence.id]
       termsSummary.evidences.append(evidence)
@@ -654,8 +680,6 @@ export class NoctuaGraphService {
       evidence.withEntity.frequency = frequency[evidence.evidence.id]
       termsSummary.withs.append(evidence.withEntity)
     })
-
-
 
     each(uniqueReference, (evidence: Evidence) => {
       if (evidence.referenceEntity && evidence.referenceEntity?.id.trim().startsWith('PMID')) {

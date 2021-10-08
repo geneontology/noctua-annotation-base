@@ -107,7 +107,15 @@ export class NoctuaUserService {
     const contributors = <Contributor[]>annotations.map((annotation) => {
       const orcid = annotation.value();
       const contributor = self.getContributorDetails(annotation.value())
-      return contributor ? contributor : { orcid: orcid };
+
+      if (contributor) {
+        return contributor;
+      } else {
+        const result = new Contributor()
+        result.orcid = result.name = orcid
+
+        return result;
+      }
     });
 
     return contributors

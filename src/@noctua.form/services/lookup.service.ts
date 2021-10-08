@@ -380,8 +380,6 @@ export class NoctuaLookupService {
     const presentPmids = Object.keys(this.articleCache)
     const ids = difference(pmids, presentPmids);
 
-    console.log(ids)
-
     if (ids.length > 0) {
       const url = environment.pubMedSummaryApi + ids.join(',');
       this.httpClient

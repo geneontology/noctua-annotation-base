@@ -41,11 +41,30 @@
         </ngx-charts-pie-chart>
       </div>
     </div>
+
+    <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Relations
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+        <ngx-charts-bar-horizontal [results]="stats.relationsBar" [view]="relationsBarOptions.view"
+          [gradient]="relationsBarOptions.gradient" [xAxis]="relationsBarOptions.showXAxis"
+          [yAxis]="relationsBarOptions.showYAxis" [legend]="relationsBarOptions.legend"
+          [showXAxisLabel]="relationsBarOptions.showXAxisLabel"
+          [maxYAxisTickLength]="relationsBarOptions.maxYAxisTickLength"
+          [showYAxisLabel]="relationsBarOptions.showYAxisLabel" [xAxisLabel]="relationsBarOptions.xAxisLabel"
+          [yAxisLabel]="relationsBarOptions.yAxisLabel">
+        </ngx-charts-bar-horizontal>
+      </div>
+    </div>
     <div *ngFor="let pie of pies" class="noc-table-form noc-form-section" fxLayout="column"
       fxLayoutAlign="start stretch">
       <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
-          pie.label
+          {{pie.label}}
         </div>
         <span fxFlex></span>
       </div>
@@ -73,6 +92,23 @@
           [showYAxisLabel]="contributorBarOptions.showYAxisLabel" [xAxisLabel]="contributorBarOptions.xAxisLabel"
           [yAxisLabel]="contributorBarOptions.yAxisLabel">
         </ngx-charts-bar-horizontal>
+      </div>
+    </div>
+
+    <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Contribution over time
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+        <ngx-charts-line-chart [results]="stats.datesLine" [view]="datesLineOptions.view"
+          [legend]="datesLineOptions.legend" [showXAxisLabel]="datesLineOptions.showXAxisLabel"
+          [showYAxisLabel]="datesLineOptions.showYAxisLabel" [xAxis]="datesLineOptions.xAxis"
+          [yAxis]="datesLineOptions.yAxis" [xAxisLabel]="datesLineOptions.xAxisLabel"
+          [yAxisLabel]="datesLineOptions.yAxisLabel" [timeline]="datesLineOptions.timeline">
+        </ngx-charts-line-chart>
       </div>
     </div>
   </div>

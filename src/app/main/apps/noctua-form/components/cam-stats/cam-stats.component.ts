@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone, Input, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ActivityNode, Cam, CamService, CamSummary, Contributor, EntityType, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary } from 'noctua-form-base';
+import { ActivityNode, Cam, CamService, CamSummary, Contributor, Entity, EntityType, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary } from 'noctua-form-base';
 import { takeUntil } from 'rxjs/operators';
 import { MatDrawer } from '@angular/material/sidenav';
 import { SearchCriteria } from '@noctua.search/models/search-criteria';
@@ -75,6 +75,19 @@ export class CamStatsComponent implements OnInit, OnDestroy {
     }
   }
 
+  relationsBarOptions = {
+    view: [400, 400],
+    showXAxis: true,
+    showYAxis: true,
+    gradient: false,
+    legend: false,
+    showXAxisLabel: true,
+    maxYAxisTickLength: 20,
+    yAxisLabel: 'Relation',
+    showYAxisLabel: true,
+    xAxisLabel: 'Count',
+  }
+
   contributorBarOptions = {
     view: [400, 300],
     showXAxis: true,
@@ -85,7 +98,21 @@ export class CamStatsComponent implements OnInit, OnDestroy {
     maxYAxisTickLength: 25,
     yAxisLabel: 'Contributor',
     showYAxisLabel: true,
-    xAxisLabel: 'Statements',
+    xAxisLabel: 'Number of Statements',
+  }
+
+  datesLineOptions = {
+    view: [400, 400],
+    legend: true,
+    showLabels: true,
+    animations: true,
+    xAxis: true,
+    yAxis: true,
+    showYAxisLabel: true,
+    showXAxisLabel: true,
+    xAxisLabel: 'Year',
+    yAxisLabel: 'Population',
+    timeline: true,
   }
 
   private _unsubscribeAll: Subject<any>;
@@ -96,7 +123,9 @@ export class CamStatsComponent implements OnInit, OnDestroy {
     mfPie: [],
     bpPie: [],
     ccPie: [],
-    contributorBar: []
+    contributorBar: [],
+    relationsBar: [],
+    datesLine: []
   }
 
   pies = []
@@ -129,7 +158,8 @@ export class CamStatsComponent implements OnInit, OnDestroy {
         this.stats.mfPie = this.buildTermsPie(this.termsSummary.mf.nodes)
         this.stats.bpPie = this.buildTermsPie(this.termsSummary.bp.nodes)
         this.stats.ccPie = this.buildTermsPie(this.termsSummary.cc.nodes)
-
+        this.stats.relationsBar = this.buildRelationsPie(this.termsSummary.relations.nodes)
+        this.stats.datesLine = this.buildContributionsStats(this.termsSummary.dates.nodes)
         this.stats.contributorBar = this.buildContributorBar(this.termsSummary.contributors.nodes)
 
         this.pies = [{
@@ -195,6 +225,22 @@ export class CamStatsComponent implements OnInit, OnDestroy {
     return stats
   }
 
+  buildContributionsStats(nodes) {
+    this.aspectOptions.customColors = []
+    const stats = [{
+      name: 'Contribution',
+      series: nodes.map((node: Entity) => {
+        return {
+          name: node.label,
+          value: node.frequency
+        }
+      })
+
+    }]
+
+    return stats
+  }
+
   buildAspectPie(summaryNodes) {
 
     const stats = summaryNodes.map((node) => {
@@ -212,6 +258,18 @@ export class CamStatsComponent implements OnInit, OnDestroy {
     const stats = nodes.map((node: ActivityNode) => {
       return {
         name: node.term.label,
+        value: node.frequency
+      }
+    })
+
+    return stats
+  }
+
+  buildRelationsPie(nodes) {
+
+    const stats = nodes.map((node: Entity) => {
+      return {
+        name: node.label,
         value: node.frequency
       }
     })

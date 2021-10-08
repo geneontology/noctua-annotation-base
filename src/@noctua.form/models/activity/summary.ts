@@ -41,17 +41,19 @@ export class TermsSummary {
   mf = new CamSummary<ActivityNode>('Molecular Function', 'MF');
   gp = new CamSummary<ActivityNode>('Gene Product', 'GP');
   other = new CamSummary<ActivityNode>('Other');
-  evidences = new CamSummary<Evidence>('Evidence');
+  evidences = new CamSummary<Evidence>('Evidence(Full)');
   evidenceEcos = new CamSummary<Entity>('Evidence Codes');
   references = new CamSummary<Entity>('Reference');
   withs = new CamSummary<Entity>('With/From');
   papers = new CamSummary<Article>('PMID Papers');
   contributors = new CamSummary<Contributor>('Contribution');
-
+  relations = new CamSummary<Entity>('Relations');
+  dates = new CamSummary<Entity>('Dates');
 
   allTerms: ActivityNode[] = []
 
   nodes = []
+
 
   constructor() {
     this.nodes = [

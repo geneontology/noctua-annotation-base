@@ -12,10 +12,11 @@
         {{activity.displayNumber}}
       </div>
     </div>
-    <div class="noc-gp noc-cell" *ngIf="gpNode" fxLayout="row" fxLayoutAlign="start center"
-      matTooltip="GP:  {{gpNode.term?.label}}  &#13; ( {{ gpNode.term?.id }})" [matTooltipPosition]="'below'"
-      [matTooltipShowDelay]="1000">
-      <span class="text-truncate">
+    <div class="noc-gp noc-cell" fxLayout="row" fxLayoutAlign="start center">
+      <span class="noc-no-info" *ngIf="!gpNode">Gene info no available</span>
+      <span class="text-truncate" *ngIf="gpNode"
+        matTooltip="GP:  {{gpNode.term?.label}}  &#13; ( {{ gpNode.term?.id }})" [matTooltipPosition]="'below'"
+        [matTooltipShowDelay]="1000">
         {{gpNode.term?.label}}
         <a class="ml-4" (click)="$event.stopPropagation()" href="{{gpNode.term?.url}}" target="_blank">
           {{ gpNode.term?.id }}

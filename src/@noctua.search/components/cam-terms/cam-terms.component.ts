@@ -71,7 +71,7 @@ export class CamTermsComponent implements OnInit, OnDestroy {
           return Evidence.getReferenceNumber(article.id)
         })
 
-        // this.noctuaLookupService.addPubmedInfos(pmids)
+        //this.noctuaLookupService.addPubmedInfos(pmids)
       });
 
     this.noctuaLookupService.onArticleCacheReady
