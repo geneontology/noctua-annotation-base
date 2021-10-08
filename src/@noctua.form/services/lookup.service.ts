@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
-import { find, filter, each, uniqWith } from 'lodash';
+import { find, filter, each, uniqWith, difference } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
 import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence } from './../models/activity/evidence';
@@ -12,6 +12,7 @@ import { ActivityNode, ActivityNodeType } from './../models/activity/activity-no
 import { Entity } from './../models/activity/entity';
 import { Predicate } from './../models/activity/predicate';
 import { NoctuaUserService } from './user.service';
+import { BehaviorSubject } from 'rxjs';
 
 declare const require: any;
 
@@ -36,10 +37,13 @@ export class NoctuaLookupService {
   linker;
   golrURLBase;
   localClosures;
+  onArticleCacheReady: BehaviorSubject<any>;
+  articleCache = {}
 
   constructor(private httpClient: HttpClient,
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService) {
+    this.onArticleCacheReady = new BehaviorSubject(null);
     this.name = 'DefaultLookupName';
     this.linker = new amigo.linker();
     this.golrURLBase = environment.globalGolrNeoServer + `select?`;
@@ -371,6 +375,34 @@ export class NoctuaLookupService {
     }
   }
 
+  addPubmedInfos(pmids: string[]) {
+    const self = this;
+    const presentPmids = Object.keys(this.articleCache)
+    const ids = difference(pmids, presentPmids);
+
+    console.log(ids)
+
+    if (ids.length > 0) {
+      const url = environment.pubMedSummaryApi + ids.join(',');
+      this.httpClient
+        .get(url)
+        .pipe(
+          map(res => res['result']),
+          map(res => {
+            return res['uids'].map(uid => {
+              return this._addArticles(res[uid])
+            });
+          })).subscribe((articles: Article[]) => {
+            articles.forEach(article => {
+              self.articleCache['PMID:' + article.id] = article;
+            })
+
+            self.onArticleCacheReady.next(true)
+          });
+    } else {
+      self.onArticleCacheReady.next(true)
+    }
+  }
 
   getPubmedInfo(pmid: string) {
     const url = environment.pubMedSummaryApi + pmid;
@@ -380,19 +412,20 @@ export class NoctuaLookupService {
       .pipe(
         map(res => res['result']),
         map(res => res[pmid]),
-        map(res => this._addArticles(res, pmid)),
+        map(res => this._addArticles(res)),
       );
   }
 
-  private _addArticles(res, pmid: string) {
+  private _addArticles(res) {
     const self = this;
     if (!res) {
       return;
     }
 
     const article = new Article();
+    article.id = res.uid
     article.title = res.title;
-    article.link = self.linker.url(`${noctuaFormConfig.evidenceDB.options.pmid.name}:${pmid}`);
+    article.link = self.linker.url(`${noctuaFormConfig.evidenceDB.options.pmid.name}:${res.uid}`);
     article.date = res.pubdate;
     if (res.authors && Array.isArray(res.authors)) {
       article.author = res.authors.map(author => {

@@ -11,7 +11,7 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
 import { Activity, ActivityType, compareActivity } from './../models/activity/activity';
-import { find, each, differenceWith, cloneDeep, uniqWith, chain } from 'lodash';
+import { find, each, differenceWith, cloneDeep, uniqWith, chain, filter } from 'lodash';
 import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { ActivityNode, ActivityNodeType, compareTerm } from './../models/activity/activity-node';
@@ -21,6 +21,7 @@ import { compareEvidence, compareEvidenceEvidence, compareEvidenceReference, com
 import { Predicate } from './../models/activity/predicate';
 import { Triple } from './../models/activity/triple';
 import { TermsSummary } from './../models/activity/summary';
+import { Article } from './../models/article';
 
 declare const require: any;
 
@@ -598,6 +599,13 @@ export class NoctuaGraphService {
         if (evidence.withEntity.id) {
           termsSummary.withs.frequency++;
         }
+
+
+        if (evidence.referenceEntity?.label.trim().startsWith('PMID')) {
+          termsSummary.papers.frequency++;
+        }
+
+
       })
     });
 
@@ -634,9 +642,22 @@ export class NoctuaGraphService {
 
     each(uniqueWith, (evidence: Evidence) => {
       evidence.withEntity.frequency = frequency[evidence.evidence.id]
-      termsSummary.references.append(evidence.withEntity)
+      termsSummary.withs.append(evidence.withEntity)
     })
+
+
+    each(uniqueReference, (evidence: Evidence) => {
+      if (evidence.referenceEntity && evidence.referenceEntity?.id.trim().startsWith('PMID')) {
+        const article = new Article()
+        article.id = evidence.referenceEntity.id.trim()
+        article.frequency = frequency[evidence.referenceEntity.id]
+        termsSummary.papers.append(article)
+      }
+    })
+
   }
+
+
 
   getActivityPreset(subjectNode: Partial<ActivityNode>, predicateId, bbopSubjectEdges): Activity {
     const self = this;

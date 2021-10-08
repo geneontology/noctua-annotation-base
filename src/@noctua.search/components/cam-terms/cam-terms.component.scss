@@ -125,6 +125,19 @@ $accent: map-get($theme, accent);
           color: #777;
         }
 
+        .noc-article-title {
+          font-size: 10px;
+          max-height: 60px;
+          overflow: hidden;
+        }
+
+        .noc-article-author {
+          font-size: 10px;
+          max-height: 60px;
+          color: #777;
+          overflow: hidden;
+        }
+
         .noc-badge,
         .noc-aspect-badge {
           margin: 2px 5px;

@@ -98,20 +98,6 @@
                         fxLayoutAlign="center center">
                         <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
                       </div>
-                      <button mat-icon-button class="noc-icon-button" [matMenuTriggerFor]="optionMenu">
-                        <fa-icon [icon]="['fas', 'bars']"></fa-icon>
-                      </button>
-                      <mat-menu #optionMenu="matMenu" class="noc-dropdown-menu">
-                        <button mat-menu-item class="" (click)="openSearch(node.data)">
-                          Find in Model
-                        </button>
-                        <button mat-menu-item class="" (click)="searchModels(node.data)">
-                          Search Models
-                        </button>
-                        <button mat-menu-item class="" (click)="searchModelsByContributor(node.data)">
-                          Search My Models
-                        </button>
-                      </mat-menu>
                     </ng-container>
 
                     <ng-container *ngSwitchCase="EntityType.ENTITY">
@@ -127,20 +113,29 @@
                         fxLayoutAlign="center center">
                         <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
                       </div>
-                      <button mat-icon-button class="noc-icon-button" [matMenuTriggerFor]="optionMenu">
-                        <fa-icon [icon]="['fas', 'bars']"></fa-icon>
-                      </button>
-                      <mat-menu #optionMenu="matMenu" class="noc-dropdown-menu">
-                        <button mat-menu-item class="" (click)="openSearch(node.data)">
-                          Find in Model
-                        </button>
-                        <button mat-menu-item class="" (click)="searchModels(node.data)">
-                          Search Models
-                        </button>
-                        <button mat-menu-item class="" (click)="searchModelsByContributor(node.data)">
-                          Search My Models
-                        </button>
-                      </mat-menu>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="EntityType.ARTICLE">
+                      <div fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
+                        <div class="noc-article-title">
+                          {{node.data.title}}
+                        </div>
+                        <div class="noc-subtitle">
+                          <a (click)="$event.stopPropagation()" href="{{node.data.link}}" target="_blank">
+                            {{node.data.id}}
+                          </a>
+                        </div>
+                        <div class="noc-article-author" fxLayout="row" fxLayoutAlign="start center">
+                          <mat-icon class="s-16 mr-4">person</mat-icon> <span fxFlex="">{{node.data.author}}</span>
+                        </div>
+                        <div class="noc-article-date">
+                          <mat-icon class="s-16 mr-4">date_range</mat-icon> <span>{{node.data.date}}</span>
+                        </div>
+                      </div>
+                      <div class="noc-badge" (click)="openSearch(node.data)" fxLayout="row"
+                        fxLayoutAlign="center center">
+                        {{node.data.frequency}}
+                      </div>
                     </ng-container>
                   </ng-container>
                 </div>

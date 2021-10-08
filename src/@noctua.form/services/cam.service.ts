@@ -12,7 +12,7 @@ import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { Evidence, compareEvidence } from './../models/activity/evidence';
 import { Cam, CamStats } from './../models/activity/cam';
 import { differenceWith, each, find, groupBy, uniqWith } from 'lodash';
-import { ActivityNodeType, ActivityNode, compareActivity, Entity, CamLoadingIndicator, CamQueryMatch, ReloadType } from './../models/activity';
+import { ActivityNodeType, ActivityNode, compareActivity, Entity, CamLoadingIndicator, CamQueryMatch, ReloadType, TermsSummary } from './../models/activity';
 import { compareTerm } from './../models/activity/activity-node';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -153,6 +153,33 @@ export class CamService {
     });
 
     this.noctuaGraphService.getGraphInfo(cam, cam.id);
+  }
+
+  buildTermsTree(termsSummary: TermsSummary) {
+    const allTerms = [
+      termsSummary.mf,
+      termsSummary.bp,
+      termsSummary.cc,
+      termsSummary.gp,
+      termsSummary.other,
+      termsSummary.evidences,
+      termsSummary.evidenceEcos,
+      termsSummary.references,
+      termsSummary.withs,
+      termsSummary.papers
+    ]
+
+    const treeNodes = allTerms.map((camSummary) => {
+      return {
+        id: camSummary.label,
+        frequency: camSummary.frequency,
+        isCategory: true,
+        label: camSummary.label,
+        children: camSummary.getSortedNodes()
+      }
+    })
+
+    return treeNodes
   }
 
   getStoredModel(cam: Cam): Observable<any> {

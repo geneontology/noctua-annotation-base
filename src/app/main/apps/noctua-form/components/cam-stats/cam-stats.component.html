@@ -1,0 +1,46 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" class="noc-drawer h-100-p">
+  <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
+    <span class="noc-drawer-header-title">
+      Cam Details & Stats</span>
+    <span fxFlex></span>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close dialog">
+      <mat-icon>close</mat-icon> CLOSE
+    </button>
+  </div>
+  <div class="noc-drawer-body" noctuaPerfectScrollbar>
+    <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Number of terms by aspect
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+        <ngx-charts-bar-vertical-stacked [results]="stats.aspect" [view]="aspectOptions.view"
+          [scheme]="aspectOptions.colorScheme" [gradient]="aspectOptions.gradient" [xAxis]="aspectOptions.showXAxis"
+          [yAxis]="aspectOptions.showYAxis" [legend]="aspectOptions.legend"
+          [showXAxisLabel]="aspectOptions.showXAxisLabel" [showYAxisLabel]="aspectOptions.showYAxisLabel"
+          [xAxisLabel]="aspectOptions.xAxisLabel" [yAxisLabel]="aspectOptions.yAxisLabel"
+          [animations]="aspectOptions.animations" (select)="aspectOptions.onSelect($event)">
+        </ngx-charts-bar-vertical-stacked>
+      </div>
+    </div>
+    <div *ngFor="let pie of pies" class="noc-table-form noc-form-section" fxLayout="column"
+      fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Gene Product
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+        <ngx-charts-pie-chart [results]="pie" [view]="gpPieOptions.view" [scheme]="gpPieOptions.colorScheme"
+          [gradient]="gpPieOptions.gradient" [legend]="gpPieOptions.legend"
+          [legendPosition]="gpPieOptions.legendPosition" [labels]="gpPieOptions.showLabels"
+          [doughnut]="gpPieOptions.isDoughnut" (select)="gpPieOptions.onSelect($event)">
+        </ngx-charts-pie-chart>
+      </div>
+    </div>
+  </div>
+</div>

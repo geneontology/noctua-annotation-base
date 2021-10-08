@@ -88,8 +88,6 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
     this._unsubscribeAll = new Subject();
 
-
-
     this.route
       .queryParams
       .pipe(takeUntil(this._unsubscribeAll))
@@ -200,6 +198,10 @@ export class NoctuaFormComponent implements OnInit, OnDestroy {
 
   openTermsSummary() {
     this.noctuaFormMenuService.openLeftDrawer(LeftPanel.camTermsSummary);
+  }
+
+  openCamStats() {
+    this.noctuaFormMenuService.openLeftDrawer(LeftPanel.camStats);
   }
 
   openDuplicateCamForm() {

@@ -1,24 +1,19 @@
 import { Component, OnInit, OnDestroy, NgZone, Input, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ActivityNode, Article, Cam, CamLoadingIndicator, CamService, CamStats, CamSummary, EntityType, Evidence, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary } from 'noctua-form-base';
-import { NoctuaSearchService } from './../..//services/noctua-search.service';
-import { NoctuaSearchMenuService } from '../../services/search-menu.service';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { NoctuaReviewSearchService } from './../../services/noctua-review-search.service';
-import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
-import { MiddlePanel } from './../../models/menu-panels';
-import { NoctuaSearchDialogService } from './../../services/dialog.service';
+import { ActivityNode, Cam, CamService, CamSummary, EntityType, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary } from 'noctua-form-base';
+import { takeUntil } from 'rxjs/operators';
 import { MatDrawer } from '@angular/material/sidenav';
 import { SearchCriteria } from '@noctua.search/models/search-criteria';
 import { environment } from 'environments/environment';
+import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
+import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 
 @Component({
-  selector: 'noc-cam-terms',
-  templateUrl: './cam-terms.component.html',
-  styleUrls: ['./cam-terms.component.scss']
+  selector: 'noc-cam-stats',
+  templateUrl: './cam-stats.component.html',
+  styleUrls: ['./cam-stats.component.scss']
 })
-export class CamTermsComponent implements OnInit, OnDestroy {
-  MiddlePanel = MiddlePanel;
+export class CamStatsComponent implements OnInit, OnDestroy {
   EntityType = EntityType;
 
   @ViewChild('tree') tree;
@@ -32,14 +27,49 @@ export class CamTermsComponent implements OnInit, OnDestroy {
     mode: 'indeterminate'
   };
 
-  treeOptions = {
-    allowDrag: false,
-    allowDrop: false,
-    // levelPadding: 15,
-  };
+
+
+  // options
+
+  aspectOptions = {
+    view: [500, 200],
+    showXAxis: true,
+    showYAxis: true,
+    gradient: false,
+    legend: false,
+    showXAxisLabel: true,
+    xAxisLabel: 'Aspect',
+    showYAxisLabel: true,
+    yAxisLabel: 'Annotations',
+    animations: true,
+    legendPosition: 'below',
+    colorScheme: {
+      domain: ['#5AA454', '#C7B42C', '#AAAAAA']
+    }
+  }
+
+  gpPieOptions = {
+    view: [500, 200],
+    gradient: true,
+    legend: false,
+    showLabels: true,
+    isDoughnut: false,
+    colorScheme: {
+      domain: ['#5AA454', '#C7B42C', '#AAAAAA']
+    }
+  }
+
 
   private _unsubscribeAll: Subject<any>;
-  treeNodes
+  stats = {
+    aspect: [],
+    gpPie: [],
+    mfPie: [],
+    bpPie: [],
+    ccPie: []
+  }
+
+  pies = []
 
   constructor(
     private zone: NgZone,
@@ -47,11 +77,8 @@ export class CamTermsComponent implements OnInit, OnDestroy {
     private _noctuaGraphService: NoctuaGraphService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public camService: CamService,
-    private confirmDialogService: NoctuaConfirmDialogService,
-    public noctuaSearchDialogService: NoctuaSearchDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
-    public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaSearchService: NoctuaSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService) {
     this._unsubscribeAll = new Subject();
@@ -66,33 +93,13 @@ export class CamTermsComponent implements OnInit, OnDestroy {
         }
         this.cam = cam;
         this.termsSummary = this._noctuaGraphService.getTerms(this.cam.graph)
-        this.treeNodes = this.camService.buildTermsTree(this.termsSummary)
-        const pmids = this.termsSummary.papers.nodes.map((article: Article) => {
-          return Evidence.getReferenceNumber(article.id)
-        })
+        this.stats.aspect = this.buildTermsStats(this.termsSummary)
+        this.stats.gpPie = this.buildTermsPie(this.termsSummary.gp.nodes)
+        this.stats.mfPie = this.buildTermsPie(this.termsSummary.mf.nodes)
+        this.stats.bpPie = this.buildTermsPie(this.termsSummary.bp.nodes)
+        this.stats.ccPie = this.buildTermsPie(this.termsSummary.cc.nodes)
 
-        this.noctuaLookupService.addPubmedInfos(pmids)
-      });
-
-
-
-    this.noctuaLookupService.onArticleCacheReady
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((ready: boolean) => {
-        if (!ready) {
-          return;
-        }
-
-        this.termsSummary.papers.nodes.forEach((article: Article) => {
-          const cachedArticle = this.noctuaLookupService.articleCache[article.id]
-          if (cachedArticle) {
-            article.title = cachedArticle.title
-            article.link = cachedArticle.link
-            article.author = cachedArticle.author
-            article.date = cachedArticle.date
-          }
-        })
-
+        this.pies = [this.stats.gpPie, this.stats.mfPie, this.stats.bpPie, this.stats.ccPie]
       });
 
   }
@@ -100,6 +107,44 @@ export class CamTermsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
+  }
+
+  buildTermsStats(termsSummary: TermsSummary) {
+    const allTerms = [
+      termsSummary.mf,
+      termsSummary.bp,
+      termsSummary.cc,
+      termsSummary.gp,
+      termsSummary.other,
+    ]
+
+    const stats = allTerms.map((camSummary: CamSummary<ActivityNode>) => {
+
+      return {
+        name: camSummary.shorthand ? camSummary.shorthand : camSummary.label,
+        series: camSummary.getSortedNodes().map((node: ActivityNode) => {
+          return {
+            name: node.term.label,
+            value: node.frequency
+          }
+        })
+
+      }
+    })
+
+    return stats
+  }
+
+  buildTermsPie(nodes) {
+
+    const stats = nodes.map((node: ActivityNode) => {
+      return {
+        name: node.term.label,
+        value: node.frequency
+      }
+    })
+
+    return stats
   }
 
   openSearch(node) {
@@ -137,10 +182,6 @@ export class CamTermsComponent implements OnInit, OnDestroy {
     this.noctuaFormMenuService.openRightDrawer(RightPanel.termDetail);
   }
 
-
-  onTreeLoad() {
-    // this.tree.treeModel.expandAll();
-  }
 
   close() {
     this.panelDrawer.close();

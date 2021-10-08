@@ -3,7 +3,8 @@ export enum LeftPanel {
     camForm = 'camForm',
     findReplace = 'findReplace',
     duplicateCamForm = 'duplicateCamForm',
-    camTermsSummary = 'camTermsSummary'
+    camTermsSummary = 'camTermsSummary',
+    camStats = 'camStats'
 };
 
 export enum MiddlePanel {

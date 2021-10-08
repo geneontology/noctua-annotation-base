@@ -224,6 +224,13 @@ export class Evidence {
     return db + ':' + accession;
   }
 
+  public static getReferenceNumber(reference: string) {
+    const DBAccession = NoctuaFormUtils.splitAndAppend(reference, ':', 1);
+    const accession = DBAccession[1]?.trim();
+
+    return accession;
+  }
+
   public static checkReference(reference: string) {
     let result = false;
 
