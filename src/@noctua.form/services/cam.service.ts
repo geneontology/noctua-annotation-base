@@ -166,7 +166,8 @@ export class CamService {
       termsSummary.evidenceEcos,
       termsSummary.references,
       termsSummary.withs,
-      termsSummary.papers
+      termsSummary.papers,
+      termsSummary.contributors
     ]
 
     const treeNodes = allTerms.map((camSummary) => {

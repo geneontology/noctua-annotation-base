@@ -71,10 +71,8 @@ export class CamTermsComponent implements OnInit, OnDestroy {
           return Evidence.getReferenceNumber(article.id)
         })
 
-        this.noctuaLookupService.addPubmedInfos(pmids)
+        // this.noctuaLookupService.addPubmedInfos(pmids)
       });
-
-
 
     this.noctuaLookupService.onArticleCacheReady
       .pipe(takeUntil(this._unsubscribeAll))
@@ -92,9 +90,7 @@ export class CamTermsComponent implements OnInit, OnDestroy {
             article.date = cachedArticle.date
           }
         })
-
       });
-
   }
 
   ngOnDestroy(): void {
@@ -120,7 +116,7 @@ export class CamTermsComponent implements OnInit, OnDestroy {
   searchModels(node: ActivityNode) {
     const searchCriteria = new SearchCriteria()
     searchCriteria.terms = [node.term]
-    const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
+    const url = `${environment.noctuaUrl}?${searchCriteria.build()}`
     window.open(url, '_blank');
   }
 
@@ -128,7 +124,7 @@ export class CamTermsComponent implements OnInit, OnDestroy {
     const searchCriteria = new SearchCriteria()
     searchCriteria.terms = [node.term]
     searchCriteria.contributors = [this.noctuaUserService.user]
-    const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
+    const url = `${environment.noctuaUrl}?${searchCriteria.build()}`
     window.open(url, '_blank')
   }
 

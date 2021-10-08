@@ -22,6 +22,7 @@ import { Predicate } from './../models/activity/predicate';
 import { Triple } from './../models/activity/triple';
 import { TermsSummary } from './../models/activity/summary';
 import { Article } from './../models/article';
+import { Contributor, equalContributor } from '../models/contributor';
 
 declare const require: any;
 
@@ -578,6 +579,7 @@ export class NoctuaGraphService {
     const self = this;
     const evidences = []
     const frequency = {}
+    const contributors = []
 
     each(camGraph.all_edges(), (bbopEdge) => {
       const evidence = self.edgeToEvidence(camGraph, bbopEdge);
@@ -588,9 +590,15 @@ export class NoctuaGraphService {
         frequency['eco' + evidence.evidence.id] = frequency['eco' + evidence.evidence.id] ? frequency['eco' + evidence.evidence.id] + 1 : 1;
         frequency[evidence.referenceEntity.id] = frequency[evidence.referenceEntity.id] ? frequency[evidence.referenceEntity.id] + 1 : 1;
         frequency[evidence.withEntity.id] = frequency[evidence.withEntity.id] ? frequency[evidence.withEntity.id] + 1 : 1;
+        evidence.contributors.map((contributor: Contributor) => {
+          frequency[contributor.orcid] = frequency[contributor.orcid] ? frequency[contributor.orcid] + 1 : 1;
+          termsSummary.contributors.frequency++;
+          contributors.push(contributor)
+        });
 
         termsSummary.evidences.frequency++
         termsSummary.evidenceEcos.frequency++
+
 
         if (evidence.referenceEntity.id) {
           termsSummary.references.frequency++;
@@ -600,11 +608,9 @@ export class NoctuaGraphService {
           termsSummary.withs.frequency++;
         }
 
-
         if (evidence.referenceEntity?.label.trim().startsWith('PMID')) {
           termsSummary.papers.frequency++;
         }
-
 
       })
     });
@@ -623,6 +629,10 @@ export class NoctuaGraphService {
 
     const uniqueWith = chain(evidences)
       .uniqWith(compareEvidenceWith)
+      .value();
+
+    const uniqueContributors = chain(contributors)
+      .uniqWith(equalContributor)
       .value();
 
     each(uniqueEvidence, (evidence: Evidence) => {
@@ -646,6 +656,7 @@ export class NoctuaGraphService {
     })
 
 
+
     each(uniqueReference, (evidence: Evidence) => {
       if (evidence.referenceEntity && evidence.referenceEntity?.id.trim().startsWith('PMID')) {
         const article = new Article()
@@ -654,6 +665,12 @@ export class NoctuaGraphService {
         termsSummary.papers.append(article)
       }
     })
+
+    each(uniqueContributors, (contributor: Contributor) => {
+      contributor.frequency = frequency[contributor.orcid]
+      termsSummary.contributors.append(contributor)
+    })
+
 
   }
 

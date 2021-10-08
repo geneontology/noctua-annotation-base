@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy, NgZone, Input, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ActivityNode, Cam, CamService, CamSummary, EntityType, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary } from 'noctua-form-base';
+import { ActivityNode, Cam, CamService, CamSummary, Contributor, EntityType, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary } from 'noctua-form-base';
 import { takeUntil } from 'rxjs/operators';
 import { MatDrawer } from '@angular/material/sidenav';
 import { SearchCriteria } from '@noctua.search/models/search-criteria';
 import { environment } from 'environments/environment';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
+import { getColor } from '@noctua.common/data/noc-colors';
 
 @Component({
   selector: 'noc-cam-stats',
@@ -32,7 +33,7 @@ export class CamStatsComponent implements OnInit, OnDestroy {
   // options
 
   aspectOptions = {
-    view: [500, 200],
+    view: [400, 200],
     showXAxis: true,
     showYAxis: true,
     gradient: false,
@@ -44,29 +45,58 @@ export class CamStatsComponent implements OnInit, OnDestroy {
     animations: true,
     legendPosition: 'below',
     colorScheme: {
-      domain: ['#5AA454', '#C7B42C', '#AAAAAA']
-    }
+      domain: ['#AAAAAA']
+    },
+    customColors: []
   }
 
-  gpPieOptions = {
-    view: [500, 200],
+  aspectPieOptions = {
+    view: [400, 200],
     gradient: true,
     legend: false,
     showLabels: true,
     isDoughnut: false,
+    maxLabelLength: 20,
+    colorScheme: {
+      domain: [getColor('green', 500), getColor('brown', 500), getColor('purple', 500)]
+    },
+
+  }
+
+  gpPieOptions = {
+    view: [400, 200],
+    gradient: true,
+    legend: false,
+    showLabels: true,
+    isDoughnut: false,
+    maxLabelLength: 20,
     colorScheme: {
       domain: ['#5AA454', '#C7B42C', '#AAAAAA']
     }
   }
 
+  contributorBarOptions = {
+    view: [400, 300],
+    showXAxis: true,
+    showYAxis: true,
+    gradient: false,
+    legend: false,
+    showXAxisLabel: true,
+    maxYAxisTickLength: 25,
+    yAxisLabel: 'Contributor',
+    showYAxisLabel: true,
+    xAxisLabel: 'Statements',
+  }
 
   private _unsubscribeAll: Subject<any>;
   stats = {
     aspect: [],
+    aspectPie: [],
     gpPie: [],
     mfPie: [],
     bpPie: [],
-    ccPie: []
+    ccPie: [],
+    contributorBar: []
   }
 
   pies = []
@@ -94,12 +124,30 @@ export class CamStatsComponent implements OnInit, OnDestroy {
         this.cam = cam;
         this.termsSummary = this._noctuaGraphService.getTerms(this.cam.graph)
         this.stats.aspect = this.buildTermsStats(this.termsSummary)
+        this.stats.aspectPie = this.buildAspectPie([this.termsSummary.mf, this.termsSummary.bp, this.termsSummary.cc])
         this.stats.gpPie = this.buildTermsPie(this.termsSummary.gp.nodes)
         this.stats.mfPie = this.buildTermsPie(this.termsSummary.mf.nodes)
         this.stats.bpPie = this.buildTermsPie(this.termsSummary.bp.nodes)
         this.stats.ccPie = this.buildTermsPie(this.termsSummary.cc.nodes)
 
-        this.pies = [this.stats.gpPie, this.stats.mfPie, this.stats.bpPie, this.stats.ccPie]
+        this.stats.contributorBar = this.buildContributorBar(this.termsSummary.contributors.nodes)
+
+        this.pies = [{
+          label: 'Gene Product',
+          data: this.stats.gpPie
+        },
+        {
+          label: 'Molecular Function',
+          data: this.stats.mfPie
+        },
+        {
+          label: 'Biological Process',
+          data: this.stats.bpPie
+        },
+        {
+          label: 'Cellular Component',
+          data: this.stats.ccPie
+        }]
       });
 
   }
@@ -109,6 +157,8 @@ export class CamStatsComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
+
+
   buildTermsStats(termsSummary: TermsSummary) {
     const allTerms = [
       termsSummary.mf,
@@ -117,18 +167,40 @@ export class CamStatsComponent implements OnInit, OnDestroy {
       termsSummary.gp,
       termsSummary.other,
     ]
-
+    this.aspectOptions.customColors = []
     const stats = allTerms.map((camSummary: CamSummary<ActivityNode>) => {
-
       return {
         name: camSummary.shorthand ? camSummary.shorthand : camSummary.label,
         series: camSummary.getSortedNodes().map((node: ActivityNode) => {
+          let color = "#AAAAAA"
+          if (camSummary.shorthand === 'MF') {
+            color = getColor('green', 500)
+          } else if (camSummary.shorthand === 'BP') {
+            color = getColor('brown', 500)
+          } else if (camSummary.shorthand === 'CC') {
+            color = getColor('purple', 500)
+          } else if (camSummary.shorthand === 'GP') {
+            color = getColor('blue', 500)
+          }
+          this.aspectOptions.customColors.push({ name: node.term.label, value: color })
           return {
             name: node.term.label,
             value: node.frequency
           }
         })
 
+      }
+    })
+
+    return stats
+  }
+
+  buildAspectPie(summaryNodes) {
+
+    const stats = summaryNodes.map((node) => {
+      return {
+        name: node.label,
+        value: node.frequency
       }
     })
 
@@ -146,6 +218,18 @@ export class CamStatsComponent implements OnInit, OnDestroy {
 
     return stats
   }
+
+  buildContributorBar(nodes: Contributor[]): any[] {
+    const stats = nodes.map((node: Contributor) => {
+      return {
+        name: node.name,
+        value: node.frequency
+      }
+    })
+
+    return stats
+  }
+
 
   openSearch(node) {
     this.noctuaLookupService.getTermDetail(node.term.id)
@@ -165,7 +249,7 @@ export class CamStatsComponent implements OnInit, OnDestroy {
   searchModels(node: ActivityNode) {
     const searchCriteria = new SearchCriteria()
     searchCriteria.terms = [node.term]
-    const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
+    const url = `${environment.noctuaUrl}?${searchCriteria.build()}`
     window.open(url, '_blank');
   }
 
@@ -173,7 +257,7 @@ export class CamStatsComponent implements OnInit, OnDestroy {
     const searchCriteria = new SearchCriteria()
     searchCriteria.terms = [node.term]
     searchCriteria.contributors = [this.noctuaUserService.user]
-    const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
+    const url = `${environment.noctuaUrl}?${searchCriteria.build()}`
     window.open(url, '_blank')
   }
 

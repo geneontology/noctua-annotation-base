@@ -1,14 +1,12 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-drawer h-100-p">
-  <div class="noc-drawer-header" fxLayout="column" fxLayoutAlign="start stretch">
-    <div class="noc-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
-      <span class="noc-drawer-header-title">
-        Terms</span>
-      <span fxFlex></span>
-      <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
-        aria-label="Close dialog">
-        <mat-icon>close</mat-icon> CLOSE
-      </button>
-    </div>
+  <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
+    <span class="noc-drawer-header-title">
+      Terms</span>
+    <span fxFlex></span>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close dialog">
+      <mat-icon>close</mat-icon> CLOSE
+    </button>
   </div>
   <div class="noc-drawer-body" noctuaPerfectScrollbar>
     <div class="noc-tree-container">
@@ -115,6 +113,21 @@
                       </div>
                     </ng-container>
 
+                    <ng-container *ngSwitchCase="EntityType.CONTRIBUTOR">
+                      <div (click)="search(node.data)" class="noc-title">
+                        {{node.data.name}}
+                      </div>
+                      <span fxFlex=""></span>
+                      <div class="noc-badge" (click)="openSearch(node.data)" fxLayout="row"
+                        fxLayoutAlign="center center">
+                        {{node.data.frequency}}
+                      </div>
+                      <div class="noc-icon" (click)="openTermDetail(node.data)" fxLayout="row"
+                        fxLayoutAlign="center center">
+                        <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
+                      </div>
+                    </ng-container>
+
                     <ng-container *ngSwitchCase="EntityType.ARTICLE">
                       <div fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
                         <div class="noc-article-title">
@@ -145,13 +158,5 @@
         </tree-root>
       </div>
     </div>
-    <div class="noc-stats-results" fxLayout="column" fxLayoutAlign="start center">
-      <!--  <div *ngFor="let node of termsSummary.allTerms" class="">
-        {{node.term.label}}
-      </div> -->
-    </div>
-  </div>
-  <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
-
   </div>
 </div>

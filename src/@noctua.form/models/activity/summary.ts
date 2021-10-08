@@ -1,10 +1,11 @@
 import { orderBy } from "lodash";
 import { Article } from "../article";
+import { Contributor } from "../contributor";
 import { ActivityNode } from "./activity-node";
 import { Entity } from "./entity";
 import { Evidence } from "./evidence";
 
-export class CamSummary<T extends Entity | Evidence | ActivityNode | Article> {
+export class CamSummary<T extends Entity | Evidence | ActivityNode | Article | Contributor> {
   label: string
   shorthand: string
   count: number = 0;
@@ -45,6 +46,7 @@ export class TermsSummary {
   references = new CamSummary<Entity>('Reference');
   withs = new CamSummary<Entity>('With/From');
   papers = new CamSummary<Article>('PMID Papers');
+  contributors = new CamSummary<Contributor>('Contribution');
 
 
   allTerms: ActivityNode[] = []

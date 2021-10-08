@@ -12,7 +12,7 @@
     <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
-          Number of terms by aspect
+          Number of terms
         </div>
         <span fxFlex></span>
       </div>
@@ -22,24 +22,57 @@
           [yAxis]="aspectOptions.showYAxis" [legend]="aspectOptions.legend"
           [showXAxisLabel]="aspectOptions.showXAxisLabel" [showYAxisLabel]="aspectOptions.showYAxisLabel"
           [xAxisLabel]="aspectOptions.xAxisLabel" [yAxisLabel]="aspectOptions.yAxisLabel"
-          [animations]="aspectOptions.animations" (select)="aspectOptions.onSelect($event)">
+          [animations]="aspectOptions.animations" [customColors]="aspectOptions.customColors">
         </ngx-charts-bar-vertical-stacked>
+      </div>
+    </div>
+    <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Number of terms by aspect
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+        <ngx-charts-pie-chart [results]="stats.aspectPie" [view]="aspectPieOptions.view"
+          [scheme]="aspectPieOptions.colorScheme" [gradient]="aspectPieOptions.gradient"
+          [legend]="aspectPieOptions.legend" [maxLabelLength]="aspectPieOptions.maxLabelLength"
+          [labels]="aspectPieOptions.showLabels" [doughnut]="aspectPieOptions.isDoughnut">
+        </ngx-charts-pie-chart>
       </div>
     </div>
     <div *ngFor="let pie of pies" class="noc-table-form noc-form-section" fxLayout="column"
       fxLayoutAlign="start stretch">
       <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
-          Gene Product
+          pie.label
         </div>
         <span fxFlex></span>
       </div>
       <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-        <ngx-charts-pie-chart [results]="pie" [view]="gpPieOptions.view" [scheme]="gpPieOptions.colorScheme"
+        <ngx-charts-pie-chart [results]="pie.data" [view]="gpPieOptions.view" [scheme]="gpPieOptions.colorScheme"
           [gradient]="gpPieOptions.gradient" [legend]="gpPieOptions.legend"
-          [legendPosition]="gpPieOptions.legendPosition" [labels]="gpPieOptions.showLabels"
-          [doughnut]="gpPieOptions.isDoughnut" (select)="gpPieOptions.onSelect($event)">
+          [maxLabelLength]="gpPieOptions.maxLabelLength" [legendPosition]="gpPieOptions.legendPosition"
+          [labels]="gpPieOptions.showLabels" [doughnut]="gpPieOptions.isDoughnut">
         </ngx-charts-pie-chart>
+      </div>
+    </div>
+    <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Contribution
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+        <ngx-charts-bar-horizontal [results]="stats.contributorBar" [view]="contributorBarOptions.view"
+          [gradient]="contributorBarOptions.gradient" [xAxis]="contributorBarOptions.showXAxis"
+          [yAxis]="contributorBarOptions.showYAxis" [legend]="contributorBarOptions.legend"
+          [showXAxisLabel]="contributorBarOptions.showXAxisLabel"
+          [maxYAxisTickLength]="contributorBarOptions.maxYAxisTickLength"
+          [showYAxisLabel]="contributorBarOptions.showYAxisLabel" [xAxisLabel]="contributorBarOptions.xAxisLabel"
+          [yAxisLabel]="contributorBarOptions.yAxisLabel">
+        </ngx-charts-bar-horizontal>
       </div>
     </div>
   </div>

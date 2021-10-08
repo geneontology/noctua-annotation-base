@@ -102,7 +102,7 @@ export class TermDetailComponent implements OnInit, OnDestroy {
   searchModels(node: ActivityNode) {
     const searchCriteria = new SearchCriteria()
     searchCriteria.terms = [node.term]
-    const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
+    const url = `${environment.noctuaUrl}?${searchCriteria.build()}`
     console.log(url)
     window.open(url, '_blank');
   }
@@ -111,7 +111,7 @@ export class TermDetailComponent implements OnInit, OnDestroy {
     const searchCriteria = new SearchCriteria()
     searchCriteria.terms = [node.term]
     searchCriteria.contributors = [this.noctuaUserService.user]
-    const url = `${environment.noctuaTempUrl}?${searchCriteria.build()}`
+    const url = `${environment.noctuaUrl}?${searchCriteria.build()}`
     console.log(url)
     window.open(url, '_blank')
 

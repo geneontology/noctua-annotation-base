@@ -3,11 +3,16 @@ import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
 
 
+
+
+
+
 export enum EntityType {
   ACTIVITY_NODE = 'activity_node',
   EVIDENCE = 'evidence',
   ENTITY = "entity",
-  ARTICLE = "article"
+  ARTICLE = "article",
+  CONTRIBUTOR = "contributor"
 }
 
 export interface EntityBase {

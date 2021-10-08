@@ -22,19 +22,11 @@ $accent: map-get($theme, accent);
     @include deep-width(380px);
 
     .noc-drawer-header {
-      padding: 0;
-      @include deep-height(40px);
+      padding: 0 12px;
+      @include deep-height(30px);
       background-color: #fff;
       @include mat-elevation(2);
       z-index: 1000;
-
-      .noc-header {
-        padding: 0 12px;
-        @include deep-height(40px);
-        border-bottom: #bbb solid 1px;
-        @include mat-elevation(2);
-        background-color: #fff;
-      }
 
       .noc-drawer-header-title {
         font-size: 14px;
@@ -44,7 +36,7 @@ $accent: map-get($theme, accent);
 
     .noc-drawer-body {
       padding: 24px 8 100px 0;
-      min-height: calc(100% - 330px);
+      min-height: calc(100% - 30px);
     }
   }
 
