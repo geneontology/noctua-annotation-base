@@ -28,6 +28,8 @@ $accent: map-get($theme, accent);
     .noc-tab-bar {
       @include deep-height(30px);
       .noc-tab-button {
+        min-width: 20px;
+        padding: 0 8px;
         &.noc-active {
           border-bottom: $noc-primary-color solid 5px;
         }
@@ -36,7 +38,7 @@ $accent: map-get($theme, accent);
 
     .noc-drawer-body {
       padding: 24px 8 100px 0;
-      min-height: calc(100% - 60px);
+      min-height: calc(100% - 65px);
     }
   }
 

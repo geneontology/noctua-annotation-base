@@ -11,11 +11,14 @@ import { getColor } from '@noctua.common/data/noc-colors';
 import { orderBy } from 'lodash';
 
 enum StatsType {
-  GENERAL = 'GENERAL',
+  GENERAL = 'general',
   GP = "GP",
   MF = 'MF',
   BP = "BP",
-  CC = "CC"
+  CC = "CC",
+  TERM = 'term',
+  CONTRIBUTION = "contribution",
+  STATEMENT = "statement"
 }
 
 @Component({
@@ -47,14 +50,14 @@ export class CamStatsComponent implements OnInit, OnDestroy {
       name: StatsType.GP,
       label: 'GP'
     }, {
-      name: StatsType.MF,
-      label: 'MF'
+      name: StatsType.TERM,
+      label: 'Terms'
     }, {
-      name: StatsType.BP,
-      label: 'BP'
+      name: StatsType.STATEMENT,
+      label: 'Statements'
     }, {
-      name: StatsType.CC,
-      label: 'CC'
+      name: StatsType.CONTRIBUTION,
+      label: 'Contribution'
     }
   ]
 

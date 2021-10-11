@@ -32,12 +32,16 @@ export class AspectStatsComponent implements OnInit, OnDestroy {
 
 
   stats = {
-    aspectPie: [],
+    gpPie: [],
+    mfPie: [],
+    bpPie: [],
+    ccPie: [],
   }
 
 
 
   private _unsubscribeAll: Subject<any>;
+  pies: { label: string; data: any[]; }[];
 
   constructor(
     private _camStatsService: CamStatsService,
@@ -48,24 +52,27 @@ export class AspectStatsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.stats.aspectPie = this._camStatsService.buildTermsPie(this.termsSummary[this.aspect]?.nodes)
+    this.stats.gpPie = this._camStatsService.buildTermsPie(this.termsSummary.gp.nodes)
+    this.stats.mfPie = this._camStatsService.buildTermsPie(this.termsSummary.mf.nodes)
+    this.stats.bpPie = this._camStatsService.buildTermsPie(this.termsSummary.bp.nodes)
+    this.stats.ccPie = this._camStatsService.buildTermsPie(this.termsSummary.cc.nodes)
 
-    /*  this.pies = [{
-       label: 'Gene Product',
-       data: this.stats.gpPie
-     },
-     {
-       label: 'Molecular Function',
-       data: this.stats.mfPie
-     },
-     {
-       label: 'Biological Process',
-       data: this.stats.bpPie
-     },
-     {
-       label: 'Cellular Component',
-       data: this.stats.ccPie
-     }] */
+    this.pies = [{
+      label: 'Gene Product',
+      data: this.stats.gpPie
+    },
+    {
+      label: 'Molecular Function',
+      data: this.stats.mfPie
+    },
+    {
+      label: 'Biological Process',
+      data: this.stats.bpPie
+    },
+    {
+      label: 'Cellular Component',
+      data: this.stats.ccPie
+    }]
   }
 
   ngOnDestroy(): void {
