@@ -31,6 +31,7 @@ export class Evidence {
   pendingWithChanges: PendingChange;
   frequency: number;
   date: string;
+  formattedDate: string
 
   constructor() {
 
@@ -270,4 +271,8 @@ export function compareEvidenceReference(a: Evidence, b: Evidence) {
 
 export function compareEvidenceWith(a: Evidence, b: Evidence) {
   return a.with === b.with;
+}
+
+export function compareEvidenceDate(a: Evidence, b: Evidence) {
+  return a.date === b.date;
 }

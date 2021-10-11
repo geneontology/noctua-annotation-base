@@ -17,12 +17,13 @@ import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { ActivityNode, ActivityNodeType, compareTerm } from './../models/activity/activity-node';
 import { Cam, CamLoadingIndicator, CamOperation } from './../models/activity/cam';
 import { Entity } from './../models/activity/entity';
-import { compareEvidence, compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence } from './../models/activity/evidence';
+import { compareEvidence, compareEvidenceDate, compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence } from './../models/activity/evidence';
 import { Predicate } from './../models/activity/predicate';
 import { Triple } from './../models/activity/triple';
 import { TermsSummary } from './../models/activity/summary';
 import { Article } from './../models/article';
 import { Contributor, equalContributor } from '../models/contributor';
+import * as moment from 'moment';
 
 declare const require: any;
 
@@ -469,7 +470,10 @@ export class NoctuaGraphService {
         const contributorAnnotations = annotationNode.get_annotations_by_key('contributor');
         const groupAnnotations = annotationNode.get_annotations_by_key('providedBy');
 
-        evidence.date = self.getNodeDate(annotationNode);
+        const date = self.getNodeDate(annotationNode);
+        const formattedDate = (moment as any)(date, 'YYYY-MM-DD')
+        evidence.date = date
+        evidence.formattedDate = formattedDate.format('ll');
 
         if (sources.length > 0) {
           const sorted = sources.sort(self._compareSources)
@@ -579,11 +583,10 @@ export class NoctuaGraphService {
 
   addSummaryEvidences(camGraph, termsSummary: TermsSummary) {
     const self = this;
-    const evidences = [];
+    const evidences: Evidence[] = [];
     const frequency = {};
     const contributors = [];
-    const relations = [];
-    const dates = [];
+    const relations: string[] = [];
 
     each(camGraph.all_edges(), (bbopEdge) => {
       const bbopPredicateId = bbopEdge.predicate_id();
@@ -595,9 +598,9 @@ export class NoctuaGraphService {
 
       evidence.forEach((evidence: Evidence) => {
         evidences.push(evidence)
-        dates.push(evidence.date)
+        const evidenceHash = evidence.evidence.id + evidence.referenceEntity.id + evidence.withEntity.id
         frequency[evidence.evidence.id] = frequency[evidence.evidence.id] ? frequency[evidence.evidence.id] + 1 : 1;
-        frequency['eco' + evidence.evidence.id] = frequency['eco' + evidence.evidence.id] ? frequency['eco' + evidence.evidence.id] + 1 : 1;
+        frequency[evidenceHash] = frequency[evidenceHash] ? frequency[evidenceHash] + 1 : 1;
         frequency[evidence.referenceEntity.id] = frequency[evidence.referenceEntity.id] ? frequency[evidence.referenceEntity.id] + 1 : 1;
         frequency[evidence.withEntity.id] = frequency[evidence.withEntity.id] ? frequency[evidence.withEntity.id] + 1 : 1;
         frequency[evidence.date] = frequency[evidence.date] ? frequency[evidence.date] + 1 : 1;
@@ -627,7 +630,10 @@ export class NoctuaGraphService {
     });
 
     const uniqueRelations = uniq(relations)
-    const uniqueDates = uniq(dates)
+
+    const uniqueDates = chain(evidences)
+      .uniqWith(compareEvidenceDate)
+      .value();
 
     const uniqueEvidence = chain(evidences)
       .uniqWith(compareEvidence)
@@ -649,9 +655,9 @@ export class NoctuaGraphService {
       .uniqWith(equalContributor)
       .value();
 
-    each(uniqueDates, (date: string) => {
-      const dateEntity = new Entity(date, date)
-      dateEntity.frequency = frequency[date]
+    each(uniqueDates, (evidence: Evidence) => {
+      const dateEntity = new Entity(evidence.date, evidence.formattedDate)
+      dateEntity.frequency = frequency[evidence.date]
       termsSummary.dates.append(dateEntity)
     })
 
@@ -662,12 +668,13 @@ export class NoctuaGraphService {
     })
 
     each(uniqueEvidence, (evidence: Evidence) => {
-      evidence.frequency = frequency[evidence.evidence.id]
+      const evidenceHash = evidence.evidence.id + evidence.referenceEntity.id + evidence.withEntity.id
+      evidence.frequency = frequency[evidenceHash]
       termsSummary.evidences.append(evidence)
     })
 
     each(uniqueEvidenceEco, (evidence: Evidence) => {
-      evidence.evidence.frequency = frequency['eco' + evidence.evidence.id]
+      evidence.evidence.frequency = frequency[evidence.evidence.id]
       termsSummary.evidenceEcos.append(evidence.evidence)
     })
 
@@ -694,9 +701,8 @@ export class NoctuaGraphService {
       contributor.frequency = frequency[contributor.orcid]
       termsSummary.contributors.append(contributor)
     })
-
-
   }
+
 
 
 

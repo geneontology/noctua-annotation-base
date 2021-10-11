@@ -67,6 +67,8 @@ import { ResizableModule } from 'angular-resizable-element';
 import { NoctuaTermDetailComponent } from './components/term-detail/term-detail.component';
 import { CamStatsComponent } from './components/cam-stats/cam-stats.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { GeneralStatsComponent } from './components/cam-stats/general-stats/general-stats.component';
+import { AspectStatsComponent } from './components/cam-stats/aspect-stats/aspect-stats.component';
 
 const routes = [
   {
@@ -182,7 +184,9 @@ const routes = [
     SelectEvidenceComponent,
     PreviewActivityComponent,
     NoctuaTermDetailComponent,
-    CamStatsComponent
+    CamStatsComponent,
+    AspectStatsComponent,
+    GeneralStatsComponent
   ],
 })
 

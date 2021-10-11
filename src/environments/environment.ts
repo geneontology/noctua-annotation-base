@@ -44,7 +44,7 @@ const globalKnownRelations = typeof global_known_relations !== 'undefined'
   : enviromnenetData.globalKnownRelations;
 
 export const environment = {
-  noctuaTempUrl: 'http://localhost:8910/workbench/noctua-landing-page',
+  // noctuaTempUrl: 'http://localhost:8910/workbench/noctua-landing-page',
   production: false,
   isDev: true,
   isBeta: true,

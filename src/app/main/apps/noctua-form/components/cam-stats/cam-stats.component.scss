@@ -10,7 +10,7 @@ $accent: map-get($theme, accent);
   @include mat-elevation(4);
 
   .noc-drawer {
-    @include deep-width(500px);
+    @include deep-width(420px);
 
     .noc-drawer-header {
       padding: 0 12px;
@@ -25,9 +25,18 @@ $accent: map-get($theme, accent);
       }
     }
 
+    .noc-tab-bar {
+      @include deep-height(30px);
+      .noc-tab-button {
+        &.noc-active {
+          border-bottom: $noc-primary-color solid 5px;
+        }
+      }
+    }
+
     .noc-drawer-body {
       padding: 24px 8 100px 0;
-      min-height: calc(100% - 30px);
+      min-height: calc(100% - 60px);
     }
   }
 
