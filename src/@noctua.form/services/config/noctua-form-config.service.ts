@@ -159,7 +159,6 @@ export class NoctuaFormConfigService {
     const options = [
       noctuaFormConfig.mechanism.options.known,
       noctuaFormConfig.mechanism.options.unknown,
-      noctuaFormConfig.mechanism.options.inputFor,
     ];
 
     return {

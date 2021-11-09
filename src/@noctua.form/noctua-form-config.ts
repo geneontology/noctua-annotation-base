@@ -228,16 +228,12 @@ export const noctuaFormConfig = {
     'options': {
       'known': {
         'name': 'known',
-        'label': 'Known(regulatory)',
+        'label': 'Direct',
       },
       'unknown': {
         'name': 'unknown',
-        'label': 'Unknown/Indirect',
-      },
-      'inputFor': {
-        'name': 'inputFor',
-        'label': 'Provides Input For'
-      },
+        'label': 'Indirect/Unknown',
+      }
     }
   },
   'displaySection': {

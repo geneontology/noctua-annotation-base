@@ -30,3 +30,20 @@
     </ngx-charts-pie-chart>
   </div>
 </div>
+
+<div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+  <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+    <div class="noc-section-heading">
+      Terms Distribution (first 20)
+    </div>
+    <span fxFlex></span>
+  </div>
+  <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
+    <ngx-charts-bar-horizontal [results]="stats.termsBar" [view]="termsBarOptions.view"
+      [gradient]="termsBarOptions.gradient" [xAxis]="termsBarOptions.showXAxis" [yAxis]="termsBarOptions.showYAxis"
+      [legend]="termsBarOptions.legend" [showXAxisLabel]="termsBarOptions.showXAxisLabel"
+      [maxYAxisTickLength]="termsBarOptions.maxYAxisTickLength" [showYAxisLabel]="termsBarOptions.showYAxisLabel"
+      [xAxisLabel]="termsBarOptions.xAxisLabel" [yAxisLabel]="termsBarOptions.yAxisLabel">
+    </ngx-charts-bar-horizontal>
+  </div>
+</div>

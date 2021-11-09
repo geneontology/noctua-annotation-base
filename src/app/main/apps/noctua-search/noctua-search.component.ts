@@ -29,7 +29,7 @@ import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
   templateUrl: './noctua-search.component.html',
   styleUrls: ['./noctua-search.component.scss'],
   // encapsulation: ViewEncapsulation.None,
-  animations: noctuaAnimations
+  animations: noctuaAnimations,
 })
 export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 

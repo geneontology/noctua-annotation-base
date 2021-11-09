@@ -168,7 +168,6 @@ export class NoctuaGraphService {
       cam.graph.merge_special(inGraph);
     } else {
       cam.graph = new noctua_graph();
-
       cam.graph.load_data_basic(response.data());
     }
 
@@ -561,12 +560,16 @@ export class NoctuaGraphService {
       node.frequency = frequency[node.term.id]
 
       if (node.hasRootType(EntityDefinition.GoMolecularEntity)) {
+        node.type = ActivityNodeType.GoMolecularEntity
         termsSummary.gp.append(node)
       } else if (node.hasRootType(EntityDefinition.GoMolecularFunction)) {
+        node.type = ActivityNodeType.GoMolecularFunction
         termsSummary.mf.append(node)
       } else if (node.hasRootType(EntityDefinition.GoBiologicalProcess)) {
+        node.type = ActivityNodeType.GoBiologicalProcess
         termsSummary.bp.append(node)
       } else if (node.hasRootType(EntityDefinition.GoCellularComponent)) {
+        node.type = ActivityNodeType.GoCellularComponent
         termsSummary.cc.append(node)
       } else if (node.hasRootType(EntityDefinition.GoEvidenceNode)) {
         // continue

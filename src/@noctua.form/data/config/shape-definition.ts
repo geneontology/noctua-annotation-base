@@ -397,8 +397,7 @@ export const canInsertEntity = {
             node: <ActivityNodeDisplay>{
                 category: [
                     EntityDefinition.GoBiologicalProcess,
-                    EntityDefinition.WormLifeStage,
-                    EntityDefinition.ZebrafishStage,
+                    EntityDefinition.UberonStage,
                 ],
                 type: ActivityNodeType.BPPhaseStageExistenceOverlaps,
                 label: 'existence overlaps (BP/Phase/Stage)',
@@ -417,8 +416,7 @@ export const canInsertEntity = {
             node: <ActivityNodeDisplay>{
                 category: [
                     EntityDefinition.GoBiologicalProcess,
-                    EntityDefinition.WormLifeStage,
-                    EntityDefinition.ZebrafishStage,
+                    EntityDefinition.UberonStage
                 ],
                 type: ActivityNodeType.BPPhaseStageExistenceStartsEnds,
                 label: 'Add Existence Starts and Ends During (BP/Phase/Stage)',

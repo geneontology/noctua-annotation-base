@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { getColor } from '@noctua.common/data/noc-colors';
-import { Cam, CamStatsService, NoctuaGraphService, NoctuaLookupService, TermsSummary } from '@noctua.form';
+import { ActivityNode, ActivityNodeType, Cam, CamStatsService, NoctuaGraphService, NoctuaLookupService, TermsSummary } from '@noctua.form';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -14,7 +14,7 @@ export class GeneralStatsComponent implements OnInit, OnDestroy {
   termsSummary: TermsSummary;
 
   aspectOptions = {
-    view: [400, 200],
+    view: [500, 200],
     showXAxis: true,
     showYAxis: true,
     gradient: false,
@@ -32,7 +32,7 @@ export class GeneralStatsComponent implements OnInit, OnDestroy {
   }
 
   aspectPieOptions = {
-    view: [400, 200],
+    view: [500, 200],
     gradient: true,
     legend: false,
     showLabels: true,
@@ -44,78 +44,29 @@ export class GeneralStatsComponent implements OnInit, OnDestroy {
 
   }
 
-  gpPieOptions = {
-    view: [400, 200],
-    gradient: true,
-    legend: false,
-    showLabels: true,
-    isDoughnut: false,
-    maxLabelLength: 20,
-    colorScheme: {
-      domain: ['#5AA454', '#C7B42C', '#AAAAAA']
-    }
-  }
-
-  relationsBarOptions = {
-    view: [400, 400],
+  termsBarOptions = {
+    view: [500, 400],
     showXAxis: true,
     showYAxis: true,
     gradient: false,
     legend: false,
     showXAxisLabel: true,
-    maxYAxisTickLength: 20,
-    yAxisLabel: 'Relation',
+    maxYAxisTickLength: 30,
+    yAxisLabel: 'Terms',
     showYAxisLabel: true,
     xAxisLabel: 'Count',
-  }
-
-  contributorBarOptions = {
-    view: [400, 300],
-    showXAxis: true,
-    showYAxis: true,
-    gradient: false,
-    legend: false,
-    showXAxisLabel: true,
-    maxYAxisTickLength: 25,
-    yAxisLabel: 'Contributor',
-    showYAxisLabel: true,
-    xAxisLabel: 'Number of Statements',
-  }
-
-  datesLineOptions = {
-    view: [400, 400],
-    legend: false,
-    legendPosition: 'below',
-    showLabels: true,
-    animations: true,
-    xAxis: true,
-    yAxis: true,
-    showYAxisLabel: true,
-    showXAxisLabel: true,
-    xAxisLabel: 'Curated Statements',
-    yAxisLabel: 'Statements',
-    timeline: true,
   }
 
   stats = {
     aspect: [],
     aspectPie: [],
-    gpPie: [],
-    mfPie: [],
-    bpPie: [],
-    ccPie: [],
-    contributorBar: [],
-    relationsBar: [],
-    datesLine: []
+    termsBar: [],
   }
-
-
 
   private _unsubscribeAll: Subject<any>;
 
   constructor(
     private _camStatsService: CamStatsService,
-    private _noctuaGraphService: NoctuaGraphService
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -124,35 +75,37 @@ export class GeneralStatsComponent implements OnInit, OnDestroy {
 
     this.stats.aspect = this._camStatsService.buildTermsStats(this.termsSummary)
     this.stats.aspectPie = this._camStatsService.buildAspectPie([this.termsSummary.mf, this.termsSummary.bp, this.termsSummary.cc])
-    this.stats.gpPie = this._camStatsService.buildTermsPie(this.termsSummary.gp.nodes)
-    this.stats.mfPie = this._camStatsService.buildTermsPie(this.termsSummary.mf.nodes)
-    this.stats.bpPie = this._camStatsService.buildTermsPie(this.termsSummary.bp.nodes)
-    this.stats.ccPie = this._camStatsService.buildTermsPie(this.termsSummary.cc.nodes)
-    this.stats.relationsBar = this._camStatsService.buildRelationsPie(this.termsSummary.relations.nodes)
-    this.stats.datesLine = this._camStatsService.buildContributionsStats(this.termsSummary.dates.nodes)
-    this.stats.contributorBar = this._camStatsService.buildContributorBar(this.termsSummary.contributors.nodes)
+    this.stats.termsBar = this._camStatsService.buildTermsDistribution([
+      this.termsSummary.mf,
+      this.termsSummary.bp,
+      this.termsSummary.cc,
+      this.termsSummary.other]
+    )
 
-    /*  this.pies = [{
-       label: 'Gene Product',
-       data: this.stats.gpPie
-     },
-     {
-       label: 'Molecular Function',
-       data: this.stats.mfPie
-     },
-     {
-       label: 'Biological Process',
-       data: this.stats.bpPie
-     },
-     {
-       label: 'Cellular Component',
-       data: this.stats.ccPie
-     }] */
+    //this.getCustomColors(this.stats.termsBar)
   }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
+  }
+
+  getCustomColors(nodes) {
+    const customColors = nodes.map((node: ActivityNode) => {
+      let color = "#AAAAAA"
+      if (node.type = ActivityNodeType.GoMolecularEntity) {
+        color = getColor('blue', 500)
+      } else if (node.type = ActivityNodeType.GoMolecularFunction) {
+        color = getColor('brown', 500)
+      } else if (node.type = ActivityNodeType.GoBiologicalProcess) {
+        color = getColor('purple', 500)
+      } else if (node.type = ActivityNodeType.GoCellularComponent) {
+        color = getColor('green', 500)
+      }
+      return { name: node.term.label, value: color }
+    });
+
+    return customColors;
   }
 
 }

@@ -17,13 +17,13 @@ export class StatementStatsComponent implements OnInit, OnDestroy {
 
 
   relationsBarOptions = {
-    view: [400, 400],
+    view: [500, 400],
     showXAxis: true,
     showYAxis: true,
     gradient: false,
     legend: false,
     showXAxisLabel: true,
-    maxYAxisTickLength: 20,
+    maxYAxisTickLength: 30,
     yAxisLabel: 'Relation',
     showYAxisLabel: true,
     xAxisLabel: 'Count',
@@ -31,7 +31,7 @@ export class StatementStatsComponent implements OnInit, OnDestroy {
 
 
   datesLineOptions = {
-    view: [400, 400],
+    view: [500, 400],
     legend: false,
     legendPosition: 'below',
     showLabels: true,

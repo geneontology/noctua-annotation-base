@@ -6,7 +6,7 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each, uniqWith, difference } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
-import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence } from './../models/activity/evidence';
+import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence, EvidenceExt } from './../models/activity/evidence';
 import { Group } from './../models/group';
 import { ActivityNode, ActivityNodeType } from './../models/activity/activity-node';
 import { Entity } from './../models/activity/entity';
@@ -229,6 +229,25 @@ export class NoctuaLookupService {
           activityNode = find(result, (srcActivityNode: ActivityNode) => {
             return srcActivityNode.getTerm().id === doc.annotation_class;
           });
+
+          if (doc.annotation_extension_json) {
+            try {
+              const extJson = JSON.parse(doc.annotation_extension_json);
+              console.log(extJson)
+
+              if (extJson.relationship && extJson.relationship.relation) {
+                evidence.evidenceExt = new EvidenceExt();
+                evidence.evidenceExt.term = new Entity(extJson.relationship.id, extJson.relationship.label)
+                extJson.relationship.relation.forEach(relation => {
+                  evidence.evidenceExt.relations.push(new Entity(relation.id, relation.label))
+                });
+              }
+
+
+            } catch (e) {
+              console.log(e, activityNode, doc.annotation_extension_json); // error in the above string (in this case, yes)!
+            }
+          }
 
           if (activityNode) {
             activityNode.predicate.addEvidence(evidence);

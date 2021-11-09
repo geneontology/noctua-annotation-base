@@ -16,7 +16,7 @@ export class ContributionStatsComponent implements OnInit, OnDestroy {
   aspect: string;
 
   contributorBarOptions = {
-    view: [400, 300],
+    view: [500, 300],
     showXAxis: true,
     showYAxis: true,
     gradient: false,
@@ -35,8 +35,7 @@ export class ContributionStatsComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
-    private _camStatsService: CamStatsService,
-    private _noctuaGraphService: NoctuaGraphService
+    private _camStatsService: CamStatsService
   ) {
     this._unsubscribeAll = new Subject();
   }

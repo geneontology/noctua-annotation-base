@@ -18,6 +18,7 @@
   <div *ngIf="termsSummary" class="noc-drawer-body" noctuaPerfectScrollbar>
     <div [ngSwitch]="selectedStatsType">
       <noc-general-stats *ngSwitchCase="StatsType.GENERAL" [termsSummary]="termsSummary"></noc-general-stats>
+      <noc-gp-stats *ngSwitchCase="StatsType.GP" [termsSummary]="termsSummary"></noc-gp-stats>
       <noc-aspect-stats *ngSwitchCase="StatsType.TERM" [termsSummary]="termsSummary"></noc-aspect-stats>
       <noc-statement-stats *ngSwitchCase="StatsType.STATEMENT" [termsSummary]="termsSummary"></noc-statement-stats>
       <noc-contribution-stats *ngSwitchCase="StatsType.CONTRIBUTION" [termsSummary]="termsSummary">

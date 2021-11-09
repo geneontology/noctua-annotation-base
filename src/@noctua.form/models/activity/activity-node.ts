@@ -32,6 +32,22 @@ export interface GoCategory {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export enum ActivityNodeType {
 
   GoCellularComponent = 'GoCellularComponent',
@@ -55,7 +71,8 @@ export enum ActivityNodeType {
   // evidence
   GoEvidence = 'GoEvidence',
   BPPhaseStageExistenceOverlaps = "BPPhaseStageExistenceOverlaps",
-  BPPhaseStageExistenceStartsEnds = "BPPhaseStageExistenceStartsEnds"
+  BPPhaseStageExistenceStartsEnds = "BPPhaseStageExistenceStartsEnds",
+  UberonStage = "UberonStage"
 }
 
 export interface ActivityNodeDisplay {

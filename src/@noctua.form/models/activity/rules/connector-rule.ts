@@ -8,11 +8,6 @@ export class ConnectorRule {
     'Do you know the mechanism for how the upstream activity affects the downstream activity?');
   effectDirection = new DirectionRule('effectDirection', 'Direction of Effect?');
 
-  notes = [
-    this.mechanism,
-    this.effectDirection
-  ];
-
   displaySection = {
     mechanism: true,
     causalEffect: true,

@@ -102,9 +102,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       }
     }
 
-    if (mechanism.name === noctuaFormConfig.mechanism.options.inputFor.name) {
-      edge = noctuaFormConfig.edge.directlyProvidesInput;
-    }
 
     return Entity.createEntity(edge);
   }
@@ -118,9 +115,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
       case noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id:
         mechanism = noctuaFormConfig.mechanism.options.unknown;
-        break;
-      case noctuaFormConfig.edge.directlyProvidesInput.id:
-        mechanism = noctuaFormConfig.mechanism.options.inputFor;
         break;
     }
     switch (edge.id) {

@@ -10,6 +10,11 @@ import { Group } from "../group";
 import { PendingChange } from "./pending-change";
 import { NoctuaFormUtils } from "../../utils/noctua-form-utils";
 
+export class EvidenceExt {
+  term: Entity;
+  relations: Entity[] = [];
+}
+
 export class Evidence {
   entityType = EntityType.EVIDENCE;
   edge: Entity;
@@ -32,6 +37,8 @@ export class Evidence {
   frequency: number;
   date: string;
   formattedDate: string
+  evidenceExt: EvidenceExt;
+
 
   constructor() {
 

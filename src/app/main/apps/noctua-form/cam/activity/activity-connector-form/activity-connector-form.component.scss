@@ -16,7 +16,6 @@ $accent: map-get($theme, accent);
   .noc-connector-form {
     width: 600px;
     background-color: #fff;
-    padding-bottom: 300px;
   }
 
   .noc-form-section {
@@ -85,12 +84,12 @@ $accent: map-get($theme, accent);
   }
 
   .noc-graph-preview {
-    height: 400px;
+    height: 200px;
     width: 100%;
   }
 
   .noc-connector-form-notes {
-    width: 416px;
+    width: 100%;
     background-color: rgba($noc-primary-color-lighter, 0.6);
 
     .noc-form-section {

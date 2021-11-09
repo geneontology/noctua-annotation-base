@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { NoctuaFormConfigService } from './../services/config/noctua-form-config.service';
-import { ActivityNode, Entity, TermsSummary, CamSummary } from './../models/activity';
+import { ActivityNode, Entity, TermsSummary, CamSummary, ActivityNodeType } from './../models/activity';
 import { orderBy } from 'lodash';
 import { Contributor } from './../models/contributor';
 
@@ -13,12 +12,7 @@ export class CamStatsService {
 
   constructor(
     public noctuaFormConfigService: NoctuaFormConfigService) {
-
-
   }
-
-
-
 
   buildTermsStats(termsSummary: TermsSummary) {
     const allTerms = [
@@ -40,6 +34,23 @@ export class CamStatsService {
           }
         })
 
+      }
+    })
+
+    return stats
+  }
+
+  buildTermsDistribution(summaries: CamSummary<ActivityNode>[]) {
+    const terms = summaries.reduce((acc, c) => {
+      acc.push(...c.nodes)
+      return acc
+    }, [])
+
+    const sorted = orderBy(terms, ['frequency'], ['desc']).slice(0, 20)
+    const stats = sorted.map((node: ActivityNode) => {
+      return {
+        name: node.term.label,
+        value: node.frequency
       }
     })
 
@@ -114,4 +125,5 @@ export class CamStatsService {
 
     return stats
   }
+
 }

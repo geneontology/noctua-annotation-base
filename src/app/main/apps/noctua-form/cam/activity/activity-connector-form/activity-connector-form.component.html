@@ -70,24 +70,6 @@
                 </div>
               </div>
             </div>
-            <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section noc-bt w-100-p">
-              <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-                <div class="noc-section-heading">
-                  Notes
-                </div>
-              </div>
-              <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-                <div class="noc-note" [ngClass]="{'noc-note-disabled':!note.condition}"
-                  *ngFor="let note of connector.connectorActivity?.rule.notes" fxLayout="row"
-                  fxLayoutAlign="start center">
-                  <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
-                  <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
-                  <span class="noc-description">
-                    {{note.label}}
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </ng-container>
       </div>
@@ -113,42 +95,29 @@
       <mat-icon>close</mat-icon> Close
     </button>
   </div>
-  <div class="noc-drawer-body" fxLayout="row" fxLayoutAlign="start start">
-    <div *ngIf="connectorFormGroup" class="noc-connector-form h-100-p" noctuaPerfectScrollbar>
+  <div class="noc-drawer-body" fxLayout="column" fxLayoutAlign="start start">
+    <div *ngIf="connectorFormGroup" class="noc-connector-form">
       <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section w-100-p">
         <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
-          <div fxLayout="row" fxLayoutAlign="space-between center" class="noc-summary-row p-8 w-100-p">
-            <div class="noc-activity-box" fxLayout="column" fxLayoutAlign="center start">
-              <div class="noc-activity-box-header" fxLayout="row" fxLayoutAlign="start center">
-                Upstream Activity
-              </div>
-              <div class="noc-activity-box-row">
-                {{ connectorActivity?.subject?.presentation.mfText}}
-              </div>
-              <div class="noc-activity-box-row">
-                <small>enabled by:</small><strong>{{ connectorActivity?.subject?.presentation.gpText}} </strong>
-              </div>
-            </div>
-            <div>
-              <mat-icon class="s-32">arrow_right_alt</mat-icon>
-            </div>
-            <div class="noc-activity-box" fxLayout="column" fxLayoutAlign="center start">
-              <div class="noc-activity-box-header" fxLayout="row" fxLayoutAlign="start center">
-                Downstream Activity
-              </div>
-              <div class="noc-activity-box-row">
-                {{ connectorActivity?.object?.presentation.mfText}}
-              </div>
-              <div class="noc-activity-box-row">
-                <small>enabled by:</small><strong>{{ connectorActivity?.object?.presentation.gpText}}</strong>
-              </div>
-            </div>
-          </div>
+          <noc-graph-preview [nodes]="connectorActivity?.graphPreview.nodes"
+            [edges]="connectorActivity?.graphPreview.edges" class="noc-graph-preview"></noc-graph-preview>
         </div>
         <div class="noc-form-section p-0 w-100-p">
           <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="180px">
+              <p>Effect Direction</p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
+                class="noc-radio-button-rounded mb-8" [value]="causalEffect"
+                [checked]="causalEffect.name === connectorActivity?.rule.effectDirection.direction.name">
+                {{causalEffect.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex="180px" class="pr-8">
-              <p>Mechanism
+              <p>Directness
                 <mat-icon
                   matTooltip="Do you know the mechanism for how the upstream activity affects the downstream activity?"
                   [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">help</mat-icon>
@@ -162,23 +131,18 @@
               </mat-radio-button>
             </mat-radio-group>
           </div>
-          <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-section-heading">
-              Causal Effect
-            </div>
+
+        </div>
+        <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-section-heading">
+            Suggested Causal Relation
           </div>
-          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
-            <div fxFlex="180px">
-              <p> Direction of Effect </p>
-            </div>
-            <mat-radio-group fxFlex="" formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start start">
-              <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
-                class="noc-radio-button-rounded mb-8" [value]="causalEffect"
-                [checked]="causalEffect.name === connectorActivity?.rule.effectDirection.direction.name">
-                {{causalEffect.label}}
-              </mat-radio-button>
-            </mat-radio-group>
-          </div>
+        </div>
+        <div class="noc-note mb-4" fxLayout="row" fxLayoutAlign="start center">
+          <mat-icon class="green-500-fg">check_circle</mat-icon>
+          <span class="noc-description">
+            {{connectorActivity?.predicate.edge?.label}}
+          </span>
         </div>
         <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-section-heading">
@@ -230,55 +194,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="noc-connector-form-notes p-8 h-100-p" noctuaPerfectScrollbar>
-      <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section w-100-p">
-        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-section-heading">
-            Notes
-          </div>
-        </div>
-        <div class="noc-section-body" fxLayout="column" fxLayoutAlign="start stretch">
-          <div class="noc-note" [ngClass]="{'noc-note-disabled':!note.condition}"
-            *ngFor="let note of connectorActivity?.rule.notes" fxLayout="row" fxLayoutAlign="start center">
-            <mat-icon *ngIf="note.condition" class="green-500-fg">check_circle</mat-icon>
-            <mat-icon *ngIf="!note.condition">check_circle_outline</mat-icon>
-            <span class="noc-description">
-              {{note.label}} <strong>
-                {{note.descriptionSuffix}}
-              </strong>
-            </span>
-          </div>
-        </div>
-        <ng-container *ngIf="currentConnectorActivity">
-          <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-section-heading">
-              Current Causal Relation
-            </div>
-          </div>
-          <div class="noc-note mb-4" fxLayout="row" fxLayoutAlign="start center">
-            <mat-icon class="green-500-fg">check_circle</mat-icon>
-            <span class="noc-description">
-              {{currentConnectorActivity?.predicate.edge?.label}}
-            </span>
-          </div>
-          <noc-graph-preview [nodes]="currentConnectorActivity?.graphPreview.nodes"
-            [edges]="currentConnectorActivity?.graphPreview.edges" class="noc-graph-preview"></noc-graph-preview>
-        </ng-container>
-        <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-section-heading">
-            Suggested Causal Relation
-          </div>
-        </div>
-        <div class="noc-note mb-4" fxLayout="row" fxLayoutAlign="start center">
-          <mat-icon class="green-500-fg">check_circle</mat-icon>
-          <span class="noc-description">
-            {{connectorActivity?.predicate.edge?.label}}
-          </span>
-        </div>
-        <noc-graph-preview [nodes]="connectorActivity?.graphPreview.nodes"
-          [edges]="connectorActivity?.graphPreview.edges" class="noc-graph-preview"></noc-graph-preview>
       </div>
     </div>
   </div>

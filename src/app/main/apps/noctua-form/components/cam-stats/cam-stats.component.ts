@@ -126,7 +126,7 @@ export class CamStatsComponent implements OnInit, OnDestroy {
   searchModels(node: ActivityNode) {
     const searchCriteria = new SearchCriteria()
     searchCriteria.terms = [node.term]
-    const url = `${environment.noctuaUrl}?${searchCriteria.build()}`
+    const url = `${environment.noctuaLandingPageUrl}?${searchCriteria.build()}`
     window.open(url, '_blank');
   }
 
@@ -134,7 +134,7 @@ export class CamStatsComponent implements OnInit, OnDestroy {
     const searchCriteria = new SearchCriteria()
     searchCriteria.terms = [node.term]
     searchCriteria.contributors = [this.noctuaUserService.user]
-    const url = `${environment.noctuaUrl}?${searchCriteria.build()}`
+    const url = `${environment.noctuaLandingPageUrl}?${searchCriteria.build()}`
     window.open(url, '_blank')
   }
 

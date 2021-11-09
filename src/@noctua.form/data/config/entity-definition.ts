@@ -122,6 +122,12 @@ export const ZebrafishStage = {
     categoryType: 'isa_closure',
 } as GoCategory;
 
+export const UberonStage = {
+    id: ActivityNodeType.UberonStage,
+    category: 'UBERON:0000105',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
 /* export const EntityCategories = [
     [GoProteinContainingComplex],
     [GoCellularComponent],

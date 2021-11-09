@@ -1,6 +1,6 @@
 {
   "name": "noctua-form-base",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -9,6 +9,7 @@
     "clean": "rm -r workbenches/noctua-activity-graph/public workbenches/noctua-activity-graph-beta/public",
     "build": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod --index src/inject.tmpl  --base-href  /workbench/noctua-activity-graph/ ",
     "build:beta-test": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod --index src/inject.tmpl --output-path workbenches/noctua-activity-graph-beta/public --base-href  /workbench/noctua-activity-graph-beta/ --configuration=beta-test",
+    "build:pathway-wb": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod --index src/inject.tmpl  --base-href  /workbench/noctua-gocam-pathway/ ",
     "start-hmr": "ng serve --configuration hmr -sm=false",
     "start-hmr-sourcemaps": "ng serve --hmr -e=hmr",
     "build-dev": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --dev",

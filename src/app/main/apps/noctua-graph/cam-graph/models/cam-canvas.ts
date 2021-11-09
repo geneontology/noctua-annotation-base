@@ -539,7 +539,6 @@ export class CamCanvas {
         // Automatic Layout
         joint.layout.DirectedGraph.layout(graph.getSubgraph(autoLayoutElements), {
             align: 'UR',
-            setVertices: true,
             setLabels: true,
             marginX: 50,
             marginY: 50,

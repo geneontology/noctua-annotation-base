@@ -32,7 +32,6 @@ export class AspectStatsComponent implements OnInit, OnDestroy {
 
 
   stats = {
-    gpPie: [],
     mfPie: [],
     bpPie: [],
     ccPie: [],
@@ -52,27 +51,21 @@ export class AspectStatsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.stats.gpPie = this._camStatsService.buildTermsPie(this.termsSummary.gp.nodes)
     this.stats.mfPie = this._camStatsService.buildTermsPie(this.termsSummary.mf.nodes)
     this.stats.bpPie = this._camStatsService.buildTermsPie(this.termsSummary.bp.nodes)
     this.stats.ccPie = this._camStatsService.buildTermsPie(this.termsSummary.cc.nodes)
 
-    this.pies = [{
-      label: 'Gene Product',
-      data: this.stats.gpPie
-    },
-    {
-      label: 'Molecular Function',
-      data: this.stats.mfPie
-    },
-    {
-      label: 'Biological Process',
-      data: this.stats.bpPie
-    },
-    {
-      label: 'Cellular Component',
-      data: this.stats.ccPie
-    }]
+    this.pies = [
+      {
+        label: 'Molecular Function',
+        data: this.stats.mfPie
+      }, {
+        label: 'Biological Process',
+        data: this.stats.bpPie
+      }, {
+        label: 'Cellular Component',
+        data: this.stats.ccPie
+      }]
   }
 
   ngOnDestroy(): void {
