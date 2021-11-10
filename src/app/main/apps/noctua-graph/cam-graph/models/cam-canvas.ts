@@ -373,7 +373,6 @@ export class CamCanvas {
     toggleActivityVisibility(cell: joint.dia.Element, activity: Activity) {
         const self = this;
 
-
         //self.activity.subgraphVisibility(activity, !activity.expanded);
         const elements = self.canvasGraph.getSuccessors(cell).concat(cell);
         // find all the links between successors and the element

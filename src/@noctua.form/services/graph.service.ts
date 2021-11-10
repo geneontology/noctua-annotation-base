@@ -260,19 +260,23 @@ export class NoctuaGraphService {
     const activities = self.graphToActivities(cam.graph);
 
     if (environment.isGraph) {
-      const molecules = self.graphToMolecules(cam.graph);
+      const molecules = self.graphToMoleculesFromActivities(activities);
       let activity;
 
       if (cam.operation === CamOperation.ADD_ACTIVITY) {
         activity = self.getAddedActivity(activities, cam.activities);
         self.onActivityAdded.next(activity);
       }
+
       cam.activities = [...activities, ...molecules]
+      console.log(cam.activities)
       cam.causalRelations = self.getCausalRelations(cam);
       self.getActivityLocations(cam)
       //cam.connectorActivities = self.getConnectorActivities(cam)
+    } else {
+      cam.activities = activities;
     }
-    cam.activities = activities;
+
     cam.applyFilter();
     cam.updateActivityDisplayNumber();
     cam.updateProperties()
@@ -730,32 +734,6 @@ export class NoctuaGraphService {
     return self.noctuaFormConfigService.createActivityBaseModel(activityType);
   }
 
-  graphToMolecules(camGraph): Activity[] {
-    const self = this;
-    const activities: Activity[] = [];
-
-    each(camGraph.all_nodes(), (bbopNode) => {
-      const subjectNode = self.nodeToActivityNode(camGraph, bbopNode.id());
-
-
-      if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity)) {
-        const subjectEdges = camGraph.get_edges_by_subject(bbopNode.id());
-        const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
-        const subjectActivityNode = activity.rootNode;
-
-        subjectActivityNode.term = subjectNode.term;
-        subjectActivityNode.classExpression = subjectNode.classExpression;
-        subjectActivityNode.uuid = bbopNode.id();
-        self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
-        activity.id = bbopNode.id();
-        //activity.postRunUpdate();
-        activities.push(activity);
-      }
-
-    });
-
-    return activities
-  }
 
   graphToActivities(camGraph): Activity[] {
     const self = this;
@@ -784,6 +762,62 @@ export class NoctuaGraphService {
     });
 
     return activities;
+  }
+
+  graphToMolecules(camGraph): Activity[] {
+    const self = this;
+    const activities: Activity[] = [];
+
+    each(camGraph.all_nodes(), (bbopNode) => {
+      const subjectNode = self.nodeToActivityNode(camGraph, bbopNode.id());
+
+
+      if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity)) {
+        const subjectEdges = camGraph.get_edges_by_subject(bbopNode.id());
+        const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
+        const subjectActivityNode = activity.rootNode;
+
+        subjectActivityNode.term = subjectNode.term;
+        subjectActivityNode.classExpression = subjectNode.classExpression;
+        subjectActivityNode.uuid = bbopNode.id();
+        self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
+        activity.id = bbopNode.id();
+        //activity.postRunUpdate();
+        activities.push(activity);
+      }
+
+    });
+
+    return activities
+  }
+
+  graphToMoleculesFromActivities(activities: Activity[]): Activity[] {
+    const self = this;
+    const molecules: Activity[] = [];
+
+    each(activities, (subjectActivity: Activity) => {
+      const inputEdges = subjectActivity.getEdgesByEdgeId(noctuaFormConfig.edge.hasInput.id)
+      const outputEdges = subjectActivity.getEdgesByEdgeId(noctuaFormConfig.edge.hasOutput.id)
+
+      each(inputEdges, (inputEdge: Triple<ActivityNode>) => {
+
+        if (inputEdge.subject.type === ActivityNodeType.GoMolecularFunction
+          && inputEdge.object.type === ActivityNodeType.GoChemicalEntityHasInput) {
+          const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
+          const subjectActivityNode = activity.rootNode;
+
+          subjectActivityNode.term = inputEdge.object.term;
+          subjectActivityNode.classExpression = inputEdge.object.classExpression;
+          subjectActivityNode.uuid = inputEdge.object.uuid;
+          activity.id = inputEdge.object.uuid;
+          //activity.postRunUpdate();
+          molecules.push(activity);
+
+        }
+      })
+    });
+
+    return molecules
   }
 
   getCausalRelations(cam: Cam) {

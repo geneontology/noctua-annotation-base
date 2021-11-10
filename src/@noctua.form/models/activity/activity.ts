@@ -424,6 +424,19 @@ export class Activity extends SaeGraph<ActivityNode> {
     return this._grid;
   }
 
+
+  getEdgesByEdgeId(edgeId: string): Triple<ActivityNode>[] {
+    const self = this;
+    const found = filter(self.edges, ((node: Triple<ActivityNode>) => {
+      return node.predicate.edge.id === edgeId
+    }))
+
+    if (!found) return null
+
+    return found;
+  }
+
+
   enableSubmit() {
     const self = this;
     let result = true;
