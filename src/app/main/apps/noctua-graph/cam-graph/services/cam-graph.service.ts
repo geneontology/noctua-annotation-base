@@ -28,7 +28,6 @@ export class CamGraphService {
 
   selectedElement: joint.shapes.noctua.NodeCellList | joint.shapes.noctua.NodeLink;
   selectedStencilElement: joint.shapes.noctua.NodeCellList;
-
   placeholderElement: joint.shapes.noctua.NodeCellList = new NodeCellList();
 
   camCanvas: CamCanvas;

@@ -365,6 +365,10 @@ export const noctuaFormConfig = {
     Entity.createEntity(edge.directlyProvidesInput),
   ],
 
+  moleculeEdges: [
+    Entity.createEntity(edge.hasInput),
+    Entity.createEntity(edge.hasOutput),
+  ],
   connectorProcesses: [{
     id: 'GO:0006351',
     label: 'transcription, DNA templated',

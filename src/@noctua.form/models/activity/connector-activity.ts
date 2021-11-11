@@ -48,8 +48,8 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     this.object = object;
     this.predicate = predicate;
     this.rule = new ConnectorRule();
-    this.subjectNode = this.subject.getMFNode();
-    this.objectNode = this.object.getMFNode()
+    this.subjectNode = this.subject.rootNode;
+    this.objectNode = this.object.rootNode;
     this.setRule();
     this.createGraph();
     this.setPreview();

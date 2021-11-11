@@ -804,12 +804,22 @@ export class NoctuaGraphService {
         if (inputEdge.subject.type === ActivityNodeType.GoMolecularFunction
           && inputEdge.object.type === ActivityNodeType.GoChemicalEntityHasInput) {
           const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
-          const subjectActivityNode = activity.rootNode;
+          const subjectNode = activity.getMFNode();
+          const objectNode = activity.rootNode;
 
-          subjectActivityNode.term = inputEdge.object.term;
-          subjectActivityNode.classExpression = inputEdge.object.classExpression;
-          subjectActivityNode.uuid = inputEdge.object.uuid;
           activity.id = inputEdge.object.uuid;
+          objectNode.term = inputEdge.object.term;
+          objectNode.classExpression = inputEdge.object.classExpression;
+          objectNode.uuid = inputEdge.object.uuid;
+          objectNode.type = ActivityNodeType.GoChemicalEntity
+
+          if (subjectNode) {
+            subjectNode.term = inputEdge.subject.term;
+            subjectNode.classExpression = inputEdge.subject.classExpression;
+            subjectNode.uuid = inputEdge.subject.uuid;
+            subjectNode.type = inputEdge.subject.type;
+          }
+
           //activity.postRunUpdate();
           molecules.push(activity);
 
@@ -830,25 +840,17 @@ export class NoctuaGraphService {
         const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
         const objectId = bbopEdge.object_id();
         const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
-        const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
+        const edges = [...noctuaFormConfig.causalEdges, ...noctuaFormConfig.moleculeEdges];
+        const causalEdge = <Entity>find(edges, {
           id: predicateId
         });
 
         if (causalEdge) {
-          if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
+          if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)
+            || objectInfo.hasRootType(EntityDefinition.GoChemicalEntity)) {
             const objectActivity = cam.findActivityById(objectId);
-            // const subjectMF = subjectActivity.getMFNode();
-            //const objectMF = cloneDeep(objectActivity.getMFNode())
             const predicate = new Predicate(causalEdge, evidence)
             const triple = new Triple<Activity>(subjectActivity, objectActivity, predicate);
-
-            // Show everything
-            /*  objectMF.id = `${objectMF.type}'@@'${NoctuaFormUtils.generateGUID()}`;
-             objectMF.predicate = predicate;
-             objectMF.causalNode = true;
-             objectMF.treeLevel = 2;
-             subjectActivity.addNode(objectMF);
-             subjectActivity.addEdgeById(subjectMF.id, objectMF.id, predicate); */
 
             triples.push(triple);
           }
