@@ -1,5 +1,3 @@
-
-
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -20,7 +18,8 @@ import {
   Entity,
   NoctuaUserService,
   NoctuaFormMenuService,
-  ConnectorPanel
+  ConnectorPanel,
+  ConnectorType
 } from 'noctua-form-base';
 import { NoctuaFormDialogService } from '../../../services/dialog.service';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
@@ -33,6 +32,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
   ConnectorPanel = ConnectorPanel;
+  ConnectorType = ConnectorType
 
   @Input('panelDrawer')
   panelDrawer: MatDrawer;

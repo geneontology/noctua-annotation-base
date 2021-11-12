@@ -80,7 +80,8 @@ export class NoctuaActivityConnectorService {
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
 
     this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
-    this.connectorForm.mechanism.setValue(this.connectorActivity.rule.mechanism.mechanism);
+    this.connectorForm.directness.setValue(this.connectorActivity.rule.directness.directness);
+    this.connectorForm.chemicalRelationship.setValue(this.connectorActivity.rule.chemicalRelationship.relation);
     this._onActivityFormChanges();
 
     // just to trigger the on Changes event
@@ -125,7 +126,6 @@ export class NoctuaActivityConnectorService {
 
   private _onActivityFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
-      //  this.errors = this.getActivityFormErrors();
       this.connectorActivity.checkConnection(value);
     });
   }

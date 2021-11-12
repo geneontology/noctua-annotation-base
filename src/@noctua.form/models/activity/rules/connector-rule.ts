@@ -1,20 +1,23 @@
 import { noctuaFormConfig } from './../../../noctua-form-config';
 import { Entity } from '../entity';
 import { DirectionRule } from './direction-rule';
-import { MechanismRule } from './mechanism-rule';
+import { DirectnessRule } from './directness-rule';
+import { ChemicalRelationshipRule } from './chemical-relationship-rule';
 
 export class ConnectorRule {
-  mechanism = new MechanismRule('mechanism',
-    'Do you know the mechanism for how the upstream activity affects the downstream activity?');
+  directness = new DirectnessRule('directness',
+    'Do you know the directness for how the upstream activity affects the downstream activity?');
   effectDirection = new DirectionRule('effectDirection', 'Direction of Effect?');
+  chemicalRelationship = new ChemicalRelationshipRule('chemicalRelationship')
 
   displaySection = {
-    mechanism: true,
+    directness: true,
     causalEffect: true,
   };
 
   constructor() {
-    this.mechanism.mechanism = noctuaFormConfig.mechanism.options.known;
+    this.directness.directness = noctuaFormConfig.directness.options.known;
     this.effectDirection.direction = noctuaFormConfig.causalEffect.options.positive;
+    this.chemicalRelationship.relation = noctuaFormConfig.chemicalRelationship.options.chemicalRegulates
   }
 }

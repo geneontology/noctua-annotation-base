@@ -224,7 +224,7 @@ export const noctuaFormConfig = {
       },
     }
   },
-  'mechanism': {
+  'directness': {
     'options': {
       'known': {
         'name': 'known',
@@ -233,7 +233,29 @@ export const noctuaFormConfig = {
       'unknown': {
         'name': 'unknown',
         'label': 'Indirect/Unknown',
+      },
+      'chemicalProduct': {
+        'name': 'chemicalProduct',
+        'label': 'Chemical is product of activity',
+      },
+      'chemicalIndirectly': {
+        'name': 'chemicalIndirectly',
+        'label': 'Chemical is indirectly downstream',
       }
+    }
+  },
+
+  'chemicalRelationship': {
+    'options': {
+      'chemicalRegulates': {
+        'name': 'chemicalRegulates',
+        'label': 'Chemical regulates activity',
+      },
+      'chemicalSubstrate': {
+        'name': 'chemicalSubstrate',
+        'label': 'Chemical is substrate for activity',
+      },
+
     }
   },
   'displaySection': {

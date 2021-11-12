@@ -102,7 +102,8 @@
           <noc-graph-preview [nodes]="connectorActivity?.graphPreview.nodes"
             [edges]="connectorActivity?.graphPreview.edges" class="noc-graph-preview"></noc-graph-preview>
         </div>
-        <div class="noc-form-section p-0 w-100-p">
+        <div *ngIf="connectorActivity.connectorType === ConnectorType.ACTIVITY_ACTIVITY"
+          class="noc-form-section p-0 w-100-p">
           <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex="180px">
               <p>Effect Direction</p>
@@ -118,20 +119,75 @@
           <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex="180px" class="pr-8">
               <p>Directness
-                <mat-icon
-                  matTooltip="Do you know the mechanism for how the upstream activity affects the downstream activity?"
-                  [matTooltipPosition]="'below'" [matTooltipShowDelay]="1000">help</mat-icon>
               </p>
             </div>
-            <mat-radio-group fxFlex="" formControlName="mechanism" fxLayout="column" fxLayoutAlign="start start">
-              <mat-radio-button *ngFor="let mechanism of noctuaFormConfigService.mechanism.options"
-                class="noc-radio-button-rounded mb-8" [value]="mechanism"
-                [checked]="mechanism.name === connectorActivity?.rule.mechanism.mechanism.name">
-                {{mechanism.label}}
+            <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let directness of noctuaFormConfigService.directness.options"
+                class="noc-radio-button-rounded mb-8" [value]="directness"
+                [checked]="directness.name === connectorActivity?.rule.directness.directness.name">
+                {{directness.label}}
               </mat-radio-button>
             </mat-radio-group>
           </div>
-
+        </div>
+        <div *ngIf="connectorActivity.connectorType === ConnectorType.ACTIVITY_MOLECULE"
+          class="noc-form-section p-0 w-100-p">
+          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="180px" class="pr-8">
+              <p>Directness
+              </p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let directness of noctuaFormConfigService.directnessActivityMolecule.options"
+                class="noc-radio-button-rounded mb-8" [value]="directness"
+                [checked]="directness.name === connectorActivity?.rule.directness.directness.name">
+                {{directness.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div *ngIf="connectorActivity.connectorType === ConnectorType.MOLECULE_ACTIVITY"
+          class="noc-form-section p-0 w-100-p">
+          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="180px">
+              <p>Relationship</p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="chemicalRelationship" fxLayout="column"
+              fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let relationship of noctuaFormConfigService.chemicalRelationship.options"
+                class="noc-radio-button-rounded mb-8"
+                [checked]="relationship.name === connectorActivity?.rule.chemicalRelationship.relation.name"
+                [value]="relationship">
+                {{relationship.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div *ngIf="connectorActivity?.rule.displaySection.causalEffect" class="px-8 noc-group-row" fxLayout="row"
+            fxLayoutAlign="start center">
+            <div fxFlex="180px">
+              <p>Effect Direction</p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
+                class="noc-radio-button-rounded mb-8" [value]="causalEffect"
+                [checked]="causalEffect.name === connectorActivity?.rule.effectDirection.direction.name">
+                {{causalEffect.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div *ngIf="connectorActivity?.rule.displaySection.directness" class="px-8 noc-group-row" fxLayout="row"
+            fxLayoutAlign="start center">
+            <div fxFlex="180px" class="pr-8">
+              <p>Directness </p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let directness of noctuaFormConfigService.directness.options"
+                class="noc-radio-button-rounded mb-8" [value]="directness"
+                [checked]="directness.name === connectorActivity?.rule.directness.directness.name">
+                {{directness.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
         </div>
         <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-section-heading">
@@ -139,7 +195,6 @@
           </div>
         </div>
         <div class="noc-note mb-4" fxLayout="row" fxLayoutAlign="start center">
-          <mat-icon class="green-500-fg">check_circle</mat-icon>
           <span class="noc-description">
             {{connectorActivity?.predicate.edge?.label}}
           </span>
@@ -189,7 +244,6 @@
                   </mat-form-field>
                 </div>
                 <span fxFlex=""></span>
-
               </div>
             </div>
           </div>

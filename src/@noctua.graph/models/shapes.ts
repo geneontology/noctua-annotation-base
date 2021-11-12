@@ -348,7 +348,7 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
 export const NodeCellMolecule = joint.dia.Element.define('noctua.NodeCellMolecule', {
   attrs: {
     '.wrapper': {
-      refPoints: '300,150 225,280 75,280 0,150 75,20 225,20',
+      refPoints: '0,10 10,15 30,15 40,10 30,5 10,5',
       magnet: true,
       refWidth: '100%',
       refHeight: '100%',
@@ -356,7 +356,7 @@ export const NodeCellMolecule = joint.dia.Element.define('noctua.NodeCellMolecul
       stroke: 'rgba(0,0,255,0.3)',
     },
     '.polygon': {
-      refPoints: '300,150 225,280 75,280 0,150 75,20 225,20',
+      refPoints: '0,10 10,15 30,15 40,10 30,5 10,5',
       strokeWidth: 2,
     },
     '.label': {
@@ -365,12 +365,15 @@ export const NodeCellMolecule = joint.dia.Element.define('noctua.NodeCellMolecul
       refX: '50%',
       refY: '50%',
       fontSize: 12,
-      fill: '#333333'
+      fill: '#333333',
+      textWrap: {
+        ellipsis: false,
+        width: '95%'
+      }
     }
   }
 }, {
   markup: [
-
     '<polygon class="wrapper"/>',
     '<g class="rotatable">',
     '<g class="scalable">',

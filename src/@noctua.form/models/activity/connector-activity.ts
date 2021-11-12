@@ -4,7 +4,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
 import { getEdges, Edge, getNodes, subtractNodes, subtractEdges } from './noctua-form-graph';
 
-import { Activity } from './activity';
+import { Activity, ActivityType } from './activity';
 import { ActivityNode } from './activity-node';
 import { ConnectorRule } from './rules';
 import { Entity } from './entity';
@@ -23,17 +23,23 @@ export enum ConnectorPanel {
   FORM = 'form',
 };
 
+export enum ConnectorType {
+  ACTIVITY_ACTIVITY = 'ACTIVITY_ACTIVITY',
+  ACTIVITY_MOLECULE = 'ACTIVITY_MOLECULE',
+  MOLECULE_ACTIVITY = 'MOLECULE_ACTIVITY',
+};
+
 export class ConnectorActivity extends SaeGraph<ActivityNode> {
   id: string;
   subject: Activity;
   object: Activity;
   subjectNode: ActivityNode;
   objectNode: ActivityNode;
-
   predicate: Predicate;
   originalPredicate: Predicate;
   state: ConnectorState;
   rule: ConnectorRule;
+  connectorType: ConnectorType
 
   graphPreview = {
     nodes: [],
@@ -53,6 +59,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     this.setRule();
     this.createGraph();
     this.setPreview();
+    this.setConnectorType()
   }
 
   setRule() {
@@ -61,7 +68,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const question = self.edgeToConnectorQuestion(self.predicate.edge);
 
     self.rule.effectDirection.direction = question.causalEffect;
-    self.rule.mechanism.mechanism = question.mechanism;
+    self.rule.directness.directness = question.directness;
   }
 
   checkConnection(value: any) {
@@ -69,52 +76,64 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     self.rule.displaySection.causalEffect = true;
 
+    if (value.chemicalRelationship) {
+      if (value.chemicalRelationship.name === noctuaFormConfig.chemicalRelationship.options.chemicalRegulates.name) {
+        self.rule.displaySection.causalEffect = false;
+        self.rule.displaySection.directness = false;
+      } else if (value.chemicalRelationship.name === noctuaFormConfig.chemicalRelationship.options.chemicalSubstrate.name) {
+        self.rule.displaySection.causalEffect = true;
+        self.rule.displaySection.directness = true;
+      }
+    }
+
     self.predicate.edge = this.getCausalConnectorEdge(
       value.causalEffect,
-      value.mechanism);
+      value.directness);
 
     self.setPreview();
   }
 
+  get() {
 
-  getCausalConnectorEdge(causalEffect, mechanism): Entity {
+  }
 
-    let edge = noctuaFormConfig.edge.directlyProvidesInput
+  getCausalConnectorEdge(causalEffect, directness): Entity {
+    let edge = noctuaFormConfig.edge.directlyProvidesInput;
+
     if (causalEffect.name === noctuaFormConfig.causalEffect.options.positive.name) {
-      if (mechanism.name === noctuaFormConfig.mechanism.options.known.name) {
+      if (directness.name === noctuaFormConfig.directness.options.known.name) {
         edge = noctuaFormConfig.edge.positivelyRegulates;
       } else {
         edge = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
       }
 
     } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.negative.name) {
-      if (mechanism.name === noctuaFormConfig.mechanism.options.known.name) {
+      if (directness.name === noctuaFormConfig.directness.options.known.name) {
         edge = noctuaFormConfig.edge.negativelyRegulates;
       } else {
         edge = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
       }
 
     } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.neutral.name) {
-      if (mechanism.name === noctuaFormConfig.mechanism.options.known.name) {
+      if (directness.name === noctuaFormConfig.directness.options.known.name) {
         edge = noctuaFormConfig.edge.regulates;
       } else {
         edge = noctuaFormConfig.edge.causallyUpstreamOf;
       }
     }
 
-
     return Entity.createEntity(edge);
   }
 
   edgeToConnectorQuestion(edge: Entity) {
-    let mechanism = noctuaFormConfig.mechanism.options.known;
+    let directness = noctuaFormConfig.directness.options.known;
     let causalEffect = noctuaFormConfig.causalEffect.options.positive;
 
     switch (edge.id) {
       case noctuaFormConfig.edge.causallyUpstreamOf.id:
       case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
       case noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id:
-        mechanism = noctuaFormConfig.mechanism.options.unknown;
+        directness = noctuaFormConfig.directness.options.unknown;
         break;
     }
     switch (edge.id) {
@@ -129,8 +148,18 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     }
 
     return {
-      mechanism,
+      directness,
       causalEffect
+    }
+  }
+
+  setConnectorType() {
+    if (this.subject.activityType !== ActivityType.molecule && this.object.activityType !== ActivityType.molecule) {
+      this.connectorType = ConnectorType.ACTIVITY_ACTIVITY
+    } else if (this.subject.activityType !== ActivityType.molecule && this.object.activityType === ActivityType.molecule) {
+      this.connectorType = ConnectorType.ACTIVITY_MOLECULE
+    } else if (this.subject.activityType === ActivityType.molecule && this.object.activityType !== ActivityType.molecule) {
+      this.connectorType = ConnectorType.MOLECULE_ACTIVITY
     }
   }
 
@@ -155,13 +184,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     });
 
     return nodes;
-  }
-
-  copyValues(currentConnectorActivity: ConnectorActivity) {
-    const self = this;
-
-    self.rule = cloneDeep(currentConnectorActivity.rule);
-    self.state = currentConnectorActivity.state;
   }
 
   createSave() {

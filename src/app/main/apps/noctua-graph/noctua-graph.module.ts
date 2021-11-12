@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CamGraphComponent } from './cam-graph/cam-graph.component';
 import { NoctuaGraphComponent } from './noctua-graph.component';
 import { GraphSettingsDialogComponent } from './dialogs/graph-settings/graph-settings.component';
+import { RelationPreviewComponent } from './relation-preview/relation-preview.component';
 
 const routes = [
   {
@@ -35,7 +36,8 @@ const routes = [
   declarations: [
     NoctuaGraphComponent,
     CamGraphComponent,
-    GraphSettingsDialogComponent
+    GraphSettingsDialogComponent,
+    RelationPreviewComponent
   ]
 })
 

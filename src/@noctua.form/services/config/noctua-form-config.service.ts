@@ -155,10 +155,10 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get mechanism() {
+  get directness() {
     const options = [
-      noctuaFormConfig.mechanism.options.known,
-      noctuaFormConfig.mechanism.options.unknown,
+      noctuaFormConfig.directness.options.known,
+      noctuaFormConfig.directness.options.unknown,
     ];
 
     return {
@@ -166,6 +166,31 @@ export class NoctuaFormConfigService {
       selected: options[0]
     };
   }
+
+  get directnessActivityMolecule() {
+    const options = [
+      noctuaFormConfig.directness.options.chemicalProduct,
+      noctuaFormConfig.directness.options.chemicalIndirectly,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
+  get chemicalRelationship() {
+    const options = [
+      noctuaFormConfig.chemicalRelationship.options.chemicalRegulates,
+      noctuaFormConfig.chemicalRelationship.options.chemicalSubstrate,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
   get connectorProcess() {
     const options = noctuaFormConfig.connectorProcesses;
 

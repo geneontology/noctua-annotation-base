@@ -9,6 +9,10 @@
     display: block;
   }
 
+  noc-activity-connector {
+    @include deep-height(600px);
+  }
+
   .mat-drawer-content {
     width: 100%;
   }
