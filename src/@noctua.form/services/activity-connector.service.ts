@@ -11,7 +11,7 @@ import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { Activity, ActivityType } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
 import { Cam, CamOperation } from './../models/activity/cam';
-import { ConnectorActivity, ConnectorPanel, ConnectorState } from './../models/activity/connector-activity';
+import { ConnectorActivity, ConnectorPanel, ConnectorState, ConnectorType } from './../models/activity/connector-activity';
 import { Entity } from '../models/activity/entity';
 import { noctuaFormConfig } from '../noctua-form-config';
 import { Triple } from '../models/activity/triple';
@@ -79,9 +79,16 @@ export class NoctuaActivityConnectorService {
     this.connectorForm = this.createConnectorForm();
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
 
-    this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
-    this.connectorForm.directness.setValue(this.connectorActivity.rule.directness.directness);
-    this.connectorForm.chemicalRelationship.setValue(this.connectorActivity.rule.chemicalRelationship.relation);
+    if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_ACTIVITY) {
+      this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
+      this.connectorForm.directness.setValue(this.connectorActivity.rule.directness.directness);
+    } else if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
+      this.connectorForm.directness.setValue(this.connectorActivity.rule.directness.directness);
+    } else if (this.connectorActivity.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
+      this.connectorForm.chemicalRelationship.setValue(this.connectorActivity.rule.chemicalRelationship.relation);
+      this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
+    }
+
     this._onActivityFormChanges();
 
     // just to trigger the on Changes event

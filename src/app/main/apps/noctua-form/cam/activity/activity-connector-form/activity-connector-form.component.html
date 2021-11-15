@@ -175,19 +175,6 @@
               </mat-radio-button>
             </mat-radio-group>
           </div>
-          <div *ngIf="connectorActivity?.rule.displaySection.directness" class="px-8 noc-group-row" fxLayout="row"
-            fxLayoutAlign="start center">
-            <div fxFlex="180px" class="pr-8">
-              <p>Directness </p>
-            </div>
-            <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
-              <mat-radio-button *ngFor="let directness of noctuaFormConfigService.directness.options"
-                class="noc-radio-button-rounded mb-8" [value]="directness"
-                [checked]="directness.name === connectorActivity?.rule.directness.directness.name">
-                {{directness.label}}
-              </mat-radio-button>
-            </mat-radio-group>
-          </div>
         </div>
         <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-section-heading">

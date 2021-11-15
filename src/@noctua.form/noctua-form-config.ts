@@ -102,6 +102,18 @@ const edge = {
     id: 'RO:0002630',
     label: 'directly negatively regulates'
   },
+  isSmallMoleculeRegulator: {
+    id: 'RO:0012004',
+    label: 'is small molecule regulator'
+  },
+  isSmallMoleculeActivator: {
+    id: 'RO_0012005',
+    label: 'is small molecule activator'
+  },
+  isSmallMoleculeInhibitor: {
+    id: 'RO:0012006',
+    label: 'is small molecule inhibitor'
+  },
 }
 
 
@@ -237,10 +249,6 @@ export const noctuaFormConfig = {
       'chemicalProduct': {
         'name': 'chemicalProduct',
         'label': 'Chemical is product of activity',
-      },
-      'chemicalIndirectly': {
-        'name': 'chemicalIndirectly',
-        'label': 'Chemical is indirectly downstream',
       }
     }
   },
@@ -390,6 +398,9 @@ export const noctuaFormConfig = {
   moleculeEdges: [
     Entity.createEntity(edge.hasInput),
     Entity.createEntity(edge.hasOutput),
+    Entity.createEntity(edge.isSmallMoleculeActivator),
+    Entity.createEntity(edge.isSmallMoleculeInhibitor),
+    Entity.createEntity(edge.isSmallMoleculeRegulator),
   ],
   connectorProcesses: [{
     id: 'GO:0006351',

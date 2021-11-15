@@ -260,7 +260,7 @@ export class NoctuaGraphService {
     const activities = self.graphToActivities(cam.graph);
 
     if (environment.isGraph) {
-      const molecules = self.graphToMoleculesFromActivities(activities);
+      const molecules = self.graphToMolecules(cam.graph);
       let activity;
 
       if (cam.operation === CamOperation.ADD_ACTIVITY) {
@@ -770,7 +770,6 @@ export class NoctuaGraphService {
 
     each(camGraph.all_nodes(), (bbopNode) => {
       const subjectNode = self.nodeToActivityNode(camGraph, bbopNode.id());
-
 
       if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity)) {
         const subjectEdges = camGraph.get_edges_by_subject(bbopNode.id());

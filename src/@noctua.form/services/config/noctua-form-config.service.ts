@@ -169,8 +169,7 @@ export class NoctuaFormConfigService {
 
   get directnessActivityMolecule() {
     const options = [
-      noctuaFormConfig.directness.options.chemicalProduct,
-      noctuaFormConfig.directness.options.chemicalIndirectly,
+      noctuaFormConfig.directness.options.chemicalProduct
     ];
 
     return {
