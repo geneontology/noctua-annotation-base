@@ -10,7 +10,13 @@
   }
 
   noc-activity-connector {
+    display: block;
     @include deep-width(600px);
+  }
+
+  noc-graph-settings {
+    display: block;
+    @include deep-width(500px);
   }
 
   .mat-drawer-content {

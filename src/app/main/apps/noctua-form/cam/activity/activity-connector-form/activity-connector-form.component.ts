@@ -18,7 +18,6 @@ import {
   Entity,
   NoctuaUserService,
   NoctuaFormMenuService,
-  ConnectorPanel,
   ConnectorType
 } from 'noctua-form-base';
 import { NoctuaFormDialogService } from '../../../services/dialog.service';
@@ -31,7 +30,6 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./activity-connector-form.component.scss']
 })
 export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
-  ConnectorPanel = ConnectorPanel;
   ConnectorType = ConnectorType
 
   @Input('panelDrawer')
@@ -78,13 +76,11 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
 
   openActivityConnector(connector: Activity) {
     this.noctuaActivityConnectorService.initializeForm(this.noctuaActivityConnectorService.objectActivity.id, connector.id);
-    this.noctuaActivityConnectorService.selectPanel(ConnectorPanel.FORM);
   }
 
   save() {
     const self = this;
     this.noctuaActivityConnectorService.saveActivity().then(() => {
-      self.noctuaActivityConnectorService.selectPanel(ConnectorPanel.SELECT);
       self.noctuaFormDialogService.openInfoToast('Causal relation successfully created.', 'OK');
       if (this.closeDialog) {
         this.closeDialog();
@@ -96,7 +92,6 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
     const self = this;
     const success = () => {
       self.noctuaActivityConnectorService.saveActivity().then(() => {
-        self.noctuaActivityConnectorService.selectPanel(ConnectorPanel.SELECT);
         self.noctuaFormDialogService.openInfoToast('Causal relation successfully updated.', 'OK');
       });
     };
@@ -110,7 +105,6 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
     const self = this;
     const success = () => {
       self.noctuaActivityConnectorService.deleteActivity(connectorActivity).then(() => {
-        self.noctuaActivityConnectorService.selectPanel(ConnectorPanel.SELECT);
         self.noctuaFormDialogService.openInfoToast('Causal relation successfully deleted.', 'OK');
       });
     };

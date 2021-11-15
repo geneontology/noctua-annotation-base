@@ -11,7 +11,7 @@ import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { Activity, ActivityType } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
 import { Cam, CamOperation } from './../models/activity/cam';
-import { ConnectorActivity, ConnectorPanel, ConnectorState, ConnectorType } from './../models/activity/connector-activity';
+import { ConnectorActivity, ConnectorState, ConnectorType } from './../models/activity/connector-activity';
 import { Entity } from '../models/activity/entity';
 import { noctuaFormConfig } from '../noctua-form-config';
 import { Triple } from '../models/activity/triple';
@@ -36,7 +36,6 @@ export class NoctuaActivityConnectorService {
   public onActivityChanged: BehaviorSubject<any>;
   public onLinkChanged: BehaviorSubject<any>;
 
-  selectedPanel: ConnectorPanel;
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
     private noctuaLookupService: NoctuaLookupService,
@@ -55,10 +54,6 @@ export class NoctuaActivityConnectorService {
       this.cam = cam;
 
     });
-  }
-
-  selectPanel(panel) {
-    this.selectedPanel = panel;
   }
 
   initializeForm(subjectId: string, objectId: string) {
@@ -93,7 +88,6 @@ export class NoctuaActivityConnectorService {
 
     // just to trigger the on Changes event
     this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
-    this.selectPanel(ConnectorPanel.FORM);
   }
 
   updateEvidence(node: ActivityNode) {

@@ -18,11 +18,6 @@ export enum ConnectorState {
   editing
 }
 
-export enum ConnectorPanel {
-  SELECT = 'select',
-  FORM = 'form',
-};
-
 export enum ConnectorType {
   ACTIVITY_ACTIVITY = 'ACTIVITY_ACTIVITY',
   ACTIVITY_MOLECULE = 'ACTIVITY_MOLECULE',

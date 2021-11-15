@@ -9,6 +9,10 @@ $accent: map-get($theme, accent);
   background-color: white;
   @include mat-elevation(4);
 
+  .noc-drawer-body {
+    min-height: calc(100% - 80px);
+  }
+
   .noc-radio-button-rounded {
     min-width: 110px;
   }

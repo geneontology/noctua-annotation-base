@@ -777,6 +777,7 @@ export class NoctuaGraphService {
         const subjectActivityNode = activity.rootNode;
 
         subjectActivityNode.term = subjectNode.term;
+        subjectActivityNode.date = subjectNode.date;
         subjectActivityNode.classExpression = subjectNode.classExpression;
         subjectActivityNode.uuid = bbopNode.id();
         self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);

@@ -312,11 +312,14 @@ export const createActivity = (activityDescription: ActivityDescription): Activi
 
     each(activityDescription.triples, (triple) => {
         const objectNode = activity.getNode(triple.object);
-        const predicate: Predicate = objectNode.predicate;
 
-        predicate.edge = Entity.createEntity(triple.predicate);
-        objectNode.treeLevel++;
-        activity.addEdgeById(triple.subject, triple.object, predicate);
+        if (objectNode) {
+            const predicate: Predicate = objectNode.predicate;
+
+            predicate.edge = Entity.createEntity(triple.predicate);
+            objectNode.treeLevel++;
+            activity.addEdgeById(triple.subject, triple.object, predicate);
+        }
     });
 
     //activity.postRunUpdate();

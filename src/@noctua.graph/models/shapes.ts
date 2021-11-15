@@ -297,7 +297,7 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
     '<rect class="activity-gp-rect"/>',
     '</g>',
     '<text class="activity-name-text"/><text class="activity-mf-text"/><text class="activity-gp-text"/>',
-    '<image class="icon"/>',
+    //'<image class="icon"/>',
     '</g>'
   ].join(''),
 

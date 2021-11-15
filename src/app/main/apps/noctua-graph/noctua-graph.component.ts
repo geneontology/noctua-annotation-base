@@ -9,7 +9,6 @@ import {
   NoctuaUserService,
   NoctuaFormConfigService,
   CamService,
-
   Activity,
   ActivityDisplayType,
   ActivityType,
@@ -200,7 +199,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openSettings() {
-    this.graphDialogService.openGraphSettingsDialog()
+    this.openRightDrawer(RightPanel.graphSettings)
   }
 
   getTableWidth(settings: SettingsOptions) {
