@@ -19,7 +19,7 @@ import {
   NoctuaUserService,
   NoctuaFormMenuService,
   ConnectorType
-} from 'noctua-form-base';
+} from '@geneontology/noctua-form-base';
 import { NoctuaFormDialogService } from '../../../services/dialog.service';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { takeUntil } from 'rxjs/operators';

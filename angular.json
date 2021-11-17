@@ -20,7 +20,7 @@
             "customWebpackConfig": {
               "path": "./webpack.extra.js"
             },
-            "outputPath": "workbenches/noctua-activity-graph/public",
+            "outputPath": "workbenches/visual-pathway-editor/public",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",

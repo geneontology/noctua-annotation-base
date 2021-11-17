@@ -6,7 +6,7 @@ import { CamCanvas } from '../models/cam-canvas';
 import { CamStencil } from '../models/cam-stencil';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Activity, Cam, CamService, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService, NoctuaGraphService } from 'noctua-form-base';
+import { Activity, Cam, CamService, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService, NoctuaGraphService } from '@geneontology/noctua-form-base';
 import { NodeLink, NodeCellList, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
@@ -143,9 +143,9 @@ export class CamGraphService {
   openTable(element: joint.shapes.noctua.NodeCellList) {
     const activity = element.prop('activity') as Activity
     this.selectedElement = element;
-    this._activityFormService.onActivityChanged.next(activity);
+    this._camService.onSelectedActivityChanged.next(activity);
     // activity.type = element.get('type');
-    this.noctuaCommonMenuService.selectRightPanel(RightPanel.camTable);
+    this.noctuaCommonMenuService.selectRightPanel(RightPanel.activityTable);
     this.noctuaCommonMenuService.closeLeftDrawer();
     this.noctuaCommonMenuService.openRightDrawer();
 

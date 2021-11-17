@@ -288,7 +288,7 @@ export class ActivityNode implements ActivityNodeDisplay {
     }
 
     each(self.predicate.evidence, (evidence: Evidence, key) => {
-      const oldEvidence = oldNode.predicate.getEvidenceById(evidence.uuid)
+      const oldEvidence = oldNode?.predicate.getEvidenceById(evidence.uuid)
       evidence.checkStored(oldEvidence)
     });
   }

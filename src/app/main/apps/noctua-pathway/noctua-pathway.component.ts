@@ -9,7 +9,7 @@ import {
   NoctuaFormMenuService,
   NoctuaGraphService,
   NoctuaUserService
-} from 'noctua-form-base';
+} from '@geneontology/noctua-form-base';
 import { NoctuaSearchDialogService } from '@noctua.search/services/dialog.service';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';

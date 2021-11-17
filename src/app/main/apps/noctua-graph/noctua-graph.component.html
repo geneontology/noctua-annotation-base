@@ -132,6 +132,11 @@
           </noc-cam-form>
           <noc-cam-table [ngStyle]="{width:tableWidth}" [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.camTable"
             [cam]="cam" [options]="tableOptions"></noc-cam-table>
+
+          <noc-graph-activity-table [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.activityTable"
+            [options]="tableOptions" [cam]="cam">
+          </noc-graph-activity-table>
+
           <noc-graph-settings [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.graphSettings">
           </noc-graph-settings>
           <noc-activity-connector *ngSwitchCase="RightPanel.connectorForm">

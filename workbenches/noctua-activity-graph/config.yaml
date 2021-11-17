@@ -1,7 +1,0 @@
-menu-name: "Activity Graph"
-page-name: "Activity Graph"
-type: "model"
-help-link: "https://github.com/geneontology/noctua-form/issues"
-javascript:
-  - main.js
-css: []

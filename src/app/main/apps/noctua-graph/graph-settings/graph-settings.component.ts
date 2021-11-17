@@ -7,7 +7,7 @@ import {
   NoctuaActivityFormService,
 
   CamService
-} from 'noctua-form-base';
+} from '@geneontology/noctua-form-base';
 import { noctuaAnimations } from '@noctua/animations';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormControl } from '@angular/forms';

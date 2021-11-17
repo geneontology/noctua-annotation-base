@@ -6,7 +6,7 @@ import {
     noctuaFormConfig,
     Predicate,
     Triple
-} from 'noctua-form-base';
+} from '@geneontology/noctua-form-base';
 import { NodeCellType } from '@noctua.graph/models/shapes';
 import { NodeCellList, NodeCellMolecule, NodeLink, StencilNode } from '@noctua.graph/services/shapes.service';
 import * as joint from 'jointjs';

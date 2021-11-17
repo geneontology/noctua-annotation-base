@@ -271,6 +271,7 @@ export class NoctuaFormConfigService {
 
     modelInfo.modelWorkbenches = environment.globalWorkbenchesModel.map(workbench => {
       return {
+        id: workbench['workbench-id'],
         label: workbench['menu-name'],
         url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
       };
@@ -278,10 +279,17 @@ export class NoctuaFormConfigService {
 
     modelInfo.modelBetaTestWorkbenches = environment.globalWorkbenchesModelBetaTest.map(workbench => {
       return {
+        id: workbench['workbench-id'],
         label: workbench['menu-name'],
         url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
       };
     });
+
+    modelInfo.workbenches = {}
+
+    modelInfo.modelWorkbenches.forEach((workbench) => {
+      modelInfo.workbenches[workbench['id']] = workbench
+    })
 
     return modelInfo;
   }

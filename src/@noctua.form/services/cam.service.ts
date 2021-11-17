@@ -36,6 +36,7 @@ export class CamService {
   onCamsCheckoutChanged: BehaviorSubject<any>;
   onSelectedCamChanged: BehaviorSubject<any>;
   onSelectedNodeChanged: BehaviorSubject<any>;
+  onSelectedActivityChanged: BehaviorSubject<any>;
 
   activity: Activity;
   private camForm: CamForm;
@@ -64,6 +65,7 @@ export class CamService {
     this.onCamsCheckoutChanged = new BehaviorSubject(null);
     this.onSelectedCamChanged = new BehaviorSubject(null);
     this.onSelectedNodeChanged = new BehaviorSubject(null);
+    this.onSelectedActivityChanged = new BehaviorSubject(null);
     this.curieUtil = this.curieService.getCurieUtil();
 
     this.onSelectedCamChanged.subscribe((uuid: string) => {

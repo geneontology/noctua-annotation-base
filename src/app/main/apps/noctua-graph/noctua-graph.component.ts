@@ -13,7 +13,7 @@ import {
   ActivityDisplayType,
   ActivityType,
   NoctuaActivityFormService
-} from 'noctua-form-base';
+} from '@geneontology/noctua-form-base';
 
 import { FormGroup } from '@angular/forms';
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
@@ -78,7 +78,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
 
   tableOptions: TableOptions = {
     displayType: ActivityDisplayType.SLIM_TREE,
-    slimViewer: false,
+    slimViewer: true,
     editableTerms: true,
     editableEvidence: true,
     editableReference: true,
