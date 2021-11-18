@@ -72,6 +72,7 @@ import { StatementStatsComponent } from './components/cam-stats/statement-stats/
 import { GPStatsComponent } from './components/cam-stats/gp-stats/gp-stats.component';
 import { ActivityFormTableNodeComponent } from './cam/cam-table/activity-form-table/activity-form-table-node/activity-form-table-node.component';
 import { ActivityFormTableComponent } from './cam/cam-table/activity-form-table/activity-form-table.component';
+import { EvidenceFormTableComponent } from './cam/cam-table/activity-form-table/evidence-table/evidence-table.component';
 
 const routes = [
   {
@@ -192,7 +193,8 @@ const routes = [
     AspectStatsComponent,
     GeneralStatsComponent,
     ContributionStatsComponent,
-    StatementStatsComponent
+    StatementStatsComponent,
+    EvidenceFormTableComponent
   ],
 })
 

@@ -1,9 +1,12 @@
 <div *ngIf="entity.predicate?.evidence.length>0" class="noc-evidence-table noctua-form-table w-100-p" fxLayout="column"
   fxLayoutAlign="start stretch">
-  <div fxLayout="row" fxLayoutAlign="start stretch" class="noc-row"
+  <div class="h-100-p mb-8" fxLayout="row" fxLayoutAlign="start stretch"
     *ngFor="let evidence of entity.predicate?.evidence; let i = index">
     <div *ngIf="settings.showEvidenceCode" class="noc-evidence-code-cell noc-box-cell" fxFlex="" fxLayout="column"
       fxLayoutAlign="start stretch" [ngClass]="{'noc-highlight-modified': evidence.evidence?.modified}">
+      <div class="noc-cell-floating-title">
+        Evidence
+      </div>
       <span class="noc-old-term" *ngIf="evidence.evidence?.modified && evidence.evidence?.termHistory?.length>0">
         {{evidence.evidence?.termHistory[0]?.label}}
         <a (click)="$event.stopPropagation()" href="{{evidence.evidence?.termHistory[0]?.url}}" target="_blank">
@@ -24,6 +27,9 @@
       [ngClass]="{'noc-highlight-match': evidence.referenceEntity?.highlight,
             'noc-highlight-modified': evidence.referenceEntity?.modified,
             'noc-highlight-match-current': camService.currentMatch?.uuid && evidence.referenceEntity?.uuid===camService.currentMatch?.uuid}">
+      <div class="noc-cell-floating-title">
+        Reference
+      </div>
       <span class="noc-old-term"
         *ngIf="evidence.referenceEntity?.modified && evidence.referenceEntity?.termHistory?.length>0">
         <a (click)="$event.stopPropagation()" href="{{evidence.referenceEntity?.termHistory[0]?.url}}" target="_blank">
@@ -43,6 +49,9 @@
     </div>
     <div *ngIf="settings.showWith" class="noc-with-cell noc-box-cell" fxLayout="column" fxLayoutAlign="start stretch"
       [ngClass]="{'noc-highlight-modified': evidence.withEntity?.modified}">
+      <div class="noc-cell-floating-title">
+        With
+      </div>
       <span class="noc-old-term" *ngIf="evidence.withEntity?.modified && evidence.withEntity?.termHistory?.length>0">
         <a (click)="$event.stopPropagation()" href="{{evidence.withEntity?.termHistory[0]?.url}}" target="_blank">
           {{ evidence.withEntity?.termHistory[0]?.id }}

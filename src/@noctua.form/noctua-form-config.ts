@@ -159,7 +159,7 @@ export const noctuaFormConfig = {
       },
       'molecule': {
         'name': 'molecule',
-        'label': 'Molecule'
+        'label': 'Chemical'
       }
     }
   },

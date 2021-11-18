@@ -33,7 +33,7 @@ $accent: map-get($theme, accent);
 
   .noc-evidence-table-header {
     @include deep-height(30px);
-    border-bottom: $noc-primary-color-light solid 1px;
+    //border-bottom: $noc-primary-color-light solid 1px;
 
     .noc-header-cell {
       padding: 0 10px;
@@ -44,25 +44,6 @@ $accent: map-get($theme, accent);
     }
   }
 
-  .noc-toolbar {
-    padding: 0px 20px;
-    height: 40px;
-    width: 100%;
-    background-color: #f2f2f2;
-    border-bottom: #bbb solid 1px;
-
-    .noc-title {
-      line-height: 38px;
-      color: #555;
-      font-size: 14px;
-      font-weight: bold;
-    }
-  }
-
-  .noc-row {
-    border-bottom: #ddd solid 1px;
-  }
-
   .noc-box-cell {
     display: flex;
     align-items: center;
@@ -71,7 +52,10 @@ $accent: map-get($theme, accent);
     padding: 8px 5px;
     font-size: 12px !important;
     color: #000;
-    border-right: #aaa solid 1px;
+
+    border: #ccc solid 1px;
+    margin-left: 4px;
+    border-radius: 8px;
     position: relative;
     overflow-wrap: anywhere;
 
@@ -79,6 +63,9 @@ $accent: map-get($theme, accent);
       position: absolute;
       bottom: 0;
       right: 0;
+    }
+    &:hover {
+      border: map-get($primary, default) solid 2px;
     }
 
     &.noc-highlight-match {
@@ -105,6 +92,7 @@ $accent: map-get($theme, accent);
   }
 
   .noc-evidence-table {
+    height: 100%;
     // position: relative;
     //  flex: 1 1 auto;
     //    border-bottom: 1px solid rgba(0, 0, 0, .12);
@@ -132,7 +120,6 @@ $accent: map-get($theme, accent);
 
     .mat-header-row {
       @include deep-height(30px);
-      border-bottom: $noc-primary-color-light solid 1px;
 
       &.noc-hide-header {
         @include deep-height(0);
