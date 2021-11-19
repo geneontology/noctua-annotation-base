@@ -19,6 +19,10 @@ export class Triple<T extends ActivityNode | Activity>  {
     this.object = object;
     this.predicate = predicate;
   }
+
+  isTripleComplete() {
+    return this.subject && this.object && this.predicate;
+  }
 }
 
 export class ActivityTriple<T extends Activity> {
@@ -39,6 +43,8 @@ export class ActivityTriple<T extends Activity> {
     this.object = object;
     this.predicate = predicate;
   }
+
+
 
   getTripleIds() {
     return {

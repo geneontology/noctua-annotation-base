@@ -20,8 +20,8 @@
       </div>
       <span fxFlex></span>
     </div>
-    <div class="noc-tree-container">
-      <noc-activity-form-table-node [settings]="settings" [options]="options" [cam]="cam" [activity]="activity"
+    <div class="noc-form-section noc-tree-container">
+      <noc-activity-form-table-node [settings]="gbSettings" [options]="options" [cam]="cam" [activity]="activity"
         [entity]="gpNode" class="w-100-p">
       </noc-activity-form-table-node>
     </div>
@@ -34,7 +34,7 @@
       </div>
       <span fxFlex></span>
     </div>
-    <div class="noc-tree-container">
+    <div class="noc-form-section noc-tree-container">
       <tree-root #tree (initialized)="onTreeLoad()" [nodes]="treeNodes" [options]="treeOptions">
         <ng-template #treeNodeWrapperTemplate let-node let-index="index">
           <div class="node-wrapper noc-tree-node" fxLayout="row" fxLayoutAlign="start center"

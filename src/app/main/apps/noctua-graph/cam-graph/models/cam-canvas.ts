@@ -483,23 +483,26 @@ export class CamCanvas {
         });
 
         each(cam.causalRelations, (triple: Triple<Activity>) => {
-            if (triple.predicate.visible) {
+            if (triple.predicate.visible && triple.isTripleComplete()) {
                 const color = getEdgeColor(triple.predicate.edge.id);
                 const link = NodeLink.create();
-                // link.set('connector', { name: 'jumpover', args: { type: 'gap' } })
-                link.setText(triple.predicate.edge.label);
-                link.set({
-                    activity: triple.predicate,
-                    source: {
-                        id: triple.subject.id,
-                    },
-                    target: {
-                        id: triple.object.id,
-                    }
-                });
+                if (triple.predicate.isReverseLink) {
+                    this.reverseLink(triple, link)
+                } else {
+                    // link.set('connector', { name: 'jumpover', args: { type: 'gap' } })
+                    link.setText(triple.predicate.edge.label);
+                    link.set({
+                        activity: triple.predicate,
+                        source: {
+                            id: triple.subject.id,
+                        },
+                        target: {
+                            id: triple.object.id,
+                        }
+                    });
+                }
 
                 link.setColor(color)
-
                 nodes.push(link);
             }
         });
@@ -530,6 +533,19 @@ export class CamCanvas {
                        }
                    });
            }); */
+    }
+
+    reverseLink(triple: Triple<Activity>, link: NodeLink) {
+        link.setText(triple.predicate.reverseLinkTitle);
+        link.set({
+            activity: triple.predicate,
+            source: {
+                id: triple.object.id,
+            },
+            target: {
+                id: triple.subject.id,
+            }
+        });
     }
 
     addStencilGraph(graph: joint.dia.Graph, activities: Activity[]) {

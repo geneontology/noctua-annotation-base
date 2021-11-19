@@ -43,12 +43,12 @@
     </div>
     <div *ngIf="settings.showEvidence" fxFlex="" class="noc-evidence-cell p-0" fxLayout="row"
       fxLayoutAlign="start stretch">
-      <noc-evidence-form-table *ngIf="!entity.skipEvidence" class="w-100-p" [settings]="settings"
-        [options]="optionsDisplay" [cam]="cam" [entity]="entity">
+      <noc-evidence-form-table class="w-100-p" [settings]="settings" [options]="optionsDisplay" [cam]="cam"
+        [entity]="entity">
       </noc-evidence-form-table>
     </div>
-    <div *ngIf="!settings.showEvidence" class="evidence-summary-cell p-0" fxLayout="column"
-      fxLayoutAlign="center center">
+    <div *ngIf="!settings.showEvidence && settings.showEvidenceSummary" class="evidence-summary-cell p-0"
+      fxLayout="column" fxLayoutAlign="center center">
       <div *ngIf="!entity.skipEvidence" class="w-100-p ">
         <div *ngIf="entity.predicate?.evidence.length>0" class="">
           {{entity.predicate?.evidence.length}} evidence

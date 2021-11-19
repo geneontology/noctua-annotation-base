@@ -196,9 +196,11 @@ export class ActivityNode implements ActivityNodeDisplay {
   }
 
   hasRootType(inRootType: GoCategory) {
-    return find(this.rootTypes, (rootType: Entity) => {
+    const found = find(this.rootTypes, (rootType: Entity) => {
       return rootType.id === inRootType.category;
     });
+
+    return found ? true : false
   }
 
   hasRootTypes(inRootTypes: GoCategory[]) {

@@ -53,7 +53,7 @@ $accent: map-get($theme, accent);
     font-size: 12px !important;
     color: #000;
 
-    border: #ccc solid 1px;
+    border: #aaa solid 1px;
     margin-left: 4px;
     border-radius: 8px;
     position: relative;
@@ -66,6 +66,10 @@ $accent: map-get($theme, accent);
     }
     &:hover {
       border: map-get($primary, default) solid 2px;
+
+      .noc-cell-floating-title {
+        color: map-get($primary, default);
+      }
     }
 
     &.noc-highlight-match {
@@ -93,60 +97,12 @@ $accent: map-get($theme, accent);
 
   .noc-evidence-table {
     height: 100%;
-    // position: relative;
-    //  flex: 1 1 auto;
-    //    border-bottom: 1px solid rgba(0, 0, 0, .12);
-
-    table {
-      // width: 800px;
-      overflow: auto;
-      background-color: transparent;
-    }
-
-    tr.mat-footer-row,
-    tr.mat-row {
-      height: auto;
-    }
-
-    .mat-header-cell {
-      padding: 0 10px;
-      font-size: 10px !important;
-      //color: #0F0; // map-get($primary, default);
-      font-weight: bold;
-      color: map-get($primary, default);
-      text-transform: uppercase;
-      font-weight: bold;
-    }
-
-    .mat-header-row {
-      @include deep-height(30px);
-
-      &.noc-hide-header {
-        @include deep-height(0);
-        visibility: hidden;
-        display: none;
-        overflow: hidden;
-        border: none;
-      }
-    }
-
-    .noc-paginator {
-      @include deep-height(0);
-    }
 
     .activity {
       position: relative;
       cursor: pointer;
       min-height: 40px;
       font-size: 12px;
-    }
-
-    .mat-column-id {
-      flex: 0 1 84px;
-    }
-
-    .mat-column-buttons {
-      flex: 0 1 80px;
     }
 
     /* .mat-header-cell {

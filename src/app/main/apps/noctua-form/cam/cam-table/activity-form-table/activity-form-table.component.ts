@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { noctuaAnimations } from './../../../../../../../@noctua/animations';
@@ -29,7 +29,7 @@ import {
 } from '@geneontology/noctua-form-base';
 
 import { EditorCategory } from '@noctua.editor/models/editor-category';
-import { find } from 'lodash';
+import { cloneDeep, find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -44,7 +44,7 @@ import { SettingsOptions } from '@noctua.common/models/graph-settings';
   styleUrls: ['./activity-form-table.component.scss'],
   animations: noctuaAnimations
 })
-export class ActivityFormTableComponent implements OnInit, OnDestroy {
+export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   ActivityDisplayType = ActivityDisplayType;
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
@@ -53,6 +53,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy {
   treeNodes: ActivityTreeNode[] = [];
 
   settings: SettingsOptions = new SettingsOptions()
+  gbSettings: SettingsOptions = new SettingsOptions()
 
   @ViewChild('tree') tree;
 
@@ -101,6 +102,13 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy {
     this._unsubscribeAll = new Subject();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // do your action
+    console.log(this.activity)
+
+    this.loadTree()
+  }
+
   ngOnInit(): void {
 
     this.noctuaCommonMenuService.onCamSettingsChanged
@@ -110,16 +118,22 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy {
           return;
         }
         this.settings = settings;
+        this.gbSettings = cloneDeep(settings)
+        this.gbSettings.showEvidence = false;
+        this.gbSettings.showEvidenceSummary = false;
       });
 
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }
-    this.gpNode = this.activity.getGPNode();
 
-    this.optionsDisplay = { ...this.options, hideHeader: true };
 
-    this.treeNodes = this.activity.buildTrees();
+  }
+
+  ngAfterViewInit(): void {
+    this.tree.treeModel.filterNodes((node) => {
+      return (node.data.id !== this.gpNode?.id);
+    });
   }
 
 
@@ -128,9 +142,17 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
+  loadTree() {
+    this.gpNode = this.activity.getGPNode();
+    this.optionsDisplay = { ...this.options, hideHeader: true };
+    this.treeNodes = this.activity.buildTrees();
+  }
+
   onTreeLoad() {
     this.tree.treeModel.expandAll();
   }
+
+
 
   setActivityDisplayType(displayType: ActivityDisplayType) {
     this.activity.activityDisplayType = displayType;

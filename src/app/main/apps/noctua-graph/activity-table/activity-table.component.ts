@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import {
@@ -54,6 +54,7 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
+    private ngZone: NgZone,
     public camService: CamService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
@@ -74,7 +75,10 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
         if (!activity) {
           return;
         }
-        this.activity = activity
+        this.ngZone.run(() => {
+          this.activity = activity
+        });
+
 
       });
 

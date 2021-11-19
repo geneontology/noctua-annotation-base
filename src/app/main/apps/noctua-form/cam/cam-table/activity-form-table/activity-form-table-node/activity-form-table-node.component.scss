@@ -85,9 +85,17 @@ $accent: map-get($theme, accent);
 
       border-radius: 5px;
 
-      border: #ccc solid 1px;
+      border: #aaa solid 1px;
       position: relative;
       overflow-wrap: break-word;
+
+      &:hover {
+        border: map-get($primary, default) solid 2px;
+
+        .noc-cell-floating-title {
+          color: map-get($primary, default);
+        }
+      }
 
       &.noc-aspect-cell {
         mat-chip {

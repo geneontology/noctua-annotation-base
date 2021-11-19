@@ -58,6 +58,7 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
   }
 
   ngOnDestroy(): void {

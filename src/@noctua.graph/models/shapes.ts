@@ -380,7 +380,7 @@ export const NodeCellMolecule = joint.dia.Element.define('noctua.NodeCellMolecul
     '<polygon class="polygon"/>',
     '</g>',
     '<text class="label"/>',
-    '<image class="icon"/>',
+    //'<image class="icon"/>',
     '</g>'
   ].join(''),
 }, {

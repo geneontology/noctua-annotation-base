@@ -6,6 +6,8 @@ import { EntityLookup } from './entity-lookup';
 export class Predicate {
   uuid: string;
   _edge: Entity = new Entity('', '');
+  isReverseLink = false;
+  reverseLinkTitle: string;
   evidence: Evidence[];
   // Because there is one predicate and multiple evidence
   evidenceLookup: EntityLookup = new EntityLookup();

@@ -269,7 +269,6 @@ export class NoctuaGraphService {
       }
 
       cam.activities = [...activities, ...molecules]
-      console.log(cam.activities)
       cam.causalRelations = self.getCausalRelations(cam);
       self.getActivityLocations(cam)
       //cam.connectorActivities = self.getConnectorActivities(cam)
@@ -756,7 +755,7 @@ export class NoctuaGraphService {
         subjectActivityNode.uuid = bbopSubjectId;
         self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
         activity.id = bbopSubjectId;
-        //activity.postRunUpdate();
+        activity.postRunUpdate();
         activities.push(activity);
       }
     });
@@ -771,19 +770,25 @@ export class NoctuaGraphService {
     each(camGraph.all_nodes(), (bbopNode) => {
       const subjectNode = self.nodeToActivityNode(camGraph, bbopNode.id());
 
-      if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity)) {
-        const subjectEdges = camGraph.get_edges_by_subject(bbopNode.id());
-        const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
-        const subjectActivityNode = activity.rootNode;
 
-        subjectActivityNode.term = subjectNode.term;
-        subjectActivityNode.date = subjectNode.date;
-        subjectActivityNode.classExpression = subjectNode.classExpression;
-        subjectActivityNode.uuid = bbopNode.id();
-        self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
-        activity.id = bbopNode.id();
-        //activity.postRunUpdate();
-        activities.push(activity);
+      if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity)) {
+        const edges = camGraph.get_edges_by_object(bbopNode.id())
+        const hasEnabledBy = find(edges, (edge) => {
+          return edge.predicate_id() === noctuaFormConfig.edge.enabledBy.id
+        })
+
+        if (!hasEnabledBy) {
+          const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
+          const subjectActivityNode = activity.rootNode;
+
+          subjectActivityNode.term = subjectNode.term;
+          subjectActivityNode.date = subjectNode.date;
+          subjectActivityNode.classExpression = subjectNode.classExpression;
+          subjectActivityNode.uuid = bbopNode.id();
+          activity.id = bbopNode.id();
+          //activity.postRunUpdate();
+          activities.push(activity);
+        }
       }
 
     });
@@ -791,44 +796,6 @@ export class NoctuaGraphService {
     return activities
   }
 
-  graphToMoleculesFromActivities(activities: Activity[]): Activity[] {
-    const self = this;
-    const molecules: Activity[] = [];
-
-    each(activities, (subjectActivity: Activity) => {
-      const inputEdges = subjectActivity.getEdgesByEdgeId(noctuaFormConfig.edge.hasInput.id)
-      const outputEdges = subjectActivity.getEdgesByEdgeId(noctuaFormConfig.edge.hasOutput.id)
-
-      each(inputEdges, (inputEdge: Triple<ActivityNode>) => {
-
-        if (inputEdge.subject.type === ActivityNodeType.GoMolecularFunction
-          && inputEdge.object.type === ActivityNodeType.GoChemicalEntityHasInput) {
-          const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
-          const subjectNode = activity.getMFNode();
-          const objectNode = activity.rootNode;
-
-          activity.id = inputEdge.object.uuid;
-          objectNode.term = inputEdge.object.term;
-          objectNode.classExpression = inputEdge.object.classExpression;
-          objectNode.uuid = inputEdge.object.uuid;
-          objectNode.type = ActivityNodeType.GoChemicalEntity
-
-          if (subjectNode) {
-            subjectNode.term = inputEdge.subject.term;
-            subjectNode.classExpression = inputEdge.subject.classExpression;
-            subjectNode.uuid = inputEdge.subject.uuid;
-            subjectNode.type = inputEdge.subject.type;
-          }
-
-          //activity.postRunUpdate();
-          molecules.push(activity);
-
-        }
-      })
-    });
-
-    return molecules
-  }
 
   getCausalRelations(cam: Cam) {
     const self = this;
@@ -850,6 +817,11 @@ export class NoctuaGraphService {
             || objectInfo.hasRootType(EntityDefinition.GoChemicalEntity)) {
             const objectActivity = cam.findActivityById(objectId);
             const predicate = new Predicate(causalEdge, evidence)
+
+            if (causalEdge.id === noctuaFormConfig.edge.hasInput.id) {
+              predicate.isReverseLink = true;
+              predicate.reverseLinkTitle = 'is input'
+            }
             const triple = new Triple<Activity>(subjectActivity, objectActivity, predicate);
 
             triples.push(triple);
