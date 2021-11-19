@@ -139,7 +139,7 @@
 
           <noc-graph-settings [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.graphSettings">
           </noc-graph-settings>
-          <noc-activity-connector *ngSwitchCase="RightPanel.connectorForm">
+          <noc-activity-connector [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.connectorForm">
           </noc-activity-connector>
           <noc-triple-table [panelDrawer]="rightDrawer" [cam]="cam" *ngSwitchCase="RightPanel.tripleTable">
           </noc-triple-table>
