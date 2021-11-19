@@ -122,11 +122,13 @@ export class CamGraphService {
 
   addActivity(activity: Activity) {
     const self = this;
-
-    const el = self.camCanvas.createNode(activity)
     const position = self.placeholderElement.prop('position') as joint.dia.Point
 
-    el.position(position.x, position.y);
+    activity.position.x = position.x
+    activity.position.y = position.y
+
+    const el = self.camCanvas.createNode(activity)
+
     self.camCanvas.canvasGraph.addCell(el);
     self.updateCamLocations(self.cam);
   }

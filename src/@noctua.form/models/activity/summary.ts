@@ -50,10 +50,9 @@ export class TermsSummary {
   relations = new CamSummary<Entity>('Relations');
   dates = new CamSummary<Entity>('Dates');
 
-  allTerms: ActivityNode[] = []
-
-  nodes = []
-
+  allTerms: ActivityNode[] = [];
+  nodes = [];
+  coverage: number;
 
   constructor() {
     this.nodes = [

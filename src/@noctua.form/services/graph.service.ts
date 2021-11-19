@@ -755,7 +755,9 @@ export class NoctuaGraphService {
         subjectActivityNode.uuid = bbopSubjectId;
         self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
         activity.id = bbopSubjectId;
-        activity.postRunUpdate();
+        if (environment.isGraph) {
+          activity.postRunUpdate();
+        }
         activities.push(activity);
       }
     });

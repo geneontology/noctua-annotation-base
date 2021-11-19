@@ -209,6 +209,7 @@ export class Activity extends SaeGraph<ActivityNode> {
   updateSummary() {
     const self = this;
     let summary = new TermsSummary()
+    let coverage = 0;
     const filteredNodes = self.nodes.filter(node => node.term.hasValue())
 
     /*  summary.nodes = chain(self.nodes)
@@ -228,6 +229,18 @@ export class Activity extends SaeGraph<ActivityNode> {
         summary.other.append(node)
       }
     })
+
+    if (summary.mf.nodes.length > 0) {
+      coverage = coverage | 4
+    }
+    if (summary.bp.nodes.length > 0) {
+      coverage = coverage | 2
+    }
+    if (summary.cc.nodes.length > 0) {
+      coverage = coverage | 1
+    }
+
+    summary.coverage = coverage;
 
     this.summary = summary
   }
