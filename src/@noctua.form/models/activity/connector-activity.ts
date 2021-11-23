@@ -35,6 +35,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   state: ConnectorState;
   rule: ConnectorRule;
   connectorType: ConnectorType
+  reverseEdge = false;
 
   graphPreview = {
     nodes: [],
@@ -248,9 +249,17 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       graph: null
     };
 
-    const triples: Triple<ActivityNode>[] = [new Triple<ActivityNode>(
-      self.subjectNode, self.objectNode, self.predicate)
-    ]
+    let triples: Triple<ActivityNode>[]
+
+    if (this.connectorType === ConnectorType.MOLECULE_ACTIVITY && self.predicate.edge.id === noctuaFormConfig.edge.hasInput.id) {
+      triples = [new Triple<ActivityNode>(
+        self.objectNode, self.subjectNode, self.predicate)
+      ]
+    } else {
+      triples = [new Triple<ActivityNode>(
+        self.subjectNode, self.objectNode, self.predicate)
+      ]
+    }
 
     saveData.triples = triples;
 

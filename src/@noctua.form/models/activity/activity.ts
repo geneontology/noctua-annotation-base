@@ -72,6 +72,9 @@ export class Activity extends SaeGraph<ActivityNode> {
   gp;
   label: string;
   date: string;
+
+  validateEvidence = true;
+
   activityRows;
   activityType;
   errors;
@@ -193,8 +196,6 @@ export class Activity extends SaeGraph<ActivityNode> {
   get rootNode(): ActivityNode {
     return this.getNode(this.rootNodeType);
   }
-
-
 
   updateDate() {
     const rootNode = this.rootNode;
@@ -459,7 +460,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     self.submitErrors = [];
 
     each(self.nodes, (node: ActivityNode) => {
-      result = node.enableSubmit(self.submitErrors) && result;
+      result = node.enableSubmit(self.submitErrors, this.validateEvidence) && result;
     });
 
     if (self.activityType === ActivityType.bpOnly) {
@@ -617,9 +618,6 @@ export class Activity extends SaeGraph<ActivityNode> {
     return [self._buildTree(sortedEdges, self.rootNode)];
   }
 
-  count = 0
-
-
   private _buildTree(triples: Triple<ActivityNode>[], rootNode: ActivityNode): ActivityTreeNode {
     const self = this;
     const result: ActivityTreeNode[] = [new ActivityTreeNode(rootNode)]
@@ -628,7 +626,6 @@ export class Activity extends SaeGraph<ActivityNode> {
       for (const i in arr) {
         const children = []
         for (const j in triples) {
-          self.count++;
           if (triples[j].subject.id === arr[i].node.id) {
             children.push(new ActivityTreeNode(triples[j].object));
           }

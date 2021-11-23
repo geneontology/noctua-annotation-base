@@ -46,23 +46,23 @@ export class CamGraphService {
 
     const self = this;
 
-    this._camService.onCamChanged
-      .subscribe((cam: Cam) => {
-        if (!cam || !self.selectedElement) {
-          return;
-        }
-
-        const type = self.selectedElement.get('type');
-
-        if (type === NodeCellType.link) {
-          (self.selectedElement as NodeLink).setText(cam.title);
-        } else {
-          self.selectedElement.attr('noctuaTitle/text', cam.title);
-          // (self.selectedElement as NodeCell).addColor(cam.backgroundColor);
-        }
-        self.selectedElement.set({ cam: cam });
-        self.selectedElement.set({ id: cam.id });
-      });
+    /*    this._camService.onCamChanged
+         .subscribe((cam: Cam) => {
+           if (!cam || !self.selectedElement) {
+             return;
+           }
+   
+           const type = self.selectedElement.get('type');
+   
+           if (type === NodeCellType.link) {
+             (self.selectedElement as NodeLink).setText(cam.title);
+           } else {
+             self.selectedElement.attr('noctuaTitle/text', cam.title);
+             // (self.selectedElement as NodeCell).addColor(cam.backgroundColor);
+           }
+           self.selectedElement.set({ cam: cam });
+           self.selectedElement.set({ id: cam.id });
+         }); */
   }
 
   initializeGraph() {
@@ -107,6 +107,7 @@ export class CamGraphService {
 
     self.placeholderElement.position(x, y);
     self._activityFormService.setActivityType(node.type)
+    self._activityFormService.activity.validateEvidence = false;
     self.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
   }
 

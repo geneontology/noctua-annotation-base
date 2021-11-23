@@ -65,7 +65,7 @@ $accent: map-get($theme, accent);
       right: 0;
     }
     &:hover {
-      border: map-get($primary, default) solid 2px;
+      border: map-get($primary, default) solid 1px;
 
       .noc-cell-floating-title {
         color: map-get($primary, default);

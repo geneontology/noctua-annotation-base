@@ -315,7 +315,7 @@ export class ActivityNode implements ActivityNodeDisplay {
     //self.term = oldNode.term
   }
 
-  enableSubmit(errors) {
+  enableSubmit(errors, validateEvidence = true) {
     const self = this;
     let result = true;
 
@@ -331,7 +331,7 @@ export class ActivityNode implements ActivityNodeDisplay {
       self.required = false;
     }
 
-    if (!self.skipEvidence && self.hasValue()) {
+    if (!self.skipEvidence && self.hasValue() && validateEvidence) {
       each(self.predicate.evidence, (evidence: Evidence, key) => {
         result = evidence.enableSubmit(errors, self, key + 1) && result;
       });

@@ -18,7 +18,8 @@ import {
   ActivityType,
   ActivityTreeNode,
   ActivityNodeType,
-  ActivityDisplayType
+  ActivityDisplayType,
+  NoctuaGraphService
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -89,6 +90,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
 
   constructor(
     public camService: CamService,
+    private _noctuaGraphService: NoctuaGraphService,
     private noctuaCommonMenuService: NoctuaCommonMenuService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaFormMenuService: NoctuaFormMenuService,
@@ -127,7 +129,16 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
       this.editableTerms = this.options.editableTerms
     }
 
-
+    this._noctuaGraphService.onCamGraphChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((cam: Cam) => {
+        if (!cam || cam.id !== this.cam.id) {
+          return;
+        }
+        this.cam = cam;
+        this.activity = cam.findActivityById(this.activity.id)
+        this.loadTree()
+      })
   }
 
   ngAfterViewInit(): void {
