@@ -7,7 +7,6 @@
       [ngClass]="{'noc-highlight-match': entity.term?.highlight,
             'noc-highlight-modified': entity.term?.modified,
             'noc-highlight-match-current': camService.currentMatch?.uuid && entity.term?.uuid===camService.currentMatch?.uuid}">
-
       <div class="noc-cell-floating-title">
         {{entity.label}}
       </div>
@@ -59,15 +58,15 @@
       </div>
     </div>
     <div *ngIf="noctuaUserService.user &&  options.showMenu" class="noc-cell noc-action-cell" fxLayout="column"
-      fxLayoutAlign="start center">
+      fxLayoutAlign="center center">
       <button mat-icon-button (click)="updateCurrentMenuEvent($event)" class="noc-action-button" fxFlex="40px"
         [matMenuTriggerFor]="entityMenu">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
-        <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
+        <!-- <button mat-menu-item *ngIf="entity.treeLevel===0" class="" (click)="toggleIsComplement(entity)">
           NOT Qualifier
-        </button>
+        </button> -->
         <button mat-menu-item *ngIf="entity.insertMenuNodes" [matMenuTriggerFor]="addMenu">Add</button>
         <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
       </mat-menu>

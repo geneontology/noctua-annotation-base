@@ -56,7 +56,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     this.setRule();
     this.createGraph();
     this.setPreview();
-
   }
 
   setRule() {
@@ -76,6 +75,22 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
       self.rule.effectDirection.direction = question.causalEffect;
       self.rule.directness.directness = question.directness;
+    }
+  }
+
+  addDefaultEvidence() {
+    let activity: Activity;
+    if (this.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
+      activity = this.object;
+    } else {
+      activity = this.subject
+    }
+
+    const mfNode = activity.getMFNode()
+    const gpNode = activity.getGPNode()
+    if (gpNode && mfNode) {
+      const edge = activity.getEdge(mfNode.id, gpNode.id)
+      this.predicate.evidence = cloneDeep(edge.predicate.evidence)
     }
   }
 
@@ -275,10 +290,8 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       destNodes: destSaveData.nodes,
       srcTriples: srcSaveData.triples,
       destTriples: destSaveData.triples,
-      removeIds: subtractNodes(srcSaveData.graph, destSaveData.graph).map((node: ActivityNode) => {
-        return node.uuid;
-      }),
-      removeTriples: <Triple<ActivityNode>[]>subtractEdges(srcSaveData.graph, destSaveData.graph)
+      removeIds: [],
+      removeTriples: []
     };
 
     return saveData;

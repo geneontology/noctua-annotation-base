@@ -31,7 +31,7 @@ export class NoctuaActivityConnectorService {
   private connectorForm: ActivityConnectorForm;
   private connectorFormGroup: BehaviorSubject<FormGroup | undefined>;
   public connectorFormGroup$: Observable<FormGroup>;
-  // public currentConnectorActivity: ConnectorActivity;
+  public currentConnectorActivity: ConnectorActivity;
   public connectorActivity: ConnectorActivity;
   public onActivityChanged: BehaviorSubject<any>;
   public onLinkChanged: BehaviorSubject<any>;
@@ -66,9 +66,13 @@ export class NoctuaActivityConnectorService {
     if (this.causalConnection) {
       const predicate = cloneDeep(this.causalConnection.predicate)
       self.connectorActivity = new ConnectorActivity(self.subjectActivity, self.objectActivity, predicate);
+      self.connectorActivity.state = ConnectorState.editing
+      self.currentConnectorActivity = cloneDeep(this.connectorActivity)
     } else {
       const predicate = self.noctuaFormConfigService.createPredicate(Entity.createEntity(noctuaFormConfig.edge.positivelyRegulates))
       self.connectorActivity = new ConnectorActivity(self.subjectActivity, self.objectActivity, predicate);
+      self.connectorActivity.state = ConnectorState.creation
+      self.connectorActivity.addDefaultEvidence();
     }
 
     this.connectorForm = this.createConnectorForm();
@@ -111,6 +115,16 @@ export class NoctuaActivityConnectorService {
     // this.connectorActivity.prepareSave(value);
 
     if (self.connectorActivity.state === ConnectorState.editing) {
+      const saveData = self.connectorActivity.createEdit(self.currentConnectorActivity);
+      return self.noctuaGraphService.editActivity(
+        self.cam,
+        [],
+        [],
+        saveData.srcTriples,
+        saveData.destTriples,
+        [],
+        []);
+
 
     } else { // creation
       const saveData = self.connectorActivity.createSave();
@@ -118,7 +132,7 @@ export class NoctuaActivityConnectorService {
     }
   }
 
-  deleteActivity(connectorActivity: ConnectorActivity) {
+  deleteConnectorEdge(connectorActivity: ConnectorActivity) {
     const self = this;
     const deleteData = connectorActivity.createDelete();
 

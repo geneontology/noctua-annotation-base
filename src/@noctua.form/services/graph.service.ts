@@ -758,6 +758,7 @@ export class NoctuaGraphService {
         if (environment.isGraph) {
           activity.postRunUpdate();
         }
+
         activities.push(activity);
       }
     });

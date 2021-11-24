@@ -158,7 +158,7 @@
       Why is the "Save" button disabled?
     </button>
     <span fxFlex></span>
-    <button (click)='clear()' type="button" mat-raised-button color="" class="mr-8">Clear</button>
+    <button (click)='deleteConnectorEdge()' type="button" mat-raised-button color="warn" class="mr-8">Delete</button>
     <button [disabled]="!connectorFormGroup.valid" (click)="save()" type="submit" class="noc-rounded-button"
       mat-raised-button color="primary">Save</button>
   </div>

@@ -107,7 +107,7 @@ const edge = {
     label: 'is small molecule regulator'
   },
   isSmallMoleculeActivator: {
-    id: 'RO_0012005',
+    id: 'RO:0012005',
     label: 'is small molecule activator'
   },
   isSmallMoleculeInhibitor: {

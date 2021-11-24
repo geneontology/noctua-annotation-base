@@ -57,9 +57,9 @@ export class NoctuaActivityEntityService {
     const formMetadata = new ActivityFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
     const entityForm = new EntityForm(formMetadata, entity);
 
-    if (!entity.skipEvidence) {
-      entityForm.createEvidenceForms(entity);
-    }
+    //if (!entity.skipEvidence) {
+    entityForm.createEvidenceForms(entity);
+    // }
 
     return entityForm;
   }

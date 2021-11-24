@@ -54,7 +54,13 @@ $accent: map-get($theme, accent);
 
     .noc-action-cell {
       padding: 0;
-      @include deep-width(40px);
+      @include deep-width(50px);
+
+      .noc-action-button {
+        background-color: map-get($primary, 400);
+        color: #fff;
+        @include mat-elevation(2);
+      }
     }
   }
 

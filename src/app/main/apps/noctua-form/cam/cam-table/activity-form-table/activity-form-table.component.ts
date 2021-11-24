@@ -38,6 +38,7 @@ import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/co
 import { takeUntil } from 'rxjs/operators';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
+import { TableOptions } from '@noctua.common/models/table-options';
 
 @Component({
   selector: 'noc-activity-form-table',
@@ -57,15 +58,11 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
   gbSettings: SettingsOptions = new SettingsOptions()
 
   @ViewChild('tree') tree;
+  @Input('cam') cam: Cam
+  @Input('activity') activity: Activity
+  @Input('options') options: TableOptions = {};
 
-  @Input('cam')
-  cam: Cam
-
-  @Input('activity')
-  activity: Activity
-
-  @Input('options')
-  options: any = {};
+  gbOptions: TableOptions = {};
 
   optionsDisplay: any = {}
 
@@ -112,6 +109,9 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
   }
 
   ngOnInit(): void {
+
+    this.gbOptions = cloneDeep(this.options)
+    this.gbOptions.showMenu = false
 
     this.noctuaCommonMenuService.onCamSettingsChanged
       .pipe(takeUntil(this._unsubscribeAll))
