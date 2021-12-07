@@ -103,8 +103,6 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
 
   ngOnChanges(changes: SimpleChanges): void {
     // do your action
-    console.log(this.activity)
-
     this.loadTree()
   }
 
@@ -154,6 +152,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
   }
 
   loadTree() {
+    if (!this.activity) return;
     this.gpNode = this.activity.getGPNode();
     this.optionsDisplay = { ...this.options, hideHeader: true };
     this.treeNodes = this.activity.buildTrees();

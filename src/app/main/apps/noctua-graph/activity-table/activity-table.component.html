@@ -3,6 +3,17 @@
     <span class="noc-drawer-header-title">
     </span>
     <span fxFlex></span>
+    <button mat-icon-button class="" fxFlex="40px" color="primary" [matMenuTriggerFor]="activityOptionMenu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #activityOptionMenu="matMenu" class="noc-dropdown-menu">
+      <button mat-menu-item color="warn" class="" (click)="deleteActivity(activity)">
+        Delete
+      </button>
+      <button mat-menu-item color="" class="" (click)="delete(activity)">
+        Duplicate
+      </button>
+    </mat-menu>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
       aria-label="Close dialog">
       <mat-icon>close</mat-icon> Close

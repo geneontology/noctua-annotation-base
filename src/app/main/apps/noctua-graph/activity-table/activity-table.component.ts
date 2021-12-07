@@ -29,6 +29,9 @@ import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { MatTableDataSource } from '@angular/material/table';
 import { takeUntil } from 'rxjs/operators';
 import { MatDrawer } from '@angular/material/sidenav';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
+import { NoctuaFormDialogService } from '../../noctua-form';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 
 @Component({
   selector: 'noc-graph-activity-table',
@@ -57,11 +60,13 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
     private ngZone: NgZone,
     public camService: CamService,
     public noctuaFormMenuService: NoctuaFormMenuService,
+    public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaActivityEntityService: NoctuaActivityEntityService,
     public noctuaActivityFormService: NoctuaActivityFormService,
-    private inlineEditorService: InlineEditorService) {
+    private confirmDialogService: NoctuaConfirmDialogService,
+    private noctuaFormDialogService: NoctuaFormDialogService) {
 
     this._unsubscribeAll = new Subject();
   }
@@ -78,12 +83,32 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
         this.ngZone.run(() => {
           this.activity = activity
         });
-
-
       });
 
   }
 
+  deleteActivity(activity: Activity) {
+    const self = this;
+
+    const success = () => {
+      this.camService.deleteActivity(activity).then(() => {
+        this.camService.onSelectedActivityChanged.next(null);
+        this.noctuaCommonMenuService.closeRightDrawer();
+        this.camService.getCam(this.cam.id);
+        self.noctuaFormDialogService.openInfoToast('Activity successfully deleted.', 'OK');
+      });
+    };
+
+    if (!self.noctuaUserService.user) {
+      this.confirmDialogService.openConfirmDialog('Not Logged In',
+        'Please log in to continue.',
+        null);
+    } else {
+      this.confirmDialogService.openConfirmDialog('Confirm Delete?',
+        'You are about to delete an activity.',
+        success);
+    }
+  }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
@@ -93,7 +118,4 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
   close() {
     this.panelDrawer.close();
   }
-
-
 }
-

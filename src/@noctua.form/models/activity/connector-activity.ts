@@ -166,10 +166,16 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
         edge = noctuaFormConfig.edge.isSmallMoleculeRegulator;
       }
     } else {
-      edge = noctuaFormConfig.edge.hasInput;
+      edge = noctuaFormConfig.edge.hasInput
     }
 
-    return Entity.createEntity(edge);
+    const entity = Entity.createEntity(edge);
+
+    if (entity.id === noctuaFormConfig.edge.hasInput.id) {
+      entity.label = 'is input'
+    }
+
+    return entity
   }
 
   edgeToConnectorQuestion(edge: Entity) {

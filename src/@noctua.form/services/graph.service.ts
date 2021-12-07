@@ -1080,8 +1080,6 @@ export class NoctuaGraphService {
     return success();
   }
 
-
-
   addFact(reqs, triples: Triple<ActivityNode>[]) {
     const self = this;
 
