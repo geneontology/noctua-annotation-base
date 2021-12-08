@@ -774,7 +774,7 @@ export class NoctuaGraphService {
       const subjectNode = self.nodeToActivityNode(camGraph, bbopNode.id());
 
 
-      if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity)) {
+      if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity) && !subjectNode.hasRootType(EntityDefinition.GoMolecularEntity)) {
         const edges = camGraph.get_edges_by_object(bbopNode.id())
         const hasEnabledBy = find(edges, (edge) => {
           return edge.predicate_id() === noctuaFormConfig.edge.enabledBy.id

@@ -85,10 +85,9 @@
               fxLayoutAlign="center center">
               <div>IS NOT</div>
             </div>
-            <div fxFlex="" class="">
+            <div class="w-100-p">
               <ng-container [formGroupName]="i" *ngFor="let entityForm of nodeGroup.get('entityGroup')?.controls">
-                <noc-entity-form [entityFormGroup]="entityForm" fxLayout="row" fxLayoutAlign="start center"
-                  class="w-100-p">
+                <noc-entity-form [entityFormGroup]="entityForm" class="">
                 </noc-entity-form>
               </ng-container>
             </div>
