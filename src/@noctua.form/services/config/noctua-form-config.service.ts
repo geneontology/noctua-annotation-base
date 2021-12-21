@@ -42,7 +42,8 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.modelState.options.production,
       noctuaFormConfig.modelState.options.review,
       noctuaFormConfig.modelState.options.closed,
-      noctuaFormConfig.modelState.options.delete
+      noctuaFormConfig.modelState.options.delete,
+      noctuaFormConfig.modelState.options.internal_test
     ];
 
     return {

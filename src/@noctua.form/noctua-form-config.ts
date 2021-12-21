@@ -200,6 +200,10 @@ export const noctuaFormConfig = {
       'delete': {
         'name': 'delete',
         'label': 'Delete'
+      },
+      'internal_test': {
+        'name': 'internal_test',
+        'label': 'Internal Test'
       }
     }
   },
