@@ -225,7 +225,7 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
     },
     'rect': { width: 300, },
 
-    '.activity-name-rect': {
+    '.activity-gp-rect': {
       fill: '#d5d2d5',
       stroke: '#fff',
       height: 50,
@@ -234,7 +234,7 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
     '.icon': {
       event: 'element:.icon:pointerdown',
       'xlink:href': './assets/icons/edit.svg',
-      ref: '.activity-name-rect',
+      ref: '.activity-gp-rect',
       refX: '100%',
       refX2: -30,
       y: 10,
@@ -246,13 +246,18 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       stroke: '#fff',
       'stroke-width': 0.5
     },
-    '.activity-gp-rect': {
+    '.activity-cc-rect': {
       fill: '#d5fdd5',
       stroke: '#fff',
       'stroke-width': 0.5
     },
-    '.activity-name-text': {
-      'ref': '.activity-name-rect',
+    '.activity-bp-rect': {
+      fill: '#d5fdd5',
+      stroke: '#fff',
+      'stroke-width': 0.5
+    },
+    '.activity-gp-text': {
+      'ref': '.activity-gp-rect',
       'ref-y': .5,
       'ref-x': 5,
       'text-anchor': 'left',
@@ -272,13 +277,25 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
         ellipsis: false,
       },
     },
-    '.activity-gp-text': {
-      'ref': '.activity-gp-rect',
-      'ref-y': 5,
-      'ref-x': 5,
+    '.activity-cc-text': {
+      'ref': '.activity-cc-rect',
+      'ref-y': 5, 'ref-x': 5,
       'fill': 'black',
       'font-size': 12,
-      'font-family': 'Times New Roman'
+      'font-family': 'Times New Roman',
+      textWrap: {
+        ellipsis: false,
+      },
+    },
+    '.activity-bp-text': {
+      'ref': '.activity-bp-rect',
+      'ref-y': 5, 'ref-x': 5,
+      'fill': 'black',
+      'font-size': 12,
+      'font-family': 'Times New Roman',
+      textWrap: {
+        ellipsis: false,
+      },
     }
   },
 
@@ -287,16 +304,19 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
   gp: []
 }, {
   markup: [
-
     '<rect class="wrapper"/>',
     '<rect class="highlighter"/>',
     '<g class="rotatable">',
     '<g class="scalable">',
-    '<rect class="activity-name-rect"/>',
     '<rect class="activity-mf-rect"/>',
     '<rect class="activity-gp-rect"/>',
+    '<rect class="activity-cc-rect"/>',
+    '<rect class="activity-bp-rect"/>',
     '</g>',
-    '<text class="activity-name-text"/><text class="activity-mf-text"/><text class="activity-gp-text"/>',
+    '<text class="activity-mf-text"/>',
+    '<text class="activity-gp-text"/>',
+    '<text class="activity-cc-text"/>',
+    '<text class="activity-bp-text"/>',
     // '<image class="icon"/>',
     '</g>'
   ].join(''),
@@ -322,10 +342,20 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
     const attrs = this.get('attrs');
 
     const rects = [
-      { type: 'name', text: this.getClassName() },
+      { type: 'gp', text: this.get('gp') },
       { type: 'mf', text: this.get('mf') },
-      { type: 'gp', text: this.get('gp') }
     ];
+
+    const cc = this.get('cc');
+    const bp = this.get('bp');
+
+    if (cc) {
+      rects.push({ type: 'cc', text: cc })
+    }
+
+    if (bp) {
+      rects.push({ type: 'bp', text: bp })
+    }
 
     let offsetY = 0;
 

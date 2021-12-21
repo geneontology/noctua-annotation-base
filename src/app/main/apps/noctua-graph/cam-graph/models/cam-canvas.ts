@@ -397,18 +397,21 @@ export class CamCanvas {
         //.addActivityPorts()
         el.setColor(activity.backgroundColor)
         //.setSuccessorCount(activity.successorCount)
-        const gpNode = activity.getGPNode();
-        const mfNode = activity.getMFNode();
 
         const activityType = activity.getActivityTypeDetail();
 
-        el.prop({ 'name': [activityType ? activityType.label : 'Activity Unity'] });
-
-        if (mfNode) {
-            el.prop({ 'mf': [mfNode.term.label,] });
+        if (activity.mfNode) {
+            el.prop({ 'mf': [activity.mfNode.term.label] });
         }
 
-        if (gpNode) {
+        if (activity.ccNode) {
+            el.prop({ 'cc': [`occurs in: ${activity.ccNode.term.label}`] });
+        }
+
+        if (activity.bpNode) {
+            el.prop({ 'bp': [`part of: ${activity.bpNode.term.label}`] });
+        }
+        if (activity.gpNode) {
             el.prop({ 'gp': [activity.title] });
         }
 

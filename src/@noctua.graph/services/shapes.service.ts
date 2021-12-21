@@ -80,9 +80,10 @@ export class NodeCellList extends shapes.NodeCellList {
     const deep = getColor(colorKey, low ? low : 200);
     const light = getColor(colorKey, high ? high : 100);
 
-    self.attr('.activity-name-rect/fill', deep);
+    self.attr('.activity-gp-rect/fill', deep);
     self.attr('.activity-mf-rect/fill', light);
-    self.attr('.activity-gp-rect/fill', light);
+    self.attr('.activity-cc-rect/fill', light);
+    self.attr('.activity-bp-rect/fill', light);
 
     //this.attr('.icon/height', 200);
 

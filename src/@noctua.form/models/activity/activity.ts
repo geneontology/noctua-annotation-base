@@ -346,6 +346,18 @@ export class Activity extends SaeGraph<ActivityNode> {
     return self.getNode(ActivityNodeType.GoMolecularFunction);
   }
 
+  getBPNode() {
+    const self = this;
+
+    return self.getNode(ActivityNodeType.GoBiologicalProcess);
+  }
+
+  getCCNode() {
+    const self = this;
+
+    return self.getNode(ActivityNodeType.GoCellularComponent);
+  }
+
   getRootNodeByType(type: ActivityNodeType): ActivityNode {
     const self = this;
     const rootEdges = this.getEdges(this.rootNode.id)
