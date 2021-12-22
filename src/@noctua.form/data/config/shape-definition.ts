@@ -481,6 +481,25 @@ export const canInsertEntity = {
             predicate: noctuaFormConfig.edge.partOf,
             cardinality: CardinalityType.oneToOne
         }
+    ],
+    [ActivityNodeType.GoChemicalEntity]: [
+        <ShapeDescription>{
+            label: 'Add located in (CC)',
+            id: ActivityNodeType.GoCellularComponent,
+            node: <ActivityNodeDisplay>{
+                category: [EntityDefinition.GoCellularComponent],
+                type: ActivityNodeType.GoCellularComponent,
+                aspect: 'C',
+                label: 'located in (CC)',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                isExtension: true,
+                weight: 20,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.locatedIn,
+            cardinality: CardinalityType.oneToOne
+        },
     ]
 };
 

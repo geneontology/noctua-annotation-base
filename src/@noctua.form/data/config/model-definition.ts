@@ -268,20 +268,9 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
 export const moleculeDescription: ActivityDescription = {
     type: ActivityType.molecule,
     nodes: {
-        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularFunction.id,
-            type: ActivityNodeType.GoMolecularFunction,
-            category: [EntityDefinition.GoMolecularFunction],
-            label: 'Molecular Function',
-            aspect: 'F',
-            displaySection: noctuaFormConfig.displaySection.fd,
-            displayGroup: noctuaFormConfig.displayGroup.mf,
-            visible: false,
-            weight: 1
-        },
-        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularEntity.id,
-            type: ActivityNodeType.GoMolecularEntity,
+        [ActivityNodeType.GoChemicalEntity]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoChemicalEntity.id,
+            type: ActivityNodeType.GoChemicalEntity,
             category: [EntityDefinition.GoChemicalEntity],
             label: 'Molecule',
             skipEvidence: true,
@@ -289,12 +278,22 @@ export const moleculeDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             weight: 1
+        },
+        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoCellularComponent.id,
+            type: ActivityNodeType.GoCellularComponent,
+            category: [EntityDefinition.GoCellularComponent],
+            label: '(Chemical) located in (CC)',
+            aspect: 'C',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.cc,
+            weight: 20
         }
     },
     triples: [{
-        subject: ActivityNodeType.GoMolecularFunction,
-        object: ActivityNodeType.GoChemicalEntity,
-        predicate: noctuaFormConfig.edge.hasInput
+        subject: ActivityNodeType.GoChemicalEntity,
+        object: ActivityNodeType.GoCellularComponent,
+        predicate: noctuaFormConfig.edge.locatedIn
     }],
 };
 
