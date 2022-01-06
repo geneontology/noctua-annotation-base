@@ -145,7 +145,9 @@ const routes = [
     ActivityFormTableComponent,
     ActivityFormTableNodeComponent,
     CamPreviewComponent,
-    PreviewActivityComponent
+    PreviewActivityComponent,
+    GraphPreviewComponent,
+    EvidenceFormTableComponent
   ],
   providers: [
     NoctuaFormDialogService,

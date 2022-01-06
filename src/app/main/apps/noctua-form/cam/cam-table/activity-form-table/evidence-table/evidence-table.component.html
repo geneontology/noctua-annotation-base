@@ -88,8 +88,26 @@
         </span>
       </span>
     </div>
+    <div *ngIf="noctuaUserService.user && options.showEvidenceMenu" class="noc-cell noc-action-cell" fxLayout="column"
+      fxLayoutAlign="center center">
+      <button mat-icon-button (click)="updateCurrentMenuEvent($event)" class="noc-action-button" fxFlex="40px"
+        [matMenuTriggerFor]="evidenceMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #evidenceMenu="matMenu">
+        <button mat-menu-item (click)="addEvidence(entity)" class="">
+          Add Evidence
+        </button>
+        <button (click)="removeEvidence(entity,i)" mat-menu-item>
+          Remove Evidence
+        </button>
+      </mat-menu>
+    </div>
   </div>
 </div>
 <div *ngIf="entity.predicate?.evidence.length===0" class="noc-no-info">
   no evidence present.
+  <button mat-menu-item (click)="addEvidence(entity)" class="">
+    Add Evidence
+  </button>
 </div>

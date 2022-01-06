@@ -162,8 +162,6 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
     this.tree.treeModel.expandAll();
   }
 
-
-
   setActivityDisplayType(displayType: ActivityDisplayType) {
     this.activity.activityDisplayType = displayType;
   }

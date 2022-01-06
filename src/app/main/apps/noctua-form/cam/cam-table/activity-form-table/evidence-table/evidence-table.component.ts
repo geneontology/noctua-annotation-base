@@ -12,6 +12,7 @@ import {
   NoctuaFormMenuService,
   Predicate,
   NoctuaUserService,
+  NoctuaActivityFormService,
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -21,6 +22,7 @@ import {
 } from '@geneontology/noctua-form-base';
 import { EditorCategory } from '@noctua.editor/models/editor-category';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
+import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 
 
 @Component({
@@ -41,10 +43,14 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
   @Input('cam')
   public cam: Cam;
 
+  @Input('activity')
+  public activity: Activity;
+
   @Input('entity')
   public entity: ActivityNode;
 
   private unsubscribeAll: Subject<any>;
+  currentMenuEvent: any = {};
 
   constructor(
     public camService: CamService,
@@ -52,6 +58,8 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     //  public noctuaFormMenuService: NoctuaFormMenuService,
+    public noctuaActivityFormService: NoctuaActivityFormService,
+    private inlineEditorService: InlineEditorService,
     public noctuaActivityEntityService: NoctuaActivityEntityService) {
 
     this.unsubscribeAll = new Subject();
@@ -64,6 +72,37 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
+  }
+
+  addEvidence(entity: ActivityNode) {
+    const self = this;
+
+    entity.predicate.addEvidence();
+    const data = {
+      cam: this.cam,
+      activity: this.activity,
+      entity: entity,
+      category: EditorCategory.evidenceAll,
+      evidenceIndex: entity.predicate.evidence.length - 1
+    };
+
+    this.camService.onCamChanged.next(this.cam);
+    this.camService.activity = this.activity;
+    this.noctuaActivityEntityService.initializeForm(this.activity, entity);
+    this.inlineEditorService.open(this.currentMenuEvent.target, { data });
+
+    self.noctuaActivityFormService.initializeForm();
+  }
+
+  removeEvidence(entity: ActivityNode, index: number) {
+    const self = this;
+
+    entity.predicate.removeEvidence(index);
+    self.noctuaActivityFormService.initializeForm();
+  }
+
+  updateCurrentMenuEvent(event) {
+    this.currentMenuEvent = event;
   }
 }
 

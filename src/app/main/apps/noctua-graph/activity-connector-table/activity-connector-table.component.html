@@ -1,0 +1,127 @@
+<form name="connectorFormGroup" [formGroup]="connectorFormGroup" fxLayout="column" fxLayoutAlign="start stretch"
+  class="noc-drawer w-100-p h-100-p">
+  <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
+    <span class="noc-drawer-header-title">
+      Causal Relation Form</span>
+    <span fxFlex></span>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close dialog">
+      <mat-icon>close</mat-icon> Close
+    </button>
+  </div>
+  <div class="noc-drawer-body" fxLayout="column" fxLayoutAlign="start start" noctuaPerfectScrollbar>
+    <div *ngIf="connectorFormGroup" class="noc-connector-form">
+      <div fxLayout="column" fxLayoutAlign="start stretch" class="noc-form-section w-100-p">
+        <div class="noc-section-body w-100-p p-0" fxLayout="column" fxLayoutAlign="start center">
+          <noc-graph-preview [nodes]="connectorActivity?.graphPreview.nodes"
+            [edges]="connectorActivity?.graphPreview.edges" class="noc-graph-preview"></noc-graph-preview>
+        </div>
+        <div *ngIf="connectorActivity.connectorType === ConnectorType.ACTIVITY_ACTIVITY"
+          class="noc-form-section p-0 w-100-p">
+          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="180px">
+              <p>Effect Direction</p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
+                class="noc-radio-button-rounded mb-8" [value]="causalEffect"
+                [checked]="causalEffect.name === connectorActivity?.rule.effectDirection.direction.name">
+                {{causalEffect.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="180px" class="pr-8">
+              <p>Directness
+              </p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let directness of noctuaFormConfigService.directness.options"
+                class="noc-radio-button-rounded mb-8" [value]="directness"
+                [checked]="directness.name === connectorActivity?.rule.directness.directness.name">
+                {{directness.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div *ngIf="connectorActivity.connectorType === ConnectorType.ACTIVITY_MOLECULE"
+          class="noc-form-section p-0 w-100-p">
+          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="180px" class="pr-8">
+              <p>Directness
+              </p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let directness of noctuaFormConfigService.directnessActivityMolecule.options"
+                class="noc-radio-button-rounded mb-8" [value]="directness"
+                [checked]="directness.name === connectorActivity?.rule.directness.directness.name">
+                {{directness.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div *ngIf="connectorActivity.connectorType === ConnectorType.MOLECULE_ACTIVITY"
+          class="noc-form-section p-0 w-100-p">
+          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="180px">
+              <p>Relationship</p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="chemicalRelationship" fxLayout="column"
+              fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let relationship of noctuaFormConfigService.chemicalRelationship.options"
+                class="noc-radio-button-rounded mb-8"
+                [checked]="relationship.name === connectorActivity?.rule.chemicalRelationship.relation.name"
+                [value]="relationship">
+                {{relationship.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div *ngIf="connectorActivity?.rule.displaySection.causalEffect" class="px-8 noc-group-row" fxLayout="row"
+            fxLayoutAlign="start center">
+            <div fxFlex="180px">
+              <p>Effect Direction</p>
+            </div>
+            <mat-radio-group fxFlex="" formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
+                class="noc-radio-button-rounded mb-8" [value]="causalEffect"
+                [checked]="causalEffect.name === connectorActivity?.rule.effectDirection.direction.name">
+                {{causalEffect.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-section-heading">
+            Suggested Causal Relation
+          </div>
+        </div>
+        <div class="noc-note mb-4" fxLayout="row" fxLayoutAlign="start center">
+          <span class="noc-description">
+            {{connectorActivity?.predicate.edge?.label}}
+          </span>
+        </div>
+        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-section-heading">
+            Evidence
+          </div>
+        </div>
+        <!--  <noc-activity-form-table [options]="options" [cam]="cam" [activity]="connectorActivity"
+          class="noc-activities-table-body" fxLayout="row" fxLayoutAlign="start center">
+        </noc-activity-form-table> 
+
+   
+
+
+        <noc-activity-form-table-node [settings]="settings" [options]="options" [cam]="cam" [activity]="activity"
+          [entity]="connectorActivity.subjectNode" class="w-100-p">
+        </noc-activity-form-table-node>-->
+        <noc-evidence-form-table class="w-100-p" [settings]="settings" [options]="evidenceOptions" [cam]="cam"
+          [activity]="connectorActivity" [entity]="connectorActivity.subjectNode">
+        </noc-evidence-form-table>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
+
+  </div>
+</form>

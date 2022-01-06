@@ -128,8 +128,6 @@
       <mat-drawer #rightDrawer class="noc-right-drawer" mode="over" position="end">
         <div [ngSwitch]="noctuaCommonMenuService.selectedRightPanel" class="h-100-p" #scrollbarRef
           [perfectScrollbar]="scrollbarConfig">
-          <noc-cam-form [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.camForm">
-          </noc-cam-form>
           <noc-cam-table [ngStyle]="{width:tableWidth}" [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.camTable"
             [cam]="cam" [options]="tableOptions"></noc-cam-table>
 
@@ -137,12 +135,12 @@
             [options]="tableOptions" [cam]="cam">
           </noc-graph-activity-table>
 
+          <noc-activity-connector-table [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.activityConnectorTable"
+            [cam]="cam">
+          </noc-activity-connector-table>
+
           <noc-graph-settings [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.graphSettings">
           </noc-graph-settings>
-          <noc-activity-connector [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.connectorForm">
-          </noc-activity-connector>
-          <noc-triple-table [panelDrawer]="rightDrawer" [cam]="cam" *ngSwitchCase="RightPanel.tripleTable">
-          </noc-triple-table>
         </div>
       </mat-drawer>
     </mat-drawer-container>

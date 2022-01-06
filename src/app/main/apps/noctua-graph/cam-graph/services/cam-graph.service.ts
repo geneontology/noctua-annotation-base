@@ -170,7 +170,7 @@ export class CamGraphService {
     if (!source || !target) return;
 
     self._activityConnectorService.initializeForm(source.id, target.id);
-    self.noctuaCommonMenuService.selectRightPanel(RightPanel.connectorForm);
+    self.noctuaCommonMenuService.selectRightPanel(RightPanel.activityConnectorTable);
     self.noctuaCommonMenuService.closeLeftDrawer();
     self.noctuaCommonMenuService.openRightDrawer();
 

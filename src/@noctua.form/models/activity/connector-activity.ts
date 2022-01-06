@@ -31,7 +31,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   subjectNode: ActivityNode;
   objectNode: ActivityNode;
   predicate: Predicate;
-  originalPredicate: Predicate;
   state: ConnectorState;
   rule: ConnectorRule;
   connectorType: ConnectorType
@@ -50,8 +49,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     this.object = object;
     this.predicate = predicate;
     this.rule = new ConnectorRule();
-    this.subjectNode = this.subject.rootNode;
+    this.subjectNode = cloneDeep(this.subject.rootNode);
     this.objectNode = this.object.rootNode;
+    this.subjectNode.predicate.evidence = predicate.evidence
     this.setConnectorType()
     this.setRule();
     this.createGraph();
