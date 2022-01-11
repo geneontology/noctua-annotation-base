@@ -109,7 +109,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
   ngOnInit(): void {
 
     this.gbOptions = cloneDeep(this.options)
-    this.gbOptions.showMenu = false
+    this.gbOptions.showMenu = this.activity.activityType === ActivityType.molecule
 
     this.noctuaCommonMenuService.onCamSettingsChanged
       .pipe(takeUntil(this._unsubscribeAll))

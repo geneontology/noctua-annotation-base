@@ -17,37 +17,6 @@ export interface GoCategory {
   suffix: string;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export enum ActivityNodeType {
 
   GoCellularComponent = 'GoCellularComponent',
@@ -90,7 +59,8 @@ export interface ActivityNodeDisplay {
   required: boolean;
   termRequired: boolean;
   visible: boolean;
-  skipEvidence: boolean;
+  skipEvidenceCheck: boolean;
+  showEvidence: boolean;
   isKey: boolean;
   weight: number;
   relationEditable: boolean;
@@ -126,7 +96,8 @@ export class ActivityNode implements ActivityNodeDisplay {
   termRequired = false;
   visible = true;
   canInsertNodes;
-  skipEvidence = false;
+  skipEvidenceCheck = false;
+  showEvidence = true;
   errors = [];
   warnings = [];
   status = '0';
@@ -331,7 +302,7 @@ export class ActivityNode implements ActivityNodeDisplay {
       self.required = false;
     }
 
-    if (!self.skipEvidence && self.hasValue() && validateEvidence) {
+    if (!self.skipEvidenceCheck && self.hasValue() && validateEvidence) {
       each(self.predicate.evidence, (evidence: Evidence, key) => {
         result = evidence.enableSubmit(errors, self, key + 1) && result;
       });

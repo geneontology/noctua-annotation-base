@@ -167,10 +167,13 @@ export class Activity extends SaeGraph<ActivityNode> {
   }
 
   get rootNodeType(): ActivityNodeType {
-    return this.activityType === ActivityType.ccOnly ||
-      this.activityType === ActivityType.molecule ?
-      ActivityNodeType.GoMolecularEntity :
-      ActivityNodeType.GoMolecularFunction;
+    if (this.activityType === ActivityType.ccOnly) {
+      return ActivityNodeType.GoMolecularEntity
+    } else if (this.activityType === ActivityType.molecule) {
+      return ActivityNodeType.GoChemicalEntity;
+    } else {
+      return ActivityNodeType.GoMolecularFunction
+    }
   }
 
   postRunUpdate() {

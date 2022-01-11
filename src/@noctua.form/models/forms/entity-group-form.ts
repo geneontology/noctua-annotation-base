@@ -25,7 +25,7 @@ export class EntityGroupForm {
         entities.forEach((entity: ActivityNode) => {
             if (entity.visible) {
                 const entityForm = new EntityForm(self._metadata, entity);
-                if (!entity.skipEvidence) {
+                if (!entity.skipEvidenceCheck) {
                     entityForm.createEvidenceForms(entity);
                 }
                 self.entityForms.push(entityForm);

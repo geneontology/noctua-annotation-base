@@ -773,7 +773,6 @@ export class NoctuaGraphService {
     each(camGraph.all_nodes(), (bbopNode) => {
       const subjectNode = self.nodeToActivityNode(camGraph, bbopNode.id());
 
-
       if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity) && !subjectNode.hasRootType(EntityDefinition.GoMolecularEntity)) {
         const edges = camGraph.get_edges_by_object(bbopNode.id())
         const hasEnabledBy = find(edges, (edge) => {

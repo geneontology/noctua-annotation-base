@@ -274,6 +274,7 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       'font-size': 12,
       'font-family': 'Times New Roman',
       textWrap: {
+        width: '90%',
         ellipsis: false,
       },
     },
@@ -294,6 +295,7 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       'font-size': 12,
       'font-family': 'Times New Roman',
       textWrap: {
+        width: '90%',
         ellipsis: false,
       },
     }
