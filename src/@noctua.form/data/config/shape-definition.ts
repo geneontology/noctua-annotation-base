@@ -88,8 +88,8 @@ export const canInsertEntity = {
                 type: ActivityNodeType.GoMolecularEntity,
                 category: [EntityDefinition.GoMolecularEntity],
                 label: '(Protein Complex) has part (GP)',
-                displaySection: noctuaFormConfig.displaySection.fd,
-                displayGroup: noctuaFormConfig.displayGroup.cc,
+                displaySection: noctuaFormConfig.displaySection.gp,
+                displayGroup: noctuaFormConfig.displayGroup.gp,
                 weight: 3,
                 isKey: false,
                 showInMenu: true,
@@ -100,13 +100,30 @@ export const canInsertEntity = {
     ],
     [ActivityNodeType.GoMolecularFunction]: [
         <ShapeDescription>{
-            label: 'Add Enabled by GP',
+            label: 'Add enabled by GP',
             id: ActivityNodeType.GoMolecularEntity,
             node: <ActivityNodeDisplay>{
                 id: EntityDefinition.GoMolecularEntity.id,
                 type: ActivityNodeType.GoMolecularEntity,
                 category: [EntityDefinition.GoMolecularEntity],
                 label: '(MF) enabled by (GP)',
+                displaySection: noctuaFormConfig.displaySection.gp,
+                displayGroup: noctuaFormConfig.displayGroup.gp,
+                termRequired: true,
+                weight: 2,
+                isKey: true
+            },
+            predicate: noctuaFormConfig.edge.enabledBy,
+            cardinality: CardinalityType.oneToOne
+        },
+        <ShapeDescription>{
+            label: 'Add enabled by Protein Complex',
+            id: ActivityNodeType.GoProteinContainingComplex,
+            node: <ActivityNodeDisplay>{
+                id: EntityDefinition.GoProteinContainingComplex.id,
+                type: ActivityNodeType.GoProteinContainingComplex,
+                category: [EntityDefinition.GoProteinContainingComplex],
+                label: '(MF) enabled by (Protein Complex)',
                 displaySection: noctuaFormConfig.displaySection.gp,
                 displayGroup: noctuaFormConfig.displayGroup.gp,
                 termRequired: true,

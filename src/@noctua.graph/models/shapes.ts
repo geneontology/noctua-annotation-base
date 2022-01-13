@@ -278,7 +278,11 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       'font-weight': 'bold',
       'fill': 'black',
       'font-size': 12,
-      'font-family': 'Times New Roman'
+      'font-family': 'Times New Roman',
+      textWrap: {
+        width: '90%',
+        ellipsis: false,
+      },
     },
     '.activity-mf-text': {
       'ref': '.activity-mf-rect',

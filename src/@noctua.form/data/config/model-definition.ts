@@ -81,17 +81,18 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
 };
 
 export const proteinComplexBaseDescription: ActivityDescription = {
-    type: ActivityType.ccOnly,
+    type: ActivityType.proteinComplex,
     nodes: {
-        [ActivityNodeType.GoProteinContainingComplex]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoProteinContainingComplex.id,
-            type: ActivityNodeType.GoProteinContainingComplex,
-            category: [EntityDefinition.GoProteinContainingComplex],
-            label: 'Protein Complex',
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'Molecular Function',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.mf,
             skipEvidenceCheck: true,
-            termRequired: true,
-            displaySection: noctuaFormConfig.displaySection.gp,
-            displayGroup: noctuaFormConfig.displayGroup.gp,
+            visible: false,
             weight: 1
         }
     },
@@ -287,7 +288,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
 };
 
 export const proteinComplexDescription: ActivityDescription = {
-    type: ActivityType.ccOnly,
+    type: ActivityType.proteinComplex,
     isComplex: true,
     nodes: {
         [ActivityNodeType.GoProteinContainingComplex]: <ActivityNodeDisplay>{
@@ -299,10 +300,53 @@ export const proteinComplexDescription: ActivityDescription = {
             termRequired: true,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 2
+        },
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'Molecular Function',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.mf,
+            termRequired: true,
             weight: 1
+        },
+        [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoBiologicalProcess.id,
+            type: ActivityNodeType.GoBiologicalProcess,
+            category: [EntityDefinition.GoBiologicalProcess],
+            label: '(MF) part of (BP)',
+            aspect: 'P',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.bp,
+            weight: 10
+        },
+        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoCellularComponent.id,
+            type: ActivityNodeType.GoCellularComponent,
+            category: [EntityDefinition.GoCellularComponent],
+            label: '(MF) occurs in (CC)',
+            aspect: 'C',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.cc,
+            weight: 20
         }
     },
-    triples: [],
+    triples: [{
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoProteinContainingComplex,
+        predicate: noctuaFormConfig.edge.enabledBy
+    }, {
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoBiologicalProcess,
+        predicate: noctuaFormConfig.edge.partOf
+    }, {
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoCellularComponent,
+        predicate: noctuaFormConfig.edge.occursIn
+    }],
 };
 
 export const moleculeDescription: ActivityDescription = {

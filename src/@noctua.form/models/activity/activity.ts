@@ -47,7 +47,8 @@ export enum ActivityType {
   default = 'default',
   bpOnly = 'bpOnly',
   ccOnly = 'ccOnly',
-  molecule = 'molecule'
+  molecule = 'molecule',
+  proteinComplex = 'proteinComplex'
 }
 
 export class ActivitySize {
@@ -340,6 +341,10 @@ export class Activity extends SaeGraph<ActivityNode> {
   getGPNode() {
     const self = this;
 
+    if (self.activityType === ActivityType.proteinComplex) {
+      return self.getNode(ActivityNodeType.GoProteinContainingComplex);
+    }
+
     return self.getNode(ActivityNodeType.GoMolecularEntity);
   }
 
@@ -612,7 +617,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   get title() {
     const self = this;
-    const gp = self.getNode(ActivityNodeType.GoMolecularEntity);
+    const gp = self.getGPNode();
     const gpText = gp ? gp.getTerm().label : '';
     let title = '';
 
@@ -675,6 +680,8 @@ export class Activity extends SaeGraph<ActivityNode> {
     if (self.activityType === ActivityType.ccOnly) {
       title = gpText;
     } else if (self.activityType === ActivityType.molecule) {
+      title = gpText;
+    } else if (self.activityType === ActivityType.proteinComplex) {
       title = gpText;
     } else {
       qualifier = mf.isComplement ? 'NOT' : '';

@@ -160,6 +160,10 @@ export const noctuaFormConfig = {
       'molecule': {
         'name': 'molecule',
         'label': 'Chemical'
+      },
+      'proteinComplex': {
+        'name': 'proteinComplex',
+        'label': 'Protein Complex'
       }
     }
   },

@@ -712,7 +712,7 @@ export class NoctuaGraphService {
 
 
 
-  getActivityPreset(subjectNode: Partial<ActivityNode>, predicateId, bbopSubjectEdges): Activity {
+  getActivityPreset(subjectNode: Partial<ActivityNode>, objectNode: Partial<ActivityNode>, predicateId, bbopSubjectEdges): Activity {
     const self = this;
     let activityType = ActivityType.default;
 
@@ -728,6 +728,8 @@ export class NoctuaGraphService {
           activityType = ActivityType.bpOnly;
         }
       });
+    } else if (objectNode.hasRootType(EntityDefinition.GoProteinContainingComplex)) {
+      activityType = ActivityType.proteinComplex;
     }
 
     return self.noctuaFormConfigService.createActivityBaseModel(activityType);
@@ -740,12 +742,14 @@ export class NoctuaGraphService {
 
     each(camGraph.all_edges(), (bbopEdge) => {
       const bbopSubjectId = bbopEdge.subject_id();
+      const bbopObjectId = bbopEdge.object_id();
       const subjectNode = self.nodeToActivityNode(camGraph, bbopSubjectId);
+      const objectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
 
       if (self.isStartEdge(subjectNode, bbopEdge.predicate_id())) {
 
         const subjectEdges = camGraph.get_edges_by_subject(bbopSubjectId);
-        const activity: Activity = self.getActivityPreset(subjectNode, bbopEdge.predicate_id(), subjectEdges);
+        const activity: Activity = self.getActivityPreset(subjectNode, objectNode, bbopEdge.predicate_id(), subjectEdges);
         const subjectActivityNode = activity.rootNode;
 
         subjectActivityNode.term = subjectNode.term;

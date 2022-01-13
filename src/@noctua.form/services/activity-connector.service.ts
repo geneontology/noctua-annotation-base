@@ -142,6 +142,10 @@ export class NoctuaActivityConnectorService {
   private _onActivityFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
       this.connectorActivity.checkConnection(value);
+      if (this.connectorActivity.state === ConnectorState.editing) {
+        console.log(value)
+        this.saveActivity()
+      }
     });
   }
 }

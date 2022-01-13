@@ -44,10 +44,10 @@ const globalKnownRelations = typeof global_known_relations !== 'undefined'
   : enviromnenetData.globalKnownRelations;
 
 export const environment = {
-  production: false,
+  production: true,
   isDev: true,
   isBeta: true,
-  isGraph: false,
+  isGraph: true,
   spaqrlApiUrl: 'http://rdf-internal.berkeleybop.io/blazegraph/sparql',
   // spaqrlApiUrl: 'http://rdf.geneontology.org/blazegraph/sparql',
   // gorestApiUrl: 'https://api.geneontology.cloud/'
