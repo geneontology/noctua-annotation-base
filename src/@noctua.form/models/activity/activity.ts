@@ -52,7 +52,7 @@ export enum ActivityType {
 
 export class ActivitySize {
   width: number = 150;
-  height: number = 120;
+  height: number = 150;
 
   constructor() {
 

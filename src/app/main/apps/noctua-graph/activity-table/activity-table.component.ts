@@ -1,4 +1,4 @@
-import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import {
@@ -58,6 +58,7 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
 
   constructor(
     private ngZone: NgZone,
+    private changeDetectorRef: ChangeDetectorRef,
     public camService: CamService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
@@ -80,9 +81,17 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
         if (!activity) {
           return;
         }
-        this.ngZone.run(() => {
+        this.activity = null
+
+        setTimeout(() => {
           this.activity = activity
-        });
+        }, 100);
+
+        //this.changeDetectorRef.markForCheck()
+        //this.ngZone.run(() => {
+
+        //   console.log('zone ran')
+        //   });
       });
 
   }

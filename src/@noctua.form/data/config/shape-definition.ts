@@ -43,7 +43,7 @@ const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
     return causalShapeDescriptions;
 };
 
-//What can you insert
+// What can you insert
 export const canInsertEntity = {
     [ActivityNodeType.GoMolecularEntity]: [
         <ShapeDescription>{
@@ -76,6 +76,25 @@ export const canInsertEntity = {
                 showInMenu: true,
             },
             predicate: noctuaFormConfig.edge.locatedIn,
+            cardinality: CardinalityType.oneToMany
+        },
+    ],
+
+    [ActivityNodeType.GoProteinContainingComplex]: [
+        <ShapeDescription>{
+            label: 'Add has part (Gene Product)',
+            id: ActivityNodeType.GoMolecularEntity,
+            node: <ActivityNodeDisplay>{
+                type: ActivityNodeType.GoMolecularEntity,
+                category: [EntityDefinition.GoMolecularEntity],
+                label: '(Protein Complex) has part (GP)',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                weight: 3,
+                isKey: false,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.hasPart,
             cardinality: CardinalityType.oneToMany
         },
     ],

@@ -14,7 +14,6 @@
       </noc-activity-form-table-node>
     </div>
   </div>
-
   <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
     <div *ngIf="activity.activityType !== ActivityType.molecule" class="noc-section-header" fxLayout="row"
       fxLayoutAlign="start center">
@@ -28,13 +27,13 @@
         <ng-template #treeNodeWrapperTemplate let-node let-index="index">
           <div class="node-wrapper noc-tree-node" fxLayout="row" fxLayoutAlign="start center"
             [style.padding-left]="node.getNodePadding()">
-            <!--     <button mat-icon-button class="noc-node-expander-button" color="primary" (click)="node.toggleExpanded()"
+            <button mat-icon-button class="noc-node-expander-button" color="primary" (click)="node.toggleExpanded()"
               *ngIf="node.hasChildren">
               <fa-icon *ngIf="node?.isCollapsed" [icon]="['fas', 'caret-right']"></fa-icon>
               <fa-icon *ngIf="node?.isExpanded" [icon]="['fas', 'caret-down']"></fa-icon>
             </button>
             <div class="noc-expander-placeholder" *ngIf="!node.hasChildren">
-            </div> -->
+            </div>
             <div class="node-content-wrapper" fxFlex="" fxLayout="row" fxLayoutAlign="start center"
               [class.node-content-wrapper-active]="node.isActive" [class.node-content-wrapper-focused]="node.isFocused"
               (click)="node.mouseAction('click', $event)" (dblclick)="node.mouseAction('dblClick', $event)"

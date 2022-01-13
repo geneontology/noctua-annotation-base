@@ -102,6 +102,7 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
   }
 
   updateCurrentMenuEvent(event) {
+    console.group(event)
     this.currentMenuEvent = event;
   }
 }

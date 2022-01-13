@@ -105,9 +105,9 @@
     </div>
   </div>
 </div>
-<div *ngIf="entity.predicate?.evidence.length===0" class="noc-no-info">
+<div *ngIf="entity.predicate?.evidence.length===0" class="noc-no-info" fxLayout="row" fxLayoutAlign="start center">
   no evidence present.
-  <button mat-menu-item (click)="addEvidence(entity)" class="">
-    Add Evidence
+  <button mat-button (click)="updateCurrentMenuEvent($event); addEvidence(entity)" class="">
+    +
   </button>
 </div>

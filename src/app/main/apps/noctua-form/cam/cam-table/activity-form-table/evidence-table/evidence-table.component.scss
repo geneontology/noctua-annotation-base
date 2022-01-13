@@ -116,4 +116,18 @@ $accent: map-get($theme, accent);
       }
     }
   }
+
+  .noc-no-info {
+    height: 100px;
+    width: 400px;
+    position: relative;
+    padding: 3px 8px;
+    font-size: 10px;
+    font-style: italic;
+    color: #aaa;
+
+    .mat-button {
+      position: relative;
+    }
+  }
 }

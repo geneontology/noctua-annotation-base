@@ -231,16 +231,29 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       height: 50,
       'stroke-width': 0.5
     },
-    '.icon': {
-      event: 'element:.icon:pointerdown',
+    '.edit': {
+      event: 'element:.edit:pointerdown',
       'xlink:href': './assets/icons/edit.svg',
-      ref: '.activity-gp-rect',
+      ref: '.wrapper',
       refX: '100%',
-      refX2: -30,
-      y: 10,
+      refX2: 5,
+      y: 0,
       height: 20,
-      cursor: 'pointer'
+      cursor: 'pointer',
+      visibility: 'hidden'
     },
+    '.delete': {
+      event: 'element:.delete:pointerdown',
+      'xlink:href': './assets/icons/delete.svg',
+      ref: '.wrapper',
+      refX: '100%',
+      refX2: 5,
+      y: 30,
+      height: 20,
+      cursor: 'pointer',
+      visibility: 'hidden',
+    },
+
     '.activity-mf-rect': {
       fill: '#d5fdd5',
       stroke: '#fff',
@@ -319,7 +332,8 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
     '<text class="activity-gp-text"/>',
     '<text class="activity-cc-text"/>',
     '<text class="activity-bp-text"/>',
-    // '<image class="icon"/>',
+    '<image class="delete"/>',
+    '<image class="edit"/>',
     '</g>'
   ].join(''),
 
@@ -380,15 +394,20 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
 export const NodeCellMolecule = joint.dia.Element.define('noctua.NodeCellMolecule', {
   attrs: {
     '.wrapper': {
-      refPoints: '0,10 10,15 30,15 40,10 30,5 10,5',
+      refCx: '50%',
+      refCy: '50%',
+      refR: '50%',
       magnet: true,
       refWidth: '100%',
       refHeight: '100%',
       fill: 'transparent',
       stroke: 'rgba(0,0,255,0.3)',
     },
-    '.polygon': {
-      refPoints: '0,10 10,15 30,15 40,10 30,5 10,5',
+    '.circle': {
+      // refPoints: '0,10 10,15 30,15 40,10 30,5 10,5',
+      refCx: '50%',
+      refCy: '50%',
+      refR: '50%',
       strokeWidth: 2,
     },
     '.label': {
@@ -402,17 +421,40 @@ export const NodeCellMolecule = joint.dia.Element.define('noctua.NodeCellMolecul
         ellipsis: false,
         width: '95%'
       }
-    }
+    },
+    '.edit': {
+      event: 'element:.edit:pointerdown',
+      'xlink:href': './assets/icons/edit.svg',
+      ref: '.wrapper',
+      refX: '100%',
+      refX2: -10,
+      y: 0,
+      height: 20,
+      cursor: 'pointer',
+      visibility: 'hidden'
+    },
+    '.delete': {
+      event: 'element:.delete:pointerdown',
+      'xlink:href': './assets/icons/delete.svg',
+      ref: '.wrapper',
+      refX: '100%',
+      refX2: 5,
+      y: 30,
+      height: 20,
+      cursor: 'pointer',
+      visibility: 'hidden',
+    },
   }
 }, {
   markup: [
-    '<polygon class="wrapper"/>',
+    '<circle class="wrapper"/>',
     '<g class="rotatable">',
     '<g class="scalable">',
-    '<polygon class="polygon"/>',
+    '<circle class="circle"/>',
     '</g>',
     '<text class="label"/>',
-    //'<image class="icon"/>',
+    '<image class="delete"/>',
+    '<image class="edit"/>',
     '</g>'
   ].join(''),
 }, {

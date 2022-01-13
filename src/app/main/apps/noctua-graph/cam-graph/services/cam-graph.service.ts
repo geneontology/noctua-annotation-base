@@ -6,13 +6,14 @@ import { CamCanvas } from '../models/cam-canvas';
 import { CamStencil } from '../models/cam-stencil';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
-import { Activity, Cam, CamService, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService, NoctuaGraphService } from '@geneontology/noctua-form-base';
+import { Activity, Cam, CamService, FormType, NoctuaActivityConnectorService, NoctuaActivityFormService, NoctuaFormConfigService, NoctuaGraphService, NoctuaUserService } from '@geneontology/noctua-form-base';
 import { NodeLink, NodeCellList, NoctuaShapesService } from '@noctua.graph/services/shapes.service';
 import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
 import { noctuaStencil, StencilItemNode } from '@noctua.graph/data/cam-stencil';
 import { RightPanel } from '@noctua.common/models/menu-panels';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,9 @@ export class CamGraphService {
   constructor(
     private _camService: CamService,
     private _noctuaGraphService: NoctuaGraphService,
-    private noctuaFormDialogService: NoctuaFormDialogService,
+    private _noctuaFormDialogService: NoctuaFormDialogService,
+    private _noctuaUserService: NoctuaUserService,
+    private confirmDialogService: NoctuaConfirmDialogService,
     private noctuaDataService: NoctuaDataService,
     private noctuaFormConfigService: NoctuaFormConfigService,
     private _activityFormService: NoctuaActivityFormService,
@@ -70,7 +73,8 @@ export class CamGraphService {
 
     self.camCanvas = new CamCanvas();
     self.camCanvas.elementOnClick = self.openTable.bind(self);
-    self.camCanvas.editOnClick = self.editActivity.bind(self);
+    self.camCanvas.editOnClick = self.openTable.bind(self);
+    self.camCanvas.deleteOnClick = self.deleteActivity.bind(self);
     self.camCanvas.linkOnClick = self.openConnector.bind(self);
     self.camCanvas.onLinkCreated = self.createActivityConnector.bind(self);
     self.camCanvas.onUpdateCamLocations = self.updateCamLocations.bind(self);
@@ -108,7 +112,7 @@ export class CamGraphService {
     self.placeholderElement.position(x, y);
     self._activityFormService.setActivityType(node.type)
     self._activityFormService.activity.validateEvidence = false;
-    self.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
+    self._noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
   }
 
   createActivityConnector(
@@ -118,7 +122,7 @@ export class CamGraphService {
     const self = this;
 
     self._activityConnectorService.initializeForm(sourceId, targetId);
-    self.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY_CONNECTOR);
+    self._noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY_CONNECTOR);
   }
 
   addActivity(activity: Activity) {
@@ -139,7 +143,32 @@ export class CamGraphService {
     const activity = element.get('activity') as Activity;
 
     self._activityFormService.initializeForm(activity);
-    self.noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
+    self._noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
+  }
+
+  deleteActivity(element: joint.shapes.noctua.NodeCellList) {
+    const self = this;
+
+    const activity = element.get('activity') as Activity;
+
+    const success = () => {
+      this._camService.deleteActivity(activity).then(() => {
+        this._camService.onSelectedActivityChanged.next(null);
+        this.noctuaCommonMenuService.closeRightDrawer();
+        this._camService.getCam(this.cam.id);
+        self._noctuaFormDialogService.openInfoToast('Activity successfully deleted.', 'OK');
+      });
+    };
+
+    if (!self._noctuaUserService.user) {
+      this.confirmDialogService.openConfirmDialog('Not Logged In',
+        'Please log in to continue.',
+        null);
+    } else {
+      this.confirmDialogService.openConfirmDialog('Confirm Delete?',
+        'You are about to delete an activity.',
+        success);
+    }
   }
 
 

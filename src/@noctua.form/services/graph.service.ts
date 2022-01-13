@@ -774,8 +774,10 @@ export class NoctuaGraphService {
       const subjectNode = self.nodeToActivityNode(camGraph, bbopNode.id());
 
       if (subjectNode.hasRootType(EntityDefinition.GoChemicalEntity) && !subjectNode.hasRootType(EntityDefinition.GoMolecularEntity)) {
-        const edges = camGraph.get_edges_by_object(bbopNode.id())
-        const hasEnabledBy = find(edges, (edge) => {
+        const subjectEdges = camGraph.get_edges_by_subject(bbopNode.id())
+        const objectEdges = camGraph.get_edges_by_object(bbopNode.id())
+
+        const hasEnabledBy = find(objectEdges, (edge) => {
           return edge.predicate_id() === noctuaFormConfig.edge.enabledBy.id
         })
 
@@ -788,6 +790,7 @@ export class NoctuaGraphService {
           subjectActivityNode.classExpression = subjectNode.classExpression;
           subjectActivityNode.uuid = bbopNode.id();
           activity.id = bbopNode.id();
+          self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
           //activity.postRunUpdate();
           activities.push(activity);
         }

@@ -12,6 +12,7 @@ import { v4 as uuid } from 'uuid';
 
 export interface ActivityDescription {
     type: ActivityType;
+    isComplex?: boolean;
     nodes: { [key: string]: ActivityNodeDisplay };
     triples: { subject: string, object: string, predicate: any }[];
     overrides?: { [key: string]: ActivityNodeDisplay };
@@ -43,6 +44,7 @@ export const activityUnitBaseDescription: ActivityDescription = {
 
 export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
     type: ActivityType.bpOnly,
+    isComplex: true,
     nodes: {
         [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularFunction.id,
@@ -68,6 +70,24 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
             type: ActivityNodeType.GoMolecularEntity,
             category: [EntityDefinition.GoMolecularEntity],
             label: 'Gene Product',
+            skipEvidenceCheck: true,
+            termRequired: true,
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 1
+        }
+    },
+    triples: [],
+};
+
+export const proteinComplexBaseDescription: ActivityDescription = {
+    type: ActivityType.ccOnly,
+    nodes: {
+        [ActivityNodeType.GoProteinContainingComplex]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoProteinContainingComplex.id,
+            type: ActivityNodeType.GoProteinContainingComplex,
+            category: [EntityDefinition.GoProteinContainingComplex],
+            label: 'Protein Complex',
             skipEvidenceCheck: true,
             termRequired: true,
             displaySection: noctuaFormConfig.displaySection.gp,
@@ -264,6 +284,25 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
         object: ActivityNodeType.GoCellularComponent,
         predicate: noctuaFormConfig.edge.partOf
     }*/],
+};
+
+export const proteinComplexDescription: ActivityDescription = {
+    type: ActivityType.ccOnly,
+    isComplex: true,
+    nodes: {
+        [ActivityNodeType.GoProteinContainingComplex]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoProteinContainingComplex.id,
+            type: ActivityNodeType.GoProteinContainingComplex,
+            category: [EntityDefinition.GoProteinContainingComplex],
+            label: 'Protein Complex',
+            skipEvidenceCheck: true,
+            termRequired: true,
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 1
+        }
+    },
+    triples: [],
 };
 
 export const moleculeDescription: ActivityDescription = {

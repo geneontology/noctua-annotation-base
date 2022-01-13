@@ -21,6 +21,7 @@ export class CamCanvas {
     selectedStencilElement;
     elementOnClick: (element: joint.shapes.noctua.NodeCellList) => void;
     editOnClick: (element: joint.shapes.noctua.NodeCellList) => void;
+    deleteOnClick: (element: joint.shapes.noctua.NodeCellList) => void;
     linkOnClick: (element: joint.shapes.noctua.NodeLink) => void;
     onUpdateCamLocations: (cam: Cam) => void
     onLinkCreated: (
@@ -165,12 +166,19 @@ export class CamCanvas {
             self.unselectAll();
         });
 
-
-        this.canvasPaper.on('element:.icon:pointerdown', function (elementView: joint.dia.ElementView, evt) {
+        this.canvasPaper.on('element:.edit:pointerdown', function (elementView: joint.dia.ElementView, evt) {
             evt.stopPropagation();
 
             const element = elementView.model;
             self.editOnClick(element);
+
+        });
+
+        this.canvasPaper.on('element:.delete:pointerdown', function (elementView: joint.dia.ElementView, evt) {
+            evt.stopPropagation();
+
+            const element = elementView.model;
+            self.deleteOnClick(element);
 
         });
 
@@ -435,7 +443,7 @@ export class CamCanvas {
     createMolecule(activity: Activity): NodeCellList {
         const el = new NodeCellMolecule()
         activity.size.width = 120;
-        activity.size.height = 100;
+        activity.size.height = 120;
         //.addActivityPorts()
         el.setColor(activity.backgroundColor)
         //.setSuccessorCount(activity.successorCount)
