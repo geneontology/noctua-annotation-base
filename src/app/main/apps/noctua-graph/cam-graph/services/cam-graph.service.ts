@@ -109,6 +109,8 @@ export class CamGraphService {
     const self = this;
     const node = element.get('node') as StencilItemNode;
 
+    console.log(x, y)
+
     self.placeholderElement.position(x, y);
     self._activityFormService.setActivityType(node.type)
     self._activityFormService.activity.validateEvidence = false;
@@ -135,7 +137,8 @@ export class CamGraphService {
     const el = self.camCanvas.createNode(activity)
 
     self.camCanvas.canvasGraph.addCell(el);
-    self.updateCamLocations(self.cam);
+
+    this._noctuaGraphService.addActivityLocation(self.cam, activity);
   }
 
   editActivity(element: joint.shapes.noctua.NodeCellList) {

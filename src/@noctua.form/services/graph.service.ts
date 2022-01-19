@@ -261,17 +261,17 @@ export class NoctuaGraphService {
 
     if (environment.isGraph) {
       const molecules = self.graphToMolecules(cam.graph);
-      let activity;
+
+      activities.push(...molecules);
 
       if (cam.operation === CamOperation.ADD_ACTIVITY) {
-        activity = self.getAddedActivity(activities, cam.activities);
+        const activity = self.getAddedActivity(activities, cam.activities);
         self.onActivityAdded.next(activity);
       }
 
-      cam.activities = [...activities, ...molecules]
+      cam.activities = activities;
       cam.causalRelations = self.getCausalRelations(cam);
       self.getActivityLocations(cam)
-      //cam.connectorActivities = self.getConnectorActivities(cam)
     } else {
       cam.activities = activities;
     }
@@ -1260,7 +1260,6 @@ export class NoctuaGraphService {
     if (locations) {
       cam.manualLayout = true;
       const activityLocations = JSON.parse(locations)
-      console.log(activityLocations)
       cam.activities.forEach((activity: Activity) => {
         const activityLocation = find(activityLocations, { id: activity.id })
         if (activityLocation) {
@@ -1273,6 +1272,17 @@ export class NoctuaGraphService {
 
   setActivityLocations(cam: Cam) {
     const locations = cam.activities.map((activity: Activity) => {
+      return {
+        id: activity.id,
+        x: activity.position.x,
+        y: activity.position.y
+      }
+    })
+    localStorage.setItem(`activityLocations-${cam.id}`, JSON.stringify(locations));
+  }
+
+  addActivityLocation(cam: Cam, activity: Activity) {
+    const locations = [...cam.activities, ...[activity]].map((activity: Activity) => {
       return {
         id: activity.id,
         x: activity.position.x,

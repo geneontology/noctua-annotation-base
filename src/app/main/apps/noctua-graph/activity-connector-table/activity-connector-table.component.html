@@ -105,16 +105,6 @@
             Evidence
           </div>
         </div>
-        <!--  <noc-activity-form-table [options]="options" [cam]="cam" [activity]="connectorActivity"
-          class="noc-activities-table-body" fxLayout="row" fxLayoutAlign="start center">
-        </noc-activity-form-table> 
-
-   
-
-
-        <noc-activity-form-table-node [settings]="settings" [options]="options" [cam]="cam" [activity]="activity"
-          [entity]="connectorActivity.subjectNode" class="w-100-p">
-        </noc-activity-form-table-node>-->
         <noc-evidence-form-table class="w-100-p" [settings]="settings" [options]="evidenceOptions" [cam]="cam"
           [activity]="connectorActivity" [entity]="connectorActivity.subjectNode">
         </noc-evidence-form-table>
@@ -122,6 +112,8 @@
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
-
+    <span fxFlex></span>
+    <button (click)='deleteConnectorEdge()' type="button" mat-raised-button color="warn" class="mr-8">Delete</button>
+    <button (click)="save()" type="submit" class="noc-rounded-button" mat-raised-button color="primary">Save</button>
   </div>
 </form>
