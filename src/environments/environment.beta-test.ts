@@ -44,8 +44,8 @@ const globalKnownRelations = typeof global_known_relations !== 'undefined'
   : enviromnenetData.globalKnownRelations;
 
 export const environment = {
-  production: true,
-  isDev: true,
+  production: false,
+  isDev: false,
   isBeta: true,
   isGraph: true,
   spaqrlApiUrl: 'http://rdf-internal.berkeleybop.io/blazegraph/sparql',
