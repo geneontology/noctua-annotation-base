@@ -179,6 +179,18 @@ export class NoctuaFormConfigService {
     };
   }
 
+  get activityRelationship() {
+    const options = [
+      noctuaFormConfig.activityRelationship.options.regulation,
+      noctuaFormConfig.activityRelationship.options.outputInput,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
   get chemicalRelationship() {
     const options = [
       noctuaFormConfig.chemicalRelationship.options.chemicalRegulates,

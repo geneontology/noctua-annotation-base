@@ -1000,25 +1000,6 @@ export class NoctuaGraphService {
     return cam.manager.request_with(reqs);
   }
 
-  replaceActivity(manager, modelId, entities: Entity[], replaceWithTerm: Entity) {
-
-    const self = this;
-    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, modelId);
-
-    each(entities, function (entity: Entity) {
-      self.replaceIndividual(reqs, modelId, entity, replaceWithTerm);
-    });
-
-    // self.editFact(reqs, cam, srcTriples, destTriples);
-
-    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
-      reqs.use_groups([self.noctuaUserService.user.group.id]);
-    }
-
-    // reqs.store_model(modelId);
-    return manager.request_with(reqs);
-  }
-
 
   bulkEditActivity(cam: Cam): Observable<any> {
     const self = this;

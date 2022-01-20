@@ -76,7 +76,7 @@ const edge = {
   },
   directlyProvidesInput: {
     id: 'RO:0002413',
-    label: 'directly provides input'
+    label: 'directly provides input for'
   },
   regulates: {
     id: 'RO:0002211',
@@ -260,7 +260,20 @@ export const noctuaFormConfig = {
       }
     }
   },
-
+  'activityRelationship': {
+    'options': {
+      'regulation': {
+        'name': 'regulation',
+        'label': 'Regulation',
+        'description': 'The upstream activity regulates the downstream activity',
+      },
+      'outputInput': {
+        'name': 'outputInput',
+        'label': 'Output-Input',
+        'description': 'The molecular output produced by the upstream activity is the molecular input of the downstream activity'
+      },
+    }
+  },
   'chemicalRelationship': {
     'options': {
       'chemicalRegulates': {
@@ -271,7 +284,6 @@ export const noctuaFormConfig = {
         'name': 'chemicalSubstrate',
         'label': 'Chemical is substrate for activity',
       },
-
     }
   },
   'displaySection': {

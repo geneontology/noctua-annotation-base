@@ -36,6 +36,8 @@ export class NoctuaActivityConnectorService {
   public onActivityChanged: BehaviorSubject<any>;
   public onLinkChanged: BehaviorSubject<any>;
 
+  private _allowRequestWatch = false;
+
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
     private noctuaLookupService: NoctuaLookupService,
@@ -59,6 +61,8 @@ export class NoctuaActivityConnectorService {
   initializeForm(subjectId: string, objectId: string) {
     const self = this;
 
+    self._allowRequestWatch = false;
+
     self.subjectActivity = this.cam.findActivityById(subjectId);
     self.objectActivity = this.cam.findActivityById(objectId);
     self.causalConnection = self.cam.getCausalRelation(subjectId, objectId);
@@ -79,6 +83,7 @@ export class NoctuaActivityConnectorService {
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
 
     if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_ACTIVITY) {
+      this.connectorForm.activityRelationship.setValue(this.connectorActivity.rule.activityRelationship.relation);
       this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
       this.connectorForm.directness.setValue(this.connectorActivity.rule.directness.directness);
     } else if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
@@ -123,8 +128,10 @@ export class NoctuaActivityConnectorService {
         saveData.srcTriples,
         saveData.destTriples,
         [],
-        []);
-
+        []).then(() => {
+          this.initializeForm(self.subjectActivity.id, self.objectActivity.id)
+        }
+        );
 
     } else { // creation
       const saveData = self.connectorActivity.createSave();
@@ -142,10 +149,11 @@ export class NoctuaActivityConnectorService {
   private _onActivityFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
       this.connectorActivity.checkConnection(value);
-      if (this.connectorActivity.state === ConnectorState.editing) {
+      if (this._allowRequestWatch && (this.connectorActivity.state === ConnectorState.editing)) {
         console.log(value)
         this.saveActivity()
       }
+      this._allowRequestWatch = true
     });
   }
 }

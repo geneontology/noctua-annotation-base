@@ -73,6 +73,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     } else {
       const question = self.edgeToConnectorQuestion(self.predicate.edge);
 
+      self.rule.activityRelationship.relation = question.relationship;
       self.rule.effectDirection.direction = question.causalEffect;
       self.rule.directness.directness = question.directness;
     }
@@ -107,8 +108,16 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       }
     }
 
+    if (value.activityRelationship) {
+      if (value.activityRelationship.name === noctuaFormConfig.activityRelationship.options.regulation.name) {
+        self.rule.displaySection.directionCausalEffect = true;
+      } else if (value.activityRelationship.name === noctuaFormConfig.activityRelationship.options.outputInput.name) {
+        self.rule.displaySection.directionCausalEffect = false;
+      }
+    }
+
     if (this.connectorType === ConnectorType.ACTIVITY_ACTIVITY) {
-      self.predicate.edge = this.getCausalConnectorEdge(value.directness, value.causalEffect);
+      self.predicate.edge = this.getCausalConnectorEdge(value.directness, value.causalEffect, value.activityRelationship);
     } else if (this.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
       self.predicate.edge = this.getCausalConnectorEdgeAtoM(value.directness)
     } else if (this.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
@@ -118,23 +127,23 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     self.setPreview();
   }
 
-  getCausalConnectorEdge(directness, causalEffect): Entity {
+  getCausalConnectorEdge(directness, causalEffect, relationship): Entity {
     let edge = noctuaFormConfig.edge.directlyProvidesInput;
 
-    if (causalEffect.name === noctuaFormConfig.causalEffect.options.positive.name) {
+    if (relationship.name === noctuaFormConfig.activityRelationship.options.outputInput.name) {
+      edge = noctuaFormConfig.edge.directlyProvidesInput;
+    } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.positive.name) {
       if (directness.name === noctuaFormConfig.directness.options.known.name) {
         edge = noctuaFormConfig.edge.positivelyRegulates;
       } else {
         edge = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
       }
-
     } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.negative.name) {
       if (directness.name === noctuaFormConfig.directness.options.known.name) {
         edge = noctuaFormConfig.edge.negativelyRegulates;
       } else {
         edge = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
       }
-
     } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.neutral.name) {
       if (directness.name === noctuaFormConfig.directness.options.known.name) {
         edge = noctuaFormConfig.edge.regulates;
@@ -179,8 +188,14 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   }
 
   edgeToConnectorQuestion(edge: Entity) {
+    let relationship = noctuaFormConfig.activityRelationship.options.regulation;
     let directness = noctuaFormConfig.directness.options.known;
     let causalEffect = noctuaFormConfig.causalEffect.options.positive;
+
+    if (edge.id === noctuaFormConfig.edge.directlyProvidesInput.id) {
+      relationship = noctuaFormConfig.activityRelationship.options.outputInput;
+      return { directness, causalEffect, relationship }
+    }
 
     switch (edge.id) {
       case noctuaFormConfig.edge.causallyUpstreamOf.id:
@@ -200,7 +215,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
         break;
     }
 
-    return { directness, causalEffect }
+    return { directness, causalEffect, relationship }
   }
 
   edgeToConnectorQuestionAtoM(edge: Entity) {
