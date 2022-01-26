@@ -256,7 +256,8 @@ export const noctuaFormConfig = {
       },
       'chemicalProduct': {
         'name': 'chemicalProduct',
-        'label': 'Chemical is product of activity',
+        'label': 'Product',
+        'description': 'The activity creates the molecule as a reaction product'
       }
     }
   },
@@ -278,11 +279,13 @@ export const noctuaFormConfig = {
     'options': {
       'chemicalRegulates': {
         'name': 'chemicalRegulates',
-        'label': 'Chemical regulates activity',
+        'label': 'Regulation',
+        'description': 'The chemical regulates the activity'
       },
       'chemicalSubstrate': {
         'name': 'chemicalSubstrate',
-        'label': 'Chemical is substrate for activity',
+        'label': 'Substrate',
+        'description': 'The chemical is the substrate that the activity acts upon'
       },
     }
   },
