@@ -1,5 +1,6 @@
 import {
     Activity,
+    ActivityNodeType,
     ActivityType,
     Cam,
     Entity,
@@ -446,15 +447,19 @@ export class CamCanvas {
         activity.size.height = 120;
         //.addActivityPorts()
         el.setColor(activity.backgroundColor)
-        //.setSuccessorCount(activity.successorCount)
-        const moleculeNode = activity.rootNode;
-
+        //.setSuccessorCount(activity.successorCount)  
         const activityType = activity.getActivityTypeDetail();
+        const moleculeNode = activity.rootNode;
 
         el.prop({ 'name': [activityType ? activityType.label : 'Activity Unity'] });
 
         if (moleculeNode) {
-            el.setText(moleculeNode.term.label);
+            let label = moleculeNode.term.label
+
+            if (activity.ccNode) {
+                label += `\n occurs in: ${activity.ccNode.term.label}`;
+            }
+            el.setText(label);
         }
 
         el.attr({

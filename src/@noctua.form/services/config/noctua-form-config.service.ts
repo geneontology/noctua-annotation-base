@@ -203,15 +203,6 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get connectorProcess() {
-    const options = noctuaFormConfig.connectorProcesses;
-
-    return {
-      options: options,
-      selected: options[0]
-    };
-  }
-
   setupUrls() {
     const self = this;
     const baristaToken = self.noctuaUserService.baristaToken;
