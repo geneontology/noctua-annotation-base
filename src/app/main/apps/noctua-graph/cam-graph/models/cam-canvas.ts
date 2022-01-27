@@ -457,7 +457,7 @@ export class CamCanvas {
             let label = moleculeNode.term.label
 
             if (activity.ccNode) {
-                label += `\n occurs in: ${activity.ccNode.term.label}`;
+                label += `\nlocated in: ${activity.ccNode.term.label}`;
             }
             el.setText(label);
         }
