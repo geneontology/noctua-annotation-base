@@ -420,7 +420,7 @@ export class CamCanvas {
             el.prop({ 'bp': [`part of: ${activity.bpNode.term.label}`] });
         }
         if (activity.gpNode) {
-            el.prop({ 'gp': [activity.title] });
+            el.prop({ 'gp': [activity.gpNode?.term.label] });
         }
 
         el.attr({
