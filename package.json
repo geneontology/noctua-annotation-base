@@ -1,6 +1,6 @@
 {
   "name": "@geneontology/noctua-form-base",
-  "version": "1.5.12",
+  "version": "1.5.20",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
