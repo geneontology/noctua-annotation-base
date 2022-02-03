@@ -42,6 +42,11 @@
       </div>
       <fa-icon [icon]="['fas', 'shopping-basket']"></fa-icon>
     </button>
+    <button mat-icon-button color="" class="noc-rounded-button" (click)="toggleLeftDrawer(LeftPanel.camStats)"
+      [ngClass]="{'noc-active': noctuaSearchMenuService.selectedLeftPanel === LeftPanel.camStats}" matTooltip="History"
+      [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
+      <fa-icon [icon]="['fas', 'chart-bar']"></fa-icon>
+    </button>
   </div>
   <mat-drawer-container class="h-100-p" fxFlex="" fxLayout="row" fxLayoutAlign="start start" [hasBackdrop]="false"
     autosize>
@@ -110,17 +115,24 @@
           </button>
           <div class="noc-line" fxFlex="80px" [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>0}">
           </div>
-          <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.camsReview)" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.camsReview,
+          <button *ngIf="noctuaSearchMenuService.selectedLeftPanel !== LeftPanel.camStats" mat-stroked-button
+            (click)="selectMiddlePanel(MiddlePanel.camsReview)" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.camsReview,
             'noc-visited': noctuaSearchMenuService.reviewLevel>1}" class="" color="">
             <div class="noc-title">Review</div> <br>
             <div class="noc-description">Edit models</div>
           </button>
           <div class="noc-line" fxFlex="80px" [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>1}">
           </div>
-          <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.reviewChanges)" class="" color="" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.reviewChanges,
+          <button *ngIf="noctuaSearchMenuService.selectedLeftPanel !== LeftPanel.camStats" mat-stroked-button
+            (click)="selectMiddlePanel(MiddlePanel.reviewChanges)" class="" color="" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.reviewChanges,
             'noc-visited': noctuaSearchMenuService.reviewLevel>2}">
             <div class="noc-title">Checkout</div> <br>
             <div class="noc-description">Review and submit changes</div>
+          </button>
+          <button mat-stroked-button (click)="selectMiddlePanel(MiddlePanel.camsStats)" class="" color="" [ngClass]="{'noc-active': noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.camsStats,
+          'noc-visited': noctuaSearchMenuService.reviewLevel>2}">
+            <div class="noc-title">View Stats</div> <br>
+            <div class="noc-description">View Stats</div>
           </button>
           <div class="noc-line" fxFlex [ngClass]="{'noc-visited': noctuaSearchMenuService.reviewLevel>2}">
           </div>
@@ -134,6 +146,9 @@
         </noc-cams-review>
         <noc-cams-review-changes [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.reviewChanges">
         </noc-cams-review-changes>
+
+        <noc-cams-stats *ngIf="noctuaSearchMenuService.selectedMiddlePanel === MiddlePanel.camsStats">
+        </noc-cams-stats>
       </div>
       <div class="w-100-p">
         <app-footer></app-footer>

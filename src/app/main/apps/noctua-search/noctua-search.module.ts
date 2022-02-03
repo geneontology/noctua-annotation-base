@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { NoctuaSharedModule } from '@noctua/shared.module';
@@ -12,6 +12,7 @@ import { CamsReviewComponent } from './cams/cams-review/cams-review.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CamsReviewChangesComponent } from './cams/cams-review-changes/cams-review-changes.component';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { CamsStatsComponent } from './cams/cams-stats/cams-stats.component';
 
 const routes = [
   {
@@ -33,11 +34,15 @@ const routes = [
     NoctuaFormModule,
     PerfectScrollbarModule
   ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
   declarations: [
     NoctuaSearchComponent,
     CamsTableComponent,
     CamsReviewComponent,
-    CamsReviewChangesComponent
+    CamsReviewChangesComponent,
+    CamsStatsComponent
   ]
 })
 
