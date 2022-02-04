@@ -360,6 +360,26 @@ export class NoctuaFormConfigService {
     return ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
   }
 
+  insertActivityNodeByPredicate(activity: Activity, subjectNode: ActivityNode, bbopPredicateId: string,
+    partialObjectNode?: Partial<ActivityNode>): ActivityNode {
+    const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
+    let objectNode;
+
+    each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
+      if (bbopPredicateId === nodeDescription.predicate.id) {
+        if (partialObjectNode && partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
+          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+          return false;
+        } else if (!partialObjectNode) {
+          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+          return false;
+        }
+      }
+    });
+
+    return objectNode;
+  }
+
   createActivityModelFakeData(nodes) {
     const self = this;
     const activity = self.createActivityModel(ActivityType.default);

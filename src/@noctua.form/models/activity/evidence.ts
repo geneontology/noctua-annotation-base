@@ -37,7 +37,7 @@ export class Evidence {
   frequency: number;
   date: string;
   formattedDate: string
-  evidenceExt: EvidenceExt;
+  evidenceExts: EvidenceExt[] = [];
 
 
   constructor() {

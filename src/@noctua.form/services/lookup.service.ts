@@ -232,16 +232,26 @@ export class NoctuaLookupService {
 
           if (doc.annotation_extension_json) {
             try {
-              const extJson = JSON.parse(doc.annotation_extension_json);
-              console.log(extJson)
-
-              if (extJson.relationship && extJson.relationship.relation) {
-                evidence.evidenceExt = new EvidenceExt();
-                evidence.evidenceExt.term = new Entity(extJson.relationship.id, extJson.relationship.label)
-                extJson.relationship.relation.forEach(relation => {
-                  evidence.evidenceExt.relations.push(new Entity(relation.id, relation.label))
+              const extJsons = [];
+              if (Array.isArray(doc.annotation_extension_json)) {
+                doc.annotation_extension_json.forEach((ext) => {
+                  extJsons.push(JSON.parse(ext));
                 });
+              } else {
+                extJsons.push(JSON.parse(doc.annotation_extension_json));
               }
+
+              evidence.evidenceExts = [];
+              extJsons.forEach((extJson) => {
+                if (extJson.relationship && extJson.relationship.relation) {
+                  const evidenceExt = new EvidenceExt();
+                  evidenceExt.term = new Entity(extJson.relationship.id, extJson.relationship.label)
+                  extJson.relationship.relation.forEach(relation => {
+                    evidenceExt.relations.push(new Entity(relation.id, relation.label))
+                  });
+                  evidence.evidenceExts.push(evidenceExt);
+                }
+              });
 
 
             } catch (e) {
