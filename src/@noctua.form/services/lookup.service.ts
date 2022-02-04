@@ -253,7 +253,6 @@ export class NoctuaLookupService {
                 }
               });
 
-
             } catch (e) {
               console.log(e, activityNode, doc.annotation_extension_json); // error in the above string (in this case, yes)!
             }
