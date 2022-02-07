@@ -759,6 +759,9 @@ export class NoctuaGraphService {
         subjectActivityNode.uuid = bbopSubjectId;
         self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
         activity.id = bbopSubjectId;
+
+        activity.postRunUpdateCompliment();
+
         if (environment.isGraph) {
           activity.postRunUpdate();
         }
@@ -1293,6 +1296,7 @@ export class NoctuaGraphService {
           triple.object.date = partialObjectNode.date;
           triple.object.classExpression = partialObjectNode.classExpression;
           triple.object.setIsComplement(partialObjectNode.isComplement);
+          triple.predicate.isComplement = triple.object.isComplement;
           triple.predicate.evidence = evidence;
           triple.predicate.uuid = bbopEdge.id();
           self._graphToActivityDFS(camGraph, activity, camGraph.get_edges_by_subject(bbopObjectId), triple.object);

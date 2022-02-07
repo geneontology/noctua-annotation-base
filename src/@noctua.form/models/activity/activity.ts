@@ -177,6 +177,20 @@ export class Activity extends SaeGraph<ActivityNode> {
     }
   }
 
+  postRunUpdateCompliment() {
+    const self = this;
+
+    if (this.activityType === ActivityType.default || this.activityType === ActivityType.bpOnly) {
+      const mfNode = self.getMFNode();
+      const edge = self.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
+
+      if (mfNode && edge && mfNode.isComplement) {
+        edge.predicate.isComplement = true;
+      }
+    }
+  }
+
+
   postRunUpdate() {
     const self = this;
 
