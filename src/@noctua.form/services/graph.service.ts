@@ -836,7 +836,9 @@ export class NoctuaGraphService {
             }
             const triple = new Triple<Activity>(subjectActivity, objectActivity, predicate);
 
-            triples.push(triple);
+            if (triple.subject && triple.object) {
+              triples.push(triple);
+            }
           }
         }
       });

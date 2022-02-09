@@ -263,7 +263,7 @@ export class Cam {
     const self = this;
 
     return self.causalRelations.find((triple: Triple<Activity>) => {
-      return triple.subject.id === subjectId && triple.object.id === objectId;
+      return triple.subject?.id === subjectId && triple.object?.id === objectId;
     })
   }
 
