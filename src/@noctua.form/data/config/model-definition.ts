@@ -68,7 +68,7 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
             skipEvidenceCheck: true,
             termRequired: true,
@@ -136,7 +136,7 @@ export const activityUnitDescription: ActivityDescription = {
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'enabled by (GP)',
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
@@ -197,7 +197,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'enabled by (GP)',
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
@@ -258,7 +258,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
             skipEvidenceCheck: true,
             termRequired: true,

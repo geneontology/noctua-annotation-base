@@ -86,7 +86,7 @@ export const canInsertEntity = {
             id: ActivityNodeType.GoMolecularEntity,
             node: <ActivityNodeDisplay>{
                 type: ActivityNodeType.GoMolecularEntity,
-                category: [EntityDefinition.GoMolecularEntity],
+                category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
                 label: '(Protein Complex) has part (GP)',
                 displaySection: noctuaFormConfig.displaySection.gp,
                 displayGroup: noctuaFormConfig.displayGroup.gp,
@@ -105,7 +105,7 @@ export const canInsertEntity = {
             node: <ActivityNodeDisplay>{
                 id: EntityDefinition.GoMolecularEntity.id,
                 type: ActivityNodeType.GoMolecularEntity,
-                category: [EntityDefinition.GoMolecularEntity],
+                category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
                 label: '(MF) enabled by (GP)',
                 displaySection: noctuaFormConfig.displaySection.gp,
                 displayGroup: noctuaFormConfig.displayGroup.gp,
