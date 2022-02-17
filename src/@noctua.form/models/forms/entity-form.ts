@@ -43,6 +43,22 @@ export class EntityForm {
         });
     }
 
+
+    refreshEvidenceForms(evidences: Evidence[]) {
+        const self = this;
+
+        self.evidenceForms = [];
+        self.evidenceFormArray = new FormArray([]);
+
+        evidences.forEach((evidence: Evidence) => {
+            const evidenceForm = new EvidenceForm(self._metadata, self.node, evidence);
+
+            self.evidenceForms.push(evidenceForm);
+            evidenceForm.onValueChanges(self.node.predicate);
+            self.evidenceFormArray.push(self._fb.group(evidenceForm));
+        });
+    }
+
     populateTerm() {
         const self = this;
 

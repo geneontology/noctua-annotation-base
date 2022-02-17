@@ -11,6 +11,8 @@ import { NoctuaGraphService } from './graph.service';
 import { cloneDeep } from 'lodash';
 import { Activity } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
+import { Entity } from '../models/activity/entity';
+import { Evidence } from './../models/activity/evidence';
 
 @Injectable({
   providedIn: 'root'
@@ -52,14 +54,18 @@ export class NoctuaActivityEntityService {
     this._onActivityFormChanges();
   }
 
+  reinitializeForm(term: Entity, evidences: Evidence[]) {
+    this.entityForm.term.setValue(term);
+    this.entityForm.refreshEvidenceForms(evidences);
+    this.entityFormGroup.next(this._fb.group(this.entityForm));
+  }
+
   createActivityEntityForm(entity: ActivityNode) {
     const self = this;
     const formMetadata = new ActivityFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
     const entityForm = new EntityForm(formMetadata, entity);
 
-    //if (!entity.skipEvidenceCheck) {
     entityForm.createEvidenceForms(entity);
-    // }
 
     return entityForm;
   }
