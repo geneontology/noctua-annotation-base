@@ -43,6 +43,7 @@ const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
     return causalShapeDescriptions;
 };
 
+// ORDER MATTERS A LOT
 // What can you insert
 export const canInsertEntity = {
     [ActivityNodeType.GoMolecularEntity]: [
@@ -100,13 +101,13 @@ export const canInsertEntity = {
     ],
     [ActivityNodeType.GoMolecularFunction]: [
         <ShapeDescription>{
-            label: 'Add enabled by GP',
-            id: ActivityNodeType.GoMolecularEntity,
+            label: 'Add enabled by Protein Complex',
+            id: ActivityNodeType.GoProteinContainingComplex,
             node: <ActivityNodeDisplay>{
-                id: EntityDefinition.GoMolecularEntity.id,
-                type: ActivityNodeType.GoMolecularEntity,
-                category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
-                label: '(MF) enabled by (GP)',
+                id: EntityDefinition.GoProteinContainingComplex.id,
+                type: ActivityNodeType.GoProteinContainingComplex,
+                category: [EntityDefinition.GoProteinContainingComplex],
+                label: '(MF) enabled by (Protein Complex)',
                 displaySection: noctuaFormConfig.displaySection.gp,
                 displayGroup: noctuaFormConfig.displayGroup.gp,
                 termRequired: true,
@@ -117,13 +118,13 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToOne
         },
         <ShapeDescription>{
-            label: 'Add enabled by Protein Complex',
-            id: ActivityNodeType.GoProteinContainingComplex,
+            label: 'Add enabled by GP',
+            id: ActivityNodeType.GoMolecularEntity,
             node: <ActivityNodeDisplay>{
-                id: EntityDefinition.GoProteinContainingComplex.id,
-                type: ActivityNodeType.GoProteinContainingComplex,
-                category: [EntityDefinition.GoProteinContainingComplex],
-                label: '(MF) enabled by (Protein Complex)',
+                id: EntityDefinition.GoMolecularEntity.id,
+                type: ActivityNodeType.GoMolecularEntity,
+                category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+                label: '(MF) enabled by (GP)',
                 displaySection: noctuaFormConfig.displaySection.gp,
                 displayGroup: noctuaFormConfig.displayGroup.gp,
                 termRequired: true,
