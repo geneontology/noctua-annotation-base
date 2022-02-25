@@ -359,6 +359,10 @@ export class Activity extends SaeGraph<ActivityNode> {
       return self.getNode(ActivityNodeType.GoProteinContainingComplex);
     }
 
+    if (self.activityType === ActivityType.molecule) {
+      return self.getNode(ActivityNodeType.GoChemicalEntity);
+    }
+
     return self.getNode(ActivityNodeType.GoMolecularEntity);
   }
 
