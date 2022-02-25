@@ -366,6 +366,16 @@ export class Activity extends SaeGraph<ActivityNode> {
     return self.getNode(ActivityNodeType.GoMolecularEntity);
   }
 
+  getFDRootNode() {
+    const self = this;
+
+    if (self.activityType === ActivityType.molecule) {
+      return self.getNode(ActivityNodeType.GoCellularComponent);
+    }
+
+    return self.getNode(ActivityNodeType.GoMolecularFunction);
+  }
+
   getMFNode() {
     const self = this;
 
@@ -649,11 +659,13 @@ export class Activity extends SaeGraph<ActivityNode> {
     return title;
   }
 
-  buildTrees() {
+  buildTrees(): any[] {
     const self = this;
     const sortedEdges = self.edges.sort(compareTripleWeight);
+    const fdRootNode = self.getFDRootNode();
 
-    return [self._buildTree(sortedEdges, self.rootNode)];
+    if (!fdRootNode) return [];
+    return [self._buildTree(sortedEdges, fdRootNode)];
   }
 
   buildGPTrees() {

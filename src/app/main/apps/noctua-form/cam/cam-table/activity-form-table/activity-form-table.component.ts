@@ -73,6 +73,9 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
   editableTerms = false;
   currentMenuEvent: any = {};
 
+  descriptionSectionTitle = 'Function Description';
+  annotatedSectionTitle = 'Gene Product';
+
   //Tree
   treeNodes: ActivityTreeNode[] = [];
   treeControl = new FlatTreeControl<ActivityNode>(
@@ -121,10 +124,17 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
 
   ngOnInit(): void {
     this.loadTree()
-    this.gbOptions = cloneDeep(this.options)
-    this.gbOptions.showMenu = this.activity.activityType === ActivityType.molecule
+    this.gbOptions = cloneDeep(this.options);
+    this.gbOptions.showMenu = this.activity.activityType === ActivityType.molecule;
 
-    this.dataSource.data = this.activity.nodes.sort(compareNodeWeight);
+    if (this.activity.activityType === ActivityType.ccOnly) {
+      this.descriptionSectionTitle = 'Localization Description';
+    } else if (this.activity.activityType === ActivityType.molecule) {
+      this.annotatedSectionTitle = 'Small Molecule';
+      this.descriptionSectionTitle = 'Location (optional)';
+    } else {
+      this.descriptionSectionTitle = 'Function Description';
+    }
 
     this.noctuaCommonMenuService.onCamSettingsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -156,7 +166,12 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
 
   ngAfterViewInit(): void {
 
-    this.tree.treeModel.filterNodes((node) => {
+    this.gpTree?.treeModel.filterNodes((node) => {
+      const activityNode = node.data.node as ActivityNode;
+      return (activityNode?.displaySection.id === noctuaFormConfig.displaySection.gp.id);
+    });
+
+    this.tree?.treeModel.filterNodes((node) => {
       const activityNode = node.data.node as ActivityNode;
       return (activityNode?.displaySection.id === noctuaFormConfig.displaySection.fd.id);
     });
@@ -177,11 +192,11 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
   }
 
   onTreeLoad() {
-    this.tree.treeModel.expandAll();
+    this.tree?.treeModel.expandAll();
   }
 
   onGPTreeLoad() {
-    this.gpTree.treeModel.expandAll();
+    this.gpTree?.treeModel.expandAll();
   }
 
   setActivityDisplayType(displayType: ActivityDisplayType) {

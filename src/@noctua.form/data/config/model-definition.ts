@@ -414,9 +414,9 @@ export const createActivity = (activityDescription: ActivityDescription): Activi
 export const insertNode = (activity: Activity, subjectNode: ActivityNode, nodeDescription: InsertNodeDescription): ActivityNode => {
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
-    objectNode.id = nodeDescription.node.isKey ?
-        nodeDescription.node.type :
-        `${nodeDescription.node.type}'@@'${uuid()}`;
+    objectNode.id = activity.exist(nodeDescription.node.type) ?
+        `${nodeDescription.node.type}'@@'${uuid()}` :
+        nodeDescription.node.type;
 
     objectNode.type = nodeDescription.node.type;
     activity.addNode(objectNode);

@@ -2,10 +2,9 @@
   [ngClass]="{'noc-selected': activity.displayId===camService.currentMatch?.activityDisplayId}">
 
   <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
-    <div *ngIf="activity.activityType !== ActivityType.molecule" class="noc-section-header" fxLayout="row"
-      fxLayoutAlign="start center">
+    <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-section-heading">
-        Gene Product
+        {{annotatedSectionTitle}}
       </div>
       <span fxFlex></span>
     </div>
@@ -28,14 +27,6 @@
               [treeAllowDrop]="node.allowDrop" [treeDrag]="node" [treeDragEnabled]="node.allowDrag()">
 
               <div class="noc-annotation-row" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
-                <!--     <div class="noc-cell-label" fxLayout="row" fxLayoutAlign="start center">
-                  {{node.data.node?.predicate?.edge?.label}}
-                  <noctua-inline-editor
-                    *ngIf="noctuaUserService.user && node.data.node.relationEditable && options.editableRelation"
-                    [cam]="cam" [activity]='activity' [entity]="node.data.node" [category]="EditorCategory.relationship"
-                    class="noc-edit-button ml-12">
-                  </noctua-inline-editor>
-                </div> -->
                 <noc-activity-form-table-node [settings]="settings" [options]="options" [cam]="cam"
                   [activity]="activity" [entity]="node.data.node" class="w-100-p">
                 </noc-activity-form-table-node>
@@ -45,13 +36,11 @@
         </ng-template>
       </tree-root>
     </div>
-
   </div>
   <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
-    <div *ngIf="activity.activityType !== ActivityType.molecule" class="noc-section-header" fxLayout="row"
-      fxLayoutAlign="start center">
+    <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-section-heading">
-        Function Description
+        {{descriptionSectionTitle}}
       </div>
       <span fxFlex></span>
     </div>

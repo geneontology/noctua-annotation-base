@@ -41,6 +41,10 @@ export class SaeGraph<T extends ActivityNode> {
     return this.getEdges(null);
   }
 
+  exist(id: string): boolean {
+    return id in this.graph._nodes;
+  }
+
   getNode(id: string): T {
     return findNode(this.graph, id);
   }

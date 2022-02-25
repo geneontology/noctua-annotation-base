@@ -409,8 +409,6 @@ export class CamCanvas {
 
         const activityType = activity.getActivityTypeDetail();
 
-        console.log('poo', activity.mfNode)
-
         if (activity.mfNode) {
             el.prop({ 'mf': [activity.mfNode.term.label] });
         }
