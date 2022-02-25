@@ -1,9 +1,6 @@
 import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { noctuaAnimations } from './../../../../../../../@noctua/animations';
-import { NoctuaFormDialogService } from './../../../services/dialog.service';
-
 import {
   NoctuaFormConfigService,
   NoctuaActivityFormService,
@@ -19,8 +16,7 @@ import {
   ActivityTreeNode,
   ActivityNodeType,
   ActivityDisplayType,
-  NoctuaGraphService,
-  compareNodeWeight
+  NoctuaGraphService
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -40,27 +36,25 @@ import { takeUntil } from 'rxjs/operators';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
 import { TableOptions } from '@noctua.common/models/table-options';
-import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'noc-activity-form-table',
-  templateUrl: './activity-form-table.component.html',
-  styleUrls: ['./activity-form-table.component.scss'],
-  animations: noctuaAnimations
+  selector: 'noc-activity-tree-group',
+  templateUrl: './activity-tree-group.component.html',
+  styleUrls: ['./activity-tree-group.component.scss'],
 })
-export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
+export class ActivityTreeGroupComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   ActivityDisplayType = ActivityDisplayType;
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
   activityTypeOptions = noctuaFormConfig.activityType.options;
 
-
+  treeNodes: ActivityTreeNode[] = [];
 
   settings: SettingsOptions = new SettingsOptions()
   gbSettings: SettingsOptions = new SettingsOptions()
 
   @ViewChild('tree') tree;
-  @ViewChild('gpTree') gpTree;
+  @ViewChild('tree') gpTree;
   @Input('cam') cam: Cam
   @Input('activity') activity: Activity
   @Input('options') options: TableOptions = {};
@@ -72,17 +66,8 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
   gpNode: ActivityNode;
   editableTerms = false;
   currentMenuEvent: any = {};
-
-  //Tree
-  treeNodes: ActivityTreeNode[] = [];
   treeControl = new FlatTreeControl<ActivityNode>(
     node => node.treeLevel, node => node.expandable);
-
-  gpTreeNodes: ActivityTreeNode[] = [];
-  gpTreeControl = new FlatTreeControl<ActivityNode>(
-    node => node.treeLevel, node => node.expandable);
-
-  dataSource: MatTableDataSource<ActivityNode>;
 
   treeOptions = {
     allowDrag: false,
@@ -101,16 +86,12 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
     public camService: CamService,
     private _noctuaGraphService: NoctuaGraphService,
     private noctuaCommonMenuService: NoctuaCommonMenuService,
-    private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaActivityEntityService: NoctuaActivityEntityService,
-    public noctuaActivityFormService: NoctuaActivityFormService,
-    private inlineEditorService: InlineEditorService) {
+    public noctuaActivityFormService: NoctuaActivityFormService) {
 
-    this.dataSource = new MatTableDataSource<ActivityNode>();
     this._unsubscribeAll = new Subject();
   }
 
@@ -123,8 +104,6 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
     this.loadTree()
     this.gbOptions = cloneDeep(this.options)
     this.gbOptions.showMenu = this.activity.activityType === ActivityType.molecule
-
-    this.dataSource.data = this.activity.nodes.sort(compareNodeWeight);
 
     this.noctuaCommonMenuService.onCamSettingsChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -155,10 +134,12 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
   }
 
   ngAfterViewInit(): void {
+    this.tree.treeModel.filterNodes(() => {
+      return true;
+    });
 
-    this.tree.treeModel.filterNodes((node) => {
-      const activityNode = node.data.node as ActivityNode;
-      return (activityNode?.displaySection.id === noctuaFormConfig.displaySection.fd.id);
+    this.gpTree.treeModel.filterNodes((node) => {
+      return (node.data.id !== this.gpNode?.id);
     });
   }
 
@@ -173,7 +154,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
     this.gpNode = this.activity.getGPNode();
     this.optionsDisplay = { ...this.options, hideHeader: true };
     this.treeNodes = this.activity.buildTrees();
-    this.gpTreeNodes = this.activity.buildGPTrees();
+
   }
 
   onTreeLoad() {
@@ -196,40 +177,5 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
     node.expanded = !node.expanded;
   }
 
-  displayCamErrors() {
-    const errors = this.cam.getViolationDisplayErrors();
-    this.noctuaFormDialogService.openCamErrorsDialog(errors);
-  }
-
-  displayActivityErrors(activity: Activity) {
-    const errors = activity.getViolationDisplayErrors();
-    this.noctuaFormDialogService.openCamErrorsDialog(errors);
-  }
-
-
-  addEvidence(entity: ActivityNode) {
-    const self = this;
-
-    entity.predicate.addEvidence();
-    const data = {
-      cam: this.cam,
-      activity: this.activity,
-      entity: entity,
-      category: EditorCategory.evidenceAll,
-      evidenceIndex: entity.predicate.evidence.length - 1
-    };
-
-    this.camService.onCamChanged.next(this.cam);
-    this.camService.activity = this.activity;
-    this.noctuaActivityEntityService.initializeForm(this.activity, entity);
-    this.inlineEditorService.open(this.currentMenuEvent.target, { data });
-
-    self.noctuaActivityFormService.initializeForm();
-  }
-
-
-  cleanId(dirtyId: string) {
-    return NoctuaUtils.cleanID(dirtyId);
-  }
 }
 

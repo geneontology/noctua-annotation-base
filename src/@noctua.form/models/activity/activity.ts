@@ -652,8 +652,16 @@ export class Activity extends SaeGraph<ActivityNode> {
     return [self._buildTree(sortedEdges, self.rootNode)];
   }
 
+  buildGPTrees() {
+    const self = this;
+    const sortedEdges = self.edges.sort(compareTripleWeight);
+
+    return [self._buildTree(sortedEdges, self.gpNode)];
+  }
+
   private _buildTree(triples: Triple<ActivityNode>[], rootNode: ActivityNode): ActivityTreeNode {
     const self = this;
+    if (!rootNode) return;
     const result: ActivityTreeNode[] = [new ActivityTreeNode(rootNode)]
     const getNestedChildren = (arr: ActivityTreeNode[]) => {
 
