@@ -57,7 +57,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
 
 
   settings: SettingsOptions = new SettingsOptions()
-  gbSettings: SettingsOptions = new SettingsOptions()
+  gpSettings: SettingsOptions = new SettingsOptions()
 
   @ViewChild('tree') tree;
   @ViewChild('gpTree') gpTree;
@@ -65,7 +65,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
   @Input('activity') activity: Activity
   @Input('options') options: TableOptions = {};
 
-  gbOptions: TableOptions = {};
+  gpOptions: TableOptions = {};
 
   optionsDisplay: any = {}
 
@@ -124,8 +124,9 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
 
   ngOnInit(): void {
     this.loadTree()
-    this.gbOptions = cloneDeep(this.options);
-    this.gbOptions.showMenu = this.activity.activityType === ActivityType.molecule;
+    this.gpOptions = cloneDeep(this.options);
+    this.gpOptions.showMenu = this.activity.activityType === ActivityType.molecule ||
+      this.activity.activityType === ActivityType.proteinComplex;
 
     if (this.activity.activityType === ActivityType.ccOnly) {
       this.descriptionSectionTitle = 'Localization Description';
@@ -143,9 +144,9 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
           return;
         }
         this.settings = settings;
-        this.gbSettings = cloneDeep(settings)
-        this.gbSettings.showEvidence = false;
-        this.gbSettings.showEvidenceSummary = false;
+        this.gpSettings = cloneDeep(settings)
+        this.gpSettings.showEvidence = false;
+        this.gpSettings.showEvidenceSummary = false;
       });
 
     if (this.options?.editableTerms) {

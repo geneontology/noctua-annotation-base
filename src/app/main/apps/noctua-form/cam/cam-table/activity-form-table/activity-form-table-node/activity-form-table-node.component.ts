@@ -29,7 +29,7 @@ import {
 } from '@geneontology/noctua-form-base';
 
 import { EditorCategory } from '@noctua.editor/models/editor-category';
-import { find } from 'lodash';
+import { cloneDeep, find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { MatTableDataSource } from '@angular/material/table';
@@ -157,26 +157,27 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
 
       const success = (selected) => {
         if (selected.term) {
-          entity.term = new Entity(selected.term.term.id, selected.term.term.label);
+          const term = new Entity(selected.term.term.id, selected.term.term.label);
 
           if (selected.evidences && selected.evidences.length > 0) {
+
+            self.noctuaActivityEntityService.initializeForm(this.activity, entity);
+            entity.term = term;
             entity.predicate.setEvidence(selected.evidences);
+            self.noctuaActivityEntityService.saveActivity(false);
 
-            selected.evidences.forEach((evidence: Evidence) => {
 
-              evidence.evidenceExts.forEach((evidenceExt) => {
-                evidenceExt.relations.forEach((relation) => {
-                  const node = self.noctuaFormConfigService.insertActivityNodeByPredicate(self.noctuaActivityFormService.activity, self.entity, relation.id);
-                  node.term = new Entity(evidenceExt.term.id, evidenceExt.term.id);
-                  node.predicate.setEvidence([evidence]);
-                });
-              });
-
-            });
+            /*  selected.evidences.forEach((evidence: Evidence) => {
+               evidence.evidenceExts.forEach((evidenceExt) => {
+                 evidenceExt.relations.forEach((relation) => {
+                   const node = self.noctuaFormConfigService.insertActivityNodeByPredicate(self.noctuaActivityFormService.activity, self.entity, relation.id);
+                   node.term = new Entity(evidenceExt.term.id, evidenceExt.term.id);
+                   node.predicate.setEvidence([evidence]);
+                 });
+               });
+ 
+             }); */
           }
-
-
-          self.noctuaActivityFormService.initializeForm();
         }
       };
       self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
@@ -188,6 +189,7 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
       self.noctuaFormDialogService.openActivityErrorsDialog([error])
     }
   }
+
 
   insertEntity(entity: ActivityNode, nodeDescription: ShapeDefinition.ShapeDescription) {
     const insertedNode = this.noctuaFormConfigService.insertActivityNode(this.activity, entity, nodeDescription);

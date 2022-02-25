@@ -84,10 +84,12 @@ export class NoctuaActivityEntityService {
     });
   }
 
-  saveActivity() {
+  saveActivity(withForm = true) {
     const self = this;
 
-    self.activityEntityFormToActivity();
+    if (withForm) {
+      self.activityEntityFormToActivity();
+    }
     const saveData = self.activity.createEdit(self.currentActivity);
 
     return self.noctuaGraphService.editActivity(self.cam,
@@ -98,6 +100,8 @@ export class NoctuaActivityEntityService {
       saveData.removeIds,
       saveData.removeTriples);
   }
+
+
 
   saveActivityReplace(cam: Cam, addLoadingStatus?: boolean): Observable<any> {
     const self = this;
