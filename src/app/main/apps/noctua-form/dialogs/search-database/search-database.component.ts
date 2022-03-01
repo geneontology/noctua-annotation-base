@@ -1,24 +1,20 @@
 
-import { Component, OnInit, OnDestroy, ViewChild, Inject, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
 
 import { SelectionModel } from '@angular/cdk/collections';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatMenuTrigger, MatTableDataSource } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { Subject } from 'rxjs';
-import * as _ from 'lodash';
+
 import {
-  AnnotonNode,
+  ActivityNode,
   Evidence,
   NoctuaFormConfigService,
-  NoctuaGraphService,
   NoctuaLookupService
-} from 'noctua-form-base';
+} from '@geneontology/noctua-form-base';
 
 import { noctuaAnimations } from './../../../../../../@noctua/animations';
-import { NoctuaSearchService } from './../../../../../../@noctua.search/services/noctua-search.service';
-import { SparqlService } from './../../../../../../@noctua.sparql/services/sparql/sparql.service';
 
 @Component({
   selector: 'app-search-database',
@@ -29,8 +25,8 @@ import { SparqlService } from './../../../../../../@noctua.sparql/services/sparq
 export class SearchDatabaseDialogComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
   evidence: Evidence[] = [];
-  annotonNodes: AnnotonNode[] = [];
-  selectedAnnotonNode: AnnotonNode;
+  activityNodes: ActivityNode[] = [];
+  selectedActivityNode: ActivityNode;
   searchCriteria: any;
   displayedColumns: string[] = ['select', 'evidence', 'reference', 'with', 'assignedBy'];
   dataSource;
@@ -39,13 +35,8 @@ export class SearchDatabaseDialogComponent implements OnInit, OnDestroy {
   constructor(
     private _matDialogRef: MatDialogRef<SearchDatabaseDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private _data: any,
-    private _matDialog: MatDialog,
-    private route: ActivatedRoute,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    private noctuaSearchService: NoctuaSearchService,
     private noctuaLookupService: NoctuaLookupService,
-    private noctuaGraphService: NoctuaGraphService,
-    private sparqlService: SparqlService,
   ) {
     this._unsubscribeAll = new Subject();
 
@@ -54,8 +45,8 @@ export class SearchDatabaseDialogComponent implements OnInit, OnDestroy {
     this.initialize();
 
   }
-  ngOnInit() {
-  }
+  ngOnInit() { }
+
   initialize() {
     const self = this;
 
@@ -65,14 +56,13 @@ export class SearchDatabaseDialogComponent implements OnInit, OnDestroy {
       this.searchCriteria.params)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response) => {
-        console.log(response);
-        this.annotonNodes = response;
+        this.activityNodes = response;
       });
   }
 
-  selectAnnotonNode(annotonNode: AnnotonNode) {
-    this.selectedAnnotonNode = annotonNode;
-    this.dataSource = new MatTableDataSource<Evidence>(annotonNode.predicate.evidence);
+  selectActivityNode(activityNode: ActivityNode) {
+    this.selectedActivityNode = activityNode;
+    this.dataSource = new MatTableDataSource<Evidence>(activityNode.predicate.evidence);
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -91,7 +81,7 @@ export class SearchDatabaseDialogComponent implements OnInit, OnDestroy {
 
   save() {
     this._matDialogRef.close({
-      term: this.selectedAnnotonNode,
+      term: this.selectedActivityNode,
       evidences: <Evidence[]>this.selection.selected
     });
   }

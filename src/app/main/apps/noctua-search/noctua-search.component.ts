@@ -1,40 +1,37 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatDrawer } from '@angular/material';
+import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
-
 import { noctuaAnimations } from './../../../../@noctua/animations';
-
 import {
   Cam,
   Contributor,
   NoctuaUserService,
   NoctuaFormConfigService,
-  NoctuaGraphService,
-  NoctuaAnnotonFormService,
-  CamService
-} from 'noctua-form-base';
+  CamService,
+} from '@geneontology/noctua-form-base';
 
-import { NoctuaFormService } from './../noctua-form/services/noctua-form.service';
 import { FormGroup } from '@angular/forms';
-
 import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
-
-
-import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
-import { takeUntil } from 'rxjs/operators';
-import { ReviewService } from '../noctua-review/services/review.service';
-
-
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { CamPage } from '@noctua.search/models/cam-page';
+import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { ReviewMode } from '@noctua.search/models/review-mode';
+import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.search/models/menu-panels';
+import { ArtBasket } from '@noctua.search/models/art-basket';
+import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
+import { NgScrollbar } from 'ngx-scrollbar';
+import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 
 @Component({
   selector: 'noc-noctua-search',
   templateUrl: './noctua-search.component.html',
   styleUrls: ['./noctua-search.component.scss'],
-  //encapsulation: ViewEncapsulation.None,
-  animations: noctuaAnimations
+  // encapsulation: ViewEncapsulation.None,
+  animations: noctuaAnimations,
 })
-export class NoctuaSearchComponent implements OnInit, OnDestroy {
+export class NoctuaSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('leftDrawer', { static: true })
   leftDrawer: MatDrawer;
@@ -42,176 +39,176 @@ export class NoctuaSearchComponent implements OnInit, OnDestroy {
   @ViewChild('rightDrawer', { static: true })
   rightDrawer: MatDrawer;
 
+  @ViewChild(PerfectScrollbarDirective)
+  scrollbarRef?: PerfectScrollbarDirective;
 
-  public cam: Cam;
-  public user: Contributor;
-  searchResults = [];
-  modelId: string = '';
-  baristaToken: string = '';
-  searchCriteria: any = {};
-  searchFormData: any = []
-  searchForm: FormGroup;
+  // @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
+
   loadingSpinner: any = {
     color: 'primary',
     mode: 'indeterminate'
+  };
+
+  scrollbarConfig = {
+    suppressScrollX: true
   }
 
-  summary: any = {
-    expanded: false,
-    detail: {}
-  }
+  ReviewMode = ReviewMode;
+  LeftPanel = LeftPanel;
+  MiddlePanel = MiddlePanel;
+  RightPanel = RightPanel;
+  artBasket: ArtBasket = new ArtBasket();
+
+  camPage: CamPage;
+  public cam: Cam;
+  public user: Contributor;
+
   cams: any[] = [];
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private route: ActivatedRoute,
-    public noctuaUserService: NoctuaUserService,
+  constructor(
+    private route: ActivatedRoute,
+    private camService: CamService,
+
+    public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaAnnotonFormService: NoctuaAnnotonFormService,
+    public noctuaCommonMenuService: NoctuaCommonMenuService,
+    public noctuaSearchMenuService: NoctuaSearchMenuService,
+    public noctuaUserService: NoctuaUserService,
     public noctuaSearchService: NoctuaSearchService,
-    public noctuaFormService: NoctuaFormService,
-    // private noctuaLookupService: NoctuaLookupService,
-    private noctuaGraphService: NoctuaGraphService,
-    private sparqlService: SparqlService,
-    public reviewService: ReviewService,
-
-
   ) {
-
     this._unsubscribeAll = new Subject();
 
     this.route
       .queryParams
       .subscribe(params => {
-        this.baristaToken = params['barista_token'] || null;
-        this.noctuaUserService.baristaToken = this.baristaToken;
-        this.getUserInfo();
-        this.loadCams();
+        const baristaToken = params['barista_token'] || null;
+
+        this.noctuaSearchService.paramsToSearch(params)
+        this.noctuaUserService.getUser(baristaToken);
       });
-  }
 
-  getUserInfo() {
-
-    this.noctuaUserService.getUser()
+    this.noctuaSearchService.onCamsPageChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((response) => {
-        if (response && response.nickname) {
-          this.user = new Contributor()
-          this.user.name = response.nickname;
-          this.user.groups = response.groups;
-          // user.manager.use_groups([self.userInfo.selectedGroup.id]);
-          this.noctuaUserService.user = this.user;
-          this.noctuaUserService.onUserChanged.next(this.user);
+      .subscribe((camPage: CamPage) => {
+        if (!camPage) {
+          return;
         }
+        this.camPage = camPage;
+      });
+
+    this.noctuaUserService.onUserChanged.pipe(
+      distinctUntilChanged(this.noctuaUserService.distinctUser),
+      takeUntil(this._unsubscribeAll))
+      .subscribe((user: Contributor) => {
+        if (user === undefined) {
+          return;
+        }
+        this.noctuaFormConfigService.setupUrls();
+        this.noctuaFormConfigService.setUniversalUrls();
+        this.noctuaSearchService.setup();
+        this.noctuaReviewSearchService.setup();
       });
   }
 
   ngOnInit(): void {
-    this.reviewService.setLeftDrawer(this.leftDrawer);
-    this.noctuaFormService.setRightDrawer(this.rightDrawer);
-
-    /*
-    this.sparqlService.getCamsByContributor('http://orcid.org/0000-0002-1706-4196').subscribe((response: any) => {
-      this.cams = this.sparqlService.cams = response;
-      this.sparqlService.onCamsChanged.next(this.cams);
-    });
-    */
+    this.noctuaSearchMenuService.setLeftDrawer(this.leftDrawer);
+    this.noctuaSearchMenuService.setRightDrawer(this.rightDrawer);
 
     this.rightDrawer.open();
 
-    this.sparqlService.getAllContributors()
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((response: any) => {
-        this.reviewService.contributors = response;
-        this.reviewService.onContributorsChanged.next(response);
-        this.noctuaSearchService.searchCriteria.goterms.push(
-          {
-            "id": "GO:0042632",
-            "label": "cholesterol homeostasis"
-          }
-        )
-        this.noctuaSearchService.updateSearch();
-      });
-
-    this.sparqlService.getAllGroups()
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((response: any) => {
-        this.reviewService.groups = response;
-        this.reviewService.onGroupsChanged.next(response);
-      });
-
-
-
-    this.sparqlService.getAllOrganisms()
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((response: any) => {
-        this.reviewService.organisms = response;
-        this.reviewService.onOrganismsChanged.next(response);
-      });
-
-    this.sparqlService.onCamsChanged
+    this.noctuaSearchService.onCamsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(cams => {
         this.cams = cams;
-        this.summary.detail = this.sparqlService.searchSummary;
-        this.loadCams();
       });
 
-    this.reviewService.onContributorsChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(contributors => {
-        this.noctuaUserService.contributors = contributors;
+    this.noctuaReviewSearchService.onArtBasketChanged.pipe(
+      takeUntil(this._unsubscribeAll))
+      .subscribe((artBasket: ArtBasket) => {
+        if (artBasket) {
+          this.artBasket = artBasket;
+        }
       });
+  }
 
-    this.reviewService.onGroupsChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(groups => {
-        this.noctuaUserService.groups = groups;
-      });
 
+  ngAfterViewInit(): void {
+    this.noctuaSearchMenuService.resultsViewScrollbar = this.scrollbarRef;
+  }
+
+  openLeftDrawer(panel) {
+    this.noctuaSearchMenuService.selectLeftPanel(panel);
+    this.noctuaSearchMenuService.openLeftDrawer();
+  }
+
+  selectMiddlePanel(panel) {
+    const self = this;
+    this.noctuaSearchMenuService.selectMiddlePanel(panel);
+
+    switch (panel) {
+      case MiddlePanel.cams:
+        this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
+        break;
+      case MiddlePanel.camsReview:
+        self.camService.reviewChangesCams();
+        this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.artBasket);
+        break;
+      case MiddlePanel.reviewChanges:
+        self.camService.reviewChangesCams();
+        this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.artBasket);
+        break;
+    }
+  }
+
+  openRightDrawer(panel) {
+    this.noctuaSearchMenuService.selectRightPanel(panel);
+    this.noctuaSearchMenuService.openRightDrawer();
   }
 
   toggleLeftDrawer(panel) {
-    this.reviewService.toggleLeftDrawer(panel);
+    this.noctuaSearchMenuService.toggleLeftDrawer(panel);
+    this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
   }
 
-  search() {
-    let searchCriteria = this.searchForm.value;
-    this.noctuaSearchService.search(searchCriteria);
+  createModel(type: 'graph-editor' | 'noctua-form') {
+    this.noctuaCommonMenuService.createModel(type);
   }
 
-  loadCams() {
-    this.cams = this.sparqlService.cams;
+  openBasketPanel() {
+    this.openLeftDrawer(LeftPanel.artBasket);
+    this.camService.reviewChangesCams();
+    this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.camsReview);
+    this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
+    this.noctuaSearchMenuService.isReviewMode = true;
   }
 
-  toggleSummaryExpand() {
-    this.summary.expanded = !this.summary.expanded;
-  }
-
-  toggleExpand(cam) {
-    if (cam.expanded) {
-      cam.expanded = false;
-    } else {
-      cam.expanded = true;
+  toggleReviewMode() {
+    if (this.noctuaSearchMenuService.reviewMode === ReviewMode.off) {
+      this.noctuaSearchMenuService.reviewMode = ReviewMode.on;
+      this.noctuaSearchMenuService.isReviewMode = true;
+      // this.noctuaSearchMenuService.closeLeftDrawer();
+    } else if (this.noctuaSearchMenuService.reviewMode === ReviewMode.on) {
+      this.noctuaReviewSearchService.onClearForm.next(true);
+      this.noctuaSearchMenuService.reviewMode = ReviewMode.off;
+      this.noctuaSearchMenuService.selectMiddlePanel(MiddlePanel.cams);
+      this.noctuaSearchMenuService.selectLeftPanel(LeftPanel.filter);
+      this.noctuaSearchMenuService.isReviewMode = false;
     }
   }
+
 
   refresh() {
     this.noctuaSearchService.updateSearch();
   }
 
-  selectCam(cam) {
-    this.sparqlService.onCamChanged.next(cam);
+  reset() {
+    this.noctuaSearchService.clearSearchCriteria();
   }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
-
-
-
-
-
 }
-

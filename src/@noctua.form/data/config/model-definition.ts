@@ -1,242 +1,435 @@
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { AnnotonNode, EntityLookup, Predicate, Annoton, Entity, AnnotonType, AnnotonNodeDisplay } from './../../models/annoton';
-import * as EntityDefinition from './entity-definition';
-import * as InsertEntityDefinition from './insert-entity-definition';
-import { each } from 'lodash';
-import { AnnotonNodeType } from './../../models/annoton/annoton-node';
 
-declare const require: any;
-const getUuid = require('uuid/v1');
+import * as EntityDefinition from './entity-definition';
+import * as ShapeDescription from './shape-definition';
+import { each, find } from 'lodash';
+import { ActivityNodeType, ActivityNodeDisplay, ActivityNode } from './../../models/activity/activity-node';
+import { Entity } from '../../models/activity/entity';
+import { Predicate } from '../../models/activity/predicate';
+import { ActivityType, Activity } from '../../models/activity/activity';
+import { v4 as uuid } from 'uuid';
+
 
 export interface ActivityDescription {
-    type: AnnotonType;
-    nodes: { [key: string]: AnnotonNodeDisplay };
+    type: ActivityType;
+    isComplex?: boolean;
+    nodes: { [key: string]: ActivityNodeDisplay };
     triples: { subject: string, object: string, predicate: any }[];
-    overrides?: { [key: string]: AnnotonNodeDisplay };
+    overrides?: { [key: string]: ActivityNodeDisplay };
 }
 
 export interface InsertNodeDescription {
-    node: AnnotonNodeDisplay;
+    node: ActivityNodeDisplay;
     predicate: Entity;
 }
 
-export const activityUnitDescription: ActivityDescription = {
-    type: AnnotonType.default,
+export const activityUnitBaseDescription: ActivityDescription = {
+    type: ActivityType.default,
     nodes: {
-        [AnnotonNodeType.GoMolecularFunction]: <AnnotonNodeDisplay>{
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularFunction.id,
-            type: AnnotonNodeType.GoMolecularFunction,
-            category: EntityDefinition.GoMolecularFunction.category,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
             label: 'Molecular Function',
             aspect: 'F',
-            relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
-            termRequired: true
+            skipEvidenceCheck: true,
+            termRequired: true,
+            weight: 1
         },
-        [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
+    },
+    triples: [],
+};
+
+export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
+    type: ActivityType.bpOnly,
+    isComplex: true,
+    nodes: {
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'Molecular Function',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.mf,
+            skipEvidenceCheck: true,
+            visible: false,
+            weight: 1
+        }
+    },
+    triples: []
+};
+
+export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
+    type: ActivityType.ccOnly,
+    nodes: {
+        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
-            type: AnnotonNodeType.GoMolecularEntity,
-            category: EntityDefinition.GoMolecularEntity.category,
+            type: ActivityNodeType.GoMolecularEntity,
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
-            skipEvidence: true,
-            relationship: noctuaFormConfig.edge.enabledBy,
+            skipEvidenceCheck: true,
+            termRequired: true,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true
+            weight: 1
+        }
+    },
+    triples: [],
+};
+
+export const proteinComplexBaseDescription: ActivityDescription = {
+    type: ActivityType.proteinComplex,
+    nodes: {
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'Molecular Function',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.mf,
+            skipEvidenceCheck: true,
+            visible: false,
+            weight: 1
+        }
+    },
+    triples: [],
+};
+
+export const moleculeBaseDescription: ActivityDescription = {
+    type: ActivityType.molecule,
+    nodes: {
+        [ActivityNodeType.GoChemicalEntity]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoChemicalEntity.id,
+            type: ActivityNodeType.GoChemicalEntity,
+            category: [EntityDefinition.GoChemicalEntity],
+            label: 'Molecule',
+            skipEvidenceCheck: true,
+            showEvidence: false,
+            termRequired: true,
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 1
+        }
+    },
+    triples: [],
+};
+
+
+export const activityUnitDescription: ActivityDescription = {
+    type: ActivityType.default,
+    nodes: {
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'Molecular Function',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.mf,
+            termRequired: true,
+            weight: 1
         },
-        [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
+        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularEntity.id,
+            type: ActivityNodeType.GoMolecularEntity,
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+            label: 'enabled by (GP)',
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            termRequired: true,
+            skipEvidenceCheck: true,
+            weight: 2
+        },
+        [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoBiologicalProcess.id,
-            type: AnnotonNodeType.GoBiologicalProcess,
-            category: EntityDefinition.GoBiologicalProcess.category,
-            label: 'MF part of Biological Process',
+            type: ActivityNodeType.GoBiologicalProcess,
+            category: [EntityDefinition.GoBiologicalProcess],
+            label: '(MF) part of (BP)',
             aspect: 'P',
-            relationship: noctuaFormConfig.edge.partOf,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
-            treeLevel: 2,
+            weight: 10
         },
-        [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
+        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
-            type: AnnotonNodeType.GoCellularComponent,
-            category: EntityDefinition.GoCellularComponent.category,
-            label: 'MF occurs in Cellular Component',
+            type: ActivityNodeType.GoCellularComponent,
+            category: [EntityDefinition.GoCellularComponent],
+            label: '(MF) occurs in (CC)',
             aspect: 'C',
-            relationship: noctuaFormConfig.edge.occursIn,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
-            treeLevel: 2,
+            weight: 20
         }
     },
     triples: [{
-        subject: AnnotonNodeType.GoMolecularFunction,
-        object: AnnotonNodeType.GoMolecularEntity,
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoMolecularEntity,
         predicate: noctuaFormConfig.edge.enabledBy
     }, {
-        subject: AnnotonNodeType.GoMolecularFunction,
-        object: AnnotonNodeType.GoBiologicalProcess,
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoBiologicalProcess,
         predicate: noctuaFormConfig.edge.partOf
     }, {
-        subject: AnnotonNodeType.GoMolecularFunction,
-        object: AnnotonNodeType.GoCellularComponent,
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoCellularComponent,
         predicate: noctuaFormConfig.edge.occursIn
     }],
 };
 
 export const bpOnlyAnnotationDescription: ActivityDescription = {
-    type: AnnotonType.bpOnly,
+    type: ActivityType.bpOnly,
     nodes: {
-        [AnnotonNodeType.GoMolecularFunction]: <AnnotonNodeDisplay>{
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularFunction.id,
-            type: AnnotonNodeType.GoMolecularFunction,
-            category: EntityDefinition.GoMolecularFunction.category,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
             label: 'Molecular Function',
             aspect: 'F',
-            relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
-            visible: false
+            visible: false,
+            weight: 1
         },
-        [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
+        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
-            type: AnnotonNodeType.GoMolecularEntity,
-            category: EntityDefinition.GoMolecularEntity.category,
-            label: 'Gene Product',
-            skipEvidence: true,
-            relationship: noctuaFormConfig.edge.enabledBy,
+            type: ActivityNodeType.GoMolecularEntity,
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+            label: 'enabled by (GP)',
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true
+            termRequired: true,
+            skipEvidenceCheck: true,
+            weight: 2
         },
 
-        [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
+        [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoBiologicalProcess.id,
-            type: AnnotonNodeType.GoBiologicalProcess,
-            category: EntityDefinition.GoBiologicalProcess.category,
+            type: ActivityNodeType.GoBiologicalProcess,
+            category: [EntityDefinition.GoBiologicalProcess],
             label: 'Biological Process',
             aspect: 'P',
-            relationship: noctuaFormConfig.edge.causallyUpstreamOfOrWithin,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.bp,
-            treeLevel: 2,
-            termRequired: true
+            termRequired: true,
+            weight: 10
         },
-        [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
+        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
-            type: AnnotonNodeType.GoCellularComponent,
-            category: EntityDefinition.GoCellularComponent.category,
-            label: 'occurs in Cellular Component',
+            type: ActivityNodeType.GoCellularComponent,
+            category: [EntityDefinition.GoCellularComponent],
+            label: 'occurs in (CC)',
             aspect: 'C',
-            relationship: noctuaFormConfig.edge.occursIn,
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
-            treeLevel: 3,
+            weight: 20
         }
     },
     triples: [{
-        subject: AnnotonNodeType.GoMolecularFunction,
-        object: AnnotonNodeType.GoMolecularEntity,
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoMolecularEntity,
         predicate: noctuaFormConfig.edge.enabledBy
     }, {
-        subject: AnnotonNodeType.GoMolecularFunction,
-        object: AnnotonNodeType.GoBiologicalProcess,
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoBiologicalProcess,
         predicate: noctuaFormConfig.edge.causallyUpstreamOfOrWithin
     }, {
-        subject: AnnotonNodeType.GoBiologicalProcess,
-        object: AnnotonNodeType.GoCellularComponent,
+        subject: ActivityNodeType.GoBiologicalProcess,
+        object: ActivityNodeType.GoCellularComponent,
         predicate: noctuaFormConfig.edge.occursIn
     }],
     overrides: {
-        [AnnotonNodeType.GoBiologicalProcess]: <AnnotonNodeDisplay>{
+        [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{
             label: 'Biological Process',
-            treeLevel: 2
+
         },
-        [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
-            treeLevel: 3
+        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
+
         }
     }
 };
 
 export const ccOnlyAnnotationDescription: ActivityDescription = {
-    type: AnnotonType.ccOnly,
+    type: ActivityType.ccOnly,
     nodes: {
-        [AnnotonNodeType.GoMolecularEntity]: <AnnotonNodeDisplay>{
+        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
-            type: AnnotonNodeType.GoMolecularEntity,
-            category: EntityDefinition.GoMolecularEntity.category,
+            type: ActivityNodeType.GoMolecularEntity,
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
-            skipEvidence: true,
+            skipEvidenceCheck: true,
             termRequired: true,
-            relationship: noctuaFormConfig.edge.enabledBy,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 1
         },
-        [AnnotonNodeType.GoCellularComponent]: <AnnotonNodeDisplay>{
+        /*[ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoCellularComponent.id,
-            type: AnnotonNodeType.GoCellularComponent,
-            category: EntityDefinition.GoCellularComponent.category,
+            type: ActivityNodeType.GoCellularComponent,
+            category: [EntityDefinition.GoCellularComponent],
             aspect: 'C',
-            label: 'Part Of Cellular Component',
-            relationship: noctuaFormConfig.edge.partOf,
+            termRequired: true,
+            label: 'part of (CC)',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
-            treeLevel: 2,
+
+            weight: 2
+        }*/
+    },
+    triples: [
+        /*{
+        subject: ActivityNodeType.GoMolecularEntity,
+        object: ActivityNodeType.GoCellularComponent,
+        predicate: noctuaFormConfig.edge.partOf
+    }*/],
+};
+
+export const proteinComplexDescription: ActivityDescription = {
+    type: ActivityType.proteinComplex,
+    isComplex: true,
+    nodes: {
+        [ActivityNodeType.GoProteinContainingComplex]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoProteinContainingComplex.id,
+            type: ActivityNodeType.GoProteinContainingComplex,
+            category: [EntityDefinition.GoProteinContainingComplex],
+            label: 'Protein Complex',
+            skipEvidenceCheck: true,
+            termRequired: true,
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 2
+        },
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'Molecular Function',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.mf,
+            termRequired: true,
+            weight: 1
+        },
+        [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoBiologicalProcess.id,
+            type: ActivityNodeType.GoBiologicalProcess,
+            category: [EntityDefinition.GoBiologicalProcess],
+            label: '(MF) part of (BP)',
+            aspect: 'P',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.bp,
+            weight: 10
+        },
+        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoCellularComponent.id,
+            type: ActivityNodeType.GoCellularComponent,
+            category: [EntityDefinition.GoCellularComponent],
+            label: '(MF) occurs in (CC)',
+            aspect: 'C',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.cc,
+            weight: 20
         }
     },
     triples: [{
-        subject: AnnotonNodeType.GoMolecularEntity,
-        object: AnnotonNodeType.GoCellularComponent,
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoProteinContainingComplex,
+        predicate: noctuaFormConfig.edge.enabledBy
+    }, {
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoBiologicalProcess,
         predicate: noctuaFormConfig.edge.partOf
+    }, {
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoCellularComponent,
+        predicate: noctuaFormConfig.edge.occursIn
     }],
 };
 
+export const moleculeDescription: ActivityDescription = {
+    type: ActivityType.molecule,
+    nodes: {
+        [ActivityNodeType.GoChemicalEntity]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoChemicalEntity.id,
+            type: ActivityNodeType.GoChemicalEntity,
+            category: [EntityDefinition.GoChemicalEntity],
+            label: 'Molecule',
+            skipEvidenceCheck: true,
+            termRequired: true,
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 1
+        },
+        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoCellularComponent.id,
+            type: ActivityNodeType.GoCellularComponent,
+            category: [EntityDefinition.GoCellularComponent],
+            label: '(Chemical) located in (CC)',
+            aspect: 'C',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.cc,
+            weight: 20
+        }
+    },
+    triples: [{
+        subject: ActivityNodeType.GoChemicalEntity,
+        object: ActivityNodeType.GoCellularComponent,
+        predicate: noctuaFormConfig.edge.locatedIn
+    }],
+};
 
-export const createActivity = (activityDescription: ActivityDescription): Annoton => {
+export const createActivity = (activityDescription: ActivityDescription): Activity => {
     const self = this;
-    const annoton = new Annoton();
+    const activity = new Activity();
 
-    annoton.annotonType = activityDescription.type;
+    activity.activityType = activityDescription.type;
 
-    each(activityDescription.nodes, (node: AnnotonNodeDisplay) => {
-        const annotonNode = EntityDefinition.generateBaseTerm(node.category, node);
-        annoton.addNode(annotonNode);
+    each(activityDescription.nodes, (node: ActivityNodeDisplay) => {
+        const activityNode = EntityDefinition.generateBaseTerm(node.category, node);
+
+        activity.addNode(activityNode);
     });
 
     each(activityDescription.triples, (triple) => {
-        const predicate: Predicate = annoton.getNode(triple.object).predicate;
+        const objectNode = activity.getNode(triple.object);
 
-        predicate.edge = Entity.createEntity(triple.predicate);
-        annoton.addEdgeById(triple.subject, triple.object, predicate);
+        if (objectNode) {
+            const predicate: Predicate = objectNode.predicate;
+
+            predicate.edge = Entity.createEntity(triple.predicate);
+            objectNode.treeLevel++;
+            activity.addEdgeById(triple.subject, triple.object, predicate);
+        }
     });
 
-    const startNode = annoton.getNode(activityDescription.triples[0].subject);
-    const startTriple = annoton.getEdge(
-        activityDescription.triples[0].subject,
-        activityDescription.triples[0].object);
-
-    startNode.predicate = startTriple.predicate;
-
-    annoton.updateEntityInsertMenu();
-    annoton.enableSubmit();
-    return annoton;
+    //activity.postRunUpdate();
+    activity.updateEntityInsertMenu();
+    activity.enableSubmit();
+    return activity;
 };
 
-export const insertNode = (annoton: Annoton, subjectNode: AnnotonNode, nodeDescription: InsertNodeDescription): AnnotonNode => {
+export const insertNode = (activity: Activity, subjectNode: ActivityNode, nodeDescription: InsertNodeDescription): ActivityNode => {
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
-    objectNode.id = `${nodeDescription.node.type}'@@'${getUuid()}`;
+    objectNode.id = activity.exist(nodeDescription.node.type) ?
+        `${nodeDescription.node.type}'@@'${uuid()}` :
+        nodeDescription.node.type;
+
     objectNode.type = nodeDescription.node.type;
+    activity.addNode(objectNode);
+    objectNode.treeLevel = subjectNode.treeLevel + 1;
 
-    annoton.addNode(objectNode);
+    /*   if (activity.activityType === ActivityType.ccOnly && objectNode.treeLevel < 3) {
+          objectNode.termRequired = true
+      } */
 
-    const predicate: Predicate = annoton.getNode(objectNode.id).predicate;
+    const predicate: Predicate = activity.getNode(objectNode.id).predicate;
     predicate.edge = Entity.createEntity(nodeDescription.predicate);
 
-    annoton.updateEdges(subjectNode, objectNode, predicate);
-
-    annoton.resetPresentation();
+    activity.updateEdges(subjectNode, objectNode, predicate);
+    activity.resetPresentation();
     return objectNode;
 };
-
-
-

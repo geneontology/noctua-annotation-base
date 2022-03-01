@@ -7,15 +7,14 @@ import { cloneDeep } from 'lodash';
 
 import { InlineEditorService, EditorDropdownDialogConfig } from './inline-editor.service';
 
-import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 import {
     CamService,
-    NoctuaAnnotonEntityService,
-    AnnotonNode,
-    Annoton,
+    NoctuaActivityEntityService,
+    ActivityNode,
+    Activity,
     Cam,
-    NoctuaAnnotonFormService
-} from 'noctua-form-base';
+    NoctuaActivityFormService
+} from '@geneontology/noctua-form-base';
 import { EditorCategory } from './../models/editor-category';
 
 @Component({
@@ -28,39 +27,38 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
     noctuaConfig: any;
 
     @Input() cam: Cam;
-    @Input() annoton: Annoton;
-    @Input() entity: AnnotonNode;
+    @Input() activity: Activity;
+    @Input() entity: ActivityNode;
     @Input() category: EditorCategory;
     @Input() evidenceIndex = 0;
 
-    @ViewChild('editorDropdownTrigger', { read: ElementRef, static: false })
+    @ViewChild('editorDropdownTrigger', { read: ElementRef })
     private editorDropdownTrigger: ElementRef;
-
     private _unsubscribeAll: Subject<any>;
 
     constructor(private inlineEditorService: InlineEditorService,
         private camService: CamService,
-        public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-        private noctuaAnnotonEntityService: NoctuaAnnotonEntityService) {
+        public noctuaActivityFormService: NoctuaActivityFormService,
+        private noctuaActivityEntityService: NoctuaActivityEntityService) {
         this._unsubscribeAll = new Subject();
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+
+    }
 
     openEditorDropdown(event) {
-
-        console.log(event)
+        const displayEntity = cloneDeep(this.entity);
         const data = {
             cam: this.cam,
-            annoton: this.annoton,
-            entity: this.entity,
+            activity: this.activity,
+            entity: displayEntity,
             category: this.category,
             evidenceIndex: this.evidenceIndex
         };
-        // this.camService.onCamChanged.next(this.cam);
         this.camService.onCamChanged.next(this.cam);
-        this.camService.annoton = this.annoton;
-        this.noctuaAnnotonEntityService.initializeForm(this.annoton, this.entity);
+        this.camService.activity = this.activity;
+        this.noctuaActivityEntityService.initializeForm(this.activity, displayEntity);
         this.inlineEditorService.open(event.target, { data });
     }
 

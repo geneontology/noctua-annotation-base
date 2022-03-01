@@ -1,9 +1,10 @@
+export { Annotation, AnnotationNode, AnnotationFlatNode } from './annotation';
+export { LeftPanel, MiddlePanel, RightPanel } from './menu-panels';
 export { Article } from './article';
-export { Contributor } from './contributor';
-export { CamRow } from './cam-row';
-export { Group } from './group';
-export { Organism } from './organism';
+export { Contributor, compareContributor } from './contributor';
+export { CamPage } from './cam-page';
+export { Group, compareGroup } from './group';
+export { Organism, compareOrganism } from './organism';
 
-
-export * from './annoton';
+export * from './activity';
 export * from './forms';

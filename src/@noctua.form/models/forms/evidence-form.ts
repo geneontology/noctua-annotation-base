@@ -1,18 +1,19 @@
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
 
-import { Evidence } from './../annoton/evidence';
-import { AnnotonNode } from './../annoton/annoton-node';
-import * as _ from 'lodash';
+import { Evidence } from './../activity/evidence';
+import { ActivityNode } from './../activity/activity-node';
+
 declare const require: any;
 const each = require('lodash/forEach');
 
-import { AnnotonFormMetadata } from './../forms/annoton-form-metadata';
+import { ActivityFormMetadata } from './../forms/activity-form-metadata';
 
 import { termValidator } from './validators/term-validator';
 import { evidenceValidator } from './validators/evidence-validator';
-import { EntityLookup } from '../annoton/entity-lookup';
-import { Entity } from '../annoton/entity';
+import { EntityLookup } from '../activity/entity-lookup';
+import { Entity } from '../activity/entity';
+import { Predicate } from '../activity/predicate';
 
 export class EvidenceForm {
     uuid;
@@ -20,10 +21,10 @@ export class EvidenceForm {
     reference = new FormControl();
     with = new FormControl();
 
-    _metadata: AnnotonFormMetadata;
+    _metadata: ActivityFormMetadata;
     private _term
 
-    constructor(metadata, term: AnnotonNode, evidence: Evidence) {
+    constructor(metadata, term: ActivityNode, evidence: Evidence) {
         this._metadata = metadata;
 
         this._term = term;
@@ -44,17 +45,30 @@ export class EvidenceForm {
         evidence.with = this.with.value;
     }
 
-    onValueChanges(lookup: EntityLookup) {
+    onValueChanges(predicate: Predicate) {
         const self = this;
 
         self.evidence.valueChanges.pipe(
             distinctUntilChanged(),
             debounceTime(400)
         ).subscribe(data => {
-            self._metadata.lookupFunc(data, lookup.requestParams).subscribe(response => {
-                console.log(response);
-                lookup.results = response;
+            self._metadata.lookupFunc.termLookup(data, predicate.evidenceLookup.requestParams).subscribe(response => {
+                predicate.evidenceLookup.results = response;
             });
+        });
+
+        self.reference.valueChanges.pipe(
+            distinctUntilChanged(),
+            debounceTime(400)
+        ).subscribe(data => {
+            predicate.referenceLookup.results = self._metadata.lookupFunc.evidenceLookup(data, 'reference');
+        });
+
+        self.with.valueChanges.pipe(
+            distinctUntilChanged(),
+            debounceTime(400)
+        ).subscribe(data => {
+            predicate.withLookup.results = self._metadata.lookupFunc.evidenceLookup(data, 'with');
         });
     }
 

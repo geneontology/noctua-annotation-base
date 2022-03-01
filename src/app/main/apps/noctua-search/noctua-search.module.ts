@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { NoctuaSharedModule } from '@noctua/shared.module';
 import { ContextMenuModule } from 'ngx-contextmenu';
-import { NoctuaFormModule } from './../noctua-form/noctua-form.module'
-
-import { CamService } from 'noctua-form-base';
 import { CamsTableComponent } from './cams/cams-table/cams-table.component';
 import { NoctuaSearchComponent } from './noctua-search.component';
-import { NoctuaReviewModule } from '../noctua-review/noctua-review.module';
+import { NoctuaSearchBaseModule } from '@noctua.search';
+import { NoctuaFooterModule } from 'app/layout/components/footer/footer.module';
+import { NoctuaFormModule } from '../noctua-form';
+import { CamsReviewComponent } from './cams/cams-review/cams-review.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CamsReviewChangesComponent } from './cams/cams-review-changes/cams-review-changes.component';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 const routes = [
   {
@@ -23,12 +26,18 @@ const routes = [
     CommonModule,
     RouterModule.forChild(routes),
     ContextMenuModule.forRoot(),
+    FormsModule,
+    ReactiveFormsModule,
+    NoctuaSearchBaseModule,
+    NoctuaFooterModule,
     NoctuaFormModule,
-    NoctuaReviewModule
+    PerfectScrollbarModule
   ],
   declarations: [
     NoctuaSearchComponent,
-    CamsTableComponent
+    CamsTableComponent,
+    CamsReviewComponent,
+    CamsReviewChangesComponent
   ]
 })
 

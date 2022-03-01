@@ -5,17 +5,19 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 import {
   NoctuaFormConfigService,
-  NoctuaAnnotonFormService,
-  AnnotonError,
+  NoctuaActivityFormService,
+  ActivityError,
   noctuaFormConfig,
-  Article
-} from 'noctua-form-base';
+  Article,
+  NoctuaLookupService,
+  ErrorLevel,
+  ErrorType
+} from '@geneontology/noctua-form-base';
 
 import { referenceDropdownData } from './reference-dropdown.tokens';
 import { ReferenceDropdownOverlayRef } from './reference-dropdown-ref';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
-import { NoctuaSearchService } from '@noctua.search/services/noctua-search.service';
 
 @Component({
   selector: 'noc-reference-dropdown',
@@ -32,11 +34,10 @@ export class NoctuaReferenceDropdownComponent implements OnInit, OnDestroy {
 
   constructor(public dialogRef: ReferenceDropdownOverlayRef,
     @Inject(referenceDropdownData) public data: any,
-    private sparqlService: SparqlService,
-    private noctuaSearchService: NoctuaSearchService,
+    private noctuaLookupService: NoctuaLookupService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaAnnotonFormService: NoctuaAnnotonFormService,
+    public noctuaActivityFormService: NoctuaActivityFormService,
   ) {
     this._unsubscribeAll = new Subject();
     this.formControl = data.formControl;
@@ -59,9 +60,9 @@ export class NoctuaReferenceDropdownComponent implements OnInit, OnDestroy {
     let canSave = true;
 
     if (accession.trim() === '') {
-      const error = new AnnotonError('error', 1, `${db.name} accession is required`);
+      const error = new ActivityError(ErrorLevel.error, ErrorType.general, `${db.name} accession is required`);
       errors.push(error);
-      self.noctuaFormDialogService.openAnnotonErrorsDialog(errors);
+      self.noctuaFormDialogService.openActivityErrorsDialog(errors);
       canSave = false;
     }
 
@@ -91,9 +92,8 @@ export class NoctuaReferenceDropdownComponent implements OnInit, OnDestroy {
     self.evidenceDBForm.valueChanges.pipe(
       takeUntil(this._unsubscribeAll),
       distinctUntilChanged(),
-      debounceTime(400)
+      debounceTime(1000)
     ).subscribe(data => {
-      console.log(data);
       self.article = null;
       self._updateArticle(data);
     });
@@ -112,11 +112,10 @@ export class NoctuaReferenceDropdownComponent implements OnInit, OnDestroy {
       if (pmid === '') {
         return;
       }
-      this.noctuaSearchService.getPubmedInfo(pmid).pipe(
+      this.noctuaLookupService.getPubmedInfo(pmid).pipe(
         takeUntil(this._unsubscribeAll))
         .subscribe((article: Article) => {
           self.article = article;
-          console.log(article);
         });
     }
   }

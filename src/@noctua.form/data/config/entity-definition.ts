@@ -1,38 +1,23 @@
-
-declare const require: any;
-const getUuid = require('uuid/v1');
-
-import { noctuaFormConfig } from './../../noctua-form-config';
 import {
-    AnnotonNode,
-    AnnotonNodeType,
-    AnnotonNodeDisplay
-} from './../../models/annoton/annoton-node';
-import { EntityLookup } from './../..//models/annoton/entity-lookup';
-import { Predicate } from './../../models/annoton/predicate';
-
+    ActivityNode,
+    ActivityNodeType,
+    ActivityNodeDisplay,
+    GoCategory,
+    categoryToClosure
+} from './../../models/activity/activity-node';
+import { EntityLookup } from './../..//models/activity/entity-lookup';
+import { Predicate } from './../../models/activity/predicate';
 
 const baseRequestParams = {
     defType: 'edismax',
     indent: 'on',
     qt: 'standard',
     wt: 'json',
-    rows: '10',
+    rows: '50',
     start: '0',
-    fl: '*,score',
-    'facet': true,
-    'facet.mincount': 1,
-    'facet.sort': 'count',
-    'facet.limit': '25',
-    'json.nl': 'arrarr',
     packet: '1',
     callback_type: 'search',
-    'facet.field': [
-        'source',
-        'subset',
-        'isa_closure_label',
-        'is_obsolete'
-    ],
+    //fl: ['annotation_class'],
     qf: [
         'annotation_class^3',
         'annotation_class_label_searchable^5.5',
@@ -46,117 +31,158 @@ const baseRequestParams = {
     _: Date.now()
 };
 
+export const GoProteinContainingComplex = {
+    id: ActivityNodeType.GoProteinContainingComplex,
+    category: 'GO:0032991',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoProteinContainingComplex {
-    public static readonly id = AnnotonNodeType.GoProteinContainingComplex;
-    public static readonly category = 'GO:0032991';
-}
+export const GoCellularComponent = {
+    id: ActivityNodeType.GoCellularComponent,
+    category: 'GO:0005575',
+    categoryType: 'isa_closure',
+    suffix: `OR NOT ${GoProteinContainingComplex.categoryType}:"${GoProteinContainingComplex.category}"`,
+} as GoCategory;
 
-export class GoCellularComponent {
-    public static readonly id = AnnotonNodeType.GoCellularComponent;
-    public static readonly category = 'GO:0005575';
-}
+export const GoCellularAnatomical = {
+    id: ActivityNodeType.GoCellularAnatomical,
+    category: 'GO:0110165',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoBiologicalProcess {
-    public static readonly id = AnnotonNodeType.GoBiologicalProcess;
-    public static readonly category = 'GO:0008150';
-}
+export const GoBiologicalProcess = {
+    id: ActivityNodeType.GoBiologicalProcess,
+    category: 'GO:0008150',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoMolecularFunction {
-    public static readonly id = AnnotonNodeType.GoMolecularFunction;
-    public static readonly category = 'GO:0003674';
-}
+export const GoMolecularFunction = {
+    id: ActivityNodeType.GoMolecularFunction,
+    category: 'GO:0003674',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoMolecularEntity {
-    public static readonly id = AnnotonNodeType.GoMolecularEntity;
-    public static readonly category = 'CHEBI:23367';
-}
+export const GoMolecularEntity = {
+    id: ActivityNodeType.GoMolecularEntity,
+    category: 'CHEBI:33695',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoChemicalEntity {
-    public static readonly id = AnnotonNodeType.GoChemicalEntity;
-    public static readonly category = 'CHEBI:24431';
-}
+export const GoChemicalEntity = {
+    id: ActivityNodeType.GoChemicalEntity,
+    category: 'CHEBI:24431',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoEvidence {
-    public static readonly id = AnnotonNodeType.GoEvidence;
-    public static readonly category = 'ECO:0000352';
-}
+export const GoEvidence = {
+    id: ActivityNodeType.GoEvidence,
+    category: 'ECO:0000352',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoCellTypeEntity {
-    public static readonly id = AnnotonNodeType.GoCellTypeEntity;
-    public static readonly category = 'CL:0000003';
-}
+export const GoEvidenceNode = {
+    id: ActivityNodeType.GoEvidence,
+    category: 'ECO:0000000',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoAnatomicalEntity {
-    public static readonly id = AnnotonNodeType.GoAnatomicalEntity;
-    public static readonly category = 'UBERON:0000061';
-}
+export const GoCellTypeEntity = {
+    id: ActivityNodeType.GoCellTypeEntity,
+    category: 'CL:0000003',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoOrganism {
-    public static readonly id = AnnotonNodeType.GoOrganism;
-    public static readonly category = 'NCBITaxon';
-    public static readonly categoryType = 'idspace';
-}
+export const GoAnatomicalEntity = {
+    id: ActivityNodeType.GoAnatomicalEntity,
+    category: 'CARO:0000000',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export class GoBiologicalPhase {
-    public static readonly id = AnnotonNodeType.GoBiologicalPhase;
-    public static readonly category = 'GO:0044848';
-}
+export const GoOrganism = {
+    id: ActivityNodeType.GoOrganism,
+    category: 'NCBITaxon',
+    categoryType: 'idspace',
+} as GoCategory;
 
-export const EntityCategories = [
-    GoProteinContainingComplex,
-    GoCellularComponent,
-    GoBiologicalProcess,
-    GoMolecularFunction,
-    GoMolecularEntity,
-    GoChemicalEntity,
-    GoEvidence,
-    GoCellTypeEntity,
-    GoAnatomicalEntity,
-    GoOrganism,
-    GoBiologicalPhase
-];
+export const GoBiologicalPhase = {
+    id: ActivityNodeType.GoBiologicalPhase,
+    category: 'GO:0044848',
+    categoryType: 'isa_closure',
+} as GoCategory;
 
-export const generateBaseTerm = (goType?: string, override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = new AnnotonNode();
+export const WormLifeStage = {
+    id: ActivityNodeType.WormLifeStage,
+    category: 'WBls:0000075',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
+export const ZebrafishStage = {
+    id: ActivityNodeType.ZebrafishStage,
+    category: 'ZFS:0100000',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
+export const UberonStage = {
+    id: ActivityNodeType.UberonStage,
+    category: 'UBERON:0000105',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
+/* export const EntityCategories = [
+    [GoProteinContainingComplex],
+    [GoCellularComponent],
+    [GoCellularAnatomical],
+    [GoBiologicalProcess],
+    [GoMolecularFunction],
+    [GoMolecularEntity],
+    [GoChemicalEntity],
+    [GoEvidence],
+    [GoCellTypeEntity],
+    [GoAnatomicalEntity],
+    [GoOrganism],
+    [GoBiologicalPhase],
+    [GoChemicalEntity, GoProteinContainingComplex],
+    [GoChemicalEntity, GoAnatomicalEntity, GoProteinContainingComplex]
+    // [GoCatalyticActivity]
+]; */
+
+export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
+    const activityNode = new ActivityNode();
     const predicate = new Predicate(null);
+    const fqTermCategory = categoryToClosure(goCategories);
+    const fqEvidenceCategory = categoryToClosure([GoEvidence]);
 
     predicate.setEvidenceMeta('eco', Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
         fq: [
             'document_category:"ontology_class"',
-            `isa_closure:"${GoEvidence.category}"`
+            fqEvidenceCategory
         ],
     }));
 
-    annotonNode.predicate = predicate;
+    activityNode.predicate = predicate;
 
-    if (goType) {
-        const fqCategory = (goType === GoOrganism.category)
-            ? `idspace:"${goType}"`
-            : `isa_closure:"${goType}"`;
-
-        annotonNode.termLookup = new EntityLookup(null,
+    if (goCategories && goCategories.length > 0) {
+        activityNode.termLookup = new EntityLookup(null,
             Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
                 fq: [
                     'document_category:"ontology_class"',
-                    fqCategory
+                    fqTermCategory
                 ],
             })
         );
     }
 
-    annotonNode.overrideValues(override);
+    activityNode.overrideValues(override);
 
-    return annotonNode;
+    return activityNode;
 };
 
+export const generateGOTerm = (): ActivityNode => {
+    const activityNode = generateBaseTerm();
 
-export const generateGoTerm = (): AnnotonNode => {
-    const annotonNode = generateBaseTerm();
-
-    annotonNode.id = 'goterm';
-    annotonNode.ontologyClass = ['go'];
-    annotonNode.termLookup = new EntityLookup(null,
+    activityNode.id = 'goterm';
+    activityNode.ontologyClass = ['go'];
+    activityNode.termLookup = new EntityLookup(null,
         Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
             fq: [
                 'document_category:"ontology_class"',
@@ -165,171 +191,17 @@ export const generateGoTerm = (): AnnotonNode => {
         }),
     );
 
-    return annotonNode;
+    return activityNode;
 };
 
-export const generateProteinContainingComplex = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoProteinContainingComplex.category);
+export const setEvidenceLookup = (predicate: Predicate): void => {
+    const fqEvidenceCategory = categoryToClosure([GoEvidence]);
 
-    annotonNode.id = GoProteinContainingComplex.id;
-    annotonNode.type = GoProteinContainingComplex.id;
-    annotonNode.category = GoProteinContainingComplex.category;
-    annotonNode.label = 'Macromolecular Complex';
-    annotonNode.relationship = noctuaFormConfig.edge.hasPart;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.mc;
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
-};
-
-export const generateMolecularEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoMolecularEntity.category);
-
-    annotonNode.id = GoMolecularEntity.id;
-    annotonNode.type = GoMolecularEntity.id;
-    annotonNode.category = GoMolecularEntity.category;
-    annotonNode.label = 'Gene Product';
-    annotonNode.relationship = noctuaFormConfig.edge.enabledBy;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.gp;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.gp;
-
-    annotonNode.ontologyClass = [];
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
-};
-
-export const generateMolecularFunction = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoMolecularFunction.category);
-
-    annotonNode.id = GoMolecularFunction.id;
-    annotonNode.category = GoMolecularFunction.category;
-
-    annotonNode.label = 'Molecular Function';
-    annotonNode.aspect = 'F';
-    annotonNode.relationship = noctuaFormConfig.edge.enabledBy;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
-};
-
-export const generateBiologicalProcess = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoBiologicalProcess.category);
-
-    annotonNode.id = GoBiologicalProcess.id;
-    annotonNode.category = GoBiologicalProcess.category;
-
-    annotonNode.label = 'MF part of Biological Process';
-    annotonNode.aspect = 'P';
-    annotonNode.relationship = noctuaFormConfig.edge.partOf;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.bp;
-
-    annotonNode.treeLevel = 2;
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
-};
-
-export const generateCellularComponent = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoCellularComponent.category);
-
-    annotonNode.id = GoCellularComponent.id;
-    annotonNode.category = GoCellularComponent.category;
-
-    annotonNode.label = 'MF occurs in Cellular Component';
-    annotonNode.aspect = 'C';
-    annotonNode.relationship = noctuaFormConfig.edge.occursIn;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-    annotonNode.treeLevel = 2;
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
-};
-
-export const generateChemicalEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoChemicalEntity.category);
-    annotonNode.id = GoChemicalEntity.id;
-    annotonNode.category = GoChemicalEntity.category;
-
-    annotonNode.label = 'Has Input (GP/Chemical)';
-    annotonNode.relationship = noctuaFormConfig.edge.hasInput;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-    annotonNode.treeLevel = 3;
-    annotonNode.isExtension = true;
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
-};
-
-export const generateBiologicalPhase = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoBiologicalPhase.category);
-
-    annotonNode.id = GoBiologicalPhase.id;
-    annotonNode.category = GoBiologicalPhase.category;
-
-    annotonNode.label = 'Happens During (Temporal Phase)';
-    annotonNode.relationship = noctuaFormConfig.edge.happensDuring;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.mf;
-    annotonNode.treeLevel = 2;
-    annotonNode.isExtension = true;
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
-};
-
-export const generateCellTypeEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoCellTypeEntity.category);
-    annotonNode.id = GoCellTypeEntity.id;
-    annotonNode.category = GoCellTypeEntity.category;
-    annotonNode.label = 'Part Of (Cell Type)';
-    annotonNode.relationship = noctuaFormConfig.edge.partOf;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-    annotonNode.treeLevel = 3;
-    annotonNode.isExtension = true;
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
-};
-
-export const generateAnatomicalEntity = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoAnatomicalEntity.category);
-
-    annotonNode.id = GoAnatomicalEntity.id;
-    annotonNode.category = GoAnatomicalEntity.category;
-
-    annotonNode.label = 'Part Of (Anatomy)';
-    annotonNode.relationship = noctuaFormConfig.edge.partOf;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-    annotonNode.treeLevel = 4;
-    annotonNode.isExtension = true;
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
-};
-
-export const generateOrganism = (override: Partial<AnnotonNodeDisplay> = {}): AnnotonNode => {
-    const annotonNode = generateBaseTerm(GoOrganism.category);
-
-    annotonNode.id = GoOrganism.id;
-    annotonNode.category = GoOrganism.category;
-
-    annotonNode.label = 'Part Of (Organism)';
-    annotonNode.relationship = noctuaFormConfig.edge.partOf;
-    annotonNode.displaySection = noctuaFormConfig.displaySection.fd;
-    annotonNode.displayGroup = noctuaFormConfig.displayGroup.cc;
-    annotonNode.treeLevel = 5;
-    annotonNode.isExtension = true;
-
-    annotonNode.overrideValues(override);
-    return annotonNode;
+    predicate.setEvidenceMeta('eco', Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
+        fq: [
+            'document_category:"ontology_class"',
+            fqEvidenceCategory
+        ],
+    }));
 };
 

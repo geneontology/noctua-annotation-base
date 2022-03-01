@@ -1,7 +1,7 @@
 <div class="dialog-content-wrapper noc-dialog" fxLayout="column" fxLayoutAlign="start stretch">
   <div class="m-0 noc-dialog-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-dialog-header-title">
-      Search Database</span>
+      Search Annotations</span>
     <span fxFlex></span>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" aria-label="Close dialog">
       <mat-icon>close</mat-icon> Close
@@ -18,11 +18,11 @@
         </div>
       </div>
       <div class="noc-section-body w-100-p" noctuaPerfectScrollbar>
-        <div class="noc-term-box" *ngFor="let annotonNode of annotonNodes" (click)="selectAnnotonNode(annotonNode)"
-          [ngClass]="{'noc-term-selected': annotonNode.getTerm().id===selectedAnnotonNode?.getTerm().id}" fxLayout="row"
-          fxLayoutAlign="start center">
+        <div class="noc-term-box" *ngFor="let activityNode of activityNodes" (click)="selectActivityNode(activityNode)"
+          [ngClass]="{'noc-term-selected': activityNode.getTerm().id===selectedActivityNode?.getTerm().id}"
+          fxLayout="row" fxLayoutAlign="start center">
           <mat-icon fkFlex="25px" class="green-300-fg mr-4">check_circle</mat-icon>
-          {{annotonNode.getTerm().label}}
+          {{activityNode.getTerm().label}}
         </div>
       </div>
     </div>
@@ -31,7 +31,7 @@
         <div class="noc-section-heading">
           Select Evidence <small>(optional)</small>
           <div class="text-truncate">
-            <small>{{selectedAnnotonNode?.getTerm().label}}</small>
+            <small>{{selectedActivityNode?.getTerm().label}}</small>
           </div>
         </div>
       </div>
@@ -54,7 +54,13 @@
           <ng-container cdkColumnDef="evidence">
             <mat-header-cell *cdkHeaderCellDef fxFlex="40%">Evidence</mat-header-cell>
             <mat-cell *cdkCellDef="let evidence" fxFlex="40%">
-              <p class="">{{evidence.evidence?.label}}</p>
+              <p class="">
+                {{evidence.evidence?.label}} <br>
+                <span *ngFor="let evidenceExt of evidence.evidenceExts">
+                  Ext: <small *ngFor="let relation of evidenceExt.relations">
+                    {{relation?.label}} : {{evidenceExt.term?.label}} </small> <br>
+                </span>
+              </p>
             </mat-cell>
           </ng-container>
           <ng-container cdkColumnDef="reference">
@@ -72,7 +78,12 @@
           <ng-container cdkColumnDef="assignedBy">
             <mat-header-cell *cdkHeaderCellDef fxFlex="">Assigned By</mat-header-cell>
             <mat-cell *cdkCellDef="let evidence" fxFlex="">
-              <p class="">{{evidence.assignedBy?.label}}</p>
+              <span *ngFor="let group of evidence.groups; let i=index; let isLast=last">
+                <p (click)="$event.stopPropagation()">
+                  {{group.name}}
+                </p>
+                <span *ngIf="!isLast">&#44;&nbsp;</span>
+              </span>
             </mat-cell>
           </ng-container>
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

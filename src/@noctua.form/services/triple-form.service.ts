@@ -1,36 +1,26 @@
-import { Injector, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Observable, BehaviorSubject } from 'rxjs'
-import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
+import { FormGroup, FormBuilder } from '@angular/forms'
 
 //Config
-import { noctuaFormConfig } from './../noctua-form-config';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { CamService } from './../services/cam.service';
 
-import * as _ from 'lodash';
-declare const require: any;
-const each = require('lodash/forEach');
+import { ActivityNode } from './../models/activity/activity-node';
 
-import {
-  Cam,
-  Triple,
-  AnnotonNode
-} from './../models/annoton';
-import { } from './../models/annoton/annoton-node';
-
-import { AnnotonEntityForm } from './../models/forms/annoton-entity-form';
-
-import { EntityForm, TripleForm } from './../models/forms';
-import { AnnotonFormMetadata } from './../models/forms/annoton-form-metadata';
+import { TripleForm } from './../models/forms';
+import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
+import { Cam } from './../models/activity/cam';
+import { Triple } from './../models/activity/triple';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoctuaTripleFormService {
   cam: Cam;
-  public triple: Triple<AnnotonNode>;
+  public triple: Triple<ActivityNode>;
   private tripleForm: TripleForm;
   private tripleFormGroup: BehaviorSubject<FormGroup | undefined>;
   public tripleFormGroup$: Observable<FormGroup>;
@@ -49,33 +39,34 @@ export class NoctuaTripleFormService {
     });
   }
 
-  initializeForm(triple: Triple<AnnotonNode>) {
+  initializeForm(triple: Triple<ActivityNode>) {
     this.triple = triple;
     this.tripleForm = this.createTripleForm(triple);
     this.tripleFormGroup.next(this._fb.group(this.tripleForm));
-    this._onAnnotonFormChanges();
+    this._onActivityFormChanges();
   }
 
-  createTripleForm(triple: Triple<AnnotonNode>) {
+  createTripleForm(triple: Triple<ActivityNode>) {
     const self = this;
-    let annotonFormMetadata = new AnnotonFormMetadata(self.noctuaLookupService.golrLookup.bind(self.noctuaLookupService));
-    let tripleForm = new TripleForm(annotonFormMetadata);
+    const formMetadata = new ActivityFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
+
+    const tripleForm = new TripleForm(formMetadata);
 
     tripleForm.createTripleForm(triple);
 
     return tripleForm;
   }
 
-  tripleFormToAnnoton() {
+  tripleFormToActivity() {
     const self = this;
 
-    // self.tripleForm.populateAnnotonEntityForm(this.termNode);
+    // self.tripleForm.populateActivityEntityForm(this.termNode);
   }
 
-  private _onAnnotonFormChanges(): void {
+  private _onActivityFormChanges(): void {
     this.tripleFormGroup.getValue().valueChanges.subscribe(value => {
-      // this.errors = this.getAnnotonFormErrors();
-      this.tripleFormToAnnoton();
+      // this.errors = this.getActivityFormErrors();
+      this.tripleFormToActivity();
     });
   }
 

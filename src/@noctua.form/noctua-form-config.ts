@@ -1,4 +1,5 @@
-import { Entity } from './models/annoton/entity';
+import { environment } from './../environments/environment';
+import { Entity } from './models/activity/entity';
 
 const edge = {
   placeholder: {
@@ -33,43 +34,49 @@ const edge = {
     id: 'BFO:0000050',
     label: 'part of'
   },
+  isActiveIn: {
+    id: 'RO:0002432',
+    label: 'is active in'
+  },
   hasPart: {
     id: 'BFO:0000051',
     label: 'has part'
   },
+  existenceOverlaps: {
+    id: 'RO:0002490',
+    label: 'existence overlaps'
+  },
+  existenceStartsEndsDuring: {
+    id: 'RO:0002491',
+    label: 'existence starts and ends during'
+  },
   causallyUpstreamOf: {
     id: 'RO:0002411',
     label: 'causally upstream of',
-    actsLabel: 'acts upstream of'
   },
   causallyUpstreamOfOrWithin: {
     id: 'RO:0002418',
     label: 'causally upstream of or within',
-    actsLabel: 'acts upstream of or within'
   },
   causallyUpstreamOfPositiveEffect: {
     id: 'RO:0002304',
     label: 'causally upstream of, positive effect',
-    actsLabel: 'acts upstream of, positive effect'
   },
   causallyUpstreamOfNegativeEffect: {
     id: 'RO:0002305',
     label: 'causally upstream of, negative effect',
-    actsLabel: 'acts upstream of, negative effect'
   },
   causallyUpstreamOfOrWithinPositiveEffect: {
     id: 'RO:0004047',
     label: 'causally upstream of or within, positive effect',
-    actsLabel: 'acts upstream of or within, positive effect'
   },
   causallyUpstreamOfOrWithinNegativeEffect: {
     id: 'RO:0004046',
     label: 'causally upstream of or within, negative effect',
-    actsLabel: 'acts upstream of or within, negative effect'
   },
   directlyProvidesInput: {
     id: 'RO:0002413',
-    label: 'directly provides input'
+    label: 'directly provides input for'
   },
   regulates: {
     id: 'RO:0002211',
@@ -95,10 +102,48 @@ const edge = {
     id: 'RO:0002630',
     label: 'directly negatively regulates'
   },
+  isSmallMoleculeRegulator: {
+    id: 'RO:0012004',
+    label: 'is small molecule regulator'
+  },
+  isSmallMoleculeActivator: {
+    id: 'RO:0012005',
+    label: 'is small molecule activator'
+  },
+  isSmallMoleculeInhibitor: {
+    id: 'RO:0012006',
+    label: 'is small molecule inhibitor'
+  },
 }
 
+
+
 export const noctuaFormConfig = {
-  'annotonType': {
+  'activitySortField': {
+    'options': {
+      'gp': {
+        'id': 'gp',
+        'label': 'Gene Product (default)'
+      },
+      'mf': {
+        'id': 'mf',
+        'label': 'Molecular Function'
+      },
+      'bp': {
+        'id': 'bp',
+        'label': 'Biological Process'
+      },
+      'cc': {
+        'id': 'cc',
+        'label': 'Cellular Component'
+      },
+      'date': {
+        'id': 'date',
+        'label': 'Activity Date'
+      }
+    }
+  },
+  'activityType': {
     'options': {
       'default': {
         'name': 'default',
@@ -111,22 +156,14 @@ export const noctuaFormConfig = {
       'bpOnly': {
         'name': 'bpOnly',
         'label': 'BP Annotation'
-      }
-    }
-  },
-  'camDisplayType': {
-    'options': {
-      'triple': {
-        'name': 'triple',
-        'label': 'Simple Triple View'
       },
-      'entity': {
-        'name': 'entity',
-        'label': 'Annotated Entity View'
+      'molecule': {
+        'name': 'molecule',
+        'label': 'Chemical'
       },
-      'model': {
-        'name': 'model',
-        'label': 'Activity View'
+      'proteinComplex': {
+        'name': 'proteinComplex',
+        'label': 'Protein Complex'
       }
     }
   },
@@ -167,6 +204,10 @@ export const noctuaFormConfig = {
       'delete': {
         'name': 'delete',
         'label': 'Delete'
+      },
+      'internal_test': {
+        'name': 'internal_test',
+        'label': 'Internal Test'
       }
     }
   },
@@ -174,28 +215,78 @@ export const noctuaFormConfig = {
     'options': {
       'positive': {
         'name': 'positive',
-        'label': 'Positive'
-      },
-      'negative': {
-        'name': 'negative',
-        'label': 'Negative'
+        'label': 'Positive',
       },
       'neutral': {
         'name': 'neutral',
-        'label': 'Unknown/neutral'
+        'label': 'Unknown/neutral',
+      },
+      'negative': {
+        'name': 'negative',
+        'label': 'Negative',
+      },
+
+    }
+  },
+  'findReplaceCategory': {
+    'options': {
+      'term': {
+        'name': 'term',
+        'label': 'Ontology Term',
+      },
+      'gp': {
+        'name': 'gp',
+        'label': 'Gene Product',
+      },
+      'reference': {
+        'name': 'reference',
+        'label': 'Reference',
+      },
+    }
+  },
+  'directness': {
+    'options': {
+      'known': {
+        'name': 'known',
+        'label': 'Direct',
+      },
+      'unknown': {
+        'name': 'unknown',
+        'label': 'Indirect/Unknown',
+      },
+      'chemicalProduct': {
+        'name': 'chemicalProduct',
+        'label': 'Product',
+        'description': 'The activity creates the molecule as a reaction product'
       }
     }
   },
-  'causalReactionProduct': {
+  'activityRelationship': {
     'options': {
-      'regulate': {
-        'name': 'regulate',
-        'label': 'Regulate',
+      'regulation': {
+        'name': 'regulation',
+        'label': 'Regulation',
+        'description': 'The upstream activity regulates the downstream activity',
       },
-      'substrate': {
-        'name': 'substrate',
+      'outputInput': {
+        'name': 'outputInput',
+        'label': 'Output-Input',
+        'description': 'The molecular output produced by the upstream activity is the molecular input of the downstream activity'
+      },
+    }
+  },
+  'chemicalRelationship': {
+    'options': {
+      'chemicalRegulates': {
+        'name': 'chemicalRegulates',
+        'label': 'Regulation',
+        'description': 'The chemical regulates the activity'
+      },
+      'chemicalSubstrate': {
+        'name': 'chemicalSubstrate',
         'label': 'Substrate',
-      }
+        'description': 'The chemical is the substrate that the activity acts upon'
+      },
     }
   },
   'displaySection': {
@@ -236,16 +327,7 @@ export const noctuaFormConfig = {
     }
   },
   edge: edge,
-  noDuplicateEdges: [
-    'RO:0002333',
-    'RO:0002092',
-    'BFO:0000066',
-    'BFO:0000050'
-  ],
-  canDuplicateEdges: [{
-    label: 'hasPart',
-    id: 'BFO:0000051'
-  }],
+  allEdges: environment.globalKnownRelations,
   evidenceAutoPopulate: {
     nd: {
       evidence: {
@@ -273,73 +355,30 @@ export const noctuaFormConfig = {
     }
   },
 
-  closures: {
-    mf: {
-      'id': 'GO:0003674',
-    },
-    bp: {
-      'id': 'GO:0008150',
-    },
-    cc: {
-      'id': 'GO:0005575',
-    },
-    gp: {
-      'id': 'CHEBI:33695',
-    },
-    gpHasInput: {
-      'id': 'CHEBI:23367',
-    },
-    mc: {
-      'id': 'GO:0032991'
-    },
-    tp: {
-      'id': 'GO:0044848'
-    },
-    cl: {
-      'id': 'CL:0000003'
-    },
-    ub: {
-      'id': 'UBERON:0000061'
-    },
-    taxon: {
-      'id': 'UBERON:0000061'
-    },
-    catalyticActivity: {
-      'id': 'GO:0003824'
-    }
-  },
 
+  // This array is arrange for matrice decison tree for causal edge 0-8 index, don't rearrange
   causalEdges: [
-    Entity.createEntity(edge.causallyUpstreamOfOrWithin),
-    Entity.createEntity(edge.causallyUpstreamOf),
-    Entity.createEntity(edge.causallyUpstreamOfNegativeEffect),
-    Entity.createEntity(edge.causallyUpstreamOfPositiveEffect),
-    Entity.createEntity(edge.causallyUpstreamOfOrWithinPositiveEffect),
-    Entity.createEntity(edge.causallyUpstreamOfOrWithinNegativeEffect),
+    Entity.createEntity(edge.directlyNegativelyRegulates),
     Entity.createEntity(edge.directlyRegulates),
     Entity.createEntity(edge.directlyPositivelyRegulates),
-    Entity.createEntity(edge.directlyNegativelyRegulates),
-    Entity.createEntity(edge.directlyProvidesInput),
-    Entity.createEntity(edge.positivelyRegulates),
     Entity.createEntity(edge.negativelyRegulates),
-    Entity.createEntity(edge.regulates)
+    Entity.createEntity(edge.regulates),
+    Entity.createEntity(edge.positivelyRegulates),
+    Entity.createEntity(edge.causallyUpstreamOfNegativeEffect),
+    Entity.createEntity(edge.causallyUpstreamOf),
+    Entity.createEntity(edge.causallyUpstreamOfPositiveEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithinNegativeEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithinPositiveEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithin),
+    Entity.createEntity(edge.directlyProvidesInput),
   ],
 
-  connectorProcesses: [{
-    id: 'GO:0006351',
-    label: 'transcription, DNA templated',
-    edge: edge.causallyUpstreamOfPositiveEffect
-  }, {
-    id: 'GO:0006511',
-    label: 'ubiquitin-dependent protein catabolic process',
-    edge: edge.negativelyRegulates
-  }, {
-    id: 'GO:0031623',
-    label: 'receptor internalization',
-    edge: edge.negativelyRegulates
-  }, {
-    id: 'GO:0051170',
-    label: 'nuclear import',
-    edge: edge.positivelyRegulates
-  }]
+  moleculeEdges: [
+    Entity.createEntity(edge.hasInput),
+    Entity.createEntity(edge.hasOutput),
+    Entity.createEntity(edge.isSmallMoleculeActivator),
+    Entity.createEntity(edge.isSmallMoleculeInhibitor),
+    Entity.createEntity(edge.isSmallMoleculeRegulator),
+  ],
+
 };

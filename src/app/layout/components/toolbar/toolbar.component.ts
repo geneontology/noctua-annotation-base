@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 
 import {
     Cam,
@@ -9,15 +8,20 @@ import {
     NoctuaUserService,
     NoctuaFormConfigService,
     NoctuaGraphService,
-    NoctuaAnnotonFormService,
-    AnnotonType,
-} from 'noctua-form-base';
+    NoctuaActivityFormService,
+    ActivityType,
+    NoctuaFormMenuService,
+    LeftPanel,
+} from '@geneontology/noctua-form-base';
 
-import { NoctuaConfigService } from '@noctua/services/config.service';
-import { NoctuaFormService } from 'app/main/apps/noctua-form/services/noctua-form.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from 'environments/environment';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
+import { ArtBasket } from '@noctua.search/models/art-basket';
+import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
+import { NoctuaSearchDialogService } from '@noctua.search/services/dialog.service';
 
 @Component({
     selector: 'noctua-toolbar',
@@ -26,9 +30,8 @@ import { environment } from 'environments/environment';
 })
 
 export class NoctuaToolbarComponent implements OnInit, OnDestroy {
-    AnnotonType = AnnotonType;
-
-    public user: Contributor;
+    ActivityType = ActivityType;
+    artBasket: ArtBasket
     public cam: Cam;
     userStatusOptions: any[];
     showLoadingBar: boolean;
@@ -37,7 +40,14 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
     navigation: any;
     noctuaFormUrl = '';
     loginUrl = '';
-    noctuaUrl = environment.noctuaUrl;
+    logoutUrl = '';
+    noctuaUrl = '';
+
+    isBeta = environment.isBeta
+    isDev = environment.isDev
+
+    betaText = '';
+
 
     private _unsubscribeAll: Subject<any>;
 
@@ -45,22 +55,17 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private camService: CamService,
-        private noctuaGraphService: NoctuaGraphService,
+        private noctuaCommonMenuService: NoctuaCommonMenuService,
         public noctuaUserService: NoctuaUserService,
-        public noctuaAnnotonFormService: NoctuaAnnotonFormService,
-        public noctuaFormService: NoctuaFormService,
+        private confirmDialogService: NoctuaConfirmDialogService,
+        private noctuaSearchDialogService: NoctuaSearchDialogService,
+        public noctuaConfigService: NoctuaFormConfigService,
+        public noctuaActivityFormService: NoctuaActivityFormService,
+        public noctuaFormMenuService: NoctuaFormMenuService,
+        public noctuaReviewSearchService: NoctuaReviewSearchService,
     ) {
+        const self = this;
         this._unsubscribeAll = new Subject();
-        this.getUserInfo();
-
-        this.route
-            .queryParams
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(params => {
-                const modelId = params['model_id'] || null;
-                const noctuaFormUrl = `${environment.workbenchUrl}noctua-form/?model_id=${modelId}`;
-                this.loginUrl = `${environment.globalBaristaLocation}/login?return=${noctuaFormUrl}`;
-            });
 
         this.router.events.pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
@@ -84,36 +89,58 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
 
                 this.cam = cam;
             });
-    }
 
-    createModel() {
-        this.noctuaGraphService.createModel(this.cam);
-    }
-
-    getUserInfo() {
-        const self = this;
-
-        self.noctuaUserService.onUserChanged.pipe(
+        this.noctuaReviewSearchService.onArtBasketChanged.pipe(
             takeUntil(this._unsubscribeAll))
-            .subscribe((user: Contributor) => {
-                if (user) {
-                    self.user = user;
+            .subscribe((artBasket: ArtBasket) => {
+                if (artBasket) {
+                    this.artBasket = artBasket;
                 }
             });
+
+        if (this.isDev && this.isBeta) {
+            this.betaText = 'beta dev'
+        } else if (this.isDev) {
+            this.betaText = 'dev'
+        } else if (this.isBeta) {
+            this.betaText = 'beta'
+        }
+    }
+
+    openApps() {
+        this.noctuaCommonMenuService.openLeftSidenav();
     }
 
     openCamForm() {
         this.camService.initializeForm(this.cam);
-        this.noctuaFormService.openLeftDrawer(this.noctuaFormService.panel.camForm);
+        this.noctuaFormMenuService.openLeftDrawer(LeftPanel.camForm);
     }
 
-    openAnnotonForm(annotonType: AnnotonType) {
-        this.noctuaAnnotonFormService.setAnnotonType(annotonType);
-        this.noctuaFormService.openLeftDrawer(this.noctuaFormService.panel.annotonForm);
+    openActivityForm(activityType: ActivityType) {
+        this.noctuaActivityFormService.setActivityType(activityType);
+        this.noctuaFormMenuService.openLeftDrawer(LeftPanel.activityForm);
+    }
+
+    logout() {
+        const self = this;
+
+        const success = (logout) => {
+            if (logout) {
+                window.location.href = self.noctuaConfigService.logoutUrl;
+            }
+        };
+
+        if (self.artBasket?.cams.length > 0) {
+            this.noctuaSearchDialogService.openCamsUnsavedDialog(success);
+        } else {
+            window.location.href = self.noctuaConfigService.logoutUrl;
+        }
     }
 
     ngOnDestroy(): void {
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }
+
+
 }
