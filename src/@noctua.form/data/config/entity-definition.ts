@@ -15,20 +15,9 @@ const baseRequestParams = {
     wt: 'json',
     rows: '50',
     start: '0',
-    fl: '*,score',
-    'facet': true,
-    'facet.mincount': 1,
-    'facet.sort': 'count',
-    'facet.limit': '50',
-    'json.nl': 'arrarr',
     packet: '1',
     callback_type: 'search',
-    'facet.field': [
-        'source',
-        'subset',
-        'isa_closure_label',
-        'is_obsolete'
-    ],
+    //fl: ['annotation_class'],
     qf: [
         'annotation_class^3',
         'annotation_class_label_searchable^5.5',
@@ -41,8 +30,6 @@ const baseRequestParams = {
     ],
     _: Date.now()
 };
-
-
 
 export const GoProteinContainingComplex = {
     id: ActivityNodeType.GoProteinContainingComplex,
@@ -93,6 +80,12 @@ export const GoEvidence = {
     categoryType: 'isa_closure',
 } as GoCategory;
 
+export const GoEvidenceNode = {
+    id: ActivityNodeType.GoEvidence,
+    category: 'ECO:0000000',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
 export const GoCellTypeEntity = {
     id: ActivityNodeType.GoCellTypeEntity,
     category: 'CL:0000003',
@@ -117,13 +110,25 @@ export const GoBiologicalPhase = {
     categoryType: 'isa_closure',
 } as GoCategory;
 
-export const GoCatalyticActivity = {
-    id: ActivityNodeType.GoCatalyticActivity,
-    category: 'GO:0003824',
+export const WormLifeStage = {
+    id: ActivityNodeType.WormLifeStage,
+    category: 'WBls:0000075',
     categoryType: 'isa_closure',
 } as GoCategory;
 
-export const EntityCategories = [
+export const ZebrafishStage = {
+    id: ActivityNodeType.ZebrafishStage,
+    category: 'ZFS:0100000',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
+export const UberonStage = {
+    id: ActivityNodeType.UberonStage,
+    category: 'UBERON:0000105',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
+/* export const EntityCategories = [
     [GoProteinContainingComplex],
     [GoCellularComponent],
     [GoCellularAnatomical],
@@ -139,7 +144,7 @@ export const EntityCategories = [
     [GoChemicalEntity, GoProteinContainingComplex],
     [GoChemicalEntity, GoAnatomicalEntity, GoProteinContainingComplex]
     // [GoCatalyticActivity]
-];
+]; */
 
 export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
     const activityNode = new ActivityNode();

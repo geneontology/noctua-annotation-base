@@ -1,5 +1,5 @@
 import { ActivityError, ErrorLevel, ErrorType } from "./parser/activity-error";
-import { Entity } from './entity';
+import { Entity, EntityType } from './entity';
 import { ActivityNode } from './activity-node';
 import { find, includes, isEqual } from 'lodash';
 
@@ -10,8 +10,13 @@ import { Group } from "../group";
 import { PendingChange } from "./pending-change";
 import { NoctuaFormUtils } from "../../utils/noctua-form-utils";
 
-export class Evidence {
+export class EvidenceExt {
+  term: Entity;
+  relations: Entity[] = [];
+}
 
+export class Evidence {
+  entityType = EntityType.EVIDENCE;
   edge: Entity;
   evidence: Entity = new Entity('', '');
   referenceEntity: Entity = new Entity('', '');
@@ -29,6 +34,11 @@ export class Evidence {
   pendingEvidenceChanges: PendingChange;
   pendingReferenceChanges: PendingChange;
   pendingWithChanges: PendingChange;
+  frequency: number;
+  date: string;
+  formattedDate: string
+  evidenceExts: EvidenceExt[] = [];
+
 
   constructor() {
 
@@ -223,6 +233,13 @@ export class Evidence {
     return db + ':' + accession;
   }
 
+  public static getReferenceNumber(reference: string) {
+    const DBAccession = NoctuaFormUtils.splitAndAppend(reference, ':', 1);
+    const accession = DBAccession[1]?.trim();
+
+    return accession;
+  }
+
   public static checkReference(reference: string) {
     let result = false;
 
@@ -261,4 +278,8 @@ export function compareEvidenceReference(a: Evidence, b: Evidence) {
 
 export function compareEvidenceWith(a: Evidence, b: Evidence) {
   return a.with === b.with;
+}
+
+export function compareEvidenceDate(a: Evidence, b: Evidence) {
+  return a.date === b.date;
 }

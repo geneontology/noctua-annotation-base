@@ -12,6 +12,7 @@ import { v4 as uuid } from 'uuid';
 
 export interface ActivityDescription {
     type: ActivityType;
+    isComplex?: boolean;
     nodes: { [key: string]: ActivityNodeDisplay };
     triples: { subject: string, object: string, predicate: any }[];
     overrides?: { [key: string]: ActivityNodeDisplay };
@@ -33,7 +34,7 @@ export const activityUnitBaseDescription: ActivityDescription = {
             aspect: 'F',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
-            skipEvidence: true,
+            skipEvidenceCheck: true,
             termRequired: true,
             weight: 1
         },
@@ -43,6 +44,7 @@ export const activityUnitBaseDescription: ActivityDescription = {
 
 export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
     type: ActivityType.bpOnly,
+    isComplex: true,
     nodes: {
         [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularFunction.id,
@@ -52,7 +54,7 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
             aspect: 'F',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
-            skipEvidence: true,
+            skipEvidenceCheck: true,
             visible: false,
             weight: 1
         }
@@ -66,9 +68,9 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
-            skipEvidence: true,
+            skipEvidenceCheck: true,
             termRequired: true,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
@@ -78,15 +80,35 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
     triples: [],
 };
 
+export const proteinComplexBaseDescription: ActivityDescription = {
+    type: ActivityType.proteinComplex,
+    nodes: {
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'Molecular Function',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.mf,
+            skipEvidenceCheck: true,
+            visible: false,
+            weight: 1
+        }
+    },
+    triples: [],
+};
+
 export const moleculeBaseDescription: ActivityDescription = {
     type: ActivityType.molecule,
     nodes: {
-        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularEntity.id,
-            type: ActivityNodeType.GoMolecularEntity,
+        [ActivityNodeType.GoChemicalEntity]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoChemicalEntity.id,
+            type: ActivityNodeType.GoChemicalEntity,
             category: [EntityDefinition.GoChemicalEntity],
             label: 'Molecule',
-            skipEvidence: true,
+            skipEvidenceCheck: true,
+            showEvidence: false,
             termRequired: true,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
@@ -114,12 +136,12 @@ export const activityUnitDescription: ActivityDescription = {
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'enabled by (GP)',
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             termRequired: true,
-            skipEvidence: true,
+            skipEvidenceCheck: true,
             weight: 2
         },
         [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{
@@ -175,12 +197,12 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'enabled by (GP)',
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             termRequired: true,
-            skipEvidence: true,
+            skipEvidenceCheck: true,
             weight: 2
         },
 
@@ -236,9 +258,9 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity],
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
-            skipEvidence: true,
+            skipEvidenceCheck: true,
             termRequired: true,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
@@ -265,15 +287,77 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
     }*/],
 };
 
+export const proteinComplexDescription: ActivityDescription = {
+    type: ActivityType.proteinComplex,
+    isComplex: true,
+    nodes: {
+        [ActivityNodeType.GoProteinContainingComplex]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoProteinContainingComplex.id,
+            type: ActivityNodeType.GoProteinContainingComplex,
+            category: [EntityDefinition.GoProteinContainingComplex],
+            label: 'Protein Complex',
+            skipEvidenceCheck: true,
+            termRequired: true,
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            weight: 2
+        },
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'Molecular Function',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.mf,
+            termRequired: true,
+            weight: 1
+        },
+        [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoBiologicalProcess.id,
+            type: ActivityNodeType.GoBiologicalProcess,
+            category: [EntityDefinition.GoBiologicalProcess],
+            label: '(MF) part of (BP)',
+            aspect: 'P',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.bp,
+            weight: 10
+        },
+        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoCellularComponent.id,
+            type: ActivityNodeType.GoCellularComponent,
+            category: [EntityDefinition.GoCellularComponent],
+            label: '(MF) occurs in (CC)',
+            aspect: 'C',
+            displaySection: noctuaFormConfig.displaySection.fd,
+            displayGroup: noctuaFormConfig.displayGroup.cc,
+            weight: 20
+        }
+    },
+    triples: [{
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoProteinContainingComplex,
+        predicate: noctuaFormConfig.edge.enabledBy
+    }, {
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoBiologicalProcess,
+        predicate: noctuaFormConfig.edge.partOf
+    }, {
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoCellularComponent,
+        predicate: noctuaFormConfig.edge.occursIn
+    }],
+};
+
 export const moleculeDescription: ActivityDescription = {
     type: ActivityType.molecule,
     nodes: {
-        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularEntity.id,
-            type: ActivityNodeType.GoMolecularEntity,
+        [ActivityNodeType.GoChemicalEntity]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoChemicalEntity.id,
+            type: ActivityNodeType.GoChemicalEntity,
             category: [EntityDefinition.GoChemicalEntity],
             label: 'Molecule',
-            skipEvidence: true,
+            skipEvidenceCheck: true,
             termRequired: true,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
@@ -283,18 +367,15 @@ export const moleculeDescription: ActivityDescription = {
             id: EntityDefinition.GoCellularComponent.id,
             type: ActivityNodeType.GoCellularComponent,
             category: [EntityDefinition.GoCellularComponent],
+            label: '(Chemical) located in (CC)',
             aspect: 'C',
-            termRequired: false,
-            label: 'located in (CC)',
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.cc,
-
-            weight: 2
+            weight: 20
         }
-
     },
     triples: [{
-        subject: ActivityNodeType.GoMolecularEntity,
+        subject: ActivityNodeType.GoChemicalEntity,
         object: ActivityNodeType.GoCellularComponent,
         predicate: noctuaFormConfig.edge.locatedIn
     }],
@@ -314,11 +395,14 @@ export const createActivity = (activityDescription: ActivityDescription): Activi
 
     each(activityDescription.triples, (triple) => {
         const objectNode = activity.getNode(triple.object);
-        const predicate: Predicate = objectNode.predicate;
 
-        predicate.edge = Entity.createEntity(triple.predicate);
-        objectNode.treeLevel++;
-        activity.addEdgeById(triple.subject, triple.object, predicate);
+        if (objectNode) {
+            const predicate: Predicate = objectNode.predicate;
+
+            predicate.edge = Entity.createEntity(triple.predicate);
+            objectNode.treeLevel++;
+            activity.addEdgeById(triple.subject, triple.object, predicate);
+        }
     });
 
     //activity.postRunUpdate();
@@ -330,13 +414,17 @@ export const createActivity = (activityDescription: ActivityDescription): Activi
 export const insertNode = (activity: Activity, subjectNode: ActivityNode, nodeDescription: InsertNodeDescription): ActivityNode => {
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
-    objectNode.id = nodeDescription.node.isKey ?
-        nodeDescription.node.type :
-        `${nodeDescription.node.type}'@@'${uuid()}`;
+    objectNode.id = activity.exist(nodeDescription.node.type) ?
+        `${nodeDescription.node.type}'@@'${uuid()}` :
+        nodeDescription.node.type;
 
     objectNode.type = nodeDescription.node.type;
     activity.addNode(objectNode);
     objectNode.treeLevel = subjectNode.treeLevel + 1;
+
+    /*   if (activity.activityType === ActivityType.ccOnly && objectNode.treeLevel < 3) {
+          objectNode.termRequired = true
+      } */
 
     const predicate: Predicate = activity.getNode(objectNode.id).predicate;
     predicate.edge = Entity.createEntity(nodeDescription.predicate);

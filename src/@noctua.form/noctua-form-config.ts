@@ -42,6 +42,14 @@ const edge = {
     id: 'BFO:0000051',
     label: 'has part'
   },
+  existenceOverlaps: {
+    id: 'RO:0002490',
+    label: 'existence overlaps'
+  },
+  existenceStartsEndsDuring: {
+    id: 'RO:0002491',
+    label: 'existence starts and ends during'
+  },
   causallyUpstreamOf: {
     id: 'RO:0002411',
     label: 'causally upstream of',
@@ -68,7 +76,7 @@ const edge = {
   },
   directlyProvidesInput: {
     id: 'RO:0002413',
-    label: 'directly provides input'
+    label: 'directly provides input for'
   },
   regulates: {
     id: 'RO:0002211',
@@ -94,11 +102,47 @@ const edge = {
     id: 'RO:0002630',
     label: 'directly negatively regulates'
   },
+  isSmallMoleculeRegulator: {
+    id: 'RO:0012004',
+    label: 'is small molecule regulator'
+  },
+  isSmallMoleculeActivator: {
+    id: 'RO:0012005',
+    label: 'is small molecule activator'
+  },
+  isSmallMoleculeInhibitor: {
+    id: 'RO:0012006',
+    label: 'is small molecule inhibitor'
+  },
 }
 
 
 
 export const noctuaFormConfig = {
+  'activitySortField': {
+    'options': {
+      'gp': {
+        'id': 'gp',
+        'label': 'Gene Product (default)'
+      },
+      'mf': {
+        'id': 'mf',
+        'label': 'Molecular Function'
+      },
+      'bp': {
+        'id': 'bp',
+        'label': 'Biological Process'
+      },
+      'cc': {
+        'id': 'cc',
+        'label': 'Cellular Component'
+      },
+      'date': {
+        'id': 'date',
+        'label': 'Activity Date'
+      }
+    }
+  },
   'activityType': {
     'options': {
       'default': {
@@ -115,7 +159,11 @@ export const noctuaFormConfig = {
       },
       'molecule': {
         'name': 'molecule',
-        'label': 'Molecule'
+        'label': 'Chemical'
+      },
+      'proteinComplex': {
+        'name': 'proteinComplex',
+        'label': 'Protein Complex'
       }
     }
   },
@@ -156,6 +204,10 @@ export const noctuaFormConfig = {
       'delete': {
         'name': 'delete',
         'label': 'Delete'
+      },
+      'internal_test': {
+        'name': 'internal_test',
+        'label': 'Internal Test'
       }
     }
   },
@@ -192,19 +244,48 @@ export const noctuaFormConfig = {
       },
     }
   },
-  'mechanism': {
+  'directness': {
     'options': {
       'known': {
         'name': 'known',
-        'label': 'Known(regulatory)',
+        'label': 'Direct',
       },
       'unknown': {
         'name': 'unknown',
-        'label': 'Unknown/Indirect',
+        'label': 'Indirect/Unknown',
       },
-      'inputFor': {
-        'name': 'inputFor',
-        'label': 'Provides Input For'
+      'chemicalProduct': {
+        'name': 'chemicalProduct',
+        'label': 'Product',
+        'description': 'The activity creates the molecule as a reaction product'
+      }
+    }
+  },
+  'activityRelationship': {
+    'options': {
+      'regulation': {
+        'name': 'regulation',
+        'label': 'Regulation',
+        'description': 'The upstream activity regulates the downstream activity',
+      },
+      'outputInput': {
+        'name': 'outputInput',
+        'label': 'Output-Input',
+        'description': 'The molecular output produced by the upstream activity is the molecular input of the downstream activity'
+      },
+    }
+  },
+  'chemicalRelationship': {
+    'options': {
+      'chemicalRegulates': {
+        'name': 'chemicalRegulates',
+        'label': 'Regulation',
+        'description': 'The chemical regulates the activity'
+      },
+      'chemicalSubstrate': {
+        'name': 'chemicalSubstrate',
+        'label': 'Substrate',
+        'description': 'The chemical is the substrate that the activity acts upon'
       },
     }
   },
@@ -247,16 +328,6 @@ export const noctuaFormConfig = {
   },
   edge: edge,
   allEdges: environment.globalKnownRelations,
-  noDuplicateEdges: [
-    'RO:0002333',
-    'RO:0002092',
-    'BFO:0000066',
-    'BFO:0000050'
-  ],
-  canDuplicateEdges: [{
-    label: 'hasPart',
-    id: 'BFO:0000051'
-  }],
   evidenceAutoPopulate: {
     nd: {
       evidence: {
@@ -284,41 +355,6 @@ export const noctuaFormConfig = {
     }
   },
 
-  closures: {
-    mf: {
-      'id': 'GO:0003674',
-    },
-    bp: {
-      'id': 'GO:0008150',
-    },
-    cc: {
-      'id': 'GO:0005575',
-    },
-    gp: {
-      'id': 'CHEBI:33695',
-    },
-    gpHasInput: {
-      'id': 'CHEBI:23367',
-    },
-    mc: {
-      'id': 'GO:0032991'
-    },
-    tp: {
-      'id': 'GO:0044848'
-    },
-    cl: {
-      'id': 'CL:0000003'
-    },
-    ub: {
-      'id': 'CARO:0000000'
-    },
-    taxon: {
-      'id': 'CARO:0000000'
-    },
-    catalyticActivity: {
-      'id': 'GO:0003824'
-    }
-  },
 
   // This array is arrange for matrice decison tree for causal edge 0-8 index, don't rearrange
   causalEdges: [
@@ -337,35 +373,12 @@ export const noctuaFormConfig = {
     Entity.createEntity(edge.directlyProvidesInput),
   ],
 
-  connectorProcesses: [{
-    id: 'GO:0006351',
-    label: 'transcription, DNA templated',
-    edge: edge.causallyUpstreamOfPositiveEffect
-  }, {
-    id: 'GO:0006511',
-    label: 'ubiquitin-dependent protein catabolic process',
-    edge: edge.negativelyRegulates
-  }, {
-    id: 'GO:0031623',
-    label: 'receptor internalization',
-    edge: edge.negativelyRegulates
-  }, {
-    id: 'GO:0051170',
-    label: 'nuclear import',
-    edge: edge.positivelyRegulates
-  }],
-  causalEdgeBuckets: [
-    [
-      edge.negativelyRegulates,
-      edge.causallyUpstreamOfNegativeEffect,
-    ],
-    [
-      edge.regulates,
-      edge.causallyUpstreamOf,
-    ],
-    [
-      edge.positivelyRegulates,
-      edge.causallyUpstreamOfPositiveEffect,
-    ]
-  ]
+  moleculeEdges: [
+    Entity.createEntity(edge.hasInput),
+    Entity.createEntity(edge.hasOutput),
+    Entity.createEntity(edge.isSmallMoleculeActivator),
+    Entity.createEntity(edge.isSmallMoleculeInhibitor),
+    Entity.createEntity(edge.isSmallMoleculeRegulator),
+  ],
+
 };

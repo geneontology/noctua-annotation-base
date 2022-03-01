@@ -9,9 +9,10 @@ import { EntityForm } from './../models/forms/entity-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { NoctuaGraphService } from './graph.service';
 import { cloneDeep } from 'lodash';
-import { CamsService } from './cams.service';
 import { Activity } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
+import { Entity } from '../models/activity/entity';
+import { Evidence } from './../models/activity/evidence';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class NoctuaActivityEntityService {
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
-    private camsService: CamsService,
+
     private noctuaLookupService: NoctuaLookupService) {
 
     this.entityFormGroup = new BehaviorSubject(null);
@@ -53,14 +54,18 @@ export class NoctuaActivityEntityService {
     this._onActivityFormChanges();
   }
 
+  reinitializeForm(term: Entity, evidences: Evidence[]) {
+    this.entityForm.term.setValue(term);
+    this.entityForm.refreshEvidenceForms(evidences);
+    this.entityFormGroup.next(this._fb.group(this.entityForm));
+  }
+
   createActivityEntityForm(entity: ActivityNode) {
     const self = this;
     const formMetadata = new ActivityFormMetadata(self.noctuaLookupService.lookupFunc.bind(self.noctuaLookupService));
     const entityForm = new EntityForm(formMetadata, entity);
 
-    if (!entity.skipEvidence) {
-      entityForm.createEvidenceForms(entity);
-    }
+    entityForm.createEvidenceForms(entity);
 
     return entityForm;
   }
@@ -79,10 +84,12 @@ export class NoctuaActivityEntityService {
     });
   }
 
-  saveActivity() {
+  saveActivity(withForm = true) {
     const self = this;
 
-    self.activityEntityFormToActivity();
+    if (withForm) {
+      self.activityEntityFormToActivity();
+    }
     const saveData = self.activity.createEdit(self.currentActivity);
 
     return self.noctuaGraphService.editActivity(self.cam,
@@ -94,6 +101,8 @@ export class NoctuaActivityEntityService {
       saveData.removeTriples);
   }
 
+
+
   saveActivityReplace(cam: Cam, addLoadingStatus?: boolean): Observable<any> {
     const self = this;
 
@@ -104,7 +113,7 @@ export class NoctuaActivityEntityService {
     const oldEntity = cloneDeep(self.entity);
     self.activityEntityFormToActivity();
     self.entity.addPendingChanges(oldEntity);
-    return self.camsService.bulkEditActivityNode(cam, self.entity);
+    return self.camService.bulkEditActivityNode(cam, self.entity);
 
   }
 }

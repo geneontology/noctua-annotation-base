@@ -2,7 +2,9 @@ export enum LeftPanel {
     activityForm = 'activityForm',
     camForm = 'camForm',
     findReplace = 'findReplace',
-    duplicateCamForm = 'duplicateCamForm'
+    duplicateCamForm = 'duplicateCamForm',
+    camTermsSummary = 'camTermsSummary',
+    camStats = 'camStats'
 };
 
 export enum MiddlePanel {
@@ -12,5 +14,6 @@ export enum MiddlePanel {
 
 export enum RightPanel {
     activityForm = 'activityForm',
-    camForm = 'camForm'
+    camForm = 'camForm',
+    termDetail = 'termDetail'
 }

@@ -19,7 +19,8 @@ export class NoctuaUserService {
   groups: Group[] = [];
 
   constructor(
-    private httpClient: HttpClient) {
+    private httpClient: HttpClient
+  ) {
     this.onUserChanged = new BehaviorSubject(undefined);
   }
 
@@ -45,6 +46,7 @@ export class NoctuaUserService {
           if (response) {
             if (response.token) {
               this.user = new Contributor();
+              this.user.orcid = response.uri;
               this.user.name = response.nickname;
               this.user.groups = response.groups;
               this.user.token = this.baristaToken = response.token;
@@ -105,7 +107,15 @@ export class NoctuaUserService {
     const contributors = <Contributor[]>annotations.map((annotation) => {
       const orcid = annotation.value();
       const contributor = self.getContributorDetails(annotation.value())
-      return contributor ? contributor : { orcid: orcid };
+
+      if (contributor) {
+        return contributor;
+      } else {
+        const result = new Contributor()
+        result.orcid = result.name = orcid
+
+        return result;
+      }
     });
 
     return contributors
@@ -126,6 +136,17 @@ export class NoctuaUserService {
 
     return group
   }
+
+  getGroupDetailsByName(name: string): Group {
+    const self = this;
+
+    const group = find(self.groups, (inGroup: Group) => {
+      return inGroup.name === name;
+    });
+
+    return group
+  }
+
   getGroupInfo(uri: string): Observable<any> {
     const self = this;
 
@@ -137,13 +158,36 @@ export class NoctuaUserService {
     const self = this;
 
     const groups = <Group[]>annotations.map((annotation) => {
-      const orcid = annotation.value();
+      const url = annotation.value();
       const group = self.getGroupDetails(annotation.value())
-      return group ? group : { orcid: orcid };
+      return group ? group : new Group(null, url);
     });
 
     return groups
   }
+
+  getGroupsFromUrls(urls: string[]): Group[] {
+    const self = this;
+
+    const groups = <Group[]>urls.map((url) => {
+      const group = self.getGroupDetails(url)
+      return group ? group : new Group(null, url);
+    });
+
+    return groups
+  }
+
+  getGroupsFromNames(names: string[]): Group[] {
+    const self = this;
+
+    const groups = <Group[]>names.map((name) => {
+      const group = self.getGroupDetailsByName(name)
+      return group ? group : new Group(null, name);
+    });
+
+    return groups
+  }
+
 
   filterContributors(value: string): any[] {
     const filterValue = value.toLowerCase();

@@ -27,20 +27,32 @@
       (click)="openSearch()" matTooltip="Find and replace" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'search']"></fa-icon>
     </button>
-    <button mat-icon-button color="" class="noc-rounded-button" (click)="openDuplicateCamForm()"
+    <button mat-icon-button color="" class="noc-rounded-button"
+      [ngClass]="{'noc-active': noctuaFormMenuService.selectedLeftPanel === LeftPanel.camTermsSummary}"
+      (click)="openTermsSummary()" matTooltip="terms summary" [matTooltipPosition]="'after'"
+      [matTooltipShowDelay]="1500">
+      <fa-icon [icon]="['fas', 'list']"></fa-icon>
+    </button>
+    <button mat-icon-button color="" class="noc-rounded-button"
+      [ngClass]="{'noc-active': noctuaFormMenuService.selectedLeftPanel === LeftPanel.camStats}"
+      (click)="openCamStats()" matTooltip="GO CAM Statistics" [matTooltipPosition]="'after'"
+      [matTooltipShowDelay]="1500">
+      <fa-icon [icon]="['fas', 'chart-bar']"></fa-icon>
+    </button>
+    <!--    <button mat-icon-button color="" class="noc-rounded-button" (click)="openDuplicateCamForm()"
       [ngClass]="{'noc-active': noctuaFormMenuService.selectedLeftPanel === LeftPanel.duplicateCamForm}"
       matTooltip="Make a copy of this model" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
       <fa-icon [icon]="['fas', 'clone']"></fa-icon>
-    </button>
+    </button> -->
   </div>
 
   <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
-
     <div *ngIf="!noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
       Not Logged In: You can only view existing annotations
     </div>
-    <div *ngIf="noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
-      Not Saved
+    <div *ngIf="noctuaUserService.user && cam?.modified && cam?.activities.length>0" class="noc-not-loggedin"
+      fxLayout="row" fxLayoutAlign="center center">
+      <small class="mr-16">Not Saved</small>
       <button mat-raised-button fxFlex="100px" (click)="resetCam(cam)" color="warn"
         class="noc-rounded-button noc-half-button noc-r noc-sm">
         Reset
@@ -50,7 +62,6 @@
         Save
       </button>
     </div>
-
     <div *ngIf="cam" class="noc-cam-heading" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center"
       [@animateStagger]="{value:'50'}">
       <div class="" fxFlex="180px">
@@ -164,10 +175,10 @@
       </button>
     </div> -->
     </div>
-
     <mat-drawer-container class="noc-drawer-container w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start"
       autosize>
       <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start">
+        <div class="resize-handle-right" mwlResizeHandle [resizeEdges]="{ right: true }"></div>
         <div [ngSwitch]="noctuaFormMenuService.selectedLeftPanel" class="h-100-p">
           <noc-cam-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.camForm">
           </noc-cam-form>
@@ -175,21 +186,27 @@
           </noc-duplicate-cam-form>
           <noc-activity-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.activityForm">
           </noc-activity-form>
-          <noc-find-replace [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.findReplace">
+          <noc-find-replace [panelDrawer]="leftDrawer"
+            [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.findReplace">
           </noc-find-replace>
+
+          <noc-cam-terms [panelDrawer]="leftDrawer"
+            [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.camTermsSummary"></noc-cam-terms>
+          <noc-cam-stats [panelDrawer]="leftDrawer"
+            [hidden]="noctuaFormMenuService.selectedLeftPanel !== LeftPanel.camStats"></noc-cam-stats>
         </div>
       </mat-drawer>
       <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">
-        <div [ngSwitch]="noctuaFormMenuService.selectedMiddlePanel" class="w-100-p h-100-p" noctuaPerfectScrollbar>
-          <noc-cam-preview *ngSwitchCase="MiddlePanel.camPreview" [cam]="cam"></noc-cam-preview>
+        <div *ngIf="cam" [ngSwitch]="noctuaFormMenuService.selectedMiddlePanel" class="w-100-p h-100-p"
+          noctuaPerfectScrollbar>
           <noc-cam-table *ngSwitchCase="MiddlePanel.camTable" [cam]="cam" [options]="tableOptions"></noc-cam-table>
         </div>
       </mat-drawer-content>
-      <mat-drawer #rightDrawer class="noc-right-drawer" mode="over" position="end">
-        <!--  <div [ngSwitch]="noctuaFormMenuService.selectedRightPanel?.id" class="h-100-p">
-        <noc-activity-connector [panelDrawer]="rightDrawer" *ngSwitchCase="noctuaFormMenuService.panel.connectorForm.id">
-        </noc-activity-connector>
-      </div> -->
+      <mat-drawer #rightDrawer class="noc-right-drawer" mode="side" position="end">
+        <div [ngSwitch]="noctuaFormMenuService.selectedRightPanel" class="h-100-p">
+          <noc-term-detail [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.termDetail">
+          </noc-term-detail>
+        </div>
       </mat-drawer>
     </mat-drawer-container>
   </div>

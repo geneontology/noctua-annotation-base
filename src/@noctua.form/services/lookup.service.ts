@@ -3,14 +3,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
-import { find, filter, each, uniqWith } from 'lodash';
+import { find, filter, each, uniqWith, difference } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
-import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence } from './../models/activity/evidence';
+import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence, EvidenceExt } from './../models/activity/evidence';
 import { Group } from './../models/group';
 import { ActivityNode, ActivityNodeType } from './../models/activity/activity-node';
 import { Entity } from './../models/activity/entity';
 import { Predicate } from './../models/activity/predicate';
+import { NoctuaUserService } from './user.service';
+import { BehaviorSubject } from 'rxjs';
 
 declare const require: any;
 
@@ -35,9 +37,13 @@ export class NoctuaLookupService {
   linker;
   golrURLBase;
   localClosures;
+  onArticleCacheReady: BehaviorSubject<any>;
+  articleCache = {}
 
   constructor(private httpClient: HttpClient,
+    private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService) {
+    this.onArticleCacheReady = new BehaviorSubject(null);
     this.name = 'DefaultLookupName';
     this.linker = new amigo.linker();
     this.golrURLBase = environment.globalGolrNeoServer + `select?`;
@@ -144,6 +150,7 @@ export class NoctuaLookupService {
 
 
   companionLookup(gp, aspect, extraParams) {
+    const self = this;
     const golrUrl = environment.globalGolrServer + `select?`;
 
     const requestParams = {
@@ -217,11 +224,39 @@ export class NoctuaLookupService {
             evidence.with = doc.evidence_with.join(' | ');
           }
 
-          evidence.groups = [new Group(doc.assigned_by)];
+          evidence.groups = self.noctuaUserService.getGroupsFromNames([doc.assigned_by]);
 
           activityNode = find(result, (srcActivityNode: ActivityNode) => {
             return srcActivityNode.getTerm().id === doc.annotation_class;
           });
+
+          if (doc.annotation_extension_json) {
+            try {
+              const extJsons = [];
+              if (Array.isArray(doc.annotation_extension_json)) {
+                doc.annotation_extension_json.forEach((ext) => {
+                  extJsons.push(JSON.parse(ext));
+                });
+              } else {
+                extJsons.push(JSON.parse(doc.annotation_extension_json));
+              }
+
+              evidence.evidenceExts = [];
+              extJsons.forEach((extJson) => {
+                if (extJson.relationship && extJson.relationship.relation) {
+                  const evidenceExt = new EvidenceExt();
+                  evidenceExt.term = new Entity(extJson.relationship.id, extJson.relationship.label)
+                  extJson.relationship.relation.forEach(relation => {
+                    evidenceExt.relations.push(new Entity(relation.id, relation.label))
+                  });
+                  evidence.evidenceExts.push(evidenceExt);
+                }
+              });
+
+            } catch (e) {
+              console.log(e, activityNode, doc.annotation_extension_json); // error in the above string (in this case, yes)!
+            }
+          }
 
           if (activityNode) {
             activityNode.predicate.addEvidence(evidence);
@@ -297,6 +332,58 @@ export class NoctuaLookupService {
       }));
   }
 
+  getTermDetail(a: string) {
+    const self = this;
+
+    const requestParams = {
+      q: self.buildQ(a),
+      defType: 'edismax',
+      indent: 'on',
+      qt: 'standard',
+      wt: 'json',
+      rows: '2',
+      start: '0',
+      fl: '*,score',
+      'facet': 'true',
+      'facet.mincount': '1',
+      'facet.sort': 'count',
+      'facet.limit': '25',
+      'json.nl': 'arrarr',
+      packet: '1',
+      callback_type: 'search',
+      'facet.field': [
+        'source',
+        'subset',
+        'idspace',
+        'is_obsolete'
+      ],
+      fq: [
+        'document_category:"ontology_class"',
+      ],
+      qf: [
+        'annotation_class^3',
+        'isa_closure^1',
+      ]
+    };
+
+    const params = new HttpParams({
+      fromObject: requestParams
+    });
+
+    const url = this.golrURLBase + params.toString();
+
+    return this.httpClient.jsonp(url, 'json.wrf').pipe(
+      map(response => self._lookupMap(response)),
+      map(response => {
+        if (response.length > 0) {
+          return response[0]
+        } else {
+          return response
+        }
+      })
+    );
+  }
+
 
   getTermURL(id: string) {
     const self = this;
@@ -316,6 +403,32 @@ export class NoctuaLookupService {
     }
   }
 
+  addPubmedInfos(pmids: string[]) {
+    const self = this;
+    const presentPmids = Object.keys(this.articleCache)
+    const ids = difference(pmids, presentPmids);
+
+    if (ids.length > 0) {
+      const url = environment.pubMedSummaryApi + ids.join(',');
+      this.httpClient
+        .get(url)
+        .pipe(
+          map(res => res['result']),
+          map(res => {
+            return res['uids'].map(uid => {
+              return this._addArticles(res[uid])
+            });
+          })).subscribe((articles: Article[]) => {
+            articles.forEach(article => {
+              self.articleCache['PMID:' + article.id] = article;
+            })
+
+            self.onArticleCacheReady.next(true)
+          });
+    } else {
+      self.onArticleCacheReady.next(true)
+    }
+  }
 
   getPubmedInfo(pmid: string) {
     const url = environment.pubMedSummaryApi + pmid;
@@ -325,19 +438,20 @@ export class NoctuaLookupService {
       .pipe(
         map(res => res['result']),
         map(res => res[pmid]),
-        map(res => this._addArticles(res, pmid)),
+        map(res => this._addArticles(res)),
       );
   }
 
-  private _addArticles(res, pmid: string) {
+  private _addArticles(res) {
     const self = this;
     if (!res) {
       return;
     }
 
     const article = new Article();
+    article.id = res.uid
     article.title = res.title;
-    article.link = self.linker.url(`${noctuaFormConfig.evidenceDB.options.pmid.name}:${pmid}`);
+    article.link = self.linker.url(`${noctuaFormConfig.evidenceDB.options.pmid.name}:${res.uid}`);
     article.date = res.pubdate;
     if (res.authors && Array.isArray(res.authors)) {
       article.author = res.authors.map(author => {
@@ -364,6 +478,7 @@ export class NoctuaLookupService {
         link: self.getTermURL(item.annotation_class),
         description: item.description,
         isObsolete: item.is_obsolete,
+        replacedBy: item.replaced_by,
         rootTypes: self._makeEntitiesArray(item.isa_closure, item.isa_closure_label),
         xref: xref
       };
@@ -374,8 +489,13 @@ export class NoctuaLookupService {
 
   private _makeEntitiesArray(ids: string[], labels: string[]): Entity[] {
     let result = [];
-
-    if (ids.length === labels.length) {
+    if (!labels && !ids) {
+      return []
+    } else if (!labels) {
+      result = ids.map((id, key) => {
+        return new Entity(id, id);
+      });
+    } else if (ids.length === labels.length) {
       result = ids.map((id, key) => {
         return new Entity(id, labels[key]);
       });

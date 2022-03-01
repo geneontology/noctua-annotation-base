@@ -1,7 +1,7 @@
 import { Evidence } from './evidence';
 import { ActivityError, ErrorLevel, ErrorType } from './parser/activity-error';
 import { Activity } from './activity';
-import { Entity } from './entity';
+import { Entity, EntityType } from './entity';
 import { EntityLookup } from './entity-lookup';
 import { Contributor } from './../contributor';
 import { each, find, some } from 'lodash';
@@ -18,22 +18,30 @@ export interface GoCategory {
 }
 
 export enum ActivityNodeType {
-  GoProteinContainingComplex = 'GoProteinContainingComplex',
+
   GoCellularComponent = 'GoCellularComponent',
-  GoCellularAnatomical = 'GoCellularAnatomical',
   GoBiologicalProcess = 'GoBiologicalProcess',
   GoMolecularFunction = 'GoMolecularFunction',
   GoMolecularEntity = 'GoMolecularEntity',
+  // extensions 
+  GoCellularAnatomical = 'GoCellularAnatomical',
+  GoProteinContainingComplex = 'GoProteinContainingComplex',
+  GoBiologicalPhase = 'GoBiologicalPhase',
   GoChemicalEntity = 'GoChemicalEntity',
-  GoEvidence = 'GoEvidence',
   GoCellTypeEntity = 'GoCellTypeEntity',
   GoAnatomicalEntity = 'GoAnatomicalEntity',
   GoOrganism = 'GoOrganism',
-  GoBiologicalPhase = 'GoBiologicalPhase',
+  WormLifeStage = "WormLifeStage",
+  ZebrafishStage = "ZebrafishStage",
   // extra internal use
-  GoCatalyticActivity = 'GoCatalyticActivity',
   GoChemicalEntityHasInput = 'GoChemicalEntityHasInput',
   GoChemicalEntityHasOutput = 'GoChemicalEntityHasOutput',
+
+  // evidence
+  GoEvidence = 'GoEvidence',
+  BPPhaseStageExistenceOverlaps = "BPPhaseStageExistenceOverlaps",
+  BPPhaseStageExistenceStartsEnds = "BPPhaseStageExistenceStartsEnds",
+  UberonStage = "UberonStage"
 }
 
 export interface ActivityNodeDisplay {
@@ -51,7 +59,8 @@ export interface ActivityNodeDisplay {
   required: boolean;
   termRequired: boolean;
   visible: boolean;
-  skipEvidence: boolean;
+  skipEvidenceCheck: boolean;
+  showEvidence: boolean;
   isKey: boolean;
   weight: number;
   relationEditable: boolean;
@@ -59,13 +68,14 @@ export interface ActivityNodeDisplay {
 }
 
 export class ActivityNode implements ActivityNodeDisplay {
-
+  entityType = EntityType.ACTIVITY_NODE
   type: ActivityNodeType;
   label: string;
   uuid: string;
   category: GoCategory[];
   rootTypes: Entity[] = [];
   term: Entity = new Entity('', '');
+  date: string;
   termLookup: EntityLookup = new EntityLookup();
   isExtension = false;
   aspect: string;
@@ -86,7 +96,8 @@ export class ActivityNode implements ActivityNodeDisplay {
   termRequired = false;
   visible = true;
   canInsertNodes;
-  skipEvidence = false;
+  skipEvidenceCheck = false;
+  showEvidence = true;
   errors = [];
   warnings = [];
   status = '0';
@@ -100,6 +111,7 @@ export class ActivityNode implements ActivityNodeDisplay {
   expandable: boolean = true;
   expanded: boolean = false;
   causalNode: boolean = false;
+  frequency: number;
 
   private _id: string;
 
@@ -155,9 +167,11 @@ export class ActivityNode implements ActivityNodeDisplay {
   }
 
   hasRootType(inRootType: GoCategory) {
-    return find(this.rootTypes, (rootType: Entity) => {
+    const found = find(this.rootTypes, (rootType: Entity) => {
       return rootType.id === inRootType.category;
     });
+
+    return found ? true : false
   }
 
   hasRootTypes(inRootTypes: GoCategory[]) {
@@ -247,7 +261,7 @@ export class ActivityNode implements ActivityNodeDisplay {
     }
 
     each(self.predicate.evidence, (evidence: Evidence, key) => {
-      const oldEvidence = oldNode.predicate.getEvidenceById(evidence.uuid)
+      const oldEvidence = oldNode?.predicate.getEvidenceById(evidence.uuid)
       evidence.checkStored(oldEvidence)
     });
   }
@@ -272,7 +286,7 @@ export class ActivityNode implements ActivityNodeDisplay {
     //self.term = oldNode.term
   }
 
-  enableSubmit(errors) {
+  enableSubmit(errors, validateEvidence = true) {
     const self = this;
     let result = true;
 
@@ -288,7 +302,7 @@ export class ActivityNode implements ActivityNodeDisplay {
       self.required = false;
     }
 
-    if (!self.skipEvidence && self.hasValue()) {
+    if (!self.skipEvidenceCheck && self.hasValue() && validateEvidence) {
       each(self.predicate.evidence, (evidence: Evidence, key) => {
         result = evidence.enableSubmit(errors, self, key + 1) && result;
       });

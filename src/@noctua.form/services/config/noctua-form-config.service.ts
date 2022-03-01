@@ -42,7 +42,8 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.modelState.options.production,
       noctuaFormConfig.modelState.options.review,
       noctuaFormConfig.modelState.options.closed,
-      noctuaFormConfig.modelState.options.delete
+      noctuaFormConfig.modelState.options.delete,
+      noctuaFormConfig.modelState.options.internal_test
     ];
 
     return {
@@ -77,6 +78,21 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.activityType.options.default,
       noctuaFormConfig.activityType.options.bpOnly,
       noctuaFormConfig.activityType.options.ccOnly,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
+  get activitySortField() {
+    const options = [
+      noctuaFormConfig.activitySortField.options.gp,
+      noctuaFormConfig.activitySortField.options.date,
+      noctuaFormConfig.activitySortField.options.mf,
+      noctuaFormConfig.activitySortField.options.bp,
+      noctuaFormConfig.activitySortField.options.cc,
     ];
 
     return {
@@ -140,11 +156,10 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get mechanism() {
+  get directness() {
     const options = [
-      noctuaFormConfig.mechanism.options.known,
-      noctuaFormConfig.mechanism.options.unknown,
-      noctuaFormConfig.mechanism.options.inputFor,
+      noctuaFormConfig.directness.options.known,
+      noctuaFormConfig.directness.options.unknown,
     ];
 
     return {
@@ -152,8 +167,11 @@ export class NoctuaFormConfigService {
       selected: options[0]
     };
   }
-  get connectorProcess() {
-    const options = noctuaFormConfig.connectorProcesses;
+
+  get directnessActivityMolecule() {
+    const options = [
+      noctuaFormConfig.directness.options.chemicalProduct
+    ];
 
     return {
       options: options,
@@ -161,7 +179,29 @@ export class NoctuaFormConfigService {
     };
   }
 
+  get activityRelationship() {
+    const options = [
+      noctuaFormConfig.activityRelationship.options.regulation,
+      noctuaFormConfig.activityRelationship.options.outputInput,
+    ];
 
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
+  get chemicalRelationship() {
+    const options = [
+      noctuaFormConfig.chemicalRelationship.options.chemicalRegulates,
+      noctuaFormConfig.chemicalRelationship.options.chemicalSubstrate,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
 
   setupUrls() {
     const self = this;
@@ -235,6 +275,7 @@ export class NoctuaFormConfigService {
 
     modelInfo.modelWorkbenches = environment.globalWorkbenchesModel.map(workbench => {
       return {
+        id: workbench['workbench-id'],
         label: workbench['menu-name'],
         url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
       };
@@ -242,10 +283,17 @@ export class NoctuaFormConfigService {
 
     modelInfo.modelBetaTestWorkbenches = environment.globalWorkbenchesModelBetaTest.map(workbench => {
       return {
+        id: workbench['workbench-id'],
         label: workbench['menu-name'],
         url: environment.workbenchUrl + workbench['workbench-id'] + '?' + paramsString,
       };
     });
+
+    modelInfo.workbenches = {}
+
+    modelInfo.modelWorkbenches.forEach((workbench) => {
+      modelInfo.workbenches[workbench['id']] = workbench
+    })
 
     return modelInfo;
   }
@@ -286,6 +334,8 @@ export class NoctuaFormConfigService {
         return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationBaseDescription);
       case ActivityType.molecule:
         return ModelDefinition.createActivity(ModelDefinition.moleculeBaseDescription);
+      case ActivityType.proteinComplex:
+        return ModelDefinition.createActivity(ModelDefinition.proteinComplexBaseDescription);
     }
   }
 
@@ -299,6 +349,8 @@ export class NoctuaFormConfigService {
         return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationDescription);
       case ActivityType.molecule:
         return ModelDefinition.createActivity(ModelDefinition.moleculeDescription);
+      case ActivityType.proteinComplex:
+        return ModelDefinition.createActivity(ModelDefinition.proteinComplexDescription);
     }
   }
 
@@ -306,6 +358,26 @@ export class NoctuaFormConfigService {
     subjectNode: ActivityNode,
     nodeDescription: ShapeDescription.ShapeDescription): ActivityNode {
     return ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+  }
+
+  insertActivityNodeByPredicate(activity: Activity, subjectNode: ActivityNode, bbopPredicateId: string,
+    partialObjectNode?: Partial<ActivityNode>): ActivityNode {
+    const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
+    let objectNode;
+
+    each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
+      if (bbopPredicateId === nodeDescription.predicate.id) {
+        if (partialObjectNode && partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
+          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+          return false;
+        } else if (!partialObjectNode) {
+          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+          return false;
+        }
+      }
+    });
+
+    return objectNode;
   }
 
   createActivityModelFakeData(nodes) {

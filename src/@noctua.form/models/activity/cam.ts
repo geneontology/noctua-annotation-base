@@ -1,15 +1,12 @@
-import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
-
 import { noctuaFormConfig } from './../../noctua-form-config';
-import { Activity } from './activity'
+import { Activity, ActivitySortField } from './activity'
 import { ActivityNode, ActivityNodeType } from './activity-node';
 import { Group } from '../group';
 import { Contributor } from '../contributor';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
-import { ConnectorActivity } from './connector-activity';
-import { each, find, filter } from 'lodash';
+import { each, find, orderBy } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
@@ -36,6 +33,13 @@ export class CamQueryMatch {
   terms?: Entity[] = [];
   reference?: Entity[] = [];
 }
+
+export class CamSortBy {
+  field: ActivitySortField = ActivitySortField.GP
+  label = "";
+  ascending = true;
+}
+
 
 export class CamStats {
   totalChanges = 0;
@@ -122,7 +126,7 @@ export class Cam {
   model: any;
   //connectorActivities: ConnectorActivity[] = [];
   causalRelations: Triple<Activity>[] = [];
-  sort;
+  sortBy: CamSortBy = new CamSortBy();
   error = false;
   date;
   modified = false;
@@ -195,7 +199,19 @@ export class Cam {
   }
 
   get activities() {
-    return this._activities.sort(this._compareMolecularFunction);
+    const direction = this.sortBy.ascending ? 'asc' : 'desc';
+    switch (this.sortBy?.field) {
+      case ActivitySortField.DATE:
+        return orderBy(this._activities, ['date', this._getGPText], [direction, direction]);
+      case ActivitySortField.MF:
+        return orderBy(this._activities, [this._getMFText, this._getGPText], [direction, direction]);
+      case ActivitySortField.BP:
+        return orderBy(this._activities, [this._getBPText, this._getGPText], [direction, direction]);
+      case ActivitySortField.CC:
+        return orderBy(this._activities, [this._getCCText, this._getGPText], [direction, direction]);
+      default:
+        return orderBy(this._activities, [this._getGPText], [direction, direction])
+    }
   }
 
   set activities(srcActivities: Activity[]) {
@@ -211,7 +227,7 @@ export class Cam {
   }
 
   get storedActivities() {
-    return this._storedActivities.sort(this._compareMolecularFunction);
+    return this._storedActivities
   }
 
   set storedActivities(srcActivities: Activity[]) {
@@ -224,6 +240,11 @@ export class Cam {
     });
 
     this._storedActivities = srcActivities;
+  }
+
+  updateSortBy(field: ActivitySortField, label: string) {
+    this.sortBy.field = field
+    this.sortBy.label = label
   }
 
   toggleExpand() {
@@ -242,7 +263,7 @@ export class Cam {
     const self = this;
 
     return self.causalRelations.find((triple: Triple<Activity>) => {
-      return triple.subject.id === subjectId && triple.object.id === objectId;
+      return triple.subject?.id === subjectId && triple.object?.id === objectId;
     })
   }
 
@@ -553,12 +574,33 @@ export class Cam {
     });
   }
 
-  private _compareMolecularFunction(a: Activity, b: Activity): number {
-    if (a.presentation.gpText.toLowerCase() < b.presentation.gpText.toLowerCase()) {
-      return -1;
-    } else {
-      return 1;
-    }
+  updateProperties() {
+    const self = this;
+
+    each(self.activities, (activity: Activity, key) => {
+      activity.updateProperties()
+    });
+
+    this.sortBy.label = noctuaFormConfig.activitySortField.options[this.sortBy.field]?.label
   }
+
+  private _getGPText(a: Activity): string {
+    return a.presentation.gpText.toLowerCase()
+  }
+
+  private _getMFText(a: Activity): string {
+    if (!a.mfNode) return ''
+    return a.mfNode.term.label;
+  }
+  private _getBPText(a: Activity): string {
+    if (!a.bpNode) return ''
+    return a.bpNode.term.label;
+  }
+  private _getCCText(a: Activity): string {
+    if (!a.ccNode) return ''
+    return a.ccNode.term.label;
+  }
+
+
 }
 

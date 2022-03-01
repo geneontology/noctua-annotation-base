@@ -1,4 +1,3 @@
-
 export {
     ActivityNode,
     ActivityNodeType,
@@ -6,6 +5,7 @@ export {
     compareNodeWeight
 } from './activity-node';
 export {
+    ActivitySortField,
     Activity,
     ActivityType,
     ActivityDisplayType,
@@ -29,10 +29,11 @@ export { Evidence } from './evidence';
 export {
     ConnectorState,
     ConnectorActivity,
-    ConnectorPanel
+    ConnectorType
 } from './connector-activity';
 export { EntityLookup } from './entity-lookup';
 export {
+    EntityType,
     EntityBase,
     Entity,
     _compareEntityWeight
@@ -42,6 +43,7 @@ export { Triple } from './triple';
 export { Rule } from './rules/rule';
 export { ConnectorRule } from './rules/connector-rule';
 export { PendingChange } from './pending-change';
+export { CamSummary, TermsSummary } from './summary';
 
 
 export * from './parser';

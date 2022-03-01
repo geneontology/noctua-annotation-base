@@ -1,11 +1,27 @@
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 
+
+
+
+
+
+
+
+export enum EntityType {
+  ACTIVITY_NODE = 'activity_node',
+  EVIDENCE = 'evidence',
+  ENTITY = "entity",
+  ARTICLE = "article",
+  CONTRIBUTOR = "contributor"
+}
+
 export interface EntityBase {
   id: string;
   label: string;
 }
 
 export class Entity implements EntityBase {
+  entityType = EntityType.ENTITY
   classExpression: any;
   highlight: boolean;
   modified: boolean;
@@ -13,6 +29,7 @@ export class Entity implements EntityBase {
   displayId: string;
   activityDisplayId: string;
   weight = 1;
+  frequency: number;
 
   private _uuid: string = null;
 

@@ -20,7 +20,7 @@
             "customWebpackConfig": {
               "path": "./webpack.extra.js"
             },
-            "outputPath": "workbenches/noctua-activity-graph/public",
+            "outputPath": "workbenches/visual-pathway-editor/public",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -30,9 +30,10 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/jsplumb/dist/js/jsplumb.min.js",
               "node_modules/jointjs/css/layout.css",
               "node_modules/jointjs/css/themes/material.css",
+              "node_modules/reveal.js/dist/reveal.css",
+              "node_modules/reveal.js/dist/theme/black.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -45,10 +46,12 @@
           },
           "configurations": {
             "production": {
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.prod.ts"
-              }],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -60,10 +63,12 @@
               "buildOptimizer": true
             },
             "beta-test": {
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.beta-test.ts"
-              }],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.beta-test.ts"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -93,10 +98,12 @@
             },
             "hmr": {
               "hmr": true,
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.hmr.ts"
-              }]
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.hmr.ts"
+                }
+              ]
             }
           }
         },

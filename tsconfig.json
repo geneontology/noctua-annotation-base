@@ -11,8 +11,9 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
-      "noctua-form-base": [
+      "@geneontology/noctua-form-base": [
         "@noctua.form/"
       ]
     },
@@ -24,5 +25,8 @@
       "es2017",
       "dom"
     ]
+  },
+  "angularCompilerOptions": {
+    "allowSyntheticDefaultImports": true
   }
 }

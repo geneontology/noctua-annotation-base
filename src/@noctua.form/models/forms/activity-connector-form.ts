@@ -9,7 +9,9 @@ import { Predicate } from '..';
 
 export class ActivityConnectorForm {
   edge = new FormControl();
-  mechanism = new FormControl();
+  activityRelationship = new FormControl();
+  chemicalRelationship = new FormControl();
+  directness = new FormControl();
   causalEffect = new FormControl();
   evidenceForms: EvidenceForm[] = [];
   evidenceFormArray = new FormArray([]);

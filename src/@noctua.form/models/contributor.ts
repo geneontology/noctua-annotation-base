@@ -1,4 +1,7 @@
+import { EntityType } from "./activity/entity";
+
 export class Contributor {
+    entityType = EntityType.CONTRIBUTOR
     orcid: string;
     name?: string;
     initials?: string;
@@ -7,6 +10,8 @@ export class Contributor {
     cams?: number;
     _groups?: any = [];
     token?: string;
+    frequency: number;
+
 
     set groups(groups) {
         this._groups = groups;
@@ -27,4 +32,8 @@ export function compareContributor(a: Contributor, b: Contributor): number {
     } else {
         return 1;
     }
+}
+
+export function equalContributor(a: Contributor, b: Contributor) {
+    return a.orcid === b.orcid;
 }
