@@ -229,6 +229,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     let causalEffect = noctuaFormConfig.causalEffect.options.positive;
 
     switch (edge.id) {
+      case noctuaFormConfig.edge.hasInput.id:
+        relationship = noctuaFormConfig.chemicalRelationship.options.chemicalSubstrate;
+        break;
       case noctuaFormConfig.edge.isSmallMoleculeActivator.id:
         causalEffect = noctuaFormConfig.causalEffect.options.positive;
         break;
@@ -328,7 +331,11 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       nodes: []
     };
 
-    deleteData.triples.push(new Triple(self.subjectNode, self.objectNode, self.predicate));
+    if (self.predicate.isReverseLink) {
+      deleteData.triples.push(new Triple(self.objectNode, self.subjectNode, self.predicate));
+    } else {
+      deleteData.triples.push(new Triple(self.subjectNode, self.objectNode, self.predicate));
+    }
 
     deleteData.uuids = uuids;
 

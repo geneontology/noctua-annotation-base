@@ -1,6 +1,5 @@
 import {
     Activity,
-    ActivityNodeType,
     ActivityType,
     Cam,
     Entity,
@@ -8,12 +7,12 @@ import {
     Predicate,
     Triple
 } from '@geneontology/noctua-form-base';
-import { NodeCellType } from '@noctua.graph/models/shapes';
-import { NodeCellList, NodeCellMolecule, NodeLink, StencilNode } from '@noctua.graph/services/shapes.service';
+import { NodeCellType } from './shapes';
+import { NodeCellList, NodeCellMolecule, NodeLink, StencilNode } from './../services/shapes.service';
 import * as joint from 'jointjs';
 import { each, cloneDeep } from 'lodash';
-import { StencilItemNode } from '@noctua.graph/data/cam-stencil';
-import { getEdgeColor } from '@noctua.graph/data/edge-display';
+import { StencilItemNode } from './../data/cam-stencil';
+import { getEdgeColor } from './../data/edge-display';
 
 export class CamCanvas {
 

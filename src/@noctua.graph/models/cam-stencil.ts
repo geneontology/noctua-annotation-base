@@ -1,6 +1,6 @@
 
-import { StencilItem, StencilItemNode } from '@noctua.graph/data/cam-stencil';
-import { StencilNode, NodeCellList } from '@noctua.graph/services/shapes.service';
+import { StencilItem, StencilItemNode } from './../data/cam-stencil';
+import { StencilNode, NodeCellList } from './../services/shapes.service';
 import * as joint from 'jointjs';
 import { cloneDeep, each } from "lodash";
 import { CamCanvas } from "./cam-canvas";

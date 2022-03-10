@@ -263,6 +263,9 @@ export class Cam {
     const self = this;
 
     return self.causalRelations.find((triple: Triple<Activity>) => {
+      if (triple.predicate?.isReverseLink) {
+        return triple.object?.id === subjectId && triple.object?.id === subjectId;
+      }
       return triple.subject?.id === subjectId && triple.object?.id === objectId;
     })
   }
