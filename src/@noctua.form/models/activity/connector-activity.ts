@@ -2,8 +2,6 @@ import { v4 as uuid } from 'uuid';
 import { Edge as NgxEdge, Node as NgxNode } from '@swimlane/ngx-graph';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
-import { getEdges, Edge, getNodes, subtractNodes, subtractEdges } from './noctua-form-graph';
-
 import { Activity, ActivityType } from './activity';
 import { ActivityNode } from './activity-node';
 import { ConnectorRule } from './rules';
@@ -11,7 +9,7 @@ import { Entity } from './entity';
 import { Triple } from './triple';
 import { Evidence } from './evidence';
 import { Predicate } from './predicate';
-import { cloneDeep, findIndex, find } from 'lodash';
+import { cloneDeep } from 'lodash';
 
 export enum ConnectorState {
   creation = 1,
@@ -54,6 +52,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     this.subjectNode.predicate.evidence = predicate.evidence
     this.setConnectorType()
     this.setRule();
+    this.setLinkDirection()
     this.createGraph();
     this.setPreview();
   }
@@ -124,6 +123,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       self.predicate.edge = this.getCausalConnectorEdgeMtoA(value.chemicalRelationship, value.causalEffect);
     }
 
+    this.setLinkDirection();
     self.setPreview();
   }
 
@@ -256,6 +256,12 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     }
   }
 
+
+  setLinkDirection() {
+    this.predicate.isReverseLink = (this.connectorType === ConnectorType.MOLECULE_ACTIVITY
+      && this.predicate.edge.id === noctuaFormConfig.edge.hasInput.id);
+  }
+
   setPreview() {
     this.graphPreview.nodes = [...this._getPreviewNodes()];
     this.graphPreview.edges = [...this._getPreviewEdges()];
@@ -290,7 +296,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     let triples: Triple<ActivityNode>[]
 
-    if (this.connectorType === ConnectorType.MOLECULE_ACTIVITY && self.predicate.edge.id === noctuaFormConfig.edge.hasInput.id) {
+    if (self.predicate.isReverseLink) {
       triples = [new Triple<ActivityNode>(
         self.objectNode, self.subjectNode, self.predicate)
       ]
@@ -310,12 +316,8 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const srcSaveData = srcActivity.createSave();
     const destSaveData = self.createSave();
     const saveData = {
-      srcNodes: srcSaveData.nodes,
-      destNodes: destSaveData.nodes,
-      srcTriples: srcSaveData.triples,
-      destTriples: destSaveData.triples,
-      removeIds: [],
-      removeTriples: []
+      removeTriples: srcSaveData.triples,
+      addTriples: destSaveData.triples
     };
 
     return saveData;
@@ -323,12 +325,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
   createDelete() {
     const self = this;
-    const uuids: string[] = [];
 
     const deleteData = {
-      uuids: [],
-      triples: [],
-      nodes: []
+      triples: []
     };
 
     if (self.predicate.isReverseLink) {
@@ -336,8 +335,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     } else {
       deleteData.triples.push(new Triple(self.subjectNode, self.objectNode, self.predicate));
     }
-
-    deleteData.uuids = uuids;
 
     return deleteData;
   }

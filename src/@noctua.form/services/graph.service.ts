@@ -962,6 +962,31 @@ export class NoctuaGraphService {
     return cam.manager.request_with(reqs);
   }
 
+  editConnection(cam: Cam,
+    removeTriples: Triple<ActivityNode>[],
+    addTriples: Triple<ActivityNode>[]) {
+
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    each(removeTriples, (triple: Triple<ActivityNode>) => {
+      reqs.remove_fact([
+        triple.subject.uuid,
+        triple.object.uuid,
+        triple.predicate.edge.id
+      ]);
+    });
+
+    self.addFact(reqs, addTriples);
+
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
+    }
+
+    reqs.store_model(cam.id);
+    return cam.manager.request_with(reqs);
+  }
+
   editActivity(cam: Cam,
     srcNodes: ActivityNode[],
     destNodes: ActivityNode[],
