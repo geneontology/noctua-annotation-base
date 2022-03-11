@@ -812,8 +812,6 @@ export class NoctuaGraphService {
   getCausalRelations(cam: Cam) {
     const self = this;
     const triples: Triple<Activity>[] = [];
-    console.log('d')
-
     each(cam.activities, (subjectActivity: Activity) => {
       each(cam.graph.get_edges_by_subject(subjectActivity.id), (bbopEdge) => {
         const predicateId = bbopEdge.predicate_id();

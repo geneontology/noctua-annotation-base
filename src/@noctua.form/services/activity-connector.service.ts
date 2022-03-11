@@ -116,8 +116,6 @@ export class NoctuaActivityConnectorService {
 
   saveActivity() {
     const self = this;
-    const value = this.connectorFormGroup.getValue().value;
-    // this.connectorActivity.prepareSave(value);
 
     if (self.connectorActivity.state === ConnectorState.editing) {
       const saveData = self.connectorActivity.createEdit(self.currentConnectorActivity);
@@ -127,7 +125,6 @@ export class NoctuaActivityConnectorService {
         saveData.addTriples).then(() => {
           this.initializeForm(self.subjectActivity.id, self.objectActivity.id)
         });
-
     } else { // creation
       const saveData = self.connectorActivity.createSave();
       return self.noctuaGraphService.addActivity(self.cam, [], saveData.triples, '', CamOperation.ADD_CAUSAL_RELATION);

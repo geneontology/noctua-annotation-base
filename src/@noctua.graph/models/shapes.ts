@@ -21,23 +21,6 @@ export const enum NodeCellType {
   cell = 'noctua.NodeCellList',
 }
 
-const Link = joint.dia.Link;
-const portAttrs = {
-  '.port-body': {
-    fill: '#16A085',
-    r: 10,
-    magnet: true
-  },
-  'text': {
-    'text': '',
-    'font-size': 12,
-    'ref-x': '50%',
-    'ref-y': .5,
-    'text-anchor': 'middle',
-    'y-alignment': 'middle',
-  }
-};
-
 export const StencilNode = joint.dia.Element.define('noctua.StencilNode', {
   size: { width: 80, height: 80 },
   attrs: {
@@ -253,7 +236,6 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
       cursor: 'pointer',
       visibility: 'hidden',
     },
-
     '.activity-mf-rect': {
       fill: '#d5fdd5',
       stroke: '#fff',
@@ -345,6 +327,9 @@ export const NodeCellList = joint.dia.Element.define('noctua.NodeCellList', {
 
     this.on('change:name change:attributes change:gp', function () {
       this.updateRectangles();
+
+      //this.set('size', { height: 500, width: 120 });
+
       this.trigger('activity-update');
     }, this);
 
