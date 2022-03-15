@@ -4,6 +4,7 @@ import 'jqueryui';
 import * as _ from 'lodash';
 import * as joint from 'jointjs';
 import * as shapes from './../models/shapes';
+import * as listShape from './../models/shapes/list';
 import * as Backbone from 'backbone';
 import { getColor } from '@noctua.common/data/noc-colors';
 
@@ -62,7 +63,7 @@ export class NodeCell extends shapes.NodeCell {
   }
 }
 
-export class NodeCellList extends shapes.NodeCellList {
+export class NodeCellList2 extends shapes.NodeCellList {
 
   constructor() {
     super();
@@ -106,6 +107,67 @@ export class NodeCellList extends shapes.NodeCellList {
     self.attr('.highlighter/stroke', 'transparent');
 
     return this;
+  }
+
+
+  hover(on: boolean): this {
+    const self = this;
+    self.attr('.wrapper/strokeWidth', on ? 40 : 0);
+    self.attr('.edit/visibility', on ? 'visible' : 'hidden');
+    self.attr('.delete/visibility', on ? 'visible' : 'hidden');
+
+    return this;
+  }
+}
+
+export class NodeCellList extends listShape.NodeCellList {
+
+  constructor() {
+    super();
+
+  }
+
+  addNodePorts(): this {
+    const self = this;
+
+    return this;
+  }
+
+  setColor(colorKey: string, low?: number, high?: number): this {
+    const self = this;
+    const deep = getColor(colorKey, low ? low : 200);
+    const light = getColor(colorKey, high ? high : 100);
+
+    self.attr('body/fill', deep);
+    self.attr('.activity-mf-rect/fill', light);
+    self.attr('.activity-cc-rect/fill', light);
+    self.attr('.activity-bp-rect/fill', light);
+
+    //this.attr('.icon/height', 200);
+
+    return this;
+  }
+
+
+  setBorder(colorKey: string, hue?: number): this {
+    const self = this;
+    const deep = getColor(colorKey, hue ? hue : 500);
+
+    self.attr('.highlighter/stroke', deep);
+
+    return this;
+  }
+
+  unsetBorder(): this {
+    const self = this;
+
+    self.attr('.highlighter/stroke', 'transparent');
+
+    return this;
+  }
+
+  addIcon(icon: string) {
+    this.attr('icon/xlinkHref', icon);
   }
 
 

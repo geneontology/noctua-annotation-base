@@ -10,7 +10,7 @@ declare module 'jointjs' {
     namespace noctua {
       class StencilNode extends joint.dia.Link { }
       class NodeCell extends joint.dia.Element { }
-      class NodeCellList extends joint.dia.Element { }
+      // class NodeCellList extends joint.dia.Element { }
       class NodeLink extends joint.dia.Link { }
     }
   }
