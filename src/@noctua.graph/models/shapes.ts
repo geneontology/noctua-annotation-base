@@ -1,6 +1,3 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit, Injectable } from '@angular/core';
-import * as jQuery from 'jquery';
-import 'jqueryui';
 import * as _ from 'lodash';
 import * as joint from 'jointjs';
 import * as Backbone from 'backbone';

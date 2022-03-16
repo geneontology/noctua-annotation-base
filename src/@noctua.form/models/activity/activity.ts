@@ -659,7 +659,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     return title;
   }
 
-  buildTrees(): any[] {
+  buildTrees(): ActivityTreeNode[] {
     const self = this;
     const sortedEdges = self.edges.sort(compareTripleWeight);
     const fdRootNode = self.getFDRootNode();
@@ -668,7 +668,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     return [self._buildTree(sortedEdges, fdRootNode)];
   }
 
-  buildGPTrees() {
+  buildGPTrees(): ActivityTreeNode[] {
     const self = this;
     const sortedEdges = self.edges.sort(compareTripleWeight);
 

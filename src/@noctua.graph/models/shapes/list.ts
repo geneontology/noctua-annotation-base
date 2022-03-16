@@ -1,9 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit, Injectable } from '@angular/core';
-import * as jQuery from 'jquery';
-import 'jqueryui';
-import * as _ from 'lodash';
+
 import * as joint from 'jointjs';
 import * as Backbone from 'backbone';
+import { dia, g } from 'jointjs';
 
 declare module 'jointjs' {
   namespace shapes {
@@ -13,15 +11,12 @@ declare module 'jointjs' {
   }
 }
 
-import { dia, shapes, g, linkTools, util } from 'jointjs';
 
 const GRID_SIZE = 8;
 const PADDING_S = GRID_SIZE;
 const PADDING_L = GRID_SIZE * 2;
 const FONT_FAMILY = 'sans-serif';
-const LIGHT_COLOR = '#FFF';
 const DARK_COLOR = 'transparent';
-const SECONDARY_DARK_COLOR = '#999';
 
 const HEADER_ICON_SIZE = 30;
 const HEADER_HEIGHT = 40;
@@ -29,10 +24,8 @@ const HEADER_HEIGHT = 40;
 export const LIST_GROUP_NAME = 'list';
 const LIST_ITEM_HEIGHT = 35;
 export const LIST_ITEM_WIDTH = 200;
-const LIST_ITEM_GAP = 1;
+const LIST_ITEM_GAP = 2;
 const LIST_ADD_BUTTON_SIZE = 20;
-const LIST_REMOVE_BUTTON_SIZE = 16;
-const LIST_IMAGE_SIZE = 20;
 
 const itemPosition = (portsArgs: dia.Element.Port[], elBBox: dia.BBox): g.Point[] => {
   return portsArgs.map((_port: dia.Element.Port, index: number, { length }) => {
@@ -194,7 +187,7 @@ const headerAttributes = {
   }]
 };
 
-export class NodeCellList extends dia.Element {
+export class NodeCellList extends joint.dia.Element {
 
   defaults() {
     return {
@@ -227,62 +220,4 @@ export class NodeCellList extends dia.Element {
   }
 
 }
-
-class ListLink extends shapes.standard.DoubleLink {
-
-  defaults() {
-    return util.defaultsDeep({
-      type: 'ListLink',
-      z: -1,
-      attrs: {
-        line: {
-          stroke: LIGHT_COLOR,
-          targetMarker: {
-            stroke: SECONDARY_DARK_COLOR
-          }
-        },
-        outline: {
-          stroke: SECONDARY_DARK_COLOR
-        }
-      }
-    }, super.defaults);
-  }
-}
-
-
-
-// Events
-
-
-
-function onPaperElementPortRemove(elementView: dia.ElementView, evt: dia.Event): void {
-  evt.stopPropagation();
-  const portId = elementView.findAttribute('port', evt.target);
-  const message = elementView.model as NodeCellList
-  message.removePort(portId);
-}
-
-function onPaperLinkMouseEnter(linkView: dia.LinkView) {
-  const toolsView = new dia.ToolsView({
-    tools: [new linkTools.Remove()]
-  });
-  linkView.addTools(toolsView);
-}
-
-function onPaperLinkMouseLeave(linkView: dia.LinkView) {
-  linkView.removeTools();
-}
-
-// Example Diagram
-
-const list1 = new NodeCellList({
-  attrs: {
-    label: {
-      text: 'List of Items 1'
-    },
-    description: {
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis gravida sem, vitae mollis lectus. Vivamus in justo sit amet turpis auctor facilisis eget vitae magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ut varius tortor. Donec volutpat pharetra augue, sed tincidunt nibh tempus eu. Nulla facilisi. Quisque pharetra, elit porta laoreet faucibus, justo dui ullamcorper massa, vitae sollicitudin metus nunc vel leo. Curabitur sit amet mattis tortor. Morbi eleifend viverra suscipit. Maecenas fringilla, nibh vitae elementum rutrum, ipsum ipsum volutpat nisi, eu euismod arcu justo sit amet dolor. Nam pulvinar ligula varius purus vestibulum tincidunt.'
-    }
-  }
-});
 
