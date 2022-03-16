@@ -133,6 +133,24 @@ export class CamCanvas {
                 self.unhighlightAllNodes()
             }
         });
+
+        this.canvasPaper.on('link:mouseenter', function (cellView) {
+            cellView.removeTools();
+            const element = cellView.model;
+            if (element.get('type') === NodeCellType.link) {
+                (element as NodeLink).hover(true);
+            }
+
+        });
+
+        this.canvasPaper.on('link:mouseleave', function (cellView) {
+            cellView.removeTools();
+            const element = cellView.model;
+            if (element.get('type') === NodeCellType.link) {
+                (element as NodeLink).hover(false);
+            }
+
+        });
         /* 'element:pointerup': function (elementView, evt, x, y) {
             const coordinates = new joint.g.Point(x, y);
             const elementAbove = elementView.model;
@@ -403,11 +421,17 @@ export class CamCanvas {
     createNode(activity: Activity): NodeCellList {
         const el = new NodeCellList()
         //.addActivityPorts()
-        el.setColor(activity.backgroundColor)
+
         el.addIcon(`./assets/images/activity/coverage-${activity.summary.coverage}.png`)
         //.setSuccessorCount(activity.successorCount)
 
         const activityType = activity.getActivityTypeDetail();
+
+        if (activity.gpNode) {
+            el.addHeader(activity.gpNode?.term.label);
+        } else {
+            el.prop('GP info unavailable');
+        }
 
         if (activity.mfNode) {
             el.addEntity('', activity.mfNode.term.label);
@@ -415,19 +439,13 @@ export class CamCanvas {
 
         if (activity.ccNode) {
             el.addEntity('occurs in: ', activity.ccNode.term.label);
-            el.addEntity('occurs in: ', activity.ccNode.term.label);
-            el.addEntity('occurs in: ', activity.ccNode.term.label);
-            el.addEntity('occurs in: ', activity.ccNode.term.label);
         }
 
         if (activity.bpNode) {
             el.addEntity('part of: ', activity.bpNode.term.label);
         }
-        if (activity.gpNode) {
-            el.prop({ 'gp': [activity.gpNode?.term.label] });
-        } else {
-            el.prop({ 'gp': [''] });
-        }
+
+        el.setColor(activity.backgroundColor);
 
         el.attr({
             expand: {

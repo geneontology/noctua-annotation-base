@@ -22,16 +22,14 @@ const FONT_FAMILY = 'sans-serif';
 const LIGHT_COLOR = '#FFF';
 const DARK_COLOR = 'transparent';
 const SECONDARY_DARK_COLOR = '#999';
-const LINE_WIDTH = 2;
 
-const HEADER_ICON_SIZE = 50;
-const HEADER_HEIGHT = 80;
+const HEADER_ICON_SIZE = 30;
+const HEADER_HEIGHT = 40;
 
-const LIST_GROUP_NAME = 'list';
-const LIST_ITEM_HEIGHT = 28;
-const LIST_ITEM_WIDTH = GRID_SIZE * 40;
+export const LIST_GROUP_NAME = 'list';
+const LIST_ITEM_HEIGHT = 35;
+export const LIST_ITEM_WIDTH = 200;
 const LIST_ITEM_GAP = 1;
-const LIST_BUTTON_RADIUS = 16;
 const LIST_ADD_BUTTON_SIZE = 20;
 const LIST_REMOVE_BUTTON_SIZE = 16;
 const LIST_IMAGE_SIZE = 20;
@@ -46,14 +44,17 @@ const itemPosition = (portsArgs: dia.Element.Port[], elBBox: dia.BBox): g.Point[
 
 const itemAttributes = {
   attrs: {
-    portBody: {
+    body: {
       width: 'calc(w)',
       height: 'calc(h)',
       x: '0',
       y: 'calc(-0.5*h)',
-      fill: DARK_COLOR
+      fill: DARK_COLOR,
+      stroke: 'white',
+      strokeWidth: 1,
     },
     relationship: {
+      width: 60,
       pointerEvents: 'none',
       fontFamily: FONT_FAMILY,
       fontWeight: 400,
@@ -62,26 +63,26 @@ const itemAttributes = {
       textAnchor: 'start',
       textVerticalAnchor: 'middle',
       textWrap: {
-        width: - LIST_REMOVE_BUTTON_SIZE - PADDING_L - 2 * PADDING_S - LIST_IMAGE_SIZE,
-        maxLineCount: 1,
+        width: 60,
+        maxLineCount: 2,
         ellipsis: true
       },
       x: 8
     },
     portLabel: {
+      width: 100,
       pointerEvents: 'none',
       fontFamily: FONT_FAMILY,
-      fontWeight: 400,
-      fontSize: 13,
+      fontSize: 12,
       fill: 'black',
       textAnchor: 'start',
       textVerticalAnchor: 'middle',
       textWrap: {
-        width: - LIST_REMOVE_BUTTON_SIZE - PADDING_L - 2 * PADDING_S - LIST_IMAGE_SIZE,
-        maxLineCount: 1,
+        width: 140,
+        maxLineCount: 2,
         ellipsis: true
       },
-      x: 100
+      x: 60
     },
 
   },
@@ -91,7 +92,7 @@ const itemAttributes = {
   },
   markup: [{
     tagName: 'rect',
-    selector: 'portBody'
+    selector: 'body'
   }, {
     tagName: 'text',
     selector: 'relationship'
@@ -123,46 +124,27 @@ const headerAttributes = {
     body: {
       width: 'calc(w)',
       height: 'calc(h)',
-      fill: LIGHT_COLOR,
-      strokeWidth: LINE_WIDTH / 2,
-      stroke: SECONDARY_DARK_COLOR,
-      rx: 3,
-      ry: 3,
     },
     icon: {
       width: HEADER_ICON_SIZE,
       height: HEADER_ICON_SIZE,
-      x: PADDING_L,
+      x: 5,
       y: (HEADER_HEIGHT - HEADER_ICON_SIZE) / 2,
     },
     label: {
-      transform: `translate(${PADDING_L + HEADER_ICON_SIZE + PADDING_L},${PADDING_L})`,
+      x: 40,
+      y: 15,
       fontFamily: FONT_FAMILY,
       fontWeight: 600,
-      fontSize: 16,
-      fill: DARK_COLOR,
+      fontSize: 12,
+      fill: "black",
       text: 'Label',
       textWrap: {
-        width: - PADDING_L - HEADER_ICON_SIZE - PADDING_L - PADDING_L,
+        width: '90%',
         maxLineCount: 1,
         ellipsis: true
       },
       textVerticalAnchor: 'top',
-    },
-    description: {
-      transform: `translate(${PADDING_L + HEADER_ICON_SIZE + PADDING_L},${PADDING_L + 20})`,
-      fontFamily: FONT_FAMILY,
-      fontWeight: 400,
-      fontSize: 13,
-      lineHeight: 13,
-      fill: SECONDARY_DARK_COLOR,
-      textVerticalAnchor: 'top',
-      text: 'Description',
-      textWrap: {
-        width: - PADDING_L - HEADER_ICON_SIZE - PADDING_L - PADDING_L,
-        maxLineCount: 2,
-        ellipsis: true
-      }
     },
     '.edit': {
       event: 'element:.edit:pointerdown',
@@ -186,25 +168,7 @@ const headerAttributes = {
       cursor: 'pointer',
       visibility: 'hidden',
     },
-    portAddButton: {
-      title: 'Add List Item',
-      cursor: 'pointer',
-      event: 'element:port:add',
-      transform: `translate(calc(w-${3 * PADDING_S}),calc(h))`
-    },
-    portAddButtonBody: {
-      width: LIST_ADD_BUTTON_SIZE,
-      height: LIST_ADD_BUTTON_SIZE,
-      rx: LIST_BUTTON_RADIUS,
-      ry: LIST_BUTTON_RADIUS,
-      x: -LIST_ADD_BUTTON_SIZE / 2,
-      y: -LIST_ADD_BUTTON_SIZE / 2,
-    },
-    portAddButtonIcon: {
-      d: 'M -4 0 4 0 M 0 -4 0 4',
-      stroke: LIGHT_COLOR,
-      strokeWidth: LINE_WIDTH
-    }
+
   },
   markup: [{
     tagName: 'rect',
@@ -219,9 +183,6 @@ const headerAttributes = {
     tagName: 'text',
     selector: 'label',
   }, {
-    tagName: 'text',
-    selector: 'description',
-  }, {
     tagName: 'image',
     selector: 'icon',
   }, {
@@ -230,16 +191,6 @@ const headerAttributes = {
   }, {
     tagName: 'image',
     selector: '.delete',
-  }, {
-    tagName: 'g',
-    selector: 'portAddButton',
-    children: [{
-      tagName: 'rect',
-      selector: 'portAddButtonBody'
-    }, {
-      tagName: 'path',
-      selector: 'portAddButtonIcon'
-    }]
   }]
 };
 
@@ -269,16 +220,6 @@ export class NodeCellList extends dia.Element {
     super.initialize.call(this, ...args);
   }
 
-  addEntity(relationship: string, term: string) {
-    this.addPort({
-      group: LIST_GROUP_NAME,
-      attrs: {
-        relationship: { text: relationship },
-        portLabel: { text: term }
-      }
-    });
-    this.resizeToFitPorts()
-  }
 
   resizeToFitPorts() {
     const { length } = this.getPorts();
