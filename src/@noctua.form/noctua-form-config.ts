@@ -397,4 +397,10 @@ export const noctuaFormConfig = {
     Entity.createEntity(edge.isSmallMoleculeRegulator),
   ],
 
+  defaultGraphDisplayEdges: [
+    Entity.createEntity(edge.hasInput),
+    Entity.createEntity(edge.partOf),
+    Entity.createEntity(edge.occursIn),
+  ],
+
 };

@@ -106,11 +106,11 @@ export class NodeCellList extends listShape.NodeCellList {
     const deep = getColor(colorKey, low ? low : 200);
     const light = getColor(colorKey, high ? high : 100);
 
-    self.attr('body/fill', deep);
+    self.attr('body/fill', light);
 
-    this.getPorts().forEach(el => {
-      this.portProp(el.id, 'attrs/body/fill', light)
-    })
+    /*   this.getPorts().forEach(el => {
+        this.portProp(el.id, 'attrs/body/fill', light)
+      }) */
 
     return this;
   }

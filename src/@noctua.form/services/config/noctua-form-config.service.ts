@@ -143,6 +143,20 @@ export class NoctuaFormConfigService {
     };
   }
 
+  get graphDisplayDefaultEdges() {
+    const options = [
+      noctuaFormConfig.edge.enabledBy,
+      noctuaFormConfig.edge.partOf,
+      noctuaFormConfig.edge.occursIn,
+      noctuaFormConfig.edge.hasInput
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
   get causalEffect() {
     const options = [
       noctuaFormConfig.causalEffect.options.positive,

@@ -21,7 +21,7 @@ const HEADER_HEIGHT = 40;
 export const LIST_GROUP_NAME = 'list';
 const LIST_ITEM_HEIGHT = 35;
 export const LIST_ITEM_WIDTH = 200;
-const LIST_ITEM_GAP = 2;
+const LIST_ITEM_GAP = 0;
 const LIST_ADD_BUTTON_SIZE = 20;
 
 const itemPosition = (portsArgs: dia.Element.Port[], elBBox: dia.BBox): g.Point[] => {

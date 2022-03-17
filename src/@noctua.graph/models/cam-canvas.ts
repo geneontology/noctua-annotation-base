@@ -14,7 +14,7 @@ import {
 import { NodeCellType } from './shapes';
 import { NodeCellList, NodeCellMolecule, NodeLink, StencilNode } from './../services/shapes.service';
 import * as joint from 'jointjs';
-import { each, cloneDeep } from 'lodash';
+import { each, cloneDeep, find } from 'lodash';
 import { StencilItemNode } from './../data/cam-stencil';
 import { getEdgeColor } from './../data/edge-display';
 
@@ -426,7 +426,7 @@ export class CamCanvas {
         const self = this;
 
         if (treeNode.node?.displaySection.id === noctuaFormConfig.displaySection.gp.id) {
-            if (treeNode.node?.term) {
+            if (treeNode.node?.term && treeNode.node.predicate.edge?.id !== noctuaFormConfig.edge.enabledBy.id) {
                 el.addEntity(NoctuaFormUtils.pad('—', treeNode.node.treeLevel - 2)
                     + treeNode.node.predicate.edge?.label, treeNode.node.term.label);
             }
@@ -467,14 +467,19 @@ export class CamCanvas {
             const fdNodes = activity.buildTrees();
             fdNodes.forEach(fdNode => this._addFDEntity(fdNode, el));
         } else if (graphLayoutDetail === noctuaFormConfig.graphLayoutDetail.options.activity.id) {
-            const activityNodes = activity.getEdges(ActivityNodeType.GoMolecularFunction)
 
-            activityNodes.forEach((activityNode: Triple<ActivityNode>) => {
-                if (activityNode.object?.term.hasValue()) {
-                    el.addEntity(activityNode.object.predicate.edge.label, activityNode.object?.term.label);
-                }
-            })
+            if (activity.mfNode) {
+                const activityNodes = activity.getEdges(activity.mfNode.id)
+                el.addEntity('', activity.mfNode?.term.label);
 
+                activityNodes.forEach((activityNode: Triple<ActivityNode>) => {
+                    const canAdd = find(noctuaFormConfig.defaultGraphDisplayEdges, (edge: Entity) => edge.id === activityNode.predicate.edge?.id);
+
+                    if (activityNode.object?.term.hasValue() && canAdd) {
+                        el.addEntity(activityNode.object.predicate.edge.label, activityNode.object?.term.label);
+                    }
+                })
+            }
         }
 
         if (activity.gpNode) {
