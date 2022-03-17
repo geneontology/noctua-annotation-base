@@ -74,31 +74,42 @@ export class NodeCellList extends listShape.NodeCellList {
     this.attr('label/text', label);
   }
 
-  addEntity(relationship: string, term: string) {
+  addEntity(relationship: string, term: string, hasEvidence) {
+    const attrs: any = {}
+
     if (relationship) {
-      this.addPort({
-        group: LIST_GROUP_NAME,
-        attrs: {
-          relationship: { text: relationship, },
-          portLabel: { text: term }
-        }
-      });
+      attrs.relationship = { text: relationship }
+      attrs.portLabel = { text: term }
+
+      if (!hasEvidence) {
+        attrs.portLabel.x = 75;
+      }
     } else {
-      this.addPort({
-        group: LIST_GROUP_NAME,
-        attrs: {
-          relationship: { visibility: 'hidden' },
-          portLabel: {
-            text: term,
-            x: 8,
-            width: LIST_ITEM_WIDTH,
-            textWrap: {
-              width: LIST_ITEM_WIDTH - 16,
-            },
-          }
-        }
-      });
+      attrs.relationship = { visibility: 'hidden' };
+      attrs.portLabel = {
+        text: term,
+        x: hasEvidence ? 8 : 25,
+        width: LIST_ITEM_WIDTH,
+        textWrap: {
+          width: LIST_ITEM_WIDTH - 16,
+        },
+      }
     }
+
+    if (!hasEvidence) {
+      attrs.noEvidence = { visibility: 'visible' }
+      attrs.textWrap = {
+        width: LIST_ITEM_WIDTH - 50,
+      };
+      if (!relationship) {
+        attrs.noEvidence.x = 8;
+      }
+
+    }
+    this.addPort({
+      group: LIST_GROUP_NAME,
+      attrs
+    })
   }
 
   setColor(colorKey: string, low?: number, high?: number): this {

@@ -75,6 +75,16 @@ const itemAttributes = {
       x: 60
     },
 
+    noEvidence: {
+      'xlink:href': './assets/icons/no-evidence.png',
+      ref: 'body',
+      x: 60,
+      y: -8,
+      height: 15,
+      cursor: 'pointer',
+      visibility: 'hidden'
+    },
+
   },
   size: {
     width: LIST_ITEM_WIDTH,
@@ -89,6 +99,9 @@ const itemAttributes = {
   }, {
     tagName: 'text',
     selector: 'portLabel',
+  }, {
+    tagName: 'image',
+    selector: 'noEvidence',
   }]
 };
 

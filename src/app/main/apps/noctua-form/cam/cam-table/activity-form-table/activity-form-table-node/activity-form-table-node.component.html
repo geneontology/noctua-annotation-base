@@ -72,7 +72,7 @@
         </button>
         <button mat-menu-item *ngIf="entity.insertMenuNodes" [matMenuTriggerFor]="addMenu">Add</button>
         <button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
-        <button mat-menu-item class="" (click)="deleteEntity(entity)">
+        <button mat-menu-item *ngIf="entity.canDelete" class="" color="warn" (click)="deleteEntity(entity)">
           Delete
         </button>
       </mat-menu>

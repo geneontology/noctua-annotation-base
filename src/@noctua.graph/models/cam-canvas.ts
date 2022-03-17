@@ -428,7 +428,8 @@ export class CamCanvas {
         if (treeNode.node?.displaySection.id === noctuaFormConfig.displaySection.gp.id) {
             if (treeNode.node?.term && treeNode.node.predicate.edge?.id !== noctuaFormConfig.edge.enabledBy.id) {
                 el.addEntity(NoctuaFormUtils.pad('—', treeNode.node.treeLevel - 2)
-                    + treeNode.node.predicate.edge?.label, treeNode.node.term.label);
+                    + treeNode.node.predicate.edge?.label, treeNode.node.term.label,
+                    treeNode.node.predicate.hasEvidence());
             }
 
             treeNode.children.forEach(child => {
@@ -443,7 +444,7 @@ export class CamCanvas {
         if (treeNode.node?.displaySection.id === noctuaFormConfig.displaySection.fd.id) {
             if (treeNode.node?.term) {
                 el.addEntity(NoctuaFormUtils.pad('—', treeNode.node.treeLevel - 2)
-                    + treeNode.node.predicate.edge?.label, treeNode.node.term.label);
+                    + treeNode.node.predicate.edge?.label, treeNode.node.term.label, treeNode.node.predicate.hasEvidence());
             }
 
             treeNode.children.forEach(child => {
@@ -470,13 +471,14 @@ export class CamCanvas {
 
             if (activity.mfNode) {
                 const activityNodes = activity.getEdges(activity.mfNode.id)
-                el.addEntity('', activity.mfNode?.term.label);
+                el.addEntity('', activity.mfNode?.term.label, activity.mfNode.predicate.hasEvidence());
 
                 activityNodes.forEach((activityNode: Triple<ActivityNode>) => {
                     const canAdd = find(noctuaFormConfig.defaultGraphDisplayEdges, (edge: Entity) => edge.id === activityNode.predicate.edge?.id);
 
                     if (activityNode.object?.term.hasValue() && canAdd) {
-                        el.addEntity(activityNode.object.predicate.edge.label, activityNode.object?.term.label);
+                        el.addEntity(activityNode.object.predicate.edge.label, activityNode.object?.term.label,
+                            activityNode.object.predicate.hasEvidence());
                     }
                 })
             }

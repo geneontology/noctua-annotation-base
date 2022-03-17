@@ -65,6 +65,17 @@ export class Predicate {
     return evidence;
   }
 
+  hasEvidence(): boolean {
+    if (!this.evidence) return false;
+    if (this.evidence.length > 1) return true;
+
+    if (this.evidence.length > 0) {
+      return this.evidence[0].hasValue() ? true : false;
+    }
+
+    return false;
+  }
+
   removeEvidence(index) {
     const self = this;
 
