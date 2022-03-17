@@ -1,12 +1,9 @@
-
-import * as joint from 'jointjs';
-import * as Backbone from 'backbone';
 import { dia, g } from 'jointjs';
 
 declare module 'jointjs' {
   namespace shapes {
     namespace noctua {
-      class NodeCellList extends joint.dia.Element { }
+      class NodeCellList extends dia.Element { }
     }
   }
 }
@@ -187,7 +184,7 @@ const headerAttributes = {
   }]
 };
 
-export class NodeCellList extends joint.dia.Element {
+export class NodeCellList extends dia.Element {
 
   defaults() {
     return {

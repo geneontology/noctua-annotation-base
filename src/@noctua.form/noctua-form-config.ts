@@ -143,6 +143,22 @@ export const noctuaFormConfig = {
       }
     }
   },
+  'graphLayoutDetail': {
+    'options': {
+      'preview': {
+        'id': 'preview',
+        'label': 'Preview'
+      },
+      'activity': {
+        'id': 'activity',
+        'label': 'Default'
+      },
+      'detailed': {
+        'id': 'detailed',
+        'label': 'Detailed'
+      },
+    }
+  },
   'activityType': {
     'options': {
       'default': {

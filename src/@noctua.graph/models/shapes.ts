@@ -1,6 +1,4 @@
-import * as _ from 'lodash';
 import * as joint from 'jointjs';
-import * as Backbone from 'backbone';
 
 declare module 'jointjs' {
   namespace shapes {

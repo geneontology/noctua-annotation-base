@@ -52,6 +52,19 @@ export class NoctuaFormConfigService {
     };
   }
 
+  get graphLayoutDetail() {
+    const options = [
+      noctuaFormConfig.graphLayoutDetail.options.activity,
+      noctuaFormConfig.graphLayoutDetail.options.detailed,
+      noctuaFormConfig.graphLayoutDetail.options.preview
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
   findModelState(name) {
     const self = this;
 

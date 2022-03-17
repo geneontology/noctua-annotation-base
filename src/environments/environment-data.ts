@@ -45,9 +45,9 @@ export const globalWorkbenchesModel =
       "css": [
 
       ],
-      "workbench-id": "visual-pathway-editor",
-      "template-injectable": "../noctua-form-base/workbenches/visual-pathway-editor/public/inject.tmpl",
-      "public-directory": "../noctua-form-base/workbenches/visual-pathway-editor/public"
+      "workbench-id": "noctua-visual-pathway-editor",
+      "template-injectable": "../noctua-form-base/workbenches/noctua-visual-pathway-editor/public/inject.tmpl",
+      "public-directory": "../noctua-form-base/workbenches/noctua-visual-pathway-editor/public"
     },
     {
       "menu-name": "Annotation preview",

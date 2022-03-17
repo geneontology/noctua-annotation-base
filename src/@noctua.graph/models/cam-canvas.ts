@@ -1,6 +1,7 @@
 import {
     Activity,
     ActivityNode,
+    ActivityNodeType,
     ActivityTreeNode,
     ActivityType,
     Cam,
@@ -451,36 +452,36 @@ export class CamCanvas {
         }
     }
 
-    createNode(activity: Activity): NodeCellList {
+    createNode(activity: Activity, graphLayoutDetail: string): NodeCellList {
         const el = new NodeCellList()
 
         el.addIcon(`./assets/images/activity/coverage-${activity.summary.coverage}.png`)
         //.setSuccessorCount(activity.successorCount)
-        if (activity.activityType === ActivityType.proteinComplex) {
-            const gpNodes = activity.buildGPTrees();
-            gpNodes.forEach(gpNode => this._addGPEntity(gpNode, el));
-        }
 
-        const fdNodes = activity.buildTrees();
-        fdNodes.forEach(fdNode => this._addFDEntity(fdNode, el));
+        if (graphLayoutDetail === noctuaFormConfig.graphLayoutDetail.options.detailed.id) {
+            if (activity.activityType === ActivityType.proteinComplex) {
+                const gpNodes = activity.buildGPTrees();
+                gpNodes.forEach(gpNode => this._addGPEntity(gpNode, el));
+            }
+
+            const fdNodes = activity.buildTrees();
+            fdNodes.forEach(fdNode => this._addFDEntity(fdNode, el));
+        } else if (graphLayoutDetail === noctuaFormConfig.graphLayoutDetail.options.activity.id) {
+            const activityNodes = activity.getEdges(ActivityNodeType.GoMolecularFunction)
+
+            activityNodes.forEach((activityNode: Triple<ActivityNode>) => {
+                if (activityNode.object?.term.hasValue()) {
+                    el.addEntity(activityNode.object.predicate.edge.label, activityNode.object?.term.label);
+                }
+            })
+
+        }
 
         if (activity.gpNode) {
             el.addHeader(activity.gpNode?.term.label);
         } else {
             el.prop('GP info unavailable');
         }
-
-        /* if (activity.mfNode) {
-            el.addEntity('', activity.mfNode.term.label);
-        }
-
-        if (activity.ccNode) {
-            el.addEntity('occurs in: ', activity.ccNode.term.label);
-        }
-
-        if (activity.bpNode) {
-            el.addEntity('part of: ', activity.bpNode.term.label);
-        } */
 
         el.setColor(activity.backgroundColor);
 
@@ -539,7 +540,7 @@ export class CamCanvas {
         return el
     }
 
-    addCanvasGraph(cam: Cam) {
+    addCanvasGraph(cam: Cam, graphLayoutDetail: string) {
         const self = this;
         const nodes = [];
 
@@ -552,7 +553,7 @@ export class CamCanvas {
                 if (activity.activityType === ActivityType.molecule) {
                     el = self.createMolecule(activity);
                 } else {
-                    el = self.createNode(activity);
+                    el = self.createNode(activity, graphLayoutDetail);
                 }
                 nodes.push(el);
             }
