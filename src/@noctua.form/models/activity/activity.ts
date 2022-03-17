@@ -10,8 +10,7 @@ import { Entity } from './entity';
 import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import * as ShapeDescription from './../../data/config/shape-definition';
-
-import { chain, Dictionary, each, filter, find, groupBy } from 'lodash';
+import { each, filter, find } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { TermsSummary } from './summary';
@@ -606,6 +605,19 @@ export class Activity extends SaeGraph<ActivityNode> {
     return deleteData;
   }
 
+  createActivityNodeDelete(node: ActivityNode) {
+    const self = this;
+    const deleteData = {
+      uuids: []
+    };
+    const uuids = self.descendants(node.id).map(node => node.uuid);
+    uuids.push(node.uuid);
+
+    deleteData.uuids = uuids;
+
+    return deleteData;
+  }
+
   setPreview() {
     const self = this;
     const saveData = self.createSave();
@@ -633,15 +645,6 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     // self.addSubGraph(graph, toNode.id, fromNode.id);
   }
-
-  insertSubgraph2(activity: Activity, startNodeId: string) {
-    const self = this;
-
-    const graph = activity.getTrimmedGraph(startNodeId);
-
-    // self.addSubGraph(graph);
-  }
-
 
   get title() {
     const self = this;
@@ -700,6 +703,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     return result[0]
   }
+
 
   get presentation() {
     const self = this;

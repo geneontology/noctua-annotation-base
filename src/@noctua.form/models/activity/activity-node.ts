@@ -65,6 +65,7 @@ export interface ActivityNodeDisplay {
   weight: number;
   relationEditable: boolean;
   showInMenu: boolean;
+  canDelete: boolean;
 }
 
 export class ActivityNode implements ActivityNodeDisplay {
@@ -112,6 +113,7 @@ export class ActivityNode implements ActivityNodeDisplay {
   expanded: boolean = false;
   causalNode: boolean = false;
   frequency: number;
+  canDelete: boolean = true;
 
   private _id: string;
 

@@ -35,6 +35,7 @@ export const activityUnitBaseDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
             skipEvidenceCheck: true,
+            canDelete: false,
             termRequired: true,
             weight: 1
         },
@@ -56,6 +57,7 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
             displayGroup: noctuaFormConfig.displayGroup.mf,
             skipEvidenceCheck: true,
             visible: false,
+            canDelete: false,
             weight: 1
         }
     },
@@ -72,6 +74,7 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
             label: 'Gene Product',
             skipEvidenceCheck: true,
             termRequired: true,
+            canDelete: false,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             weight: 1
@@ -93,6 +96,7 @@ export const proteinComplexBaseDescription: ActivityDescription = {
             displayGroup: noctuaFormConfig.displayGroup.mf,
             skipEvidenceCheck: true,
             visible: false,
+            canDelete: false,
             weight: 1
         }
     },
@@ -110,6 +114,7 @@ export const moleculeBaseDescription: ActivityDescription = {
             skipEvidenceCheck: true,
             showEvidence: false,
             termRequired: true,
+            canDelete: false,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             weight: 1
@@ -131,6 +136,7 @@ export const activityUnitDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
             termRequired: true,
+            canDelete: false,
             weight: 1
         },
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
@@ -142,6 +148,7 @@ export const activityUnitDescription: ActivityDescription = {
             displayGroup: noctuaFormConfig.displayGroup.gp,
             termRequired: true,
             skipEvidenceCheck: true,
+            canDelete: false,
             weight: 2
         },
         [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{
@@ -192,6 +199,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
             visible: false,
+            canDelete: false,
             weight: 1
         },
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
@@ -203,6 +211,7 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             displayGroup: noctuaFormConfig.displayGroup.gp,
             termRequired: true,
             skipEvidenceCheck: true,
+            canDelete: false,
             weight: 2
         },
 
@@ -262,6 +271,7 @@ export const ccOnlyAnnotationDescription: ActivityDescription = {
             label: 'Gene Product',
             skipEvidenceCheck: true,
             termRequired: true,
+            canDelete: false,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             weight: 1
@@ -298,6 +308,7 @@ export const proteinComplexDescription: ActivityDescription = {
             label: 'Protein Complex',
             skipEvidenceCheck: true,
             termRequired: true,
+            canDelete: false,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             weight: 2
@@ -311,6 +322,7 @@ export const proteinComplexDescription: ActivityDescription = {
             displaySection: noctuaFormConfig.displaySection.fd,
             displayGroup: noctuaFormConfig.displayGroup.mf,
             termRequired: true,
+            canDelete: false,
             weight: 1
         },
         [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{
@@ -359,6 +371,7 @@ export const moleculeDescription: ActivityDescription = {
             label: 'Molecule',
             skipEvidenceCheck: true,
             termRequired: true,
+            canDelete: false,
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             weight: 1

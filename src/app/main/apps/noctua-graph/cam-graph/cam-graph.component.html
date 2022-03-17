@@ -25,15 +25,10 @@
       <span class='mr-4'>
         <strong>Layout Detail</strong> :
       </span>
-      <button mat-stroked-button class="noc-rounded-button noc-action-button noc-half-button noc-r noc-xs"
-        color="primary" [matMenuTriggerFor]="graphLayoutDetailMenu">
+      <button mat-stroked-button class="noc-rounded-button noc-action-button noc-half-button noc-xs" color="primary"
+        [matMenuTriggerFor]="graphLayoutDetailMenu">
         {{noctuaGraphEditorService.selectedGraphLayoutDetail.label}} <fa-icon *ngIf="cam.expanded"
           [icon]="['fas', 'caret-down']"></fa-icon>
-      </button>
-      <button mat-stroked-button (click)="toggleSortDirection()"
-        class="noc-rounded-button noc-action-button noc-icon noc-half-button noc-l noc-xs" color="primary">
-        <fa-icon *ngIf="cam.sortBy.ascending" [icon]="['fas', 'sort-alpha-down']"></fa-icon>
-        <fa-icon *ngIf="!cam.sortBy.ascending" [icon]="['fas', 'sort-alpha-down-alt']"></fa-icon>
       </button>
       <mat-menu #graphLayoutDetailMenu="matMenu" class="noc-dropdown-menu">
         <button mat-menu-item *ngFor="let graphLayoutDetail of noctuaFormConfigService.graphLayoutDetail.options"

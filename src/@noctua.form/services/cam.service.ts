@@ -209,7 +209,6 @@ export class CamService {
     return self.noctuaGraphService.deleteActivity(self.cam, deleteData.uuids, deleteData.triples);
   }
 
-
   updateTermList(formActivity: Activity, entity: ActivityNode) {
     this.noctuaLookupService.termList = this.getUniqueTerms(formActivity);
     entity.termLookup.results = this.noctuaLookupService.termPreLookup(entity.type);
