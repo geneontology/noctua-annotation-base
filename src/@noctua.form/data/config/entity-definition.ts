@@ -116,12 +116,6 @@ export const WormLifeStage = {
     categoryType: 'isa_closure',
 } as GoCategory;
 
-export const ZebrafishStage = {
-    id: ActivityNodeType.ZebrafishStage,
-    category: 'ZFS:0100000',
-    categoryType: 'isa_closure',
-} as GoCategory;
-
 export const UberonStage = {
     id: ActivityNodeType.UberonStage,
     category: 'UBERON:0000105',

@@ -32,7 +32,6 @@ export enum ActivityNodeType {
   GoAnatomicalEntity = 'GoAnatomicalEntity',
   GoOrganism = 'GoOrganism',
   WormLifeStage = "WormLifeStage",
-  ZebrafishStage = "ZebrafishStage",
   // extra internal use
   GoChemicalEntityHasInput = 'GoChemicalEntityHasInput',
   GoChemicalEntityHasOutput = 'GoChemicalEntityHasOutput',
