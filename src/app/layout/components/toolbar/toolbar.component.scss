@@ -32,7 +32,11 @@ $accent: map-get($theme, accent);
     }
 
     &.noc-beta {
-      background-color: #fdcbbc;
+      background-color: #e23232;
+      color: #fbf0b0;
+      a {
+        color: #fff !important;
+      }
     }
 
     mat-toolbar-row {
