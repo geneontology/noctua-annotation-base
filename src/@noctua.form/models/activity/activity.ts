@@ -176,6 +176,22 @@ export class Activity extends SaeGraph<ActivityNode> {
     }
   }
 
+  get rootNode(): ActivityNode {
+    return this.getNode(this.rootNodeType);
+  }
+
+  get rootEdge(): Triple<ActivityNode> {
+    let edge;
+
+    if (this.activityType === ActivityType.proteinComplex) {
+      edge = this.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoProteinContainingComplex);
+    } else {
+      edge = this.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
+    }
+
+    return edge
+  }
+
   postRunUpdateCompliment() {
     const self = this;
 
@@ -195,7 +211,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     if (this.activityType !== ActivityType.ccOnly) {
       const mfNode = self.getMFNode();
-      const edge = self.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
+      const edge = self.rootEdge;
 
       if (mfNode && edge) {
         mfNode.predicate = edge.predicate;
@@ -210,9 +226,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     return noctuaFormConfig.activityType.options[this.activityType];
   }
 
-  get rootNode(): ActivityNode {
-    return this.getNode(this.rootNodeType);
-  }
+
 
   updateDate() {
     const rootNode = this.rootNode;
@@ -454,7 +468,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     if (self.activityType !== ActivityType.ccOnly && self.activityType !== ActivityType.molecule) {
       const mfNode = self.getMFNode();
-      const edge = self.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
+      const edge = self.rootEdge;
 
       if (mfNode && edge) {
         edge.predicate.evidence = mfNode.predicate.evidence;
