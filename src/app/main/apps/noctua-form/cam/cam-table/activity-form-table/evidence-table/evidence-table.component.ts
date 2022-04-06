@@ -13,6 +13,7 @@ import {
   Predicate,
   NoctuaUserService,
   NoctuaActivityFormService,
+  Evidence,
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -23,6 +24,8 @@ import {
 import { EditorCategory } from '@noctua.editor/models/editor-category';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
+import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
+import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
 
 
 @Component({
@@ -56,6 +59,8 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
     public camService: CamService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormMenuService: NoctuaFormMenuService,
+    private confirmDialogService: NoctuaConfirmDialogService,
+    private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     //  public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaActivityFormService: NoctuaActivityFormService,
@@ -94,11 +99,25 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
     self.noctuaActivityFormService.initializeForm();
   }
 
-  removeEvidence(entity: ActivityNode, index: number) {
+  removeEvidence(evidence: Evidence) {
     const self = this;
 
-    entity.predicate.removeEvidence(index);
-    self.noctuaActivityFormService.initializeForm();
+    //entity.predicate.removeEvidence(index);
+
+
+
+    const success = () => {
+      self.noctuaActivityEntityService.deleteEvidence(evidence.uuid).then(() => {
+        self.noctuaFormDialogService.openInfoToast(`${evidence.evidence.label} successfully deleted.`, 'OK');
+      });
+    };
+
+    let message = `You are about to delete an ${evidence.evidence.label} \n 
+      ${evidence.reference} \n 
+      ${evidence.with}`;
+
+    this.confirmDialogService.openConfirmDialog('Confirm Delete?',
+      `${message}`, success);
   }
 
   updateCurrentMenuEvent(event) {

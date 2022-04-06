@@ -109,6 +109,10 @@ export class NoctuaActivityEntityService {
     return self.noctuaGraphService.deleteActivity(self.cam, deleteData.uuids, []);
   }
 
+  deleteEvidence(uuid: string) {
+    return this.noctuaGraphService.deleteEvidence(this.cam, uuid);
+  }
+
 
   saveActivityReplace(cam: Cam, addLoadingStatus?: boolean): Observable<any> {
     const self = this;

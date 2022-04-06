@@ -1096,6 +1096,27 @@ export class NoctuaGraphService {
     return success();
   }
 
+  deleteEvidence(cam: Cam, uuid: string) {
+    const self = this;
+
+    const success = () => {
+      const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
+
+
+      reqs.remove_evidence(uuid, cam.model.id);
+
+      reqs.store_model(cam.id);
+
+      if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+        reqs.use_groups([self.noctuaUserService.user.group.id]);
+      }
+
+      return cam.manager.request_with(reqs);
+    };
+
+    return success();
+  }
+
   addFact(reqs, triples: Triple<ActivityNode>[]) {
     const self = this;
 
