@@ -305,8 +305,8 @@ export class Activity extends SaeGraph<ActivityNode> {
     // remove the subject menu
     each(self.edges, function (triple: Triple<ActivityNode>) {
       if (triple.subject.type === triple.object.type) {
-        triple.subject.canInsertNodes = [];
-        triple.subject.insertMenuNodes = [];
+        //triple.subject.canInsertNodes = [];
+        // triple.subject.insertMenuNodes = [];
       }
     });
   }

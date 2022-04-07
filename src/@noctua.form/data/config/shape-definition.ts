@@ -261,6 +261,22 @@ export const canInsertEntity = {
             cardinality: CardinalityType.oneToOne
         },
 
+        <ShapeDescription>{
+            label: 'Add has part (Subfunction)',
+            id: ActivityNodeType.GoMolecularFunction,
+            node: <ActivityNodeDisplay>{
+                type: ActivityNodeType.GoMolecularFunction,
+                category: [EntityDefinition.GoMolecularFunction],
+                label: 'has part (Subfunction)',
+                displaySection: noctuaFormConfig.displaySection.fd,
+                displayGroup: noctuaFormConfig.displayGroup.cc,
+                weight: 100,
+                showInMenu: true,
+            },
+            predicate: noctuaFormConfig.edge.hasPart,
+            cardinality: CardinalityType.oneToMany
+        },
+
         // Causal Edges
         ...addCausalEdges([
             Entity.createEntity(noctuaFormConfig.edge.causallyUpstreamOfOrWithin),

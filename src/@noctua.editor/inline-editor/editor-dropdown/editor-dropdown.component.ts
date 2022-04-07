@@ -243,6 +243,11 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
+  updateTermList() {
+    const self = this;
+    this.camService.updateTermList(self.noctuaActivityFormService.activity, this.entity);
+  }
+
   updateEvidenceList() {
     const self = this;
     this.camService.updateEvidenceList(self.noctuaActivityFormService.activity, this.entity);
