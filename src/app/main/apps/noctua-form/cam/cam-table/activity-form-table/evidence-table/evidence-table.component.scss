@@ -60,12 +60,14 @@ $accent: map-get($theme, accent);
     overflow-wrap: anywhere;
 
     .noc-edit-button {
+      visibility: hidden;
       position: absolute;
       bottom: 0;
       right: 0;
     }
 
     .noc-delete-button {
+      visibility: hidden;
       @include deep-height(20px);
       @include deep-width(20px);
       position: absolute;
@@ -77,7 +79,8 @@ $accent: map-get($theme, accent);
       border-radius: 0;
 
       &:hover {
-        color: #d85959;
+        background-color: #ee7979;
+        color: #fff;
       }
     }
     &:hover {
@@ -85,6 +88,11 @@ $accent: map-get($theme, accent);
 
       .noc-cell-floating-title {
         color: map-get($primary, default);
+      }
+
+      .noc-edit-button,
+      .noc-delete-button {
+        visibility: visible;
       }
     }
 
@@ -134,7 +142,7 @@ $accent: map-get($theme, accent);
   }
 
   .noc-no-info {
-    height: 100px;
+    height: 100%;
     width: 400px;
     position: relative;
     padding: 3px 8px;

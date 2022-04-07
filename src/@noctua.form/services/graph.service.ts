@@ -991,7 +991,7 @@ export class NoctuaGraphService {
     srcTriples: Triple<ActivityNode>[],
     destTriples: Triple<ActivityNode>[],
     removeIds: string[],
-    removeTriples: Triple<ActivityNode>[]) {
+    removeTriples: Triple<ActivityNode>[] = []) {
 
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
@@ -1105,6 +1105,25 @@ export class NoctuaGraphService {
 
       reqs.remove_evidence(uuid, cam.model.id);
 
+      reqs.store_model(cam.id);
+
+      if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+        reqs.use_groups([self.noctuaUserService.user.group.id]);
+      }
+
+      return cam.manager.request_with(reqs);
+    };
+
+    return success();
+  }
+
+  deleteEvidenceAnnotation(cam: Cam, uuid: string, key: 'source' | 'with', oldValue: string) {
+    const self = this;
+
+    const success = () => {
+      const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
+
+      reqs.remove_annotation_from_individual(key, oldValue, null, uuid);
       reqs.store_model(cam.id);
 
       if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {

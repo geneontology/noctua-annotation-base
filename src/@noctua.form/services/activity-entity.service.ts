@@ -97,8 +97,7 @@ export class NoctuaActivityEntityService {
       saveData.destNodes,
       saveData.srcTriples,
       saveData.destTriples,
-      saveData.removeIds,
-      saveData.removeTriples);
+      saveData.removeIds);
   }
 
 
@@ -111,6 +110,15 @@ export class NoctuaActivityEntityService {
 
   deleteEvidence(uuid: string) {
     return this.noctuaGraphService.deleteEvidence(this.cam, uuid);
+  }
+
+
+  deleteEvidenceReference(uuid: string, oldReference: string) {
+    return this.noctuaGraphService.deleteEvidenceAnnotation(this.cam, uuid, 'source', oldReference);
+  }
+
+  deleteEvidenceWith(uuid: string, oldWith: string) {
+    return this.noctuaGraphService.deleteEvidenceAnnotation(this.cam, uuid, 'with', oldWith);
   }
 
 

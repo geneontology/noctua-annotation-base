@@ -102,19 +102,45 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
   removeEvidence(evidence: Evidence) {
     const self = this;
 
-    //entity.predicate.removeEvidence(index);
-
-
-
     const success = () => {
       self.noctuaActivityEntityService.deleteEvidence(evidence.uuid).then(() => {
         self.noctuaFormDialogService.openInfoToast(`${evidence.evidence.label} successfully deleted.`, 'OK');
       });
     };
 
-    let message = `You are about to delete an ${evidence.evidence.label} \n 
+    let message = `You are about to delete ${evidence.evidence.label} \n 
       ${evidence.reference} \n 
       ${evidence.with}`;
+
+    this.confirmDialogService.openConfirmDialog('Confirm Delete?',
+      `${message}`, success);
+  }
+
+  removeReference(evidence: Evidence) {
+    const self = this;
+
+    const success = () => {
+      self.noctuaActivityEntityService.deleteEvidenceReference(evidence.uuid, evidence.reference).then(() => {
+        self.noctuaFormDialogService.openInfoToast(`${evidence.reference} successfully deleted.`, 'OK');
+      });
+    };
+
+    let message = `You are about to delete Reference:  ${evidence.reference}`
+
+    this.confirmDialogService.openConfirmDialog('Confirm Delete?',
+      `${message}`, success);
+  }
+
+  removeWith(evidence: Evidence) {
+    const self = this;
+
+    const success = () => {
+      self.noctuaActivityEntityService.deleteEvidenceWith(evidence.uuid, evidence.with).then(() => {
+        self.noctuaFormDialogService.openInfoToast(`${evidence.with} successfully deleted.`, 'OK');
+      });
+    };
+
+    let message = `You are about to delete With/From:  ${evidence.with}`
 
     this.confirmDialogService.openConfirmDialog('Confirm Delete?',
       `${message}`, success);

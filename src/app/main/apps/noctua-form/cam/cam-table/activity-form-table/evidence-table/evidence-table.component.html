@@ -13,7 +13,7 @@
         </a>
       </span>
       <button mat-icon-button (click)="removeEvidence(evidence)" class="noc-delete-button" aria-label="Delete Evidence">
-        <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+        <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
       </button>
       <noctua-inline-editor *ngIf="noctuaUserService.user && options.editableEvidence" [cam]="cam" [activity]='activity'
         [entity]="entity" [category]="EditorCategory.evidence" [evidenceIndex]="i" class="noc-edit-button">
@@ -27,6 +27,10 @@
       <div class="noc-cell-floating-title">
         Reference
       </div>
+      <button mat-icon-button (click)="removeReference(evidence)" class="noc-delete-button"
+        aria-label="Delete Evidence">
+        <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+      </button>
       <span *ngIf="!evidence.referenceEntity?.url" class="">{{evidence.reference}}</span>
       <span *ngIf="evidence.referenceEntity?.url" class="">
         <a (click)="$event.stopPropagation()" href="{{evidence.referenceEntity?.url}}" target="_blank">
@@ -43,6 +47,9 @@
       <div class="noc-cell-floating-title">
         With
       </div>
+      <button mat-icon-button (click)="removeWith(evidence)" class="noc-delete-button" aria-label="Delete Evidence">
+        <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+      </button>
       <span *ngIf="!evidence.withEntity?.url" class="">{{evidence.with}}</span>
       <span *ngIf="evidence.withEntity?.url" class="">
         <a (click)="$event.stopPropagation()" href="{{evidence.withEntity?.url}}" target="_blank">
