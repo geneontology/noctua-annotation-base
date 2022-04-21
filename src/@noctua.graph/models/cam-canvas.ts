@@ -670,14 +670,14 @@ export class CamCanvas {
         });
         // Automatic Layout
         joint.layout.DirectedGraph.layout(graph.getSubgraph(autoLayoutElements), {
-            align: 'UR',
+            align: 'UL',
             setLabels: true,
             marginX: 50,
             marginY: 50,
             rankSep: 200,
             // nodeSep: 2000,
             //edgeSep: 2000,
-            rankDir: "LR"
+            rankDir: "TB"
         });
         // Manual Layout
         manualLayoutElements.forEach(function (el) {
