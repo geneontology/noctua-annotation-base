@@ -181,7 +181,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const entity = Entity.createEntity(edge);
 
     if (entity.id === noctuaFormConfig.edge.hasInput.id) {
-      entity.label = 'is input'
+      entity.label = 'input of'
     }
 
     return entity

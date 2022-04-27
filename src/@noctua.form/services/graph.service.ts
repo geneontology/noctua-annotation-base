@@ -709,9 +709,6 @@ export class NoctuaGraphService {
     })
   }
 
-
-
-
   getActivityPreset(subjectNode: Partial<ActivityNode>, objectNode: Partial<ActivityNode>, predicateId, bbopSubjectEdges): Activity {
     const self = this;
     let activityType = ActivityType.default;
@@ -831,7 +828,7 @@ export class NoctuaGraphService {
 
             if (causalEdge.id === noctuaFormConfig.edge.hasInput.id) {
               predicate.isReverseLink = true;
-              predicate.reverseLinkTitle = 'is input'
+              predicate.reverseLinkTitle = 'input of'
             }
             const triple = new Triple<Activity>(subjectActivity, objectActivity, predicate);
 

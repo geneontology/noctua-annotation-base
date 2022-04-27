@@ -8,7 +8,7 @@ import { CamService } from './cam.service';
 import { NoctuaGraphService } from './graph.service';
 import { ActivityConnectorForm } from './../models/forms/activity-connector-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
-import { Activity, ActivityType } from './../models/activity/activity';
+import { Activity } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
 import { Cam, CamOperation } from './../models/activity/cam';
 import { ConnectorActivity, ConnectorState, ConnectorType } from './../models/activity/connector-activity';
