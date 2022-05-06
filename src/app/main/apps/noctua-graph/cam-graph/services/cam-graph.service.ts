@@ -140,14 +140,6 @@ export class CamGraphService {
     this._noctuaGraphService.addActivityLocation(self.cam, activity);
   }
 
-  editActivity(element: joint.shapes.noctua.NodeCellList) {
-    const self = this;
-    const activity = element.get('activity') as Activity;
-
-    self._activityFormService.initializeForm(activity);
-    self._noctuaFormDialogService.openCreateActivityDialog(FormType.ACTIVITY);
-  }
-
   deleteActivity(element: joint.shapes.noctua.NodeCellList) {
     const self = this;
 

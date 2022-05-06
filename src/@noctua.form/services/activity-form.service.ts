@@ -52,19 +52,13 @@ export class NoctuaActivityFormService {
     this.initializeForm();
   }
 
-  initializeForm(activity?: Activity) {
+  initializeForm() {
     const self = this;
 
     self.errors = [];
 
-    if (activity) {
-      self.state = ActivityState.editing;
-      self.currentActivity = activity;
-      self.activity = cloneDeep(activity);
-    } else {
-      self.state = ActivityState.creation;
-      self.currentActivity = null;
-    }
+    self.state = ActivityState.creation;
+    self.currentActivity = null;
 
     self.activity.resetPresentation();
     self.activityForm = this.createActivityForm();

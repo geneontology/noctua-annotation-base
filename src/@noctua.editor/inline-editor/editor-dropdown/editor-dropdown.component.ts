@@ -154,10 +154,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     self.noctuaActivityFormService.initializeForm();
   }
 
-  toggleIsComplement() {
-
-  }
-
+  toggleIsComplement() { }
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;

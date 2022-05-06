@@ -124,12 +124,6 @@ export class CamTableComponent implements OnInit, OnDestroy {
     this.noctuaActivityConnectorService.onActivityChanged.next(activity);
   }
 
-  openActivityForm(activity: Activity) {
-    this.camService.onCamChanged.next(this.cam);
-    this.camService.activity = activity;
-    this.noctuaActivityFormService.initializeForm(activity);
-  }
-
   sortBy(sortCriteria: { id, label }) {
     this.cam.updateSortBy(sortCriteria.id, sortCriteria.label);
   }
