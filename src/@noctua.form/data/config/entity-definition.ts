@@ -44,6 +44,12 @@ export const GoCellularComponent = {
     suffix: `OR NOT ${GoProteinContainingComplex.categoryType}:"${GoProteinContainingComplex.category}"`,
 } as GoCategory;
 
+export const GoAllCellularComponent = {
+    id: ActivityNodeType.GoCellularComponent,
+    category: 'GO:0005575',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
 export const GoCellularAnatomical = {
     id: ActivityNodeType.GoCellularAnatomical,
     category: 'GO:0110165',
@@ -107,12 +113,6 @@ export const GoOrganism = {
 export const GoBiologicalPhase = {
     id: ActivityNodeType.GoBiologicalPhase,
     category: 'GO:0044848',
-    categoryType: 'isa_closure',
-} as GoCategory;
-
-export const WormLifeStage = {
-    id: ActivityNodeType.WormLifeStage,
-    category: 'WBls:0000075',
     categoryType: 'isa_closure',
 } as GoCategory;
 
