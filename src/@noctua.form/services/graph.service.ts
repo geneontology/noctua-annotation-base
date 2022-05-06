@@ -440,10 +440,6 @@ export class NoctuaGraphService {
       isComplement: self.getNodeIsComplement(node),
     };
 
-    //if (result.uuid === 'gomodel:R-HSA-9679509/R-COV-9686310_R-HSA-9686174') {
-    //  console.log(result.term.label, result.rootTypes, result.uuid)
-    //}
-
     return new ActivityNode(result);
   }
 
@@ -983,28 +979,20 @@ export class NoctuaGraphService {
   }
 
   editActivity(cam: Cam,
-    srcNodes: ActivityNode[],
-    destNodes: ActivityNode[],
-    srcTriples: Triple<ActivityNode>[],
-    destTriples: Triple<ActivityNode>[],
+    addNodes: ActivityNode[],
+    addTriples: Triple<ActivityNode>[],
     removeIds: string[],
     removeTriples: Triple<ActivityNode>[] = []) {
 
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
-    each(destNodes, function (destNode: ActivityNode) {
-      const srcNode = find(srcNodes, (node: ActivityNode) => {
-        return node.uuid === destNode.uuid;
-      });
-
-      if (srcNode) {
-        self.editIndividual(reqs, cam, srcNode, destNode);
-      }
+    each(addNodes, function (destNode: ActivityNode) {
+      self.addIndividual(reqs, destNode);
     });
 
-    self.editFact(reqs, srcTriples, destTriples);
-    self.addFact(reqs, destTriples);
+    // self.editFact(reqs, srcTriples, addTriples);
+    self.addFact(reqs, addTriples);
 
     each(removeTriples, function (triple: Triple<ActivityNode>) {
       reqs.remove_fact([
@@ -1153,24 +1141,6 @@ export class NoctuaGraphService {
 
           reqs.add_evidence(evidence.evidence.id, evidenceReference, evidenceWith, triple.predicate.uuid);
         });
-      }
-    });
-  }
-
-  editFact(reqs, srcTriples: Triple<ActivityNode>[], destTriples: Triple<ActivityNode>[]) {
-
-    each(destTriples, (destTriple: Triple<ActivityNode>) => {
-
-      const srcTriple = find(srcTriples, (triple: Triple<ActivityNode>) => {
-        return triple.subject.uuid === destTriple.subject.uuid && triple.object.uuid === destTriple.object.uuid;
-      });
-
-      if (srcTriple) {
-        reqs.remove_fact([
-          srcTriple.subject.uuid,
-          srcTriple.object.uuid,
-          srcTriple.predicate.edge.id
-        ]);
       }
     });
   }

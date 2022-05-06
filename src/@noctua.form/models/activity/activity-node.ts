@@ -68,6 +68,7 @@ export interface ActivityNodeDisplay {
 }
 
 export class ActivityNode implements ActivityNodeDisplay {
+  subjectId: string;
   entityType = EntityType.ACTIVITY_NODE
   type: ActivityNodeType;
   label: string;
@@ -119,6 +120,7 @@ export class ActivityNode implements ActivityNodeDisplay {
   //For Save 
   pendingEntityChanges: PendingChange;
   pendingRelationChanges: PendingChange;
+
 
   constructor(activityNode?: Partial<ActivityNodeDisplay>) {
     if (activityNode) {

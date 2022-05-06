@@ -84,20 +84,30 @@ export class NoctuaActivityEntityService {
     });
   }
 
-  saveActivity(withForm = true) {
+  saveActivity() {
     const self = this;
 
-    if (withForm) {
-      self.activityEntityFormToActivity();
-    }
+    self.activityEntityFormToActivity();
+
     const saveData = self.activity.createEdit(self.currentActivity);
 
     return self.noctuaGraphService.editActivity(self.cam,
-      saveData.srcNodes,
-      saveData.destNodes,
-      saveData.srcTriples,
-      saveData.destTriples,
+      saveData.addNodes,
+      saveData.addTriples,
       saveData.removeIds);
+  }
+
+  saveSearchDatabase() {
+    const self = this;
+
+    const removeTriples = self.activity.getEdge(self.entity.subjectId, self.entity.id)
+    const addTriples = self.currentActivity.getEdge(self.entity.subjectId, self.entity.id)
+
+    return self.noctuaGraphService.editActivity(self.cam,
+      [],
+      [addTriples],
+      [],
+      [removeTriples]);
   }
 
 

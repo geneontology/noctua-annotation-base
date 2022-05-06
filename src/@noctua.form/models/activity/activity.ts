@@ -587,10 +587,8 @@ export class Activity extends SaeGraph<ActivityNode> {
     const srcSaveData = srcActivity.createSave();
     const destSaveData = self.createSave();
     const saveData = {
-      srcNodes: srcSaveData.nodes,
-      destNodes: destSaveData.nodes,
-      srcTriples: srcSaveData.triples,
-      destTriples: destSaveData.triples,
+      addNodes: destSaveData.nodes,
+      addTriples: destSaveData.triples,
       removeIds: subtractNodes(srcSaveData.graph, destSaveData.graph).map((node: ActivityNode) => {
         return node.uuid;
       }),
@@ -599,6 +597,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     return saveData;
   }
+
 
   createDelete() {
     const self = this;

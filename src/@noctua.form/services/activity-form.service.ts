@@ -138,31 +138,19 @@ export class NoctuaActivityFormService {
     const self = this;
     self.activityFormToActivity();
 
-    if (self.state === ActivityState.editing) {
-      const saveData = self.activity.createEdit(self.currentActivity);
+    if (this.activity.activityType === ActivityType.ccOnly) {
+      const promises = []
+      const activities = self.createCCAnnotations(self.activity);
+      each(activities, (activity: Activity) => {
+        const saveData = activity.createSave();
+        promises.push(self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title))
+      })
 
-      return self.noctuaGraphService.editActivity(self.cam,
-        saveData.srcNodes,
-        saveData.destNodes,
-        saveData.srcTriples,
-        saveData.destTriples,
-        saveData.removeIds,
-        saveData.removeTriples);
-    } else { // creation
-      if (this.activity.activityType === ActivityType.ccOnly) {
-        const promises = []
-        const activities = self.createCCAnnotations(self.activity);
-        each(activities, (activity: Activity) => {
-          const saveData = activity.createSave();
-          promises.push(self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title))
-        })
+      return forkJoin(promises)
 
-        return forkJoin(promises)
-
-      } else {
-        const saveData = self.activity.createSave();
-        return forkJoin(self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title));
-      }
+    } else {
+      const saveData = self.activity.createSave();
+      return forkJoin(self.noctuaGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title));
     }
   }
 
