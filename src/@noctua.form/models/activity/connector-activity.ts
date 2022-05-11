@@ -123,6 +123,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       self.predicate.edge = this.getCausalConnectorEdgeMtoA(value.chemicalRelationship, value.causalEffect);
     }
 
+
+    self.prepareSave(value);
+
     this.setLinkDirection();
     self.setPreview();
   }
@@ -361,7 +364,9 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       return result;
     });
 
-    this.createGraph(evidence);
+    this.predicate.evidence = evidence;
+
+    // this.createGraph(evidence);
   }
 
   private _getPreviewEdges(): NgxEdge[] {
