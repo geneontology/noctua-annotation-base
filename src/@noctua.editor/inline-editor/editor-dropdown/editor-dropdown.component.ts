@@ -132,6 +132,12 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
           });
         break;
+      case EditorCategory.evidenceAll:
+        self.noctuaActivityEntityService.addEvidence().then(() => {
+          this.close();
+          self.noctuaFormDialogService.openInfoToast('Activity successfully updated.', 'OK');
+        });
+        break;
       default:
         self.noctuaActivityEntityService.saveActivity().then(() => {
           this.close();
@@ -139,22 +145,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
         });
     }
   }
-
-  addEvidence() {
-    const self = this;
-
-    self.entity.predicate.addEvidence();
-    self.noctuaActivityFormService.initializeForm();
-  }
-
-  removeEvidence(index: number) {
-    const self = this;
-
-    self.entity.predicate.removeEvidence(index);
-    self.noctuaActivityFormService.initializeForm();
-  }
-
-  toggleIsComplement() { }
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
@@ -225,19 +215,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
     self.entity.clearValues();
     self.noctuaActivityFormService.initializeForm();
-  }
-
-  openSelectEvidenceDialog() {
-    const self = this;
-    const evidences: Evidence[] = this.camService.getUniqueEvidence(self.noctuaActivityFormService.activity);
-    const success = (selected) => {
-      if (selected.evidences && selected.evidences.length > 0) {
-        self.entity.predicate.setEvidence(selected.evidences);
-        self.noctuaActivityFormService.initializeForm();
-      }
-    };
-
-    self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
   updateTermList() {

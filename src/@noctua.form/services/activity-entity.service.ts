@@ -13,6 +13,7 @@ import { Activity } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
 import { Entity } from '../models/activity/entity';
 import { Evidence } from './../models/activity/evidence';
+import { ConnectorActivity } from './../models/activity/connector-activity';
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +90,10 @@ export class NoctuaActivityEntityService {
 
     self.activityEntityFormToActivity();
 
+    if (self.activity instanceof ConnectorActivity) {
+      self.activity.predicate.evidence = self.entity.predicate.evidence;
+    }
+
     const saveData = self.activity.createEdit(self.currentActivity);
 
     return self.noctuaGraphService.editActivity(self.cam,
@@ -100,14 +105,32 @@ export class NoctuaActivityEntityService {
   saveSearchDatabase() {
     const self = this;
 
-    const removeTriples = self.activity.getEdge(self.entity.subjectId, self.entity.id)
-    const addTriples = self.currentActivity.getEdge(self.entity.subjectId, self.entity.id)
+    const removeTriples = self.currentActivity.getEdge(
+      self.entity.predicate.subjectId,
+      self.entity.predicate.objectId)
+    const addTriples = self.activity.getEdge(
+      self.entity.predicate.subjectId,
+      self.entity.predicate.objectId)
 
     return self.noctuaGraphService.editActivity(self.cam,
       [],
       [addTriples],
       [],
       [removeTriples]);
+  }
+
+  addEvidence() {
+    const self = this;
+
+    self.activityEntityFormToActivity();
+
+    const saveData = self.activity.createEditEvidence(self.currentActivity, self.entity.predicate);
+
+    return self.noctuaGraphService.editActivity(self.cam,
+      [],
+      [saveData.addTriples],
+      [],
+      [saveData.removeTriples]);
   }
 
 

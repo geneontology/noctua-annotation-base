@@ -991,8 +991,8 @@ export class NoctuaGraphService {
       self.addIndividual(reqs, destNode);
     });
 
-    // self.editFact(reqs, srcTriples, addTriples);
-    self.addFact(reqs, addTriples);
+    //self.editFact(reqs, srcTriples, addTriples);
+
 
     each(removeTriples, function (triple: Triple<ActivityNode>) {
       reqs.remove_fact([
@@ -1001,6 +1001,7 @@ export class NoctuaGraphService {
         triple.predicate.edge.id
       ]);
     });
+    self.addFact(reqs, addTriples);
 
     each(removeIds, function (uuid: string) {
       reqs.remove_individual(uuid);
@@ -1013,7 +1014,6 @@ export class NoctuaGraphService {
     reqs.store_model(cam.id);
     return cam.manager.request_with(reqs);
   }
-
 
   bulkEditActivity(cam: Cam): Observable<any> {
     const self = this;

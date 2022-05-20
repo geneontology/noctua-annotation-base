@@ -10,6 +10,9 @@ export class Predicate {
   isReverseLink = false;
   reverseLinkTitle: string;
   evidence: Evidence[];
+  subjectId: string
+  objectId: string
+
   // Because there is one predicate and multiple evidence
   evidenceLookup: EntityLookup = new EntityLookup();
   referenceLookup: EntityLookup = new EntityLookup();

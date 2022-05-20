@@ -314,13 +314,33 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     return saveData;
   }
 
-  createEdit(srcActivity: ConnectorActivity) {
+  createEdit(srcActivity: ConnectorActivity, predicate?: Predicate) {
     const self = this;
+
+    if (predicate) {
+      this.predicate = predicate;
+    }
+
     const srcSaveData = srcActivity.createSave();
     const destSaveData = self.createSave();
     const saveData = {
       removeTriples: srcSaveData.triples,
       addTriples: destSaveData.triples
+    };
+
+    return saveData;
+  }
+
+  createEditEvidence(srcActivity: ConnectorActivity, predicate: Predicate) {
+    const self = this;
+    self.predicate.evidence = predicate.evidence;
+
+    const removeTriples = new Triple(self.subjectNode, self.objectNode, srcActivity.predicate);
+    const addTriples = new Triple(self.subjectNode, self.objectNode, self.predicate);
+
+    const saveData = {
+      addTriples: addTriples,
+      removeTriples: removeTriples,
     };
 
     return saveData;

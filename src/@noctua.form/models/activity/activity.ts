@@ -598,6 +598,20 @@ export class Activity extends SaeGraph<ActivityNode> {
     return saveData;
   }
 
+  createEditEvidence(srcActivity: Activity, predicate: Predicate) {
+    const self = this;
+
+    const removeTriples = srcActivity.getEdge(predicate.subjectId, predicate.objectId)
+    const addTriples = self.getEdge(predicate.subjectId, predicate.objectId)
+
+    const saveData = {
+      addTriples: addTriples,
+      removeTriples: removeTriples,
+    };
+
+    return saveData;
+  }
+
 
   createDelete() {
     const self = this;

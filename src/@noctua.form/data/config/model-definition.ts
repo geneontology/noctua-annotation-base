@@ -438,6 +438,8 @@ export const insertNode = (activity: Activity, subjectNode: ActivityNode, nodeDe
     objectNode.treeLevel = subjectNode.treeLevel + 1;
 
     const predicate: Predicate = activity.getNode(objectNode.id).predicate;
+    predicate.subjectId = subjectNode.id;
+    predicate.objectId = objectNode.id;
     predicate.edge = Entity.createEntity(nodeDescription.predicate);
 
     activity.updateEdges(subjectNode, objectNode, predicate);
