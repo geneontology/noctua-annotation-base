@@ -133,6 +133,20 @@ export class NoctuaActivityEntityService {
       [saveData.removeTriples]);
   }
 
+  createEvidence(evidence: Evidence) {
+    const self = this;
+
+    self.entity.predicate.evidence = [evidence]
+
+    const saveData = self.activity.createEditEvidence(self.currentActivity, self.entity.predicate);
+
+    return self.noctuaGraphService.editActivity(self.cam,
+      [],
+      [saveData.addTriples],
+      [],
+      [saveData.removeTriples]);
+  }
+
 
   deleteActivityNode(activity: Activity, activityNode: ActivityNode) {
     const self = this;
