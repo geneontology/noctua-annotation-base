@@ -502,7 +502,7 @@ export class Cam {
     return result;
   }
 
-  getEvidences(formActivity: Activity) {
+  getEvidences(formActivity?: Activity) {
     const self = this;
     const result = [];
 

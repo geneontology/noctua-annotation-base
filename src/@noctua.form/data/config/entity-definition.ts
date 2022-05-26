@@ -122,25 +122,7 @@ export const UberonStage = {
     categoryType: 'isa_closure',
 } as GoCategory;
 
-/* export const EntityCategories = [
-    [GoProteinContainingComplex],
-    [GoCellularComponent],
-    [GoCellularAnatomical],
-    [GoBiologicalProcess],
-    [GoMolecularFunction],
-    [GoMolecularEntity],
-    [GoChemicalEntity],
-    [GoEvidence],
-    [GoCellTypeEntity],
-    [GoAnatomicalEntity],
-    [GoOrganism],
-    [GoBiologicalPhase],
-    [GoChemicalEntity, GoProteinContainingComplex],
-    [GoChemicalEntity, GoAnatomicalEntity, GoProteinContainingComplex]
-    // [GoCatalyticActivity]
-]; */
-
-export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
+export const generateBaseTerm = (goCategories: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
     const activityNode = new ActivityNode();
     const predicate = new Predicate(null);
     const fqTermCategory = categoryToClosure(goCategories);
@@ -171,22 +153,7 @@ export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<
     return activityNode;
 };
 
-export const generateGOTerm = (): ActivityNode => {
-    const activityNode = generateBaseTerm();
 
-    activityNode.id = 'goterm';
-    activityNode.ontologyClass = ['go'];
-    activityNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
-            ],
-        }),
-    );
-
-    return activityNode;
-};
 
 export const setEvidenceLookup = (predicate: Predicate): void => {
     const fqEvidenceCategory = categoryToClosure([GoEvidence]);

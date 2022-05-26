@@ -98,7 +98,6 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
     self.noctuaActivityFormService.initializeForm();
   }
 
-
   createEvidence() {
     const self = this;
 
@@ -113,7 +112,6 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
           self.noctuaActivityFormService.initializeForm();
         });
       };
-
     }
     this.noctuaFormDialogService.openAddEvidenceDialog(success);
   }

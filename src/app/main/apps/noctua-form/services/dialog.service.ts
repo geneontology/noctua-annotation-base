@@ -106,7 +106,7 @@ export class NoctuaFormDialogService {
 
     openAddEvidenceDialog(success): void {
         this.dialogRef = this._matDialog.open(AddEvidenceDialogComponent, {
-            panelClass: 'noc-search-database-dialog',
+            panelClass: 'noc-add-evidence-dialog',
             data: {
             },
             width: '600px',

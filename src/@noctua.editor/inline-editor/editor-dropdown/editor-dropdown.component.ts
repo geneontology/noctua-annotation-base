@@ -62,7 +62,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     public dialogRef: EditorDropdownOverlayRef,
     @Inject(editorDropdownData) public data: any,
     private noctuaFormDialogService: NoctuaFormDialogService,
-    private noctuaGraphService: NoctuaGraphService,
     private camService: CamService,
     private noctuaActivityEntityService: NoctuaActivityEntityService,
     private inlineReferenceService: InlineReferenceService,
