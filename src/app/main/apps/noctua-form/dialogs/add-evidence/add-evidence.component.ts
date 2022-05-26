@@ -81,10 +81,8 @@ export class AddEvidenceDialogComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.entityForm.populateTerm()
-    this._matDialogRef.close({
-      evidences: this.entity.predicate.evidence
-    });
+    this.entityForm.populateTermEvidenceOnly();
+    this._matDialogRef.close(this.entity.predicate.evidence);
   }
 
   close() {

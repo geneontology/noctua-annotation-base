@@ -101,14 +101,14 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
   createEvidence() {
     const self = this;
 
-    const success = (evidence: Evidence) => {
+    const success = (evidence: Evidence[]) => {
       if (evidence) {
         this.camService.onCamChanged.next(this.cam);
         this.camService.activity = this.activity;
         this.noctuaActivityEntityService.initializeForm(this.activity, this.entity);
 
         self.noctuaActivityEntityService.createEvidence(evidence).then(() => {
-          self.noctuaFormDialogService.openInfoToast(`${evidence.evidence.label} successfully deleted.`, 'OK');
+          self.noctuaFormDialogService.openInfoToast(`Evidence successfully added.`, 'OK');
           self.noctuaActivityFormService.initializeForm();
         });
       };

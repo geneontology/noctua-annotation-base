@@ -78,6 +78,17 @@ export class EntityForm {
         }
     }
 
+    populateTermEvidenceOnly() {
+        const self = this;
+
+        self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
+            const evidence: Evidence = self.node.predicate.evidence[index];
+            if (evidence) {
+                evidenceForm.populateEvidence(evidence);
+            }
+        });
+    }
+
     private _onValueChanges(lookup: EntityLookup) {
         const self = this;
 

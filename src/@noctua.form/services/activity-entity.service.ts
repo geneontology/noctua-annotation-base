@@ -133,10 +133,10 @@ export class NoctuaActivityEntityService {
       [saveData.removeTriples]);
   }
 
-  createEvidence(evidence: Evidence) {
+  createEvidence(evidence: Evidence[]) {
     const self = this;
 
-    self.entity.predicate.evidence = [evidence]
+    self.entity.predicate.evidence = evidence
 
     const saveData = self.activity.createEditEvidence(self.currentActivity, self.entity.predicate);
 
