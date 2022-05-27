@@ -149,7 +149,7 @@ export class Cam {
   baristaClient;
   engine;
   manager;
-  duplicateManager;
+  copyModelManager;
   artManager;
   groupManager;
   replaceManager;

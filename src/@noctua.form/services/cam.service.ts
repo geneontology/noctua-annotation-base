@@ -33,6 +33,7 @@ export class CamService {
   cam: Cam;
   onCamChanged: BehaviorSubject<any>;
   onCamsChanged: BehaviorSubject<any>;
+  onCopyModelChanged: BehaviorSubject<any>;
   onCamsCheckoutChanged: BehaviorSubject<any>;
   onSelectedCamChanged: BehaviorSubject<any>;
   onSelectedNodeChanged: BehaviorSubject<any>;
@@ -51,7 +52,6 @@ export class CamService {
     private httpClient: HttpClient,
     private noctuaUserService: NoctuaUserService,
     private _fb: FormBuilder,
-    private noctuaGraphService: NoctuaGraphService,
     private noctuaLookupService: NoctuaLookupService,
     private _noctuaGraphService: NoctuaGraphService,
     private curieService: CurieService) {
@@ -62,6 +62,7 @@ export class CamService {
     this.camFormGroup$ = this.camFormGroup.asObservable();
 
     this.onCamsChanged = new BehaviorSubject(null);
+    this.onCopyModelChanged = new BehaviorSubject(null);
     this.onCamsCheckoutChanged = new BehaviorSubject(null);
     this.onSelectedCamChanged = new BehaviorSubject(null);
     this.onSelectedNodeChanged = new BehaviorSubject(null);
@@ -117,7 +118,7 @@ export class CamService {
       modelInfo: this.noctuaFormConfigService.getModelUrls(modelId)
     });
     cam.expanded = true;
-    this.noctuaGraphService.getGraphInfo(cam, modelId);
+    this._noctuaGraphService.getGraphInfo(cam, modelId);
     cam.manager.get_model(cam.id);
     this.onCamChanged.next(cam);
 
@@ -139,7 +140,7 @@ export class CamService {
       modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
     });
 
-    this.noctuaGraphService.getGraphInfo(cam, cam.id);
+    this._noctuaGraphService.getGraphInfo(cam, cam.id);
     this.cam = cam;
 
     cam.manager.get_model(cam.id);
@@ -154,7 +155,7 @@ export class CamService {
       modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
     });
 
-    this.noctuaGraphService.getGraphInfo(cam, cam.id);
+    this._noctuaGraphService.getGraphInfo(cam, cam.id);
   }
 
   buildTermsTree(termsSummary: TermsSummary) {
@@ -206,7 +207,7 @@ export class CamService {
     const self = this;
     const deleteData = activity.createDelete();
 
-    return self.noctuaGraphService.deleteActivity(self.cam, deleteData.uuids, deleteData.triples);
+    return self._noctuaGraphService.deleteActivity(self.cam, deleteData.uuids, deleteData.triples);
   }
 
   updateTermList(formActivity: Activity, entity: ActivityNode) {
@@ -252,10 +253,13 @@ export class CamService {
     return result;
   }
 
-  duplicateModel(cam: Cam, destTitle?: string) {
+  copyModel(cam: Cam) {
     const self = this;
 
-    return self._noctuaGraphService.duplicateModel(cam, destTitle);
+    return self._noctuaGraphService.copyModel(cam).then((response) => {
+      const cam: Cam = self._noctuaGraphService.getMetadata(response)
+      self.onCopyModelChanged.next(cam)
+    });
   }
 
   resetModel(cam: Cam) {

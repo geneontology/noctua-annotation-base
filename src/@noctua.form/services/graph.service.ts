@@ -145,13 +145,52 @@ export class NoctuaGraphService {
     cam.id = modelId;
     //cam.baristaClient = this.registerBaristaClient(cam);
     cam.manager = this.registerManager();
-    cam.duplicateManager = this.registerManager();
+    cam.copyModelManager = this.registerManager();
     cam.artManager = this.registerManager();
     cam.groupManager = this.registerManager();
     cam.replaceManager = this.registerManager(false);
     cam.manager.register('rebuild', function (resp) {
       self.rebuild(cam, resp);
     }, 10);
+  }
+
+  getMetadata(response) {
+    const self = this;
+    const noctua_graph = model.graph;
+    const cam = new Cam()
+
+    cam.graph = new noctua_graph();
+    cam.graph.load_data_basic(response.data());
+
+    cam.id = response.data().id;
+    cam.model = Object.assign({}, {
+      modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
+    });
+    cam.modified = response.data()['modified-p'];
+
+    const titleAnnotations = cam.graph.get_annotations_by_key('title');
+    const stateAnnotations = cam.graph.get_annotations_by_key('state');
+    const dateAnnotations = cam.graph.get_annotations_by_key('date');
+    const groupAnnotations = cam.graph.get_annotations_by_key('providedBy');
+    const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
+
+    cam.contributors = self.noctuaUserService.getContributorsFromAnnotations(contributorAnnotations);
+    cam.groups = self.noctuaUserService.getGroupsFromAnnotations(groupAnnotations);
+
+    if (dateAnnotations.length > 0) {
+      cam.date = dateAnnotations[0].value();
+    }
+
+    if (titleAnnotations.length > 0) {
+      cam.title = titleAnnotations[0].value();
+    }
+
+    if (stateAnnotations.length > 0) {
+      cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
+    }
+
+    return cam;
+
   }
 
   rebuild(cam: Cam, response) {
@@ -838,50 +877,20 @@ export class NoctuaGraphService {
 
     return triples;
   }
-  /* 
-    getConnectorActivities(cam: Cam) {
-      const self = this;
-      const connectorActivities: ConnectorActivity[] = [];
-  
-      each(cam.activities, (subjectActivity: Activity) => {
-        each(cam.graph.get_edges_by_subject(subjectActivity.id), (bbopEdge) => {
-          const predicateId = bbopEdge.predicate_id();
-          const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
-          const objectId = bbopEdge.object_id();
-          const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
-          const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
-            id: predicateId
-          });
-  
-          if (causalEdge) {
-            if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
-              const objectActivity = cam.getActivityByConnectionId(objectId);
-              const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, objectActivity);
-  
-              connectorActivity.state = ConnectorState.editing;
-              connectorActivity.predicate = new Predicate(causalEdge, evidence);
-              connectorActivity.setRule();
-              connectorActivity.createGraph();
-              connectorActivities.push(connectorActivity);
-            }
-          }
-        });
-      });
-  
-      return connectorActivities;
-    }
-   */
+
   saveModelGroup(cam: Cam, groupId) {
     cam.manager.use_groups([groupId]);
     cam.groupId = groupId;
   }
 
-  duplicateModel(cam: Cam, destTitle?: string) {
+  copyModel(cam: Cam) {
     const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+    const req = new minerva_requests.request('model', 'copy');
 
-    const title = destTitle ? destTitle : cam.title + ' - Copy';
-
-    return cam.duplicateManager.async_duplicate_model(cam.id, title);
+    req.model(cam.id);
+    reqs.add(req, 'query');
+    return cam.copyModelManager.request_with(reqs);
   }
 
   resetModel(cam: Cam) {

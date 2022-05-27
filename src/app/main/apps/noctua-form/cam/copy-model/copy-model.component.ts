@@ -1,44 +1,35 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
-import { Subscription, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import {
   Cam,
   NoctuaUserService,
   NoctuaFormConfigService,
-  NoctuaGraphService,
   CamService,
-  Entity,
   NoctuaFormMenuService
 } from '@geneontology/noctua-form-base';
-import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
 @Component({
-  selector: 'noc-duplicate-cam-form',
-  templateUrl: './duplicate-cam-form.component.html',
-  styleUrls: ['./duplicate-cam-form.component.scss'],
+  selector: 'noc-copy-model',
+  templateUrl: './copy-model.component.html',
+  styleUrls: ['./copy-model.component.scss'],
 })
 
-export class DuplicateCamFormComponent implements OnInit, OnDestroy {
+export class CopyModelComponent implements OnInit, OnDestroy {
 
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
   cam: Cam;
-  camFormGroup: FormGroup;
-  camFormSub: Subscription;
-  camForm
   loading = false;
 
-  duplicatedModelInfo;
+  duplicatedCam;
 
   private _unsubscribeAll: Subject<any>;
 
   constructor(public noctuaUserService: NoctuaUserService,
-    private sparqlService: SparqlService,
     private camService: CamService,
-    private noctuaGraphService: NoctuaGraphService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaFormMenuService: NoctuaFormMenuService
   ) {
@@ -57,31 +48,24 @@ export class DuplicateCamFormComponent implements OnInit, OnDestroy {
         }
 
         this.cam = cam;
-        this.camForm = this.createForm();
+      });
+
+    this.camService.onCopyModelChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((cam) => {
+        this.loading = false;
+        if (!cam) {
+          return;
+        }
+
+        this.duplicatedCam = cam
       });
   }
 
-  createForm() {
-    return new FormGroup({
-      title: new FormControl(this.cam.title + ' Copy'),
-    });
+  copyModel() {
+    this.loading = true;
+    this.camService.copyModel(this.cam);
   }
-
-
-  duplicate() {
-    const self = this;
-    const value = this.camForm.value;
-    self.loading = true;
-
-    this.camService.duplicateModel(self.cam, value.title).then(response => {
-      self.duplicatedModelInfo = self.noctuaFormConfigService.getModelUrls(response.data().id)
-      self.loading = false;
-    }, error => {
-      console.log(error)
-      self.loading = false;
-    })
-  }
-
 
   close() {
     this.panelDrawer.close();
