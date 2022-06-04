@@ -144,7 +144,7 @@ export class NoctuaSearchService {
             promises.push(self.noctuaLookupService.getTermDetail(term.id))
         })
 
-        forkJoin(promises).subscribe((response: []) => {
+        forkJoin(promises).subscribe((response: any[]) => {
             if (response) {
                 terms.forEach((term) => {
                     const found = find(response, { id: term.id })
