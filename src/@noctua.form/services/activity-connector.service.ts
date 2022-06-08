@@ -8,7 +8,7 @@ import { CamService } from './cam.service';
 import { NoctuaGraphService } from './graph.service';
 import { ActivityConnectorForm } from './../models/forms/activity-connector-form';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
-import { Activity, ActivityType } from './../models/activity/activity';
+import { Activity } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
 import { Cam, CamOperation } from './../models/activity/cam';
 import { ConnectorActivity, ConnectorState, ConnectorType } from './../models/activity/connector-activity';
@@ -116,23 +116,15 @@ export class NoctuaActivityConnectorService {
 
   saveActivity() {
     const self = this;
-    const value = this.connectorFormGroup.getValue().value;
-    // this.connectorActivity.prepareSave(value);
 
     if (self.connectorActivity.state === ConnectorState.editing) {
       const saveData = self.connectorActivity.createEdit(self.currentConnectorActivity);
-      return self.noctuaGraphService.editActivity(
+      return self.noctuaGraphService.editConnection(
         self.cam,
-        [],
-        [],
-        saveData.srcTriples,
-        saveData.destTriples,
-        [],
-        []).then(() => {
+        saveData.removeTriples,
+        saveData.addTriples).then(() => {
           this.initializeForm(self.subjectActivity.id, self.objectActivity.id)
-        }
-        );
-
+        });
     } else { // creation
       const saveData = self.connectorActivity.createSave();
       return self.noctuaGraphService.addActivity(self.cam, [], saveData.triples, '', CamOperation.ADD_CAUSAL_RELATION);
@@ -143,14 +135,13 @@ export class NoctuaActivityConnectorService {
     const self = this;
     const deleteData = connectorActivity.createDelete();
 
-    return self.noctuaGraphService.deleteActivity(self.cam, deleteData.uuids, deleteData.triples);
+    return self.noctuaGraphService.deleteActivity(self.cam, [], deleteData.triples);
   }
 
   private _onActivityFormChanges(): void {
     this.connectorFormGroup.getValue().valueChanges.subscribe(value => {
       this.connectorActivity.checkConnection(value);
       if (this._allowRequestWatch && (this.connectorActivity.state === ConnectorState.editing)) {
-        console.log(value)
         this.saveActivity()
       }
       this._allowRequestWatch = true

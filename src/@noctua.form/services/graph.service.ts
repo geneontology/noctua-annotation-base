@@ -145,13 +145,52 @@ export class NoctuaGraphService {
     cam.id = modelId;
     //cam.baristaClient = this.registerBaristaClient(cam);
     cam.manager = this.registerManager();
-    cam.duplicateManager = this.registerManager();
+    cam.copyModelManager = this.registerManager();
     cam.artManager = this.registerManager();
     cam.groupManager = this.registerManager();
     cam.replaceManager = this.registerManager(false);
     cam.manager.register('rebuild', function (resp) {
       self.rebuild(cam, resp);
     }, 10);
+  }
+
+  getMetadata(response) {
+    const self = this;
+    const noctua_graph = model.graph;
+    const cam = new Cam()
+
+    cam.graph = new noctua_graph();
+    cam.graph.load_data_basic(response.data());
+
+    cam.id = response.data().id;
+    cam.model = Object.assign({}, {
+      modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
+    });
+    cam.modified = response.data()['modified-p'];
+
+    const titleAnnotations = cam.graph.get_annotations_by_key('title');
+    const stateAnnotations = cam.graph.get_annotations_by_key('state');
+    const dateAnnotations = cam.graph.get_annotations_by_key('date');
+    const groupAnnotations = cam.graph.get_annotations_by_key('providedBy');
+    const contributorAnnotations = cam.graph.get_annotations_by_key('contributor');
+
+    cam.contributors = self.noctuaUserService.getContributorsFromAnnotations(contributorAnnotations);
+    cam.groups = self.noctuaUserService.getGroupsFromAnnotations(groupAnnotations);
+
+    if (dateAnnotations.length > 0) {
+      cam.date = dateAnnotations[0].value();
+    }
+
+    if (titleAnnotations.length > 0) {
+      cam.title = titleAnnotations[0].value();
+    }
+
+    if (stateAnnotations.length > 0) {
+      cam.state = self.noctuaFormConfigService.findModelState(stateAnnotations[0].value());
+    }
+
+    return cam;
+
   }
 
   rebuild(cam: Cam, response) {
@@ -440,10 +479,6 @@ export class NoctuaGraphService {
       isComplement: self.getNodeIsComplement(node),
     };
 
-    //if (result.uuid === 'gomodel:R-HSA-9679509/R-COV-9686310_R-HSA-9686174') {
-    //  console.log(result.term.label, result.rootTypes, result.uuid)
-    //}
-
     return new ActivityNode(result);
   }
 
@@ -709,9 +744,6 @@ export class NoctuaGraphService {
     })
   }
 
-
-
-
   getActivityPreset(subjectNode: Partial<ActivityNode>, objectNode: Partial<ActivityNode>, predicateId, bbopSubjectEdges): Activity {
     const self = this;
     let activityType = ActivityType.default;
@@ -812,7 +844,6 @@ export class NoctuaGraphService {
   getCausalRelations(cam: Cam) {
     const self = this;
     const triples: Triple<Activity>[] = [];
-
     each(cam.activities, (subjectActivity: Activity) => {
       each(cam.graph.get_edges_by_subject(subjectActivity.id), (bbopEdge) => {
         const predicateId = bbopEdge.predicate_id();
@@ -832,7 +863,7 @@ export class NoctuaGraphService {
 
             if (causalEdge.id === noctuaFormConfig.edge.hasInput.id) {
               predicate.isReverseLink = true;
-              predicate.reverseLinkTitle = 'is input'
+              predicate.reverseLinkTitle = 'input of'
             }
             const triple = new Triple<Activity>(subjectActivity, objectActivity, predicate);
 
@@ -846,50 +877,20 @@ export class NoctuaGraphService {
 
     return triples;
   }
-  /* 
-    getConnectorActivities(cam: Cam) {
-      const self = this;
-      const connectorActivities: ConnectorActivity[] = [];
-  
-      each(cam.activities, (subjectActivity: Activity) => {
-        each(cam.graph.get_edges_by_subject(subjectActivity.id), (bbopEdge) => {
-          const predicateId = bbopEdge.predicate_id();
-          const evidence = self.edgeToEvidence(cam.graph, bbopEdge);
-          const objectId = bbopEdge.object_id();
-          const objectInfo = self.nodeToActivityNode(cam.graph, objectId);
-          const causalEdge = <Entity>find(noctuaFormConfig.causalEdges, {
-            id: predicateId
-          });
-  
-          if (causalEdge) {
-            if (objectInfo.hasRootType(EntityDefinition.GoMolecularFunction)) {
-              const objectActivity = cam.getActivityByConnectionId(objectId);
-              const connectorActivity = this.noctuaFormConfigService.createActivityConnectorModel(subjectActivity, objectActivity);
-  
-              connectorActivity.state = ConnectorState.editing;
-              connectorActivity.predicate = new Predicate(causalEdge, evidence);
-              connectorActivity.setRule();
-              connectorActivity.createGraph();
-              connectorActivities.push(connectorActivity);
-            }
-          }
-        });
-      });
-  
-      return connectorActivities;
-    }
-   */
+
   saveModelGroup(cam: Cam, groupId) {
     cam.manager.use_groups([groupId]);
     cam.groupId = groupId;
   }
 
-  duplicateModel(cam: Cam, destTitle?: string) {
+  copyModel(cam: Cam) {
     const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+    const req = new minerva_requests.request('model', 'copy');
 
-    const title = destTitle ? destTitle : cam.title + ' - Copy';
-
-    return cam.duplicateManager.async_duplicate_model(cam.id, title);
+    req.model(cam.id);
+    reqs.add(req, 'query');
+    return cam.copyModelManager.request_with(reqs);
   }
 
   resetModel(cam: Cam) {
@@ -961,29 +962,46 @@ export class NoctuaGraphService {
     return cam.manager.request_with(reqs);
   }
 
-  editActivity(cam: Cam,
-    srcNodes: ActivityNode[],
-    destNodes: ActivityNode[],
-    srcTriples: Triple<ActivityNode>[],
-    destTriples: Triple<ActivityNode>[],
-    removeIds: string[],
-    removeTriples: Triple<ActivityNode>[]) {
+  editConnection(cam: Cam,
+    removeTriples: Triple<ActivityNode>[],
+    addTriples: Triple<ActivityNode>[]) {
 
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
-    each(destNodes, function (destNode: ActivityNode) {
-      const srcNode = find(srcNodes, (node: ActivityNode) => {
-        return node.uuid === destNode.uuid;
-      });
-
-      if (srcNode) {
-        self.editIndividual(reqs, cam, srcNode, destNode);
-      }
+    each(removeTriples, (triple: Triple<ActivityNode>) => {
+      reqs.remove_fact([
+        triple.subject.uuid,
+        triple.object.uuid,
+        triple.predicate.edge.id
+      ]);
     });
 
-    self.editFact(reqs, srcTriples, destTriples);
-    self.addFact(reqs, destTriples);
+    self.addFact(reqs, addTriples);
+
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      reqs.use_groups([self.noctuaUserService.user.group.id]);
+    }
+
+    reqs.store_model(cam.id);
+    return cam.manager.request_with(reqs);
+  }
+
+  editActivity(cam: Cam,
+    addNodes: ActivityNode[],
+    addTriples: Triple<ActivityNode>[],
+    removeIds: string[],
+    removeTriples: Triple<ActivityNode>[] = []) {
+
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    each(addNodes, function (destNode: ActivityNode) {
+      self.addIndividual(reqs, destNode);
+    });
+
+    //self.editFact(reqs, srcTriples, addTriples);
+
 
     each(removeTriples, function (triple: Triple<ActivityNode>) {
       reqs.remove_fact([
@@ -992,6 +1010,7 @@ export class NoctuaGraphService {
         triple.predicate.edge.id
       ]);
     });
+    self.addFact(reqs, addTriples);
 
     each(removeIds, function (uuid: string) {
       reqs.remove_individual(uuid);
@@ -1004,7 +1023,6 @@ export class NoctuaGraphService {
     reqs.store_model(cam.id);
     return cam.manager.request_with(reqs);
   }
-
 
   bulkEditActivity(cam: Cam): Observable<any> {
     const self = this;
@@ -1072,6 +1090,46 @@ export class NoctuaGraphService {
     return success();
   }
 
+  deleteEvidence(cam: Cam, uuid: string) {
+    const self = this;
+
+    const success = () => {
+      const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
+
+
+      reqs.remove_evidence(uuid, cam.model.id);
+
+      reqs.store_model(cam.id);
+
+      if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+        reqs.use_groups([self.noctuaUserService.user.group.id]);
+      }
+
+      return cam.manager.request_with(reqs);
+    };
+
+    return success();
+  }
+
+  deleteEvidenceAnnotation(cam: Cam, uuid: string, key: 'source' | 'with', oldValue: string) {
+    const self = this;
+
+    const success = () => {
+      const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.model.id);
+
+      reqs.remove_annotation_from_individual(key, oldValue, null, uuid);
+      reqs.store_model(cam.id);
+
+      if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+        reqs.use_groups([self.noctuaUserService.user.group.id]);
+      }
+
+      return cam.manager.request_with(reqs);
+    };
+
+    return success();
+  }
+
   addFact(reqs, triples: Triple<ActivityNode>[]) {
     const self = this;
 
@@ -1092,24 +1150,6 @@ export class NoctuaGraphService {
 
           reqs.add_evidence(evidence.evidence.id, evidenceReference, evidenceWith, triple.predicate.uuid);
         });
-      }
-    });
-  }
-
-  editFact(reqs, srcTriples: Triple<ActivityNode>[], destTriples: Triple<ActivityNode>[]) {
-
-    each(destTriples, (destTriple: Triple<ActivityNode>) => {
-
-      const srcTriple = find(srcTriples, (triple: Triple<ActivityNode>) => {
-        return triple.subject.uuid === destTriple.subject.uuid && triple.object.uuid === destTriple.object.uuid;
-      });
-
-      if (srcTriple) {
-        reqs.remove_fact([
-          srcTriple.subject.uuid,
-          srcTriple.object.uuid,
-          srcTriple.predicate.edge.id
-        ]);
       }
     });
   }

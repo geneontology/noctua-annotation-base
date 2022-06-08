@@ -44,6 +44,12 @@ export const GoCellularComponent = {
     suffix: `OR NOT ${GoProteinContainingComplex.categoryType}:"${GoProteinContainingComplex.category}"`,
 } as GoCategory;
 
+export const GoAllCellularComponent = {
+    id: ActivityNodeType.GoCellularComponent,
+    category: 'GO:0005575',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
 export const GoCellularAnatomical = {
     id: ActivityNodeType.GoCellularAnatomical,
     category: 'GO:0110165',
@@ -110,43 +116,13 @@ export const GoBiologicalPhase = {
     categoryType: 'isa_closure',
 } as GoCategory;
 
-export const WormLifeStage = {
-    id: ActivityNodeType.WormLifeStage,
-    category: 'WBls:0000075',
-    categoryType: 'isa_closure',
-} as GoCategory;
-
-export const ZebrafishStage = {
-    id: ActivityNodeType.ZebrafishStage,
-    category: 'ZFS:0100000',
-    categoryType: 'isa_closure',
-} as GoCategory;
-
 export const UberonStage = {
     id: ActivityNodeType.UberonStage,
     category: 'UBERON:0000105',
     categoryType: 'isa_closure',
 } as GoCategory;
 
-/* export const EntityCategories = [
-    [GoProteinContainingComplex],
-    [GoCellularComponent],
-    [GoCellularAnatomical],
-    [GoBiologicalProcess],
-    [GoMolecularFunction],
-    [GoMolecularEntity],
-    [GoChemicalEntity],
-    [GoEvidence],
-    [GoCellTypeEntity],
-    [GoAnatomicalEntity],
-    [GoOrganism],
-    [GoBiologicalPhase],
-    [GoChemicalEntity, GoProteinContainingComplex],
-    [GoChemicalEntity, GoAnatomicalEntity, GoProteinContainingComplex]
-    // [GoCatalyticActivity]
-]; */
-
-export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
+export const generateBaseTerm = (goCategories: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
     const activityNode = new ActivityNode();
     const predicate = new Predicate(null);
     const fqTermCategory = categoryToClosure(goCategories);
@@ -177,22 +153,7 @@ export const generateBaseTerm = (goCategories?: GoCategory[], override: Partial<
     return activityNode;
 };
 
-export const generateGOTerm = (): ActivityNode => {
-    const activityNode = generateBaseTerm();
 
-    activityNode.id = 'goterm';
-    activityNode.ontologyClass = ['go'];
-    activityNode.termLookup = new EntityLookup(null,
-        Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-            fq: [
-                'document_category:"ontology_class"',
-                'isa_closure:"GO:0003674" OR isa_closure:"GO:0008150" OR isa_closure:"GO:0005575"',
-            ],
-        }),
-    );
-
-    return activityNode;
-};
 
 export const setEvidenceLookup = (predicate: Predicate): void => {
     const fqEvidenceCategory = categoryToClosure([GoEvidence]);

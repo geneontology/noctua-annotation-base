@@ -13,6 +13,7 @@ import { Activity } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
 import { Entity } from '../models/activity/entity';
 import { Evidence } from './../models/activity/evidence';
+import { ConnectorActivity } from './../models/activity/connector-activity';
 
 @Injectable({
   providedIn: 'root'
@@ -84,23 +85,88 @@ export class NoctuaActivityEntityService {
     });
   }
 
-  saveActivity(withForm = true) {
+  saveActivity() {
     const self = this;
 
-    if (withForm) {
-      self.activityEntityFormToActivity();
+    self.activityEntityFormToActivity();
+
+    if (self.activity instanceof ConnectorActivity) {
+      self.activity.predicate.evidence = self.entity.predicate.evidence;
     }
+
     const saveData = self.activity.createEdit(self.currentActivity);
 
     return self.noctuaGraphService.editActivity(self.cam,
-      saveData.srcNodes,
-      saveData.destNodes,
-      saveData.srcTriples,
-      saveData.destTriples,
-      saveData.removeIds,
-      saveData.removeTriples);
+      saveData.addNodes,
+      saveData.addTriples,
+      saveData.removeIds);
   }
 
+  saveSearchDatabase() {
+    const self = this;
+
+    const removeTriples = self.currentActivity.getEdge(
+      self.entity.predicate.subjectId,
+      self.entity.predicate.objectId)
+    const addTriples = self.activity.getEdge(
+      self.entity.predicate.subjectId,
+      self.entity.predicate.objectId)
+
+    return self.noctuaGraphService.editActivity(self.cam,
+      [],
+      [addTriples],
+      [],
+      [removeTriples]);
+  }
+
+  addEvidence() {
+    const self = this;
+
+    self.activityEntityFormToActivity();
+
+    const saveData = self.activity.createEditEvidence(self.currentActivity, self.entity.predicate);
+
+    return self.noctuaGraphService.editActivity(self.cam,
+      [],
+      [saveData.addTriples],
+      [],
+      [saveData.removeTriples]);
+  }
+
+  createEvidence(evidence: Evidence[]) {
+    const self = this;
+
+    self.entity.predicate.evidence = evidence
+
+    const saveData = self.activity.createEditEvidence(self.currentActivity, self.entity.predicate);
+
+    return self.noctuaGraphService.editActivity(self.cam,
+      [],
+      [saveData.addTriples],
+      [],
+      [saveData.removeTriples]);
+  }
+
+
+  deleteActivityNode(activity: Activity, activityNode: ActivityNode) {
+    const self = this;
+    const deleteData = activity.createActivityNodeDelete(activityNode);
+
+    return self.noctuaGraphService.deleteActivity(self.cam, deleteData.uuids, []);
+  }
+
+  deleteEvidence(uuid: string) {
+    return this.noctuaGraphService.deleteEvidence(this.cam, uuid);
+  }
+
+
+  deleteEvidenceReference(uuid: string, oldReference: string) {
+    return this.noctuaGraphService.deleteEvidenceAnnotation(this.cam, uuid, 'source', oldReference);
+  }
+
+  deleteEvidenceWith(uuid: string, oldWith: string) {
+    return this.noctuaGraphService.deleteEvidenceAnnotation(this.cam, uuid, 'with', oldWith);
+  }
 
 
   saveActivityReplace(cam: Cam, addLoadingStatus?: boolean): Observable<any> {

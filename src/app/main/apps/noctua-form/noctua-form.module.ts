@@ -5,7 +5,6 @@ import { TreeModule } from '@circlon/angular-tree-component';
 import { NoctuaFormComponent } from './noctua-form.component';
 import { NoctuaSharedModule } from './../../../../@noctua/shared.module';
 import { NoctuaFormDialogService } from './services/dialog.service';
-import { ContextMenuModule } from 'ngx-contextmenu';
 import { ActivityFormComponent } from './cam/activity/activity-form/activity-form.component';
 import { EntityFormComponent } from './cam/activity/activity-form/entity-form/entity-form.component';
 import { CamTableComponent } from './cam/cam-table/cam-table.component';
@@ -17,11 +16,6 @@ import { CreateFromExistingDialogComponent } from './dialogs/create-from-existin
 import { LinkToExistingDialogComponent } from './dialogs/link-to-existing/link-to-existing.component';
 import { SelectEvidenceDialogComponent } from './dialogs/select-evidence/select-evidence.component';
 import { SearchDatabaseDialogComponent } from './dialogs/search-database/search-database.component';
-import { CamDiagramComponent } from './cam/cam-diagram/cam-diagram.component';
-import { NodeComponent } from './cam/cam-diagram/nodes/node/node.component';
-import { NodesContainerComponent } from './cam/cam-diagram/nodes/nodes-container.component';
-import { CamDiagramService } from './cam/cam-diagram/services/cam-diagram.service';
-import { NodeService } from './cam/cam-diagram/nodes/services/node.service';
 import { ActivityConnectorFormComponent } from './cam/activity/activity-connector-form/activity-connector-form.component';
 import { ActivityTableComponent } from './cam/cam-table/activity-table/activity-table.component';
 import { TripleTableComponent } from './cam/cam-table/triple-table/triple-table.component';
@@ -60,7 +54,7 @@ import { CreateActivityDialogComponent } from './dialogs/create-activity/create-
 import { ActivityTreeTableComponent } from './cam/cam-table/activity-tree-table/activity-tree-table.component';
 import { PreviewActivityComponent } from './cam/activity/preview-activity/preview-activity.component';
 import { NoctuaSearchBaseModule } from '@noctua.search';
-import { DuplicateCamFormComponent } from './cam/duplicate-cam-form/duplicate-cam-form.component';
+import { CopyModelComponent } from './cam/copy-model/copy-model.component';
 import { ResizableModule } from 'angular-resizable-element';
 import { NoctuaTermDetailComponent } from './components/term-detail/term-detail.component';
 import { CamStatsComponent } from './components/cam-stats/cam-stats.component';
@@ -76,7 +70,7 @@ import { EvidenceFormTableComponent } from './cam/cam-table/activity-form-table/
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];
@@ -88,7 +82,6 @@ const routes = [
     CommonModule,
     // NoctuaModule.forRoot(noctuaConfig),
     RouterModule.forChild(routes),
-    ContextMenuModule.forRoot(),
     NoctuaConfirmDialogModule,
     NoctuaEditorModule,
     NoctuaSearchBaseModule,
@@ -131,11 +124,8 @@ const routes = [
     SearchDatabaseDialogComponent,
     SearchEvidenceDialogComponent,
     PreviewActivityDialogComponent,
-    CamDiagramComponent,
     CamFormComponent,
-    DuplicateCamFormComponent,
-    NodeComponent,
-    NodesContainerComponent,
+    CopyModelComponent,
     ActivityConnectorFormComponent,
     ActivityTableComponent,
     ActivityTreeComponent,
@@ -151,8 +141,6 @@ const routes = [
   ],
   providers: [
     NoctuaFormDialogService,
-    NodeService,
-    CamDiagramService,
   ],
   declarations: [
     NoctuaFormComponent,
@@ -170,11 +158,8 @@ const routes = [
     SelectEvidenceDialogComponent,
     SearchDatabaseDialogComponent,
     SearchEvidenceDialogComponent,
-    CamDiagramComponent,
     CamFormComponent,
-    DuplicateCamFormComponent,
-    NodeComponent,
-    NodesContainerComponent,
+    CopyModelComponent,
     ActivityConnectorFormComponent,
     TripleTableComponent,
     ActivityTableComponent,

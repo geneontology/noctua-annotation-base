@@ -7,6 +7,7 @@ import { termValidator } from './validators/term-validator';
 import { EntityLookup } from '../activity/entity-lookup';
 import { Entity } from './../activity/entity';
 import { ActivityNode } from './../activity/activity-node';
+import { Predicate } from '../activity';
 
 export class EntityForm {
     id: string;
@@ -43,7 +44,6 @@ export class EntityForm {
         });
     }
 
-
     refreshEvidenceForms(evidences: Evidence[]) {
         const self = this;
 
@@ -76,6 +76,17 @@ export class EntityForm {
                 }
             });
         }
+    }
+
+    populateTermEvidenceOnly() {
+        const self = this;
+
+        self.evidenceForms.forEach((evidenceForm: EvidenceForm, index: number) => {
+            const evidence: Evidence = self.node.predicate.evidence[index];
+            if (evidence) {
+                evidenceForm.populateEvidence(evidence);
+            }
+        });
     }
 
     private _onValueChanges(lookup: EntityLookup) {

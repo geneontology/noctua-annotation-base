@@ -2,7 +2,7 @@ export enum LeftPanel {
     activityForm = 'activityForm',
     camForm = 'camForm',
     findReplace = 'findReplace',
-    duplicateCamForm = 'duplicateCamForm',
+    copyModel = 'copyModel',
     camTermsSummary = 'camTermsSummary',
     camStats = 'camStats'
 };

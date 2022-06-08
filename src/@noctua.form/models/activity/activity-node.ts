@@ -32,7 +32,6 @@ export enum ActivityNodeType {
   GoAnatomicalEntity = 'GoAnatomicalEntity',
   GoOrganism = 'GoOrganism',
   WormLifeStage = "WormLifeStage",
-  ZebrafishStage = "ZebrafishStage",
   // extra internal use
   GoChemicalEntityHasInput = 'GoChemicalEntityHasInput',
   GoChemicalEntityHasOutput = 'GoChemicalEntityHasOutput',
@@ -65,9 +64,11 @@ export interface ActivityNodeDisplay {
   weight: number;
   relationEditable: boolean;
   showInMenu: boolean;
+  canDelete: boolean;
 }
 
 export class ActivityNode implements ActivityNodeDisplay {
+  subjectId: string;
   entityType = EntityType.ACTIVITY_NODE
   type: ActivityNodeType;
   label: string;
@@ -112,12 +113,14 @@ export class ActivityNode implements ActivityNodeDisplay {
   expanded: boolean = false;
   causalNode: boolean = false;
   frequency: number;
+  canDelete: boolean = true;
 
   private _id: string;
 
   //For Save 
   pendingEntityChanges: PendingChange;
   pendingRelationChanges: PendingChange;
+
 
   constructor(activityNode?: Partial<ActivityNodeDisplay>) {
     if (activityNode) {
