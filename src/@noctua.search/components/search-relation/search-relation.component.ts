@@ -87,9 +87,9 @@ export class SearchRelationComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    this.searchForm.controls.subject.setValue('');
-    this.searchForm.controls.predicate.setValue('');
-    this.searchForm.controls.object.setValue('');
+    this.searchForm.controls['subject'].setValue('');
+    this.searchForm.controls['predicate'].setValue('');
+    this.searchForm.controls['object'].setValue('');
   }
 
   close() {

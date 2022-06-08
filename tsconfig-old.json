@@ -4,18 +4,9 @@
     "baseUrl": "./src",
     "module": "es2020",
     "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    //"strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    //"noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
-    "downlevelIteration": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "es2017",
     "declaration": false,
+    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
@@ -26,6 +17,7 @@
         "@noctua.form/"
       ]
     },
+    "target": "es5",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -35,9 +27,6 @@
     ]
   },
   "angularCompilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    //"strictInjectionParameters": true,
-    //"strictInputAccessModifiers": true,
-   // "strictTemplates": true
+    "allowSyntheticDefaultImports": true
   }
 }

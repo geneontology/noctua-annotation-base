@@ -14,7 +14,7 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 const routes = [
   {
-    path: '',
+    path: 's',
     component: NoctuaSearchComponent
   }
 ];
@@ -39,5 +39,4 @@ const routes = [
   ]
 })
 
-export class NoctuaSearchModule {
-}
+export class NoctuaSearchModule { }

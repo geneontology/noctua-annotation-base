@@ -4,15 +4,15 @@
   "newProjectRoot": "projects",
   "projects": {
     "noctua": {
+      "root": "",
+      "sourceRoot": "src",
       "projectType": "application",
+      "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
-      "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
@@ -43,15 +43,7 @@
               "node_modules/backbone/backbone.js",
               "node_modules/dagre/dist/dagre.min.js",
               "node_modules/graphlib/dist/graphlib.min.js"
-            ],
-            "showCircularDependencies": false,
-            "aot": false,
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+            ]
           },
           "configurations": {
             "production": {
@@ -64,32 +56,34 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
+              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "4mb",
-                  "maximumError": "6mb"
-                }
-              ]
+              "buildOptimizer": true
             },
-            "hmr": {
+            "beta-test": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.hmr.ts"
+                  "with": "src/environments/environment.beta-test.ts"
                 }
-              ]
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
             }
-          },
-          "defaultConfiguration": ""
+          }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "noctua:build"
           },
@@ -97,9 +91,17 @@
             "production": {
               "browserTarget": "noctua:build:production"
             },
+            "beta-test": {
+              "browserTarget": "noctua:build:beta-test"
+            },
             "hmr": {
               "hmr": true,
-              "browserTarget": "noctua:build:hmr"
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.hmr.ts"
+                }
+              ]
             }
           }
         },
@@ -114,28 +116,38 @@
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
             "assets": [
-              "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/jsplumb/dist/js/jsplumb.min.js",
+              "node_modules/jointjs/css/layout.css",
+              "node_modules/jointjs/css/themes/material.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jqueryui/jquery-ui.min.js",
+              "node_modules/lodash/lodash.js",
+              "node_modules/backbone/backbone.js",
+              "node_modules/dagre/dist/dagre.min.js",
+              "node_modules/graphlib/dist/graphlib.min.js"
+            ]
           }
-        },
+        }
+      }
+    },
+    "noctua-e2e": {
+      "root": "e2e/",
+      "projectType": "application",
+      "architect": {
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
             "devServerTarget": "noctua:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "noctua:serve:production"
-            }
           }
         }
       }

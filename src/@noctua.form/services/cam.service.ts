@@ -39,8 +39,8 @@ export class CamService {
   onSelectedNodeChanged: BehaviorSubject<any>;
   onSelectedActivityChanged: BehaviorSubject<any>;
 
-  activity: Activity;
-  private camForm: CamForm;
+  activity: Activity | undefined;
+  private camForm: CamForm | undefined;
   private camFormGroup: BehaviorSubject<FormGroup | undefined>;
   camFormGroup$: Observable<FormGroup>;
 

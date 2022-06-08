@@ -299,6 +299,7 @@ export class NoctuaFormConfigService {
     modelInfo.owlUrl = environment.noctuaUrl + '/download/' + modelId + '/owl';
     modelInfo.gpadUrl = environment.noctuaUrl + '/download/' + modelId + '/gpad';
     modelInfo.noctuaFormUrl = environment.workbenchUrl + 'noctua-form?' + paramsString;
+    modelInfo.noctuaVPEUrl = environment.workbenchUrl + 'noctua-visual-pathway-editor?' + paramsString;
 
     modelInfo.modelWorkbenches = environment.globalWorkbenchesModel.map(workbench => {
       return {
@@ -325,24 +326,6 @@ export class NoctuaFormConfigService {
     return modelInfo;
   }
 
-  /*   createActivityConnectorModel(subjectActivity: Activity, objectActivity: Activity) {
-      const self = this;
-      const srcSubjectNode = subjectActivity.getMFNode();
-      const srcObjectNode = objectActivity ? objectActivity.getMFNode() : new ActivityNode();
-      const subjectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'upstream', isKey: true });
-      const objectNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity], { id: 'downstream', isKey: true });
-  
-      subjectNode.copyValues(srcSubjectNode);
-      objectNode.copyValues(srcObjectNode);
-  
-      const connectorActivity = new ConnectorActivity(subjectNode, objectNode);
-      connectorActivity.predicate = new Predicate(null);
-      connectorActivity.predicate.setEvidence(srcSubjectNode.predicate.evidence);
-      connectorActivity.subjectActivity = subjectActivity;
-      connectorActivity.objectActivity = objectActivity;
-  
-      return connectorActivity;
-    } */
 
   createPredicate(edge: Entity, evidence?: Evidence[]): Predicate {
     const predicate = new Predicate(edge, evidence);

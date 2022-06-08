@@ -23,8 +23,8 @@ export interface EntityBase {
 export class Entity implements EntityBase {
   entityType = EntityType.ENTITY
   classExpression: any;
-  highlight: boolean;
-  modified: boolean;
+  highlight: boolean | undefined;
+  modified: boolean | undefined;
   termHistory: Entity[] = [];
   displayId: string;
   activityDisplayId: string;
