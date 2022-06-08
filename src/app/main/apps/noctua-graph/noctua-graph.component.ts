@@ -29,6 +29,7 @@ import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { TableOptions } from '@noctua.common/models/table-options';
 import { NoctuaGraphDialogService } from './services/dialog.service';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
+import { WorkbenchId } from '@noctua.common/models/workench-id';
 
 @Component({
   selector: 'noc-noctua-graph',
@@ -196,7 +197,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     this.noctuaCommonMenuService.toggleLeftDrawer(panel);
   }
 
-  createModel(type: 'graph-editor' | 'noctua-form') {
+  createModel(type: WorkbenchId) {
     this.noctuaCommonMenuService.createModel(type);
   }
 
@@ -248,7 +249,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._unsubscribeAll.next();
+    this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
   }
 }

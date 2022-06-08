@@ -16,7 +16,7 @@ import {
   getEdges,
   addGraph,
 } from './noctua-form-graph';
-import { each, find } from 'lodash';
+import { each, find, flatten } from 'lodash';
 
 import { Graph as Graphlib } from 'graphlib';
 
@@ -130,6 +130,20 @@ export class SaeGraph<T extends ActivityNode> {
   successors(id: string): T[] {
     const ids = this.graphlib.successors(id) as string[];
     return this.getNodes(ids);
+  }
+
+  descendants(id: string) {
+    const ids = this._descendantsDFS(id);
+    return this.getNodes(ids);
+  }
+
+  private _descendantsDFS(id: string) {
+    const self = this;
+    const down = this.graphlib.successors(id) as string[];
+
+    if (!down) return [];
+    return flatten(
+      down.concat(down.map(function (u) { return self._descendantsDFS(u); })));
   }
 
   getTrimmedGraph(startNodeId: string): Graph<T, Triple<T>> {

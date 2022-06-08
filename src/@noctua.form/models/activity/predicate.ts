@@ -10,6 +10,9 @@ export class Predicate {
   isReverseLink = false;
   reverseLinkTitle: string;
   evidence: Evidence[];
+  subjectId: string
+  objectId: string
+
   // Because there is one predicate and multiple evidence
   evidenceLookup: EntityLookup = new EntityLookup();
   referenceLookup: EntityLookup = new EntityLookup();
@@ -63,6 +66,17 @@ export class Predicate {
     evidence.setEvidenceOntologyClass(self._evidenceMeta.ontologyClass);
     self.evidence.push(evidence);
     return evidence;
+  }
+
+  hasEvidence(): boolean {
+    if (!this.evidence) return false;
+    if (this.evidence.length > 1) return true;
+
+    if (this.evidence.length > 0) {
+      return this.evidence[0].hasValue() ? true : false;
+    }
+
+    return false;
   }
 
   removeEvidence(index) {

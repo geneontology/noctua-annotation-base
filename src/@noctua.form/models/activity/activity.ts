@@ -10,8 +10,7 @@ import { Entity } from './entity';
 import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import * as ShapeDescription from './../../data/config/shape-definition';
-
-import { chain, Dictionary, each, filter, find, groupBy } from 'lodash';
+import { each, filter, find } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { TermsSummary } from './summary';
@@ -177,6 +176,22 @@ export class Activity extends SaeGraph<ActivityNode> {
     }
   }
 
+  get rootNode(): ActivityNode {
+    return this.getNode(this.rootNodeType);
+  }
+
+  get rootEdge(): Triple<ActivityNode> {
+    let edge;
+
+    if (this.activityType === ActivityType.proteinComplex) {
+      edge = this.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoProteinContainingComplex);
+    } else {
+      edge = this.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
+    }
+
+    return edge
+  }
+
   postRunUpdateCompliment() {
     const self = this;
 
@@ -196,7 +211,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     if (this.activityType !== ActivityType.ccOnly) {
       const mfNode = self.getMFNode();
-      const edge = self.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
+      const edge = self.rootEdge;
 
       if (mfNode && edge) {
         mfNode.predicate = edge.predicate;
@@ -211,9 +226,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     return noctuaFormConfig.activityType.options[this.activityType];
   }
 
-  get rootNode(): ActivityNode {
-    return this.getNode(this.rootNodeType);
-  }
+
 
   updateDate() {
     const rootNode = this.rootNode;
@@ -292,8 +305,8 @@ export class Activity extends SaeGraph<ActivityNode> {
     // remove the subject menu
     each(self.edges, function (triple: Triple<ActivityNode>) {
       if (triple.subject.type === triple.object.type) {
-        triple.subject.canInsertNodes = [];
-        triple.subject.insertMenuNodes = [];
+        //triple.subject.canInsertNodes = [];
+        // triple.subject.insertMenuNodes = [];
       }
     });
   }
@@ -455,7 +468,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     if (self.activityType !== ActivityType.ccOnly && self.activityType !== ActivityType.molecule) {
       const mfNode = self.getMFNode();
-      const edge = self.getEdge(ActivityNodeType.GoMolecularFunction, ActivityNodeType.GoMolecularEntity);
+      const edge = self.rootEdge;
 
       if (mfNode && edge) {
         edge.predicate.evidence = mfNode.predicate.evidence;
@@ -574,10 +587,8 @@ export class Activity extends SaeGraph<ActivityNode> {
     const srcSaveData = srcActivity.createSave();
     const destSaveData = self.createSave();
     const saveData = {
-      srcNodes: srcSaveData.nodes,
-      destNodes: destSaveData.nodes,
-      srcTriples: srcSaveData.triples,
-      destTriples: destSaveData.triples,
+      addNodes: destSaveData.nodes,
+      addTriples: destSaveData.triples,
       removeIds: subtractNodes(srcSaveData.graph, destSaveData.graph).map((node: ActivityNode) => {
         return node.uuid;
       }),
@@ -586,6 +597,21 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     return saveData;
   }
+
+  createEditEvidence(srcActivity: Activity, predicate: Predicate) {
+    const self = this;
+
+    const removeTriples = srcActivity.getEdge(predicate.subjectId, predicate.objectId)
+    const addTriples = self.getEdge(predicate.subjectId, predicate.objectId)
+
+    const saveData = {
+      addTriples: addTriples,
+      removeTriples: removeTriples,
+    };
+
+    return saveData;
+  }
+
 
   createDelete() {
     const self = this;
@@ -600,6 +626,19 @@ export class Activity extends SaeGraph<ActivityNode> {
         uuids.push(node.uuid);
       }
     });
+
+    deleteData.uuids = uuids;
+
+    return deleteData;
+  }
+
+  createActivityNodeDelete(node: ActivityNode) {
+    const self = this;
+    const deleteData = {
+      uuids: []
+    };
+    const uuids = self.descendants(node.id).map(node => node.uuid);
+    uuids.push(node.uuid);
 
     deleteData.uuids = uuids;
 
@@ -634,15 +673,6 @@ export class Activity extends SaeGraph<ActivityNode> {
     // self.addSubGraph(graph, toNode.id, fromNode.id);
   }
 
-  insertSubgraph2(activity: Activity, startNodeId: string) {
-    const self = this;
-
-    const graph = activity.getTrimmedGraph(startNodeId);
-
-    // self.addSubGraph(graph);
-  }
-
-
   get title() {
     const self = this;
     const gp = self.getGPNode();
@@ -659,7 +689,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     return title;
   }
 
-  buildTrees(): any[] {
+  buildTrees(): ActivityTreeNode[] {
     const self = this;
     const sortedEdges = self.edges.sort(compareTripleWeight);
     const fdRootNode = self.getFDRootNode();
@@ -668,7 +698,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     return [self._buildTree(sortedEdges, fdRootNode)];
   }
 
-  buildGPTrees() {
+  buildGPTrees(): ActivityTreeNode[] {
     const self = this;
     const sortedEdges = self.edges.sort(compareTripleWeight);
 
@@ -700,6 +730,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
     return result[0]
   }
+
 
   get presentation() {
     const self = this;

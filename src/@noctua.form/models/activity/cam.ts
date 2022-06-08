@@ -149,7 +149,7 @@ export class Cam {
   baristaClient;
   engine;
   manager;
-  duplicateManager;
+  copyModelManager;
   artManager;
   groupManager;
   replaceManager;
@@ -263,6 +263,9 @@ export class Cam {
     const self = this;
 
     return self.causalRelations.find((triple: Triple<Activity>) => {
+      if (triple.predicate?.isReverseLink) {
+        return triple.object?.id === subjectId && triple.object?.id === subjectId;
+      }
       return triple.subject?.id === subjectId && triple.object?.id === objectId;
     })
   }
@@ -499,7 +502,7 @@ export class Cam {
     return result;
   }
 
-  getEvidences(formActivity: Activity) {
+  getEvidences(formActivity?: Activity) {
     const self = this;
     const result = [];
 

@@ -17,6 +17,16 @@ export class NoctuaFormUtils {
         return S4() + S4();
     }
 
+    public static pad(pad: string, count: number) {
+        let counter = 0;
+        let result = ''
+        while (counter++ < count) {
+            result += pad;
+        }
+
+        return result;
+    }
+
     public static handleize(text) {
         return text.toString().toLowerCase()
             .replace(new RegExp("/\s+/g"), '-')           // Replace spaces with -

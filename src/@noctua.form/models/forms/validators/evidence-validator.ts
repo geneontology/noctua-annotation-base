@@ -1,4 +1,4 @@
-import { FormGroup, AbstractControl, ValidatorFn, FormControl } from '@angular/forms';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { ActivityNode } from './../../..//models/activity';
 
 export function evidenceValidator(termNode: ActivityNode): ValidatorFn {
@@ -6,7 +6,7 @@ export function evidenceValidator(termNode: ActivityNode): ValidatorFn {
         if (termNode && termNode.hasValue()) {
             if (control.value) {
                 if (!control.value.id) {
-                    return { [`Selevt correct evidence for "${termNode.label}" correct value`]: { value: control.value } };
+                    return { [`Select correct evidence for "${termNode.label}" correct value`]: { value: control.value } };
                 }
             } else {
                 return { [`Evidence for "${termNode.label}" is required`]: { value: control.value } };
