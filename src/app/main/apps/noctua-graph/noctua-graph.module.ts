@@ -16,7 +16,7 @@ import { ActivityConnectorTableComponent } from './activity-connector-table/acti
 
 const routes = [
   {
-    path: 'g',
+    path: '',
     component: NoctuaGraphComponent
   }
 ];

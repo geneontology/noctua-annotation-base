@@ -25,6 +25,9 @@
         <div class="noc-item-body w-100-p" fxLayout="row" fxLayoutAlign="start center">
           <div class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start start">
             <div class="noc-item" fxLayout="row wrap" fxLayoutAlign="start center">
+              <div class="noc-title">ID:</div> {{cam.id}}
+            </div>
+            <div class="noc-item" fxLayout="row wrap" fxLayoutAlign="start center">
               <div class="noc-title">Title:</div> {{cam.title}}
             </div>
             <div class="noc-item" fxLayout="row" fxLayoutAlign="start center">
@@ -54,7 +57,7 @@
                 </a>
                 <span>&#8226;</span>
                 <a class="ml-4 mr-4" [href]='cam.model?.modelInfo?.noctuaFormUrl' target="_blank">
-                  Noctua Form
+                  Form Editor
                 </a>
                 <span>&#8226;</span>
                 <a class="ml-4" [href]='cam.model?.modelInfo?.graphEditorUrl' target="_blank">
@@ -115,7 +118,7 @@
                 </a>
                 <span>&#8226;</span>
                 <a class="ml-4 mr-4" [href]='duplicatedCam.model?.modelInfo?.noctuaFormUrl' target="_blank">
-                  Noctua Form
+                  Form Editor
                 </a>
                 <span>&#8226;</span>
                 <a class="ml-4" [href]='duplicatedCam.model?.modelInfo?.graphEditorUrl' target="_blank">

@@ -1,11 +1,11 @@
 ---
-title: Noctua Form 2.0
+title: Form Editor 2.0
 ---
 
-# Noctua Form 2
+# Form Editor 2
 
-Welcome to the second release of Noctua Form. From the user’s feedback from
-Noctua Form 1.0, this version was a complete rewrite to utilize the modern UI
+Welcome to the second release of Form Editor. From the user’s feedback from
+Form Editor 1.0, this version was a complete rewrite to utilize the modern UI
 features and web technologies. We added a clever layout design such that it is
 seamless to switch between components like easy form, advanced forms, display,
 editing, causal relation editor etc. This version has the same feel as the

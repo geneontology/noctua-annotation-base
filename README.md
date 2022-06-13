@@ -1,9 +1,9 @@
 # Noctua Annotation Base
 
-A base noctua form library 
+A base form editor library 
 
 ### Clients
-- [Noctua Form](https://github.com/geneontology/noctua-form)
+- [Form Editor](https://github.com/geneontology/noctua-form)
 - [noctua-annotation-review](https://github.com/geneontology/noctua-annotation-review)
 
 The actual library on npm is [src/@noctua-form](https://github.com/geneontology/noctua-form-base/tree/master/src/%40noctua.form), Other code is for testing

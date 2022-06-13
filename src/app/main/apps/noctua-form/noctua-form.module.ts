@@ -70,7 +70,7 @@ import { EvidenceFormTableComponent } from './cam/cam-table/activity-form-table/
 
 const routes = [
   {
-    path: '',
+    path: 'f',
     component: NoctuaFormComponent
   }
 ];
