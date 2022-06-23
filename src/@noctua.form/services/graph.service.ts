@@ -24,6 +24,7 @@ import { TermsSummary } from './../models/activity/summary';
 import { Article } from './../models/article';
 import { Contributor, equalContributor } from '../models/contributor';
 import * as moment from 'moment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 declare const require: any;
 
@@ -51,6 +52,7 @@ export class NoctuaGraphService {
 
   constructor(
     private curieService: CurieService,
+    private httpClient: HttpClient,
     private noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaLookupService: NoctuaLookupService) {
@@ -160,13 +162,13 @@ export class NoctuaGraphService {
     const cam = new Cam()
 
     cam.graph = new noctua_graph();
-    cam.graph.load_data_basic(response.data());
+    cam.graph.load_data_basic(response.data);
 
-    cam.id = response.data().id;
+    cam.id = response.data.id;
     cam.model = Object.assign({}, {
       modelInfo: this.noctuaFormConfigService.getModelUrls(cam.id)
     });
-    cam.modified = response.data()['modified-p'];
+    cam.modified = response.data['modified-p'];
 
     const titleAnnotations = cam.graph.get_annotations_by_key('title');
     const stateAnnotations = cam.graph.get_annotations_by_key('state');
@@ -883,14 +885,36 @@ export class NoctuaGraphService {
     cam.groupId = groupId;
   }
 
-  copyModel(cam: Cam) {
+  copyModelMinervaTemp(cam: Cam) {
     const self = this;
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
     const req = new minerva_requests.request('model', 'copy');
 
     req.model(cam.id);
+    reqs.remove_annotation_from_model('title', 'i am copy');
     reqs.add(req, 'query');
     return cam.copyModelManager.request_with(reqs);
+  }
+
+  copyModel(cam: Cam, title) {
+    const baristaUrl = environment.globalBaristaLocation
+    const globalMinervaDefinitionName = environment.globalMinervaDefinitionName
+
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+    const requests = [
+      {
+        "entity": "model",
+        "operation": "copy",
+        "arguments":
+        {
+          "model-id": cam.id,
+          "title": title
+        }
+      }]
+    const payload = `token=${this.noctuaUserService.baristaToken}&intention=query&requests=${encodeURIComponent(JSON.stringify(requests))}`
+    return this.httpClient.post(`${baristaUrl}/api/${globalMinervaDefinitionName}/m3BatchPrivileged`, payload, { headers });
   }
 
   resetModel(cam: Cam) {

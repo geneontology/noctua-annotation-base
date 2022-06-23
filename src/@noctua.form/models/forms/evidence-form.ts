@@ -3,15 +3,8 @@ import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
 
 import { Evidence } from './../activity/evidence';
 import { ActivityNode } from './../activity/activity-node';
-
-declare const require: any;
-const each = require('lodash/forEach');
-
 import { ActivityFormMetadata } from './../forms/activity-form-metadata';
-
-import { termValidator } from './validators/term-validator';
 import { evidenceValidator } from './validators/evidence-validator';
-import { EntityLookup } from '../activity/entity-lookup';
 import { Entity } from '../activity/entity';
 import { Predicate } from '../activity/predicate';
 
