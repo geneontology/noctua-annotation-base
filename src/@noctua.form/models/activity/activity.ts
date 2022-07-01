@@ -243,7 +243,6 @@ export class Activity extends SaeGraph<ActivityNode> {
       if (nodeDate > self.date) {
         self.date = nodeDate
       }
-      console.log('node date', node.date)
     });
 
     // remove the subject menu
@@ -255,7 +254,6 @@ export class Activity extends SaeGraph<ActivityNode> {
         if (evidenceDate > self.date) {
           self.date = evidenceDate
         }
-        console.log('triple date', evidence.date)
       })
     });
 

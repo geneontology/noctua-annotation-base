@@ -147,6 +147,7 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
     const success = () => {
       this.noctuaActivityEntityService.deleteActivityNode(self.activity, entity).then(() => {
         self.noctuaFormDialogService.openInfoToast(`${entity.term.label} successfully deleted.`, 'OK');
+
       });
     };
 

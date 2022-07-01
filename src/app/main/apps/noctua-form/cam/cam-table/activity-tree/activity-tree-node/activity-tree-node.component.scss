@@ -144,14 +144,14 @@ $accent: map-get($theme, accent);
       }
 
       .noc-edit-button {
-        visibility: hidden;
+        //: hidden;
         position: absolute;
         bottom: 0;
         right: 0;
       }
 
       .noc-delete-button {
-        visibility: hidden;
+        //visibility: hidden;
         @include deep-height(20px);
         @include deep-width(20px);
         position: absolute;
