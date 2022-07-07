@@ -57,7 +57,6 @@ export class CamService {
     private curieService: CurieService) {
 
     this.onCamChanged = new BehaviorSubject(null);
-    this.curieUtil = this.curieService.getCurieUtil();
     this.camFormGroup = new BehaviorSubject(null);
     this.camFormGroup$ = this.camFormGroup.asObservable();
 
@@ -256,8 +255,8 @@ export class CamService {
   copyModel(cam: Cam, title) {
     const self = this;
 
-    return self._noctuaGraphService.copyModel(cam, title).then((response) => {
-      const cam: Cam = self._noctuaGraphService.getMetadata(response.data())
+    return self._noctuaGraphService.copyModelRaw(cam, title).subscribe((response) => {
+      const cam: Cam = self._noctuaGraphService.getMetadata(response['data'])
       self.onCopyModelChanged.next(cam)
     });
   }

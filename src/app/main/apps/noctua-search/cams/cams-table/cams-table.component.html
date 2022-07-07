@@ -179,16 +179,21 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="edit">
-      <th mat-header-cell *matHeaderCellDef fxFlex="100px" fxLayout="row" fxLayoutAlign="start center">Open In</th>
-      <td mat-cell *matCellDef="let cam" fxFlex="100px" fxLayout="row" fxLayoutAlign="start center">
+      <th mat-header-cell *matHeaderCellDef fxFlex="130px" fxLayout="row" fxLayoutAlign="start center">Open In</th>
+      <td mat-cell *matCellDef="let cam" fxFlex="130px" fxLayout="row" fxLayoutAlign="start center">
+        <a mat-icon-button [href]="cam?.model?.modelInfo?.workbenches['noctua-visual-pathway-editor']?.url"
+          target="_blank" class="noc-edit-button noc-rounded-button noc-sm noc-half-button noc-r"
+          matTooltip="Pathway Editor" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
+          <img width="15" src="assets/icons/pathway.png">
+        </a>
         <a mat-icon-button [href]='cam?.model?.modelInfo?.noctuaFormUrl' target="_blank"
-          class="noc-edit-button noc-rounded-button noc-sm  mr-4 noc-half-button noc-r" matTooltip="Form Editor"
-          [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
+          class="noc-edit-button noc-rounded-button noc-sm  mr-4 noc-half-button noc-m" matTooltip="Form Editor"
+          [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
           <fa-icon [icon]="['fas', 'list-alt']"></fa-icon>
         </a>
         <a mat-icon-button [href]='cam?.model?.modelInfo?.graphEditorUrl' target="_blank"
           class="noc-edit-button noc-rounded-button noc-sm noc-half-button noc-l" matTooltip="Graph Editor"
-          [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
+          [matTooltipPosition]="'after'" [matTooltipShowDelay]="1500">
           <fa-icon [icon]="['fas', 'sitemap']"></fa-icon>
         </a>
       </td>
@@ -204,10 +209,6 @@
           <a mat-menu-item [href]="cam?.model?.modelInfo?.workbenches['noctua-alliance-pathway-preview']?.url"
             target="_blank" class="">
             Alliance Pathway Preview
-          </a>
-          <a mat-menu-item [href]="cam?.model?.modelInfo?.workbenches['noctua-visual-pathway-editor']?.url"
-            target="_blank" class="">
-            Visual Pathway Editor
           </a>
           <button mat-menu-item (click)="openCamForm(cam)" class="">
             Model Info

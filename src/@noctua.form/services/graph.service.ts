@@ -24,11 +24,12 @@ import { TermsSummary } from './../models/activity/summary';
 import { Article } from './../models/article';
 import { Contributor, equalContributor } from '../models/contributor';
 import * as moment from 'moment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { graph as bbopGraph } from 'bbop-graph-noctua';
 
 declare const require: any;
 
-const model = require('bbop-graph-noctua');
+//const model = require('bbop-graph-noctua');
 const barista_client = require('bbop-client-barista');
 const amigo = require('amigo2');
 const barista_response = require('bbop-response-barista');
@@ -158,10 +159,9 @@ export class NoctuaGraphService {
 
   getMetadata(responseData) {
     const self = this;
-    const noctua_graph = model.graph;
     const cam = new Cam()
 
-    cam.graph = new noctua_graph();
+    cam.graph = new bbopGraph();
     cam.graph.load_data_basic(responseData);
 
     cam.id = responseData.id;
@@ -197,18 +197,17 @@ export class NoctuaGraphService {
 
   rebuild(cam: Cam, response) {
     const self = this;
-    const noctua_graph = model.graph;
 
     // cam.loading.status = true;
     // cam.loading.message = 'Loading Model Entities Metadata...';
 
     if (cam.graph) {
-      const inGraph = new noctua_graph();
+      const inGraph = new bbopGraph();
 
       inGraph.load_data_basic(response.data());
       cam.graph.merge_special(inGraph);
     } else {
-      cam.graph = new noctua_graph();
+      cam.graph = new bbopGraph();
       cam.graph.load_data_basic(response.data());
     }
 
@@ -265,9 +264,8 @@ export class NoctuaGraphService {
 
   rebuildFromStoredApi(cam: Cam, activeModel) {
     const self = this;
-    const noctua_graph = model.graph;
 
-    cam.graph = new noctua_graph();
+    cam.graph = new bbopGraph();
     cam.graph.load_data_basic(activeModel);
 
     cam.id = activeModel.id;
@@ -899,6 +897,72 @@ export class NoctuaGraphService {
     }
 
     return cam.copyModelManager.request_with(reqs);
+  }
+
+  copyModelRaw(cam: Cam, title) {
+    const self = this;
+    const baristaUrl = environment.globalBaristaLocation
+    const globalMinervaDefinitionName = environment.globalMinervaDefinitionName
+
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+    const requests = [
+      {
+        "entity": "model",
+        "operation": "copy",
+        "arguments":
+        {
+          "model-id": cam.id,
+          "values": [
+            {
+              "key": "title",
+              "value": title
+            }]
+        }
+      }]
+    let payload = `token=${this.noctuaUserService.baristaToken}&intention=query&requests=${encodeURIComponent(JSON.stringify(requests))}`
+
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      payload = payload + '&provided-by=' + self.noctuaUserService.user.group.id;
+    }
+    return this.httpClient.post(`${baristaUrl}/api/${globalMinervaDefinitionName}/m3BatchPrivileged`, payload, { headers });
+  }
+
+  copyModelRaw2(cam: Cam, title) {
+    const self = this;
+    const baristaUrl = environment.globalBaristaLocation
+    const globalMinervaDefinitionName = environment.globalMinervaDefinitionName
+
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+    const requests = [
+      {
+        "entity": "model",
+        "operation": "copy",
+        "arguments":
+        {
+          "model-id": cam.id,
+          "title": title
+        }
+      }]
+
+    const requestParams = {
+      token: this.noctuaUserService.baristaToken,
+      intention: 'query',
+      //requests: requests
+    }
+
+    if (self.noctuaUserService.user && self.noctuaUserService.user.groups.length > 0) {
+      //  requestParams['provided-by'] = self.noctuaUserService.user.group.id
+    }
+
+    const params = new HttpParams({
+      fromObject: requestParams
+    });
+    const payload = params.toString();
+    return this.httpClient.post(`${baristaUrl}/api/${globalMinervaDefinitionName}/m3BatchPrivileged`, payload, { headers });
   }
 
   resetModel(cam: Cam) {
