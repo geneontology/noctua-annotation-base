@@ -1,10 +1,13 @@
 set -e
 cd ../noctua-form
-git commit -am "init sprint 1 from master"
+git add --all
+git commit -m "fix evidence issue has_input, added announcement banner sample"
 git push origin sprint-1
 cd ../noctua-landing-page
-git commit -am "init sprint 1 from master"
+git add --all
+git commit -m "fix evidence issue has_input, added announcement banner sample"
 git push origin sprint-1
 cd ../noctua-visual-pathway-editor
-git commit -am "init sprint 1 from master"
+git add --all
+git commit -m "fix evidence issue has_input, added announcement banner sample"
 git push origin sprint-1
