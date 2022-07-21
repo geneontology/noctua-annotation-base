@@ -71,7 +71,7 @@ import { ConfirmCopyModelDialogComponent } from './dialogs/confirm-copy-model/co
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];
