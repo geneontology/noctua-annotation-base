@@ -111,23 +111,22 @@ export class NoctuaToolbarComponent implements OnInit, OnDestroy {
                     this.artBasket = artBasket;
                 }
             });
-        /* 
-                this.noctuaAnnouncementService.onAnnouncementsChanged.pipe(
-                    takeUntil(this._unsubscribeAll))
-                    .subscribe((announcements: Announcement[]) => {
-                        if (announcements) {
-                            this.announcements = announcements
-                        }
-                    });
-        
-                this.noctuaAnnouncementService.onAnnouncementChanged.pipe(
-                    takeUntil(this._unsubscribeAll))
-                    .subscribe((announcement: Announcement) => {
-                        if (announcement) {
-                            this.announcement = announcement
-                        }
-                    });
-         */
+        this.noctuaAnnouncementService.onAnnouncementsChanged.pipe(
+            takeUntil(this._unsubscribeAll))
+            .subscribe((announcements: Announcement[]) => {
+                if (announcements) {
+                    this.announcements = announcements
+                }
+            });
+
+        this.noctuaAnnouncementService.onAnnouncementChanged.pipe(
+            takeUntil(this._unsubscribeAll))
+            .subscribe((announcement: Announcement) => {
+                if (announcement) {
+                    this.announcement = announcement
+                }
+            });
+
         if (this.isDev && this.isBeta) {
             this.betaText = 'beta dev'
         } else if (this.isDev) {
