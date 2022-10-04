@@ -68,10 +68,11 @@ import { ActivityFormTableNodeComponent } from './cam/cam-table/activity-form-ta
 import { ActivityFormTableComponent } from './cam/cam-table/activity-form-table/activity-form-table.component';
 import { EvidenceFormTableComponent } from './cam/cam-table/activity-form-table/evidence-table/evidence-table.component';
 import { ConfirmCopyModelDialogComponent } from './dialogs/confirm-copy-model/confirm-copy-model.component';
+import { CamToolbarComponent } from './cam/cam-toolbar/cam-toolbar.component';
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];
@@ -139,7 +140,8 @@ const routes = [
     PreviewActivityComponent,
     GraphPreviewComponent,
     EvidenceFormTableComponent,
-    ConfirmCopyModelDialogComponent
+    ConfirmCopyModelDialogComponent,
+    CamToolbarComponent,
   ],
   providers: [
     NoctuaFormDialogService,
@@ -184,7 +186,8 @@ const routes = [
     ContributionStatsComponent,
     StatementStatsComponent,
     EvidenceFormTableComponent,
-    ConfirmCopyModelDialogComponent
+    ConfirmCopyModelDialogComponent,
+    CamToolbarComponent
   ],
 })
 
