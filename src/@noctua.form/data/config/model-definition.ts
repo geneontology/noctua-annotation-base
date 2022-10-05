@@ -1,8 +1,7 @@
 import { noctuaFormConfig } from './../../noctua-form-config';
 
 import * as EntityDefinition from './entity-definition';
-import * as ShapeDescription from './shape-definition';
-import { each, find } from 'lodash';
+import { each } from 'lodash';
 import { ActivityNodeType, ActivityNodeDisplay, ActivityNode } from './../../models/activity/activity-node';
 import { Entity } from '../../models/activity/entity';
 import { Predicate } from '../../models/activity/predicate';

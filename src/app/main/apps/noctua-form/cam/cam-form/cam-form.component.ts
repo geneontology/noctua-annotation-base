@@ -11,7 +11,6 @@ import {
   NoctuaGraphService,
   CamService,
   Entity,
-  NoctuaFormMenuService
 } from '@geneontology/noctua-form-base';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
@@ -36,8 +35,7 @@ export class CamFormComponent implements OnInit, OnDestroy {
     private sparqlService: SparqlService,
     private camService: CamService,
     private noctuaGraphService: NoctuaGraphService,
-    public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaFormMenuService: NoctuaFormMenuService
+    public noctuaFormConfigService: NoctuaFormConfigService
   ) {
     this._unsubscribeAll = new Subject();
     // this.activity = self.noctuaCamFormService.activity;

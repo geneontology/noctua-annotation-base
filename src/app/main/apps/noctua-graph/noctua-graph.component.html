@@ -21,7 +21,7 @@
     <div *ngIf="!noctuaUserService.user" class="noc-not-loggedin" fxLayout="row" fxLayoutAlign="center center">
       Not Logged In: You can only view existing annotations
     </div>
-    <noc-cam-toolbar></noc-cam-toolbar>
+    <noc-cam-toolbar [cam]="cam" [options]="camToolbarOptions"></noc-cam-toolbar>
     <mat-drawer-container class="h-100-p" fxFlex="" fxLayout="row" fxLayoutAlign="start start" [hasBackdrop]="false"
       autosize>
       <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>

@@ -18,7 +18,6 @@ import { SelectEvidenceDialogComponent } from './dialogs/select-evidence/select-
 import { SearchDatabaseDialogComponent } from './dialogs/search-database/search-database.component';
 import { ActivityConnectorFormComponent } from './cam/activity/activity-connector-form/activity-connector-form.component';
 import { ActivityTableComponent } from './cam/cam-table/activity-table/activity-table.component';
-import { TripleTableComponent } from './cam/cam-table/triple-table/triple-table.component';
 import { GraphPreviewComponent } from './cam/cam-preview/graph-preview/graph-preview.component';
 import { NoctuaConfirmDialogModule } from '@noctua/components';
 import { CamPreviewComponent } from './cam/cam-preview/cam-preview.component';
@@ -132,7 +131,6 @@ const routes = [
     ActivityTableComponent,
     ActivityTreeComponent,
     ActivityTreeTableComponent,
-    TripleTableComponent,
     ActivityTreeNodeComponent,
     ActivityFormTableComponent,
     ActivityFormTableNodeComponent,
@@ -165,7 +163,6 @@ const routes = [
     CamFormComponent,
     CopyModelComponent,
     ActivityConnectorFormComponent,
-    TripleTableComponent,
     ActivityTableComponent,
     ActivityTreeTableComponent,
     EvidenceTableComponent,

@@ -11,6 +11,7 @@ import {
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.common/models/menu-panels';
 import { WorkbenchId } from '@noctua.common/models/workench-id';
+import { CamToolbarOptions } from '@noctua.common/models/cam-toolbar-options';
 
 @Component({
   selector: 'noc-cam-toolbar',
@@ -20,11 +21,13 @@ import { WorkbenchId } from '@noctua.common/models/workench-id';
 })
 export class CamToolbarComponent implements OnInit, OnDestroy {
 
+  ActivityType = ActivityType
   LeftPanel = LeftPanel;
   MiddlePanel = MiddlePanel;
   RightPanel = RightPanel;
 
   @Input('cam') public cam: Cam;
+  @Input('options') public camToolbarOptions: CamToolbarOptions;
 
 
   private _unsubscribeAll: Subject<any>;
