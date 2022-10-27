@@ -2,7 +2,10 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { Entity } from './../../models/activity/entity';
 import * as EntityDefinition from './entity-definition';
 import { ActivityNodeDisplay, ActivityNodeType } from './../../models/activity/activity-node';
-import { each } from 'lodash';
+import { cloneDeep, each, uniqWith } from 'lodash';
+
+import shexJson from './../shex_dump.json'
+import lookupTable from './../lookup_table.json'
 
 export enum CardinalityType {
     none = 'none',
@@ -16,6 +19,12 @@ export interface ShapeDescription {
     node: ActivityNodeDisplay;
     predicate: Entity;
     cardinality: CardinalityType;
+}
+
+export interface PredicateExpression {
+    id: string;
+    label: string;
+    cardinality: number;
 }
 
 const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
@@ -42,6 +51,43 @@ const addCausalEdges = (edges: Entity[]): ShapeDescription[] => {
 
     return causalShapeDescriptions;
 };
+
+export function compareRange(a, b) {
+    return a.id === b.id;
+}
+
+export const getShexJson = (subjectIds: string[]) => {
+    const pred = []
+    subjectIds.forEach((subjectId: string) => {
+        const s = shexJson[subjectId]
+
+        if (s) {
+            const predicates = Object.keys(s)
+            const entities = predicates.map(predicate => {
+                const result = cloneDeep(lookupTable[predicate])
+                if (shexJson[subjectId][predicate]) {
+                    result.longLabel = result.label + ' ' + shexJson[subjectId][predicate]['range'].map(range => {
+                        return lookupTable[range]?.label
+                    }).join(', ');
+                } else {
+                    result.longLabel = result.label
+                }
+
+                return result
+
+            })
+
+
+            pred.push(...entities)
+        }
+    });
+    console.log(pred)
+
+    return uniqWith(pred, compareRange) as any
+
+    // return pred
+}
+
 
 // ORDER MATTERS A LOT
 // What can you insert
