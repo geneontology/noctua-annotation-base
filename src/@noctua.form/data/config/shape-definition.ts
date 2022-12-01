@@ -2,7 +2,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { Entity } from './../../models/activity/entity';
 import * as EntityDefinition from './entity-definition';
 import { ActivityNodeDisplay, ActivityNodeType } from './../../models/activity/activity-node';
-import { cloneDeep, each, groupBy, uniqWith } from 'lodash';
+import { cloneDeep, each, uniqWith } from 'lodash';
 
 import shexJson from './../shapes.json'
 import shapeTerms from './../shape-terms.json'
@@ -60,25 +60,17 @@ export function compareRange(a, b) {
 
 export const getShexJson = (subjectIds: string[]) => {
     const pred = []
-    const lookupTable = groupBy(shapeTerms, 'id');
+    const lookupTable = DataUtils.genTermLookupTable();
     const shapes = shexJson.goshapes as ShexShapeAssociation[];
     subjectIds.forEach((subjectId: string) => {
         const subjectShapes = DataUtils.getSubjectShapes(shapes, subjectId);
-        console.log(subjectShapes)
         if (subjectShapes) {
             const predicates = DataUtils.getPredicates(shapes);
-            const entities = predicates.map(predicate => {
-                const result = cloneDeep(lookupTable[predicate])
-                result['longLabel'] = DataUtils.getRangeLabels(subjectShapes, lookupTable)
-
-                return result
-
-            })
+            const entities = DataUtils.getRangeLabels(subjectShapes, lookupTable)
 
             pred.push(...entities)
         }
     });
-    console.log(pred)
 
     return uniqWith(pred, compareRange) as any
 

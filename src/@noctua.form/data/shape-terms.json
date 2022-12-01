@@ -19,18 +19,18 @@
   },
   {
     "id": "GO:0032991",
-    "label": "protein-containing complex",
+    "label": "protein complex",
     "definition": "A stable assembly of two or more macromolecules, i.e. proteins, nucleic acids, carbohydrates or lipids, in which at least one component is a protein and the constituent parts function together.",
     "comment": "A protein complex in this context is meant as a stable set of interacting proteins which can be co-purified by an acceptable method, and where the complex has been shown to exist as an isolated, functional unit in vivo. Acceptable experimental methods include stringent protein purification followed by detection of protein interaction. The following methods should be considered non-acceptable: simple immunoprecipitation, pull-down experiments from cell extracts without further purification, colocalization and 2-hybrid screening. Interactions that should not be captured as protein complexes include: 1) enzyme/substrate, receptor/ligand or any similar transient interactions, unless these are a critical part of the complex assembly or are required e.g. for the receptor to be functional; 2) proteins associated in a pull-down/co-immunoprecipitation assay with no functional link or any evidence that this is a defined biological entity rather than a loose-affinity complex; 3) any complex where the only evidence is based on genetic interaction data; 4) partial complexes, where some subunits (e.g. transmembrane ones) cannot be expressed as recombinant proteins and are excluded from experiments (in this case, independent evidence is necessary to find out the composition of the full complex, if known). Interactions that may be captured as protein complexes include: 1) enzyme/substrate or receptor/ligand if the complex can only assemble and become functional in the presence of both classes of subunits; 2) complexes where one of the members has not been shown to be physically linked to the other(s), but is a homologue of, and has the same functionality as, a protein that has been experimentally demonstrated to form a complex with the other member(s); 3) complexes whose existence is accepted based on localization and pharmacological studies, but for which experimental evidence is not yet available for the complex as a whole.",
     "synonyms": [
       "macromolecular complex",
       "macromolecule complex",
-      "protein containing complex"
+      "protein complex"
     ]
   },
   {
     "id": "GO:0005575",
-    "label": "cellular_component",
+    "label": "cellular component",
     "definition": "A location, relative to cellular compartments and structures, occupied by a macromolecular machine when it carries out a molecular function. There are two ways in which the gene ontology describes locations of gene products: (1) relative to cellular structures (e.g., cytoplasmic side of plasma membrane) or compartments (e.g., mitochondrion), and (2) the stable macromolecular complexes of which they are parts (e.g., the ribosome).",
     "comment": "Note that, in addition to forming the root of the cellular component ontology, this term is recommended for use for the annotation of gene products whose cellular component is unknown. When this term is used for annotation, it indicates that no information was available about the cellular component of the gene product annotated as of the date the annotation was made; the evidence code 'no data' (ND), is used to indicate this.",
     "synonyms": [
@@ -40,7 +40,7 @@
   },
   {
     "id": "GO:0008150",
-    "label": "biological_process",
+    "label": "biological process",
     "definition": "A biological process represents a specific objective that the organism is genetically programmed to achieve. Biological processes are often described by their outcome or ending state, e.g., the biological process of cell division results in the creation of two daughter cells (a divided cell) from a single parent cell. A biological process is accomplished by a particular set of molecular functions carried out by specific gene products (or macromolecular complexes), often in a highly regulated manner and in a particular temporal sequence.",
     "comment": "Note that, in addition to forming the root of the biological process ontology, this term is recommended for use for the annotation of gene products whose biological process is unknown. When this term is used for annotation, it indicates that no information was available about the biological process of the gene product annotated as of the date the annotation was made; the evidence code 'no data' (ND), is used to indicate this.",
     "synonyms": [
@@ -230,7 +230,7 @@
   },
   {
     "id": "GO:0003674",
-    "label": "molecular_function",
+    "label": "molecular function",
     "definition": "A molecular process that can be carried out by the action of a single macromolecular machine, usually via direct physical interactions with other molecular entities. Function in this sense denotes an action, or activity, that a gene product (or a complex) performs. These actions are described from two distinct but related perspectives: (1) biochemical activity, and (2) role as a component in a larger system/process.",
     "comment": "Note that, in addition to forming the root of the molecular function ontology, this term is recommended for use for the annotation of gene products whose molecular function is unknown. When this term is used for annotation, it indicates that no information was available about the molecular function of the gene product annotated as of the date the annotation was made; the evidence code 'no data' (ND), is used to indicate this. Despite its name, this is not a type of 'function' in the sense typically defined by upper ontologies such as Basic Formal Ontology (BFO). It is instead a BFO:process carried out by a single gene product or complex.",
     "synonyms": [
@@ -248,7 +248,7 @@
   },
   {
     "id": "CHEBI:24431",
-    "label": "chemical entity",
+    "label": "chemical",
     "definition": "A chemical entity is a physical entity of interest in chemistry including molecular entities, parts thereof, and chemical substances.",
     "comment": "",
     "synonyms": [
@@ -266,7 +266,7 @@
   },
   {
     "id": "CARO:0000000",
-    "label": "anatomical entity",
+    "label": "anatomy",
     "definition": "",
     "comment": "",
     "synonyms": [
@@ -275,7 +275,7 @@
   },
   {
     "id": "CL:0000003",
-    "label": "native cell",
+    "label": "cell",
     "definition": "A cell that is found in a natural setting, which includes multicellular organism cells 'in vivo' (i.e. part of an organism), and unicellular organisms 'in environment' (i.e. part of a natural environment).",
     "comment": "",
     "synonyms": [
@@ -284,7 +284,7 @@
   },
   {
     "id": "NCBITaxon:1",
-    "label": "root",
+    "label": "Organism",
     "definition": "",
     "comment": "",
     "synonyms": [
@@ -302,7 +302,7 @@
   },
   {
     "id": "UBERON:0000105",
-    "label": "life cycle stage",
+    "label": "stage",
     "definition": "A spatiotemporal region encompassing some part of the life cycle of an organism.",
     "comment": "",
     "synonyms": [
@@ -311,7 +311,7 @@
   },
   {
     "id": "PO:0009012",
-    "label": "plant structure development stage",
+    "label": "plant stage",
     "definition": "A stage in the life of a plant structure (PO:0009011) during which the plant structure undergoes developmental processes.",
     "comment": "",
     "synonyms": [

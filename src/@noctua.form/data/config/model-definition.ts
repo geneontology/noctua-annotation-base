@@ -2,7 +2,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 
 import * as EntityDefinition from './entity-definition';
 import * as ShapeDescription from './../../data/config/shape-definition';
-import { each, groupBy } from 'lodash';
+import { each, } from 'lodash';
 import { ActivityNodeType, ActivityNodeDisplay, ActivityNode, GoCategory } from './../../models/activity/activity-node';
 import { Entity } from '../../models/activity/entity';
 import { Predicate } from '../../models/activity/predicate';
@@ -10,6 +10,7 @@ import { ActivityType, Activity } from '../../models/activity/activity';
 import { v4 as uuid } from 'uuid';
 import shexJson from './../shapes.json'
 import shapeTerms from './../shape-terms.json'
+import { DataUtils } from './data-utils';
 
 
 export interface ActivityDescription {
@@ -496,7 +497,7 @@ export const insertNode = (activity: Activity, subjectNode: ActivityNode, nodeDe
 export const insertNodeShex = (activity: Activity,
     subjectNode: ActivityNode,
     predExpr: ShapeDescription.PredicateExpression): ActivityNode => {
-    const lookupTable = groupBy(shapeTerms, 'id');
+    const lookupTable = DataUtils.genTermLookupTable();
 
     const ranges = []
     subjectNode.category.forEach((category: GoCategory) => {
