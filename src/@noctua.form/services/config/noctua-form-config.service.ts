@@ -334,6 +334,8 @@ export class NoctuaFormConfigService {
 
     return predicate;
   }
+
+  //For reading the table
   createActivityBaseModel(modelType: ActivityType): Activity {
     switch (modelType) {
       case ActivityType.default:
@@ -349,6 +351,7 @@ export class NoctuaFormConfigService {
     }
   }
 
+  // For the form
   createActivityModel(activityType: ActivityType): Activity {
     switch (activityType) {
       case ActivityType.default:

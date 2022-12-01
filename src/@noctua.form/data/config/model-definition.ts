@@ -2,14 +2,14 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 
 import * as EntityDefinition from './entity-definition';
 import * as ShapeDescription from './../../data/config/shape-definition';
-import { each } from 'lodash';
+import { each, groupBy } from 'lodash';
 import { ActivityNodeType, ActivityNodeDisplay, ActivityNode, GoCategory } from './../../models/activity/activity-node';
 import { Entity } from '../../models/activity/entity';
 import { Predicate } from '../../models/activity/predicate';
 import { ActivityType, Activity } from '../../models/activity/activity';
 import { v4 as uuid } from 'uuid';
-import shexJson from './../shex_dump.json'
-import lookupTable from './../lookup_table.json'
+import shexJson from './../shapes.json'
+import shapeTerms from './../shape-terms.json'
 
 
 export interface ActivityDescription {
@@ -29,9 +29,7 @@ const getNodeDefaults = (subjectNode: ActivityNode, predExpr: ShapeDescription.P
     const node = {
         type: ActivityNodeType.GoMolecularEntity,
         category: ranges,
-        label: predExpr.label + ' ' + ranges.map(range => {
-            return lookupTable[range.category].label
-        }).join(', '),
+        label: predExpr.label,
         canDelete: true,
         displaySection: subjectNode.displaySection,
         displayGroup: subjectNode.displayGroup,
@@ -467,7 +465,7 @@ export const createActivityShex = (activityDescription: ActivityDescription): Ac
     });
 
     //activity.postRunUpdate();
-    activity.updateEntityInsertMenuShex();
+    activity.updateShapeMenuShex();
     activity.enableSubmit();
     return activity;
 };
@@ -498,6 +496,7 @@ export const insertNode = (activity: Activity, subjectNode: ActivityNode, nodeDe
 export const insertNodeShex = (activity: Activity,
     subjectNode: ActivityNode,
     predExpr: ShapeDescription.PredicateExpression): ActivityNode => {
+    const lookupTable = groupBy(shapeTerms, 'id');
 
     const ranges = []
     subjectNode.category.forEach((category: GoCategory) => {
@@ -505,8 +504,8 @@ export const insertNodeShex = (activity: Activity,
             const range = shexJson[category.category][predExpr.id]['range'].map(inNode => {
                 const node = lookupTable[inNode]
                 return {
-                    category: node.id,
-                    categoryType: node.closure_type
+                    //category: node.id,
+                    // categoryType: node.closure_type
                 } as GoCategory
             })
             ranges.push(...range)

@@ -314,16 +314,18 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   }
 
-  updateEntityInsertMenuShex(rootTypes?) {
+  updateShapeMenuShex(rootTypes?) {
     const self = this;
 
     each(self.nodes, (node: ActivityNode) => {
       const subjectIds = node.category.map((category) => {
         return category.category
-      })
+      });
+
       if (rootTypes) {
         subjectIds.push(...rootTypes.map(rootType => rootType.id))
       }
+
       const canInsertNodes = ShapeDescription.getShexJson(subjectIds);
       const insertNodes: ShapeDescription.ShapeDescription[] = [];
 

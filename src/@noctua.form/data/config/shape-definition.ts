@@ -2,10 +2,12 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { Entity } from './../../models/activity/entity';
 import * as EntityDefinition from './entity-definition';
 import { ActivityNodeDisplay, ActivityNodeType } from './../../models/activity/activity-node';
-import { cloneDeep, each, uniqWith } from 'lodash';
+import { cloneDeep, each, groupBy, uniqWith } from 'lodash';
 
-import shexJson from './../shex_dump.json'
-import lookupTable from './../lookup_table.json'
+import shexJson from './../shapes.json'
+import shapeTerms from './../shape-terms.json'
+import { ShexShapeAssociation } from '../shape';
+import { DataUtils } from './data-utils';
 
 export enum CardinalityType {
     none = 'none',
@@ -58,25 +60,20 @@ export function compareRange(a, b) {
 
 export const getShexJson = (subjectIds: string[]) => {
     const pred = []
+    const lookupTable = groupBy(shapeTerms, 'id');
+    const shapes = shexJson.goshapes as ShexShapeAssociation[];
     subjectIds.forEach((subjectId: string) => {
-        const s = shexJson[subjectId]
-
-        if (s) {
-            const predicates = Object.keys(s)
+        const subjectShapes = DataUtils.getSubjectShapes(shapes, subjectId);
+        console.log(subjectShapes)
+        if (subjectShapes) {
+            const predicates = DataUtils.getPredicates(shapes);
             const entities = predicates.map(predicate => {
                 const result = cloneDeep(lookupTable[predicate])
-                if (shexJson[subjectId][predicate]) {
-                    result.longLabel = result.label + ' ' + shexJson[subjectId][predicate]['range'].map(range => {
-                        return lookupTable[range]?.label
-                    }).join(', ');
-                } else {
-                    result.longLabel = result.label
-                }
+                result['longLabel'] = DataUtils.getRangeLabels(subjectShapes, lookupTable)
 
                 return result
 
             })
-
 
             pred.push(...entities)
         }

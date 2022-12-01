@@ -63,7 +63,7 @@ export class NoctuaActivityFormService {
     self.activity.resetPresentation();
     self.activityForm = this.createActivityForm();
     self.activityFormGroup.next(this._fb.group(this.activityForm));
-    self.activity.updateEntityInsertMenuShex(rootTypes);
+    self.activity.updateShapeMenuShex(rootTypes);
     self.activity.enableSubmit();
     self._onActivityFormChanges();
   }
