@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid';
 import shexJson from './../shapes.json'
 import shapeTerms from './../shape-terms.json'
 import { DataUtils } from './data-utils';
+import { ShexShapeAssociation } from '../shape';
 
 
 export interface ActivityDescription {
@@ -498,24 +499,25 @@ export const insertNodeShex = (activity: Activity,
     subjectNode: ActivityNode,
     predExpr: ShapeDescription.PredicateExpression): ActivityNode => {
     const lookupTable = DataUtils.genTermLookupTable();
+    const shapes = shexJson.goshapes as ShexShapeAssociation[];
 
     const ranges = []
     subjectNode.category.forEach((category: GoCategory) => {
-        if (shexJson[category.category][predExpr.id]?.range) {
-            const range = shexJson[category.category][predExpr.id]['range'].map(inNode => {
+        //const subjectShapes = DataUtils.getSubjectShapes(shapes, category.category);
+        const shape = DataUtils.getRangeBySubject(shapes, category.category, predExpr.id);
+        if (shape) {
+            const range = shape.object.map(inNode => {
                 const node = lookupTable[inNode]
-                return {
-                    //category: node.id,
-                    // categoryType: node.closure_type
-                } as GoCategory
+                const category = new GoCategory()
+                category.category = node.id
+
+                return category;
             })
             ranges.push(...range)
         }
     })
 
     const overrides = getNodeDefaults(subjectNode, predExpr, ranges)
-
-
     const objectNode = EntityDefinition.generateBaseTerm(ranges, overrides);
 
     objectNode.id = uuid()

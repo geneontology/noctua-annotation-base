@@ -36,6 +36,14 @@ export class DataUtils {
 
   }
 
+  public static getRangeBySubject(shapes: ShexShapeAssociation[], subjectId: string, predicateId: string): ShexShapeAssociation {
+    return shapes.find(shape => {
+      return shape.subject === subjectId &&
+        shape.predicate === predicateId &&
+        !shape.exclude_from_extensions;
+    });
+  }
+
   public static getRangeLabels(shapes: ShexShapeAssociation[], lookupTable): string[] {
     const predicates = shapes.map((shape) => {
       const range = shape.object.map((term) => {
