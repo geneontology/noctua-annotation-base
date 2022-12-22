@@ -74,6 +74,11 @@ const edge = {
     id: 'RO:0004046',
     label: 'causally upstream of or within, negative effect',
   },
+  constitutivelyUpstreamOf: {
+    id: 'RO:0012009',
+    label: 'constitutively upstream of',
+  },
+
   directlyProvidesInput: {
     id: 'RO:0002413',
     label: 'directly provides input for'
@@ -121,6 +126,10 @@ const edge = {
   isSmallMoleculeInhibitor: {
     id: 'RO:0012006',
     label: 'is small molecule inhibitor'
+  },
+  removesInputFor: {
+    id: 'RO:0012010',
+    label: 'removes input for'
   },
 }
 
@@ -313,11 +322,6 @@ export const noctuaFormConfig = {
         'name': 'undetermined',
         'label': 'Undetermined',
         'description': 'There is insufficient data to specify a precise causal mechanism.',
-      },
-      'outputInput': {
-        'name': 'outputInput',
-        'label': 'Output-Input',
-        'description': 'The molecular output produced by the upstream activity is the molecular input of the downstream activity'
       },
     }
   },

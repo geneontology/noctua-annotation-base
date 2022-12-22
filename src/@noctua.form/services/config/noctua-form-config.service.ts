@@ -213,7 +213,6 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.activityRelationship.options.providesInputFor,
       noctuaFormConfig.activityRelationship.options.removesInputFor,
       noctuaFormConfig.activityRelationship.options.undetermined,
-      noctuaFormConfig.activityRelationship.options.outputInput,
     ];
 
     return {
