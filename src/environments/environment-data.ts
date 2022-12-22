@@ -253,7 +253,7 @@ export const globalKnownRelations = [
   {
     "id": "BFO:0000050",
     "label": "part of",
-    "relevant": true
+    "relevant": false
   },
   {
     "id": "BFO:0000051",
@@ -292,7 +292,7 @@ export const globalKnownRelations = [
   {
     "id": "BFO:0000066",
     "label": "occurs in",
-    "relevant": true
+    "relevant": false
   },
   {
     "id": "BFO:0000067",
@@ -1023,7 +1023,7 @@ export const globalKnownRelations = [
   },
   {
     "id": "RO:0002159",
-    "label": "serially_homologous_to",
+    "label": "serially homologous to",
     "relevant": false
   },
   {
@@ -1194,7 +1194,7 @@ export const globalKnownRelations = [
   {
     "id": "RO:0002224",
     "label": "starts with",
-    "relevant": true
+    "relevant": false
   },
   {
     "id": "RO:0002225",
@@ -1224,7 +1224,7 @@ export const globalKnownRelations = [
   {
     "id": "RO:0002230",
     "label": "ends with",
-    "relevant": true
+    "relevant": false
   },
   {
     "id": "RO:0002231",
@@ -1239,12 +1239,12 @@ export const globalKnownRelations = [
   {
     "id": "RO:0002233",
     "label": "has input",
-    "relevant": true
+    "relevant": false
   },
   {
     "id": "RO:0002234",
     "label": "has output",
-    "relevant": true
+    "relevant": false
   },
   {
     "id": "RO:0002235",
@@ -1443,12 +1443,12 @@ export const globalKnownRelations = [
   },
   {
     "id": "RO:0002304",
-    "label": "causally upstream of with a positive effect",
+    "label": "causally upstream of, positive effect",
     "relevant": false
   },
   {
     "id": "RO:0002305",
-    "label": "causally upstream of with a negative effect",
+    "label": "causally upstream of, negative effect",
     "relevant": false
   },
   {
@@ -1508,7 +1508,7 @@ export const globalKnownRelations = [
   },
   {
     "id": "RO:0002326",
-    "label": "contributes_to",
+    "label": "contributes to",
     "relevant": false
   },
   {
@@ -1544,7 +1544,7 @@ export const globalKnownRelations = [
   {
     "id": "RO:0002333",
     "label": "enabled by",
-    "relevant": true
+    "relevant": false
   },
   {
     "id": "RO:0002334",
@@ -1573,7 +1573,7 @@ export const globalKnownRelations = [
   },
   {
     "id": "RO:0002339",
-    "label": "has_target_end_location",
+    "label": "has target end location",
     "relevant": false
   },
   {
@@ -1783,8 +1783,8 @@ export const globalKnownRelations = [
   },
   {
     "id": "RO:0002406",
-    "label": "directly activates (process to process)",
-    "relevant": true
+    "label": "directly activates",
+    "relevant": false
   },
   {
     "id": "RO:0002407",
@@ -1793,8 +1793,8 @@ export const globalKnownRelations = [
   },
   {
     "id": "RO:0002408",
-    "label": "directly inhibits (process to process)",
-    "relevant": true
+    "label": "directly inhibits",
+    "relevant": false
   },
   {
     "id": "RO:0002409",
@@ -1818,8 +1818,8 @@ export const globalKnownRelations = [
   },
   {
     "id": "RO:0002413",
-    "label": "directly provides input for (process to process)",
-    "relevant": true
+    "label": "directly provides input for",
+    "relevant": false
   },
   {
     "id": "RO:0002414",
@@ -2564,7 +2564,7 @@ export const globalKnownRelations = [
   {
     "id": "RO:0002614",
     "label": "is evidence with support from",
-    "relevant": true
+    "relevant": false
   },
   {
     "id": "RO:0002615",
@@ -3519,36 +3519,6 @@ export const globalKnownRelations = [
     "relevant": false
   },
   {
-    "id": "obo:cl#has_completed",
-    "label": "has_completed",
-    "relevant": false
-  },
-  {
-    "id": "obo:cl#has_high_plasma_membrane_amount",
-    "label": "has_high_plasma_membrane_amount",
-    "relevant": false
-  },
-  {
-    "id": "obo:cl#has_low_plasma_membrane_amount",
-    "label": "has_low_plasma_membrane_amount",
-    "relevant": false
-  },
-  {
-    "id": "obo:cl#has_not_completed",
-    "label": "has_not_completed",
-    "relevant": false
-  },
-  {
-    "id": "obo:cl#lacks_part",
-    "label": "lacks_part",
-    "relevant": false
-  },
-  {
-    "id": "obo:cl#lacks_plasma_membrane_part",
-    "label": "lacks_plasma_membrane_part",
-    "relevant": false
-  },
-  {
     "id": "obo:core#connected_to",
     "relevant": false
   },
@@ -3637,10 +3607,6 @@ export const globalKnownRelations = [
   {
     "id": "obo:pato#has_cross_section",
     "label": "has_cross_section",
-    "relevant": false
-  },
-  {
-    "id": "obo:pr#lacks_part",
     "relevant": false
   },
   {
@@ -3829,10 +3795,6 @@ export const globalKnownRelations = [
     "id": "obo:xao#start_stage",
     "label": "starts during",
     "relevant": false
-  },
-  {
-    "id": "http://semanticscience.org/resource/SIO_000658",
-    "label": "immediate_transformation_of",
-    "relevant": false
   }
 ]
+

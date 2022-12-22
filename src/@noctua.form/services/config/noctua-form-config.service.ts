@@ -185,8 +185,8 @@ export class NoctuaFormConfigService {
 
   get directness() {
     const options = [
-      noctuaFormConfig.directness.options.known,
-      noctuaFormConfig.directness.options.unknown,
+      noctuaFormConfig.directness.options.direct,
+      noctuaFormConfig.directness.options.indirect,
     ];
 
     return {
@@ -209,6 +209,10 @@ export class NoctuaFormConfigService {
   get activityRelationship() {
     const options = [
       noctuaFormConfig.activityRelationship.options.regulation,
+      noctuaFormConfig.activityRelationship.options.constitutivelyUpstream,
+      noctuaFormConfig.activityRelationship.options.providesInputFor,
+      noctuaFormConfig.activityRelationship.options.removesInputFor,
+      noctuaFormConfig.activityRelationship.options.undetermined,
       noctuaFormConfig.activityRelationship.options.outputInput,
     ];
 

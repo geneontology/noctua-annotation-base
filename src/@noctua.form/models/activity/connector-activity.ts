@@ -136,19 +136,19 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     if (relationship.name === noctuaFormConfig.activityRelationship.options.outputInput.name) {
       edge = noctuaFormConfig.edge.directlyProvidesInput;
     } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.positive.name) {
-      if (directness.name === noctuaFormConfig.directness.options.known.name) {
-        edge = noctuaFormConfig.edge.positivelyRegulates;
+      if (directness.name === noctuaFormConfig.directness.options.direct.name) {
+        edge = noctuaFormConfig.edge.directlyPositivelyRegulates;
       } else {
-        edge = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
+        edge = noctuaFormConfig.edge.indirectlyPositivelyRegulates;
       }
     } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.negative.name) {
-      if (directness.name === noctuaFormConfig.directness.options.known.name) {
-        edge = noctuaFormConfig.edge.negativelyRegulates;
+      if (directness.name === noctuaFormConfig.directness.options.direct.name) {
+        edge = noctuaFormConfig.edge.directlyNegativelyRegulates;
       } else {
-        edge = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
+        edge = noctuaFormConfig.edge.indirectlyNegativelyRegulates;
       }
     } else if (causalEffect.name === noctuaFormConfig.causalEffect.options.neutral.name) {
-      if (directness.name === noctuaFormConfig.directness.options.known.name) {
+      if (directness.name === noctuaFormConfig.directness.options.direct.name) {
         edge = noctuaFormConfig.edge.regulates;
       } else {
         edge = noctuaFormConfig.edge.causallyUpstreamOf;
@@ -192,7 +192,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
   edgeToConnectorQuestion(edge: Entity) {
     let relationship = noctuaFormConfig.activityRelationship.options.regulation;
-    let directness = noctuaFormConfig.directness.options.known;
+    let directness = noctuaFormConfig.directness.options.direct;
     let causalEffect = noctuaFormConfig.causalEffect.options.positive;
 
     if (edge.id === noctuaFormConfig.edge.directlyProvidesInput.id) {
@@ -204,7 +204,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       case noctuaFormConfig.edge.causallyUpstreamOf.id:
       case noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect.id:
       case noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect.id:
-        directness = noctuaFormConfig.directness.options.unknown;
+        directness = noctuaFormConfig.directness.options.indirect;
         break;
     }
     switch (edge.id) {

@@ -19,7 +19,7 @@ export class ConnectorRule {
   };
 
   constructor() {
-    this.directness.directness = noctuaFormConfig.directness.options.known;
+    this.directness.directness = noctuaFormConfig.directness.options.direct;
     this.effectDirection.direction = noctuaFormConfig.causalEffect.options.positive;
     this.activityRelationship.relation = noctuaFormConfig.activityRelationship.options.regulation
     this.chemicalRelationship.relation = noctuaFormConfig.chemicalRelationship.options.chemicalRegulates

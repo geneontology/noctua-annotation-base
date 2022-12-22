@@ -102,6 +102,14 @@ const edge = {
     id: 'RO:0002630',
     label: 'directly negatively regulates'
   },
+  indirectlyPositivelyRegulates: {
+    id: 'RO:00002407',
+    label: 'indirectly positively regulates'
+  },
+  indirectlyNegativelyRegulates: {
+    id: 'RO:0002409',
+    label: 'indirectly negatively regulates'
+  },
   isSmallMoleculeRegulator: {
     id: 'RO:0012004',
     label: 'is small molecule regulator'
@@ -262,13 +270,15 @@ export const noctuaFormConfig = {
   },
   'directness': {
     'options': {
-      'known': {
-        'name': 'known',
+      'direct': {
+        'name': 'direct',
         'label': 'Direct',
+        'description': 'The upstream activity immediately precedes the downstream activity',
       },
-      'unknown': {
-        'name': 'unknown',
-        'label': 'Indirect/Unknown',
+      'indirect': {
+        'name': 'indirect',
+        'label': 'Indirect',
+        'description': 'There are intervening activities between the upstream and downstream activities.'
       },
       'chemicalProduct': {
         'name': 'chemicalProduct',
@@ -282,7 +292,27 @@ export const noctuaFormConfig = {
       'regulation': {
         'name': 'regulation',
         'label': 'Regulation',
-        'description': 'The upstream activity regulates the downstream activity',
+        'description': 'The upstream activity conditionally controls the downstream activity',
+      },
+      'constitutivelyUpstream': {
+        'name': 'constitutivelyUpstream',
+        'label': 'Constitutively Upstream',
+        'description': 'The upstream activity is normally present and required for the downstream activity.',
+      },
+      'providesInputFor': {
+        'name': 'providesInputFor',
+        'label': 'Provides Input For',
+        'description': 'The upstream activity produces a molecule that is an input for the downstream activity.',
+      },
+      'removesInputFor': {
+        'name': 'removesInputFor',
+        'label': 'Removes Input For',
+        'description': 'The upstream and downstream activities have the same input but the upstream activity makes the input unavailable for the downstream activity.',
+      },
+      'undetermined': {
+        'name': 'undetermined',
+        'label': 'Undetermined',
+        'description': 'There is insufficient data to specify a precise causal mechanism.',
       },
       'outputInput': {
         'name': 'outputInput',
