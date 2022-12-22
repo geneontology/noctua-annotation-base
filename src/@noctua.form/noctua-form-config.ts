@@ -408,9 +408,12 @@ export const noctuaFormConfig = {
 
   // This array is arrange for matrice decison tree for causal edge 0-8 index, don't rearrange
   causalEdges: [
+    Entity.createEntity(edge.constitutivelyUpstreamOf),
     Entity.createEntity(edge.directlyNegativelyRegulates),
     Entity.createEntity(edge.directlyRegulates),
     Entity.createEntity(edge.directlyPositivelyRegulates),
+    Entity.createEntity(edge.indirectlyNegativelyRegulates),
+    Entity.createEntity(edge.indirectlyPositivelyRegulates),
     Entity.createEntity(edge.negativelyRegulates),
     Entity.createEntity(edge.regulates),
     Entity.createEntity(edge.positivelyRegulates),
@@ -421,6 +424,7 @@ export const noctuaFormConfig = {
     Entity.createEntity(edge.causallyUpstreamOfOrWithinPositiveEffect),
     Entity.createEntity(edge.causallyUpstreamOfOrWithin),
     Entity.createEntity(edge.directlyProvidesInput),
+    Entity.createEntity(edge.removesInputFor),
   ],
 
   moleculeEdges: [

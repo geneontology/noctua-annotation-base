@@ -160,8 +160,7 @@ export class NoctuaFormConfigService {
   get causalEffect() {
     const options = [
       noctuaFormConfig.causalEffect.options.positive,
-      noctuaFormConfig.causalEffect.options.negative,
-      noctuaFormConfig.causalEffect.options.neutral
+      noctuaFormConfig.causalEffect.options.negative
     ];
 
     return {
