@@ -80,13 +80,13 @@
               </p>
             </div>
             <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
-              <div *ngFor="let directness of noctuaFormConfigService.directnessActivityMolecule.options" class="mb-8"
-                fxLayout="row" fxLayoutAlign="start center">
-                <mat-radio-button class="noc-radio-button-rounded" [value]="directness"
+              <div *ngFor="let directness of noctuaFormConfigService.directnessActivityMolecule.options"
+                class="mb-8 w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <mat-radio-button fxFlex="200px" class="noc-radio-button-rounded" [value]="directness"
                   [checked]="directness.name === connectorActivity?.rule.directness.directness.name">
                   {{directness.label}}
                 </mat-radio-button>
-                <div *ngIf="directness.description" class="noc-hint">
+                <div fxFlex="" *ngIf="directness.description" class="noc-hint">
                   {{directness.description}}
                 </div>
               </div>

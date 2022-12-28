@@ -1,0 +1,84 @@
+{
+  "definitions": {
+    "relationship:regulation": {
+      "name": "regulation",
+      "label": "Regulation",
+      "description": "The upstream activity conditionally controls the downstream activity",
+    },
+    "relationship:constitutivelyUpstream": {
+      "name": "constitutivelyUpstream",
+      "label": "Constitutively Upstream",
+      "description": "The upstream activity is normally present and required for the downstream activity.",
+    },
+    "relationship:providesInputFor": {
+      "name": "providesInputFor",
+      "label": "Provides Input For",
+      "description": "The upstream activity produces a molecule that is an input for the downstream activity.",
+    },
+    "relationship:removesInputFor": {
+      "name": "removesInputFor",
+      "label": "Removes Input For",
+      "description": "The upstream and downstream activities have the same input but the upstream activity makes the input unavailable for the downstream activity.",
+    },
+    "relationship:undetermined": {
+      "name": "undetermined",
+      "label": "Undetermined",
+      "description": "There is insufficient data to specify a precise causal mechanism.",
+    },
+    "causalEffect:positive": {
+      "name": "positive",
+      "label": "Positive"
+    },
+    "causalEffect:negative": {
+      "name": "negative",
+      "label": "Negative"
+    },
+    "directness:direct": {
+      "name": "direct",
+      "label": "Direct",
+      "description": "The upstream activity immediately precedes the downstream activity",
+    },
+    "directness,indirect": {
+      "name": "indirect",
+      "label": "Indirect",
+      "description": "There are intervening activities between the upstream and downstream activities."
+    }
+  },
+  "decisionTree": {
+    "relationship:constitutivelyUpstream": {
+      "edge": "RO:0012009"
+    },
+    "relationship:providesInputFor": {
+      "edge": "RO:0002413"
+    },
+    "relationship:removesInputFor": {
+      "edge": "RO:0012010"
+    },
+    "relationship:undetermined": {
+      "causalEffect:positive": {
+        "edge": "RO:0002304"
+      },
+      "causalEffect:negative": {
+        "edge": "RO:0002305"
+      }
+    },
+    "relationship:regulation": {
+      "causalEffect:positive": {
+        "directness:direct": {
+          "edge": "RO:0002629"
+        },
+        "directness:indirect": {
+          "edge": "RO:00002407"
+        }
+      },
+      "causalEffect:negative": {
+        "directness:direct": {
+          "edge": "RO:0002630"
+        },
+        "directness:indirect": {
+          "edge": "RO:0002409"
+        }
+      }
+    }
+  }
+}
