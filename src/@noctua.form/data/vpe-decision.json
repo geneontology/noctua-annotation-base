@@ -1,47 +1,53 @@
 {
   "definitions": {
-    "relationship:regulation": {
-      "name": "regulation",
-      "label": "Regulation",
-      "description": "The upstream activity conditionally controls the downstream activity",
+    "relationship": {
+      "regulation": {
+        "id": "relationship:regulation",
+        "label": "Regulation",
+        "description": "The upstream activity conditionally controls the downstream activity",
+      },
+      "constitutivelyUpstream": {
+        "id": "relationship:constitutivelyUpstream",
+        "label": "Constitutively Upstream",
+        "description": "The upstream activity is normally present and required for the downstream activity.",
+      },
+      "providesInputFor": {
+        "id": "relationship:providesInputFor",
+        "label": "Provides Input For",
+        "description": "The upstream activity produces a molecule that is an input for the downstream activity.",
+      },
+      "removesInputFor": {
+        "id": "relationship:removesInputFor",
+        "label": "Removes Input For",
+        "description": "The upstream and downstream activities have the same input but the upstream activity makes the input unavailable for the downstream activity.",
+      },
+      "undetermined": {
+        "id": "relationship:undetermined",
+        "label": "Undetermined",
+        "description": "There is insufficient data to specify a precise causal mechanism.",
+      }
     },
-    "relationship:constitutivelyUpstream": {
-      "name": "constitutivelyUpstream",
-      "label": "Constitutively Upstream",
-      "description": "The upstream activity is normally present and required for the downstream activity.",
+    "causalEffect": {
+      "positive": {
+        "id": "causalEffect:positive",
+        "label": "Positive"
+      },
+      "negative": {
+        "id": "causalEffect:negative",
+        "label": "Negative"
+      }
     },
-    "relationship:providesInputFor": {
-      "name": "providesInputFor",
-      "label": "Provides Input For",
-      "description": "The upstream activity produces a molecule that is an input for the downstream activity.",
-    },
-    "relationship:removesInputFor": {
-      "name": "removesInputFor",
-      "label": "Removes Input For",
-      "description": "The upstream and downstream activities have the same input but the upstream activity makes the input unavailable for the downstream activity.",
-    },
-    "relationship:undetermined": {
-      "name": "undetermined",
-      "label": "Undetermined",
-      "description": "There is insufficient data to specify a precise causal mechanism.",
-    },
-    "causalEffect:positive": {
-      "name": "positive",
-      "label": "Positive"
-    },
-    "causalEffect:negative": {
-      "name": "negative",
-      "label": "Negative"
-    },
-    "directness:direct": {
-      "name": "direct",
-      "label": "Direct",
-      "description": "The upstream activity immediately precedes the downstream activity",
-    },
-    "directness,indirect": {
-      "name": "indirect",
-      "label": "Indirect",
-      "description": "There are intervening activities between the upstream and downstream activities."
+    "directness": {
+      "direct": {
+        "id": "directness:direct",
+        "label": "Direct",
+        "description": "The upstream activity immediately precedes the downstream activity",
+      },
+      "indirect": {
+        "id": "directness:indirect",
+        "label": "Indirect",
+        "description": "There are intervening activities between the upstream and downstream activities."
+      }
     }
   },
   "decisionTree": {

@@ -10,6 +10,7 @@ import { Triple } from './triple';
 import { Evidence } from './evidence';
 import { Predicate } from './predicate';
 import { cloneDeep } from 'lodash';
+import vpeJson from '../../data/vpe-decision.json'
 
 export enum ConnectorState {
   creation = 1,
@@ -136,6 +137,22 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     this.setLinkDirection();
     self.setPreview();
+  }
+
+  getVPEEdge(relationship: string, causalEffect?: string, directness?: string): string | undefined {
+    const tree = vpeJson['decisionTree'];
+    if (tree[relationship]) {
+      if (tree[relationship].edge) {
+        return tree[relationship].edge;
+      } else if (causalEffect && tree[relationship][causalEffect]) {
+        if (tree[relationship][causalEffect].edge) {
+          return tree[relationship][causalEffect].edge;
+        } else if (directness && tree[relationship][causalEffect][directness]) {
+          return tree[relationship][causalEffect][directness].edge;
+        }
+      }
+    }
+    return undefined;
   }
 
   getCausalConnectorEdge(directness, causalEffect, relationship): Entity {

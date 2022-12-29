@@ -1,5 +1,6 @@
 import { environment } from './../environments/environment';
 import { Entity } from './models/activity/entity';
+import vpeJson from './data/vpe-decision.json'
 
 const edge = {
   placeholder: {
@@ -244,23 +245,6 @@ export const noctuaFormConfig = {
       }
     }
   },
-  'causalEffect': {
-    'options': {
-      'positive': {
-        'name': 'positive',
-        'label': 'Positive',
-      },
-      'neutral': {
-        'name': 'neutral',
-        'label': 'Unknown/neutral',
-      },
-      'negative': {
-        'name': 'negative',
-        'label': 'Negative',
-      },
-
-    }
-  },
   'findReplaceCategory': {
     'options': {
       'term': {
@@ -277,54 +261,9 @@ export const noctuaFormConfig = {
       },
     }
   },
-  'directness': {
-    'options': {
-      'direct': {
-        'name': 'direct',
-        'label': 'Direct',
-        'description': 'The upstream activity immediately precedes the downstream activity',
-      },
-      'indirect': {
-        'name': 'indirect',
-        'label': 'Indirect',
-        'description': 'There are intervening activities between the upstream and downstream activities.'
-      },
-      'chemicalProduct': {
-        'name': 'chemicalProduct',
-        'label': 'Product',
-        'description': 'The activity creates the molecule as a reaction product'
-      }
-    }
-  },
-  'activityRelationship': {
-    'options': {
-      'regulation': {
-        'name': 'regulation',
-        'label': 'Regulation',
-        'description': 'The upstream activity conditionally controls the downstream activity',
-      },
-      'constitutivelyUpstream': {
-        'name': 'constitutivelyUpstream',
-        'label': 'Constitutively Upstream',
-        'description': 'The upstream activity is normally present and required for the downstream activity.',
-      },
-      'providesInputFor': {
-        'name': 'providesInputFor',
-        'label': 'Provides Input For',
-        'description': 'The upstream activity produces a molecule that is an input for the downstream activity.',
-      },
-      'removesInputFor': {
-        'name': 'removesInputFor',
-        'label': 'Removes Input For',
-        'description': 'The upstream and downstream activities have the same input but the upstream activity makes the input unavailable for the downstream activity.',
-      },
-      'undetermined': {
-        'name': 'undetermined',
-        'label': 'Undetermined',
-        'description': 'There is insufficient data to specify a precise causal mechanism.',
-      },
-    }
-  },
+  'directness': vpeJson.definitions.directness,
+  'causalEffect': vpeJson.definitions.causalEffect,
+  'relationship': vpeJson.definitions.relationship,
   'chemicalRelationship': {
     'options': {
       'chemicalRegulates': {
@@ -336,6 +275,11 @@ export const noctuaFormConfig = {
         'name': 'chemicalSubstrate',
         'label': 'Substrate',
         'description': 'The chemical is the substrate that the activity acts upon'
+      },
+      'chemicalProduct': {
+        'name': 'chemicalProduct',
+        'label': 'Product',
+        'description': 'The activity creates the molecule as a reaction product'
       },
     }
   },
@@ -406,6 +350,7 @@ export const noctuaFormConfig = {
   },
 
 
+
   // This array is arrange for matrice decison tree for causal edge 0-8 index, don't rearrange
   causalEdges: [
     Entity.createEntity(edge.constitutivelyUpstreamOf),
@@ -442,3 +387,4 @@ export const noctuaFormConfig = {
   ],
 
 };
+

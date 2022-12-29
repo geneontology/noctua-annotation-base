@@ -159,8 +159,8 @@ export class NoctuaFormConfigService {
 
   get causalEffect() {
     const options = [
-      noctuaFormConfig.causalEffect.options.positive,
-      noctuaFormConfig.causalEffect.options.negative
+      noctuaFormConfig.causalEffect.positive,
+      noctuaFormConfig.causalEffect.negative
     ];
 
     return {
@@ -184,8 +184,8 @@ export class NoctuaFormConfigService {
 
   get directness() {
     const options = [
-      noctuaFormConfig.directness.options.direct,
-      noctuaFormConfig.directness.options.indirect,
+      noctuaFormConfig.directness.direct,
+      noctuaFormConfig.directness.indirect,
     ];
 
     return {
@@ -196,7 +196,7 @@ export class NoctuaFormConfigService {
 
   get directnessActivityMolecule() {
     const options = [
-      noctuaFormConfig.directness.options.chemicalProduct
+      noctuaFormConfig.chemicalRelationship.options.chemicalProduct
     ];
 
     return {
@@ -207,11 +207,7 @@ export class NoctuaFormConfigService {
 
   get activityRelationship() {
     const options = [
-      noctuaFormConfig.activityRelationship.options.regulation,
-      noctuaFormConfig.activityRelationship.options.constitutivelyUpstream,
-      noctuaFormConfig.activityRelationship.options.providesInputFor,
-      noctuaFormConfig.activityRelationship.options.removesInputFor,
-      noctuaFormConfig.activityRelationship.options.undetermined,
+      noctuaFormConfig['relationship,'],
     ];
 
     return {
