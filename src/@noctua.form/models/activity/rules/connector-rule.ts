@@ -12,7 +12,6 @@ export class ConnectorRule {
   activityRelationship = new ActivityRelationshipRule('activityRelationship')
 
   displaySection = {
-    directionCausalEffect: true,
     directness: true,
     causalEffect: true,
   };

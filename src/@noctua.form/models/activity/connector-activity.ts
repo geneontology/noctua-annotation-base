@@ -9,7 +9,7 @@ import { Entity } from './entity';
 import { Triple } from './triple';
 import { Evidence } from './evidence';
 import { Predicate } from './predicate';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, find } from 'lodash';
 import vpeJson from '../../data/vpe-decision.json'
 
 export enum ConnectorState {
@@ -110,22 +110,28 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     switch (value.activityRelationship.id) {
       case (noctuaFormConfig.activityRelationship.regulation.id):
-        self.rule.displaySection.directionCausalEffect = true;
+        self.rule.displaySection.causalEffect = true;
+        self.rule.displaySection.directness = true;
         break;
       case (noctuaFormConfig.activityRelationship.constitutivelyUpstream.id):
       case (noctuaFormConfig.activityRelationship.providesInputFor.id):
       case (noctuaFormConfig.activityRelationship.removesInputFor.id):
-        self.rule.displaySection.directionCausalEffect = false;
+        self.rule.displaySection.causalEffect = false;
         self.rule.displaySection.directness = false;
         break;
       case (noctuaFormConfig.activityRelationship.undetermined.id):
-        self.rule.displaySection.directionCausalEffect = true;
+        self.rule.displaySection.causalEffect = true;
         self.rule.displaySection.directness = false;
         break;
     }
 
+    console.log(self.rule.displaySection.directness)
+
     if (this.connectorType === ConnectorType.ACTIVITY_ACTIVITY) {
-      self.predicate.edge = this.getCausalConnectorEdge(value.directness, value.causalEffect, value.activityRelationship);
+      self.predicate.edge = this.getCausalConnectorEdge(
+        value.activityRelationship.id,
+        self.rule.displaySection.causalEffect ? value.causalEffect.id : null,
+        self.rule.displaySection.directness ? value.directness.id : null);
     } else if (this.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
       self.predicate.edge = this.getCausalConnectorEdgeAtoM(value.directness)
     } else if (this.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
@@ -155,36 +161,15 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     return undefined;
   }
 
-  getCausalConnectorEdge(directness, causalEffect, relationship): Entity {
-    let edge = noctuaFormConfig.edge.directlyProvidesInput;
+  getCausalConnectorEdge(relationship, causalEffect, directness): Entity {
+    const predicateId = this.getVPEEdge(relationship, causalEffect, directness)
 
-    if (relationship.id === noctuaFormConfig.activityRelationship.constitutivelyUpstream.id) {
-      edge = noctuaFormConfig.edge.constitutivelyUpstreamOf;
-    } else if (relationship.id === noctuaFormConfig.activityRelationship.providesInputFor) {
-      edge = noctuaFormConfig.edge.directlyProvidesInput;
-    } else if (relationship.id === noctuaFormConfig.activityRelationship.removesInputFor.id) {
-      edge = noctuaFormConfig.edge.removesInputFor;
-    } else if (relationship.id === noctuaFormConfig.activityRelationship.undetermined.id) {
-      if (causalEffect.id === noctuaFormConfig.causalEffect.positive.id) {
-        edge = noctuaFormConfig.edge.causallyUpstreamOfPositiveEffect;
-      } else {
-        edge = noctuaFormConfig.edge.causallyUpstreamOfNegativeEffect;
-      }
-    } else if (causalEffect.id === noctuaFormConfig.causalEffect.positive.id) {
-      if (directness.id === noctuaFormConfig.directness.direct.id) {
-        edge = noctuaFormConfig.edge.directlyPositivelyRegulates;
-      } else {
-        edge = noctuaFormConfig.edge.indirectlyPositivelyRegulates;
-      }
-    } else if (causalEffect.id === noctuaFormConfig.causalEffect.negative.id) {
-      if (directness.id === noctuaFormConfig.directness.direct.id) {
-        edge = noctuaFormConfig.edge.directlyNegativelyRegulates;
-      } else {
-        edge = noctuaFormConfig.edge.indirectlyNegativelyRegulates;
-      }
-    }
+    const edge = find(noctuaFormConfig.allEdges, {
+      id: predicateId
+    });
 
-    return Entity.createEntity(edge);
+    return edge ? Entity.createEntity(edge) : Entity.createEntity({ id: predicateId, label: predicateId });
+
   }
 
   getCausalConnectorEdgeAtoM(directness): Entity {

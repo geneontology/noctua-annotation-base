@@ -37,40 +37,40 @@
               </div>
             </mat-radio-group>
           </div>
-          <ng-container *ngIf="connectorActivity?.rule.displaySection.directionCausalEffect">
-            <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
-              <div fxFlex="180px">
-                <p>Effect Direction</p>
-              </div>
-              <mat-radio-group fxFlex="135px" formControlName="causalEffect" fxLayout="column"
-                fxLayoutAlign="start start">
-                <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
-                  class="noc-radio-button-rounded mb-8" [value]="causalEffect"
-                  [checked]="causalEffect.id === connectorActivity?.rule.effectDirection.direction.id">
-                  {{causalEffect.label}}
-                </mat-radio-button>
-              </mat-radio-group>
-              <div fxFlex="" fxLayout="column" fxLayoutAlign="center start">
-                <div class="noc-hint noc-sm">
-                  The mechanism regulation should be known, so it should be possible to pick the direction of the
-                  regulation.
-                </div>
+          <div *ngIf="connectorActivity?.rule.displaySection.causalEffect" class="px-8 noc-group-row" fxLayout="row"
+            fxLayoutAlign="start center">
+            <div fxFlex="180px">
+              <p>Effect Direction</p>
+            </div>
+            <mat-radio-group fxFlex="135px" formControlName="causalEffect" fxLayout="column"
+              fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
+                class="noc-radio-button-rounded mb-8" [value]="causalEffect"
+                [checked]="causalEffect.id === connectorActivity?.rule.effectDirection.direction.id">
+                {{causalEffect.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+            <div fxFlex="" fxLayout="column" fxLayoutAlign="center start">
+              <div class="noc-hint noc-sm">
+                The mechanism regulation should be known, so it should be possible to pick the direction of the
+                regulation.
               </div>
             </div>
-            <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
-              <div fxFlex="180px" class="pr-8">
-                <p>Directness
-                </p>
-              </div>
-              <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
-                <mat-radio-button *ngFor="let directness of noctuaFormConfigService.directness.options"
-                  class="noc-radio-button-rounded mb-8" [value]="directness"
-                  [checked]="directness.id === connectorActivity?.rule.directness.directness.id">
-                  {{directness.label}}
-                </mat-radio-button>
-              </mat-radio-group>
+          </div>
+          <div *ngIf="connectorActivity?.rule.displaySection.directness" class="px-8 noc-group-row" fxLayout="row"
+            fxLayoutAlign="start center">
+            <div fxFlex="180px" class="pr-8">
+              <p>Directness
+              </p>
             </div>
-          </ng-container>
+            <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
+              <mat-radio-button *ngFor="let directness of noctuaFormConfigService.directness.options"
+                class="noc-radio-button-rounded mb-8" [value]="directness"
+                [checked]="directness.id === connectorActivity?.rule.directness.directness.id">
+                {{directness.label}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
         </div>
         <div *ngIf="connectorActivity.connectorType === ConnectorType.ACTIVITY_MOLECULE"
           class="noc-form-section p-0 w-100-p">
