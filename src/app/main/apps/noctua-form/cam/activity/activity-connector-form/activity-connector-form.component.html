@@ -27,7 +27,7 @@
               <div *ngFor="let relationship of noctuaFormConfigService.activityRelationship.options" class="mb-8"
                 fxLayout="row" fxLayoutAlign="start center">
                 <mat-radio-button class="noc-radio-button-rounded"
-                  [checked]="relationship.name === connectorActivity?.rule.activityRelationship.relation.name"
+                  [checked]="relationship.id === connectorActivity?.rule.activityRelationship.relation.id"
                   [value]="relationship">
                   {{relationship.label}}
                 </mat-radio-button>
@@ -46,7 +46,7 @@
                 fxLayoutAlign="start start">
                 <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
                   class="noc-radio-button-rounded mb-8" [value]="causalEffect"
-                  [checked]="causalEffect.name === connectorActivity?.rule.effectDirection.direction.name">
+                  [checked]="causalEffect.id === connectorActivity?.rule.effectDirection.direction.id">
                   {{causalEffect.label}}
                 </mat-radio-button>
               </mat-radio-group>
@@ -65,7 +65,7 @@
               <mat-radio-group fxFlex="" formControlName="directness" fxLayout="column" fxLayoutAlign="start start">
                 <mat-radio-button *ngFor="let directness of noctuaFormConfigService.directness.options"
                   class="noc-radio-button-rounded mb-8" [value]="directness"
-                  [checked]="directness.name === connectorActivity?.rule.directness.directness.name">
+                  [checked]="directness.id === connectorActivity?.rule.directness.directness.id">
                   {{directness.label}}
                 </mat-radio-button>
               </mat-radio-group>
@@ -83,7 +83,7 @@
               <div *ngFor="let directness of noctuaFormConfigService.directnessActivityMolecule.options"
                 class="mb-8 w-100-p" fxLayout="row" fxLayoutAlign="start center">
                 <mat-radio-button fxFlex="200px" class="noc-radio-button-rounded" [value]="directness"
-                  [checked]="directness.name === connectorActivity?.rule.directness.directness.name">
+                  [checked]="directness.id === connectorActivity?.rule.directness.directness.id">
                   {{directness.label}}
                 </mat-radio-button>
                 <div fxFlex="" *ngIf="directness.description" class="noc-hint">
@@ -104,7 +104,7 @@
               <div *ngFor="let relationship of noctuaFormConfigService.chemicalRelationship.options" class="mb-8"
                 fxLayout="row" fxLayoutAlign="start center">
                 <mat-radio-button class="noc-radio-button-rounded"
-                  [checked]="relationship.name === connectorActivity?.rule.chemicalRelationship.relation.name"
+                  [checked]="relationship.id === connectorActivity?.rule.chemicalRelationship.relation.id"
                   [value]="relationship">
                   {{relationship.label}}
                 </mat-radio-button>
@@ -123,7 +123,7 @@
               fxLayoutAlign="start start">
               <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
                 class="noc-radio-button-rounded mb-8" [value]="causalEffect"
-                [checked]="causalEffect.name === connectorActivity?.rule.effectDirection.direction.name">
+                [checked]="causalEffect.id === connectorActivity?.rule.effectDirection.direction.id">
                 {{causalEffect.label}}
               </mat-radio-button>
             </mat-radio-group>

@@ -4,27 +4,27 @@
       "regulation": {
         "id": "relationship:regulation",
         "label": "Regulation",
-        "description": "The upstream activity conditionally controls the downstream activity",
+        "description": "The upstream activity conditionally controls the downstream activity"
       },
       "constitutivelyUpstream": {
         "id": "relationship:constitutivelyUpstream",
         "label": "Constitutively Upstream",
-        "description": "The upstream activity is normally present and required for the downstream activity.",
+        "description": "The upstream activity is normally present and required for the downstream activity."
       },
       "providesInputFor": {
         "id": "relationship:providesInputFor",
         "label": "Provides Input For",
-        "description": "The upstream activity produces a molecule that is an input for the downstream activity.",
+        "description": "The upstream activity produces a molecule that is an input for the downstream activity."
       },
       "removesInputFor": {
         "id": "relationship:removesInputFor",
         "label": "Removes Input For",
-        "description": "The upstream and downstream activities have the same input but the upstream activity makes the input unavailable for the downstream activity.",
+        "description": "The upstream and downstream activities have the same input but the upstream activity makes the input unavailable for the downstream activity."
       },
       "undetermined": {
         "id": "relationship:undetermined",
         "label": "Undetermined",
-        "description": "There is insufficient data to specify a precise causal mechanism.",
+        "description": "There is insufficient data to specify a precise causal mechanism."
       }
     },
     "causalEffect": {
@@ -41,7 +41,7 @@
       "direct": {
         "id": "directness:direct",
         "label": "Direct",
-        "description": "The upstream activity immediately precedes the downstream activity",
+        "description": "The upstream activity immediately precedes the downstream activity"
       },
       "indirect": {
         "id": "directness:indirect",

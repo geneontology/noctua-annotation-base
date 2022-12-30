@@ -1,5 +1,4 @@
 import { noctuaFormConfig } from './../../../noctua-form-config';
-import { Entity } from '../entity';
 import { DirectionRule } from './direction-rule';
 import { DirectnessRule } from './directness-rule';
 import { ChemicalRelationshipRule } from './chemical-relationship-rule';
@@ -19,9 +18,9 @@ export class ConnectorRule {
   };
 
   constructor() {
-    this.directness.directness = noctuaFormConfig.directness.options.direct;
-    this.effectDirection.direction = noctuaFormConfig.causalEffect.options.positive;
-    this.activityRelationship.relation = noctuaFormConfig.activityRelationship.options.regulation
-    this.chemicalRelationship.relation = noctuaFormConfig.chemicalRelationship.options.chemicalRegulates
+    this.directness.directness = noctuaFormConfig.directness.direct;
+    this.effectDirection.direction = noctuaFormConfig.causalEffect.positive;
+    this.activityRelationship.relation = noctuaFormConfig.activityRelationship.regulation
+    this.chemicalRelationship.relation = noctuaFormConfig.chemicalRelationship.chemicalRegulates
   }
 }

@@ -263,25 +263,23 @@ export const noctuaFormConfig = {
   },
   'directness': vpeJson.definitions.directness,
   'causalEffect': vpeJson.definitions.causalEffect,
-  'relationship': vpeJson.definitions.relationship,
+  'activityRelationship': vpeJson.definitions.relationship,
   'chemicalRelationship': {
-    'options': {
-      'chemicalRegulates': {
-        'name': 'chemicalRegulates',
-        'label': 'Regulation',
-        'description': 'The chemical regulates the activity'
-      },
-      'chemicalSubstrate': {
-        'name': 'chemicalSubstrate',
-        'label': 'Substrate',
-        'description': 'The chemical is the substrate that the activity acts upon'
-      },
-      'chemicalProduct': {
-        'name': 'chemicalProduct',
-        'label': 'Product',
-        'description': 'The activity creates the molecule as a reaction product'
-      },
-    }
+    'chemicalRegulates': {
+      'id': 'chemicalRegulates',
+      'label': 'Regulation',
+      'description': 'The chemical regulates the activity'
+    },
+    'chemicalSubstrate': {
+      'id': 'chemicalSubstrate',
+      'label': 'Substrate',
+      'description': 'The chemical is the substrate that the activity acts upon'
+    },
+    'chemicalProduct': {
+      'id': 'chemicalProduct',
+      'label': 'Product',
+      'description': 'The activity creates the molecule as a reaction product'
+    },
   },
   'displaySection': {
     'gp': {

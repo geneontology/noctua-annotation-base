@@ -4,8 +4,8 @@ import { Rule } from './rule';
 export class DirectionRule extends Rule {
   direction: any;
 
-  constructor(name?: string, label?: string, description?: string, url?: string) {
-    super(name, label, description, url);
+  constructor(id?: string, label?: string, description?: string, url?: string) {
+    super(id, label, description, url);
   }
 
 }

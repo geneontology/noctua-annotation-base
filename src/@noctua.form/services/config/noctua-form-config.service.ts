@@ -196,7 +196,7 @@ export class NoctuaFormConfigService {
 
   get directnessActivityMolecule() {
     const options = [
-      noctuaFormConfig.chemicalRelationship.options.chemicalProduct
+      noctuaFormConfig.chemicalRelationship.chemicalProduct
     ];
 
     return {
@@ -207,7 +207,11 @@ export class NoctuaFormConfigService {
 
   get activityRelationship() {
     const options = [
-      noctuaFormConfig['relationship,'],
+      noctuaFormConfig.activityRelationship.regulation,
+      noctuaFormConfig.activityRelationship.constitutivelyUpstream,
+      noctuaFormConfig.activityRelationship.providesInputFor,
+      noctuaFormConfig.activityRelationship.removesInputFor,
+      noctuaFormConfig.activityRelationship.undetermined
     ];
 
     return {
@@ -218,8 +222,8 @@ export class NoctuaFormConfigService {
 
   get chemicalRelationship() {
     const options = [
-      noctuaFormConfig.chemicalRelationship.options.chemicalRegulates,
-      noctuaFormConfig.chemicalRelationship.options.chemicalSubstrate,
+      noctuaFormConfig.chemicalRelationship.chemicalRegulates,
+      noctuaFormConfig.chemicalRelationship.chemicalSubstrate,
     ];
 
     return {
