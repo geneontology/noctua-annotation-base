@@ -22,13 +22,11 @@
             <div fxFlex="180px">
               <p>Relationship</p>
             </div>
-            <mat-radio-group fxFlex="" formControlName="activityRelationship" fxLayout="column"
-              fxLayoutAlign="start start">
+            <mat-radio-group fxFlex="" formControlName="relationship" fxLayout="column" fxLayoutAlign="start start">
               <div *ngFor="let relationship of noctuaFormConfigService.activityRelationship.options" class="mb-8"
                 fxLayout="row" fxLayoutAlign="start center">
                 <mat-radio-button class="noc-radio-button-rounded"
-                  [checked]="relationship.id === connectorActivity?.rule.activityRelationship.id"
-                  [value]="relationship">
+                  [checked]="relationship.id === connectorActivity?.rule.relationship.id" [value]="relationship">
                   {{relationship.label}}
                 </mat-radio-button>
                 <div *ngIf="relationship.description" class="noc-hint">
@@ -79,12 +77,11 @@
               <p>Relationship
               </p>
             </div>
-            <mat-radio-group fxFlex="" formControlName="activityMoleculeRelationship" fxLayout="column"
-              fxLayoutAlign="start start">
+            <mat-radio-group fxFlex="" formControlName="relationship" fxLayout="column" fxLayoutAlign="start start">
               <div *ngFor="let relationship of noctuaFormConfigService.activityMoleculeRelationship.options"
                 class="mb-8 w-100-p" fxLayout="row" fxLayoutAlign="start center">
                 <mat-radio-button fxFlex="200px" class="noc-radio-button-rounded" [value]="relationship"
-                  [checked]="relationship.id === connectorActivity?.rule.activityMoleculeRelationship.id">
+                  [checked]="relationship.id === connectorActivity?.rule.relationship.id">
                   {{relationship.label}}
                 </mat-radio-button>
                 <div fxFlex="" *ngIf="relationship.description" class="noc-hint">
@@ -100,13 +97,11 @@
             <div fxFlex="180px">
               <p>Relationship</p>
             </div>
-            <mat-radio-group fxFlex="" formControlName="moleculeActivityRelationship" fxLayout="column"
-              fxLayoutAlign="start start">
+            <mat-radio-group fxFlex="" formControlName="relationship" fxLayout="column" fxLayoutAlign="start start">
               <div *ngFor="let relationship of noctuaFormConfigService.moleculeActivityRelationship.options"
                 class="mb-8" fxLayout="row" fxLayoutAlign="start center">
                 <mat-radio-button class="noc-radio-button-rounded"
-                  [checked]="relationship.id === connectorActivity?.rule.moleculeActivityRelationship.id"
-                  [value]="relationship">
+                  [checked]="relationship.id === connectorActivity?.rule.relationship.id" [value]="relationship">
                   {{relationship.label}}
                 </mat-radio-button>
                 <div *ngIf="relationship.description" class="noc-hint">

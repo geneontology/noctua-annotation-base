@@ -27,8 +27,7 @@
               <div *ngFor="let relationship of noctuaFormConfigService.activityRelationship.options" class="mb-8"
                 fxLayout="row" fxLayoutAlign="start center">
                 <mat-radio-button class="noc-radio-button-rounded"
-                  [checked]="relationship.id === connectorActivity?.rule.activityRelationship.id"
-                  [value]="relationship">
+                  [checked]="relationship.id === connectorActivity?.rule.relationship.id" [value]="relationship">
                   {{relationship.label}}
                 </mat-radio-button>
                 <div *ngIf="relationship.description" class="noc-hint">

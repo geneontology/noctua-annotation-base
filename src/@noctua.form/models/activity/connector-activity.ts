@@ -47,11 +47,12 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     this.subject = subject;
     this.object = object;
     this.predicate = predicate;
-    this.rule = new ConnectorRule();
+    this.setConnectorType()
+    this.rule = new ConnectorRule(this.connectorType);
     this.subjectNode = cloneDeep(this.subject.rootNode);
     this.objectNode = this.object.rootNode;
     this.subjectNode.predicate.evidence = predicate.evidence
-    this.setConnectorType()
+
     this.setRule();
     this.setLinkDirection()
     this.createGraph();
@@ -63,16 +64,16 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     if (this.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
       const question = self.edgeToConnectorQuestionAtoM(self.predicate.edge);
-      self.rule.activityMoleculeRelationship = question.relationship;
+      self.rule.relationship = question.relationship;
     } else if (this.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
       const question = self.edgeToConnectorQuestionMtoA(self.predicate.edge);
 
-      self.rule.moleculeActivityRelationship = question.relationship;
+      self.rule.relationship = question.relationship;
       self.rule.effectDirection = question.causalEffect
     } else {
       const question = self.edgeToConnectorQuestion(self.predicate.edge);
 
-      self.rule.activityRelationship = question.relationship;
+      self.rule.relationship = question.relationship;
       self.rule.effectDirection = question.causalEffect;
       self.rule.directness = question.directness;
     }
@@ -99,16 +100,8 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     self.rule.displaySection.causalEffect = true;
 
-    if (value.moleculeActivityRelationship) {
-      if (value.moleculeActivityRelationship.id === noctuaFormConfig.moleculeActivityRelationship.regulates.id) {
-        self.rule.displaySection.causalEffect = true;
-      } else if (value.moleculeActivityRelationship.id === noctuaFormConfig.moleculeActivityRelationship.substrate.id) {
-        self.rule.displaySection.causalEffect = false;
-      }
-    }
-
-    if (value.activityRelationship) {
-      switch (value.activityRelationship.id) {
+    if (value.relationship) {
+      switch (value.relationship.id) {
         case (noctuaFormConfig.activityRelationship.regulation.id):
           self.rule.displaySection.causalEffect = true;
           self.rule.displaySection.directness = true;
@@ -123,20 +116,23 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
           self.rule.displaySection.causalEffect = true;
           self.rule.displaySection.directness = false;
           break;
-      }
-    }
-
-    if (value.activityMoleculeRelationship) {
-      if (value.activityMoleculeRelationship.id === noctuaFormConfig.activityMoleculeRelationship.product.id) {
-        self.rule.displaySection.causalEffect = false;
-        self.rule.displaySection.directness = false;
+        case (noctuaFormConfig.moleculeActivityRelationship.regulates.id):
+          self.rule.displaySection.causalEffect = true;
+          break;
+        case (value.relationship.id === noctuaFormConfig.moleculeActivityRelationship.substrate.id):
+          self.rule.displaySection.causalEffect = false;
+          break;
+        case (noctuaFormConfig.activityMoleculeRelationship.product.id):
+          self.rule.displaySection.causalEffect = false;
+          self.rule.displaySection.directness = false;
+          break;
       }
     }
 
     self.predicate.edge = this.getCausalConnectorEdge(
-      value.activityRelationship.id,
-      self.rule.displaySection.causalEffect ? value.causalEffect.id : null,
-      self.rule.displaySection.directness ? value.directness.id : null);
+      value.relationship.id,
+      self.rule.displaySection.causalEffect && value.causalEffect ? value.causalEffect.id : null,
+      self.rule.displaySection.directness && value.directness ? value.directness.id : null);
 
     self.prepareSave(value);
 
@@ -163,16 +159,16 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   getCausalConnectorEdge(relationship, causalEffect, directness): Entity {
     const predicateId = this.getVPEEdge(relationship, causalEffect, directness)
 
-    const edge = find(noctuaFormConfig.allEdges, {
+    const entity = find(noctuaFormConfig.allEdges, {
       id: predicateId
     });
+    const edge = entity ? Entity.createEntity(entity) : Entity.createEntity({ id: predicateId, label: predicateId });
 
     if (edge.id === noctuaFormConfig.edge.hasInput.id) {
       edge.label = 'input of'
     }
 
-    return edge ? Entity.createEntity(edge) : Entity.createEntity({ id: predicateId, label: predicateId });
-
+    return edge
   }
 
 

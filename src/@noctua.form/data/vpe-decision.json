@@ -41,7 +41,7 @@
         "description": "The chemical regulates the activity"
       },
       "substrate": {
-        "id": "moleculeActivityRelationship:Substrate",
+        "id": "moleculeActivityRelationship:substrate",
         "label": "Substrate",
         "description": "The chemical is the substrate that the activity acts upon"
       }
@@ -108,13 +108,16 @@
     "activityMoleculeRelationship:product": {
       "edge": "RO:0002234"
     },
-    "moleculeActivityRelationship:product": {
+    "moleculeActivityRelationship:regulates": {
       "causalEffect:positive": {
         "edge": "RO:0012005"
       },
       "causalEffect:negative": {
         "edge": "RO:0012006"
       }
+    },
+    "moleculeActivityRelationship:substrate": {
+      "edge": "RO:0002233"
     }
   }
 }

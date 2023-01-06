@@ -83,13 +83,13 @@ export class NoctuaActivityConnectorService {
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
 
     if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_ACTIVITY) {
-      this.connectorForm.activityRelationship.setValue(this.connectorActivity.rule.activityRelationship);
+      this.connectorForm.relationship.setValue(this.connectorActivity.rule.relationship);
       this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection);
       this.connectorForm.directness.setValue(this.connectorActivity.rule.directness);
     } else if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
-      this.connectorForm.activityMoleculeRelationship.setValue(this.connectorActivity.rule.activityMoleculeRelationship);
+      this.connectorForm.relationship.setValue(this.connectorActivity.rule.relationship);
     } else if (this.connectorActivity.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
-      this.connectorForm.moleculeActivityRelationship.setValue(this.connectorActivity.rule.moleculeActivityRelationship);
+      this.connectorForm.relationship.setValue(this.connectorActivity.rule.relationship);
       this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection);
     }
 
