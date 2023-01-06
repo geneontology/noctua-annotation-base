@@ -83,20 +83,20 @@ export class NoctuaActivityConnectorService {
     this.connectorFormGroup.next(this._fb.group(this.connectorForm));
 
     if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_ACTIVITY) {
-      this.connectorForm.activityRelationship.setValue(this.connectorActivity.rule.activityRelationship.relation);
-      this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
-      this.connectorForm.directness.setValue(this.connectorActivity.rule.directness.directness);
+      this.connectorForm.activityRelationship.setValue(this.connectorActivity.rule.activityRelationship);
+      this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection);
+      this.connectorForm.directness.setValue(this.connectorActivity.rule.directness);
     } else if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
-      this.connectorForm.directness.setValue(this.connectorActivity.rule.directness.directness);
+      this.connectorForm.activityMoleculeRelationship.setValue(this.connectorActivity.rule.activityMoleculeRelationship);
     } else if (this.connectorActivity.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
-      this.connectorForm.chemicalRelationship.setValue(this.connectorActivity.rule.chemicalRelationship.relation);
-      this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
+      this.connectorForm.moleculeActivityRelationship.setValue(this.connectorActivity.rule.moleculeActivityRelationship);
+      this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection);
     }
 
     this._onActivityFormChanges();
 
     // just to trigger the on Changes event
-    this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection.direction);
+    this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection);
   }
 
   updateEvidence(node: ActivityNode) {

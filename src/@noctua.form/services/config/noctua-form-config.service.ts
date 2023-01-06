@@ -194,17 +194,6 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get directnessActivityMolecule() {
-    const options = [
-      noctuaFormConfig.chemicalRelationship.chemicalProduct
-    ];
-
-    return {
-      options: options,
-      selected: options[0]
-    };
-  }
-
   get activityRelationship() {
     const options = [
       noctuaFormConfig.activityRelationship.regulation,
@@ -220,10 +209,21 @@ export class NoctuaFormConfigService {
     };
   }
 
-  get chemicalRelationship() {
+  get activityMoleculeRelationship() {
     const options = [
-      noctuaFormConfig.chemicalRelationship.chemicalRegulates,
-      noctuaFormConfig.chemicalRelationship.chemicalSubstrate,
+      noctuaFormConfig.activityMoleculeRelationship.product,
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
+  get moleculeActivityRelationship() {
+    const options = [
+      noctuaFormConfig.moleculeActivityRelationship.regulates,
+      noctuaFormConfig.moleculeActivityRelationship.substrate,
     ];
 
     return {

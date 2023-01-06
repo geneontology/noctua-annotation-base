@@ -1,15 +1,11 @@
 import { noctuaFormConfig } from './../../../noctua-form-config';
-import { DirectionRule } from './direction-rule';
-import { DirectnessRule } from './directness-rule';
-import { ChemicalRelationshipRule } from './chemical-relationship-rule';
-import { ActivityRelationshipRule } from './activity-relationship-rule';
 
 export class ConnectorRule {
-  directness = new DirectnessRule('directness',
-    'Do you know the directness for how the upstream activity affects the downstream activity?');
-  effectDirection = new DirectionRule('effectDirection', 'Direction of Effect?');
-  chemicalRelationship = new ChemicalRelationshipRule('chemicalRelationship')
-  activityRelationship = new ActivityRelationshipRule('activityRelationship')
+  directness = noctuaFormConfig.directness.direct;
+  effectDirection = noctuaFormConfig.causalEffect.positive;
+  activityRelationship = noctuaFormConfig.activityRelationship.regulation;
+  activityMoleculeRelationship = noctuaFormConfig.activityMoleculeRelationship.product;
+  moleculeActivityRelationship = noctuaFormConfig.moleculeActivityRelationship.regulates;
 
   displaySection = {
     directness: true,
@@ -17,9 +13,6 @@ export class ConnectorRule {
   };
 
   constructor() {
-    this.directness.directness = noctuaFormConfig.directness.direct;
-    this.effectDirection.direction = noctuaFormConfig.causalEffect.positive;
-    this.activityRelationship.relation = noctuaFormConfig.activityRelationship.regulation
-    this.chemicalRelationship.relation = noctuaFormConfig.chemicalRelationship.chemicalRegulates
+
   }
 }

@@ -1,30 +1,49 @@
 {
   "definitions": {
-    "relationship": {
+    "activityRelationship": {
       "regulation": {
-        "id": "relationship:regulation",
+        "id": "activityRelationship:regulation",
         "label": "Regulation",
         "description": "The upstream activity conditionally controls the downstream activity"
       },
       "constitutivelyUpstream": {
-        "id": "relationship:constitutivelyUpstream",
+        "id": "activityRelationship:constitutivelyUpstream",
         "label": "Constitutively Upstream",
         "description": "The upstream activity is normally present and required for the downstream activity."
       },
       "providesInputFor": {
-        "id": "relationship:providesInputFor",
+        "id": "activityRelationship:providesInputFor",
         "label": "Provides Input For",
         "description": "The upstream activity produces a molecule that is an input for the downstream activity."
       },
       "removesInputFor": {
-        "id": "relationship:removesInputFor",
+        "id": "activityRelationship:removesInputFor",
         "label": "Removes Input For",
         "description": "The upstream and downstream activities have the same input but the upstream activity makes the input unavailable for the downstream activity."
       },
       "undetermined": {
-        "id": "relationship:undetermined",
+        "id": "activityRelationship:undetermined",
         "label": "Undetermined",
         "description": "There is insufficient data to specify a precise causal mechanism."
+      }
+    },
+    "activityMoleculeRelationship": {
+      "product": {
+        "id": "activityMoleculeRelationship:product",
+        "label": "Product",
+        "description": "The activity creates the molecule as a reaction product"
+      }
+    },
+    "moleculeActivityRelationship": {
+      "regulates": {
+        "id": "moleculeActivityRelationship:regulates",
+        "label": "Regulation",
+        "description": "The chemical regulates the activity"
+      },
+      "substrate": {
+        "id": "moleculeActivityRelationship:Substrate",
+        "label": "Substrate",
+        "description": "The chemical is the substrate that the activity acts upon"
       }
     },
     "causalEffect": {
@@ -51,16 +70,16 @@
     }
   },
   "decisionTree": {
-    "relationship:constitutivelyUpstream": {
+    "activityRelationship:constitutivelyUpstream": {
       "edge": "RO:0012009"
     },
-    "relationship:providesInputFor": {
+    "activityRelationship:providesInputFor": {
       "edge": "RO:0002413"
     },
-    "relationship:removesInputFor": {
+    "activityRelationship:removesInputFor": {
       "edge": "RO:0012010"
     },
-    "relationship:undetermined": {
+    "activityRelationship:undetermined": {
       "causalEffect:positive": {
         "edge": "RO:0002304"
       },
@@ -68,7 +87,7 @@
         "edge": "RO:0002305"
       }
     },
-    "relationship:regulation": {
+    "activityRelationship:regulation": {
       "causalEffect:positive": {
         "directness:direct": {
           "edge": "RO:0002629"
@@ -84,6 +103,17 @@
         "directness:indirect": {
           "edge": "RO:0002409"
         }
+      }
+    },
+    "activityMoleculeRelationship:product": {
+      "edge": "RO:0002234"
+    },
+    "moleculeActivityRelationship:product": {
+      "causalEffect:positive": {
+        "edge": "RO:0012005"
+      },
+      "causalEffect:negative": {
+        "edge": "RO:0012006"
       }
     }
   }

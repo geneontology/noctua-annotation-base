@@ -63,19 +63,18 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     if (this.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
       const question = self.edgeToConnectorQuestionAtoM(self.predicate.edge);
-
-      self.rule.directness.directness = question.directness;
+      self.rule.activityMoleculeRelationship = question.relationship;
     } else if (this.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
       const question = self.edgeToConnectorQuestionMtoA(self.predicate.edge);
 
-      self.rule.chemicalRelationship.relation = question.relationship;
-      self.rule.effectDirection.direction = question.causalEffect
+      self.rule.moleculeActivityRelationship = question.relationship;
+      self.rule.effectDirection = question.causalEffect
     } else {
       const question = self.edgeToConnectorQuestion(self.predicate.edge);
 
-      self.rule.activityRelationship.relation = question.relationship;
-      self.rule.effectDirection.direction = question.causalEffect;
-      self.rule.directness.directness = question.directness;
+      self.rule.activityRelationship = question.relationship;
+      self.rule.effectDirection = question.causalEffect;
+      self.rule.directness = question.directness;
     }
   }
 
@@ -100,44 +99,44 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     self.rule.displaySection.causalEffect = true;
 
-    if (value.chemicalRelationship) {
-      if (value.chemicalRelationship.id === noctuaFormConfig.chemicalRelationship.chemicalRegulates.id) {
+    if (value.moleculeActivityRelationship) {
+      if (value.moleculeActivityRelationship.id === noctuaFormConfig.moleculeActivityRelationship.regulates.id) {
         self.rule.displaySection.causalEffect = true;
-      } else if (value.chemicalRelationship.id === noctuaFormConfig.chemicalRelationship.chemicalSubstrate.id) {
+      } else if (value.moleculeActivityRelationship.id === noctuaFormConfig.moleculeActivityRelationship.substrate.id) {
         self.rule.displaySection.causalEffect = false;
       }
     }
 
-    switch (value.activityRelationship.id) {
-      case (noctuaFormConfig.activityRelationship.regulation.id):
-        self.rule.displaySection.causalEffect = true;
-        self.rule.displaySection.directness = true;
-        break;
-      case (noctuaFormConfig.activityRelationship.constitutivelyUpstream.id):
-      case (noctuaFormConfig.activityRelationship.providesInputFor.id):
-      case (noctuaFormConfig.activityRelationship.removesInputFor.id):
+    if (value.activityRelationship) {
+      switch (value.activityRelationship.id) {
+        case (noctuaFormConfig.activityRelationship.regulation.id):
+          self.rule.displaySection.causalEffect = true;
+          self.rule.displaySection.directness = true;
+          break;
+        case (noctuaFormConfig.activityRelationship.constitutivelyUpstream.id):
+        case (noctuaFormConfig.activityRelationship.providesInputFor.id):
+        case (noctuaFormConfig.activityRelationship.removesInputFor.id):
+          self.rule.displaySection.causalEffect = false;
+          self.rule.displaySection.directness = false;
+          break;
+        case (noctuaFormConfig.activityRelationship.undetermined.id):
+          self.rule.displaySection.causalEffect = true;
+          self.rule.displaySection.directness = false;
+          break;
+      }
+    }
+
+    if (value.activityMoleculeRelationship) {
+      if (value.activityMoleculeRelationship.id === noctuaFormConfig.activityMoleculeRelationship.product.id) {
         self.rule.displaySection.causalEffect = false;
         self.rule.displaySection.directness = false;
-        break;
-      case (noctuaFormConfig.activityRelationship.undetermined.id):
-        self.rule.displaySection.causalEffect = true;
-        self.rule.displaySection.directness = false;
-        break;
+      }
     }
 
-    console.log(self.rule.displaySection.directness)
-
-    if (this.connectorType === ConnectorType.ACTIVITY_ACTIVITY) {
-      self.predicate.edge = this.getCausalConnectorEdge(
-        value.activityRelationship.id,
-        self.rule.displaySection.causalEffect ? value.causalEffect.id : null,
-        self.rule.displaySection.directness ? value.directness.id : null);
-    } else if (this.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
-      self.predicate.edge = this.getCausalConnectorEdgeAtoM(value.directness)
-    } else if (this.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
-      self.predicate.edge = this.getCausalConnectorEdgeMtoA(value.chemicalRelationship, value.causalEffect);
-    }
-
+    self.predicate.edge = this.getCausalConnectorEdge(
+      value.activityRelationship.id,
+      self.rule.displaySection.causalEffect ? value.causalEffect.id : null,
+      self.rule.displaySection.directness ? value.directness.id : null);
 
     self.prepareSave(value);
 
@@ -168,39 +167,14 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       id: predicateId
     });
 
+    if (edge.id === noctuaFormConfig.edge.hasInput.id) {
+      edge.label = 'input of'
+    }
+
     return edge ? Entity.createEntity(edge) : Entity.createEntity({ id: predicateId, label: predicateId });
 
   }
 
-  getCausalConnectorEdgeAtoM(directness): Entity {
-    let edge = noctuaFormConfig.edge.hasOutput;
-
-    if (directness.id === noctuaFormConfig.chemicalRelationship.chemicalProduct.id) {
-      edge = noctuaFormConfig.edge.hasOutput;
-    }
-
-    return Entity.createEntity(edge);
-  }
-
-  getCausalConnectorEdgeMtoA(relationship, causalEffect): Entity {
-    let edge = noctuaFormConfig.edge.isSmallMoleculeActivator;
-
-    if (relationship.id === noctuaFormConfig.chemicalRelationship.chemicalRegulates.id) {
-      if (causalEffect.id === noctuaFormConfig.causalEffect.negative.id) {
-        edge = noctuaFormConfig.edge.isSmallMoleculeInhibitor;
-      }
-    } else {
-      edge = noctuaFormConfig.edge.hasInput
-    }
-
-    const entity = Entity.createEntity(edge);
-
-    if (entity.id === noctuaFormConfig.edge.hasInput.id) {
-      entity.label = 'input of'
-    }
-
-    return entity
-  }
 
   edgeToConnectorQuestion(edge: Entity) {
     let relationship = noctuaFormConfig.activityRelationship.regulation;
@@ -244,18 +218,18 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   }
 
   edgeToConnectorQuestionAtoM(edge: Entity) {
-    let directness = noctuaFormConfig.chemicalRelationship.chemicalProduct;
+    let relationship = noctuaFormConfig.activityMoleculeRelationship.product;
 
-    return { directness }
+    return { relationship }
   }
 
   edgeToConnectorQuestionMtoA(edge: Entity) {
-    let relationship = noctuaFormConfig.chemicalRelationship.chemicalRegulates
+    let relationship = noctuaFormConfig.moleculeActivityRelationship.regulates
     let causalEffect = noctuaFormConfig.causalEffect.positive;
 
     switch (edge.id) {
       case noctuaFormConfig.edge.hasInput.id:
-        relationship = noctuaFormConfig.chemicalRelationship.chemicalSubstrate;
+        relationship = noctuaFormConfig.moleculeActivityRelationship.substrate;
         break;
       case noctuaFormConfig.edge.isSmallMoleculeActivator.id:
         causalEffect = noctuaFormConfig.causalEffect.positive;
