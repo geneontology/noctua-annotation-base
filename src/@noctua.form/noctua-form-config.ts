@@ -261,8 +261,9 @@ export const noctuaFormConfig = {
       },
     }
   },
+  'decisionTree': vpeJson.decisionTree,
   'directness': vpeJson.definitions.directness,
-  'causalEffect': vpeJson.definitions.causalEffect,
+  'effectDirection': vpeJson.definitions.effectDirection,
   'activityRelationship': vpeJson.definitions.activityRelationship,
   'activityMoleculeRelationship': vpeJson.definitions.activityMoleculeRelationship,
   'moleculeActivityRelationship': vpeJson.definitions.moleculeActivityRelationship,

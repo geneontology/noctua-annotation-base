@@ -1,16 +1,16 @@
 import vpeJson from '../../data/vpe-decision.json'
 
 
-export function getVPEEdge(relationship: string, causalEffect?: string, directness?: string): string | undefined {
+export function getVPEEdge(relationship: string, effectDirection?: string, directness?: string): string | undefined {
   const tree = vpeJson['tree'];
   if (tree[relationship]) {
     if (tree[relationship].edge) {
       return tree[relationship].edge;
-    } else if (causalEffect && tree[relationship][causalEffect]) {
-      if (tree[relationship][causalEffect].edge) {
-        return tree[relationship][causalEffect].edge;
-      } else if (directness && tree[relationship][causalEffect][directness]) {
-        return tree[relationship][causalEffect][directness].edge;
+    } else if (effectDirection && tree[relationship][effectDirection]) {
+      if (tree[relationship][effectDirection].edge) {
+        return tree[relationship][effectDirection].edge;
+      } else if (directness && tree[relationship][effectDirection][directness]) {
+        return tree[relationship][effectDirection][directness].edge;
       }
     }
   }

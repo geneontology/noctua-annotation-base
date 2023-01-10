@@ -84,19 +84,19 @@ export class NoctuaActivityConnectorService {
 
     if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_ACTIVITY) {
       this.connectorForm.relationship.setValue(this.connectorActivity.rule.relationship);
-      this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection);
+      this.connectorForm.effectDirection.setValue(this.connectorActivity.rule.effectDirection);
       this.connectorForm.directness.setValue(this.connectorActivity.rule.directness);
     } else if (this.connectorActivity.connectorType === ConnectorType.ACTIVITY_MOLECULE) {
       this.connectorForm.relationship.setValue(this.connectorActivity.rule.relationship);
     } else if (this.connectorActivity.connectorType === ConnectorType.MOLECULE_ACTIVITY) {
       this.connectorForm.relationship.setValue(this.connectorActivity.rule.relationship);
-      this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection);
+      this.connectorForm.effectDirection.setValue(this.connectorActivity.rule.effectDirection);
     }
 
     this._onActivityFormChanges();
 
     // just to trigger the on Changes event
-    this.connectorForm.causalEffect.setValue(this.connectorActivity.rule.effectDirection);
+    this.connectorForm.effectDirection.setValue(this.connectorActivity.rule.effectDirection);
   }
 
   updateEvidence(node: ActivityNode) {

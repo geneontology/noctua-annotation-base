@@ -3,12 +3,12 @@ import { noctuaFormConfig } from './../../../noctua-form-config';
 
 export class ConnectorRule {
   directness = noctuaFormConfig.directness.direct;
-  effectDirection = noctuaFormConfig.causalEffect.positive;
+  effectDirection = noctuaFormConfig.effectDirection.positive;
   relationship;
 
   displaySection = {
     directness: true,
-    causalEffect: true,
+    effectDirection: true,
   };
 
   constructor(connectorType: ConnectorType) {

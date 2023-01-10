@@ -46,13 +46,13 @@
         "description": "The chemical is the substrate that the activity acts upon"
       }
     },
-    "causalEffect": {
+    "effectDirection": {
       "positive": {
-        "id": "causalEffect:positive",
+        "id": "effectDirection:positive",
         "label": "Positive"
       },
       "negative": {
-        "id": "causalEffect:negative",
+        "id": "effectDirection:negative",
         "label": "Negative"
       }
     },
@@ -80,15 +80,15 @@
       "edge": "RO:0012010"
     },
     "activityRelationship:undetermined": {
-      "causalEffect:positive": {
+      "effectDirection:positive": {
         "edge": "RO:0002304"
       },
-      "causalEffect:negative": {
+      "effectDirection:negative": {
         "edge": "RO:0002305"
       }
     },
     "activityRelationship:regulation": {
-      "causalEffect:positive": {
+      "effectDirection:positive": {
         "directness:direct": {
           "edge": "RO:0002629"
         },
@@ -96,7 +96,7 @@
           "edge": "RO:00002407"
         }
       },
-      "causalEffect:negative": {
+      "effectDirection:negative": {
         "directness:direct": {
           "edge": "RO:0002630"
         },
@@ -109,10 +109,10 @@
       "edge": "RO:0002234"
     },
     "moleculeActivityRelationship:regulates": {
-      "causalEffect:positive": {
+      "effectDirection:positive": {
         "edge": "RO:0012005"
       },
-      "causalEffect:negative": {
+      "effectDirection:negative": {
         "edge": "RO:0012006"
       }
     },

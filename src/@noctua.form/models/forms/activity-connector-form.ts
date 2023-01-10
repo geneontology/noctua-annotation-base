@@ -8,7 +8,7 @@ export class ActivityConnectorForm {
   edge = new FormControl();
   relationship = new FormControl();
   directness = new FormControl();
-  causalEffect = new FormControl();
+  effectDirection = new FormControl();
   evidenceForms: EvidenceForm[] = [];
   evidenceFormArray = new FormArray([]);
   _metadata: ActivityFormMetadata;
