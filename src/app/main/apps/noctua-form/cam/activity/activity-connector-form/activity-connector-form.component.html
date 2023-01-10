@@ -16,15 +16,14 @@
           <noc-graph-preview [nodes]="connectorActivity?.graphPreview.nodes"
             [edges]="connectorActivity?.graphPreview.edges" class="noc-graph-preview"></noc-graph-preview>
         </div>
-        <div *ngIf="connectorActivity.connectorType === ConnectorType.ACTIVITY_ACTIVITY"
-          class="noc-form-section p-0 w-100-p">
+        <div class="noc-form-section p-0 w-100-p">
           <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
             <div class="noc-title">
               <p>Relationship</p>
             </div>
             <mat-radio-group fxFlex="" formControlName="relationship" fxLayout="column" fxLayoutAlign="start start">
-              <div *ngFor="let relationship of noctuaFormConfigService.activityRelationship.options"
-                class="noc-radio-row" fxLayout="row" fxLayoutAlign="start center">
+              <div *ngFor="let relationship of relationshipOptions" class="noc-radio-row" fxLayout="row"
+                fxLayoutAlign="start center">
                 <mat-radio-button class="noc-radio-button-rounded noc-label"
                   [checked]="relationship.id === connectorActivity?.rule.relationship.id" [value]="relationship">
                   {{relationship.label}}
@@ -73,66 +72,6 @@
                 </div>
               </div>
             </mat-radio-group>
-          </div>
-        </div>
-        <div *ngIf="connectorActivity.connectorType === ConnectorType.ACTIVITY_MOLECULE"
-          class="noc-form-section p-0 w-100-p">
-          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-title">
-              <p>Relationship
-              </p>
-            </div>
-            <mat-radio-group fxFlex="" formControlName="relationship" fxLayout="column" fxLayoutAlign="start start">
-              <div *ngFor="let relationship of noctuaFormConfigService.activityMoleculeRelationship.options"
-                class="mb-8 w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                <mat-radio-button fxFlex="200px" class="noc-radio-button-rounded" noc-label [value]="relationship"
-                  [checked]="relationship.id === connectorActivity?.rule.relationship.id">
-                  {{relationship.label}}
-                </mat-radio-button>
-                <div fxFlex="" *ngIf="relationship.description" class="noc-hint">
-                  {{relationship.description}}
-                </div>
-              </div>
-            </mat-radio-group>
-          </div>
-        </div>
-        <div *ngIf="connectorActivity.connectorType === ConnectorType.MOLECULE_ACTIVITY"
-          class="noc-form-section p-0 w-100-p">
-          <div class="px-8 noc-group-row" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-title">
-              <p>Relationship</p>
-            </div>
-            <mat-radio-group fxFlex="" formControlName="relationship" fxLayout="column" fxLayoutAlign="start start">
-              <div *ngFor="let relationship of noctuaFormConfigService.moleculeActivityRelationship.options"
-                class="mb-8" fxLayout="row" fxLayoutAlign="start center">
-                <mat-radio-button class="noc-radio-button-rounded noc-label"
-                  [checked]="relationship.id === connectorActivity?.rule.relationship.id" [value]="relationship">
-                  {{relationship.label}}
-                </mat-radio-button>
-                <div *ngIf="relationship.description" class="noc-hint">
-                  {{relationship.description}}
-                </div>
-              </div>
-            </mat-radio-group>
-          </div>
-          <div *ngIf="connectorActivity?.rule.displaySection.causalEffect" class="px-8 noc-group-row" fxLayout="row"
-            fxLayoutAlign="start center">
-            <div class="noc-title">
-              <p>Effect Direction</p>
-            </div>
-            <mat-radio-group formControlName="causalEffect" fxLayout="column" fxLayoutAlign="start start">
-              <mat-radio-button *ngFor="let causalEffect of noctuaFormConfigService.causalEffect.options"
-                class="noc-radio-button-rounded noc-label" [value]="causalEffect"
-                [checked]="causalEffect.id === connectorActivity?.rule.effectDirection.id">
-                {{causalEffect.label}}
-              </mat-radio-button>
-            </mat-radio-group>
-            <div fxFlex="" fxLayout="column" fxLayoutAlign="center start">
-              <div class="noc-hint noc-sm">
-                The mechanism regulation should be known, so it should be possible to pick the direction of the
-                regulation.
-              </div>
-            </div>
           </div>
         </div>
         <div class="noc-section-header noc-bt" fxLayout="row" fxLayoutAlign="start center">

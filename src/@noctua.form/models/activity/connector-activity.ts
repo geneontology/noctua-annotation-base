@@ -18,9 +18,9 @@ export enum ConnectorState {
 }
 
 export enum ConnectorType {
-  ACTIVITY_ACTIVITY = 'ACTIVITY_ACTIVITY',
-  ACTIVITY_MOLECULE = 'ACTIVITY_MOLECULE',
-  MOLECULE_ACTIVITY = 'MOLECULE_ACTIVITY',
+  ACTIVITY_ACTIVITY = 'activity',
+  ACTIVITY_MOLECULE = 'activityMolecule',
+  MOLECULE_ACTIVITY = 'moleculeActivity',
 };
 
 export class ConnectorActivity extends SaeGraph<ActivityNode> {
@@ -102,25 +102,27 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     if (value.relationship) {
       switch (value.relationship.id) {
-        case (noctuaFormConfig.activityRelationship.regulation.id):
+        case noctuaFormConfig.activityRelationship.regulation.id:
           self.rule.displaySection.causalEffect = true;
           self.rule.displaySection.directness = true;
           break;
-        case (noctuaFormConfig.activityRelationship.constitutivelyUpstream.id):
-        case (noctuaFormConfig.activityRelationship.providesInputFor.id):
-        case (noctuaFormConfig.activityRelationship.removesInputFor.id):
+        case noctuaFormConfig.activityRelationship.constitutivelyUpstream.id:
+        case noctuaFormConfig.activityRelationship.providesInputFor.id:
+        case noctuaFormConfig.activityRelationship.removesInputFor.id:
           self.rule.displaySection.causalEffect = false;
           self.rule.displaySection.directness = false;
           break;
-        case (noctuaFormConfig.activityRelationship.undetermined.id):
+        case noctuaFormConfig.activityRelationship.undetermined.id:
           self.rule.displaySection.causalEffect = true;
           self.rule.displaySection.directness = false;
           break;
-        case (noctuaFormConfig.moleculeActivityRelationship.regulates.id):
+        case noctuaFormConfig.moleculeActivityRelationship.regulates.id:
           self.rule.displaySection.causalEffect = true;
+          self.rule.displaySection.directness = false;
           break;
-        case (value.relationship.id === noctuaFormConfig.moleculeActivityRelationship.substrate.id):
+        case noctuaFormConfig.moleculeActivityRelationship.substrate.id:
           self.rule.displaySection.causalEffect = false;
+          self.rule.displaySection.directness = false;
           break;
         case (noctuaFormConfig.activityMoleculeRelationship.product.id):
           self.rule.displaySection.causalEffect = false;
