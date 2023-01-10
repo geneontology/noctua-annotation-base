@@ -4,13 +4,12 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
 import { Activity, ActivityType } from './activity';
 import { ActivityNode } from './activity-node';
-import { ConnectorRule } from './rules';
+import { ConnectorRule } from './connector-rule';
 import { Entity } from './entity';
 import { Triple } from './triple';
 import { Evidence } from './evidence';
 import { Predicate } from './predicate';
 import { cloneDeep, find } from 'lodash';
-import vpeJson from '../../data/vpe-decision.json'
 
 export enum ConnectorState {
   creation = 1,
@@ -65,7 +64,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
     Object.entries(question).forEach(entry => {
       const [key, value] = entry;
-      console.log(key, value);
       const id = (value as string).split(':');
       self.rule[key] = noctuaFormConfig[id[0]][id[1]]
     });
@@ -191,7 +189,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
   edgeToConnectorQuestion(edge: Entity) {
 
     const question = this.getInputs(edge.id)
-    console.log(question)
     return question
   }
 

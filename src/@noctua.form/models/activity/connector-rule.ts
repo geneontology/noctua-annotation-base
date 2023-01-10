@@ -1,5 +1,5 @@
-import { ConnectorType } from '../connector-activity';
-import { noctuaFormConfig } from './../../../noctua-form-config';
+import { ConnectorType } from './connector-activity';
+import { noctuaFormConfig } from './../../noctua-form-config';
 
 export class ConnectorRule {
   directness = noctuaFormConfig.directness.direct;
@@ -12,6 +12,7 @@ export class ConnectorRule {
   };
 
   constructor(connectorType: ConnectorType) {
+
     switch (connectorType) {
       case (ConnectorType.ACTIVITY_ACTIVITY):
         this.relationship = noctuaFormConfig.activityRelationship.regulation;
@@ -19,7 +20,7 @@ export class ConnectorRule {
       case (ConnectorType.ACTIVITY_MOLECULE):
         this.relationship = noctuaFormConfig.activityMoleculeRelationship.product;
         break;
-      case (ConnectorType.ACTIVITY_ACTIVITY):
+      case (ConnectorType.MOLECULE_ACTIVITY):
         this.relationship = noctuaFormConfig.moleculeActivityRelationship.regulates;
         break;
     }
