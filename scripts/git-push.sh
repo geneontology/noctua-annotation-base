@@ -1,14 +1,10 @@
 #!/bin/bash
 
 set -e
-cd ../noctua-form
-git add --all
-git commit -m "added the extension for menu after updating the menu"
 
-cd ../noctua-landing-page
-git add --all
-git commit -m "added the extension for menu after updating the menu"
 
 cd ../noctua-visual-pathway-editor
+git checkout -b sprint-5
 git add --all
-git commit -m "added the extension for menu after updating the menu"
+git commit -m "added the decision tree for vpe"
+git push origin sprint-5
