@@ -62,7 +62,6 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
     const self = this;
     const question = self.edgeToConnectorQuestion(self.predicate.edge);
 
-    console.log('---', question)
     if (question) {
 
       Object.entries(question).forEach(entry => {
