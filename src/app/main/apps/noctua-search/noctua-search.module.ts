@@ -13,7 +13,7 @@ import { CamsReviewChangesComponent } from './cams/cams-review-changes/cams-revi
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 const routes = [
   {
-    path: 's',
+    path: '',
     component: NoctuaSearchComponent
   }
 ];

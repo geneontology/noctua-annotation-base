@@ -71,7 +71,7 @@ import { CamToolbarComponent } from './cam/cam-toolbar/cam-toolbar.component';
 
 const routes = [
   {
-    path: 's',
+    path: 'f',
     component: NoctuaFormComponent
   }
 ];
