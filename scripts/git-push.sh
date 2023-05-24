@@ -3,7 +3,13 @@
 set -e
 
 
+
+cd ../noctua-form
+git add --all
+git commit -m "Fix: dev banner"
+git push origin sprint-6
+
 cd ../noctua-visual-pathway-editor
 git add --all
-git commit -m "delete casual edge not supported"
-git push origin sprint-5
+git commit -m "Fix: dev banner"
+git push origin sprint-6
