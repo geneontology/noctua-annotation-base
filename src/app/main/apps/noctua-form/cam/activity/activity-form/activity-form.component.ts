@@ -62,6 +62,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log('save')
     this.activityFormSub = this.noctuaActivityFormService.activityFormGroup$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(activityFormGroup => {
@@ -117,6 +118,8 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
   save() {
     const self = this;
+
+
 
     self.noctuaActivityFormService.saveActivity().subscribe(() => {
       self.noctuaFormDialogService.openInfoToast('Annotation successfully created.', 'OK');
