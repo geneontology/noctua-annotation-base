@@ -65,7 +65,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     this.entity = this.noctuaActivityFormService.activity.getNode(this.entityFormGroup.get('id').value);
     this.friendNodes = this.camService.getNodesByType(this.entity.type);
     if (this.noctuaActivityFormService.activity.activityType === ActivityType.ccOnly
-      && this.entity.type === ActivityNodeType.GoMolecularEntity) {
+      && this.entity.treeLevel === 1) {
       this.displayAddButton = true;
     }
 
