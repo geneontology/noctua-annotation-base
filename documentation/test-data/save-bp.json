@@ -1,0 +1,196 @@
+[
+  {
+    "entity": "model",
+    "operation": "add-annotation",
+    "arguments": {
+      "values": [
+        {
+          "key": "title",
+          "value": "enabled by Them4 Rnor"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "GO:0003674"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000",
+      "assign-to-variable": "8748fa01-ed60-4d25-9ee1-1376ac105842"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "RGD:1304723"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000",
+      "assign-to-variable": "dddec285-71a3-4e93-b608-d0fbb992e297"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "GO:0055088"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000",
+      "assign-to-variable": "8649ca93-5b0c-4348-bb24-b2d129971781"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "CL:0000503"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000",
+      "assign-to-variable": "9fc1a870-d743-41af-945d-c7e35824e192"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add",
+    "arguments": {
+      "subject": "8748fa01-ed60-4d25-9ee1-1376ac105842",
+      "object": "dddec285-71a3-4e93-b608-d0fbb992e297",
+      "predicate": "RO:0002333",
+      "model-id": "gomodel:64b0282400000000"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "ECO:0006101"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000",
+      "assign-to-variable": "6c3f243b-a862-4413-b6cc-54ee5e064e20"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add-annotation",
+    "arguments": {
+      "individual": "6c3f243b-a862-4413-b6cc-54ee5e064e20",
+      "values": [
+        {
+          "key": "source",
+          "value": "PMID:124"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add-annotation",
+    "arguments": {
+      "subject": "8748fa01-ed60-4d25-9ee1-1376ac105842",
+      "object": "dddec285-71a3-4e93-b608-d0fbb992e297",
+      "predicate": "RO:0002333",
+      "values": [
+        {
+          "key": "evidence",
+          "value": "6c3f243b-a862-4413-b6cc-54ee5e064e20"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add",
+    "arguments": {
+      "subject": "8748fa01-ed60-4d25-9ee1-1376ac105842",
+      "object": "8649ca93-5b0c-4348-bb24-b2d129971781",
+      "predicate": "RO:0002304",
+      "model-id": "gomodel:64b0282400000000"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "ECO:0006101"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000",
+      "assign-to-variable": "307bf9d0-d5d3-4f47-b6c2-4450a08fe9e4"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add-annotation",
+    "arguments": {
+      "individual": "307bf9d0-d5d3-4f47-b6c2-4450a08fe9e4",
+      "values": [
+        {
+          "key": "source",
+          "value": "PMID:124"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add-annotation",
+    "arguments": {
+      "subject": "8748fa01-ed60-4d25-9ee1-1376ac105842",
+      "object": "8649ca93-5b0c-4348-bb24-b2d129971781",
+      "predicate": "RO:0002304",
+      "values": [
+        {
+          "key": "evidence",
+          "value": "307bf9d0-d5d3-4f47-b6c2-4450a08fe9e4"
+        }
+      ],
+      "model-id": "gomodel:64b0282400000000"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add",
+    "arguments": {
+      "subject": "8649ca93-5b0c-4348-bb24-b2d129971781",
+      "object": "9fc1a870-d743-41af-945d-c7e35824e192",
+      "predicate": "BFO:0000066",
+      "model-id": "gomodel:64b0282400000000"
+    }
+  },
+  {
+    "entity": "model",
+    "operation": "store",
+    "arguments": {
+      "model-id": "gomodel:64b0282400000000"
+    }
+  }
+]

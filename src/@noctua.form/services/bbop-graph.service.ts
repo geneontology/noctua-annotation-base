@@ -784,6 +784,43 @@ export class BbopGraphService {
   }
 
 
+  graphToActivities2(camGraph): Activity[] {
+    const self = this;
+    const activities: Activity[] = [];
+
+    each(camGraph.all_edges(), (bbopEdge) => {
+      const bbopSubjectId = bbopEdge.subject_id();
+      const bbopObjectId = bbopEdge.object_id();
+      const subjectNode = self.nodeToActivityNode(camGraph, bbopSubjectId);
+      const objectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
+
+      if (self.isStartEdge(subjectNode, bbopEdge.predicate_id())) {
+
+        const subjectEdges = camGraph.get_edges_by_subject(bbopSubjectId);
+        const activity: Activity = self.getActivityPreset(subjectNode, objectNode, bbopEdge.predicate_id(), subjectEdges);
+        const subjectActivityNode = activity.rootNode;
+
+        subjectActivityNode.term = subjectNode.term;
+        subjectActivityNode.date = subjectNode.date;
+        subjectActivityNode.classExpression = subjectNode.classExpression;
+        subjectActivityNode.setIsComplement(subjectNode.isComplement);
+        subjectActivityNode.uuid = bbopSubjectId;
+        self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
+        activity.id = bbopSubjectId;
+
+        activity.postRunUpdateCompliment();
+
+        // if (environment.isGraph) {
+        activity.postRunUpdate();
+        // }
+
+        activities.push(activity);
+      }
+    });
+
+    return activities;
+  }
+
   graphToActivities(camGraph): Activity[] {
     const self = this;
     const activities: Activity[] = [];
@@ -1379,14 +1416,22 @@ export class BbopGraphService {
   private _graphToActivityDFS(camGraph, activity: Activity, bbopEdges, subjectNode: ActivityNode) {
     const self = this;
 
-    each(bbopEdges, (bbopEdge) => {
+    for (const bbopEdge of bbopEdges) {
+
       const bbopPredicateId = bbopEdge.predicate_id();
+      const predExpr = this.noctuaFormConfigService.termLookupTable[bbopPredicateId];
+
+      if (!predExpr) continue
+
+
       const bbopObjectId = bbopEdge.object_id();
       const evidence = self.edgeToEvidence(camGraph, bbopEdge);
       const partialObjectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
-      const objectNode = this._insertNode(activity, bbopPredicateId, subjectNode, partialObjectNode);
+      //const objectNode = this._insertNode(activity, bbopPredicateId, subjectNode, partialObjectNode);
+      const objectNode = this.noctuaFormConfigService.insertActivityNodeShex(activity, subjectNode, predExpr);
+      activity.updateShapeMenuShex();
 
-      activity.updateEntityInsertMenu();
+
 
       if (objectNode) {
         const triple: Triple<ActivityNode> = activity.getEdge(subjectNode.id, objectNode.id);
@@ -1402,7 +1447,7 @@ export class BbopGraphService {
           self._graphToActivityDFS(camGraph, activity, camGraph.get_edges_by_subject(bbopObjectId), triple.object);
         }
       }
-    });
+    }
 
     return activity;
   }
@@ -1413,7 +1458,7 @@ export class BbopGraphService {
     let objectNode;
 
     each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
-      if (bbopPredicateId === nodeDescription.predicate.id) {
+      if (bbopPredicateId === nodeDescription?.predicate?.id) {
         if (partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
           objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
           return false;

@@ -15,6 +15,7 @@ import { ConnectorActivity } from './../../models/activity/connector-activity';
 import { Entity } from './../../models/activity/entity';
 import { Evidence } from './../../models/activity/evidence';
 import { Predicate } from './../../models/activity/predicate';
+import { DataUtils } from '@noctua.form/data/config/data-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +28,11 @@ export class NoctuaFormConfigService {
   noctuaUrl: string;
   homeUrl: string;
   onSetupReady: BehaviorSubject<any>;
+  termLookupTable
 
   constructor(private noctuaUserService: NoctuaUserService) {
     this.onSetupReady = new BehaviorSubject(null);
+    this.termLookupTable = DataUtils.genTermLookupTable();
   }
 
   get edges() {
