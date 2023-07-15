@@ -575,17 +575,20 @@ export class Activity extends SaeGraph<ActivityNode> {
     self.adjustCC();
     self.adjustActivity();
 
-    const graph = self.getTrimmedGraph(this.rootNodeType);
-    const keyNodes = getNodes(graph);
-    const edges: Edge<Triple<ActivityNode>>[] = getEdges(graph);
+    // const graph = self.getTrimmedGraph(this.rootNodeType);
+    //const keyNodes = getNodes(graph);
+    //const edges: Edge<Triple<ActivityNode>>[] = getEdges(graph);
 
-    saveData.nodes = Object.values(keyNodes);
+    //saveData.nodes = Object.values(keyNodes);
 
-    saveData.triples = edges.map((edge: Edge<Triple<ActivityNode>>) => {
-      return edge.metadata;
-    });
+    saveData.nodes = self.nodes;
+    saveData.triples = self.edges
 
-    saveData.graph = graph;
+    /*     saveData.triples = self.edges.map((edge: Edge<Triple<ActivityNode>>) => {
+          return edge.metadata;
+        }); */
+
+    // saveData.graph = graph;
 
     return saveData;
   }

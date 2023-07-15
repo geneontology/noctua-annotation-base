@@ -1431,8 +1431,6 @@ export class BbopGraphService {
       const objectNode = this.noctuaFormConfigService.insertActivityNodeShex(activity, subjectNode, predExpr);
       activity.updateShapeMenuShex();
 
-
-
       if (objectNode) {
         const triple: Triple<ActivityNode> = activity.getEdge(subjectNode.id, objectNode.id);
         if (triple) {
