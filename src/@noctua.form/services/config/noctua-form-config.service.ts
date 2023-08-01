@@ -58,7 +58,7 @@ export class NoctuaFormConfigService {
   get graphLayoutDetail() {
     const options = [
       noctuaFormConfig.graphLayoutDetail.options.detailed,
-      noctuaFormConfig.graphLayoutDetail.options.activity,
+      noctuaFormConfig.graphLayoutDetail.options.simple,
       noctuaFormConfig.graphLayoutDetail.options.preview
     ];
 

@@ -229,7 +229,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     if (!rootNode) return;
 
     self.date = (moment as any)(rootNode.date, 'YYYY-MM-DD')
-    // self.date = rootNode.date
+
 
     each(self.nodes, (node: ActivityNode) => {
       const nodeDate = (moment as any)(node.date, 'YYYY-MM-DD')
@@ -239,7 +239,6 @@ export class Activity extends SaeGraph<ActivityNode> {
       }
     });
 
-    // remove the subject menu
     each(self.edges, (triple: Triple<ActivityNode>) => {
       each(triple.predicate.evidence, (evidence: Evidence) => {
 
