@@ -266,6 +266,10 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
+  openCommentsForm(entity) {
+
+  }
+
   updateCurrentMenuEvent(event) {
     this.currentMenuEvent = event;
   }

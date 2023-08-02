@@ -498,6 +498,17 @@ export class BbopGraphService {
     return new ActivityNode(result);
   }
 
+
+  edgeComments(edge): string[] {
+
+    const commentAnnotations = edge.get_annotations_by_key('comment');
+
+    return commentAnnotations.map(c => {
+      return c.value();
+    })
+
+  }
+
   edgeToEvidence(graph, edge): Evidence[] {
 
     const self = this;
@@ -782,8 +793,6 @@ export class BbopGraphService {
 
     return self.noctuaFormConfigService.createActivityBaseModel(activityType);
   }
-
-
 
 
   graphToActivitiesOld(camGraph): Activity[] {
@@ -1429,6 +1438,7 @@ export class BbopGraphService {
 
       const bbopObjectId = bbopEdge.object_id();
       const evidence = self.edgeToEvidence(camGraph, bbopEdge);
+      const comments = self.edgeComments(bbopEdge);
       const partialObjectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
       //const objectNode = this._insertNode(activity, bbopPredicateId, subjectNode, partialObjectNode);
       const objectNode = this.noctuaFormConfigService.insertActivityNodeShex(activity, subjectNode, predExpr);
@@ -1444,6 +1454,7 @@ export class BbopGraphService {
           triple.object.setIsComplement(partialObjectNode.isComplement);
           triple.predicate.isComplement = triple.object.isComplement;
           triple.predicate.evidence = evidence;
+          triple.predicate.comments = comments;
           triple.predicate.uuid = bbopEdge.id();
           self._graphToActivityDFS(camGraph, activity, camGraph.get_edges_by_subject(bbopObjectId), triple.object);
         }
