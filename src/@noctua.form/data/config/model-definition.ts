@@ -440,6 +440,7 @@ export const createActivity = (activityDescription: ActivityDescription): Activi
     //activity.postRunUpdate();
     activity.updateEntityInsertMenu();
     activity.enableSubmit();
+    activity.updateProperties();
     return activity;
 };
 
@@ -470,6 +471,7 @@ export const createActivityShex = (activityDescription: ActivityDescription): Ac
     //activity.postRunUpdate();
     activity.updateShapeMenuShex();
     activity.enableSubmit();
+    activity.updateProperties();
     return activity;
 };
 
