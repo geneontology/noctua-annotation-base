@@ -75,7 +75,7 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }
-    this.gpNode = this.activity.getGPNode();
+    this.gpNode = this.activity.gpNode;
 
     this.optionsDisplay = { ...this.options, hideHeader: true };
     this.nodes = this.activity.nodes.filter((node) => {
@@ -132,7 +132,7 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.bpNode;
 
     if (gpNode) {
       const data = {

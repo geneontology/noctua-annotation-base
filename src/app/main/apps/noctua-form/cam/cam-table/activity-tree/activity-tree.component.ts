@@ -93,7 +93,7 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }
-    this.gpNode = this.activity.getGPNode();
+    this.gpNode = this.activity.gpNode;
 
     this.optionsDisplay = { ...this.options, hideHeader: true };
 
@@ -165,7 +165,7 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.gpNode;
 
     if (gpNode) {
       const data = {

@@ -172,7 +172,7 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.gpNode;
 
     if (gpNode) {
       const data = {

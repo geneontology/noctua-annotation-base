@@ -176,7 +176,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
 
   loadTree() {
     if (!this.activity) return;
-    this.gpNode = this.activity.getGPNode();
+    this.gpNode = this.activity.gpNode;
     this.optionsDisplay = { ...this.options, hideHeader: true };
     this.treeNodes = this.activity.buildTrees();
     this.gpTreeNodes = this.activity.buildGPTrees();

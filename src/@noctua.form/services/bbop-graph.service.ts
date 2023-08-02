@@ -784,7 +784,9 @@ export class BbopGraphService {
   }
 
 
-  graphToActivities2(camGraph): Activity[] {
+
+
+  graphToActivitiesOld(camGraph): Activity[] {
     const self = this;
     const activities: Activity[] = [];
 
@@ -1228,7 +1230,8 @@ export class BbopGraphService {
   addFact(reqs, triples: Triple<ActivityNode>[]) {
     const self = this;
 
-    each(triples, function (triple: Triple<ActivityNode>) {
+    triples.forEach((triple: Triple<ActivityNode>) => {
+      console.log(triples.length, triple)
       const subject = self.addIndividual(reqs, triple.subject);
       const object = self.addIndividual(reqs, triple.object);
 

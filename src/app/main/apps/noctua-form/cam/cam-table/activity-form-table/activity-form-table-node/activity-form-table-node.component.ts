@@ -156,7 +156,7 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.activity.getGPNode();
+    const gpNode = this.activity.gpNode;
 
     if (gpNode && gpNode.hasValue()) {
       const data = {

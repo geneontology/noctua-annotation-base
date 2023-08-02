@@ -251,8 +251,9 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             label: 'occurs in (CC)',
             aspect: 'C',
             displaySection: noctuaFormConfig.displaySection.fd,
-            displayGroup: noctuaFormConfig.displayGroup.cc,
-            weight: 20
+            displayGroup: noctuaFormConfig.displayGroup.bp,
+            weight: 20,
+            treeLevel: 2
         }
     },
     triples: [{
@@ -533,7 +534,9 @@ export const insertNodeShex = (activity: Activity,
     predicate.objectId = objectNode.id;
     predicate.edge = Entity.createEntity(predExpr);
 
-    activity.updateEdges(subjectNode, objectNode, predicate);
+    //activity.updateEdges(subjectNode, objectNode, predicate);
+
+    activity.addEdge(subjectNode, objectNode, predicate);
     activity.resetPresentation();
     return objectNode;
 };

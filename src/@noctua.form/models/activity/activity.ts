@@ -129,10 +129,26 @@ export class Activity extends SaeGraph<ActivityNode> {
     this.updateSummary()
     this.updateDate()
 
-    this.gpNode = this.getGPNode()
+    const mfTriples = this.getEdges(ActivityNodeType.GoMolecularFunction)
+
+    mfTriples.forEach(mfTriple => {
+      switch (mfTriple.predicate.edge?.id) {
+        case (noctuaFormConfig.edge.enabledBy.id):
+          this.gpNode = mfTriple.object
+          break;
+        case (noctuaFormConfig.edge.partOf.id):
+          this.bpNode = mfTriple.object
+          break;
+        case (noctuaFormConfig.edge.occursIn.id):
+          this.ccNode = mfTriple.object
+          break;
+      }
+    })
+
+    //this.gpNode = this.getGPNode()
     this.mfNode = this.getMFNode()
-    this.bpNode = this.getRootNodeByType(ActivityNodeType.GoBiologicalProcess)
-    this.ccNode = this.getRootNodeByType(ActivityNodeType.GoCellularComponent)
+    //this.bpNode = this.getRootNodeByType(ActivityNodeType.GoBiologicalProcess)
+    // this.ccNode = this.getRootNodeByType(ActivityNodeType.GoCellularComponent)
 
   }
 
@@ -353,6 +369,36 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   }
 
+  updateEdgesShex(subjectNode: ActivityNode, insertNode: ActivityNode, predicate: Predicate) {
+    const self = this;
+    const canInsertSubjectNodes = ShapeDescription.canInsertEntity[subjectNode.type] || [];
+    let updated = false;
+
+    each(canInsertSubjectNodes, (nodeDescription: ShapeDescription.ShapeDescription) => {
+
+      if (predicate.edge.id === nodeDescription.predicate.id) {
+        if (nodeDescription.cardinality === ShapeDescription.CardinalityType.oneToOne) {
+          const edgeTypeExist = self.edgeTypeExist(subjectNode.id, nodeDescription.predicate.id, subjectNode.type, nodeDescription.node.type);
+
+          if (edgeTypeExist) {
+            edgeTypeExist.object.treeLevel++;
+            self.removeEdge(edgeTypeExist.subject, edgeTypeExist.object, edgeTypeExist.predicate);
+            self.addEdge(edgeTypeExist.subject, insertNode, edgeTypeExist.predicate);
+            self.addEdge(insertNode, edgeTypeExist.object, predicate);
+            updated = true;
+
+            return false;
+          }
+        }
+      }
+    });
+
+    if (!updated) {
+      self.addEdgeById(subjectNode.id, insertNode.id, predicate);
+    }
+
+  }
+
   updateEdges(subjectNode: ActivityNode, insertNode: ActivityNode, predicate: Predicate) {
     const self = this;
     const canInsertSubjectNodes = ShapeDescription.canInsertEntity[subjectNode.type] || [];
@@ -393,7 +439,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     return result;
   }
 
-  getGPNode() {
+  xxgetGPNode() {
     const self = this;
 
     if (self.activityType === ActivityType.proteinComplex) {
@@ -707,7 +753,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   get title() {
     const self = this;
-    const gp = self.getGPNode();
+    const gp = self.gpNode;
     const gpText = gp ? gp.getTerm().label : '';
     let title = '';
 

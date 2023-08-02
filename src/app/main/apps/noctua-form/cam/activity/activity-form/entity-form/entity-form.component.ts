@@ -137,7 +137,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.gpNode
 
     if (gpNode && gpNode.hasValue()) {
       const data = {
@@ -187,7 +187,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchEvidenceDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.gpNode
 
     if (gpNode) {
       const data = {
@@ -245,7 +245,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchModels() {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.gpNode;
     // const searchCriteria = new SearchCriteria();
 
     //searchCriteria.goterms.push(this.entity.term);

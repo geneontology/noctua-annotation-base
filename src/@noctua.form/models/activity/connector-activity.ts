@@ -85,8 +85,8 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
       activity = this.subject
     }
 
-    const mfNode = activity.getMFNode()
-    const gpNode = activity.getGPNode()
+    const mfNode = activity.mfNode
+    const gpNode = activity.gpNode
     if (gpNode && mfNode) {
       const edge = activity.getEdge(mfNode.id, gpNode.id)
       this.predicate.evidence = cloneDeep(edge.predicate.evidence)
