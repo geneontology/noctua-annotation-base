@@ -13,7 +13,8 @@ import {
   Entity,
   noctuaFormConfig,
   NoctuaUserService,
-  ActivityType
+  ActivityType,
+  Predicate
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -266,8 +267,14 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
-  openCommentsForm(entity) {
+  openCommentsForm(predicate: Predicate) {
+    const self = this;
 
+    const success = (selected) => {
+      if (selected) {
+      }
+    };
+    self.noctuaFormDialogService.openCommentsDialog(predicate, success)
   }
 
   updateCurrentMenuEvent(event) {
