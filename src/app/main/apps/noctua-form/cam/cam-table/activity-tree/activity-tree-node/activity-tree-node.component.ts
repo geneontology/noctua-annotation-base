@@ -14,7 +14,8 @@ import {
   noctuaFormConfig,
   NoctuaUserService,
   ActivityType,
-  Predicate
+  Predicate,
+  BbopGraphService
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -65,6 +66,7 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
 
   constructor(
     public camService: CamService,
+    private bbopGraphService: BbopGraphService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -270,8 +272,9 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
   openCommentsForm(predicate: Predicate) {
     const self = this;
 
-    const success = (selected) => {
-      if (selected) {
+    const success = (comments) => {
+      if (comments) {
+        this.bbopGraphService.savePredicateComments(self.cam, comments);
       }
     };
     self.noctuaFormDialogService.openCommentsDialog(predicate, success)

@@ -244,17 +244,6 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
             termRequired: true,
             weight: 10
         },
-        [ActivityNodeType.GoCellularComponent]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoCellularComponent.id,
-            type: ActivityNodeType.GoCellularComponent,
-            category: [EntityDefinition.GoCellularComponent],
-            label: 'occurs in (CC)',
-            aspect: 'C',
-            displaySection: noctuaFormConfig.displaySection.fd,
-            displayGroup: noctuaFormConfig.displayGroup.bp,
-            weight: 20,
-            treeLevel: 2
-        }
     },
     triples: [{
         subject: ActivityNodeType.GoMolecularFunction,
@@ -264,10 +253,6 @@ export const bpOnlyAnnotationDescription: ActivityDescription = {
         subject: ActivityNodeType.GoMolecularFunction,
         object: ActivityNodeType.GoBiologicalProcess,
         predicate: noctuaFormConfig.edge.causallyUpstreamOfOrWithin
-    }, {
-        subject: ActivityNodeType.GoBiologicalProcess,
-        object: ActivityNodeType.GoCellularComponent,
-        predicate: noctuaFormConfig.edge.occursIn
     }],
     overrides: {
         [ActivityNodeType.GoBiologicalProcess]: <ActivityNodeDisplay>{

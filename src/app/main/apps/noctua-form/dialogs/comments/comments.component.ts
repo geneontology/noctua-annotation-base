@@ -42,7 +42,7 @@ export class CommentsDialogComponent implements OnInit, OnDestroy {
 
   createForm() {
     return new FormGroup({
-      comments: new FormArray([]),
+      commentsFormArray: new FormArray([]),
     });
   }
 
@@ -57,6 +57,7 @@ export class CommentsDialogComponent implements OnInit, OnDestroy {
 
   save() {
     const value = this.commentsFormGroup.value
+    console.log(value)
     this._matDialogRef.close(value);
   }
 

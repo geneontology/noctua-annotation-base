@@ -503,6 +503,8 @@ export class BbopGraphService {
 
     const commentAnnotations = edge.get_annotations_by_key('comment');
 
+    console.log(edge)
+
     return commentAnnotations.map(c => {
       return c.value();
     })
@@ -1041,6 +1043,27 @@ export class BbopGraphService {
 
     reqs.store_model(cam.id);
     cam.manager.request_with(reqs);
+  }
+
+
+  savePredicateComments(cam: Cam, comments) {
+    const self = this;
+
+    console.log(cam.graph)
+
+    const commentAnnotations = cam.graph.get_annotations_by_key('comment');
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    each(commentAnnotations, function (annotation) {
+      reqs.remove_annotation_from_model('comment', annotation.value());
+    });
+
+    comments.comments.forEach(comment => {
+      reqs.add_annotation_to_model('comment', comment);
+    });
+
+    //reqs.store_model(cam.id);
+    // cam.manager.request_with(reqs);
   }
 
   addActivity(cam: Cam, nodes: ActivityNode[], triples: Triple<ActivityNode>[], title, operation = CamOperation.ADD_ACTIVITY) {
