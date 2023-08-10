@@ -274,7 +274,7 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
 
     const success = (comments) => {
       if (comments) {
-        this.bbopGraphService.savePredicateComments(self.cam, comments);
+        this.bbopGraphService.savePredicateComments(self.cam, predicate, comments);
       }
     };
     self.noctuaFormDialogService.openCommentsDialog(predicate, success)

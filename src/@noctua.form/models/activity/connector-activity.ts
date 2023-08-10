@@ -228,7 +228,7 @@ export class ConnectorActivity extends SaeGraph<ActivityNode> {
 
 
     nodes = <NgxNode[]>activityNodes.map((activity: Activity) => {
-      const node = activity.getMFNode()
+      const node = activity.mfNode
       return {
         id: activity.id,
         label: node ? node?.term.label : '',

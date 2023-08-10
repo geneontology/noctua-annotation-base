@@ -797,43 +797,6 @@ export class BbopGraphService {
   }
 
 
-  graphToActivitiesOld(camGraph): Activity[] {
-    const self = this;
-    const activities: Activity[] = [];
-
-    each(camGraph.all_edges(), (bbopEdge) => {
-      const bbopSubjectId = bbopEdge.subject_id();
-      const bbopObjectId = bbopEdge.object_id();
-      const subjectNode = self.nodeToActivityNode(camGraph, bbopSubjectId);
-      const objectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
-
-      if (self.isStartEdge(subjectNode, bbopEdge.predicate_id())) {
-
-        const subjectEdges = camGraph.get_edges_by_subject(bbopSubjectId);
-        const activity: Activity = self.getActivityPreset(subjectNode, objectNode, bbopEdge.predicate_id(), subjectEdges);
-        const subjectActivityNode = activity.rootNode;
-
-        subjectActivityNode.term = subjectNode.term;
-        subjectActivityNode.date = subjectNode.date;
-        subjectActivityNode.classExpression = subjectNode.classExpression;
-        subjectActivityNode.setIsComplement(subjectNode.isComplement);
-        subjectActivityNode.uuid = bbopSubjectId;
-        self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
-        activity.id = bbopSubjectId;
-
-        activity.postRunUpdateCompliment();
-
-        // if (environment.isGraph) {
-        activity.postRunUpdate();
-        // }
-
-        activities.push(activity);
-      }
-    });
-
-    return activities;
-  }
-
   graphToActivities(camGraph): Activity[] {
     const self = this;
     const activities: Activity[] = [];
@@ -1046,13 +1009,19 @@ export class BbopGraphService {
   }
 
 
-  savePredicateComments(cam: Cam, comments) {
+  savePredicateComments(cam: Cam, predicate: Predicate, comments) {
     const self = this;
 
     console.log(cam.graph)
 
     const commentAnnotations = cam.graph.get_annotations_by_key('comment');
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    const node = cam.graph.get_node(predicate.objectId);
+
+    console.log(node)
+
+    console.log(reqs)
 
     each(commentAnnotations, function (annotation) {
       reqs.remove_annotation_from_model('comment', annotation.value());
