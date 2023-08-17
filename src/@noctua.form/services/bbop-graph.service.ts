@@ -1015,25 +1015,28 @@ export class BbopGraphService {
 
   savePredicateComments(cam: Cam, predicate: Predicate, comments) {
     const self = this;
-
-    console.log(cam.graph)
-
-    const commentAnnotations = cam.graph.get_annotations_by_key('comment');
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
+    const edge = cam.graph.get_edge(predicate.subjectId, predicate.objectId, predicate.edge.id)
 
-    console.log(reqs)
+    const commentAnnotations = edge.get_annotations_by_key('comment');
 
-    each(commentAnnotations, function (annotation) {
-      reqs.remove_annotation_from_model('comment', annotation.value());
-    });
+    if (edge) {
+      commentAnnotations.forEach(annotation => {
+        reqs.remove_annotation_from_fact('comment', annotation.value(), null,
+          [predicate.subjectId,
+          predicate.objectId,
+          predicate.edge.id]);
+      });
+    }
 
-    comments.comments.forEach(comment => {
-      reqs.add_annotation_to_model('comment', comment);
-    });
+    reqs.add_annotation_to_fact('comment', comments, null,
+      [predicate.subjectId,
+      predicate.objectId,
+      predicate.edge.id]);
 
-    //reqs.store_model(cam.id);
-    // cam.manager.request_with(reqs);
+    reqs.store_model(cam.id);
+    cam.manager.request_with(reqs);
   }
 
   addActivity(cam: Cam, nodes: ActivityNode[], triples: Triple<ActivityNode>[], title, operation = CamOperation.ADD_ACTIVITY) {
@@ -1434,7 +1437,7 @@ export class BbopGraphService {
       const comments = self.edgeComments(bbopEdge);
       const partialObjectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
       //const objectNode = this._insertNode(activity, bbopPredicateId, subjectNode, partialObjectNode);
-      const objectNode = this.noctuaFormConfigService.insertActivityNodeShex(activity, subjectNode, predExpr);
+      const objectNode = this.noctuaFormConfigService.insertActivityNodeShex(activity, subjectNode, predExpr, partialObjectNode.id);
       activity.updateShapeMenuShex();
 
       if (objectNode) {

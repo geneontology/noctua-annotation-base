@@ -56,7 +56,7 @@ export class CommentsDialogComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    const value = this.commentsFormGroup.value
+    const value = this.commentsFormGroup.value['commentsFormArray'];
     console.log(value)
     this._matDialogRef.close(value);
   }

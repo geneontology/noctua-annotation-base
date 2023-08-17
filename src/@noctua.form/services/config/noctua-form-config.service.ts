@@ -375,8 +375,9 @@ export class NoctuaFormConfigService {
 
   insertActivityNodeShex(activity: Activity,
     subjectNode: ActivityNode,
-    predExpr: ShapeDescription.PredicateExpression): ActivityNode {
-    return ModelDefinition.insertNodeShex(activity, subjectNode, predExpr);
+    predExpr: ShapeDescription.PredicateExpression,
+    objectId: string = null): ActivityNode {
+    return ModelDefinition.insertNodeShex(activity, subjectNode, predExpr, objectId);
   }
 
   insertActivityNodeByPredicate(activity: Activity, subjectNode: ActivityNode, bbopPredicateId: string,

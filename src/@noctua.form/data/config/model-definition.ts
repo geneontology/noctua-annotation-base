@@ -423,7 +423,8 @@ export const xxxinsertNode = (activity: Activity, subjectNode: ActivityNode, nod
 
 export const insertNodeShex = (activity: Activity,
     subjectNode: ActivityNode,
-    predExpr: ShapeDescription.PredicateExpression): ActivityNode => {
+    predExpr: ShapeDescription.PredicateExpression,
+    objectId = null): ActivityNode => {
     const lookupTable = DataUtils.genTermLookupTable();
     const shapes = shexJson.goshapes as ShexShapeAssociation[];
 
@@ -447,7 +448,7 @@ export const insertNodeShex = (activity: Activity,
     const overrides = getNodeDefaults(subjectNode, predExpr, ranges)
     const objectNode = EntityDefinition.generateBaseTerm(ranges, overrides);
 
-    objectNode.id = uuid()
+    objectNode.id = objectId ? objectId : uuid()
     objectNode.subjectId = subjectNode.id
 
     // objectNode.type = nodeDescription.node.type;
