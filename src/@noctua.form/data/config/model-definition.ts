@@ -41,99 +41,61 @@ const getNodeDefaults = (subjectNode: ActivityNode, predExpr: ShapeDescription.P
     return node
 }
 
-export const activityUnitBaseDescription: ActivityDescription = {
-    type: ActivityType.default,
-    nodes: {
-        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
-            type: ActivityNodeType.GoMolecularFunction,
-            category: [EntityDefinition.GoMolecularFunction],
-            label: 'Molecular Function',
-            aspect: 'F',
-            displaySection: noctuaFormConfig.displaySection.fd,
-            displayGroup: noctuaFormConfig.displayGroup.mf,
-            skipEvidenceCheck: true,
-            canDelete: false,
-            termRequired: true,
-            weight: 1
-        },
-    },
-    triples: [],
-};
 
-export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
-    type: ActivityType.bpOnly,
-    isComplex: true,
-    nodes: {
-        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
-            type: ActivityNodeType.GoMolecularFunction,
-            category: [EntityDefinition.GoMolecularFunction],
-            label: 'Molecular Function',
-            aspect: 'F',
-            displaySection: noctuaFormConfig.displaySection.fd,
-            displayGroup: noctuaFormConfig.displayGroup.mf,
-            skipEvidenceCheck: true,
-            visible: false,
-            canDelete: false,
-            weight: 1
-        }
-    },
-    triples: []
-};
 
-export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
-    type: ActivityType.ccOnly,
-    nodes: {
-        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
-            type: ActivityNodeType.GoMolecularEntity,
-            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
-            label: 'Gene Product',
-            skipEvidenceCheck: true,
-            termRequired: true,
-            canDelete: false,
-            displaySection: noctuaFormConfig.displaySection.gp,
-            displayGroup: noctuaFormConfig.displayGroup.gp,
-            weight: 1
-        }
-    },
-    triples: [],
-};
 
-export const proteinComplexBaseDescription: ActivityDescription = {
-    type: ActivityType.proteinComplex,
-    nodes: {
-        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
-            type: ActivityNodeType.GoMolecularFunction,
-            category: [EntityDefinition.GoMolecularFunction],
-            label: 'Molecular Function',
-            aspect: 'F',
-            displaySection: noctuaFormConfig.displaySection.fd,
-            displayGroup: noctuaFormConfig.displayGroup.mf,
-            skipEvidenceCheck: true,
-            visible: false,
-            canDelete: false,
-            weight: 1
-        }
+export const rootNodes = {
+    [ActivityType.default]: <ActivityNodeDisplay>{
+        type: ActivityNodeType.GoMolecularFunction,
+        label: 'Molecular Function',
+        aspect: 'F',
+        displaySection: noctuaFormConfig.displaySection.fd,
+        displayGroup: noctuaFormConfig.displayGroup.mf,
+        skipEvidenceCheck: true,
+        canDelete: false,
+        termRequired: true,
+        weight: 1
     },
-    triples: [],
-};
-
-export const moleculeBaseDescription: ActivityDescription = {
-    type: ActivityType.molecule,
-    nodes: {
-        [ActivityNodeType.GoChemicalEntity]: <ActivityNodeDisplay>{
-            type: ActivityNodeType.GoChemicalEntity,
-            category: [EntityDefinition.GoChemicalEntity],
-            label: 'Molecule',
-            skipEvidenceCheck: true,
-            showEvidence: false,
-            termRequired: true,
-            canDelete: false,
-            displaySection: noctuaFormConfig.displaySection.gp,
-            displayGroup: noctuaFormConfig.displayGroup.gp,
-            weight: 1
-        }
-    },
-    triples: [],
+    [ActivityType.bpOnly]: <ActivityNodeDisplay>{
+        type: ActivityNodeType.GoMolecularFunction,
+        label: 'Molecular Function',
+        aspect: 'F',
+        displaySection: noctuaFormConfig.displaySection.fd,
+        displayGroup: noctuaFormConfig.displayGroup.mf,
+        skipEvidenceCheck: true,
+        visible: false,
+        canDelete: false,
+        weight: 1
+    }, [ActivityType.ccOnly]: <ActivityNodeDisplay>{
+        type: ActivityNodeType.GoMolecularEntity,
+        label: 'Gene Product',
+        skipEvidenceCheck: true,
+        termRequired: true,
+        canDelete: false,
+        displaySection: noctuaFormConfig.displaySection.gp,
+        displayGroup: noctuaFormConfig.displayGroup.gp,
+        weight: 1
+    }, [ActivityType.proteinComplex]: <ActivityNodeDisplay>{
+        type: ActivityNodeType.GoMolecularFunction,
+        label: 'Molecular Function',
+        aspect: 'F',
+        displaySection: noctuaFormConfig.displaySection.fd,
+        displayGroup: noctuaFormConfig.displayGroup.mf,
+        skipEvidenceCheck: true,
+        visible: false,
+        canDelete: false,
+        weight: 1
+    }, [ActivityType.molecule]: <ActivityNodeDisplay>{
+        type: ActivityNodeType.GoChemicalEntity,
+        label: 'Molecule',
+        skipEvidenceCheck: true,
+        showEvidence: false,
+        termRequired: true,
+        canDelete: false,
+        displaySection: noctuaFormConfig.displaySection.gp,
+        displayGroup: noctuaFormConfig.displayGroup.gp,
+        weight: 1
+    }
 };
 
 
@@ -398,11 +360,8 @@ export const createBaseActivity = (activityType: ActivityType, rootNode: Activit
 
     activity.activityType = activityType;
     const activityNode = EntityDefinition.generateBaseTerm([], rootNode);
-    activityNode.id = rootNode.id;
     activity.addNode(activityNode);
 
-
-    //activity.postRunUpdate();
     activity.updateShapeMenuShex();
     activity.enableSubmit();
     activity.updateProperties();

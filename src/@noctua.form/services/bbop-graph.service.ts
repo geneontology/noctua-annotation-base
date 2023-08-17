@@ -493,6 +493,7 @@ export class BbopGraphService {
       date: self.getNodeDate(node),
       term: new Entity(nodeInfo.id, nodeInfo.label, self.linker.url(nodeInfo.id), objectId),
       rootTypes: self.getNodeRootInfo(node),
+      category: [],
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
       isComplement: self.getNodeIsComplement(node),

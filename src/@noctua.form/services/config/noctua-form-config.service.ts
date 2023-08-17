@@ -342,7 +342,13 @@ export class NoctuaFormConfigService {
 
   //For reading the table
   createActivityBaseModel(modelType: ActivityType, rootNode: ActivityNode): Activity {
-    return ModelDefinition.createBaseActivity(modelType, rootNode);
+
+    const baseNode = ModelDefinition.rootNodes[modelType];
+
+    if (!baseNode) return;
+    const node = { ...baseNode, ...rootNode }
+
+    return ModelDefinition.createBaseActivity(modelType, node as ActivityNode);
   }
 
   // For the form
