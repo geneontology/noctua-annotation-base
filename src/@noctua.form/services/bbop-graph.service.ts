@@ -325,15 +325,17 @@ export class BbopGraphService {
       }
 
       cam.activities = activities;
+      cam.updateProperties()
       cam.causalRelations = self.getCausalRelations(cam);
       self.getActivityLocations(cam)
     } else {
       cam.activities = activities;
+      cam.updateProperties()
     }
 
     cam.applyFilter();
     cam.updateActivityDisplayNumber();
-    cam.updateProperties()
+
     cam.operation = CamOperation.NONE;
 
     if (publish) {
@@ -486,6 +488,7 @@ export class BbopGraphService {
     }
     const nodeInfo = self.getNodeInfo(node);
     const result = {
+      id: objectId,
       uuid: objectId,
       date: self.getNodeDate(node),
       term: new Entity(nodeInfo.id, nodeInfo.label, self.linker.url(nodeInfo.id), objectId),
@@ -793,7 +796,7 @@ export class BbopGraphService {
       activityType = ActivityType.proteinComplex;
     }
 
-    return self.noctuaFormConfigService.createActivityBaseModel(activityType);
+    return self.noctuaFormConfigService.createActivityBaseModel(activityType, subjectNode as ActivityNode);
   }
 
 
@@ -850,7 +853,7 @@ export class BbopGraphService {
         })
 
         if (!hasEnabledBy) {
-          const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
+          const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule, subjectNode as ActivityNode);
           const subjectActivityNode = activity.rootNode;
 
           subjectActivityNode.term = subjectNode.term;
@@ -1017,9 +1020,6 @@ export class BbopGraphService {
     const commentAnnotations = cam.graph.get_annotations_by_key('comment');
     const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
 
-    const node = cam.graph.get_node(predicate.objectId);
-
-    console.log(node)
 
     console.log(reqs)
 
@@ -1439,6 +1439,7 @@ export class BbopGraphService {
       if (objectNode) {
         const triple: Triple<ActivityNode> = activity.getEdge(subjectNode.id, objectNode.id);
         if (triple) {
+          triple.object.id = partialObjectNode.id;
           triple.object.uuid = partialObjectNode.uuid;
           triple.object.term = partialObjectNode.term;
           triple.object.date = partialObjectNode.date;
@@ -1456,7 +1457,7 @@ export class BbopGraphService {
     return activity;
   }
 
-  private _insertNode(activity: Activity, bbopPredicateId: string, subjectNode: ActivityNode,
+  private _xxxinsertNode(activity: Activity, bbopPredicateId: string, subjectNode: ActivityNode,
     partialObjectNode: Partial<ActivityNode>): ActivityNode {
     const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
     let objectNode;
@@ -1464,7 +1465,7 @@ export class BbopGraphService {
     each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
       if (bbopPredicateId === nodeDescription?.predicate?.id) {
         if (partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
-          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+          objectNode = ModelDefinition.xxxinsertNode(activity, subjectNode, nodeDescription);
           return false;
         }
       }

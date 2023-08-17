@@ -341,19 +341,8 @@ export class NoctuaFormConfigService {
   }
 
   //For reading the table
-  createActivityBaseModel(modelType: ActivityType): Activity {
-    switch (modelType) {
-      case ActivityType.default:
-        return ModelDefinition.createActivity(ModelDefinition.activityUnitBaseDescription);
-      case ActivityType.bpOnly:
-        return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationBaseDescription);
-      case ActivityType.ccOnly:
-        return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationBaseDescription);
-      case ActivityType.molecule:
-        return ModelDefinition.createActivity(ModelDefinition.moleculeBaseDescription);
-      case ActivityType.proteinComplex:
-        return ModelDefinition.createActivity(ModelDefinition.proteinComplexBaseDescription);
-    }
+  createActivityBaseModel(modelType: ActivityType, rootNode: ActivityNode): Activity {
+    return ModelDefinition.createBaseActivity(modelType, rootNode);
   }
 
   // For the form
@@ -372,10 +361,10 @@ export class NoctuaFormConfigService {
     }
   }
 
-  insertActivityNode(activity: Activity,
+  xxxinsertActivityNode(activity: Activity,
     subjectNode: ActivityNode,
     nodeDescription: ShapeDescription.ShapeDescription): ActivityNode {
-    return ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+    return ModelDefinition.xxxinsertNode(activity, subjectNode, nodeDescription);
   }
 
   insertActivityNodeShex(activity: Activity,
@@ -392,10 +381,10 @@ export class NoctuaFormConfigService {
     each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
       if (bbopPredicateId === nodeDescription.predicate.id) {
         if (partialObjectNode && partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
-          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+          objectNode = ModelDefinition.xxxinsertNode(activity, subjectNode, nodeDescription);
           return false;
         } else if (!partialObjectNode) {
-          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+          objectNode = ModelDefinition.xxxinsertNode(activity, subjectNode, nodeDescription);
           return false;
         }
       }

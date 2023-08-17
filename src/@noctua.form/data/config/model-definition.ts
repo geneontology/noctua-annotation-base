@@ -45,7 +45,6 @@ export const activityUnitBaseDescription: ActivityDescription = {
     type: ActivityType.default,
     nodes: {
         [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularFunction.id,
             type: ActivityNodeType.GoMolecularFunction,
             category: [EntityDefinition.GoMolecularFunction],
             label: 'Molecular Function',
@@ -66,7 +65,6 @@ export const bpOnlyAnnotationBaseDescription: ActivityDescription = {
     isComplex: true,
     nodes: {
         [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularFunction.id,
             type: ActivityNodeType.GoMolecularFunction,
             category: [EntityDefinition.GoMolecularFunction],
             label: 'Molecular Function',
@@ -86,7 +84,6 @@ export const ccOnlyAnnotationBaseDescription: ActivityDescription = {
     type: ActivityType.ccOnly,
     nodes: {
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
             category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
@@ -105,7 +102,6 @@ export const proteinComplexBaseDescription: ActivityDescription = {
     type: ActivityType.proteinComplex,
     nodes: {
         [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularFunction.id,
             type: ActivityNodeType.GoMolecularFunction,
             category: [EntityDefinition.GoMolecularFunction],
             label: 'Molecular Function',
@@ -125,7 +121,6 @@ export const moleculeBaseDescription: ActivityDescription = {
     type: ActivityType.molecule,
     nodes: {
         [ActivityNodeType.GoChemicalEntity]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoChemicalEntity.id,
             type: ActivityNodeType.GoChemicalEntity,
             category: [EntityDefinition.GoChemicalEntity],
             label: 'Molecule',
@@ -398,36 +393,21 @@ export const moleculeDescription: ActivityDescription = {
     }],
 };
 
-export const createActivity = (activityDescription: ActivityDescription): Activity => {
-    const self = this;
+export const createBaseActivity = (activityType: ActivityType, rootNode: ActivityNode): Activity => {
     const activity = new Activity();
 
-    activity.activityType = activityDescription.type;
+    activity.activityType = activityType;
+    const activityNode = EntityDefinition.generateBaseTerm([], rootNode);
+    activityNode.id = rootNode.id;
+    activity.addNode(activityNode);
 
-    each(activityDescription.nodes, (node: ActivityNodeDisplay) => {
-        const activityNode = EntityDefinition.generateBaseTerm(node.category, node);
-
-        activity.addNode(activityNode);
-    });
-
-    each(activityDescription.triples, (triple) => {
-        const objectNode = activity.getNode(triple.object);
-
-        if (objectNode) {
-            const predicate: Predicate = objectNode.predicate;
-
-            predicate.edge = Entity.createEntity(triple.predicate);
-            objectNode.treeLevel++;
-            activity.addEdgeById(triple.subject, triple.object, predicate);
-        }
-    });
 
     //activity.postRunUpdate();
-    activity.updateEntityInsertMenu();
+    activity.updateShapeMenuShex();
     activity.enableSubmit();
     activity.updateProperties();
     return activity;
-};
+}
 
 export const createActivityShex = (activityDescription: ActivityDescription): Activity => {
     const self = this;
@@ -437,7 +417,6 @@ export const createActivityShex = (activityDescription: ActivityDescription): Ac
 
     each(activityDescription.nodes, (node: ActivityNodeDisplay) => {
         const activityNode = EntityDefinition.generateBaseTerm(node.category, node);
-
         activity.addNode(activityNode);
     });
 
@@ -458,9 +437,9 @@ export const createActivityShex = (activityDescription: ActivityDescription): Ac
     activity.enableSubmit();
     activity.updateProperties();
     return activity;
-};
+}
 
-export const insertNode = (activity: Activity, subjectNode: ActivityNode, nodeDescription: InsertNodeDescription): ActivityNode => {
+export const xxxinsertNode = (activity: Activity, subjectNode: ActivityNode, nodeDescription: InsertNodeDescription): ActivityNode => {
     const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
 
     objectNode.id = activity.exist(nodeDescription.node.type) ?
@@ -481,7 +460,7 @@ export const insertNode = (activity: Activity, subjectNode: ActivityNode, nodeDe
     activity.updateEdges(subjectNode, objectNode, predicate);
     activity.resetPresentation();
     return objectNode;
-};
+}
 
 export const insertNodeShex = (activity: Activity,
     subjectNode: ActivityNode,
@@ -526,4 +505,4 @@ export const insertNodeShex = (activity: Activity,
     activity.addEdge(subjectNode, objectNode, predicate);
     activity.resetPresentation();
     return objectNode;
-};
+}

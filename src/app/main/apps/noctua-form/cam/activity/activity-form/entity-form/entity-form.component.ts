@@ -257,10 +257,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   }
 
-  insertEntity(nodeDescription: ShapeDefinition.ShapeDescription) {
-    this.noctuaFormConfigService.insertActivityNode(this.noctuaActivityFormService.activity, this.entity, nodeDescription);
-    this.noctuaActivityFormService.initializeForm();
-  }
 
   insertEntityShex(predExpr: ShapeDefinition.PredicateExpression) {
     this.noctuaFormConfigService.insertActivityNodeShex(this.noctuaActivityFormService.activity, this.entity, predExpr);

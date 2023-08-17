@@ -209,8 +209,9 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
   }
 
 
-  insertEntity(entity: ActivityNode, nodeDescription: ShapeDefinition.ShapeDescription) {
-    const insertedNode = this.noctuaFormConfigService.insertActivityNode(this.activity, entity, nodeDescription);
+  insertEntity(entity: ActivityNode, predExpr: ShapeDefinition.PredicateExpression) {
+    const insertedNode = this.noctuaFormConfigService.insertActivityNodeShex(this.activity, entity, predExpr);
+
     //  this.noctuaActivityFormService.initializeForm();
 
     const data = {
@@ -269,15 +270,15 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
 
-  openCommentsForm(predicate: Predicate) {
+  openCommentsForm(entity: ActivityNode) {
     const self = this;
 
     const success = (comments) => {
       if (comments) {
-        this.bbopGraphService.savePredicateComments(self.cam, predicate, comments);
+        this.bbopGraphService.savePredicateComments(self.cam, entity.predicate, comments);
       }
     };
-    self.noctuaFormDialogService.openCommentsDialog(predicate, success)
+    self.noctuaFormDialogService.openCommentsDialog(entity.predicate, success)
   }
 
   updateCurrentMenuEvent(event) {

@@ -199,8 +199,9 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
   }
 
 
-  insertEntity(entity: ActivityNode, nodeDescription: ShapeDefinition.ShapeDescription) {
-    const insertedNode = this.noctuaFormConfigService.insertActivityNode(this.activity, entity, nodeDescription);
+  insertEntity(entity: ActivityNode, predExpr: ShapeDefinition.PredicateExpression) {
+    const insertedNode = this.noctuaFormConfigService.insertActivityNodeShex(this.activity, entity, predExpr);
+
     //  this.noctuaActivityFormService.initializeForm();
 
     const data = {

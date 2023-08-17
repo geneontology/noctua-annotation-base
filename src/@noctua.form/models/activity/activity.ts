@@ -763,7 +763,6 @@ export class Activity extends SaeGraph<ActivityNode> {
       mfText: mfText,
       gp: {},
       fd: {},
-      extra: []
     };
 
     const sortedNodes = self.nodes.sort(compareNodeWeight);
