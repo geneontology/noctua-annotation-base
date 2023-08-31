@@ -10,11 +10,11 @@ import { NodeType } from 'scard-graph-ts';
 import { NodeCellType } from '@noctua.graph/models/shapes';
 import { noctuaStencil, StencilItemNode } from '@noctua.graph/data/cam-stencil';
 import { RightPanel } from '@noctua.common/models/menu-panels';
-import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { CamCanvas } from '@noctua.graph/models/cam-canvas';
 import { CamStencil } from '@noctua.graph/models/cam-stencil';
 import { NoctuaGraphEditorService } from '@noctua.graph/services/graph-editor-service';
+import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
 
 @Injectable({
   providedIn: 'root'

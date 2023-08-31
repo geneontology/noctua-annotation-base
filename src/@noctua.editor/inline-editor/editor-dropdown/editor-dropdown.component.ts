@@ -20,11 +20,11 @@ import { Evidence } from '@geneontology/noctua-form-base';
 
 import { editorDropdownData } from './editor-dropdown.tokens';
 import { EditorDropdownOverlayRef } from './editor-dropdown-ref';
-import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { EditorCategory } from './../../models/editor-category';
 import { concatMap, finalize, take, takeUntil } from 'rxjs/operators';
 import { find } from 'lodash';
 import { InlineReferenceService } from './../../inline-reference/inline-reference.service';
+import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
 
 @Component({
   selector: 'noc-editor-dropdown',

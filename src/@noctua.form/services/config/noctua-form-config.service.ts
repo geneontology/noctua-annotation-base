@@ -367,11 +367,6 @@ export class NoctuaFormConfigService {
     }
   }
 
-  xxxinsertActivityNode(activity: Activity,
-    subjectNode: ActivityNode,
-    nodeDescription: ShapeDescription.ShapeDescription): ActivityNode {
-    return ModelDefinition.xxxinsertNode(activity, subjectNode, nodeDescription);
-  }
 
   insertActivityNodeShex(activity: Activity,
     subjectNode: ActivityNode,
@@ -382,20 +377,22 @@ export class NoctuaFormConfigService {
 
   insertActivityNodeByPredicate(activity: Activity, subjectNode: ActivityNode, bbopPredicateId: string,
     partialObjectNode?: Partial<ActivityNode>): ActivityNode {
-    const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
+    const predExprs: ShapeDescription.PredicateExpression[] = subjectNode.canInsertNodes;
+
+
     let objectNode;
 
-    each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
-      if (bbopPredicateId === nodeDescription.predicate.id) {
-        if (partialObjectNode && partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
-          objectNode = ModelDefinition.xxxinsertNode(activity, subjectNode, nodeDescription);
-          return false;
-        } else if (!partialObjectNode) {
-          objectNode = ModelDefinition.xxxinsertNode(activity, subjectNode, nodeDescription);
-          return false;
-        }
-      }
-    });
+    /*  each(predExprs, (predExpr: ShapeDescription.PredicateExpression) => {
+       if (bbopPredicateId === predExpr.id) {
+         if (partialObjectNode && partialObjectNode.hasRootTypes(predExpr.node.category)) {
+           objectNode = ModelDefinition.insertNodeShex(activity, subjectNode, predExpr);
+           return false;
+         } else if (!partialObjectNode) {
+           objectNode = ModelDefinition.insertNodeShex(activity, subjectNode, predExpr);
+           return false;
+         }
+       }
+     }); */
 
     return objectNode;
   }

@@ -123,25 +123,7 @@ export class Activity extends SaeGraph<ActivityNode> {
   updateProperties() {
     this.updateSummary()
     this.updateDate()
-
-    const mfTriples = this.getEdges(this.rootNode.id)
-
-    mfTriples.forEach(mfTriple => {
-      switch (mfTriple.predicate.edge?.id) {
-        case (noctuaFormConfig.edge.enabledBy.id):
-          this.mfNode = mfTriple.subject
-          this.gpNode = mfTriple.object
-          this.enabledByEdge = mfTriple
-          break;
-        case (noctuaFormConfig.edge.partOf.id):
-          this.bpNode = mfTriple.object
-          this.bpPartOfEdge = mfTriple
-          break;
-        case (noctuaFormConfig.edge.occursIn.id):
-          this.ccNode = mfTriple.object
-          break;
-      }
-    })
+    this.updateRootNodes();
   }
 
   get id() {
@@ -205,6 +187,33 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   getActivityTypeDetail() {
     return noctuaFormConfig.activityType.options[this.activityType];
+  }
+
+  updateRootNodes() {
+    const mfTriples = this.getEdges(this.rootNode.id)
+
+    mfTriples.forEach(mfTriple => {
+      switch (mfTriple.predicate.edge?.id) {
+        case (noctuaFormConfig.edge.enabledBy.id):
+          this.mfNode = mfTriple.subject
+          this.gpNode = mfTriple.object
+          this.enabledByEdge = mfTriple
+          break;
+        case (noctuaFormConfig.edge.partOf.id):
+          this.bpNode = mfTriple.object
+          break;
+        case (noctuaFormConfig.edge.occursIn.id):
+          this.ccNode = mfTriple.object
+          break;
+      }
+
+      if (this.activityType === ActivityType.bpOnly) {
+        if (find(noctuaFormConfig.causalEdges, { id: mfTriple.predicate.edge?.id })) {
+          this.bpNode = mfTriple.object
+          this.bpPartOfEdge = mfTriple
+        }
+      }
+    })
   }
 
   updateDate() {
@@ -271,32 +280,6 @@ export class Activity extends SaeGraph<ActivityNode> {
     this.summary = summary
   }
 
-  updateEntityInsertMenu() {
-    const self = this;
-
-    each(self.nodes, (node: ActivityNode) => {
-      const canInsertNodes = ShapeDescription.canInsertEntity[node.type] || [];
-      const insertNodes: ShapeDescription.ShapeDescription[] = [];
-
-      each(canInsertNodes, (nodeDescription: ShapeDescription.ShapeDescription) => {
-        if (nodeDescription.cardinality === ShapeDescription.CardinalityType.oneToOne) {
-          const edgeTypeExist = self.edgeTypeExist(node.id, nodeDescription.predicate.id, node.type, nodeDescription.node.type);
-
-          if (!edgeTypeExist) {
-            insertNodes.push(nodeDescription);
-          }
-        } else {
-          insertNodes.push(nodeDescription);
-        }
-      });
-
-      node.canInsertNodes = insertNodes;
-      node.insertMenuNodes = filter(insertNodes, (insertNode: ShapeDescription.ShapeDescription) => {
-        return insertNode.node.showInMenu;
-      });
-    });
-
-  }
 
   updateShapeMenuShex(rootTypes?) {
     const self = this;

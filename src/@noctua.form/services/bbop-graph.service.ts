@@ -507,8 +507,6 @@ export class BbopGraphService {
 
     const commentAnnotations = edge.get_annotations_by_key('comment');
 
-    console.log(edge)
-
     return commentAnnotations.map(c => {
       return c.value();
     })
@@ -1236,7 +1234,6 @@ export class BbopGraphService {
     const self = this;
 
     triples.forEach((triple: Triple<ActivityNode>) => {
-      console.log(triples.length, triple)
       const subject = self.addIndividual(reqs, triple.subject);
       const object = self.addIndividual(reqs, triple.object);
 
@@ -1460,26 +1457,6 @@ export class BbopGraphService {
 
     return activity;
   }
-
-  private _xxxinsertNode(activity: Activity, bbopPredicateId: string, subjectNode: ActivityNode,
-    partialObjectNode: Partial<ActivityNode>): ActivityNode {
-    const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
-    let objectNode;
-
-    each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
-      if (bbopPredicateId === nodeDescription?.predicate?.id) {
-        if (partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
-          objectNode = ModelDefinition.xxxinsertNode(activity, subjectNode, nodeDescription);
-          return false;
-        }
-      }
-    });
-
-    return objectNode;
-  }
-
-
-
 
   private _compareSources(a: any, b: any) {
     return (a.value() > b.value()) ? -1 : 1;

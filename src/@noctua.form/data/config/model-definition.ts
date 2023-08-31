@@ -398,28 +398,6 @@ export const createActivityShex = (activityDescription: ActivityDescription): Ac
     return activity;
 }
 
-export const xxxinsertNode = (activity: Activity, subjectNode: ActivityNode, nodeDescription: InsertNodeDescription): ActivityNode => {
-    const objectNode = EntityDefinition.generateBaseTerm(nodeDescription.node.category, nodeDescription.node);
-
-    objectNode.id = activity.exist(nodeDescription.node.type) ?
-        `${nodeDescription.node.type}'@@'${uuid()}` :
-        nodeDescription.node.type;
-
-    objectNode.subjectId = subjectNode.id
-
-    objectNode.type = nodeDescription.node.type;
-    activity.addNode(objectNode);
-    objectNode.treeLevel = subjectNode.treeLevel + 1;
-
-    const predicate: Predicate = activity.getNode(objectNode.id).predicate;
-    predicate.subjectId = subjectNode.id;
-    predicate.objectId = objectNode.id;
-    predicate.edge = Entity.createEntity(nodeDescription.predicate);
-
-    activity.updateEdges(subjectNode, objectNode, predicate);
-    activity.resetPresentation();
-    return objectNode;
-}
 
 export const insertNodeShex = (activity: Activity,
     subjectNode: ActivityNode,
@@ -463,6 +441,7 @@ export const insertNodeShex = (activity: Activity,
     //activity.updateEdges(subjectNode, objectNode, predicate);
 
     activity.addEdge(subjectNode, objectNode, predicate);
+    activity.updateProperties();
     activity.resetPresentation();
     return objectNode;
 }
