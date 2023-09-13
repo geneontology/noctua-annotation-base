@@ -379,5 +379,12 @@ export const noctuaFormConfig = {
     Entity.createEntity(edge.occursIn),
   ],
 
+  edgePriority: [
+    edge.enabledBy.id,
+    edge.partOf.id,
+    edge.occursIn.id,
+    edge.hasInput.id,
+    edge.hasOutput.id]
+
 };
 

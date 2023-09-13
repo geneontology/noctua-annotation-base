@@ -782,17 +782,15 @@ export class Activity extends SaeGraph<ActivityNode> {
   }
 
   private _sortActivities(triples: Triple<ActivityNode>[]) {
-    const relationshipPriority = [
-      'enabled by',
-      'has_input',
-      'has_output',
-      'part of',
-      'occurs in']
+    const edgePriority = noctuaFormConfig.edgePriority;
 
     const sortedList = orderBy(triples, [
-      //weight', // First criteria: weight
-      (item) => relationshipPriority.indexOf(item.predicate.edge.label), // Second criteria: relationshipPriority
-    ], ['asc', 'asc']);
+      'weight',
+      (item) => {
+        const index = edgePriority.indexOf(item.predicate.edge.id);
+        return index === -1 ? edgePriority.length : index;
+      }
+    ]);
 
     console.log('sortedList', sortedList)
     return sortedList;
