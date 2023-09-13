@@ -787,7 +787,7 @@ export class BbopGraphService {
       activityType = ActivityType.ccOnly;
     } else if (subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(bbopSubjectEdges, function (subjectEdge) {
-        if (find(noctuaFormConfig.causalEdges, { id: subjectEdge.predicate_id() })) {
+        if (find(noctuaFormConfig.bpOnlyCausalEdges, { id: subjectEdge.predicate_id() })) {
           activityType = ActivityType.bpOnly;
         }
       });
@@ -825,9 +825,7 @@ export class BbopGraphService {
 
         activity.postRunUpdateCompliment();
 
-        // if (environment.isGraph) {
         activity.postRunUpdate();
-        // }
 
         activities.push(activity);
       }
@@ -1424,9 +1422,27 @@ export class BbopGraphService {
     for (const bbopEdge of bbopEdges) {
 
       const bbopPredicateId = bbopEdge.predicate_id();
+
+      const allowedPredicate = this.noctuaFormConfigService.shapePredicates.find((predicate) => {
+        return predicate === bbopPredicateId;
+      });
+
       const predExpr = this.noctuaFormConfigService.termLookupTable[bbopPredicateId];
 
-      if (!predExpr) continue
+      if (!allowedPredicate || !predExpr) continue
+
+
+      const causalEdgeIds = noctuaFormConfig.causalEdges.map(edge => edge.id);
+
+      let result = this.noctuaFormConfigService.shapePredicates.filter(
+        item => !causalEdgeIds.includes(item));
+
+      if (activity.activityType === ActivityType.bpOnly && subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
+        result = [...result, ...noctuaFormConfig.bpOnlyCausalEdges.map(edge => edge.id)]
+      }
+
+      if (!result.includes(bbopPredicateId)) continue;
+
 
 
       const bbopObjectId = bbopEdge.object_id();

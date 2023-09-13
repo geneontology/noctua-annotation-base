@@ -208,7 +208,7 @@ export class Activity extends SaeGraph<ActivityNode> {
       }
 
       if (this.activityType === ActivityType.bpOnly) {
-        if (find(noctuaFormConfig.causalEdges, { id: mfTriple.predicate.edge?.id })) {
+        if (find(noctuaFormConfig.bpOnlyCausalEdges, { id: mfTriple.predicate.edge?.id })) {
           this.bpNode = mfTriple.object
           this.bpPartOfEdge = mfTriple
         }
@@ -735,7 +735,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     } else if (self.activityType === ActivityType.proteinComplex) {
       title = gpText;
     } else {
-      qualifier = mf.isComplement ? 'NOT' : '';
+      qualifier = mf?.isComplement ? 'NOT' : '';
       title = `enabled by ${gpText}`;
     }
 

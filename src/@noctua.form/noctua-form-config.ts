@@ -333,6 +333,15 @@ export const noctuaFormConfig = {
     }
   },
 
+  bpOnlyCausalEdges: [
+    Entity.createEntity(edge.causallyUpstreamOfNegativeEffect),
+    Entity.createEntity(edge.causallyUpstreamOf),
+    Entity.createEntity(edge.causallyUpstreamOfPositiveEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithinNegativeEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithinPositiveEffect),
+    Entity.createEntity(edge.causallyUpstreamOfOrWithin),
+  ],
+
 
 
   // This array is arrange for matrice decison tree for causal edge 0-8 index, don't rearrange
