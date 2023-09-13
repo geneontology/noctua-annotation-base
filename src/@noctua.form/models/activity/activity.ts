@@ -10,7 +10,7 @@ import { Entity } from './entity';
 import { Predicate } from './predicate';
 import { getEdges, Edge, getNodes, subtractNodes } from './noctua-form-graph';
 import * as ShapeDescription from './../../data/config/shape-definition';
-import { each, filter, find } from 'lodash';
+import { each, filter, find, orderBy } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { TermsSummary } from './summary';
@@ -177,11 +177,13 @@ export class Activity extends SaeGraph<ActivityNode> {
       const edge = self.enabledByEdge;
 
       if (this.mfNode && edge) {
+        this.mfNode.showEvidence = false;
         this.mfNode.predicate = edge.predicate;
         if (edge.predicate.edge) {
-          edge.predicate.edge.label = ''
+          // edge.predicate.edge.label = ''
         }
       }
+
     }
   }
 
@@ -674,7 +676,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   buildTrees(): ActivityTreeNode[] {
     const self = this;
-    const sortedEdges = self.edges.sort(compareTripleWeight);
+    const sortedEdges = this._sortActivities(self.edges);
 
     if (!this.rootNode) return [];
     return [self._buildTree(sortedEdges, this.rootNode)];
@@ -682,7 +684,7 @@ export class Activity extends SaeGraph<ActivityNode> {
 
   buildGPTrees(): ActivityTreeNode[] {
     const self = this;
-    const sortedEdges = self.edges.sort(compareTripleWeight);
+    const sortedEdges = this._sortActivities(self.edges);
 
     return [self._buildTree(sortedEdges, self.gpNode)];
   }
@@ -779,6 +781,22 @@ export class Activity extends SaeGraph<ActivityNode> {
     this._presentation = null;
   }
 
+  private _sortActivities(triples: Triple<ActivityNode>[]) {
+    const relationshipPriority = [
+      'enabled by',
+      'has_input',
+      'has_output',
+      'part of',
+      'occurs in']
+
+    const sortedList = orderBy(triples, [
+      //weight', // First criteria: weight
+      (item) => relationshipPriority.indexOf(item.predicate.edge.label), // Second criteria: relationshipPriority
+    ], ['asc', 'asc']);
+
+    console.log('sortedList', sortedList)
+    return sortedList;
+  }
 }
 
 export class ActivityTreeNode {

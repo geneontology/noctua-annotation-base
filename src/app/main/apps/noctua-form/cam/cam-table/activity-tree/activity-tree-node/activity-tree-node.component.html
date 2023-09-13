@@ -5,7 +5,8 @@
     <div *ngIf="!options.slimViewer" class="noc-relation-cell noc-entity-cell" fxFlex="{{relationWidth}}">
       <span class="">
         <strong *ngIf="entity.predicate?.isComplement"> NOT </strong>
-        {{entity.predicate?.edge?.label}}
+        <span *ngIf="entity.showEvidence">{{entity.predicate?.edge?.label}}</span>
+
       </span>
       <noctua-inline-editor *ngIf="noctuaUserService.user && entity.relationEditable" [cam]="cam" [activity]='activity'
         [entity]="entity" [category]="EditorCategory.relationship" class="noc-edit-button">
@@ -60,7 +61,7 @@
       </button>
     </div>
     <div class="noc-evidence-cell p-0" fxLayout="column" fxLayoutAlign="start stretch">
-      <noc-evidence-table *ngIf="!entity.skipEvidenceCheck" class="w-100-p" [options]="optionsDisplay" [cam]="cam"
+      <noc-evidence-table *ngIf="entity.showEvidence" class="w-100-p" [options]="optionsDisplay" [cam]="cam"
         [entity]="entity">
       </noc-evidence-table>
     </div>

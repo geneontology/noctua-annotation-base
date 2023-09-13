@@ -832,6 +832,7 @@ export class BbopGraphService {
     });
 
     return activities;
+
   }
 
   graphToMolecules(camGraph): Activity[] {
