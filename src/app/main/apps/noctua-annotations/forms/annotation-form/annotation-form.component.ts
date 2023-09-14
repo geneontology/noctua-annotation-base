@@ -72,6 +72,8 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         this.molecularEntity = <FormGroup>this.annotationFormGroup.get('molecularEntity');
 
         console.log('this.annotationFormGroup', this.annotationFormGroup);
+
+        console.log(annotationFormGroup.get('gp'))
       });
   }
 

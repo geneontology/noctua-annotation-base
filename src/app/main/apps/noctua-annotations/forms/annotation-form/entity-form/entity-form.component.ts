@@ -64,7 +64,8 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.entity = this.noctuaAnnotationFormService.activity.getNode(this.entityFormGroup.get('id').value);
+    // const xx = this.entityFormGroup.value['id']
+    this.entity = this.noctuaAnnotationFormService.activity.getNode(this.entityFormGroup.value['id']);
     this.friendNodes = this.camService.getNodesByType(this.entity.type);
     if (this.noctuaAnnotationFormService.activity.activityType === ActivityType.ccOnly
       && this.entity.treeLevel === 1) {

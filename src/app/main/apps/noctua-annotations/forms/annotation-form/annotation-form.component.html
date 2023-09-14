@@ -29,13 +29,15 @@
           </button>
         </div>
         <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
-          <div [formArrayName]="'gp'" *ngFor="let nodeGroup of annotationFormGroup.get('gp')?.controls; let i = index;"
-            class="mat-elevation-z1 noc-term-group mb-4 px-8 pt-4  {{nodeGroup.get('name').value}}">
-            <div [formGroupName]="i" *ngFor="let entityForm of nodeGroup.get('entityGroup')?.controls" class="">
-              <noc-annotation-entity-form [entityFormGroup]="entityForm" fxLayout="row" fxLayoutAlign="start center"
-                class="w-100-p">
-              </noc-annotation-entity-form>
-            </div>
+          <div fxFlex="50" class="">
+            <noc-annotation-entity-form [entityFormGroup]="annotationFormGroup.get('gp')" fxLayout="row"
+              fxLayoutAlign="start center" class="w-100-p">
+            </noc-annotation-entity-form>
+          </div>
+          <div fxFlex="50" class="">
+            <noc-annotation-entity-form [entityFormGroup]="annotationFormGroup.get('goterm')" fxLayout="row"
+              fxLayoutAlign="start center" class="w-100-p">
+            </noc-annotation-entity-form>
           </div>
         </div>
       </div>
@@ -47,6 +49,10 @@
           <span fxFlex></span>
         </div>
         <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
+          <noc-annotation-evidence-form [annotationFormGroup]="annotationFormGroup" fxLayout="row"
+            fxLayoutAlign="start center" class="w-100-p">
+          </noc-annotation-evidence-form>
+
           <div *ngIf="noctuaAnnotationFormService.activity.activityType===ActivityType.bpOnly"
             class="mat-elevation-z1 noc-term-group mb-4 px-8 mf" fxLayout="row" fxLayoutAlign="start center">
             <div class="p-4" fxFlex fxLayout="row" fxLayoutAlign="start stretch">

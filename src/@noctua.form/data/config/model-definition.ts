@@ -101,29 +101,30 @@ export const rootNodes = {
 export const simpleAnnotonDescription: ActivityDescription = {
     type: ActivityType.simpleAnnoton,
     nodes: {
-        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularFunction.id,
-            type: ActivityNodeType.GoMolecularFunction,
-            category: [EntityDefinition.GoMolecularFunction],
-            label: 'Molecular Function',
-            aspect: 'F',
-            displaySection: noctuaFormConfig.displaySection.gp,
-            displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true,
-            canDelete: false,
-            weight: 1
-        },
         [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularEntity.id,
             type: ActivityNodeType.GoMolecularEntity,
             category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
-            label: 'enabled by (GP)',
+            label: 'Gene Product',
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
             termRequired: true,
             skipEvidenceCheck: true,
             canDelete: false,
             weight: 2
+        },
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'GO Term',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            termRequired: true,
+            skipEvidenceCheck: true,
+            canDelete: false,
+            weight: 1
         },
     },
     triples: [{

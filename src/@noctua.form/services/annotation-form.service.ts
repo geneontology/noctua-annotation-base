@@ -78,7 +78,6 @@ export class NoctuaAnnotationFormService {
 
     const activityForm = new AnnotationForm(formMetadata);
 
-    activityForm.createFunctionDescriptionForm(self.activity.presentation.fd);
     activityForm.createMolecularEntityForm(self.activity.presentation.gp);
 
     return activityForm;
