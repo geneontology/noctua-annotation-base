@@ -356,6 +356,7 @@ export class NoctuaFormConfigService {
 
   // For the form
   createActivityModel(activityType: ActivityType): Activity {
+    console.log(activityType)
     switch (activityType) {
       case ActivityType.default:
         return ModelDefinition.createActivityShex(ModelDefinition.activityUnitDescription);
@@ -367,6 +368,8 @@ export class NoctuaFormConfigService {
         return ModelDefinition.createActivityShex(ModelDefinition.moleculeDescription);
       case ActivityType.proteinComplex:
         return ModelDefinition.createActivityShex(ModelDefinition.proteinComplexDescription);
+      case ActivityType.simpleAnnoton:
+        return ModelDefinition.createActivityShex(ModelDefinition.simpleAnnotonDescription);
     }
   }
 

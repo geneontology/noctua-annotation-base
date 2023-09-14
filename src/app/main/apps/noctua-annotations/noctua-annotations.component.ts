@@ -11,7 +11,7 @@ import {
   Contributor,
   NoctuaUserService,
   NoctuaFormConfigService,
-  NoctuaActivityFormService,
+  NoctuaAnnotationFormService,
   CamService,
 
   noctuaFormConfig,
@@ -88,7 +88,7 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
     public noctuaSearchDialogService: NoctuaSearchDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaActivityFormService: NoctuaActivityFormService,
+    public noctuaAnnotationFormService: NoctuaAnnotationFormService,
     public noctuaCommonMenuService: NoctuaCommonMenuService) {
 
     this._unsubscribeAll = new Subject();
@@ -154,39 +154,9 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
-  resizeValidate(event: ResizeEvent): boolean {
-    const MIN_DIMENSIONS_PX: number = 50;
-    if (
-      event.rectangle.width &&
-      event.rectangle.height &&
-      (event.rectangle.width < MIN_DIMENSIONS_PX ||
-        event.rectangle.height < MIN_DIMENSIONS_PX)
-    ) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * Finilizes resize positions
-   * (used for drawer/sidenav width)
-   * @param event 
-   */
-  onResizeEnd(event: ResizeEvent): void {
-    this.resizeStyle = {
-      // enable/disable these per your needs
-      //position: 'fixed',
-      //left: `${event.rectangle.left}px`,
-      //top: `${event.rectangle.top}px`,
-      //height: `${event.rectangle.height}px`,
-      width: `${event.rectangle.width}px`,
-    };
-  }
-
   loadCam(modelId) {
     this.cam = this.camService.getCam(modelId);
   }
-
 
   openSearch() {
     this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.findReplace);
@@ -213,8 +183,8 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
     this.noctuaCommonMenuService.openLeftDrawer();
   }
 
-  openActivityForm(activityType: ActivityType) {
-    this.noctuaActivityFormService.setActivityType(activityType);
+  openAnnotationForm(activityType: ActivityType) {
+    this.noctuaAnnotationFormService.setActivityType(activityType);
     this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.activityForm);
     this.noctuaCommonMenuService.closeRightDrawer();
     this.noctuaCommonMenuService.openLeftDrawer();

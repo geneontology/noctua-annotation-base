@@ -6,13 +6,12 @@ import { takeUntil } from 'rxjs/operators';
 import {
   Cam,
   Activity,
-  NoctuaActivityFormService,
+  NoctuaAnnotationFormService,
   NoctuaFormConfigService,
   ActivityState,
   ActivityType,
   NoctuaUserService,
 } from '@geneontology/noctua-form-base';
-import { ResizeEvent } from 'angular-resizable-element';
 import { NoctuaAnnotationsDialogService } from '../../services/dialog.service';
 
 @Component({
@@ -33,13 +32,13 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   resizeStyle = {};
 
   cam: Cam;
-  activityFormGroup: FormGroup;
-  activityFormSub: Subscription;
+  annotationFormGroup: FormGroup;
+  annotationFormSub: Subscription;
   molecularEntity: FormGroup;
   searchCriteria: any = {};
-  activityFormPresentation: any;
+  annotationFormPresentation: any;
   evidenceFormArray: FormArray;
-  activityFormData: any = [];
+  annotationFormData: any = [];
   activity: Activity;
   currentActivity: Activity;
   state: ActivityState;
@@ -53,53 +52,41 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaActivityFormService: NoctuaActivityFormService
+    public noctuaAnnotationFormService: NoctuaAnnotationFormService
   ) {
     this._unsubscribeAll = new Subject();
-
-    // this.activity = self.noctuaActivityFormService.activity;
-    // this.activityFormPresentation = this.noctuaActivityFormService.activityPresentation;
   }
 
   ngOnInit(): void {
-    console.log('save')
-    this.activityFormSub = this.noctuaActivityFormService.activityFormGroup$
+    this.annotationFormSub = this.noctuaAnnotationFormService.annotationFormGroup$
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(activityFormGroup => {
-        if (!activityFormGroup) {
+      .subscribe(annotationFormGroup => {
+        if (!annotationFormGroup) {
           return;
         }
 
-        this.activityFormGroup = activityFormGroup;
-        this.currentActivity = this.noctuaActivityFormService.currentActivity;
-        this.activity = this.noctuaActivityFormService.activity;
-        this.state = this.noctuaActivityFormService.state;
-        this.molecularEntity = <FormGroup>this.activityFormGroup.get('molecularEntity');
+        this.annotationFormGroup = annotationFormGroup;
+        this.currentActivity = this.noctuaAnnotationFormService.currentActivity;
+        this.activity = this.noctuaAnnotationFormService.activity;
+        this.state = this.noctuaAnnotationFormService.state;
+        this.molecularEntity = <FormGroup>this.annotationFormGroup.get('molecularEntity');
 
-        if (this.activity.activityType === ActivityType.ccOnly) {
-          this.descriptionSectionTitle = 'Localization Description';
-        } else if (this.activity.activityType === ActivityType.molecule) {
-          this.annotatedSectionTitle = 'Small Molecule';
-          this.descriptionSectionTitle = 'Location (optional)';
-        } else {
-          this.descriptionSectionTitle = 'Function Description';
-        }
+        console.log('this.annotationFormGroup', this.annotationFormGroup);
       });
   }
 
 
-
   checkErrors() {
-    const errors = this.noctuaActivityFormService.activity.submitErrors;
+    const errors = this.noctuaAnnotationFormService.activity.submitErrors;
     // this.noctuaAnnotationsDialogService.openActivityErrorsDialog(errors);
   }
 
   save() {
     const self = this;
 
-    self.noctuaActivityFormService.saveActivity().subscribe(() => {
+    self.noctuaAnnotationFormService.saveActivity().subscribe(() => {
       self.noctuaAnnotationsDialogService.openInfoToast('Annotation successfully created.', 'OK');
-      self.noctuaActivityFormService.clearForm();
+      self.noctuaAnnotationFormService.clearForm();
       if (this.closeDialog) {
         this.closeDialog();
       }
@@ -108,13 +95,13 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
 
   clear() {
-    this.noctuaActivityFormService.clearForm();
+    this.noctuaAnnotationFormService.clearForm();
   }
 
   createExample() {
     const self = this;
 
-    self.noctuaActivityFormService.initializeFormData();
+    self.noctuaAnnotationFormService.initializeFormData();
   }
 
   termDisplayFn(term): string | undefined {

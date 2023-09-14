@@ -98,6 +98,41 @@ export const rootNodes = {
 };
 
 
+export const simpleAnnotonDescription: ActivityDescription = {
+    type: ActivityType.simpleAnnoton,
+    nodes: {
+        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularFunction.id,
+            type: ActivityNodeType.GoMolecularFunction,
+            category: [EntityDefinition.GoMolecularFunction],
+            label: 'Molecular Function',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            termRequired: true,
+            canDelete: false,
+            weight: 1
+        },
+        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
+            id: EntityDefinition.GoMolecularEntity.id,
+            type: ActivityNodeType.GoMolecularEntity,
+            category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
+            label: 'enabled by (GP)',
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            termRequired: true,
+            skipEvidenceCheck: true,
+            canDelete: false,
+            weight: 2
+        },
+    },
+    triples: [{
+        subject: ActivityNodeType.GoMolecularFunction,
+        object: ActivityNodeType.GoMolecularEntity,
+        predicate: noctuaFormConfig.edge.enabledBy
+    }],
+};
+
 export const activityUnitDescription: ActivityDescription = {
     type: ActivityType.default,
     nodes: {

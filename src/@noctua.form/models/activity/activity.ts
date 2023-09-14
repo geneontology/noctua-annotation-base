@@ -44,7 +44,8 @@ export enum ActivityType {
   bpOnly = 'bpOnly',
   ccOnly = 'ccOnly',
   molecule = 'molecule',
-  proteinComplex = 'proteinComplex'
+  proteinComplex = 'proteinComplex',
+  simpleAnnoton = 'simpleAnnoton'
 }
 
 export class ActivitySize {

@@ -3,7 +3,7 @@
     <button mat-icon-button color="" class="noc-rounded-button"
       [ngClass]="{'noc-active': noctuaCommonMenuService.selectedLeftPanel === LeftPanel.activityForm}" color="primary"
       matTooltip="Add New Activity/Annotation" [matTooltipPosition]="'above'" [matTooltipShowDelay]="1500"
-      (click)="openActivityForm(ActivityType.default)">
+      (click)="openAnnotationForm(ActivityType.simpleAnnoton)">
       <fa-icon [icon]="['fas', 'plus']"></fa-icon>
     </button>
 

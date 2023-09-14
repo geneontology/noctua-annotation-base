@@ -1,19 +1,5 @@
 <div [formGroup]="entityFormGroup" fxLayout="row" fxLayoutAlign="start stretch" class="w-100-p">
-  <div *ngIf="entity.treeLevel>1" class="noc-tree-input noc-level-1" fxLayout="column" fxLayoutAlign="center center">
-    <div *ngIf="entity.treeLevel===2" class="noc-tree-line line-m" fxFlex></div>
-  </div>
-  <div *ngIf="entity.treeLevel>2" class="noc-tree-input noc-level-2" fxLayout="column" fxLayoutAlign="start center">
-    <div *ngIf="entity.treeLevel===3" class="noc-tree-line line-t" fxFlex="50%"></div>
-    <div *ngIf="entity.treeLevel<3" class="noc-tree-line iine-b" fxFlex="50%"></div>
-  </div>
-  <div *ngIf="entity.treeLevel>3" class="noc-tree-input noc-level-3" fxLayout="column" fxLayoutAlign="start center">
-    <div *ngIf="entity.treeLevel===4" class="noc-tree-line line-t" fxFlex="50%"></div>
-    <div *ngIf="entity.treeLevel<4" class="noc-tree-line iine-b" fxFlex="50%"></div>
-  </div>
-  <div *ngIf="entity.treeLevel>4" class="noc-tree-input noc-level-3" fxLayout="column" fxLayoutAlign="start center">
-    <div *ngIf="entity.treeLevel===5" class="noc-tree-line line-t" fxFlex="50%"></div>
-    <div *ngIf="entity.treeLevel<5" class="noc-tree-line iine-b" fxFlex="50%"></div>
-  </div>
+
   <div class="p-4" fxFlex="flex" fxLayout="row" fxLayoutAlign="start stretch">
     <mat-form-field class="noc-sm w-100-p" appearance="outline">
       <mat-label>{{entity.label}}</mat-label>
