@@ -44,6 +44,18 @@ export class DataUtils {
     return [...matchedPredicates];
   }
 
+  public static getObjects(shapes: ShexShapeAssociation[], subjectIds: string[]): string[] {
+    const objectsSet = new Set<string>();
+
+    shapes.forEach(shape => {
+      if (subjectIds.includes(shape.subject)) {
+        shape.object.forEach(obj => objectsSet.add(obj));
+      }
+    });
+
+    return [...objectsSet];
+  }
+
 
   public static getSubjectShapes(shapes: ShexShapeAssociation[], subjectId, excludeFromExtensions = true): ShexShapeAssociation[] {
     return shapes.filter(shape => {

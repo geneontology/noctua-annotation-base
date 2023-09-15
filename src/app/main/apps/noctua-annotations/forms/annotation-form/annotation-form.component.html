@@ -88,9 +88,9 @@
           <div fxFlex="50" class="">
             <mat-form-field appearance="outline" class="noc-sm w-100-p">
               <mat-label>Extension Edge</mat-label>
-              <mat-select placeholder="" formControlName="extensionEdge">
-                <mat-option *ngFor="let bpOnlyEdge of noctuaFormConfigService.bpOnlyEdges.options" [value]="bpOnlyEdge">
-                  {{bpOnlyEdge.label}}
+              <mat-select placeholder="" formControlName="extensionEdge" [compareWith]="compareFn">
+                <mat-option *ngFor="let extensionEdge of annotationActivity.extensionEdges" [value]="extensionEdge">
+                  {{extensionEdge.label}}
                 </mat-option>
               </mat-select>
             </mat-form-field>

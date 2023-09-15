@@ -99,12 +99,29 @@ export class NoctuaAnnotationFormService {
       this.activity.enableSubmit();
       this.annotationActivity.updateAspect();
 
-      const edges = this.noctuaFormConfigService.getGPToTermRelation(
+      const edges = this.noctuaFormConfigService.getTermRelations(
         this.annotationActivity.gp.rootTypes,
-        this.annotationActivity.goterm.rootTypes
+        this.annotationActivity.goterm.rootTypes,
+        true
+      );
+
+      const extensionObjects = this.noctuaFormConfigService.getObjectsRelations(
+        this.annotationActivity.goterm.rootTypes,
+      );
+
+      const extensionEdges = this.noctuaFormConfigService.getTermRelations(
+        this.annotationActivity.goterm.rootTypes,
+        this.annotationActivity.extension.rootTypes
       );
 
       this.annotationActivity.gpToTermEdges = edges;
+      this.annotationActivity.extensionEdges = extensionEdges;
+
+      if (extensionObjects.length > 0) {
+        this.annotationActivity.extension.category = extensionObjects;
+        this.noctuaFormConfigService.setTermLookup(this.annotationActivity.extension, extensionObjects);
+        // this.annotationForm.
+      }
 
       if (edges.length > 0 && this.annotationActivity.gp.hasValue()
         && this.annotationActivity.goterm.hasValue()) {
@@ -114,7 +131,9 @@ export class NoctuaAnnotationFormService {
         this._onActivityFormChanges();
       }
 
-      console.log('edges', edges);
+
+      console.log('ext', extensionObjects);
+      console.log('edges', extensionEdges);
       console.log(this.annotationActivity);
     });
   }

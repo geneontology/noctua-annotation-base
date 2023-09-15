@@ -97,8 +97,8 @@ export class EntityForm {
             distinctUntilChanged(),
             debounceTime(400)
         ).subscribe(data => {
-            self._metadata.lookupFunc.termLookup(data, lookup.requestParams).subscribe(response => {
-                lookup.results = response;
+            self._metadata.lookupFunc.termLookup(data, self.node.termLookup.requestParams).subscribe(response => {
+                self.node.termLookup.results = response;
             });
         });
     }

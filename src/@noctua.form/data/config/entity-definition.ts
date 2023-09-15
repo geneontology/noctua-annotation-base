@@ -159,6 +159,21 @@ export const generateBaseTerm = (goCategories: GoCategory[], override: Partial<A
     return activityNode;
 };
 
+export const setTermLookup = (activityNode: ActivityNode, goCategories: GoCategory[]) => {
+    if (goCategories && goCategories.length > 0) {
+        const fqTermCategory = categoryToClosure(goCategories);
+        activityNode.termLookup = new EntityLookup(null,
+            Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
+                fq: [
+                    'document_category:"ontology_class"',
+                    fqTermCategory
+                ],
+            })
+        );
+    }
+}
+
+
 
 
 export const setEvidenceLookup = (predicate: Predicate): void => {

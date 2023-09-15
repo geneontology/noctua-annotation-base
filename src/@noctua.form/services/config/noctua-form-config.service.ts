@@ -10,7 +10,7 @@ import { HttpParams } from '@angular/common/http';
 import * as EntityDefinition from './../../data/config/entity-definition';
 import { NoctuaUserService } from '../user.service';
 import { BehaviorSubject } from 'rxjs';
-import { ActivityNode } from './../../models/activity/activity-node';
+import { ActivityNode, GoCategory } from './../../models/activity/activity-node';
 import { ConnectorActivity } from './../../models/activity/connector-activity';
 import { Entity } from './../../models/activity/entity';
 import { Evidence } from './../../models/activity/evidence';
@@ -373,7 +373,7 @@ export class NoctuaFormConfigService {
     }
   }
 
-  getGPToTermRelation(subjectRootTypes: Entity[], objectRootTypes: Entity[]) {
+  getTermRelations(subjectRootTypes: Entity[], objectRootTypes: Entity[], gpToTerm = false) {
     if (!subjectRootTypes || !objectRootTypes) return [];
 
     const subjectIds = subjectRootTypes.map((rootType) => {
@@ -384,11 +384,37 @@ export class NoctuaFormConfigService {
       return rootType.id
     });
 
-    const predicates = DataUtils.getPredicates(gpToTermJson.goshapes, subjectIds, objectIds);
+    const predicates = DataUtils.getPredicates(
+      gpToTerm ? gpToTermJson.goshapes : shexJson.goshapes, subjectIds, objectIds);
 
     return predicates.map((predicate) => {
       return this.findEdge(predicate);
     });
+
+  }
+
+  setTermLookup(activityNode: ActivityNode, goCategories: GoCategory[]) {
+    EntityDefinition.setTermLookup(activityNode, goCategories);
+  }
+
+  getObjectsRelations(subjectRootTypes: Entity[], gpToTerm = false) {
+    if (!subjectRootTypes) return [];
+
+    const subjectIds = subjectRootTypes.map((rootType) => {
+      return rootType.id
+    });
+
+    const objectIds = DataUtils.getObjects(gpToTerm ? gpToTermJson.goshapes : shexJson.goshapes, subjectIds);
+
+    return objectIds.reduce((acc, term) => {
+      const node = this.termLookupTable[term];
+      if (node) {
+        const category = new GoCategory();
+        category.category = node.id;
+        acc.push(category);
+      }
+      return acc;
+    }, []);
 
   }
 
