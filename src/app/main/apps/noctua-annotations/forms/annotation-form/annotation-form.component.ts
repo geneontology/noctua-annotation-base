@@ -85,7 +85,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   save() {
     const self = this;
 
-    self.noctuaAnnotationFormService.saveActivity().subscribe(() => {
+    self.noctuaAnnotationFormService.saveAnnotation().subscribe(() => {
       self.noctuaAnnotationsDialogService.openInfoToast('Annotation successfully created.', 'OK');
       self.noctuaAnnotationFormService.clearForm();
       if (this.closeDialog) {

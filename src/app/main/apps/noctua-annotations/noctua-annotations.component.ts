@@ -55,7 +55,7 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
   rightDrawer: MatDrawer;
 
   camToolbarOptions: CamToolbarOptions = {
-    showCreateButton: true
+    showCreateButton: false
   }
 
   summary;

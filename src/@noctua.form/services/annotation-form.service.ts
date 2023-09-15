@@ -88,7 +88,7 @@ export class NoctuaAnnotationFormService {
   }
 
   activityFormToActivity() {
-    this.annotationForm.populateActivity(this.activity);
+    this.annotationForm.populateActivity(this.annotationActivity);
   }
 
   private _onActivityFormChanges(): void {
@@ -173,10 +173,11 @@ export class NoctuaAnnotationFormService {
     this.initializeForm();
   }
 
-  saveActivity() {
+  saveAnnotation() {
     const self = this;
     self.activityFormToActivity();
-    const saveData = self.activity.createSave();
+    self.annotationActivity.activityToAnnotation(self.activity);
+    const saveData = self.annotationActivity.createSave();
     return forkJoin(self.bbopGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title));
   }
 

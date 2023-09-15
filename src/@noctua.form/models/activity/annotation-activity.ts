@@ -2,6 +2,8 @@ import { ActivityNode } from './activity-node';
 import { Entity } from './entity';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { Activity } from './activity';
+import { Triple } from './triple';
+import { Predicate } from './predicate';
 
 
 export class AnnotationActivity {
@@ -18,15 +20,41 @@ export class AnnotationActivity {
 
 
   constructor(activity: Activity) {
-    this._activityToAnnotation(activity)
+    this.activityToAnnotation(activity)
   }
 
 
-  private _activityToAnnotation(activity: Activity) {
+  activityToAnnotation(activity: Activity) {
     this.gp = activity.getNode('gp');
     this.goterm = activity.getNode('goterm');
     this.extension = activity.getNode('extension');
 
+  }
+
+  createSave() {
+    const self = this;
+    const saveData = {
+      title: 'enabled by ' + self.gp?.term.label,
+      triples: [],
+      nodes: [],
+      graph: null
+    };
+
+    const gpTpTermTriple = new Triple(self.gp, self.goterm,
+      new Predicate(this.gpToTermEdge, self.goterm.predicate.evidence));
+
+    const extensionTriple = new Triple(self.goterm, self.extension,
+      new Predicate(this.extensionEdge, self.goterm.predicate.evidence));
+
+
+    saveData.nodes = [self.gp, self.goterm, self.extension];
+    saveData.triples = [gpTpTermTriple, extensionTriple];
+
+
+
+    // saveData.triples = 
+
+    return saveData;
   }
 
   updateAspect() {

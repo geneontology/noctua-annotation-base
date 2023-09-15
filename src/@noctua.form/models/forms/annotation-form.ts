@@ -5,6 +5,7 @@ import { ActivityFormMetadata } from './../forms/activity-form-metadata';
 import { each } from 'lodash';
 import { ActivityNode, ActivityNodeType } from '../activity/activity-node';
 import { EntityForm } from './entity-form';
+import { AnnotationActivity } from '../activity/annotation-activity';
 
 export class AnnotationForm {
   gp: FormGroup;
@@ -54,7 +55,15 @@ export class AnnotationForm {
   }
 
 
-  populateActivity(activity: Activity) {
+  populateActivity(annotationActivity: AnnotationActivity) {
+
+    if (this.gpToTermEdge.value) {
+      annotationActivity.gpToTermEdge = this.gpToTermEdge.value;
+    }
+
+    if (this.extensionEdge.value) {
+      annotationActivity.extensionEdge = this.extensionEdge.value;
+    }
 
     this.entityForms.forEach((entityForm: EntityForm) => {
       entityForm.populateTerm();
