@@ -1,21 +1,19 @@
-import { FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
 
 import { Activity } from './../activity/activity';
 import { ActivityFormMetadata } from './../forms/activity-form-metadata';
-import { EntityGroupForm } from './entity-group-form';
-import { Entity } from './../../models/activity/entity';
 import { each } from 'lodash';
 import { ActivityNode, ActivityNodeType } from '../activity/activity-node';
 import { EntityForm } from './entity-form';
-import { EvidenceForm } from './evidence-form';
-import { Evidence } from '../activity/evidence';
 
 export class AnnotationForm {
-  entityGroupForms: EntityGroupForm[] = [];
-  gp = new FormControl();
-  goterm = new FormControl();
-  evidenceForms: EvidenceForm[] = [];
-  evidenceFormArray = new FormArray([]);
+  gp: FormGroup;
+  goterm: FormGroup;
+  extension: FormGroup;
+  gpToTermEdge = new FormControl();
+  extensionEdge = new FormControl();
+  extensionType = new FormControl();
+  entityForms: EntityForm[] = [];
 
   private _metadata: ActivityFormMetadata;
   private _fb = new FormBuilder();
@@ -32,32 +30,23 @@ export class AnnotationForm {
       if (!entity.skipEvidenceCheck) {
         entityForm.createEvidenceForms(entity);
       }
+      this.entityForms.push(entityForm);
 
-      if (entity.type === ActivityNodeType.GoMolecularEntity) {
-        this.gp = this._fb.control(entityForm)
-        // this.gp.setValue(entity.term.control.value)
-      } else if (entity.type === ActivityNodeType.GoMolecularFunction) {
-        this.goterm = this._fb.control(entityForm)
-        this.createEvidenceForms(entity);
-        // self.gp.setValue(entity.term.control.value)
+
+      const entityTypeToPropertyMap = {
+        [ActivityNodeType.GoMolecularEntity]: 'gp',
+        [ActivityNodeType.GoMolecularFunction]: 'goterm',
+        extension: 'extension'
+      };
+
+      const propertyName = entityTypeToPropertyMap[entity.id];
+      if (propertyName) {
+        self[propertyName] = this._fb.group(entityForm);
       }
 
     });
   }
 
-
-  createEvidenceForms(entity: ActivityNode) {
-    const self = this;
-
-    entity.predicate.evidence.forEach((evidence: Evidence) => {
-      const evidenceForm = new EvidenceForm(self._metadata, entity, evidence);
-
-      self.evidenceForms.push(evidenceForm);
-      evidenceForm.onValueChanges(entity.predicate);
-      //  evidenceForm.setTermValidator(termValidator(this.term, entity));
-      self.evidenceFormArray.push(self._fb.group(evidenceForm));
-    });
-  }
 
 
   createMolecularEntityForm(gpData) {
@@ -73,15 +62,16 @@ export class AnnotationForm {
 
   populateActivity(activity: Activity) {
 
-    this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
-      entityGroupForm.populateActivityNodes(activity);
+    this.entityForms.forEach((entityForm: EntityForm) => {
+      entityForm.populateTerm();
     });
 
   }
 
   getErrors(error) {
-    this.entityGroupForms.forEach((entityGroupForm: EntityGroupForm) => {
-      entityGroupForm.getErrors(error);
+    this.entityForms.forEach((entityForm: EntityForm) => {
+      entityForm.getErrors(error);
     });
+
   }
 }

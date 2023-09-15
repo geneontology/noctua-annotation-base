@@ -374,6 +374,20 @@ export class NoctuaFormConfigService {
   }
 
 
+  getGoTermAspect(termNode: ActivityNode) {
+    let aspect: string | null = null;
+    const rootNode = noctuaFormConfig.rootNode
+    for (const key in noctuaFormConfig.rootNode) {
+      if (termNode.rootTypes.some(item => item.id === rootNode[key].id)) {
+        aspect = rootNode[key].aspect;
+        break;
+      }
+    }
+
+    return aspect;
+  }
+
+
   insertActivityNodeShex(activity: Activity,
     subjectNode: ActivityNode,
     predExpr: ShapeDescription.PredicateExpression,

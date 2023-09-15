@@ -1,3 +1,5 @@
+
+
 export {
     ActivityNode,
     ActivityNodeType,
@@ -15,6 +17,7 @@ export {
     ActivityTreeNode,
     compareActivity
 } from './activity';
+export { AnnotationActivity } from './annotation-activity';
 export {
     Cam,
     CamRebuildSignal,

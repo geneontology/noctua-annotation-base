@@ -116,6 +116,22 @@ export const simpleAnnotonDescription: ActivityDescription = {
         [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
             id: EntityDefinition.GoMolecularFunction.id,
             type: ActivityNodeType.GoMolecularFunction,
+            category: [
+                EntityDefinition.GoMolecularFunction,
+                EntityDefinition.GoBiologicalProcess,
+                EntityDefinition.GoCellularComponent
+            ],
+            label: 'GO Term',
+            aspect: 'F',
+            displaySection: noctuaFormConfig.displaySection.gp,
+            displayGroup: noctuaFormConfig.displayGroup.gp,
+            termRequired: true,
+            canDelete: false,
+            weight: 1
+        },
+        'extension': <ActivityNodeDisplay>{
+            id: 'extension',
+            type: ActivityNodeType.GoMolecularFunction,
             category: [EntityDefinition.GoMolecularFunction],
             label: 'GO Term',
             aspect: 'F',

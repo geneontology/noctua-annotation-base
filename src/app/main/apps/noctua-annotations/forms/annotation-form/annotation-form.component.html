@@ -35,8 +35,8 @@
             </noc-annotation-entity-form>
           </div>
           <div fxFlex="50" class="">
-            <noc-annotation-entity-form [entityFormGroup]="annotationFormGroup.get('goterm')" fxLayout="row"
-              fxLayoutAlign="start center" class="w-100-p">
+            <noc-annotation-entity-form [entityFormGroup]="annotationFormGroup.get('goterm')" [selectTerm]="updateMenu"
+              fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
             </noc-annotation-entity-form>
           </div>
         </div>
@@ -49,10 +49,9 @@
           <span fxFlex></span>
         </div>
         <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
-          <noc-annotation-evidence-form [annotationFormGroup]="annotationFormGroup" fxLayout="row"
+          <noc-annotation-evidence-form [entityFormGroup]="annotationFormGroup.get('goterm')" fxLayout="row"
             fxLayoutAlign="start center" class="w-100-p">
           </noc-annotation-evidence-form>
-
           <div *ngIf="noctuaAnnotationFormService.activity.activityType===ActivityType.bpOnly"
             class="mat-elevation-z1 noc-term-group mb-4 px-8 mf" fxLayout="row" fxLayoutAlign="start center">
             <div class="p-4" fxFlex fxLayout="row" fxLayoutAlign="start stretch">
@@ -72,6 +71,57 @@
                 </mat-select>
               </mat-form-field>
             </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-section-heading">
+            GP to Term Relation
+          </div>
+          <span fxFlex></span>
+        </div>
+        <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
+          <div class="mat-elevation-z1 noc-term-group mb-4 px-8 mf" fxLayout="row" fxLayoutAlign="start center">
+            <div class="p-4" fxFlex="600px" fxLayout="row" fxLayoutAlign="start stretch">
+              <mat-form-field appearance="outline" class="noc-sm w-100-p">
+                <mat-label>GP to Term Relation</mat-label>
+                <mat-select placeholder="" formControlName="gpToTermEdge">
+                  <mat-option *ngFor="let bpOnlyEdge of noctuaFormConfigService.bpOnlyEdges.options"
+                    [value]="bpOnlyEdge">
+                    {{bpOnlyEdge.label}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-section-heading">
+            Extension
+          </div>
+          <span fxFlex></span>
+        </div>
+        <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
+          <div fxFlex="50" class="">
+            <mat-form-field appearance="outline" class="noc-sm w-100-p">
+              <mat-label>Extension Edge</mat-label>
+              <mat-select placeholder="" formControlName="extensionEdge">
+                <mat-option *ngFor="let bpOnlyEdge of noctuaFormConfigService.bpOnlyEdges.options" [value]="bpOnlyEdge">
+                  {{bpOnlyEdge.label}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex="50" class="">
+            <noc-annotation-entity-form [entityFormGroup]="annotationFormGroup.get('extension')" fxLayout="row"
+              fxLayoutAlign="start center" class="w-100-p">
+            </noc-annotation-entity-form>
           </div>
         </div>
       </div>

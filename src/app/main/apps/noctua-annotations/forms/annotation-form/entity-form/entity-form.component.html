@@ -7,7 +7,7 @@
         row="2">
       </textarea>
       <mat-autocomplete #termAuto="matAutocomplete" [displayWith]="termDisplayFn"
-        (optionSelected)="updateMenu($event.option.value)" class="noc-term-autocomplete " fxLayout="row"
+        (optionSelected)="selectTerm($event.option.value)" class="noc-term-autocomplete " fxLayout="row"
         fxLayoutAlign="start start">
         <div class="" fxFlex="400px">
           <mat-option *ngFor="let item of entity?.termLookup.results" [value]="item">
@@ -30,7 +30,6 @@
               </button>
             </div>
           </mat-option>
-
         </div>
         <!-- <div fxFlex="" class="scard-more-info">
           <noc-term-detail *ngIf="termData" [termData]="termData"></noc-term-detail>
@@ -38,17 +37,4 @@
       </mat-autocomplete>
     </mat-form-field>
   </div>
-  <button *ngIf="displayAddButton" mat-icon-button class="noc-action-button" fxFlex="40px"
-    [matMenuTriggerFor]="ccOnlyAddMenu">
-    <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-  </button>
-  <mat-menu #ccOnlyAddMenu="matMenu" class="noc-extensions-menu-panel">
-    <button mat-menu-item *ngFor="let insertMenuItem of entity.insertMenuNodes" fxLayout="column"
-      fxLayoutAlign="start start" class="w-100-p" (click)="insertEntityShex(insertMenuItem)">
-      {{insertMenuItem?.label}}
-      <div class="noc-terms-description">
-        {{insertMenuItem?.rangeLabel}}
-      </div>
-    </button>
-  </mat-menu>
 </div>

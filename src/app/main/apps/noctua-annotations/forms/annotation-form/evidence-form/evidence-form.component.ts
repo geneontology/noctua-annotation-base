@@ -32,15 +32,17 @@ import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dial
 })
 
 export class AnnotationEvidenceFormComponent implements OnInit, OnDestroy {
-  @Input('annotationFormGroup')
-  annotationFormGroup: FormGroup
+  @Input('entityFormGroup')
+  entityFormGroup: FormGroup
+
+  entity: ActivityNode;
 
   @ViewChild('evidenceDBreferenceMenuTrigger', { static: true, read: MatMenuTrigger })
   evidenceDBreferenceMenuTrigger: MatMenuTrigger;
 
   evidenceDBForm: FormGroup;
   evidenceFormArray: FormArray;
-  entity: ActivityNode;
+
   selectedItemDisplay;
   friendNodes;
   friendNodesFlat;
@@ -64,7 +66,7 @@ export class AnnotationEvidenceFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // this.entity = this.noctuaAnnotationFormService.activity.getNode(this.entityFormGroup.get('id').value);
+    this.entity = this.noctuaAnnotationFormService.activity.getNode(this.entityFormGroup.value['id']);
   }
 
   ngOnDestroy(): void {

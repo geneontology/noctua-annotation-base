@@ -35,15 +35,26 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   @Input('entityFormGroup')
   public entityFormGroup: FormGroup;
 
+  private _selectTerm: (term: any) => void = this.updateMenu; // Initialize with default function
+
+  @Input()
+  set selectTerm(fn: (term: any) => void) {
+    if (fn) {
+      this._selectTerm = fn;
+    }
+  }
+
+  get selectTerm(): (term: any) => void {
+    return this._selectTerm;
+  }
+
+
   @ViewChild('evidenceDBreferenceMenuTrigger', { static: true, read: MatMenuTrigger })
   evidenceDBreferenceMenuTrigger: MatMenuTrigger;
 
   evidenceDBForm: FormGroup;
   evidenceFormArray: FormArray;
   entity: ActivityNode;
-  selectedItemDisplay;
-  friendNodes;
-  friendNodesFlat;
   activityNodeType = ActivityNodeType;
   displayAddButton = false;
 
@@ -66,17 +77,6 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // const xx = this.entityFormGroup.value['id']
     this.entity = this.noctuaAnnotationFormService.activity.getNode(this.entityFormGroup.value['id']);
-    this.friendNodes = this.camService.getNodesByType(this.entity.type);
-    if (this.noctuaAnnotationFormService.activity.activityType === ActivityType.ccOnly
-      && this.entity.treeLevel === 1) {
-      this.displayAddButton = true;
-    }
-
-    if (this.noctuaAnnotationFormService.activity.activityType === ActivityType.proteinComplex
-      && this.entity.type === ActivityNodeType.GoProteinContainingComplex) {
-      this.displayAddButton = true;
-    }
-    //  this.friendNodesFlat = this.camService.getNodesByTypeFlat(this.entity.type);
   }
 
   ngOnDestroy(): void {
@@ -249,7 +249,7 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   }
 
   updateMenu(entity) {
-    console.log(entity.rootTypes)
+    console.log("root", entity.rootTypes)
     this.noctuaAnnotationFormService.initializeForm(entity.rootTypes);
   }
 
@@ -289,9 +289,7 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
     this.inlineWithService.open(event.target, { data });
   }
 
-  unselectItemDisplay() {
-    this.selectedItemDisplay = null;
-  }
+
 
   openTermDetails(event, item) {
     event.stopPropagation();

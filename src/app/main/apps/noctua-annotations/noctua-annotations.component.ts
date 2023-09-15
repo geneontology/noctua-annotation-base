@@ -138,15 +138,6 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
       });
 
 
-    this.camService.onCamsCheckoutChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(summary => {
-        if (!summary) {
-          return;
-        }
-
-        this.summary = summary
-      });
   }
 
   ngOnDestroy(): void {

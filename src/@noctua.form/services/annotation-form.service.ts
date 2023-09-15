@@ -88,9 +88,11 @@ export class NoctuaAnnotationFormService {
   }
 
   private _onActivityFormChanges(): void {
-    this.annotationFormGroup.getValue().valueChanges.subscribe(() => {
+    this.annotationFormGroup.getValue().valueChanges.subscribe((value) => {
       this.activityFormToActivity();
       this.activity.enableSubmit();
+
+
     });
   }
 
@@ -107,10 +109,7 @@ export class NoctuaAnnotationFormService {
     this.initializeForm();
   }
 
-  linkFormNode(entity, srcNode) {
-    entity.uuid = srcNode.uuid;
-    entity.term = srcNode.getTerm();
-  }
+
 
   cloneForm(srcActivity, filterNodes) {
     this.activity = this.noctuaFormConfigService.createActivityModel(
@@ -150,6 +149,7 @@ export class NoctuaAnnotationFormService {
 
     this.initializeForm();
   }
+
 
 
   fakester(activity: Activity) {

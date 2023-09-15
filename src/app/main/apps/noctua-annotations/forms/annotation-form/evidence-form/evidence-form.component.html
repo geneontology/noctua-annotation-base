@@ -1,8 +1,8 @@
-<div [formGroup]="annotationFormGroup" fxLayout="row" fxLayoutAlign="start stretch" class="w-100-p">
+<div [formGroup]="entityFormGroup" fxLayout="row" fxLayoutAlign="start stretch" class="w-100-p">
 
   <div fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
     <div formArrayName="evidenceFormArray"
-      *ngFor="let evidence of annotationFormGroup.get('evidenceFormArray')?.controls; let i = index;">
+      *ngFor="let evidence of entityFormGroup.get('evidenceFormArray')?.controls; let i = index;">
       <div [formGroupName]="i" fxLayout="row" fxLayoutAlign="start stretch" class="w-100-p">
         <div class="p-4" fxFlex="55">
           <mat-form-field appearance="outline" class="noc-sm w-100-p">

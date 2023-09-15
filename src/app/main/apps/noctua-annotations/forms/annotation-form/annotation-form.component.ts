@@ -47,6 +47,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   annotatedSectionTitle = 'Gene Product';
 
   private _unsubscribeAll: Subject<any>;
+  mfEntity: import("c:/work/go/noctua-form-base/src/@noctua.form/index").ActivityNode;
 
   constructor(
     private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
@@ -58,6 +59,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.mfEntity = this.noctuaAnnotationFormService.activity.rootNode;
     this.annotationFormSub = this.noctuaAnnotationFormService.annotationFormGroup$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(annotationFormGroup => {
@@ -77,7 +79,6 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       });
   }
 
-
   checkErrors() {
     const errors = this.noctuaAnnotationFormService.activity.submitErrors;
     // this.noctuaAnnotationsDialogService.openActivityErrorsDialog(errors);
@@ -93,6 +94,11 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         this.closeDialog();
       }
     });
+  }
+
+  updateMenu(entity) {
+    console.log("root parent", entity.rootTypes)
+    this.noctuaAnnotationFormService.initializeForm(entity.rootTypes);
   }
 
 
