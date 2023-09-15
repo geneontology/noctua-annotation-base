@@ -11,6 +11,7 @@ import {
   ActivityState,
   ActivityType,
   NoctuaUserService,
+  AnnotationActivity,
 } from '@geneontology/noctua-form-base';
 import { NoctuaAnnotationsDialogService } from '../../services/dialog.service';
 
@@ -47,7 +48,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   annotatedSectionTitle = 'Gene Product';
 
   private _unsubscribeAll: Subject<any>;
-  mfEntity: import("c:/work/go/noctua-form-base/src/@noctua.form/index").ActivityNode;
+  annotationActivity: AnnotationActivity;
 
   constructor(
     private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
@@ -59,7 +60,6 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.mfEntity = this.noctuaAnnotationFormService.activity.rootNode;
     this.annotationFormSub = this.noctuaAnnotationFormService.annotationFormGroup$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(annotationFormGroup => {
@@ -70,12 +70,10 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         this.annotationFormGroup = annotationFormGroup;
         this.currentActivity = this.noctuaAnnotationFormService.currentActivity;
         this.activity = this.noctuaAnnotationFormService.activity;
+        this.annotationActivity = this.noctuaAnnotationFormService.annotationActivity;
         this.state = this.noctuaAnnotationFormService.state;
         this.molecularEntity = <FormGroup>this.annotationFormGroup.get('molecularEntity');
 
-        console.log('this.annotationFormGroup', this.annotationFormGroup);
-
-        console.log(annotationFormGroup.get('gp'))
       });
   }
 
@@ -97,8 +95,8 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   }
 
   updateMenu(entity) {
-    console.log("root parent", entity.rootTypes)
-    this.noctuaAnnotationFormService.initializeForm(entity.rootTypes);
+
+    // this.noctuaAnnotationFormService.initializeForm(entity.rootTypes);
   }
 
 
@@ -114,6 +112,10 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
   termDisplayFn(term): string | undefined {
     return term ? term.label : undefined;
+  }
+
+  compareFn(o1: any, o2: any): boolean {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 
   close() {

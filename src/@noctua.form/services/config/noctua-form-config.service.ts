@@ -17,6 +17,7 @@ import { Evidence } from './../../models/activity/evidence';
 import { Predicate } from './../../models/activity/predicate';
 import { DataUtils } from '@noctua.form/data/config/data-utils';
 import shexJson from './../../data/shapes.json';
+import gpToTermJson from './../../data/gp-to-term.json';
 
 @Injectable({
   providedIn: 'root'
@@ -356,7 +357,6 @@ export class NoctuaFormConfigService {
 
   // For the form
   createActivityModel(activityType: ActivityType): Activity {
-    console.log(activityType)
     switch (activityType) {
       case ActivityType.default:
         return ModelDefinition.createActivityShex(ModelDefinition.activityUnitDescription);
@@ -373,18 +373,23 @@ export class NoctuaFormConfigService {
     }
   }
 
+  getGPToTermRelation(subjectRootTypes: Entity[], objectRootTypes: Entity[]) {
+    if (!subjectRootTypes || !objectRootTypes) return [];
 
-  getGoTermAspect(termNode: ActivityNode) {
-    let aspect: string | null = null;
-    const rootNode = noctuaFormConfig.rootNode
-    for (const key in noctuaFormConfig.rootNode) {
-      if (termNode.rootTypes.some(item => item.id === rootNode[key].id)) {
-        aspect = rootNode[key].aspect;
-        break;
-      }
-    }
+    const subjectIds = subjectRootTypes.map((rootType) => {
+      return rootType.id
+    });
 
-    return aspect;
+    const objectIds = objectRootTypes.map((rootType) => {
+      return rootType.id
+    });
+
+    const predicates = DataUtils.getPredicates(gpToTermJson.goshapes, subjectIds, objectIds);
+
+    return predicates.map((predicate) => {
+      return this.findEdge(predicate);
+    });
+
   }
 
 

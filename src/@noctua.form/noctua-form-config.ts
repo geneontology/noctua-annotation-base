@@ -333,6 +333,7 @@ export const noctuaFormConfig = {
     }
   },
 
+
   bpOnlyCausalEdges: [
     Entity.createEntity(edge.causallyUpstreamOfNegativeEffect),
     Entity.createEntity(edge.causallyUpstreamOf),

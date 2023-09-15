@@ -1,5 +1,3 @@
-
-
 export {
     ActivityNode,
     ActivityNodeType,

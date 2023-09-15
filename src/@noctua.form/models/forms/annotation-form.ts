@@ -34,8 +34,8 @@ export class AnnotationForm {
 
 
       const entityTypeToPropertyMap = {
-        [ActivityNodeType.GoMolecularEntity]: 'gp',
-        [ActivityNodeType.GoMolecularFunction]: 'goterm',
+        gp: 'gp',
+        goterm: 'goterm',
         extension: 'extension'
       };
 
@@ -47,14 +47,8 @@ export class AnnotationForm {
     });
   }
 
-
-
   createMolecularEntityForm(gpData) {
-    const self = this;
-
     each(gpData, (nodeGroup, nodeKey) => {
-      console.log('nodeGroup', nodeGroup, nodeKey)
-
       this.createEntityForms(nodeGroup.nodes);
     });
   }

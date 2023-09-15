@@ -44,7 +44,7 @@
       <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-section-heading">
-            {{descriptionSectionTitle}}
+            Evidence
           </div>
           <span fxFlex></span>
         </div>
@@ -52,30 +52,8 @@
           <noc-annotation-evidence-form [entityFormGroup]="annotationFormGroup.get('goterm')" fxLayout="row"
             fxLayoutAlign="start center" class="w-100-p">
           </noc-annotation-evidence-form>
-          <div *ngIf="noctuaAnnotationFormService.activity.activityType===ActivityType.bpOnly"
-            class="mat-elevation-z1 noc-term-group mb-4 px-8 mf" fxLayout="row" fxLayoutAlign="start center">
-            <div class="p-4" fxFlex fxLayout="row" fxLayoutAlign="start stretch">
-              <mat-form-field class="noc-sm w-100-p" appearance="outline">
-                <mat-label><strong>(readonly)</strong> Molecular Function </mat-label>
-                <input [readonly]="true" type="text" matInput value="molecular_function (GO:0003674)" />
-              </mat-form-field>
-            </div>
-            <div class="p-4" fxFlex="600px" fxLayout="row" fxLayoutAlign="start stretch">
-              <mat-form-field appearance="outline" class="noc-sm w-100-p">
-                <mat-label>Choose Causal Relation</mat-label>
-                <mat-select placeholder="" formControlName="bpOnlyEdge">
-                  <mat-option *ngFor="let bpOnlyEdge of noctuaFormConfigService.bpOnlyEdges.options"
-                    [value]="bpOnlyEdge">
-                    {{bpOnlyEdge.label}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
         </div>
-
       </div>
-
       <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-section-heading">
@@ -88,10 +66,9 @@
             <div class="p-4" fxFlex="600px" fxLayout="row" fxLayoutAlign="start stretch">
               <mat-form-field appearance="outline" class="noc-sm w-100-p">
                 <mat-label>GP to Term Relation</mat-label>
-                <mat-select placeholder="" formControlName="gpToTermEdge">
-                  <mat-option *ngFor="let bpOnlyEdge of noctuaFormConfigService.bpOnlyEdges.options"
-                    [value]="bpOnlyEdge">
-                    {{bpOnlyEdge.label}}
+                <mat-select placeholder="" formControlName="gpToTermEdge" [compareWith]="compareFn">
+                  <mat-option *ngFor="let gpToTermEdge of annotationActivity.gpToTermEdges" [value]="gpToTermEdge">
+                    {{gpToTermEdge.label}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

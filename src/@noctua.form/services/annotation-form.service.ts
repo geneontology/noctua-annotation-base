@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin, Subject, takeUntil } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
@@ -13,6 +13,7 @@ import { Evidence } from '../models/activity/evidence';
 import { cloneDeep, each } from 'lodash';
 import { Cam } from '../models/activity/cam';
 import { AnnotationForm } from '@noctua.form/models/forms/annotation-form';
+import { AnnotationActivity } from '../models/activity/annotation-activity';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +24,15 @@ export class NoctuaAnnotationFormService {
   public errors = [];
   public currentActivity: Activity;
   public activity: Activity;
+  public annotationActivity: AnnotationActivity;
   public onActivityCreated: BehaviorSubject<Activity>
   public onActivityChanged: BehaviorSubject<Activity>
   public annotationForm: AnnotationForm;
   public annotationFormGroup: BehaviorSubject<FormGroup | undefined>;
   public annotationFormGroup$: Observable<FormGroup>;
   public cam: Cam;
+
+  private destroy$ = new Subject<void>();
 
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
@@ -52,19 +56,19 @@ export class NoctuaAnnotationFormService {
   }
 
   initializeForm(rootTypes?) {
-    const self = this;
 
-    self.errors = [];
+    this.errors = [];
 
-    self.state = ActivityState.creation;
-    self.currentActivity = null;
+    this.state = ActivityState.creation;
+    this.currentActivity = null;
 
-    self.activity.resetPresentation();
-    self.annotationForm = this.createAnnotationForm();
-    self.annotationFormGroup.next(this._fb.group(this.annotationForm));
-    self.activity.updateShapeMenuShex(rootTypes);
-    self.activity.enableSubmit();
-    self._onActivityFormChanges();
+    this.activity.resetPresentation();
+    this.annotationForm = this.createAnnotationForm();
+    this.annotationFormGroup.next(this._fb.group(this.annotationForm));
+    this.activity.updateShapeMenuShex(rootTypes);
+    this.activity.enableSubmit();
+    this.annotationActivity = new AnnotationActivity(this.activity);
+    this._onActivityFormChanges();
   }
 
   initializeFormData() {
@@ -88,11 +92,30 @@ export class NoctuaAnnotationFormService {
   }
 
   private _onActivityFormChanges(): void {
-    this.annotationFormGroup.getValue().valueChanges.subscribe((value) => {
+    this.annotationFormGroup.getValue().valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((value) => {
       this.activityFormToActivity();
       this.activity.enableSubmit();
+      this.annotationActivity.updateAspect();
 
+      const edges = this.noctuaFormConfigService.getGPToTermRelation(
+        this.annotationActivity.gp.rootTypes,
+        this.annotationActivity.goterm.rootTypes
+      );
 
+      this.annotationActivity.gpToTermEdges = edges;
+
+      if (edges.length > 0 && this.annotationActivity.gp.hasValue()
+        && this.annotationActivity.goterm.hasValue()) {
+        this.destroy$.next();
+        this.annotationForm.gpToTermEdge.setValue(edges[0]);
+        this.destroy$ = new Subject<void>();
+        this._onActivityFormChanges();
+      }
+
+      console.log('edges', edges);
+      console.log(this.annotationActivity);
     });
   }
 
@@ -134,11 +157,7 @@ export class NoctuaAnnotationFormService {
   saveActivity() {
     const self = this;
     self.activityFormToActivity();
-    console.log(self.activity.edges)
     const saveData = self.activity.createSave();
-    console.log(saveData)
-    console.log(saveData.triples)
-    console.log(saveData.triples[3])
     return forkJoin(self.bbopGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title));
   }
 

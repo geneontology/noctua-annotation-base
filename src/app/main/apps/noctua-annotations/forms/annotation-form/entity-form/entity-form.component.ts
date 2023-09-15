@@ -249,13 +249,12 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   }
 
   updateMenu(entity) {
-    console.log("root", entity.rootTypes)
-    this.noctuaAnnotationFormService.initializeForm(entity.rootTypes);
+    // this.noctuaAnnotationFormService.initializeForm(entity.rootTypes);
   }
 
   updateTermList() {
     const self = this;
-    this.camService.updateTermList(self.noctuaAnnotationFormService.activity, this.entity);
+    // this.camService.updateTermList(self.noctuaAnnotationFormService.activity, this.entity);
   }
 
   updateEvidenceList() {

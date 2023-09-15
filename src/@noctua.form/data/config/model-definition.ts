@@ -101,8 +101,8 @@ export const rootNodes = {
 export const simpleAnnotonDescription: ActivityDescription = {
     type: ActivityType.simpleAnnoton,
     nodes: {
-        [ActivityNodeType.GoMolecularEntity]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularEntity.id,
+        gp: <ActivityNodeDisplay>{
+            id: 'gp',
             type: ActivityNodeType.GoMolecularEntity,
             category: [EntityDefinition.GoMolecularEntity, EntityDefinition.GoProteinContainingComplex],
             label: 'Gene Product',
@@ -113,8 +113,8 @@ export const simpleAnnotonDescription: ActivityDescription = {
             canDelete: false,
             weight: 2
         },
-        [ActivityNodeType.GoMolecularFunction]: <ActivityNodeDisplay>{
-            id: EntityDefinition.GoMolecularFunction.id,
+        goterm: <ActivityNodeDisplay>{
+            id: 'goterm',
             type: ActivityNodeType.GoMolecularFunction,
             category: [
                 EntityDefinition.GoMolecularFunction,
