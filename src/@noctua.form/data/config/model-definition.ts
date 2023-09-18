@@ -136,7 +136,7 @@ export const simpleAnnotonDescription: ActivityDescription = {
             label: 'Extension',
             displaySection: noctuaFormConfig.displaySection.gp,
             displayGroup: noctuaFormConfig.displayGroup.gp,
-            termRequired: true,
+            termRequired: false,
             skipEvidenceCheck: true,
             canDelete: false,
             weight: 1

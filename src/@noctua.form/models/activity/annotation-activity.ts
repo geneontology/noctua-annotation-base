@@ -36,26 +36,26 @@ export class AnnotationActivity {
     const saveData = {
       title: 'enabled by ' + self.gp?.term.label,
       triples: [],
-      nodes: [],
+      nodes: [self.gp, self.goterm],
       graph: null
     };
 
     const gpTpTermTriple = new Triple(self.gp, self.goterm,
       new Predicate(this.gpToTermEdge, self.goterm.predicate.evidence));
 
-    const extensionTriple = new Triple(self.goterm, self.extension,
-      new Predicate(this.extensionEdge, self.goterm.predicate.evidence));
+    saveData.triples.push(gpTpTermTriple);
 
+    if (self.extension?.hasValue()) {
+      const extensionTriple = new Triple(self.goterm, self.extension,
+        new Predicate(this.extensionEdge, self.goterm.predicate.evidence));
 
-    saveData.nodes = [self.gp, self.goterm, self.extension];
-    saveData.triples = [gpTpTermTriple, extensionTriple];
-
-
-
-    // saveData.triples = 
+      saveData.nodes.push(self.extension);
+      saveData.triples.push(extensionTriple);
+    }
 
     return saveData;
   }
+
 
   updateAspect() {
     if (!this.goterm.hasValue()) return
