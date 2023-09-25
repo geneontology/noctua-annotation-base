@@ -17,6 +17,13 @@
     {
       "subject": "CHEBI:33695",
       "object": [
+        "GO:0008150"
+      ],
+      "predicate": "RO:0004034"
+    },
+    {
+      "subject": "CHEBI:33695",
+      "object": [
         "GO:0005575"
       ],
       "predicate": "RO:0002432"
