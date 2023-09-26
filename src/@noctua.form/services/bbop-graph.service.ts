@@ -14,7 +14,7 @@ import { Activity, ActivityType, compareActivity } from './../models/activity/ac
 import { find, each, differenceWith, cloneDeep, uniqWith, chain, filter, uniq } from 'lodash';
 import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
-import { ActivityNode, ActivityNodeType, compareTerm } from './../models/activity/activity-node';
+import { ActivityNode, ActivityNodeType, compareTerm, GoCategory } from './../models/activity/activity-node';
 import { Cam, CamLoadingIndicator, CamOperation } from './../models/activity/cam';
 import { Entity } from './../models/activity/entity';
 import { compareEvidence, compareEvidenceDate, compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence } from './../models/activity/evidence';
@@ -435,6 +435,16 @@ export class BbopGraphService {
     return result;
   }
 
+  getNodeCategoryInfo(rootTypes: Entity[]): GoCategory[] {
+    const result = rootTypes.map((rootType) => {
+      const category = new GoCategory()
+      category.category = rootType.id
+      return category
+    });
+
+    return result;
+  }
+
   getNodeDate(node) {
 
     const date = node.get_annotations_by_key('date');
@@ -487,13 +497,14 @@ export class BbopGraphService {
       return null;
     }
     const nodeInfo = self.getNodeInfo(node);
+    const rootTypes = self.getNodeRootInfo(node);
     const result = {
       id: objectId,
       uuid: objectId,
       date: self.getNodeDate(node),
       term: new Entity(nodeInfo.id, nodeInfo.label, self.linker.url(nodeInfo.id), objectId),
-      rootTypes: self.getNodeRootInfo(node),
-      category: [],
+      rootTypes: rootTypes,
+      category: self.getNodeCategoryInfo(rootTypes),
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
       isComplement: self.getNodeIsComplement(node),
@@ -572,17 +583,6 @@ export class BbopGraphService {
     return result;
   }
 
-
-  isaClosurePostParse(a: string, b: any[], node: ActivityNode) {
-    const self = this;
-    const closure = self.noctuaLookupService.categoryToClosure(b);
-
-    return self.noctuaLookupService.isaClosure(a, closure).pipe(
-      map(result => {
-        node.isCatalyticActivity = result;
-        return result;
-      }));
-  }
 
   isStartEdge(subjectNode, predicateId) {
     return predicateId === noctuaFormConfig.edge.enabledBy.id ||

@@ -72,7 +72,7 @@ import { CommentsDialogComponent } from './dialogs/comments/comments.component';
 
 const routes = [
   {
-    path: 'f',
+    path: '',
     component: NoctuaFormComponent
   }
 ];
