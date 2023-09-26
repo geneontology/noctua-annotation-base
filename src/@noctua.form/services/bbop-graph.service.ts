@@ -817,6 +817,8 @@ export class BbopGraphService {
 
         subjectActivityNode.term = subjectNode.term;
         subjectActivityNode.date = subjectNode.date;
+        subjectActivityNode.category = subjectNode.category;
+        subjectActivityNode.rootTypes = subjectNode.rootTypes;
         subjectActivityNode.classExpression = subjectNode.classExpression;
         subjectActivityNode.setIsComplement(subjectNode.isComplement);
         subjectActivityNode.uuid = bbopSubjectId;
@@ -1451,7 +1453,7 @@ export class BbopGraphService {
       const comments = self.edgeComments(bbopEdge);
       const partialObjectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
       //const objectNode = this._insertNode(activity, bbopPredicateId, subjectNode, partialObjectNode);
-      const objectNode = this.noctuaFormConfigService.insertActivityNodeShex(activity, subjectNode, predExpr, partialObjectNode.id);
+      const objectNode = this.noctuaFormConfigService.addActivityNodeShex(activity, subjectNode, predExpr, partialObjectNode);
       activity.updateShapeMenuShex();
 
       if (objectNode) {
@@ -1461,6 +1463,8 @@ export class BbopGraphService {
           triple.object.uuid = partialObjectNode.uuid;
           triple.object.term = partialObjectNode.term;
           triple.object.date = partialObjectNode.date;
+          triple.object.category = partialObjectNode.category;
+          triple.object.rootTypes = partialObjectNode.rootTypes;
           triple.object.classExpression = partialObjectNode.classExpression;
           triple.object.setIsComplement(partialObjectNode.isComplement);
           triple.predicate.isComplement = triple.object.isComplement;

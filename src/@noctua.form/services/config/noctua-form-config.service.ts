@@ -418,6 +418,13 @@ export class NoctuaFormConfigService {
 
   }
 
+  addActivityNodeShex(activity: Activity,
+    subjectNode: ActivityNode,
+    predExpr: ShapeDescription.PredicateExpression,
+    objectNode: Partial<ActivityNode>): ActivityNode {
+    return ModelDefinition.addNodeShex(activity, subjectNode, predExpr, objectNode);
+  }
+
 
   insertActivityNodeShex(activity: Activity,
     subjectNode: ActivityNode,
