@@ -2,11 +2,11 @@ import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Subject } from 'rxjs';
-import { NoctuaFormDialogService } from './../../../../services/dialog.service';
+import { NoctuaAnnotationsDialogService } from './../../../services/dialog.service';
 import {
   CamService,
   NoctuaFormConfigService,
-  NoctuaActivityFormService,
+  NoctuaAnnotationFormService,
   ActivityNode,
   Evidence,
   noctuaFormConfig,
@@ -23,16 +23,31 @@ import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-r
 import { each, find } from 'lodash';
 import { InlineWithService } from '@noctua.editor/inline-with/inline-with.service';
 import { InlineDetailService } from '@noctua.editor/inline-detail/inline-detail.service';
+import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
 
 @Component({
-  selector: 'noc-entity-form',
+  selector: 'noc-annotation-entity-form',
   templateUrl: './entity-form.component.html',
   styleUrls: ['./entity-form.component.scss'],
 })
 
-export class EntityFormComponent implements OnInit, OnDestroy {
+export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   @Input('entityFormGroup')
   public entityFormGroup: FormGroup;
+
+  private _selectTerm: (term: any) => void = this.updateMenu; // Initialize with default function
+
+  @Input()
+  set selectTerm(fn: (term: any) => void) {
+    if (fn) {
+      this._selectTerm = fn;
+    }
+  }
+
+  get selectTerm(): (term: any) => void {
+    return this._selectTerm;
+  }
+
 
   @ViewChild('evidenceDBreferenceMenuTrigger', { static: true, read: MatMenuTrigger })
   evidenceDBreferenceMenuTrigger: MatMenuTrigger;
@@ -40,9 +55,6 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   evidenceDBForm: FormGroup;
   evidenceFormArray: FormArray;
   entity: ActivityNode;
-  selectedItemDisplay;
-  friendNodes;
-  friendNodesFlat;
   activityNodeType = ActivityNodeType;
   displayAddButton = false;
 
@@ -51,29 +63,20 @@ export class EntityFormComponent implements OnInit, OnDestroy {
   private unsubscribeAll: Subject<any>;
 
   constructor(
+    private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     private camService: CamService,
     private inlineReferenceService: InlineReferenceService,
     private inlineDetailService: InlineDetailService,
     private inlineWithService: InlineWithService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaActivityFormService: NoctuaActivityFormService) {
+    public noctuaAnnotationFormService: NoctuaAnnotationFormService) {
     this.unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
-    this.entity = this.noctuaActivityFormService.activity.getNode(this.entityFormGroup.get('id').value);
-    this.friendNodes = this.camService.getNodesByType(this.entity.type);
-    if (this.noctuaActivityFormService.activity.activityType === ActivityType.ccOnly
-      && this.entity.treeLevel === 1) {
-      this.displayAddButton = true;
-    }
-
-    if (this.noctuaActivityFormService.activity.activityType === ActivityType.proteinComplex
-      && this.entity.type === ActivityNodeType.GoProteinContainingComplex) {
-      this.displayAddButton = true;
-    }
-    //  this.friendNodesFlat = this.camService.getNodesByTypeFlat(this.entity.type);
+    // const xx = this.entityFormGroup.value['id']
+    this.entity = this.noctuaAnnotationFormService.activity.getNode(this.entityFormGroup.value['id']);
   }
 
   ngOnDestroy(): void {
@@ -85,7 +88,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     const self = this;
 
     self.entity.predicate.addEvidence();
-    self.noctuaActivityFormService.initializeForm();
+    self.noctuaAnnotationFormService.initializeForm();
   }
 
   useTerm(node: ActivityNode, activity: Activity) {
@@ -97,47 +100,22 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       case ActivityNodeType.GoCellularComponent:
         self.entity.linkedNode = true;
         self.entity.uuid = node.uuid;
-        self.noctuaActivityFormService.activity.insertSubgraph(activity, self.entity, node);
+        self.noctuaAnnotationFormService.activity.insertSubgraph(activity, self.entity, node);
     }
 
-    self.noctuaActivityFormService.initializeForm();
+    self.noctuaAnnotationFormService.initializeForm();
   }
 
   removeEvidence(index: number) {
     const self = this;
 
     self.entity.predicate.removeEvidence(index);
-    self.noctuaActivityFormService.initializeForm();
-  }
-
-  toggleIsComplement(entity: ActivityNode) {
-    const self = this;
-    const errors = [];
-    let canToggle = true;
-
-    each(entity.nodeGroup.nodes, function (node: ActivityNode) {
-      if (node.isExtension) {
-        canToggle = false;
-        const meta = {
-          aspect: node.label
-        };
-        const error = new ActivityError(ErrorLevel.error, ErrorType.general,
-          `Cannot add 'NOT Qualifier', Remove Extension'${node.label}'`, meta);
-        errors.push(error);
-      }
-    });
-
-    if (canToggle) {
-      entity.toggleIsComplement();
-      self.noctuaActivityFormService.initializeForm();
-    } else {
-      self.noctuaFormDialogService.openActivityErrorsDialog(errors);
-    }
+    self.noctuaAnnotationFormService.initializeForm();
   }
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.gpNode
+    const gpNode = this.noctuaAnnotationFormService.activity.gpNode
 
     if (gpNode && gpNode.hasValue()) {
       const data = {
@@ -161,18 +139,18 @@ export class EntityFormComponent implements OnInit, OnDestroy {
             selected.evidences.forEach((evidence: Evidence) => {
 
               evidence.evidenceExts.forEach((evidenceExt) => {
-                /*      evidenceExt.relations.forEach((relation) => {
-                       const node = self.noctuaFormConfigService.insertActivityNodeByPredicate(self.noctuaActivityFormService.activity, self.entity, relation.id);
-                       node.term = new Entity(evidenceExt.term.id, evidenceExt.term.id);
-                       node.predicate.setEvidence([evidence]);
-                     }); */
+                /*                 evidenceExt.relations.forEach((relation) => {
+                                  const node = self.noctuaFormConfigService.insertActivityNodeByPredicate(self.noctuaAnnotationFormService.activity, self.entity, relation.id);
+                                  node.term = new Entity(evidenceExt.term.id, evidenceExt.term.id);
+                                  node.predicate.setEvidence([evidence]);
+                                }); */
               });
 
             });
           }
 
 
-          self.noctuaActivityFormService.initializeForm();
+          self.noctuaAnnotationFormService.initializeForm();
         }
       };
       self.noctuaFormDialogService.openSearchDatabaseDialog(data, success);
@@ -187,7 +165,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchEvidenceDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.gpNode
+    const gpNode = this.noctuaAnnotationFormService.activity.gpNode
 
     if (gpNode) {
       const data = {
@@ -204,7 +182,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
       const success = function (selected) {
         if (selected && selected.evidences) {
           entity.predicate.setEvidence(selected.evidences);
-          self.noctuaActivityFormService.initializeForm();
+          self.noctuaAnnotationFormService.initializeForm();
         }
       };
       self.noctuaFormDialogService.openSearchEvidenceDialog(data, success);
@@ -215,37 +193,9 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  linkNode(entity: ActivityNode) {
-    const self = this;
-    const nodes = this.camService.getNodesByType(entity.type);
-    const data = {
-      entity: entity,
-      nodes: nodes
-    };
-
-    const success = function (selected) {
-      if (selected.activityNode) {
-        const selectedActivityNode = selected.activityNode as ActivityNode;
-        entity.uuid = selectedActivityNode.uuid;
-        entity.term = selectedActivityNode.term;
-
-        entity.linkedNode = true;
-        //  self.noctuaActivityFormService.activity.insertSubgraph(selected.activity, entity.id);
-        self.noctuaActivityFormService.initializeForm();
-      }
-    };
-    self.noctuaFormDialogService.openLinkToExistingDialogComponent(data, success);
-
-  }
-
-  unlinkNode(entity: ActivityNode) {
-    entity.linkedNode = false;
-    entity.uuid = null;
-  }
-
   openSearchModels() {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.gpNode;
+    const gpNode = this.noctuaAnnotationFormService.activity.gpNode;
     // const searchCriteria = new SearchCriteria();
 
     //searchCriteria.goterms.push(this.entity.term);
@@ -259,8 +209,8 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
 
   insertEntityShex(predExpr: ShapeDefinition.PredicateExpression) {
-    this.noctuaFormConfigService.insertActivityNodeShex(this.noctuaActivityFormService.activity, this.entity, predExpr);
-    this.noctuaActivityFormService.initializeForm();
+    this.noctuaFormConfigService.insertActivityNodeShex(this.noctuaAnnotationFormService.activity, this.entity, predExpr);
+    this.noctuaAnnotationFormService.initializeForm();
   }
 
   addRootTerm() {
@@ -272,7 +222,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     if (term) {
       self.entity.term = new Entity(term.id, term.label);
-      self.noctuaActivityFormService.initializeForm();
+      self.noctuaAnnotationFormService.initializeForm();
 
       const evidence = new Evidence();
       evidence.setEvidence(new Entity(
@@ -280,7 +230,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
         noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
       evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference;
       self.entity.predicate.setEvidence([evidence]);
-      self.noctuaActivityFormService.initializeForm();
+      self.noctuaAnnotationFormService.initializeForm();
     }
   }
 
@@ -288,50 +238,38 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     const self = this;
 
     self.entity.clearValues();
-    self.noctuaActivityFormService.initializeForm();
+    self.noctuaAnnotationFormService.initializeForm();
   }
 
   removeNode() {
     const self = this;
 
-    self.noctuaActivityFormService.activity.removeNode(self.entity);
-    self.noctuaActivityFormService.initializeForm();
+    self.noctuaAnnotationFormService.activity.removeNode(self.entity);
+    self.noctuaAnnotationFormService.initializeForm();
   }
 
-  openSelectEvidenceDialog() {
-    const self = this;
-    const evidences: Evidence[] = this.camService.getUniqueEvidence(self.noctuaActivityFormService.activity);
-    const success = (selected) => {
-      if (selected.evidences && selected.evidences.length > 0) {
-        self.entity.predicate.setEvidence(selected.evidences);
-        self.noctuaActivityFormService.initializeForm();
-      }
-    };
-
-    self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
-  }
   updateMenu(entity) {
-    this.noctuaActivityFormService.initializeForm(entity.rootTypes);
+    // this.noctuaAnnotationFormService.initializeForm(entity.rootTypes);
   }
 
   updateTermList() {
     const self = this;
-    this.camService.updateTermList(self.noctuaActivityFormService.activity, this.entity);
+    // this.camService.updateTermList(self.noctuaAnnotationFormService.activity, this.entity);
   }
 
   updateEvidenceList() {
     const self = this;
-    this.camService.updateEvidenceList(self.noctuaActivityFormService.activity, this.entity);
+    this.camService.updateEvidenceList(self.noctuaAnnotationFormService.activity, this.entity);
   }
 
   updateReferenceList() {
     const self = this;
-    this.camService.updateReferenceList(self.noctuaActivityFormService.activity, this.entity);
+    this.camService.updateReferenceList(self.noctuaAnnotationFormService.activity, this.entity);
   }
 
   updateWithList() {
     const self = this;
-    this.camService.updateWithList(self.noctuaActivityFormService.activity, this.entity);
+    this.camService.updateWithList(self.noctuaAnnotationFormService.activity, this.entity);
   }
 
   openAddReference(event, evidence: FormGroup, name: string) {
@@ -350,9 +288,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     this.inlineWithService.open(event.target, { data });
   }
 
-  unselectItemDisplay() {
-    this.selectedItemDisplay = null;
-  }
+
 
   openTermDetails(event, item) {
     event.stopPropagation();
