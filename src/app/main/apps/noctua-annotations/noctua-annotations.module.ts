@@ -34,7 +34,7 @@ import { AnnotationEvidenceFormComponent } from './forms/annotation-form/evidenc
 
 const routes = [
   {
-    path: '',
+    path: 'a',
     component: NoctuaAnnotationsComponent
   }
 ];

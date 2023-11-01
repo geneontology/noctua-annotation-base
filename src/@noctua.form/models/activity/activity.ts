@@ -219,6 +219,10 @@ export class Activity extends SaeGraph<ActivityNode> {
 
       if (this.activityType === ActivityType.ccOnly) {
         this.gpNode = this.rootNode
+        if (mfTriple.predicate.edge?.id === noctuaFormConfig.edge.locatedIn.id ||
+          mfTriple.predicate.edge?.id === noctuaFormConfig.edge.isActiveIn.id) {
+          this.ccNode = mfTriple.object
+        }
       }
 
     })
