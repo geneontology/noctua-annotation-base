@@ -5,7 +5,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
-import { ActivityNode, CamService, EntityDefinition, EntityForm, NoctuaActivityEntityService, NoctuaFormConfigService } from '@geneontology/noctua-form-base';
+import { ActivityNode, CamService, ShapeUtils, EntityForm, NoctuaActivityEntityService, NoctuaFormConfigService } from '@geneontology/noctua-form-base';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 
 
@@ -44,7 +44,7 @@ export class AddEvidenceDialogComponent implements OnInit, OnDestroy {
   }
 
   createEvidenceForm() {
-    this.entity = EntityDefinition.generateBaseTerm([]);
+    this.entity = ShapeUtils.generateBaseTerm([]);
     this.entityForm = this._noctuaActivityEntityService.createActivityEntityForm(this.entity);
     const entityFormGroup = this._fb.group(this.entityForm);
     const evidenceFormArray = entityFormGroup.get('evidenceFormArray') as FormArray;

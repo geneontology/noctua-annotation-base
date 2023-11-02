@@ -265,17 +265,21 @@ export class Activity extends SaeGraph<ActivityNode> {
     let coverage = 0;
     const filteredNodes = self.nodes.filter(node => node.term.hasValue())
 
-    each(filteredNodes, (node: ActivityNode) => {
+    filteredNodes.forEach((node: ActivityNode) => {
+      if (node.term.label == 'A band') {
+        console.log('node 1', node)
+      }
       if (node.type === ActivityNodeType.GoMolecularFunction) {
         summary.mf.append(node)
       } else if (node.type === ActivityNodeType.GoBiologicalProcess) {
         summary.bp.append(node)
       } else if (node.type === ActivityNodeType.GoCellularComponent) {
+        console.log('node', node)
         summary.cc.append(node)
       } else {
         summary.other.append(node)
       }
-    })
+    });
 
     if (summary.mf.nodes.length > 0) {
       coverage = coverage | 4

@@ -4,7 +4,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { Activity } from './activity';
 import { Triple } from './triple';
 import { Predicate } from './predicate';
-import * as EntityDefinition from './../../data/config/entity-definition';
+import * as ShapeUtils from './../../data/config/shape-utils';
 
 
 export class AnnotationActivity {
@@ -48,7 +48,7 @@ export class AnnotationActivity {
       saveData.triples.push(gpToTermTriple);
 
     } else if (this.gpToTermEdge.id === noctuaFormConfig.inverseEdge.involvedIn.id) {
-      const mfNode = EntityDefinition.generateBaseTerm([]);
+      const mfNode = ShapeUtils.generateBaseTerm([]);
       const rootMF = noctuaFormConfig.rootNode.mf;
 
       mfNode.term = new Entity(rootMF.id, rootMF.label);
@@ -63,7 +63,7 @@ export class AnnotationActivity {
       saveData.triples.push(mfToTermTriple);
 
     } else if (this.gpToTermEdge.id === noctuaFormConfig.inverseEdge.isActiveIn.id) {
-      const mfNode = EntityDefinition.generateBaseTerm([]);
+      const mfNode = ShapeUtils.generateBaseTerm([]);
       const rootMF = noctuaFormConfig.rootNode.mf;
 
       mfNode.term = new Entity(rootMF.id, rootMF.label);

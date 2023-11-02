@@ -7,11 +7,10 @@ import * as ShapeDescription from './../../data/config/shape-definition';
 import { Activity, ActivityType } from './../../models/activity/activity';
 import { find, filter, each } from 'lodash';
 import { HttpParams } from '@angular/common/http';
-import * as EntityDefinition from './../../data/config/entity-definition';
+import * as ShapeUtils from './../../data/config/shape-utils';
 import { NoctuaUserService } from '../user.service';
 import { BehaviorSubject } from 'rxjs';
 import { ActivityNode, GoCategory } from './../../models/activity/activity-node';
-import { ConnectorActivity } from './../../models/activity/connector-activity';
 import { Entity } from './../../models/activity/entity';
 import { Evidence } from './../../models/activity/evidence';
 import { Predicate } from './../../models/activity/predicate';
@@ -339,7 +338,7 @@ export class NoctuaFormConfigService {
   createPredicate(edge: Entity, evidence?: Evidence[]): Predicate {
     const predicate = new Predicate(edge, evidence);
 
-    EntityDefinition.setEvidenceLookup(predicate);
+    ShapeUtils.setEvidenceLookup(predicate);
 
     return predicate;
   }
@@ -394,7 +393,7 @@ export class NoctuaFormConfigService {
   }
 
   setTermLookup(activityNode: ActivityNode, goCategories: GoCategory[]) {
-    EntityDefinition.setTermLookup(activityNode, goCategories);
+    ShapeUtils.setTermLookup(activityNode, goCategories);
   }
 
   getObjectsRelations(subjectRootTypes: Entity[], gpToTerm = false) {

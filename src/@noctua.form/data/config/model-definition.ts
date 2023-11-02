@@ -1,7 +1,8 @@
 import { noctuaFormConfig } from './../../noctua-form-config';
 
 import * as EntityDefinition from './entity-definition';
-import * as ShapeDescription from './../../data/config/shape-definition';
+import * as ShapeDescription from './../config/shape-definition';
+import * as ShapeUtils from './../config/shape-utils';
 import { each, } from 'lodash';
 import { ActivityNodeType, ActivityNodeDisplay, ActivityNode, GoCategory } from './../../models/activity/activity-node';
 import { Entity } from '../../models/activity/entity';
@@ -414,7 +415,7 @@ export const createBaseActivity = (activityType: ActivityType, rootNode: Activit
     const activity = new Activity();
 
     activity.activityType = activityType;
-    const activityNode = EntityDefinition.generateBaseTerm(rootNode.category, rootNode);
+    const activityNode = ShapeUtils.generateBaseTerm(rootNode.category, rootNode);
     activity.addNode(activityNode);
 
     activity.updateShapeMenuShex();
@@ -430,7 +431,7 @@ export const createActivityShex = (activityDescription: ActivityDescription): Ac
     activity.activityType = activityDescription.type;
 
     each(activityDescription.nodes, (node: ActivityNodeDisplay) => {
-        const activityNode = EntityDefinition.generateBaseTerm(node.category, node);
+        const activityNode = ShapeUtils.generateBaseTerm(node.category, node);
         activity.addNode(activityNode);
     });
 
@@ -460,7 +461,7 @@ export const addNodeShex = (activity: Activity,
     partialObjectNode: Partial<ActivityNode>): ActivityNode => {
 
     const overrides = getNodeDefaults(subjectNode, predExpr, partialObjectNode.category)
-    const objectNode = EntityDefinition.generateBaseTerm(partialObjectNode.category, overrides);
+    const objectNode = ShapeUtils.generateBaseTerm(partialObjectNode.category, overrides);
 
     objectNode.subjectId = subjectNode.id
     objectNode.id = partialObjectNode.id ? partialObjectNode.id : uuid()
@@ -505,7 +506,7 @@ export const insertNodeShex = (activity: Activity,
     })
 
     const overrides = getNodeDefaults(subjectNode, predExpr, ranges)
-    const objectNode = EntityDefinition.generateBaseTerm(ranges, overrides);
+    const objectNode = ShapeUtils.generateBaseTerm(ranges, overrides);
 
     objectNode.id = objectId ? objectId : uuid()
     objectNode.subjectId = subjectNode.id
