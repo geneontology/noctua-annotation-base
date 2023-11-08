@@ -4,6 +4,7 @@ import { noctuaFormConfig } from './../../noctua-form-config';
 import { SaeGraph } from './sae-graph';
 import { ActivityError, ErrorLevel, ErrorType } from './parser/activity-error';
 import { ActivityNode, ActivityNodeType, compareNodeWeight } from './activity-node';
+import * as EntityDefinition from './../../data/config/entity-definition';
 import { Evidence } from './evidence';
 import { Triple } from './triple';
 import { Entity } from './entity';
@@ -122,6 +123,7 @@ export class Activity extends SaeGraph<ActivityNode> {
   }
 
   updateProperties() {
+    this.updateNodeTypes()
     this.updateSummary()
     this.updateDate()
     this.updateRootNodes();
@@ -192,6 +194,13 @@ export class Activity extends SaeGraph<ActivityNode> {
     return noctuaFormConfig.activityType.options[this.activityType];
   }
 
+  updateNodeTypes() {
+    this.nodes.forEach((node: ActivityNode) => {
+      node.updateNodeType();
+    });
+
+  }
+
   updateRootNodes() {
     const mfTriples = this.getEdges(this.rootNode.id)
 
@@ -237,7 +246,7 @@ export class Activity extends SaeGraph<ActivityNode> {
     self.date = (moment as any)(rootNode.date, 'YYYY-MM-DD')
 
 
-    each(self.nodes, (node: ActivityNode) => {
+    self.nodes.forEach((node: ActivityNode) => {
       const nodeDate = (moment as any)(node.date, 'YYYY-MM-DD')
 
       if (nodeDate > self.date) {

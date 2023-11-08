@@ -79,9 +79,6 @@ export class AnnotationActivity {
 
     }
 
-
-
-
     if (self.extension?.hasValue()) {
       const extensionTriple = new Triple(self.goterm, self.extension,
         new Predicate(this.extensionEdge, self.goterm.predicate.evidence));
@@ -91,6 +88,46 @@ export class AnnotationActivity {
     }
 
     return saveData;
+  }
+
+  createSave2(edgeConfigurations) {
+    const saveData = {
+      title: 'enabled by ' + this.gp?.term.label,
+      triples: [],
+      nodes: [this.gp, this.goterm],
+      graph: null
+    };
+
+    const edgeType = this.gpToTermEdge.label; // Assuming 'label' holds the edge type as a string
+    const config = edgeConfigurations[edgeType];
+
+    if (!config) {
+      console.warn('No configuration defined for edge:', edgeType);
+      return;
+    }
+
+    if (config.mfNodeRequired) {
+      const mfNode = ShapeUtils.generateBaseTerm([]);
+      const rootMF = noctuaFormConfig.rootNode.mf;
+      mfNode.term = new Entity(rootMF.id, rootMF.label);
+
+      const mfToGpTriple = new Triple(mfNode, this.gp,
+        new Predicate(Entity.createEntity(noctuaFormConfig.edge[config.gpToTermPredicate]), this.goterm.predicate.evidence));
+
+      saveData.triples.push(mfToGpTriple);
+
+      if (config.mfToTermPredicate) {
+        const mfToTermTriple = new Triple(mfNode, this.goterm,
+          new Predicate(Entity.createEntity(noctuaFormConfig.edge[config.mfToTermPredicate]), this.goterm.predicate.evidence));
+
+        saveData.triples.push(mfToTermTriple);
+      }
+    } else {
+      const gpToTermTriple = new Triple(this.goterm, this.gp,
+        new Predicate(Entity.createEntity(noctuaFormConfig.edge[config.gpToTermPredicate]), this.goterm.predicate.evidence));
+
+      saveData.triples.push(gpToTermTriple);
+    }
   }
 
 

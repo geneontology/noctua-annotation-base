@@ -135,8 +135,7 @@ const edge = {
 }
 
 const inverseEdge = {
-  enables:
-  {
+  enables: {
     "id": "RO:0002327",
     "label": "enables",
   },
@@ -148,7 +147,79 @@ const inverseEdge = {
     "id": "RO:0002331",
     "label": "involved in",
   },
-}
+  locatedIn: {
+    id: 'RO:0001025',
+    label: 'located in'
+  },
+  contributesTo: {
+    "id": "RO:0002326",
+    "label": "contributes to",
+  },
+  actsUpstreamOfOrWithinPositive: {
+    "id": "RO:0004032",
+    "label": "acts upstream of or within, positive effect",
+  },
+  actsUpstreamOfOrWithinNegative: {
+    "id": "RO:0004033",
+    "label": "acts upstream of or within, negative effect",
+  },
+  actsUpstreamOfPositive: {
+    "id": "RO:0004034",
+    "label": "acts upstream of, positive effect",
+  },
+  actsUpstreamOfNegative: {
+    "id": "RO:0004035",
+    "label": "acts upstream of, negative effect",
+  },
+};
+
+const simpleAnnotationEdgeConfig = {
+  [inverseEdge.enables.id]: {
+    gpToTermPredicate: edge.enabledBy.id,
+    mfToTermPredicate: null,
+    mfNodeRequired: false
+  },
+  [inverseEdge.involvedIn.id]: {
+    gpToTermPredicate: edge.enabledBy.id,
+    mfToTermPredicate: edge.partOf.id,
+    mfNodeRequired: true
+  },
+  [inverseEdge.isActiveIn.id]: {
+    gpToTermPredicate: edge.enabledBy.id,
+    mfToTermPredicate: edge.occursIn.id,
+    mfNodeRequired: true
+  },
+  [inverseEdge.actsUpstreamOfOrWithinPositive.id]: {
+    gpToTermPredicate: edge.enabledBy.id,
+    mfToTermPredicate: edge.causallyUpstreamOfOrWithinPositiveEffect.id,
+    mfNodeRequired: true
+  },
+  [inverseEdge.actsUpstreamOfOrWithinNegative.id]: {
+    gpToTermPredicate: edge.enabledBy.id,
+    mfToTermPredicate: edge.causallyUpstreamOfOrWithinNegativeEffect.id,
+    mfNodeRequired: true
+  },
+  [inverseEdge.actsUpstreamOfPositive.id]: {
+    gpToTermPredicate: edge.enabledBy.id,
+    mfToTermPredicate: edge.causallyUpstreamOfPositiveEffect.id,
+    mfNodeRequired: true
+  },
+  [inverseEdge.actsUpstreamOfNegative.id]: {
+    gpToTermPredicate: edge.enabledBy.id,
+    mfToTermPredicate: edge.causallyUpstreamOfNegativeEffect.id,
+    mfNodeRequired: true
+  },
+  [inverseEdge.contributesTo.id]: {
+    gpToTermPredicate: edge.enabledBy.id,
+    mfToTermPredicate: edge.hasPart.id,
+    mfNodeRequired: true
+  },
+  [inverseEdge.locatedIn.id]: {
+    gpToTermPredicate: edge.locatedIn.id,
+    mfToTermPredicate: null,
+    mfNodeRequired: false
+  }
+};
 
 
 export const noctuaFormConfig = {
@@ -401,7 +472,9 @@ export const noctuaFormConfig = {
     edge.partOf.id,
     edge.occursIn.id,
     edge.hasInput.id,
-    edge.hasOutput.id]
+    edge.hasOutput.id],
+
+  simpleAnnotationEdgeConfig: simpleAnnotationEdgeConfig
 
 };
 
