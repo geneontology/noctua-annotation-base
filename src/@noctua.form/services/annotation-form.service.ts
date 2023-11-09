@@ -126,7 +126,7 @@ export class NoctuaAnnotationFormService {
       if (edges.length > 0 && this.annotationActivity.gp.hasValue()
         && this.annotationActivity.goterm.hasValue()) {
         this.destroy$.next();
-        this.annotationForm.gpToTermEdge.setValue(edges[0]);
+        //this.annotationForm.gpToTermEdge.setValue(edges[0]);
         this.destroy$ = new Subject<void>();
         this._onActivityFormChanges();
       }

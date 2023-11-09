@@ -217,7 +217,8 @@ const simpleAnnotationEdgeConfig = {
   [inverseEdge.locatedIn.id]: {
     gpToTermPredicate: edge.locatedIn.id,
     mfToTermPredicate: null,
-    mfNodeRequired: false
+    mfNodeRequired: false,
+    reverse: true
   }
 };
 
