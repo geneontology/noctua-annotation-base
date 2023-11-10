@@ -275,15 +275,11 @@ export class Activity extends SaeGraph<ActivityNode> {
     const filteredNodes = self.nodes.filter(node => node.term.hasValue())
 
     filteredNodes.forEach((node: ActivityNode) => {
-      if (node.term.label == 'A band') {
-        console.log('node 1', node)
-      }
       if (node.type === ActivityNodeType.GoMolecularFunction) {
         summary.mf.append(node)
       } else if (node.type === ActivityNodeType.GoBiologicalProcess) {
         summary.bp.append(node)
       } else if (node.type === ActivityNodeType.GoCellularComponent) {
-        console.log('node', node)
         summary.cc.append(node)
       } else {
         summary.other.append(node)

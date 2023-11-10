@@ -83,7 +83,6 @@ export class ActivityTreeNodeComponent implements OnInit, OnDestroy {
 
     this.termNotEditable = (this.activity.activityType === ActivityType.bpOnly) && (this.entity.term.id === noctuaFormConfig.rootNode.mf.id)
 
-    console.log(this.termNotEditable, this.entity.term.label)
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }

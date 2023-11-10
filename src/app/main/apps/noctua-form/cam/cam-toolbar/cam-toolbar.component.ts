@@ -42,9 +42,7 @@ export class CamToolbarComponent implements OnInit, OnDestroy {
     this._unsubscribeAll = new Subject();
   }
 
-  ngOnInit(): void {
-    console.log(this.camToolbarOptions)
-  }
+  ngOnInit(): void { }
 
   openGraph() {
     this.noctuaCommonMenuService.closeLeftDrawer();

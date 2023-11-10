@@ -131,10 +131,6 @@ export class NoctuaAnnotationFormService {
         this._onActivityFormChanges();
       }
 
-
-      console.log('ext', extensionObjects);
-      console.log('edges', extensionEdges);
-      console.log(this.annotationActivity);
     });
   }
 

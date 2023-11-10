@@ -173,10 +173,33 @@ const inverseEdge = {
   },
 };
 
+const rootNode = {
+  mf: {
+    'id': 'GO:0003674',
+    'label': 'molecular_function',
+    'aspect': 'F'
+  },
+  bp: {
+    'id': 'GO:0008150',
+    'label': 'biological_process',
+    'aspect': 'P'
+  },
+  cc: {
+    'id': 'GO:0005575',
+    'label': 'cellular_component',
+    'aspect': 'C'
+  },
+  complex: {
+    'id': 'GO:00032991',
+    'label': 'protein_containing_complex',
+    'aspect': 'C'
+  }
+}
+
 const simpleAnnotationEdgeConfig = {
   [inverseEdge.enables.id]: {
     gpToTermPredicate: edge.enabledBy.id,
-    mfToTermPredicate: null,
+    gpToTermReverse: true,
     mfNodeRequired: false
   },
   [inverseEdge.involvedIn.id]: {
@@ -210,15 +233,17 @@ const simpleAnnotationEdgeConfig = {
     mfNodeRequired: true
   },
   [inverseEdge.contributesTo.id]: {
-    gpToTermPredicate: edge.enabledBy.id,
-    mfToTermPredicate: edge.hasPart.id,
-    mfNodeRequired: true
+    gpToTermPredicate: edge.hasPart.id,
+    mfToTermPredicate: edge.enabledBy.id,
+    mfNodeRequired: true,
+    root: rootNode.complex,
+    gpToTermReverse: false,
+    mfToTermReverse: true
   },
   [inverseEdge.locatedIn.id]: {
     gpToTermPredicate: edge.locatedIn.id,
-    mfToTermPredicate: null,
     mfNodeRequired: false,
-    reverse: true
+    gpToTermReverse: true
   }
 };
 
@@ -403,23 +428,7 @@ export const noctuaFormConfig = {
       reference: 'GO_REF:0000015'
     }
   },
-  rootNode: {
-    mf: {
-      'id': 'GO:0003674',
-      'label': 'molecular_function',
-      'aspect': 'F'
-    },
-    bp: {
-      'id': 'GO:0008150',
-      'label': 'biological_process',
-      'aspect': 'P'
-    },
-    cc: {
-      'id': 'GO:0005575',
-      'label': 'cellular_component',
-      'aspect': 'C'
-    }
-  },
+  rootNode: rootNode,
 
 
   bpOnlyCausalEdges: [

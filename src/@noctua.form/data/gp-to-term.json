@@ -10,7 +10,7 @@
     {
       "subject": "CHEBI:33695",
       "object": [
-        "GO:0032991"
+        "GO:0003674"
       ],
       "predicate": "RO:0002326"
     },

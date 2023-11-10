@@ -5,6 +5,7 @@ import { Activity } from './activity';
 import { Triple } from './triple';
 import { Predicate } from './predicate';
 import * as ShapeUtils from './../../data/config/shape-utils';
+import { Evidence } from './evidence';
 
 
 export class AnnotationActivity {
@@ -32,64 +33,6 @@ export class AnnotationActivity {
 
   }
 
-  createSave_old() {
-    const self = this;
-    const saveData = {
-      title: 'enabled by ' + self.gp?.term.label,
-      triples: [],
-      nodes: [self.gp, self.goterm],
-      graph: null
-    };
-
-    if (this.gpToTermEdge.id === noctuaFormConfig.inverseEdge.enables.id) {
-      const gpToTermTriple = new Triple(self.goterm, self.gp,
-        new Predicate(Entity.createEntity(noctuaFormConfig.edge.enabledBy), self.goterm.predicate.evidence));
-
-      saveData.triples.push(gpToTermTriple);
-
-    } else if (this.gpToTermEdge.id === noctuaFormConfig.inverseEdge.involvedIn.id) {
-      const mfNode = ShapeUtils.generateBaseTerm([]);
-      const rootMF = noctuaFormConfig.rootNode.mf;
-
-      mfNode.term = new Entity(rootMF.id, rootMF.label);
-
-      const mfToGpTriple = new Triple(mfNode, self.gp,
-        new Predicate(Entity.createEntity(noctuaFormConfig.edge.enabledBy), self.goterm.predicate.evidence));
-
-      const mfToTermTriple = new Triple(mfNode, self.goterm,
-        new Predicate(Entity.createEntity(noctuaFormConfig.edge.partOf), self.goterm.predicate.evidence));
-
-      saveData.triples.push(mfToGpTriple);
-      saveData.triples.push(mfToTermTriple);
-
-    } else if (this.gpToTermEdge.id === noctuaFormConfig.inverseEdge.isActiveIn.id) {
-      const mfNode = ShapeUtils.generateBaseTerm([]);
-      const rootMF = noctuaFormConfig.rootNode.mf;
-
-      mfNode.term = new Entity(rootMF.id, rootMF.label);
-
-      const mfToGpTriple = new Triple(mfNode, self.gp,
-        new Predicate(Entity.createEntity(noctuaFormConfig.edge.enabledBy), self.goterm.predicate.evidence));
-
-      const mfToTermTriple = new Triple(mfNode, self.goterm,
-        new Predicate(Entity.createEntity(noctuaFormConfig.edge.occursIn), self.goterm.predicate.evidence));
-
-      saveData.triples.push(mfToGpTriple);
-      saveData.triples.push(mfToTermTriple);
-
-    }
-
-    if (self.extension?.hasValue()) {
-      const extensionTriple = new Triple(self.goterm, self.extension,
-        new Predicate(this.extensionEdge, self.goterm.predicate.evidence));
-
-      saveData.nodes.push(self.extension);
-      saveData.triples.push(extensionTriple);
-    }
-
-    return saveData;
-  }
-
   createSave() {
     const saveData = {
       title: 'enabled by ' + this.gp?.term.label,
@@ -108,32 +51,19 @@ export class AnnotationActivity {
 
     if (config.mfNodeRequired) {
       const mfNode = ShapeUtils.generateBaseTerm([]);
-      const rootMF = noctuaFormConfig.rootNode.mf;
+      const rootMF = config.root ? config.root : noctuaFormConfig.rootNode.mf;
       mfNode.term = new Entity(rootMF.id, rootMF.label);
-
-      const mfToGpEdge = noctuaFormConfig.allEdges.find((item) => item.id === config.gpToTermPredicate);
-      const mfToGpTriple = new Triple(mfNode, this.gp,
-        new Predicate(Entity.createEntity(mfToGpEdge), this.goterm.predicate.evidence));
-
-      saveData.triples.push(mfToGpTriple);
+      const triple = this._createTriple(mfNode, this.gp, config.gpToTermPredicate, this.goterm.predicate.evidence, config.gpToTermReverse)
+      saveData.triples.push(triple);
 
       if (config.mfToTermPredicate) {
-        const mfToTermEdge = noctuaFormConfig.allEdges.find((item) => item.id === config.mfToTermPredicate);
-        const mfToTermTriple = new Triple(mfNode, this.goterm,
-          new Predicate(Entity.createEntity(mfToTermEdge), this.goterm.predicate.evidence));
-
-        saveData.triples.push(mfToTermTriple);
+        const mfTriple = this._createTriple(mfNode, this.goterm, config.mfToTermPredicate, this.goterm.predicate.evidence, config.mfToTermReverse)
+        saveData.triples.push(mfTriple);
       }
+
     } else {
-      const gpToTermpEdge = noctuaFormConfig.allEdges.find((item) => item.id === config.gpToTermPredicate);
-
-      const gpToTermTriple = config.reverse ? new Triple(this.gp, this.goterm,
-        new Predicate(Entity.createEntity(gpToTermpEdge), this.goterm.predicate.evidence)) :
-        new Triple(this.goterm, this.gp,
-          new Predicate(Entity.createEntity(gpToTermpEdge), this.goterm.predicate.evidence));
-
-
-      saveData.triples.push(gpToTermTriple);
+      const triple = this._createTriple(this.gp, this.goterm, config.gpToTermPredicate, this.goterm.predicate.evidence, config.gpToTermReverse)
+      saveData.triples.push(triple);
     }
 
     if (this.extension?.hasValue()) {
@@ -145,6 +75,22 @@ export class AnnotationActivity {
     }
 
     return saveData;
+  }
+
+
+  private _createTriple(subjectNode: ActivityNode, objectNode: ActivityNode, predicateId, evidence: Evidence[], reverse = false) {
+    const edgeConfig = noctuaFormConfig.allEdges.find(edge => edge.id === predicateId);
+
+    if (!edgeConfig) {
+      throw new Error(`Edge configuration not found for predicate ID: ${predicateId}`);
+    }
+
+    const predicateEntity = Entity.createEntity(edgeConfig);
+    const predicate = new Predicate(predicateEntity, evidence);
+
+    return reverse
+      ? new Triple(objectNode, subjectNode, predicate)
+      : new Triple(subjectNode, objectNode, predicate);
   }
 
 
