@@ -190,9 +190,9 @@ const rootNode = {
     'aspect': 'C'
   },
   complex: {
-    'id': 'GO:00032991',
+    'id': 'GO:0032991',
     'label': 'protein_containing_complex',
-    'aspect': 'C'
+    'aspect': 'PCC'
   }
 }
 
@@ -242,6 +242,11 @@ const simpleAnnotationEdgeConfig = {
   },
   [inverseEdge.locatedIn.id]: {
     gpToTermPredicate: edge.locatedIn.id,
+    mfNodeRequired: false,
+    gpToTermReverse: false
+  },
+  [edge.partOf.id]: {
+    gpToTermPredicate: edge.hasPart.id,
     mfNodeRequired: false,
     gpToTermReverse: true
   }
@@ -482,7 +487,8 @@ export const noctuaFormConfig = {
     edge.partOf.id,
     edge.occursIn.id,
     edge.hasInput.id,
-    edge.hasOutput.id],
+    edge.hasOutput.id
+  ],
 
   simpleAnnotationEdgeConfig: simpleAnnotationEdgeConfig
 

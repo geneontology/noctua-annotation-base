@@ -69,6 +69,13 @@
         "GO:0005575"
       ],
       "predicate": "RO:0001025"
+    },
+    {
+      "subject": "CHEBI:33695",
+      "object": [
+        "GO:0032991"
+      ],
+      "predicate": "BFO:0000050"
     }
   ]
 }

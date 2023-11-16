@@ -125,7 +125,7 @@ export const simpleAnnotonDescription: ActivityDescription = {
             category: [
                 EntityDefinition.GoMolecularFunction,
                 EntityDefinition.GoBiologicalProcess,
-                EntityDefinition.GoCellularComponent
+                EntityDefinition.GoRootCellularComponent
             ],
             label: 'GO Term',
             aspect: 'F',

@@ -23,6 +23,12 @@ export const GoCellularComponent = {
     suffix: `OR NOT ${GoProteinContainingComplex.categoryType}:"${GoProteinContainingComplex.category}"`,
 } as GoCategory;
 
+export const GoRootCellularComponent = {
+    id: ActivityNodeType.GoCellularComponent,
+    category: 'GO:0005575',
+    categoryType: 'isa_closure',
+} as GoCategory;
+
 export const GoAllCellularComponent = {
     id: ActivityNodeType.GoCellularComponent,
     category: 'GO:0005575',

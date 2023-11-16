@@ -34,6 +34,9 @@ export class NoctuaAnnotationFormService {
 
   private destroy$ = new Subject<void>();
 
+  // for setting edge when goterm is changed
+  private previousGotermValue: any = null
+
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
     private bbopGraphService: BbopGraphService,
@@ -95,6 +98,7 @@ export class NoctuaAnnotationFormService {
     this.annotationFormGroup.getValue().valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe((value) => {
+
       this.activityFormToActivity();
       this.activity.enableSubmit();
       this.annotationActivity.updateAspect();
@@ -120,17 +124,22 @@ export class NoctuaAnnotationFormService {
       if (extensionObjects.length > 0) {
         this.annotationActivity.extension.category = extensionObjects;
         this.noctuaFormConfigService.setTermLookup(this.annotationActivity.extension, extensionObjects);
-        // this.annotationForm.
       }
 
       if (edges.length > 0 && this.annotationActivity.gp.hasValue()
         && this.annotationActivity.goterm.hasValue()) {
         this.destroy$.next();
         //this.annotationForm.gpToTermEdge.setValue(edges[0]);
+
+        //console.log(this.annotationActivity.goterm?.term?.id, "--", this.previousGotermValue)
+        if (this.annotationActivity.goterm?.term?.id !== this.previousGotermValue) {
+          this.annotationForm.gpToTermEdge.setValue(edges[0]);
+          this.previousGotermValue = this.annotationActivity.goterm?.term.id;
+        }
+
         this.destroy$ = new Subject<void>();
         this._onActivityFormChanges();
       }
-
     });
   }
 
