@@ -1,12 +1,13 @@
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import * as ModelDefinition from './../../data/config/model-definition';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
 import { Activity, ActivityType } from './../../models/activity/activity';
 import { find, filter, each } from 'lodash';
-import { HttpParams } from '@angular/common/http';
+
 import * as ShapeUtils from './../../data/config/shape-utils';
 import { NoctuaUserService } from '../user.service';
 import { BehaviorSubject } from 'rxjs';
@@ -14,9 +15,10 @@ import { ActivityNode, GoCategory } from './../../models/activity/activity-node'
 import { Entity } from './../../models/activity/entity';
 import { Evidence } from './../../models/activity/evidence';
 import { Predicate } from './../../models/activity/predicate';
-import { DataUtils } from '@noctua.form/data/config/data-utils';
+import { DataUtils } from '../../data/config/data-utils';
 import shexJson from './../../data/shapes.json';
 import gpToTermJson from './../../data/gp-to-term.json';
+import { AnnotationActivity } from './../..//models/activity/annotation-activity';
 
 @Injectable({
   providedIn: 'root'
@@ -332,6 +334,24 @@ export class NoctuaFormConfigService {
     })
 
     return modelInfo;
+  }
+
+  activityToAnnotation(srcActivity: Activity): AnnotationActivity {
+    const activity = this.createActivityModel(ActivityType.simpleAnnoton);
+    const annotationActivity = new AnnotationActivity(activity);
+
+    switch (srcActivity.activityType) {
+      case ActivityType.default:
+        annotationActivity.gp = activity.gpNode;
+        annotationActivity.goterm = activity.mfNode;
+
+    }
+
+    return annotationActivity
+
+
+
+
   }
 
 

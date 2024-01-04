@@ -19,6 +19,7 @@ export class AnnotationActivity {
 
   gpToTermEdges: Entity[] = [];
   extensionEdges: Entity[] = [];
+  activity: Activity;
 
 
   constructor(activity: Activity) {
