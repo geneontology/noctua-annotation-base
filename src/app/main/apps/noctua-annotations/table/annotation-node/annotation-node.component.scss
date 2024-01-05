@@ -135,6 +135,10 @@ $accent: map-get($theme, accent);
         }
       }
 
+      &.noc-term-cell {
+        font-size: 10px;
+      }
+
       &.noc-relation-cell {
         font-size: 10px;
       }

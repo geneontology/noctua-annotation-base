@@ -18,7 +18,7 @@ import { Predicate } from './../../models/activity/predicate';
 import { DataUtils } from '../../data/config/data-utils';
 import shexJson from './../../data/shapes.json';
 import gpToTermJson from './../../data/gp-to-term.json';
-import { AnnotationActivity } from './../..//models/activity/annotation-activity';
+import { AnnotationActivity, AnnotationEdgeConfig } from './../../models/activity/annotation-activity';
 
 @Injectable({
   providedIn: 'root'
@@ -336,22 +336,42 @@ export class NoctuaFormConfigService {
     return modelInfo;
   }
 
-  activityToAnnotation(srcActivity: Activity): AnnotationActivity {
-    const activity = this.createActivityModel(ActivityType.simpleAnnoton);
-    const annotationActivity = new AnnotationActivity(activity);
+  activityToAnnotation(activity: Activity): AnnotationActivity {
+    const annotationActivity = new AnnotationActivity();
 
-    switch (srcActivity.activityType) {
-      case ActivityType.default:
-        annotationActivity.gp = activity.gpNode;
-        annotationActivity.goterm = activity.mfNode;
+    const criteria = {} as AnnotationEdgeConfig
+
+    if (activity.activityType === ActivityType.default || activity.activityType === ActivityType.bpOnly) {
+      criteria.gpToTermPredicate = noctuaFormConfig.edge.enabledBy.id;
+      annotationActivity.gpToTermEdge = Entity.createEntity(noctuaFormConfig.edge.enabledBy);
+      annotationActivity.gp = activity.gpNode;
+      annotationActivity.goterm = activity.mfNode;
+
+      if (activity.mfNode.term.id === noctuaFormConfig.rootNode.mf.id) {
+        activity.getEdges(activity.mfNode.id).forEach((edge) => {
+          if (noctuaFormConfig.mfToTermEdges.includes(edge.predicate.edge.id)) {
+
+            annotationActivity.gpToTermEdge = edge.predicate.edge
+            criteria.mfToTermPredicate = edge.predicate.edge.id;
+
+            annotationActivity.goterm = edge.object;
+          }
+        });
+      }
+
+
+
+
+      const inverseEdgeId = annotationActivity.findEdgeByCriteria(criteria);
+
+      console.log('inverseEdgeId', inverseEdgeId)
+      const inverseEdge = this.findEdge(inverseEdgeId);
+
+      annotationActivity.gpToTermEdge.inverseEntity = inverseEdge
+
 
     }
-
     return annotationActivity
-
-
-
-
   }
 
 

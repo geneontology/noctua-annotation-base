@@ -47,6 +47,15 @@ $noc-breakpoints: (
   .noc-term-cell {
     min-width: 100px;
   }
+
+  .noc-annotation-gp-cell {
+    min-width: 100px;
+  }
+
+  .noc-annotation-term-cell {
+    min-width: 100px;
+  }
+
   .noc-aspect-cell {
     @include deep-width(30px);
   }

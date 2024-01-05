@@ -29,44 +29,41 @@
     <span fxFlex></span>
   </div>
   <div class="w-100-p noc-cam-table-body">
-    <div *ngFor="let annotationActivity of cam.annotationActivities" [attr.id]="annotationActivity.activity.displayId"
-      class="w-100-p">
 
-      <div class="noc-activity-table w-100-p"
-        [ngClass]="{'noc-selected': annotationActivity.activity.displayId===camService.currentMatch?.activityDisplayId}"
-        fxLayout="column" fxLayoutAlign="start start">
-        <div class="noctua-form-table noc-activity-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
-          <div *ngIf="!options.slimViewer" fxFlex="" class="noc-cell noc-relation-cell">
-            Relationship
-          </div>
-          <div class="noc-cell noc-term-cell" fxFlex="">
-            Term
-          </div>
-          <div *ngIf="!options.slimViewer" class="noc-cell noc-aspect-cell">
-            Asp
-          </div>
-          <div class="noc-cell noc-extension-cell">
-            Ext
-          </div>
-          <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
-            <div class="noc-cell noc-evidence-code-cell" fxFlex="">
-              Evidence
-            </div>
-            <div class="noc-cell noc-reference-cell">
-              Reference
-            </div>
-            <div class="noc-cell noc-with-cell">
-              With
-            </div>
-            <div class="noc-cell noc-group-cell">
-              Assigned By
-            </div>
-            <div class="noc-cell noc-contributor-cell">
-              Contributor
-            </div>
-          </div>
-          <div class="noc-cell noc-action-cell"> </div>
+
+    <div class="noc-activity-table w-100-p" fxLayout="column" fxLayoutAlign="start start">
+      <div class="noctua-form-table noc-activity-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
+
+        <div class="noc-cell noc-annotation-gp-cell" fxFlex="">
+          GP
         </div>
+        <div class="noc-cell noc-relation-cell">
+          Relationship
+        </div>
+        <div class="noc-cell noc-annotation-term-cell" fxFlex="">
+          Term
+        </div>
+        <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-cell noc-evidence-code-cell" fxFlex="">
+            Evidence
+          </div>
+          <div class="noc-cell noc-reference-cell">
+            Reference
+          </div>
+          <div class="noc-cell noc-with-cell">
+            With
+          </div>
+          <div class="noc-cell noc-group-cell">
+            Assigned By
+          </div>
+          <div class="noc-cell noc-contributor-cell">
+            Contributor
+          </div>
+        </div>
+        <div class="noc-cell noc-action-cell"> </div>
+      </div>
+      <div *ngFor="let annotationActivity of cam.annotationActivities" [attr.id]="annotationActivity.activity.displayId"
+        class="w-100-p">
         <noc-annotation-node [options]="options" [cam]="cam" [annotationActivity]="annotationActivity" class="w-100-p">
         </noc-annotation-node>
       </div>
