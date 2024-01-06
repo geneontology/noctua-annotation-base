@@ -1,11 +1,5 @@
 <div class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start">
   <div class="noc-sidemenu" fxLayout="column" fxLayoutAlign="start center">
-    <button mat-icon-button color="" class="noc-rounded-button"
-      [ngClass]="{'noc-active': noctuaCommonMenuService.selectedLeftPanel === LeftPanel.activityForm}" color="primary"
-      matTooltip="Add New Activity/Annotation" [matTooltipPosition]="'above'" [matTooltipShowDelay]="1500"
-      (click)="openAnnotationForm(ActivityType.simpleAnnoton)">
-      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-    </button>
 
     <button mat-icon-button color="" class="noc-rounded-button"
       [ngClass]="{'noc-active': noctuaCommonMenuService.selectedLeftPanel === LeftPanel.camForm}"

@@ -348,6 +348,7 @@ export class NoctuaFormConfigService {
       annotationActivity.goterm = activity.mfNode;
 
       if (activity.mfNode.term.id === noctuaFormConfig.rootNode.mf.id) {
+        criteria.mfNodeRequired = true;
         activity.getEdges(activity.mfNode.id).forEach((edge) => {
           if (noctuaFormConfig.mfToTermEdges.includes(edge.predicate.edge.id)) {
 
@@ -355,6 +356,12 @@ export class NoctuaFormConfigService {
             criteria.mfToTermPredicate = edge.predicate.edge.id;
 
             annotationActivity.goterm = edge.object;
+
+            activity.getEdges(edge.object.id).forEach((extensionEdge) => {
+              annotationActivity.extensionEdge = extensionEdge.predicate.edge;
+              annotationActivity.extension = extensionEdge.object;
+
+            });
           }
         });
       }
@@ -373,6 +380,7 @@ export class NoctuaFormConfigService {
     }
     return annotationActivity
   }
+
 
 
   createPredicate(edge: Entity, evidence?: Evidence[]): Predicate {
