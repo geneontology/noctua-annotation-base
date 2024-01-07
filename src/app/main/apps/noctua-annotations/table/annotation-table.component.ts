@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 
 
@@ -33,6 +33,7 @@ import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/co
   selector: 'noc-annotation-table',
   templateUrl: './annotation-table.component.html',
   styleUrls: ['./annotation-table.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   animations: noctuaAnimations
 })
 export class AnnotationTableComponent implements OnInit, OnDestroy {

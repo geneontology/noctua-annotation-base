@@ -1,5 +1,5 @@
 <div class="w-100-p">
-  <div class="noc-activity-node noctua-form-table w-100-p"
+  <div class="noc-activity-node w-100-p"
     [ngClass]="{'noc-selected': annotationActivity.activity.displayId===camService.currentMatch?.activityDisplayId}"
     fxLayout="row" fxLayoutAlign="start stretch">
 
@@ -31,7 +31,7 @@
       </noctua-inline-editor>
     </div>
 
-    <div class="noc-relation-cell noc-entity-cell">
+    <div class="noc-relation-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch">
       <span class="">
         <strong *ngIf="annotationActivity.goterm.predicate?.isComplement"> NOT </strong>
         <span>{{annotationActivity.goterm.predicate?.edge?.inverseEntity?.label}}</span>
@@ -43,7 +43,7 @@
       </noctua-inline-editor>
     </div>
 
-    <div class="noc-annotation-term-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
+    <div class="noc-term-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
       [attr.id]="annotationActivity.goterm.term?.displayId"
       [ngClass]="{'noc-highlight-match': annotationActivity.goterm.term?.highlight,
             'noc-highlight-modified': annotationActivity.goterm.term?.modified,
@@ -72,19 +72,11 @@
       </noctua-inline-editor>
     </div>
 
-
-
-    <div class="noc-relation-cell noc-entity-cell">
-      <span class="">
-        <span>{{annotationActivity.extensionEdge?.label}}</span>
-
-      </span>
-
-      <noctua-inline-editor [cam]="cam" [activity]='annotationActivity.activity' [entity]="annotationActivity.gp"
-        [category]="EditorCategory.relationship" class="noc-edit-button">
-      </noctua-inline-editor>
+    <div class="noc-evidence-cell p-0" fxLayout="column" fxLayoutAlign="start stretch">
+      <noc-evidence-table class="w-100-p" [settings]="evidenceSettings" [options]="optionsDisplay" [cam]="cam"
+        [entity]="annotationActivity.gp">
+      </noc-evidence-table>
     </div>
-
 
     <div class="noc-annotation-extension-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
       [attr.id]="annotationActivity.extension?.term?.displayId"
@@ -94,6 +86,8 @@
       <!--   <button mat-icon-button *ngIf="annotationActivity.extension?.canDelete" (click)="deleteEntity(entity)" class="noc-delete-button">
     <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
   </button> -->
+
+      <span>{{annotationActivity.extensionEdge?.label}}</span>
 
       <span class="noc-old-term"
         *ngIf="annotationActivity.extension?.term?.modified && annotationActivity.extension?.term?.termHistory?.length>0">
@@ -113,12 +107,6 @@
         *ngIf="noctuaUserService.user && annotationActivity.extension?.term && options.editableTerms" [cam]="cam"
         [activity]='activity' [entity]="entity" [category]="EditorCategory.term" class="noc-edit-button">
       </noctua-inline-editor>
-    </div>
-
-
-    <div class="noc-evidence-cell p-0" fxLayout="column" fxLayoutAlign="start stretch">
-      <noc-evidence-table class="w-100-p" [options]="optionsDisplay" [cam]="cam" [entity]="annotationActivity.gp">
-      </noc-evidence-table>
     </div>
     <div class="noc-comments-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch">
       <button *ngIf="annotationActivity.goterm.showEvidence && annotationActivity.goterm.predicate.comments.length>0"

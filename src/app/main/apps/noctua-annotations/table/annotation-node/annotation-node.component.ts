@@ -31,6 +31,7 @@ import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { noctuaAnimations } from '@noctua/animations';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
+import { SettingsOptions } from '@noctua.common/models/graph-settings';
 
 @Component({
   selector: 'noc-annotation-node',
@@ -53,14 +54,11 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
   @Input('options')
   options: any = {};
 
-  relationWidth = '0px';
-
   optionsDisplay: any = {}
 
-  editableTerms = false;
   currentMenuEvent: any = {};
 
-  termNotEditable = true;
+  evidenceSettings: SettingsOptions = new SettingsOptions();
 
   private unsubscribeAll: Subject<any>;
 
@@ -79,12 +77,9 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-
-    if (this.options?.editableTerms) {
-      this.editableTerms = this.options.editableTerms
-    }
-
     this.optionsDisplay = { ...this.options, hideHeader: true };
+    this.evidenceSettings.showGroup = false;
+    this.evidenceSettings.showContributor = false;
 
   }
 

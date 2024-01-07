@@ -6,7 +6,7 @@
   </div>
   <div *ngIf="!cam.loading?.status" class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
     <span class='mr-12'>
-      <strong>{{cam.activities.length}}</strong> Activities
+      <strong>{{cam.activities.length}}</strong> Annotations
     </span>
     <span class='mr-4'>
       <strong>Sort By</strong> :
@@ -28,45 +28,43 @@
     </mat-menu>
     <span fxFlex></span>
   </div>
-  <div class="w-100-p noc-cam-table-body">
 
+  <div class="noc-annotation-table w-100-p" fxLayout="column" fxLayoutAlign="start start">
+    <div class="noc-table-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
 
-    <div class="noc-activity-table w-100-p" fxLayout="column" fxLayoutAlign="start start">
-      <div class="noctua-form-table noc-activity-header w-100-p" fxLayout="row" fxLayoutAlign="start center">
-
-        <div class="noc-cell noc-annotation-gp-cell" fxFlex="">
-          GP
-        </div>
-        <div class="noc-cell noc-relation-cell">
-          Relationship
-        </div>
-        <div class="noc-cell noc-annotation-term-cell" fxFlex="">
-          Term
-        </div>
-        <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
-          <div class="noc-cell noc-evidence-code-cell" fxFlex="">
-            Evidence
-          </div>
-          <div class="noc-cell noc-reference-cell">
-            Reference
-          </div>
-          <div class="noc-cell noc-with-cell">
-            With
-          </div>
-          <div class="noc-cell noc-group-cell">
-            Assigned By
-          </div>
-          <div class="noc-cell noc-contributor-cell">
-            Contributor
-          </div>
-        </div>
-        <div class="noc-cell noc-action-cell"> </div>
+      <div class="noc-cell noc-gp-cell" fxFlex="">
+        Gene Product
       </div>
+      <div class="noc-cell noc-relation-cell">
+        Relationship
+      </div>
+      <div class="noc-cell noc-term-cell" fxFlex="">
+        Term
+      </div>
+      <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-cell noc-evidence-code-cell" fxFlex="">
+          Evidence
+        </div>
+        <div class="noc-cell noc-reference-cell">
+          Reference
+        </div>
+        <div class="noc-cell noc-with-cell">
+          With
+        </div>
+      </div>
+      <div class="noc-cell noc-extension-cell">
+        Extension
+      </div>
+      <div class="noc-cell noc-comments-cell">
+
+      </div>
+      <div class="noc-cell noc-action-cell"> </div>
+    </div>
+    <div class="noc-table-body w-100-p">
       <div *ngFor="let annotationActivity of cam.annotationActivities" [attr.id]="annotationActivity.activity.displayId"
         class="w-100-p">
         <noc-annotation-node [options]="options" [cam]="cam" [annotationActivity]="annotationActivity" class="w-100-p">
         </noc-annotation-node>
       </div>
     </div>
-
   </div>
