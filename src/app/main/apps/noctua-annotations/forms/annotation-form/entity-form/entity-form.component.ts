@@ -75,7 +75,7 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // const xx = this.entityFormGroup.value['id']
+    console.log(this.entity)
     this.entity = this.noctuaAnnotationFormService.activity.getNode(this.entityFormGroup.value['id']);
   }
 
