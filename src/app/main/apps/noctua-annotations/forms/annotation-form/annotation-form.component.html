@@ -52,11 +52,25 @@
     <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
         <div fxFlex="50" class="">
-          <mat-form-field appearance="outline" class="noc-sm w-100-p">
-            <mat-label>Extension Edge</mat-label>
-            <mat-select placeholder="" formControlName="extensionEdge" [compareWith]="compareFn">
-              <mat-option *ngFor="let extensionEdge of annotationActivity.extensionEdges" [value]="extensionEdge">
-                {{extensionEdge.label}}
+          <mat-form-field appearance="outline" class="noc-sm w-100-p" [attr.data-cy]="'form-input-extension-relation'">
+            <mat-label>Extension Relation</mat-label>
+            <mat-select panelClass="noc-term-autocomplete" placeholder="" formControlName="extensionEdge"
+              [compareWith]="compareFn">
+              <mat-option *ngFor="let item of annotationActivity.extensionEdges" [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.label }}
+                  </div>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    <a *ngIf="item.link" (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
+                      {{ item.id }}
+                    </a>
+                    <span *ngIf="!item.link">
+                      {{ item.id }}
+                    </span>
+                  </div>
+                </div>
               </mat-option>
             </mat-select>
           </mat-form-field>

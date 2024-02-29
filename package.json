@@ -67,6 +67,7 @@
     "date-fns": "2.28.0",
     "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
+    "fs": "0.0.1-security",
     "g": "^2.0.1",
     "golr-conf": "0.0.3",
     "graphlib": "^2.1.8",

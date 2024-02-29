@@ -342,6 +342,18 @@ export class NoctuaFormConfigService {
     const criteria = {} as AnnotationEdgeConfig
 
     if (activity.activityType === ActivityType.ccOnly || activity.activityType === ActivityType.molecule) {
+      annotationActivity.gp = activity.gpNode;
+
+      activity.getEdges(activity.gpNode.id).forEach((edge) => {
+
+        if (noctuaFormConfig.ccOnlyEdges.includes(edge.predicate.edge.id)) {
+          criteria.gpToTermPredicate = edge.predicate.edge.id;
+          annotationActivity.goterm = edge.object;
+          annotationActivity.gp.predicate = edge.predicate;
+        }
+
+      });
+
     } else {
 
       if (activity.gpNode?.term.id === noctuaFormConfig.rootNode.complex.id) {
@@ -383,16 +395,15 @@ export class NoctuaFormConfigService {
         });
       }
 
-      const edgeId = this.findEdge(criteria.gpToTermPredicate);
-      const inverseEdgeId = annotationActivity.findEdgeByCriteria(criteria);
+    }
+    const edgeId = this.findEdge(criteria.gpToTermPredicate);
+    const inverseEdgeId = annotationActivity.findEdgeByCriteria(criteria);
 
-      const inverseEdge = this.findEdge(inverseEdgeId);
+    const inverseEdge = this.findEdge(inverseEdgeId);
 
-      if (edgeId && inverseEdge) {
-        annotationActivity.gpToTermEdge = Entity.createEntity(edgeId);
-        annotationActivity.gpToTermEdge.inverseEntity = inverseEdge
-      }
-
+    if (edgeId && inverseEdge) {
+      annotationActivity.gpToTermEdge = Entity.createEntity(edgeId);
+      annotationActivity.gpToTermEdge.inverseEntity = inverseEdge
     }
     return annotationActivity
   }

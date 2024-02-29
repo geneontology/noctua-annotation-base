@@ -27,7 +27,8 @@
         </a>
       </span>
       <noctua-inline-editor *ngIf="noctuaUserService.user && annotationActivity.gp.term && options.editableTerms"
-        [cam]="cam" [activity]='activity' [entity]="entity" [category]="EditorCategory.term" class="noc-edit-button">
+        [cam]="cam" [activity]='annotationActivity.activity' [entity]="annotationActivity.gp"
+        [category]="EditorCategory.term" class="noc-edit-button">
       </noctua-inline-editor>
     </div>
 
