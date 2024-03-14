@@ -351,9 +351,7 @@ export class NoctuaFormConfigService {
           annotationActivity.goterm = edge.object;
           annotationActivity.gp.predicate = edge.predicate;
         }
-
       });
-
     } else {
 
       if (activity.gpNode?.term.id === noctuaFormConfig.rootNode.complex.id) {
@@ -389,22 +387,26 @@ export class NoctuaFormConfigService {
             activity.getEdges(edge.object.id).forEach((extensionEdge) => {
               annotationActivity.extensionEdge = extensionEdge.predicate.edge;
               annotationActivity.extension = extensionEdge.object;
-
             });
           }
         });
       }
-
     }
+
     const edgeId = this.findEdge(criteria.gpToTermPredicate);
     const inverseEdgeId = annotationActivity.findEdgeByCriteria(criteria);
-
     const inverseEdge = this.findEdge(inverseEdgeId);
 
     if (edgeId && inverseEdge) {
       annotationActivity.gpToTermEdge = Entity.createEntity(edgeId);
       annotationActivity.gpToTermEdge.inverseEntity = inverseEdge
     }
+
+    annotationActivity.gpToTermEdges = this.getTermRelations(
+      annotationActivity.gp.rootTypes,
+      annotationActivity.goterm.rootTypes,
+      true
+    );
     return annotationActivity
   }
 
@@ -464,7 +466,6 @@ export class NoctuaFormConfigService {
     return predicates.map((predicate) => {
       return this.findEdge(predicate);
     });
-
   }
 
   setTermLookup(activityNode: ActivityNode, goCategories: GoCategory[]) {
@@ -498,7 +499,6 @@ export class NoctuaFormConfigService {
     objectNode: Partial<ActivityNode>): ActivityNode {
     return ModelDefinition.addNodeShex(activity, subjectNode, predExpr, objectNode);
   }
-
 
   insertActivityNodeShex(activity: Activity,
     subjectNode: ActivityNode,

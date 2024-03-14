@@ -5,8 +5,8 @@
       <mat-form-field appearance="outline" class="noc-sm w-100-p">
         <mat-label>Choose GP to Term Relation</mat-label>
         <mat-select placeholder="" [compareWith]="compareEntity" formControlName="relationship">
-          <mat-option *ngFor="let bpOnlyEdge of noctuaFormConfigService.bpOnlyEdges.options" [value]="bpOnlyEdge">
-            {{bpOnlyEdge.label}}
+          <mat-option *ngFor="let relationshipChoice of relationshipChoices" [value]="relationshipChoice">
+            {{relationshipChoice.label}}
           </mat-option>
         </mat-select>
       </mat-form-field>
