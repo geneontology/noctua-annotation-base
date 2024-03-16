@@ -131,7 +131,7 @@ export class NoctuaAnnotationFormService {
         this.destroy$.next();
         //this.annotationForm.gpToTermEdge.setValue(edges[0]);
 
-        console.log(this.annotationActivity.goterm, "--", this.previousGotermRelation)
+        //console.log(this.annotationActivity.goterm, "--", this.previousGotermRelation)
 
         const exists = edges.some(e => e.id === this.annotationActivity.gpToTermEdge?.id);
         if (!exists) {
