@@ -92,6 +92,8 @@ export class NoctuaAnnotationFormService {
 
   activityFormToActivity() {
     this.annotationForm.populateActivity(this.annotationActivity);
+
+    this.annotationActivity.goterm.isComplement = this.annotationForm.isComplement.value;
   }
 
   private _onActivityFormChanges(): void {
