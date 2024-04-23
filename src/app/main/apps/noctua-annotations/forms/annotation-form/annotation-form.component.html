@@ -12,6 +12,7 @@
           </noc-annotation-entity-form>
         </div>
         <div class="p-4" fxFlex="30" fxLayout="row" fxLayoutAlign="start stretch">
+          <mat-checkbox formControlName="qualifier">Qualifier</mat-checkbox>
           <mat-form-field appearance="outline" class="noc-sm w-100-p" [attr.data-cy]="'form-input-gpterm-relation'">
             <mat-label>GP to Term Relation</mat-label>
             <mat-select panelClass="noc-term-autocomplete" placeholder="" formControlName="gpToTermEdge"

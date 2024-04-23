@@ -9,6 +9,7 @@ import { AnnotationActivity } from '../activity/annotation-activity';
 
 export class AnnotationForm {
   gp: FormGroup;
+  qualifier: FormGroup;
   goterm: FormGroup;
   extension: FormGroup;
   gpToTermEdge = new FormControl();
