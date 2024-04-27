@@ -587,6 +587,7 @@ export class BbopGraphService {
 
   isStartEdge(subjectNode, predicateId) {
     return predicateId === noctuaFormConfig.edge.enabledBy.id ||
+      predicateId === noctuaFormConfig.edge.hasPart.id ||
       ((predicateId === noctuaFormConfig.edge.partOf.id ||
         predicateId === noctuaFormConfig.edge.locatedIn.id ||
         predicateId === noctuaFormConfig.edge.contributesTo.id ||
@@ -796,6 +797,8 @@ export class BbopGraphService {
       });
     } else if (objectNode.hasRootType(EntityDefinition.GoProteinContainingComplex)) {
       activityType = ActivityType.proteinComplex;
+    } else if (predicateId === noctuaFormConfig.edge.hasPart.id && subjectNode.hasRootType(EntityDefinition.GoProteinContainingComplex)) {
+      activityType = ActivityType.proteinComplex;
     }
 
     return self.noctuaFormConfigService.createActivityBaseModel(activityType, subjectNode as ActivityNode);
@@ -811,6 +814,8 @@ export class BbopGraphService {
       const bbopObjectId = bbopEdge.object_id();
       const subjectNode = self.nodeToActivityNode(camGraph, bbopSubjectId);
       const objectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
+
+      //console.log(bbopEdge.predicate_id())
 
       if (self.isStartEdge(subjectNode, bbopEdge.predicate_id())) {
 
@@ -835,6 +840,8 @@ export class BbopGraphService {
         activities.push(activity);
       }
     });
+
+    console.log(activities)
 
     return activities;
 

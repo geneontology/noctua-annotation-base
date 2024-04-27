@@ -341,7 +341,7 @@ export class NoctuaFormConfigService {
 
     const criteria = {} as AnnotationEdgeConfig
 
-    if (activity.activityType === ActivityType.ccOnly || activity.activityType === ActivityType.molecule) {
+    if (activity.activityType === ActivityType.ccOnly || activity.activityType === ActivityType.molecule || activity.activityType === ActivityType.proteinComplex) {
       annotationActivity.gp = activity.gpNode;
 
       activity.getEdges(activity.gpNode.id).forEach((edge) => {
@@ -350,7 +350,12 @@ export class NoctuaFormConfigService {
           criteria.gpToTermPredicate = edge.predicate.edge.id;
           annotationActivity.goterm = edge.object;
           annotationActivity.gp.predicate = edge.predicate;
+        } else if (noctuaFormConfig.edge.hasPart.id === edge.predicate.edge.id) {
+          criteria.gpToTermPredicate = edge.predicate.edge.id;
+          annotationActivity.goterm = edge.object;
+          annotationActivity.gp.predicate = edge.predicate;
         }
+
       });
     } else {
 
