@@ -185,6 +185,8 @@ export class NoctuaAnnotationFormService {
   saveAnnotation() {
     const self = this;
     self.activityFormToActivity();
+
+    console.log(self.activity)
     self.annotationActivity.activityToAnnotation(self.activity);
     const saveData = self.annotationActivity.createSave();
     return forkJoin(self.bbopGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title));
