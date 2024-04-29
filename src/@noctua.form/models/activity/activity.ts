@@ -235,14 +235,6 @@ export class Activity extends SaeGraph<ActivityNode> {
         }
       }
 
-
-      if (this.activityType === ActivityType.proteinComplex) {
-        this.gpNode = this.rootNode
-        if (mfTriple.predicate.edge?.id === noctuaFormConfig.edge.hasPart.id) {
-          this.gpNode = mfTriple.subject
-        }
-      }
-
     })
   }
 
