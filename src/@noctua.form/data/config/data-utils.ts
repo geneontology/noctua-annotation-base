@@ -24,8 +24,6 @@ export class DataUtils {
   public static getPredicates(shapes: ShexShapeAssociation[], subjectIds?: string[], objectIds?: string[], excludeFromExtension = true): string[] {
     const matchedPredicates = new Set<string>();
 
-    console.log(shapes, subjectIds, objectIds, excludeFromExtension)
-
     // If neither subjectIds nor objectIds is provided, return all predicates
     if (!subjectIds && !objectIds) {
       shapes.forEach((shape) => {
@@ -33,6 +31,8 @@ export class DataUtils {
           matchedPredicates.add(shape.predicate);
         }
       });
+
+      console.log('matchedPredicates', matchedPredicates)
       return [...matchedPredicates];
     }
 
