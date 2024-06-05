@@ -73,6 +73,7 @@ export class NoctuaAnnotationFormService {
     this.annotationFormGroup.next(this._fb.group(this.annotationForm));
     this.activity.enableSubmit();
     this.annotationActivity = new AnnotationActivity(this.activity);
+    this.annotationActivity.enableSubmit();
     this._onActivityFormChanges();
     this.onActivityChanged.next(this.activity);
 
@@ -106,6 +107,7 @@ export class NoctuaAnnotationFormService {
       this.activityFormToActivity();
       this.activity.enableSubmit();
       this.annotationActivity.updateAspect();
+      this.annotationActivity.enableSubmit();
 
       const edges = this.noctuaFormConfigService.getTermRelations(
         this.annotationActivity.gp.rootTypes,

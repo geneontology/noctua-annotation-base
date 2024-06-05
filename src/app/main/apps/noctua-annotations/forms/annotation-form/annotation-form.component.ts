@@ -14,6 +14,7 @@ import {
   AnnotationActivity,
 } from '@geneontology/noctua-form-base';
 import { NoctuaAnnotationsDialogService } from '../../services/dialog.service';
+import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
 
 @Component({
   selector: 'noc-annotation-form',
@@ -51,6 +52,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
+    private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotationFormService: NoctuaAnnotationFormService
@@ -82,8 +84,16 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   }
 
   checkErrors() {
-    const errors = this.noctuaAnnotationFormService.activity.submitErrors;
-    // this.noctuaAnnotationsDialogService.openActivityErrorsDialog(errors);
+    const errors = [...this.noctuaAnnotationFormService.activity.submitErrors, ...this.noctuaAnnotationFormService.annotationActivity.submitErrors]
+    this.noctuaFormDialogService.openActivityErrorsDialog(errors);
+  }
+
+  hasErrors() {
+    const hasError = this.noctuaAnnotationFormService.activity.submitErrors.length > 0 ||
+      this.noctuaAnnotationFormService.annotationActivity.submitErrors.length > 0;
+
+    return hasError
+
   }
 
   save() {

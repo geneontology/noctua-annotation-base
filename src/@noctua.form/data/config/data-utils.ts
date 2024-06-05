@@ -27,9 +27,15 @@ export class DataUtils {
     // If neither subjectIds nor objectIds is provided, return all predicates
     if (!subjectIds && !objectIds) {
       shapes.forEach((shape) => {
-        if (shape.exclude_from_extensions !== excludeFromExtension) {
+
+        if (excludeFromExtension) {
+          if (!shape.exclude_from_extensions) {
+            matchedPredicates.add(shape.predicate);
+          }
+        } else {
           matchedPredicates.add(shape.predicate);
         }
+
       });
 
       console.log('matchedPredicates', matchedPredicates)
