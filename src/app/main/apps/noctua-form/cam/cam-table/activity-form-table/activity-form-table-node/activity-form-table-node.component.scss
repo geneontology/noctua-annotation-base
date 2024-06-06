@@ -1,4 +1,4 @@
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 @import "src/@noctua/scss/noctua";
 @import "src/@noctua.common/scss/noctua.common";
 @import "src/@noctua.common/scss/noctua-form.common";
@@ -134,11 +134,11 @@ $accent: map-get($theme, accent);
       }
 
       &.noc-relation-cell {
-        font-size: 10px;
+        font-size: 12px;
       }
 
       &.noc-extension-cell {
-        font-size: 10px;
+        font-size: 12px;
         .noc-extension {
           //border
         }
