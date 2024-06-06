@@ -36,7 +36,7 @@ import { AnnotationNodeComponent } from './table/annotation-node/annotation-node
 
 const routes = [
   {
-    path: '',
+    path: 'a',
     component: NoctuaAnnotationsComponent
   }
 ];

@@ -12,6 +12,9 @@ import {
   ActivityType,
   NoctuaUserService,
   AnnotationActivity,
+  noctuaFormConfig,
+  Evidence,
+  Entity,
 } from '@geneontology/noctua-form-base';
 import { NoctuaAnnotationsDialogService } from '../../services/dialog.service';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
@@ -82,6 +85,34 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         this.annotationActivity = this.noctuaAnnotationFormService.annotationActivity;
       });
   }
+
+
+  addMFRootTerm() {
+    this._addRootTerm(noctuaFormConfig.rootNode.mf);
+
+    console.log(this.annotationFormGroup)
+  }
+
+
+  private _addRootTerm(rootTerm) {
+    const self = this;
+
+    if (rootTerm) {
+      this.noctuaAnnotationFormService.annotationActivity.goterm.term = new Entity(rootTerm.id, rootTerm.label);
+      const goterm = this.annotationFormGroup.get('goterm')
+      goterm.patchValue(this.noctuaAnnotationFormService.annotationActivity.goterm);
+      //self.noctuaAnnotationFormService.initializeForm();
+
+      const evidence = new Evidence();
+      evidence.setEvidence(new Entity(
+        noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
+        noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
+      evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference;
+      //self.annotationActivity.gpToTermEdge.setEvidence([evidence]);
+      self.noctuaAnnotationFormService.initializeForm();
+    }
+  }
+
 
   checkErrors() {
     const errors = [...this.noctuaAnnotationFormService.activity.submitErrors, ...this.noctuaAnnotationFormService.annotationActivity.submitErrors]
