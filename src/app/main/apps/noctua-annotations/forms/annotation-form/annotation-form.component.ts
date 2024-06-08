@@ -100,6 +100,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     if (rootTerm) {
       this.noctuaAnnotationFormService.annotationActivity.goterm.term = new Entity(rootTerm.id, rootTerm.label);
       const goterm = this.annotationFormGroup.get('goterm')
+      // const goterm = this.annotationFormGroup.get('goterm')
       goterm.patchValue(this.noctuaAnnotationFormService.annotationActivity.goterm);
       //self.noctuaAnnotationFormService.initializeForm();
 
@@ -109,7 +110,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label));
       evidence.reference = noctuaFormConfig.evidenceAutoPopulate.nd.reference;
       //self.annotationActivity.gpToTermEdge.setEvidence([evidence]);
-      self.noctuaAnnotationFormService.initializeForm();
+      //self.noctuaAnnotationFormService.initializeForm();
     }
   }
 
