@@ -96,8 +96,8 @@
         Why is the "Save" button disabled?
       </button>
       <span fxFlex></span>
-      <button (click)='clear()' type="button" mat-raised-button color="" class="mr-8">Clear</button>
-      <button [disabled]="hasErrors()" (click)="save()" type="submit" class="" mat-raised-button color="primary"
+      <button (click)='clear()' type="button" mat-stroked-button color="" class="mr-8">Clear</button>
+      <button [disabled]="hasErrors()" (click)="save()" type="submit" class="" mat-stroked-button color="primary"
         [attr.data-cy]="'save-annotation-button'">Save</button>
     </div>
   </div>

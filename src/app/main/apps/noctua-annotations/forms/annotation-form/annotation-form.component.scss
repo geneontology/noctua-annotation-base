@@ -50,7 +50,7 @@ $accent: map-get($theme, accent);
 
   .noc-activity-form-container {
     padding: 20px 10px;
-    background-color: rgba($annotation-primary-color, 0.3);
+    background-color: #a2c4fa;
   }
 
   .noc-go-term-box {
@@ -61,12 +61,26 @@ $accent: map-get($theme, accent);
 
   .noc-activity-form {
     @include deep-width(800px);
-
+    position: relative;
+    padding: 5px;
+    background: linear-gradient(to right, #5b8cff, #a6e9fe);
+    border-radius: 12px;
+    &:before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      background-color: white;
+      z-index: -1;
+      border-radius: 12px;
+    }
+    //border: 5px solid #5b8cff;
+    //background-color: #fff;
     .noc-term-group {
       // padding-bottom: 20px;
       //  border-bottom: #CCC solid 1px;
-      background-color: #fff;
-      border-left: #fff solid 5px;
 
       &.mf {
         border-left-color: rgba($noc-mf, 0.8);
@@ -99,8 +113,6 @@ $accent: map-get($theme, accent);
       }
 
       .noc-action-button {
-        margin: 8px 0 0 0;
-        background-color: #fafafa;
         width: 35px;
         height: 35px;
 
@@ -152,7 +164,6 @@ $accent: map-get($theme, accent);
     }
 
     .noc-submit-row {
-      margin: 10px 0;
       padding: 10px 0;
       background-color: #fff;
     }
