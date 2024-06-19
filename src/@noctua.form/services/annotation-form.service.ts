@@ -3,14 +3,14 @@ import { Observable, BehaviorSubject, forkJoin, Subject, takeUntil } from 'rxjs'
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
-import { Activity, ActivityState, ActivityType } from './../models/activity/activity';
+import { Activity, ActivityType } from './../models/activity/activity';
 import { ActivityNode } from './../models/activity/activity-node';
 import { ActivityFormMetadata } from './../models/forms/activity-form-metadata';
 import { BbopGraphService } from './bbop-graph.service';
 import { CamService } from './cam.service';
 import { Entity } from '../models/activity/entity';
 import { Evidence } from '../models/activity/evidence';
-import { cloneDeep, each } from 'lodash';
+import { each } from 'lodash';
 import { Cam } from '../models/activity/cam';
 import { AnnotationForm } from '@noctua.form/models/forms/annotation-form';
 import { AnnotationActivity } from '../models/activity/annotation-activity';
