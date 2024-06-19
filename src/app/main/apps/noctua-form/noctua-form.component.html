@@ -85,8 +85,7 @@
         </div>
       </mat-drawer>
       <mat-drawer-content class="w-100-p h-100-p" fxLayout="column" fxLayoutAlign="start stretch">
-        <div *ngIf="cam" [ngSwitch]="noctuaCommonMenuService.selectedMiddlePanel" class="w-100-p h-100-p"
-          noctuaPerfectScrollbar>
+        <div *ngIf="cam" [ngSwitch]="noctuaCommonMenuService.selectedMiddlePanel" class="w-100-p h-100-p">
           <noc-cam-table *ngSwitchCase="MiddlePanel.camTable" [cam]="cam" [options]="tableOptions"></noc-cam-table>
         </div>
       </mat-drawer-content>

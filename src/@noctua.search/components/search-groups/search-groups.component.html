@@ -8,7 +8,7 @@
       <mat-icon>close</mat-icon> CLOSE
     </button>
   </div>
-  <form fxLayout="column" fxLayoutAlign="start stretch" class="mt-8 noc-search-form" noctuaPerfectScrollbar>
+  <form fxLayout="column" fxLayoutAlign="start stretch" class="mt-8 noc-search-form">
     <div *ngFor="let group of noctuaUserService.groups" (click)="selectGroup(group)" class="noc-group-row"
       fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-name" fxFlex>

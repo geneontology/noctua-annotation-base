@@ -15,7 +15,7 @@
       {{statsType.label}}
     </button>
   </div>
-  <div *ngIf="termsSummary" class="noc-drawer-body" noctuaPerfectScrollbar>
+  <div *ngIf="termsSummary" class="noc-drawer-body">
     <div [ngSwitch]="selectedStatsType">
       <noc-general-stats *ngSwitchCase="StatsType.GENERAL" [termsSummary]="termsSummary"></noc-general-stats>
       <noc-gp-stats *ngSwitchCase="StatsType.GP" [termsSummary]="termsSummary"></noc-gp-stats>

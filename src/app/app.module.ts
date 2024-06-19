@@ -65,7 +65,7 @@ import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-ic
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { NoctuaDataService } from '@noctua.common/services/noctua-data.service';
 import { StartupService } from './startup.service';
-import { TreeModule } from '@circlon/angular-tree-component';
+import { TreeModule } from '@ali-hm/angular-tree-component';
 
 export function startup(startupService: StartupService) {
     return () => startupService.loadData();

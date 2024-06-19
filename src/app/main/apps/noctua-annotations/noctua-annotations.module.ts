@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TreeModule } from '@circlon/angular-tree-component';
+import { TreeModule } from '@ali-hm/angular-tree-component';
 import { NoctuaSharedModule } from './../../../../@noctua/shared.module';
 import { NoctuaAnnotationsDialogService } from './services/dialog.service';
 import { NoctuaConfirmDialogModule } from '@noctua/components';
