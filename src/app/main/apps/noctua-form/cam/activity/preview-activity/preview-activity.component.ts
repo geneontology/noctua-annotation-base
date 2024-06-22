@@ -2,7 +2,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
 import {

@@ -227,11 +227,11 @@ $rotate-graph: 235deg;
       }
     }
 
-    tr.mat-row {
+    tr.mat-mdc-row {
       height: auto;
     }
 
-    .mat-header-cell {
+    .mat-mdc-header-cell {
       padding: 0 10px;
       font-size: 10px !important;
       //color: #0F0; // map-get($primary, default);
@@ -241,7 +241,7 @@ $rotate-graph: 235deg;
       font-weight: bold;
     }
 
-    .mat-header-row {
+    .mat-mdc-header-row {
       position: -webkit-sticky;
       position: sticky;
       top: 72px;
@@ -251,7 +251,7 @@ $rotate-graph: 235deg;
       z-index: 10;
     }
 
-    .mat-cell {
+    .mat-mdc-cell {
       display: flex;
       align-items: center;
       padding-top: 6px;
@@ -328,7 +328,7 @@ $rotate-graph: 235deg;
         top: 131px;
       }
 
-      .mat-header-row {
+      .mat-mdc-header-row {
         top: 172px;
       }
 

@@ -115,12 +115,12 @@ $accent: map-get($theme, accent);
       background-color: transparent;
     }
 
-    tr.mat-footer-row,
-    tr.mat-row {
+    tr.mat-mdc-footer-row,
+    tr.mat-mdc-row {
       height: auto;
     }
 
-    .mat-header-cell {
+    .mat-mdc-header-cell {
       padding: 0 10px;
       font-size: 10px !important;
       //color: #0F0; // map-get($primary, default);
@@ -130,7 +130,7 @@ $accent: map-get($theme, accent);
       font-weight: bold;
     }
 
-    .mat-header-row {
+    .mat-mdc-header-row {
       @include deep-height(30px);
       border-bottom: $noc-primary-color-light solid 1px;
 

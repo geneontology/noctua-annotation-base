@@ -19,11 +19,11 @@ $accent: map-get($theme, accent);
     @include deep-width(100%);
   }
 
-  .mat-dialog-container {
+  .mat-mdc-dialog-container {
     padding: 0;
   }
 
-  .mat-dialog-content {
+  .mat-mdc-dialog-content {
   }
 
   .dialog-content-wrapper {
@@ -99,7 +99,7 @@ $accent: map-get($theme, accent);
       min-width: 150px !important;
     }
 
-    .mat-cell {
+    .mat-mdc-cell {
       padding: 0 5px;
       font-size: 12px !important;
       color: #000;
@@ -114,7 +114,7 @@ $accent: map-get($theme, accent);
       }
     }
 
-    .mat-header-cell {
+    .mat-mdc-header-cell {
       padding: 0 10px;
       font-size: 10px !important;
       //color: #0F0; // map-get($primary, default);
@@ -124,7 +124,7 @@ $accent: map-get($theme, accent);
       font-weight: bold;
     }
 
-    .mat-header-row {
+    .mat-mdc-header-row {
       @include deep-height(30px);
       border-bottom: $noc-primary-color-light solid 1px;
     }
