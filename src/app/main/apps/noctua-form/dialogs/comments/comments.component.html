@@ -1,7 +1,7 @@
 <form name="commentsFormGroup" [formGroup]="commentsFormGroup" class="dialog-content-wrapper noc-dialog">
   <div class="m-0 noc-dialog-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-dialog-header-title">
-      Comments</span>
+    Comments</span>
     <span fxFlex></span>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" aria-label="Close dialog">
       <mat-icon>close</mat-icon> Close
@@ -20,23 +20,27 @@
         </button>
       </div>
       <div class="noc-section-body p-8" fxLayout="column" fxLayoutAlign="start stretch">
-        <div *ngIf="predicate?.comments.length===0" class="noc-no-info">
-          No comments yet
-        </div>
+        @if (predicate?.comments.length===0) {
+          <div class="noc-no-info">
+            No comments yet
+          </div>
+        }
         <div class="p-4" fxLayout="column">
-          <div formArrayName="commentsFormArray" *ngFor="let comment of commentsFormArray?.controls; let i = index;">
-            <div fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
-              <div class="noc-form-field-container" fxFlex>
-                <mat-form-field appearance="outline" class="noc-sm w-100-p">
-                  <mat-label>Comment</mat-label>
-                  <textarea type="text" matInput [formControlName]="i" rows="2"></textarea>
-                </mat-form-field>
-                <button mat-icon-button (click)="deleteComment(i)" class="noc-delete-float-button">
-                  <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
-                </button>
+          @for (comment of commentsFormArray?.controls; track comment; let i = $index) {
+            <div formArrayName="commentsFormArray">
+              <div fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
+                <div class="noc-form-field-container" fxFlex>
+                  <mat-form-field appearance="outline" class="noc-sm w-100-p">
+                    <mat-label>Comment</mat-label>
+                    <textarea type="text" matInput [formControlName]="i" rows="2"></textarea>
+                  </mat-form-field>
+                  <button mat-icon-button (click)="deleteComment(i)" class="noc-delete-float-button">
+                    <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          }
         </div>
       </div>
     </div>
