@@ -34,7 +34,11 @@
               "src/assets"
             ],
             "styles": [
+              "src/@noctua/styles/tailwind.scss",
+              "src/@noctua/styles/themes.scss",
+              "src/@noctua/styles/main.scss",
               "src/styles.scss",
+              "src/tailwind.scss",
               "node_modules/jointjs/css/layout.css",
               "node_modules/jointjs/css/themes/material.css",
               "node_modules/reveal.js/dist/reveal.css",
