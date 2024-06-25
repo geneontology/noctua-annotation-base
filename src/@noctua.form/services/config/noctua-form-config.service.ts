@@ -18,7 +18,7 @@ import { Predicate } from './../../models/activity/predicate';
 import { DataUtils } from '../../data/config/data-utils';
 import shexJson from './../../data/shapes.json';
 import gpToTermJson from './../../data/gp-to-term.json';
-import { AnnotationActivity, AnnotationEdgeConfig } from './../../models/activity/annotation-activity';
+import { AnnotationActivity, AnnotationEdgeConfig, AnnotationExtension } from './../../models/activity/annotation-activity';
 
 @Injectable({
   providedIn: 'root'
@@ -367,8 +367,10 @@ export class NoctuaFormConfigService {
             annotationActivity.goterm = edge.object;
 
             activity.getEdges(edge.object.id).forEach((extensionEdge) => {
-              annotationActivity.extensionEdge = extensionEdge.predicate.edge;
-              annotationActivity.extension = extensionEdge.object;
+              const annotationExtension = new AnnotationExtension();
+              annotationExtension.extensionEdge = extensionEdge.predicate.edge;
+              annotationExtension.extension = extensionEdge.object;
+              annotationActivity.extensions.push(annotationExtension);
             });
           }
         });
@@ -409,8 +411,10 @@ export class NoctuaFormConfigService {
       });
 
       if (isAllowedPredicate) {
-        annotationActivity.extensionEdge = edge.predicate.edge;
-        annotationActivity.extension = edge.object;
+        const annotationExtension = new AnnotationExtension();
+        annotationExtension.extensionEdge = edge.predicate.edge;
+        annotationExtension.extension = edge.object;
+        annotationActivity.extensions.push(annotationExtension);
       }
     });
   }

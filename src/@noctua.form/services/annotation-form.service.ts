@@ -115,22 +115,27 @@ export class NoctuaAnnotationFormService {
         true
       );
 
+      this.annotationActivity.gpToTermEdges = edges;
+
       const extensionObjects = this.noctuaFormConfigService.getObjectsRelations(
         this.annotationActivity.goterm.rootTypes,
       );
 
-      const extensionEdges = this.noctuaFormConfigService.getTermRelations(
-        this.annotationActivity.goterm.rootTypes,
-        this.annotationActivity.extension.rootTypes
-      );
+      this.annotationActivity.extensions.forEach((ext) => {
 
-      this.annotationActivity.gpToTermEdges = edges;
-      this.annotationActivity.extensionEdges = extensionEdges;
+        const extensionEdges = this.noctuaFormConfigService.getTermRelations(
+          this.annotationActivity.goterm.rootTypes,
+          ext.extension.rootTypes
+        );
 
-      if (extensionObjects.length > 0) {
-        this.annotationActivity.extension.category = extensionObjects;
-        this.noctuaFormConfigService.setTermLookup(this.annotationActivity.extension, extensionObjects);
-      }
+
+        ext.extensionEdges = extensionEdges;
+
+        if (extensionObjects.length > 0) {
+          ext.extension.category = extensionObjects;
+          this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
+        }
+      });
 
       if (edges.length > 0 && this.annotationActivity.gp.hasValue()
         && this.annotationActivity.goterm.hasValue()) {

@@ -2,9 +2,9 @@
   class="noc-activity-form-container">
   <div class="noc-activity-form">
     @if (!noctuaUserService.user) {
-      <div class="noc-draw-body-disabled" fxLayoutAlign="center center">
-        Log in to Continue
-      </div>
+    <div class="noc-draw-body-disabled" fxLayoutAlign="center center">
+      Log in to Continue
+    </div>
     }
     <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
@@ -20,26 +20,26 @@
             <mat-select panelClass="noc-term-autocomplete" placeholder="" formControlName="gpToTermEdge"
               [compareWith]="compareFn">
               @for (item of annotationActivity.gpToTermEdges; track item) {
-                <mat-option [value]="item">
-                  <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                    <div class="noc-term-label">
-                      {{ item.label }}
-                    </div>
-                    <span fxFlex></span>
-                    <div class="noc-term-id">
-                      @if (item.link) {
-                        <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
-                          {{ item.id }}
-                        </a>
-                      }
-                      @if (!item.link) {
-                        <span>
-                          {{ item.id }}
-                        </span>
-                      }
-                    </div>
+              <mat-option [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.label }}
                   </div>
-                </mat-option>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    @if (item.link) {
+                    <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
+                      {{ item.id }}
+                    </a>
+                    }
+                    @if (!item.link) {
+                    <span>
+                      {{ item.id }}
+                    </span>
+                    }
+                  </div>
+                </div>
+              </mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -57,64 +57,74 @@
           Add MF Root Term
         </button>
       </mat-menu> -->
-    </div>
-  </div>
-  <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
-    <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
-      <noc-annotation-evidence-form [entityFormGroup]="annotationFormGroup.get('goterm')" fxLayout="row"
-        fxLayoutAlign="start center" class="w-100-p">
-      </noc-annotation-evidence-form>
-    </div>
-  </div>
-  <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
-    <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
-      <div fxFlex="50" class="">
-        <mat-form-field appearance="outline" class="noc-sm w-100-p" [attr.data-cy]="'form-input-extension-relation'">
-          <mat-label>Extension Relation</mat-label>
-          <mat-select panelClass="noc-term-autocomplete" placeholder="" formControlName="extensionEdge"
-            [compareWith]="compareFn">
-            @for (item of annotationActivity.extensionEdges; track item) {
-              <mat-option [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                  <div class="noc-term-label">
-                    {{ item.label }}
-                  </div>
-                  <span fxFlex></span>
-                  <div class="noc-term-id">
-                    @if (item.link) {
-                      <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
-                        {{ item.id }}
-                      </a>
-                    }
-                    @if (!item.link) {
-                      <span>
-                        {{ item.id }}
-                      </span>
-                    }
-                  </div>
-                </div>
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
       </div>
-      <div fxFlex="50" class="">
-        <noc-annotation-entity-form [entityFormGroup]="annotationFormGroup.get('extension')" fxLayout="row"
+    </div>
+    <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-body p-0" fxLayout="column" fxLayoutAlign="start stretch">
+        <noc-annotation-evidence-form [entityFormGroup]="annotationFormGroup.get('goterm')" fxLayout="row"
           fxLayoutAlign="start center" class="w-100-p">
-        </noc-annotation-entity-form>
+        </noc-annotation-evidence-form>
       </div>
     </div>
-  </div>
-  <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
-    @if (hasErrors()) {
+    <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
+
+
+        @for (annotationExtension of annotationFormGroup.get('extensionFormArray')?.controls; track annotationExtension;
+        let i = $index) {
+        <div formArrayName="extensionFormArray">
+          <div [formGroupName]="i" fxLayout="row" fxLayoutAlign="start stretch" class="w-100-p">
+            <div fxFlex="50" class="">
+              <mat-form-field appearance="outline" class="noc-sm w-100-p"
+                [attr.data-cy]="'form-input-extension-relation'">
+                <mat-label>Extension Relation</mat-label>
+                <mat-select panelClass="noc-term-autocomplete" placeholder="" formControlName="extensionEdge"
+                  [compareWith]="compareFn">
+                  @for (item of annotationActivity.extensionEdges; track item) {
+                  <mat-option [value]="item">
+                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                      <div class="noc-term-label">
+                        {{ item.label }}
+                      </div>
+                      <span fxFlex></span>
+                      <div class="noc-term-id">
+                        @if (item.link) {
+                        <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
+                          {{ item.id }}
+                        </a>
+                        }
+                        @if (!item.link) {
+                        <span>
+                          {{ item.id }}
+                        </span>
+                        }
+                      </div>
+                    </div>
+                  </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="50" class="">
+              <noc-annotation-entity-form [entityFormGroup]="annotationFormGroup.get('extension')" fxLayout="row"
+                fxLayoutAlign="start center" class="w-100-p">
+              </noc-annotation-entity-form>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
+      @if (hasErrors()) {
       <button (click)='checkErrors()' mat-button color="warn" class="noc-rounded-button noc-sm">
         Why is the "Save" button disabled?
       </button>
-    }
-    <span fxFlex></span>
-    <button (click)='clear()' type="button" mat-stroked-button color="" class="mr-8">Clear</button>
-    <button [disabled]="hasErrors()" (click)="save()" type="submit" class="" mat-stroked-button color="primary"
-    [attr.data-cy]="'save-annotation-button'">Save</button>
+      }
+      <span fxFlex></span>
+      <button (click)='clear()' type="button" mat-stroked-button color="" class="mr-8">Clear</button>
+      <button [disabled]="hasErrors()" (click)="save()" type="submit" class="" mat-stroked-button color="primary"
+        [attr.data-cy]="'save-annotation-button'">Save</button>
+    </div>
   </div>
-</div>
 </form>

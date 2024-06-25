@@ -9,18 +9,11 @@ import {
   NoctuaAnnotationFormService,
   ActivityNode,
   Evidence,
-  noctuaFormConfig,
-  Entity,
   ShapeDefinition,
-  ActivityError,
   ActivityNodeType,
-  Activity,
-  ErrorLevel,
-  ErrorType,
-  ActivityType
+  Activity
 } from '@geneontology/noctua-form-base';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
-import { each, find } from 'lodash';
 import { InlineWithService } from '@noctua.editor/inline-with/inline-with.service';
 import { InlineDetailService } from '@noctua.editor/inline-detail/inline-detail.service';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
@@ -63,8 +56,6 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
-    private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
-    private noctuaFormDialogService: NoctuaFormDialogService,
     private camService: CamService,
     private inlineReferenceService: InlineReferenceService,
     private inlineDetailService: InlineDetailService,
@@ -115,8 +106,6 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   }
 
   openSearchModels() {
-    const self = this;
-    const gpNode = this.noctuaAnnotationFormService.activity.gpNode;
     // const searchCriteria = new SearchCriteria();
 
     //searchCriteria.goterms.push(this.entity.term);
@@ -153,7 +142,6 @@ export class AnnotationEntityFormComponent implements OnInit, OnDestroy {
   }
 
   updateTermList() {
-    const self = this;
     // this.camService.updateTermList(self.noctuaAnnotationFormService.activity, this.entity);
   }
 

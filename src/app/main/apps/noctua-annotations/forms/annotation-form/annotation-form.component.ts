@@ -41,7 +41,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   //molecularEntity: FormGroup;
   searchCriteria: any = {};
   annotationFormPresentation: any;
-  evidenceFormArray: FormArray;
+  extensionFormArray: FormArray;
   annotationFormData: any = [];
   activity: Activity;
   // currentActivity: Activity;

@@ -17,18 +17,21 @@ export interface AnnotationEdgeConfig {
   mfToTermReverse?: boolean;
 }
 
+export class AnnotationExtension {
+  extension: ActivityNode;
+  extensionEdge: Entity;
+  extensionEdges: Entity[] = [];
+}
+
 
 export class AnnotationActivity {
   gp: ActivityNode;
   goterm: ActivityNode;
-  extension: ActivityNode;
   gpToTermEdge: Entity;
-  extensionEdge: Entity;
-  extensionType;
   gotermAspect: string;
+  extensions: AnnotationExtension[] = [];
 
   gpToTermEdges: Entity[] = [];
-  extensionEdges: Entity[] = [];
   activity: Activity;
   submitErrors = [];
 
@@ -44,7 +47,14 @@ export class AnnotationActivity {
   activityToAnnotation(activity: Activity) {
     this.gp = activity.getNode('gp');
     this.goterm = activity.getNode('goterm');
-    this.extension = activity.getNode('extension');
+
+    const extensionTriples: Triple<ActivityNode>[] = activity.getEdges(this.goterm.id);
+    this.extensions = extensionTriples.map(triple => {
+      const extension = new AnnotationExtension();
+      extension.extension = triple.object;
+      extension.extensionEdge = triple.predicate.edge;
+      return extension;
+    });
 
   }
 
@@ -107,13 +117,17 @@ export class AnnotationActivity {
       saveData.triples.push(triple);
     }
 
-    if (this.extension?.hasValue()) {
-      const extensionTriple = new Triple(this.goterm, this.extension,
-        new Predicate(this.extensionEdge, this.goterm.predicate.evidence));
+    this.extensions.forEach(ext => {
 
-      saveData.nodes.push(this.extension);
-      saveData.triples.push(extensionTriple);
-    }
+
+      if (ext.extension?.hasValue()) {
+        const extensionTriple = new Triple(this.goterm, ext.extension,
+          new Predicate(ext.extensionEdge, this.goterm.predicate.evidence));
+
+        saveData.nodes.push(ext.extension);
+        saveData.triples.push(extensionTriple);
+      }
+    });
 
     return saveData;
   }
@@ -124,23 +138,23 @@ export class AnnotationActivity {
 
     this.submitErrors = [];
 
-    if (!this.extension?.term.id && !this.extensionEdge?.id) { return result }
-
-    if (!this.extension?.term.id) {
-      const meta = {
-        aspect: 'Extension'
-      };
-      const error = new ActivityError(ErrorLevel.error, ErrorType.general, `is required`, meta);
-      this.submitErrors.push(error);
-    }
-
-    if (!this.extensionEdge?.id) {
-      const meta = {
-        aspect: 'Extension Relation'
-      };
-      const error = new ActivityError(ErrorLevel.error, ErrorType.general, `is required`, meta);
-      this.submitErrors.push(error);
-    }
+    /*     if (!this.extension?.term.id && !this.extensionEdge?.id) { return result }
+    
+        if (!this.extension?.term.id) {
+          const meta = {
+            aspect: 'Extension'
+          };
+          const error = new ActivityError(ErrorLevel.error, ErrorType.general, `is required`, meta);
+          this.submitErrors.push(error);
+        }
+    
+        if (!this.extensionEdge?.id) {
+          const meta = {
+            aspect: 'Extension Relation'
+          };
+          const error = new ActivityError(ErrorLevel.error, ErrorType.general, `is required`, meta);
+          this.submitErrors.push(error);
+        } */
 
     return result;
   }

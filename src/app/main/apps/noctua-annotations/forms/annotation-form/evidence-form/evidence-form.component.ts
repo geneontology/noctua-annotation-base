@@ -46,11 +46,8 @@ export class AnnotationEvidenceFormComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
-    private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
-    private noctuaFormDialogService: NoctuaFormDialogService,
     private camService: CamService,
     private inlineReferenceService: InlineReferenceService,
-    private inlineDetailService: InlineDetailService,
     private inlineWithService: InlineWithService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotationFormService: NoctuaAnnotationFormService) {

@@ -1,4 +1,4 @@
-import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 import { Activity } from './../activity/activity';
 import { ActivityFormMetadata } from './../forms/activity-form-metadata';
@@ -9,12 +9,14 @@ import { AnnotationActivity } from '../activity/annotation-activity';
 
 export class AnnotationForm {
   gp: FormGroup;
-  isComplement = new FormControl();;
+  isComplement = new FormControl();
   goterm: FormGroup;
-  extension: FormGroup;
+  //extension: FormGroup;
   gpToTermEdge = new FormControl();
-  extensionEdge = new FormControl();
-  extensionType = new FormControl();
+  //extensionEdge = new FormControl();
+
+  extensionFormArray = new FormArray([]);
+
   entityForms: EntityForm[] = [];
 
   private _metadata: ActivityFormMetadata;
@@ -33,7 +35,6 @@ export class AnnotationForm {
         entityForm.createEvidenceForms(entity);
       }
       this.entityForms.push(entityForm);
-
 
       const entityTypeToPropertyMap = {
         gp: 'gp',
@@ -62,9 +63,9 @@ export class AnnotationForm {
       annotationActivity.gpToTermEdge = this.gpToTermEdge.value;
     }
 
-    if (this.extensionEdge.value) {
-      annotationActivity.extensionEdge = this.extensionEdge.value;
-    }
+    // if (this.extensionEdge.value) {
+    // annotationActivity.extensionEdge = this.extensionEdge.value;
+    //}
 
     this.entityForms.forEach((entityForm: EntityForm) => {
       entityForm.populateTerm();
