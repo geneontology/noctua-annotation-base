@@ -32,6 +32,23 @@ const baseRequestParams = {
     _: Date.now()
 };
 
+export const getTermLookup = (goCategories: GoCategory[]) => {
+    let termLookup = null;
+    if (goCategories && goCategories.length > 0) {
+        const fqTermCategory = categoryToClosure(goCategories);
+        termLookup = new EntityLookup(null,
+            Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
+                fq: [
+                    'document_category:"ontology_class"',
+                    fqTermCategory
+                ],
+            })
+        );
+    }
+
+    return termLookup;
+}
+
 export const generateBaseTerm = (goCategories: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
     const activityNode = new ActivityNode();
     const predicate = new Predicate(null);

@@ -1,12 +1,11 @@
 import { ActivityNode } from './activity-node';
 import { Entity, RootTypes } from './entity';
-import { SAConfigEdgeMap, noctuaFormConfig } from './../../noctua-form-config';
+import { noctuaFormConfig } from './../../noctua-form-config';
 import { Activity } from './activity';
 import { Triple } from './triple';
 import { Predicate } from './predicate';
 import * as ShapeUtils from './../../data/config/shape-utils';
 import { Evidence } from './evidence';
-import { ActivityError, ErrorLevel, ErrorType } from './parser';
 
 export interface AnnotationEdgeConfig {
   gpToTermPredicate?: string;

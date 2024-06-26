@@ -11,8 +11,10 @@ import { ActivityNode, ActivityNodeType } from './../models/activity/activity-no
 import { Entity } from './../models/activity/entity';
 import { Predicate } from './../models/activity/predicate';
 import { NoctuaUserService } from './user.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import * as EntityDefinition from './../data/config/entity-definition';
+import * as ShapeUtils from './../data/config/shape-utils';
 
 declare const require: any;
 
@@ -25,7 +27,7 @@ const golr_response = require('bbop-response-golr');
 const engine = new impl_engine(golr_response);
 engine.use_jsonp(true)
 
-interface GOlrResponse {
+export interface GOlrResponse {
   id: string;
   label: string;
   link: string;
@@ -78,6 +80,12 @@ export class NoctuaLookupService {
     return str.replace(pattern, "\\$1");
   }
 
+  search(searchText: string, searchType): Observable<GOlrResponse[]> {
+
+    const reqs = ShapeUtils.getTermLookup([EntityDefinition.GoEvidence]);
+    return this.termLookup(searchText, reqs.requestParams);
+
+  }
 
 
   termLookup(searchText, requestParams) {

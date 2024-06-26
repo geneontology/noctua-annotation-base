@@ -76,6 +76,11 @@ $accent: map-get($theme, accent);
       z-index: -1;
       border-radius: 12px;
     }
+
+    .noc-form-section {
+      background-color: #fff;
+      border-radius: 12px;
+    }
     //border: 5px solid #5b8cff;
     //background-color: #fff;
     .noc-term-group {

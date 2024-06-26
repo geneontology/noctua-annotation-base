@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormArray } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -53,17 +53,32 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
   annotationActivity: AnnotationActivity;
 
+  dynamicForm: FormGroup;
+
   constructor(
     private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaAnnotationFormService: NoctuaAnnotationFormService
+    public noctuaAnnotationFormService: NoctuaAnnotationFormService,
+    private fb: FormBuilder
   ) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
+    this.dynamicForm = this.fb.group({
+      gp: [''],
+      isComplement: [''],
+      gpToTermEdge: [''],
+      goterm: [''],
+      annotationExtension: this.fb.array([]), // Array of annotation extensions
+      evidence: this.fb.group({ // Evidence group
+        evidenceCode: [''],
+        reference: [''],
+        with_from: ['']
+      })
+    });
     this.noctuaAnnotationFormService.annotationFormGroup$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(annotationFormGroup => {
@@ -164,15 +179,20 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 
-  close() {
 
-    if (this.panelDrawer) {
-      this.panelDrawer.close();
-    }
-    if (this.closeDialog) {
-      this.closeDialog();
-    }
+  get annotationExtension() {
+    return this.dynamicForm.get('annotationExtension') as FormArray;
+  }
 
+  addAnnotationExtension() {
+    this.annotationExtension.push(this.fb.group({
+      edge: [''],
+      extension: ['']
+    }));
+  }
+
+  onSubmit() {
+    console.log(this.dynamicForm.value);
   }
 
   ngOnDestroy(): void {

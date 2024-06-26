@@ -33,6 +33,7 @@ import { AnnotationEntityFormComponent } from './forms/annotation-form/entity-fo
 import { AnnotationEvidenceFormComponent } from './forms/annotation-form/evidence-form/evidence-form.component';
 import { AnnotationTableComponent } from './table/annotation-table.component';
 import { AnnotationNodeComponent } from './table/annotation-node/annotation-node.component';
+import { TermAutocompleteComponent } from './forms/term-autocomplete/term-autocomplete.component';
 
 const routes = [
   {
@@ -73,6 +74,7 @@ const routes = [
     MatTableModule,
     MatTooltipModule,
     NoctuaFormModule,
+    TermAutocompleteComponent
   ],
   exports: [
     NoctuaAnnotationsComponent
