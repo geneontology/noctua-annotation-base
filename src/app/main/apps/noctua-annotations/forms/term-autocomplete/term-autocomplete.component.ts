@@ -1,11 +1,14 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
-import { NG_VALUE_ACCESSOR, FormControl, FormsModule, ReactiveFormsModule, ControlValueAccessor } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, FormControl, FormsModule, ReactiveFormsModule, ControlValueAccessor, FormGroup } from '@angular/forms';
 import { GOlrResponse, NoctuaLookupService } from '@noctua.form';
 import { Observable, startWith, switchMap } from 'rxjs';
 import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 
 @Component({
   selector: 'noc-term-autocomplete',
@@ -13,7 +16,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule,
     MatAutocompleteModule,
     MatInputModule,
+    MatButtonModule,
     FormsModule,
+    MatIconModule,
     ReactiveFormsModule,
 
   ],
@@ -39,7 +44,10 @@ export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
   private onChange: (value: any) => void;
   private onTouched: () => void;
 
-  constructor(private lookupService: NoctuaLookupService) { }
+  constructor(private lookupService: NoctuaLookupService,
+    private inlineReferenceService: InlineReferenceService,
+
+  ) { }
 
   ngOnInit(): void {
     this.filteredOptions = this.control.valueChanges.pipe(
@@ -67,6 +75,17 @@ export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
 
   selectTerm(term: any) {
     console.log('term', term);
+  }
+
+  updateReferenceList() {
+  }
+
+  openAddReference(event) {
+    event.stopPropagation();
+    const data = {
+      formControl: this.control as FormControl,
+    };
+    this.inlineReferenceService.open(event.target, { data });
   }
 
 

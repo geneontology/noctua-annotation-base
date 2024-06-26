@@ -1,8 +1,12 @@
 <div class="p-4" fxFlex="flex" fxLayout="row" fxLayoutAlign="start stretch">
   <mat-form-field class="noc-sm w-100-p" appearance="outline" [attr.data-cy]="'form-input-' + control">
     <mat-label>{{label}}</mat-label>
-    <textarea type="text" matInput formControlName="control" [matAutocomplete]="termAuto" row="2">
+    <textarea type="text" matInput [formControl]="control" [matAutocomplete]="termAuto" row="2"
+      (focus)="updateReferenceList()">
     </textarea>
+    <button mat-icon-button matSuffix (click)="openAddReference($event)" class="noc-evidence-db-trigger">
+      <mat-icon>playlist_add</mat-icon>
+    </button>
     <mat-autocomplete #termAuto="matAutocomplete" [displayWith]="termDisplayFn"
       (optionSelected)="selectTerm($event.option.value)" class="noc-term-autocomplete" fxLayout="row"
       fxLayoutAlign="start start">
@@ -14,6 +18,11 @@
               {{ item.label }}
             </div>
             <span fxFlex></span>
+            <div class="noc-term-id mr-8">
+              <strong>
+                {{ item.xref }}
+              </strong>
+            </div>
             <div class="noc-term-id">
               @if (item.link) {
               <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">

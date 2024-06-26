@@ -72,11 +72,11 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       isComplement: [''],
       gpToTermEdge: [''],
       goterm: [''],
-      annotationExtension: this.fb.array([]), // Array of annotation extensions
+      annotationExtensions: this.fb.array([]), // Array of annotation extensions
       evidence: this.fb.group({ // Evidence group
         evidenceCode: [''],
         reference: [''],
-        with_from: ['']
+        withFrom: ['']
       })
     });
     this.noctuaAnnotationFormService.annotationFormGroup$
@@ -180,15 +180,19 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   }
 
 
-  get annotationExtension() {
-    return this.dynamicForm.get('annotationExtension') as FormArray;
+  get annotationExtensions() {
+    return this.dynamicForm.get('annotationExtensions') as FormArray;
   }
 
-  addAnnotationExtension() {
-    this.annotationExtension.push(this.fb.group({
-      edge: [''],
-      extension: ['']
+  addExtension() {
+    this.annotationExtensions.push(this.fb.group({
+      extensionEdge: [''],
+      extensionTerm: ['']
     }));
+  }
+
+  deleteExtension(index) {
+    this.annotationExtensions.removeAt(index)
   }
 
   onSubmit() {
