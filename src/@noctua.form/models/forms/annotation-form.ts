@@ -1,11 +1,10 @@
 import { FormControl, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
-import { Activity } from './../activity/activity';
 import { ActivityFormMetadata } from './../forms/activity-form-metadata';
 import { each } from 'lodash';
 import { ActivityNode, ActivityNodeType } from '../activity/activity-node';
 import { EntityForm } from './entity-form';
-import { AnnotationActivity } from '../activity/annotation-activity';
+import { AnnotationActivity } from '../standard-annotation/annotation-activity';
 
 export class AnnotationForm {
   gp: FormGroup;

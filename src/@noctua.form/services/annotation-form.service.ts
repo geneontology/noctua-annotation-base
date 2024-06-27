@@ -10,10 +10,9 @@ import { BbopGraphService } from './bbop-graph.service';
 import { CamService } from './cam.service';
 import { Entity } from '../models/activity/entity';
 import { Evidence } from '../models/activity/evidence';
-import { each } from 'lodash';
 import { Cam } from '../models/activity/cam';
 import { AnnotationForm } from '@noctua.form/models/forms/annotation-form';
-import { AnnotationActivity } from '../models/activity/annotation-activity';
+import { AnnotationActivity } from '../models/standard-annotation/annotation-activity';
 import * as EntityDefinition from './../data/config/entity-definition';
 import { noctuaFormConfig } from './../noctua-form-config';
 
@@ -96,7 +95,7 @@ export class NoctuaAnnotationFormService {
   activityFormToActivity() {
     this.annotationForm.populateActivity(this.annotationActivity);
 
-    this.annotationActivity.goterm.isComplement = this.annotationForm.isComplement.value;
+    this.annotationActivity.isComplement = this.annotationForm.isComplement.value;
   }
 
   private _onActivityFormChanges(): void {
@@ -133,12 +132,12 @@ export class NoctuaAnnotationFormService {
 
         if (extensionObjects.length > 0) {
           ext.extension.category = extensionObjects;
-          this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
+          //this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
         }
       });
 
-      if (edges.length > 0 && this.annotationActivity.gp.hasValue()
-        && this.annotationActivity.goterm.hasValue()) {
+      if (edges.length > 0 && this.annotationActivity.gp.term?.hasValue()
+        && this.annotationActivity.goterm.term?.hasValue()) {
         this.destroy$.next();
         //this.annotationForm.gpToTermEdge.setValue(edges[0]);
 
@@ -183,7 +182,7 @@ export class NoctuaAnnotationFormService {
     );
 
     if (filterNodes) {
-      each(filterNodes, function (srcNode) {
+      filterNodes.forEach((srcNode) => {
 
         let destNode = this.activity.getNode(srcNode.id);
         if (destNode) {
@@ -215,13 +214,13 @@ export class NoctuaAnnotationFormService {
   fakester(activity: Activity) {
     const self = this;
 
-    each(activity.nodes, (node: ActivityNode) => {
+    activity.nodes.forEach((node: ActivityNode) => {
       self.noctuaLookupService.termLookup('a', Object.assign({}, node.termLookup.requestParams, { rows: 100 })).subscribe(response => {
         if (response && response.length > 0) {
           const termsCount = response.length;
           node.term = Entity.createEntity(response[Math.floor(Math.random() * termsCount)]);
 
-          each(node.predicate.evidence, (evidence: Evidence) => {
+          node.predicate.evidence?.forEach((evidence: Evidence) => {
             self.noctuaLookupService.termLookup('a', Object.assign({}, node.predicate.evidenceLookup.requestParams, { rows: 100 })).subscribe(response => {
               if (response && response.length > 0) {
                 const evidenceCount = response.length;

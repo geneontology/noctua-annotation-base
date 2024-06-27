@@ -1,7 +1,6 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import * as ModelDefinition from './../data/config/model-definition';
 import * as EntityDefinition from './../data/config/entity-definition';
@@ -11,7 +10,7 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
 import { Activity, ActivityType, compareActivity } from './../models/activity/activity';
-import { find, each, differenceWith, cloneDeep, uniqWith, chain, filter, uniq } from 'lodash';
+import { find, each, differenceWith, chain, uniq } from 'lodash';
 import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
 import { ActivityNode, ActivityNodeType, compareTerm, GoCategory } from './../models/activity/activity-node';
@@ -24,9 +23,8 @@ import { TermsSummary } from './../models/activity/summary';
 import { Article } from './../models/article';
 import { Contributor, equalContributor } from '../models/contributor';
 import * as moment from 'moment';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { graph as bbopGraph } from 'bbop-graph-noctua';
-import { AnnotationActivity } from './../models/activity/annotation-activity';
 
 declare const require: any;
 

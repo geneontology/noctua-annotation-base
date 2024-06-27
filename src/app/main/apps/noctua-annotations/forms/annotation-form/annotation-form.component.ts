@@ -72,8 +72,8 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       isComplement: [''],
       gpToTermEdge: [''],
       goterm: [''],
-      annotationExtensions: this.fb.array([]), // Array of annotation extensions
-      evidence: this.fb.group({ // Evidence group
+      annotationExtensions: this.fb.array([]),
+      evidence: this.fb.group({
         evidenceCode: [''],
         reference: [''],
         withFrom: ['']

@@ -7,13 +7,11 @@
     </div>
     }
 
-
-
     <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
       <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
 
-          <noc-term-autocomplete fxFlex="35" class="" formControlName="gp" label="Go Term"
+          <noc-term-autocomplete fxFlex="35" class="" formControlName="gp" [metadata]="annotationActivity?.gp"
             solrField="gp"></noc-term-autocomplete>
 
           <div class="p-4 noc-go-term-box" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
@@ -47,17 +45,17 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <noc-term-autocomplete fxFlex="35" class="" formControlName="goterm" label="Go Term"
+          <noc-term-autocomplete fxFlex="35" class="" formControlName="goterm" [metadata]="annotationActivity?.goterm"
             solrField="goterm"></noc-term-autocomplete>
         </div>
 
         <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
           <div formGroupName="evidence">
-            <noc-term-autocomplete fxFlex="" class="" formControlName="evidenceCode" label="Evidence"
+            <noc-term-autocomplete fxFlex="" class="" formControlName="evidenceCode" [metadata]="annotationActivity?.gp"
               solrField="evidenceCode"></noc-term-autocomplete>
-            <noc-term-autocomplete fxFlex="35" class="" formControlName="reference" label="Reference"
+            <noc-term-autocomplete fxFlex="35" class="" formControlName="reference" [metadata]="annotationActivity?.gp"
               solrField="reference"></noc-term-autocomplete>
-            <noc-term-autocomplete fxFlex="35" class="" formControlName="withFrom" label="With/From"
+            <noc-term-autocomplete fxFlex="35" class="" formControlName="withFrom" [metadata]="annotationActivity?.gp"
               solrField="withFrom"></noc-term-autocomplete>
           </div>
         </div>

@@ -34,7 +34,7 @@ import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-r
 })
 export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
 
-  @Input() label: string;
+  @Input() metadata: any;
   @Input() solrField: string;
 
   control = new FormControl();
