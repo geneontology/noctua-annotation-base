@@ -79,6 +79,19 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         withFrom: ['']
       })
     });
+
+    this.dynamicForm.valueChanges
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe({
+        next: (value) => {
+          // Process the entire form group
+          this.noctuaAnnotationFormService.processAnnotationFormGroup(value);
+        },
+        error: (err) => {
+          console.error('Error observing dynamicForm changes:', err);
+        }
+      });
+
     this.noctuaAnnotationFormService.annotationFormGroup$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(annotationFormGroup => {
@@ -86,7 +99,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this.annotationFormGroup = annotationFormGroup;
+        //this.annotationFormGroup = annotationFormGroup;
       });
 
     this.noctuaAnnotationFormService.onActivityChanged

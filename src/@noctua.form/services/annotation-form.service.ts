@@ -15,6 +15,7 @@ import { AnnotationForm } from '@noctua.form/models/forms/annotation-form';
 import { AnnotationActivity } from '../models/standard-annotation/annotation-activity';
 import * as EntityDefinition from './../data/config/entity-definition';
 import { noctuaFormConfig } from './../noctua-form-config';
+import { StandardAnnotationForm } from './../models/standard-annotation/form';
 
 @Injectable({
   providedIn: 'root'
@@ -95,7 +96,7 @@ export class NoctuaAnnotationFormService {
   activityFormToActivity() {
     this.annotationForm.populateActivity(this.annotationActivity);
 
-    this.annotationActivity.isComplement = this.annotationForm.isComplement.value;
+    this.annotationActivity.goterm.isComplement = this.annotationForm.isComplement.value;
   }
 
   private _onActivityFormChanges(): void {
@@ -132,7 +133,7 @@ export class NoctuaAnnotationFormService {
 
         if (extensionObjects.length > 0) {
           ext.extension.category = extensionObjects;
-          //this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
+          this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
         }
       });
 
@@ -160,6 +161,76 @@ export class NoctuaAnnotationFormService {
       }
     });
   }
+
+
+
+  processAnnotationFormGroup(annotationData: StandardAnnotationForm): void {
+
+    // Log or perform additional actions as needed
+    console.log('Annotation form group processed:', annotationData);
+    let edges
+
+    const gpRootTypes = annotationData.gp?.rootTypes ?? [];
+    const gotermRootTypes = annotationData.goterm?.rootTypes ?? [];
+
+    edges = this.noctuaFormConfigService.getTermRelations(
+      gpRootTypes,
+      gotermRootTypes,
+      true
+    );
+
+    this.annotationActivity.gpToTermEdges = edges;
+
+    const extensionObjects = this.noctuaFormConfigService.getObjectsRelations(
+      gotermRootTypes,
+    );
+
+    if (this.annotationActivity.extensions.length === annotationData.annotationExtensions.length) {
+
+      annotationData.annotationExtensions.forEach((ext, index) => {
+
+        const extRootTypes = ext.extensionTerm?.rootTypes ?? [];
+
+        const extensionEdges = this.noctuaFormConfigService.getTermRelations(
+          gotermRootTypes,
+          extRootTypes
+        );
+
+
+        this.annotationActivity.extensions[index].extensionEdges = extensionEdges;
+
+        if (extensionObjects.length > 0) {
+          // ext.extension.category = extensionObjects;
+          //this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
+        }
+      });
+    }
+
+    if (edges?.length > 0 && this.annotationActivity.gp.term?.hasValue()
+      && this.annotationActivity.goterm.term?.hasValue()) {
+      this.destroy$.next();
+      //this.annotationForm.gpToTermEdge.setValue(edges[0]);
+
+      //console.log(this.annotationActivity.goterm, "--", this.previousGotermRelation)
+
+      const exists = edges.some(e => e.id === this.annotationActivity.gpToTermEdge?.id);
+      if (!exists) {
+        this.annotationForm.gpToTermEdge.setValue(edges[0]);
+
+        if (this.annotationActivity.goterm.hasRootType(EntityDefinition.GoProteinContainingComplex)) {
+          const partOfEdge = edges.find(e => e.id === noctuaFormConfig.edge.partOf.id);
+          this.annotationForm.gpToTermEdge.setValue(partOfEdge);
+
+        }
+        this.previousGotermRelation = this.annotationActivity.gpToTermEdge?.id;
+      }
+
+      this.destroy$ = new Subject<void>();
+      this._onActivityFormChanges();
+    }
+  }
+
+
 
   getActivityFormErrors() {
     let errors = [];

@@ -7,7 +7,7 @@ import { find, filter, each, uniqWith, difference } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
 import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence, EvidenceExt } from './../models/activity/evidence';
-import { ActivityNode, ActivityNodeType } from './../models/activity/activity-node';
+import { ActivityNode, ActivityNodeType, GoCategory } from './../models/activity/activity-node';
 import { Entity } from './../models/activity/entity';
 import { Predicate } from './../models/activity/predicate';
 import { NoctuaUserService } from './user.service';
@@ -15,6 +15,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import * as EntityDefinition from './../data/config/entity-definition';
 import * as ShapeUtils from './../data/config/shape-utils';
+import { GOlrResponse } from './../models/golr';
 
 declare const require: any;
 
@@ -27,17 +28,7 @@ const golr_response = require('bbop-response-golr');
 const engine = new impl_engine(golr_response);
 engine.use_jsonp(true)
 
-export interface GOlrResponse {
-  id: string;
-  label: string;
-  link: string;
-  description: string;
-  isObsolete: boolean;
-  replacedBy: string;
-  rootTypes: any[];
-  xref: string;
-  notAnnotatable: boolean;
-}
+
 
 
 @Injectable({
@@ -80,9 +71,9 @@ export class NoctuaLookupService {
     return str.replace(pattern, "\\$1");
   }
 
-  search(searchText: string, searchType): Observable<GOlrResponse[]> {
+  search(searchText: string, categories: GoCategory[]): Observable<GOlrResponse[]> {
 
-    const reqs = ShapeUtils.getTermLookup([EntityDefinition.GoEvidence]);
+    const reqs = ShapeUtils.getTermLookup(categories);
     return this.termLookup(searchText, reqs.requestParams);
 
   }

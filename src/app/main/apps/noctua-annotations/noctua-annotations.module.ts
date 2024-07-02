@@ -74,7 +74,6 @@ const routes = [
     MatTableModule,
     MatTooltipModule,
     NoctuaFormModule,
-    TermAutocompleteComponent
   ],
   exports: [
     NoctuaAnnotationsComponent
@@ -88,7 +87,8 @@ const routes = [
     AnnotationEvidenceFormComponent,
     AnnotationFormComponent,
     AnnotationTableComponent,
-    AnnotationNodeComponent
+    AnnotationNodeComponent,
+    TermAutocompleteComponent
   ],
 })
 

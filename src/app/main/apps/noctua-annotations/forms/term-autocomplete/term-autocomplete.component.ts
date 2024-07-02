@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, FormControl, FormsModule, ReactiveFormsModule, ControlValueAccessor, FormGroup } from '@angular/forms';
-import { GOlrResponse, NoctuaLookupService } from '@noctua.form';
-import { Observable, startWith, switchMap } from 'rxjs';
+import { ActivityNode, GOlrResponse, NoctuaLookupService } from '@noctua.form';
+import { Observable, filter, startWith, switchMap } from 'rxjs';
 import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
@@ -12,16 +12,16 @@ import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-r
 
 @Component({
   selector: 'noc-term-autocomplete',
-  standalone: true,
-  imports: [CommonModule,
-    MatAutocompleteModule,
-    MatInputModule,
-    MatButtonModule,
-    FormsModule,
-    MatIconModule,
-    ReactiveFormsModule,
-
-  ],
+  //standalone: true,
+  /*   imports: [CommonModule,
+      MatAutocompleteModule,
+      MatInputModule,
+      MatButtonModule,
+      FormsModule,
+      MatIconModule,
+      ReactiveFormsModule,
+  
+    ], */
   templateUrl: './term-autocomplete.component.html',
   styleUrl: './term-autocomplete.component.scss',
   providers: [
@@ -34,7 +34,7 @@ import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-r
 })
 export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
 
-  @Input() metadata: any;
+  @Input() metadata: ActivityNode;
   @Input() solrField: string;
 
   control = new FormControl();
@@ -50,10 +50,14 @@ export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
   ) { }
 
   ngOnInit(): void {
-    this.filteredOptions = this.control.valueChanges.pipe(
-      startWith(''),
-      switchMap(value => this.lookupService.search(value, this.solrField))
-    );
+    console.log('metadata', this.metadata)
+    if (this.metadata?.category) {
+      this.filteredOptions = this.control.valueChanges.pipe(
+        startWith(''),
+        filter(value => value.length > 2),
+        switchMap(value => this.lookupService.search(value, this.metadata.category))
+      );
+    }
   }
 
   writeValue(value: any): void {
