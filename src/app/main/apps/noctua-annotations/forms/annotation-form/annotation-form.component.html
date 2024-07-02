@@ -11,7 +11,6 @@
 
         <noc-term-autocomplete fxFlex="35" class="" formControlName="gp" [metadata]="annotationActivity?.gp"
           solrField="gp"></noc-term-autocomplete>
-
         <div class="p-4 noc-go-term-box" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
           <mat-checkbox class="noc-qualifier-cbx" formControlName="isComplement">NOT</mat-checkbox>
           <mat-form-field appearance="outline" class="noc-sm w-100-p" [attr.data-cy]="'form-input-gpterm-relation'">
@@ -52,7 +51,8 @@
           <noc-term-autocomplete fxFlex="" class="" formControlName="evidenceCode"
             [metadata]="annotationActivity?.evidence?.evidenceCode" solrField="evidenceCode"></noc-term-autocomplete>
           <noc-term-autocomplete fxFlex="35" class="" formControlName="reference"
-            [metadata]="annotationActivity?.evidence?.reference" solrField="reference"></noc-term-autocomplete>
+            [autocompleteType]="AutocompleteType.REFERENCE" [metadata]="annotationActivity?.evidence?.reference"
+            solrField="reference"></noc-term-autocomplete>
           <noc-term-autocomplete fxFlex="35" class="" formControlName="withFrom"
             [metadata]="annotationActivity?.evidence?.with" solrField="withFrom"></noc-term-autocomplete>
         </div>
@@ -76,7 +76,7 @@
               <mat-label>Extension Relation</mat-label>
               <mat-select panelClass="noc-term-autocomplete" placeholder="" formControlName="extensionEdge"
                 [compareWith]="compareFn">
-                @for (item of annotationActivity?.gpToTermEdges; track item) {
+                @for (item of annotationActivity?.extensions[i].extensionEdges; track item) {
                 <mat-option [value]="item">
                   <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                     <div class="noc-term-label">
@@ -101,7 +101,8 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <noc-term-autocomplete fxFlex="50" class="" formControlName="extensionTerm" label="Extension Term"
+          <noc-term-autocomplete fxFlex="50" class="" formControlName="extensionTerm"
+            [metadata]="annotationActivity?.extensions[i].extensionTerm"
             solrField="extensionTerm"></noc-term-autocomplete>
           <button mat-icon-button (click)="deleteExtension(i)" class="text-warn">
             <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>

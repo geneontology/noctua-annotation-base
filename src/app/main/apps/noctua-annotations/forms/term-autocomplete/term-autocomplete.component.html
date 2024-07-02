@@ -4,9 +4,11 @@
     <textarea type="text" matInput [formControl]="control" [matAutocomplete]="termAuto" row="2"
       (focus)="updateReferenceList()">
     </textarea>
+    @if (autocompleteType === AutocompleteType.REFERENCE) {
     <button mat-icon-button matSuffix (click)="openAddReference($event)" class="noc-evidence-db-trigger">
       <mat-icon>playlist_add</mat-icon>
     </button>
+    }
     <mat-autocomplete #termAuto="matAutocomplete" [displayWith]="termDisplayFn"
       (optionSelected)="selectTerm($event.option.value)" class="noc-term-autocomplete" fxLayout="row"
       fxLayoutAlign="start start">

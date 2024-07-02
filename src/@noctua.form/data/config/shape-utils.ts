@@ -8,6 +8,7 @@ import {
 import * as EntityDefinition from './entity-definition';
 import { EntityLookup } from './../..//models/activity/entity-lookup';
 import { Predicate } from './../../models/activity/predicate';
+import { Entity } from './../../models/activity/entity';
 
 const baseRequestParams = {
     defType: 'edismax',
@@ -31,6 +32,16 @@ const baseRequestParams = {
     ],
     _: Date.now()
 };
+
+export const toGOCategory = (rootTypes: Entity[]): GoCategory[] => {
+    const result = rootTypes.map((rootType) => {
+        const category = new GoCategory()
+        category.category = rootType.id
+        return category
+    });
+
+    return result;
+}
 
 export const getTermLookup = (goCategories: GoCategory[]) => {
     let termLookup = null;

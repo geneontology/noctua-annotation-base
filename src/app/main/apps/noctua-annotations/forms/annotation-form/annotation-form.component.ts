@@ -15,6 +15,8 @@ import {
   noctuaFormConfig,
   Evidence,
   Entity,
+  AnnotationExtension,
+  AutocompleteType,
 } from '@geneontology/noctua-form-base';
 import { NoctuaAnnotationsDialogService } from '../../services/dialog.service';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
@@ -28,6 +30,7 @@ import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dial
 export class AnnotationFormComponent implements OnInit, OnDestroy {
   ActivityState = ActivityState;
   ActivityType = ActivityType;
+  AutocompleteType = AutocompleteType;
 
   @Input('panelDrawer')
   panelDrawer: MatDrawer;
@@ -202,10 +205,15 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       extensionEdge: [''],
       extensionTerm: ['']
     }));
+    const annotationExtension = new AnnotationExtension();
+    this.annotationActivity.extensions.push(annotationExtension);
+
+    this.dynamicForm.updateValueAndValidity();
   }
 
-  deleteExtension(index) {
-    this.annotationExtensions.removeAt(index)
+  deleteExtension(index: number): void {
+    this.annotationExtensions.removeAt(index);
+    this.annotationActivity.extensions.splice(index, 1);
   }
 
   onSubmit() {

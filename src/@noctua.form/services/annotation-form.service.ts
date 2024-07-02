@@ -125,15 +125,15 @@ export class NoctuaAnnotationFormService {
 
         const extensionEdges = this.noctuaFormConfigService.getTermRelations(
           this.annotationActivity.goterm.rootTypes,
-          ext.extension.rootTypes
+          ext.extensionTerm.rootTypes
         );
 
 
         ext.extensionEdges = extensionEdges;
 
         if (extensionObjects.length > 0) {
-          ext.extension.category = extensionObjects;
-          this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
+          ext.extensionTerm.category = extensionObjects;
+          this.noctuaFormConfigService.setTermLookup(ext.extensionTerm, extensionObjects);
         }
       });
 
@@ -200,7 +200,7 @@ export class NoctuaAnnotationFormService {
         this.annotationActivity.extensions[index].extensionEdges = extensionEdges;
 
         if (extensionObjects.length > 0) {
-          // ext.extension.category = extensionObjects;
+          this.annotationActivity.extensions[index].extensionTerm.category = extensionObjects;
           //this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
         }
       });

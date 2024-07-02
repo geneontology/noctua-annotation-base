@@ -369,7 +369,7 @@ export class NoctuaFormConfigService {
             activity.getEdges(edge.object.id).forEach((extensionEdge) => {
               const annotationExtension = new AnnotationExtension();
               annotationExtension.extensionEdge = extensionEdge.predicate.edge;
-              annotationExtension.extension = extensionEdge.object;
+              annotationExtension.extensionTerm = extensionEdge.object;
               annotationActivity.extensions.push(annotationExtension);
             });
           }
@@ -413,7 +413,7 @@ export class NoctuaFormConfigService {
       if (isAllowedPredicate) {
         const annotationExtension = new AnnotationExtension();
         annotationExtension.extensionEdge = edge.predicate.edge;
-        annotationExtension.extension = edge.object;
+        annotationExtension.extensionTerm = edge.object;
         annotationActivity.extensions.push(annotationExtension);
       }
     });

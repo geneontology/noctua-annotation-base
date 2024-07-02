@@ -1,14 +1,14 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, FormControl, FormsModule, ReactiveFormsModule, ControlValueAccessor, FormGroup } from '@angular/forms';
-import { ActivityNode, GOlrResponse, NoctuaLookupService } from '@noctua.form';
+import { ActivityNode, AutocompleteType, GOlrResponse, NoctuaLookupService } from '@geneontology/noctua-form-base';
 import { Observable, filter, startWith, switchMap } from 'rxjs';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
-
+/* import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon'; */
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
+
 
 @Component({
   selector: 'noc-term-autocomplete',
@@ -34,8 +34,10 @@ import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-r
 })
 export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
 
+  AutocompleteType = AutocompleteType;
   @Input() metadata: ActivityNode;
   @Input() solrField: string;
+  @Input() autocompleteType: string = AutocompleteType.TERM;
 
   control = new FormControl();
   options: string[] = [];
@@ -51,13 +53,13 @@ export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit(): void {
     console.log('metadata', this.metadata)
-    if (this.metadata?.category) {
-      this.filteredOptions = this.control.valueChanges.pipe(
-        startWith(''),
-        filter(value => value.length > 2),
-        switchMap(value => this.lookupService.search(value, this.metadata.category))
-      );
-    }
+    //if (this.metadata?.category) {
+    this.filteredOptions = this.control.valueChanges.pipe(
+      startWith(''),
+      filter(value => value.length > 2),
+      switchMap(value => this.lookupService.search(value, this.metadata.category))
+    );
+    // }
   }
 
   writeValue(value: any): void {

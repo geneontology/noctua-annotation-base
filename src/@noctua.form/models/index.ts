@@ -7,6 +7,8 @@ export { Organism, compareOrganism } from './organism';
 
 export { GOlrResponse } from './golr';
 
+export { AutocompleteType } from './autocomplete';
+
 export * from './activity';
 export * from './standard-annotation';
 export * from './forms';

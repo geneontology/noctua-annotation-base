@@ -19,9 +19,18 @@ export interface AnnotationEdgeConfig {
 }
 
 export class AnnotationExtension {
-  extension: ActivityNode;
+  extensionTerm: ActivityNode;
   extensionEdge: Entity;
   extensionEdges: Entity[] = [];
+
+  constructor(extension?: ActivityNode) {
+    if (extension) {
+      this.extensionTerm = extension;
+    } else {
+      this.extensionTerm = ShapeUtils.generateBaseTerm([]);
+      this.extensionTerm.label = 'Extension Term';
+    }
+  }
 }
 
 export class AnnotationEvidence {
@@ -31,11 +40,11 @@ export class AnnotationEvidence {
 
   constructor(evidence?: Evidence) {
 
-    this.evidenceCode = ShapeUtils.generateBaseTerm([EntityDefinition.GoEvidence]);
+    this.evidenceCode = ShapeUtils.generateBaseTerm([]);
     this.reference = ShapeUtils.generateBaseTerm([]);
     this.with = ShapeUtils.generateBaseTerm([]);
 
-
+    this.evidenceCode.category = [EntityDefinition.GoEvidence];
     this.evidenceCode.label = 'Evidence'
     this.reference.label = 'Reference'
     this.with.label = 'With/From'
@@ -76,7 +85,7 @@ export class AnnotationActivity {
     const extensionTriples: Triple<ActivityNode>[] = activity.getEdges(this.goterm.id);
     this.extensions = extensionTriples.map(triple => {
       const extension = new AnnotationExtension();
-      extension.extension = triple.object;
+      extension.extensionTerm = triple.object;
       extension.extensionEdge = triple.predicate.edge;
       return extension;
     });
@@ -104,7 +113,7 @@ export class AnnotationActivity {
         }
       }
     }
-    return null; // Return null if no match is found
+    return null;
   }
 
   createSave() {
@@ -145,11 +154,11 @@ export class AnnotationActivity {
     this.extensions.forEach(ext => {
 
 
-      if (ext.extension?.hasValue()) {
-        const extensionTriple = new Triple(this.goterm, ext.extension,
+      if (ext.extensionTerm?.hasValue()) {
+        const extensionTriple = new Triple(this.goterm, ext.extensionTerm,
           new Predicate(ext.extensionEdge, this.goterm.predicate.evidence));
 
-        saveData.nodes.push(ext.extension);
+        saveData.nodes.push(ext.extensionTerm);
         saveData.triples.push(extensionTriple);
       }
     });
