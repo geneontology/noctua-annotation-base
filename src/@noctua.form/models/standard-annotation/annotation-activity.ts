@@ -195,9 +195,9 @@ export class AnnotationActivity {
 
     const evidence = new Evidence();
 
-    evidence.evidence = new Entity(annotationEvidence.evidenceCode.id, "");
-    evidence.reference = annotationEvidence.reference.id;
-    evidence.with = annotationEvidence.with.id;
+    evidence.evidence = new Entity(annotationEvidence.evidenceCode?.term.id, "");
+    evidence.reference = annotationEvidence.reference?.term.id;
+    evidence.with = annotationEvidence.with?.term.id;
 
     const predicateEntity = Entity.createEntity(edgeConfig);
     const predicate = new Predicate(predicateEntity, [evidence]);
