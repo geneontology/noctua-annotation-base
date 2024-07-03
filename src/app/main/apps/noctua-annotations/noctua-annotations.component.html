@@ -55,8 +55,6 @@
           </noc-cam-form>
           <noc-copy-model [panelDrawer]="leftDrawer" [panelSide]="'left'" *ngSwitchCase="LeftPanel.copyModel">
           </noc-copy-model>
-          <noc-annotation-form [panelDrawer]="leftDrawer" *ngSwitchCase="LeftPanel.activityForm">
-          </noc-annotation-form>
           <noc-find-replace [panelDrawer]="leftDrawer"
             [hidden]="noctuaCommonMenuService.selectedLeftPanel !== LeftPanel.findReplace">
           </noc-find-replace>

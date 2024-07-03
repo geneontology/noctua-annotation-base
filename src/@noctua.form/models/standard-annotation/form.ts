@@ -1,21 +1,22 @@
-import { Evidence } from "../activity/evidence";
+import { Entity } from "../activity/entity";
 import { GOlrResponse } from "../golr";
 
-export interface StandardAnnotationForm {
-  gp: GOlrResponse;
-  isComplement: string;
-  gpToTermEdge: string;
-  goterm: GOlrResponse;
-  annotationExtensions: AnnotationExtensionForm[];
-  evidence: Evidence;
-}
-
 export interface AnnotationExtensionForm {
-  extensionEdge: string;
+  extensionEdge: Entity;
   extensionTerm: GOlrResponse;
 }
+
 export interface AnnotationEvidenceForm {
   evidenceCode: GOlrResponse;
   reference: string;
   withFrom: string;
+}
+
+export interface StandardAnnotationForm {
+  gp: GOlrResponse;
+  isComplement: boolean;
+  gpToTermEdge: Entity;
+  goterm: GOlrResponse;
+  annotationExtensions: AnnotationExtensionForm[];
+  evidence: AnnotationEvidenceForm;
 }

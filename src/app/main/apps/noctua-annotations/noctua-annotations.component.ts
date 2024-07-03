@@ -177,12 +177,6 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
     this.noctuaCommonMenuService.openLeftDrawer();
   }
 
-  openAnnotationForm(activityType: ActivityType) {
-    this.noctuaAnnotationFormService.setActivityType(activityType);
-    this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.activityForm);
-    this.noctuaCommonMenuService.closeRightDrawer();
-    this.noctuaCommonMenuService.openLeftDrawer();
-  }
 
   openCopyModel() {
     this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.copyModel);

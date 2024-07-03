@@ -53,13 +53,13 @@ export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit(): void {
     console.log('metadata', this.metadata)
-    //if (this.metadata?.category) {
-    this.filteredOptions = this.control.valueChanges.pipe(
-      startWith(''),
-      filter(value => value.length > 2),
-      switchMap(value => this.lookupService.search(value, this.metadata.category))
-    );
-    // }
+    if (this.metadata?.category) {
+      this.filteredOptions = this.control.valueChanges.pipe(
+        startWith(''),
+        filter(value => value.length > 2),
+        switchMap(value => this.lookupService.search(value, this.metadata.category))
+      );
+    }
   }
 
   writeValue(value: any): void {

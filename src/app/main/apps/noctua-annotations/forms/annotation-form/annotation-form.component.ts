@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subscription, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import {
   Cam,
   Activity,
@@ -17,6 +17,7 @@ import {
   Entity,
   AnnotationExtension,
   AutocompleteType,
+  ActivityError,
 } from '@geneontology/noctua-form-base';
 import { NoctuaAnnotationsDialogService } from '../../services/dialog.service';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
@@ -37,16 +38,12 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
   @Input() public closeDialog: () => void;
 
-  resizeStyle = {};
-
   cam: Cam;
   annotationFormGroup: FormGroup;
-  //molecularEntity: FormGroup;
   searchCriteria: any = {};
-  annotationFormPresentation: any;
   extensionFormArray: FormArray;
-  annotationFormData: any = [];
   activity: Activity;
+  errors: ActivityError[] = [];
   // currentActivity: Activity;
   // state: ActivityState;
 
@@ -70,6 +67,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.noctuaAnnotationFormService.initializeForm();
     this.dynamicForm = this.fb.group({
       gp: [''],
       isComplement: [''],
@@ -84,25 +82,22 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     });
 
     this.dynamicForm.valueChanges
-      .pipe(takeUntil(this._unsubscribeAll))
+      .pipe(takeUntil(this._unsubscribeAll),
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
       .subscribe({
         next: (value) => {
           // Process the entire form group
-          this.noctuaAnnotationFormService.processAnnotationFormGroup(value);
+          this.noctuaAnnotationFormService.processAnnotationFormGroup(this.dynamicForm, value);
         },
         error: (err) => {
           console.error('Error observing dynamicForm changes:', err);
         }
       });
 
-    this.noctuaAnnotationFormService.annotationFormGroup$
+    this.noctuaAnnotationFormService.onFormErrorsChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(annotationFormGroup => {
-        if (!annotationFormGroup) {
-          return;
-        }
-
-        //this.annotationFormGroup = annotationFormGroup;
+      .subscribe((error: ActivityError[]) => {
+        this.errors = error;
       });
 
     this.noctuaAnnotationFormService.onActivityChanged
@@ -114,6 +109,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         }
         this.activity = activity;
         this.annotationActivity = this.noctuaAnnotationFormService.annotationActivity;
+        this.dynamicForm.updateValueAndValidity();
       });
   }
 
@@ -147,22 +143,18 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
 
   checkErrors() {
-    const errors = [...this.noctuaAnnotationFormService.activity.submitErrors, ...this.noctuaAnnotationFormService.annotationActivity.submitErrors]
-    this.noctuaFormDialogService.openActivityErrorsDialog(errors);
+    this.noctuaFormDialogService.openActivityErrorsDialog(this.errors);
   }
 
   hasErrors() {
-    const hasError = this.noctuaAnnotationFormService.activity.submitErrors.length > 0 ||
-      this.noctuaAnnotationFormService.annotationActivity.submitErrors.length > 0;
-
+    const hasError = this.errors.length > 0;
     return hasError
-
   }
 
   save() {
     const self = this;
 
-    self.noctuaAnnotationFormService.saveAnnotation().subscribe(() => {
+    self.noctuaAnnotationFormService.saveAnnotation(this.dynamicForm).subscribe(() => {
       self.noctuaAnnotationsDialogService.openInfoToast('Annotation successfully created.', 'OK');
       self.noctuaAnnotationFormService.clearForm();
       if (this.closeDialog) {
@@ -171,20 +163,9 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateMenu(entity) {
-
-    // this.noctuaAnnotationFormService.initializeForm(entity.rootTypes);
-  }
-
 
   clear() {
     this.noctuaAnnotationFormService.clearForm();
-  }
-
-  createExample() {
-    const self = this;
-
-    self.noctuaAnnotationFormService.initializeFormData();
   }
 
   termDisplayFn(term): string | undefined {
@@ -214,6 +195,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   deleteExtension(index: number): void {
     this.annotationExtensions.removeAt(index);
     this.annotationActivity.extensions.splice(index, 1);
+    this.dynamicForm.updateValueAndValidity();
   }
 
   onSubmit() {

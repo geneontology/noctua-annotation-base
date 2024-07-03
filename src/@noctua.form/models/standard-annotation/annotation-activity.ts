@@ -7,6 +7,7 @@ import { Predicate } from './../activity/predicate';
 import * as ShapeUtils from './../../data/config/shape-utils';
 import * as EntityDefinition from './../../data/config/entity-definition';
 import { Evidence } from './../activity/evidence';
+import { StandardAnnotationForm } from './form';
 
 
 export interface AnnotationEdgeConfig {
@@ -116,7 +117,25 @@ export class AnnotationActivity {
     return null;
   }
 
-  createSave() {
+  private _populateAnnotationActivity(annotationForm: StandardAnnotationForm) {
+
+    this.gp.term.id = annotationForm.gp.id;
+    this.goterm.term.id = annotationForm.goterm.id;
+    this.gpToTermEdge = annotationForm.gpToTermEdge;
+
+    annotationForm.annotationExtensions.forEach((ext, index) => {
+      this.extensions[index].extensionEdge = ext.extensionEdge;
+      this.extensions[index].extensionTerm.term.id = ext.extensionTerm.id;
+    });
+
+    this.evidence.evidenceCode.term.id = annotationForm.evidence.evidenceCode.id;
+    this.evidence.reference.term.id = annotationForm.evidence.reference;
+    this.evidence.with.term.id = annotationForm.evidence.withFrom;
+  }
+
+  createSave(annotationForm: StandardAnnotationForm) {
+
+    this._populateAnnotationActivity(annotationForm);
     const saveData = {
       title: 'enabled by ' + this.gp?.term.label,
       triples: [],
@@ -138,16 +157,16 @@ export class AnnotationActivity {
       const rootMF = noctuaFormConfig.rootNode.mf;
       mfNode.term = new Entity(rootMF.id, rootMF.label);
 
-      const triple = this._createTriple(mfNode, this.gp, config.gpToTermPredicate, this.goterm.predicate.evidence, config.gpToTermReverse)
+      const triple = this._createTriple(mfNode, this.gp, config.gpToTermPredicate, this.evidence, config.gpToTermReverse)
       saveData.triples.push(triple);
 
       if (config.mfToTermPredicate) {
-        const mfTriple = this._createTriple(mfNode, this.goterm, config.mfToTermPredicate, this.goterm.predicate.evidence)
+        const mfTriple = this._createTriple(mfNode, this.goterm, config.mfToTermPredicate, this.evidence)
         saveData.triples.push(mfTriple);
       }
 
     } else {
-      const triple = this._createTriple(this.gp, this.goterm, config.gpToTermPredicate, this.goterm.predicate.evidence, config.gpToTermReverse)
+      const triple = this._createTriple(this.gp, this.goterm, config.gpToTermPredicate, this.evidence, config.gpToTermReverse)
       saveData.triples.push(triple);
     }
 
@@ -167,42 +186,21 @@ export class AnnotationActivity {
   }
 
 
-  enableSubmit() {
-    let result = true;
-
-    this.submitErrors = [];
-
-    /*     if (!this.extension?.term.id && !this.extensionEdge?.id) { return result }
-    
-        if (!this.extension?.term.id) {
-          const meta = {
-            aspect: 'Extension'
-          };
-          const error = new ActivityError(ErrorLevel.error, ErrorType.general, `is required`, meta);
-          this.submitErrors.push(error);
-        }
-    
-        if (!this.extensionEdge?.id) {
-          const meta = {
-            aspect: 'Extension Relation'
-          };
-          const error = new ActivityError(ErrorLevel.error, ErrorType.general, `is required`, meta);
-          this.submitErrors.push(error);
-        } */
-
-    return result;
-  }
-
-
-  private _createTriple(subjectNode: ActivityNode, objectNode: ActivityNode, predicateId, evidence: Evidence[], reverse = false) {
+  private _createTriple(subjectNode: ActivityNode, objectNode: ActivityNode, predicateId: string, annotationEvidence: AnnotationEvidence, reverse = false) {
     const edgeConfig = noctuaFormConfig.allEdges.find(edge => edge.id === predicateId);
 
     if (!edgeConfig) {
       throw new Error(`Edge configuration not found for predicate ID: ${predicateId}`);
     }
 
+    const evidence = new Evidence();
+
+    evidence.evidence = new Entity(annotationEvidence.evidenceCode.id, "");
+    evidence.reference = annotationEvidence.reference.id;
+    evidence.with = annotationEvidence.with.id;
+
     const predicateEntity = Entity.createEntity(edgeConfig);
-    const predicate = new Predicate(predicateEntity, evidence);
+    const predicate = new Predicate(predicateEntity, [evidence]);
 
     return reverse
       ? new Triple(objectNode, subjectNode, predicate)
