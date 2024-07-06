@@ -1,6 +1,6 @@
 <div class="p-4" fxFlex="flex" fxLayout="row" fxLayoutAlign="start stretch">
   <mat-form-field class="noc-sm w-100-p" appearance="outline" [attr.data-cy]="'form-input-' + control">
-    <mat-label>{{metadata?.label}}</mat-label>
+    <mat-label>{{label}}</mat-label>
     <textarea type="text" matInput [formControl]="control" [matAutocomplete]="termAuto" row="2"
       (focus)="updateReferenceList()">
     </textarea>

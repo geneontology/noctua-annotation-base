@@ -9,8 +9,8 @@
     <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
 
-        <noc-term-autocomplete fxFlex="35" class="" formControlName="gp" [metadata]="annotationActivity?.gp"
-          solrField="gp"></noc-term-autocomplete>
+        <noc-term-autocomplete fxFlex="35" class="" formControlName="gp" [label]="annotationActivity?.gp.label"
+          [category]="annotationActivity?.gp.category" solrField="gp"></noc-term-autocomplete>
         <div class="p-4 noc-go-term-box" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
           <mat-checkbox class="noc-qualifier-cbx" formControlName="isComplement">NOT</mat-checkbox>
           <mat-form-field appearance="outline" class="noc-sm w-100-p" [attr.data-cy]="'form-input-gpterm-relation'">
@@ -42,19 +42,21 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <noc-term-autocomplete fxFlex="35" class="" formControlName="goterm" [metadata]="annotationActivity?.goterm"
+        <noc-term-autocomplete fxFlex="35" class="" formControlName="goterm" [label]="annotationActivity?.goterm.label"
           [category]="annotationActivity?.goterm.category" solrField="goterm"></noc-term-autocomplete>
       </div>
 
       <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
         <div formGroupName="evidence">
           <noc-term-autocomplete fxFlex="" class="" formControlName="evidenceCode"
-            [metadata]="annotationActivity?.evidence?.evidenceCode" solrField="evidenceCode"></noc-term-autocomplete>
+            [label]="annotationActivity?.evidence?.evidenceCode.label"
+            [category]="annotationActivity?.evidence?.evidenceCode.category"
+            solrField="evidenceCode"></noc-term-autocomplete>
           <noc-term-autocomplete fxFlex="35" class="" formControlName="reference"
-            [autocompleteType]="AutocompleteType.REFERENCE" [metadata]="annotationActivity?.evidence?.reference"
+            [autocompleteType]="AutocompleteType.REFERENCE" [label]="annotationActivity?.evidence?.reference.label"
             solrField="reference"></noc-term-autocomplete>
           <noc-term-autocomplete fxFlex="35" class="" formControlName="withFrom"
-            [metadata]="annotationActivity?.evidence?.with" solrField="withFrom"></noc-term-autocomplete>
+            [label]="annotationActivity?.evidence?.with.label" solrField="withFrom"></noc-term-autocomplete>
         </div>
       </div>
       <div class="noc-section-header pr-8" fxLayout="row" fxLayoutAlign="start center">
@@ -102,7 +104,7 @@
             </mat-form-field>
           </div>
           <noc-term-autocomplete fxFlex="50" class="" formControlName="extensionTerm"
-            [metadata]="annotationActivity?.extensions[i]?.extensionTerm"
+            [label]="annotationActivity?.extensions[i]?.extensionTerm.label"
             [category]="annotationActivity?.extensions[i]?.extensionTerm?.category"
             solrField="extensionTerm"></noc-term-autocomplete>
           <button mat-icon-button (click)="deleteExtension(i)" class="text-warn">

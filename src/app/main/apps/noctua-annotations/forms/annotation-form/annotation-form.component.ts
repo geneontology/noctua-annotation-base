@@ -89,6 +89,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         next: (value) => {
           // Process the entire form group
           this.noctuaAnnotationFormService.processAnnotationFormGroup(this.dynamicForm, value);
+
         },
         error: (err) => {
           console.error('Error observing dynamicForm changes:', err);
@@ -108,7 +109,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         if (!activity) {
           return;
         }
-        this.dynamicForm.updateValueAndValidity();
+        // this.dynamicForm.updateValueAndValidity();
         this.activity = activity;
         this.annotationActivity = { ...this.noctuaAnnotationFormService.annotationActivity } as AnnotationActivity;
 

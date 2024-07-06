@@ -85,7 +85,6 @@ export class NoctuaLookupService {
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
       map(response => {
         const result = this._lookupMap(response);
-        console.log('Term Lookup Result:', result);
         return result;
       }),
       catchError(err => {
@@ -492,8 +491,6 @@ export class NoctuaLookupService {
         notAnnotatable: !item.subset?.includes('gocheck_do_not_annotate')
       } as GOlrResponse;
     });
-
-    console.log('lookupMap', result);
 
     return result;
   }

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, SimpleChanges, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, FormControl, FormsModule, ReactiveFormsModule, ControlValueAccessor, FormGroup } from '@angular/forms';
-import { ActivityNode, AutocompleteType, GOlrResponse, GoCategory, NoctuaLookupService } from '@geneontology/noctua-form-base';
-import { Observable, Subject, Subscription, catchError, filter, of, startWith, switchMap, takeUntil } from 'rxjs';
+import { ActivityNode, AutocompleteType, GOlrResponse, GoCategory, NoctuaFormUtils, NoctuaLookupService } from '@geneontology/noctua-form-base';
+import { Observable, Subject, Subscription, catchError, debounceTime, filter, of, startWith, switchMap, takeUntil } from 'rxjs';
 /* import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
@@ -35,7 +35,7 @@ import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-r
 export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   AutocompleteType = AutocompleteType;
-  @Input() metadata: ActivityNode;
+  @Input() label: string;
   @Input() category: GoCategory[] = [];
   @Input() solrField: string;
   @Input() autocompleteType: string = AutocompleteType.TERM;
@@ -62,8 +62,13 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['category'] && !changes['category'].firstChange) {
-      console.log('Category changed:', changes['category'].currentValue);
-      this.subscribeToValueChanges();
+      const previousCategory = changes['category'].previousValue;
+      const currentCategory = changes['category'].currentValue;
+
+      if (!NoctuaFormUtils.areArraysEqualByKey(previousCategory, currentCategory, 'id')) {
+        console.log(`Category changed from ${previousCategory} to ${currentCategory}`);
+        this.subscribeToValueChanges();
+      }
     }
   }
 
@@ -74,59 +79,34 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
       this.valueChangesSubscription.unsubscribe();
     }
 
-    this.filteredOptions = this.control.valueChanges.pipe(
-      startWith(''),
-      filter(value => {
-        console.log('Filter value:', value);
-        return value && value.length > 2;
-      }),
-      switchMap(value => {
-        console.log('SwitchMap value:', value);
-        return this.lookupService.search(value, this.category).pipe(
-          catchError(err => {
-            console.error('Error in search:', err);
-            return of([]);
-          })
-        );
-      })
-    );
-
-    this.valueChangesSubscription = this.filteredOptions.subscribe(data => {
-      console.log('Filtered options:', data);
-    });
-  }
-
-
-  initFilteredOptions(): void {
-    console.log('metadata', this.metadata);
-    console.log('category', this.category);
-
-    if (this.category) {
-      if (this.valueChangesSubscription) {
-        this.valueChangesSubscription.unsubscribe();
-      }
+    if (this.category && this.category.length > 0) {
 
       this.filteredOptions = this.control.valueChanges.pipe(
+        takeUntil(this._unsubscribeAll),
+        debounceTime(300),
         startWith(''),
-        filter(value => value && value.length > 2),
+        filter(value => {
+          console.log('Filter value:', value);
+          return value && value.length > 2;
+        }),
         switchMap(value => {
-          console.log('Searching with value:', value);
+          console.log('SwitchMap value:', value);
           return this.lookupService.search(value, this.category).pipe(
             catchError(err => {
               console.error('Error in search:', err);
-              return of([]); // Return an empty array on error
+              return of([]);
             })
           );
-        }),
-        catchError(err => {
-          console.error('Error in filteredOptions pipeline:', err);
-          return of([]); // Return an empty array on error
         })
       );
 
-      this.valueChangesSubscription = this.filteredOptions.subscribe();
+      this.valueChangesSubscription = this.filteredOptions.subscribe(data => {
+        console.log('Filtered options:', data);
+      });
     }
   }
+
+
 
   writeValue(value: any): void {
     this.control.setValue(value);

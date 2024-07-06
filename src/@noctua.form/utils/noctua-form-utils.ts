@@ -53,4 +53,14 @@ export class NoctuaFormUtils {
         const arr = str.split(delim);
         return [...arr.splice(0, count), arr.join(delim)];
     }
+
+    public static areArraysEqualByKey(a: any[], b: any[], key: string): boolean {
+        if (!a || !b) {
+            return false;
+        }
+        if (a.length !== b.length) {
+            return false;
+        }
+        return a.every((item, index) => item[key] === b[index][key]);
+    }
 }
