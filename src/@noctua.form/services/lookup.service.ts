@@ -1,7 +1,7 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each, uniqWith, difference } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
@@ -11,7 +11,7 @@ import { ActivityNode, ActivityNodeType, GoCategory } from './../models/activity
 import { Entity } from './../models/activity/entity';
 import { Predicate } from './../models/activity/predicate';
 import { NoctuaUserService } from './user.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import * as EntityDefinition from './../data/config/entity-definition';
 import * as ShapeUtils from './../data/config/shape-utils';
@@ -27,9 +27,6 @@ const impl_engine = require('bbop-rest-manager').jquery;
 const golr_response = require('bbop-response-golr');
 const engine = new impl_engine(golr_response);
 engine.use_jsonp(true)
-
-
-
 
 @Injectable({
   providedIn: 'root'
@@ -75,9 +72,7 @@ export class NoctuaLookupService {
 
     const reqs = ShapeUtils.getTermLookup(categories);
     return this.termLookup(searchText, reqs.requestParams);
-
   }
-
 
   termLookup(searchText, requestParams) {
     const self = this;
@@ -88,7 +83,15 @@ export class NoctuaLookupService {
     const url = this.golrURLBase + params.toString();
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
-      map(response => self._lookupMap(response))
+      map(response => {
+        const result = this._lookupMap(response);
+        console.log('Term Lookup Result:', result);
+        return result;
+      }),
+      catchError(err => {
+        console.error('Term Lookup Error:', err);
+        return of([]);
+      })
     );
   }
 
@@ -489,6 +492,8 @@ export class NoctuaLookupService {
         notAnnotatable: !item.subset?.includes('gocheck_do_not_annotate')
       } as GOlrResponse;
     });
+
+    console.log('lookupMap', result);
 
     return result;
   }

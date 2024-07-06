@@ -98,6 +98,8 @@ export class NoctuaAnnotationFormService {
 
         if (extensionObjects.length > 0) {
           this.annotationActivity.extensions[index].extensionTerm.category = extensionObjects;
+
+          // this.annotationActivity.extensions[index].extensionTerm.category = extensionObjects;
           //this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
         }
       });
@@ -123,6 +125,8 @@ export class NoctuaAnnotationFormService {
 
     this.errors = this.getActivityFormErrors(annotationData);
     this.onFormErrorsChanged.next(this.errors);
+
+    this.onActivityChanged.next(this.activity);
   }
 
   getActivityFormErrors(annotationData: StandardAnnotationForm) {

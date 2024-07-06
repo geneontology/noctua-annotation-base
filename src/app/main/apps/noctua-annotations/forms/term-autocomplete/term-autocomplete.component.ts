@@ -1,7 +1,7 @@
-import { Component, Input, OnInit, forwardRef } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, SimpleChanges, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, FormControl, FormsModule, ReactiveFormsModule, ControlValueAccessor, FormGroup } from '@angular/forms';
-import { ActivityNode, AutocompleteType, GOlrResponse, NoctuaLookupService } from '@geneontology/noctua-form-base';
-import { Observable, filter, startWith, switchMap } from 'rxjs';
+import { ActivityNode, AutocompleteType, GOlrResponse, GoCategory, NoctuaLookupService } from '@geneontology/noctua-form-base';
+import { Observable, Subject, Subscription, catchError, filter, of, startWith, switchMap, takeUntil } from 'rxjs';
 /* import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
@@ -32,15 +32,18 @@ import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-r
     }
   ]
 })
-export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
+export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   AutocompleteType = AutocompleteType;
   @Input() metadata: ActivityNode;
+  @Input() category: GoCategory[] = [];
   @Input() solrField: string;
   @Input() autocompleteType: string = AutocompleteType.TERM;
 
   control = new FormControl();
   options: string[] = [];
+  private valueChangesSubscription: Subscription;
+  private _unsubscribeAll: Subject<any>;
   filteredOptions: Observable<GOlrResponse[]>;
 
   private onChange: (value: any) => void;
@@ -49,16 +52,79 @@ export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
   constructor(private lookupService: NoctuaLookupService,
     private inlineReferenceService: InlineReferenceService,
 
-  ) { }
+  ) {
+    this._unsubscribeAll = new Subject();
+  }
 
   ngOnInit(): void {
-    console.log('metadata', this.metadata)
-    if (this.metadata?.category) {
+    this.subscribeToValueChanges();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['category'] && !changes['category'].firstChange) {
+      console.log('Category changed:', changes['category'].currentValue);
+      this.subscribeToValueChanges();
+    }
+  }
+
+  subscribeToValueChanges(): void {
+    console.log('Subscribing to value changes with category:', this.category);
+
+    if (this.valueChangesSubscription) {
+      this.valueChangesSubscription.unsubscribe();
+    }
+
+    this.filteredOptions = this.control.valueChanges.pipe(
+      startWith(''),
+      filter(value => {
+        console.log('Filter value:', value);
+        return value && value.length > 2;
+      }),
+      switchMap(value => {
+        console.log('SwitchMap value:', value);
+        return this.lookupService.search(value, this.category).pipe(
+          catchError(err => {
+            console.error('Error in search:', err);
+            return of([]);
+          })
+        );
+      })
+    );
+
+    this.valueChangesSubscription = this.filteredOptions.subscribe(data => {
+      console.log('Filtered options:', data);
+    });
+  }
+
+
+  initFilteredOptions(): void {
+    console.log('metadata', this.metadata);
+    console.log('category', this.category);
+
+    if (this.category) {
+      if (this.valueChangesSubscription) {
+        this.valueChangesSubscription.unsubscribe();
+      }
+
       this.filteredOptions = this.control.valueChanges.pipe(
         startWith(''),
-        filter(value => value.length > 2),
-        switchMap(value => this.lookupService.search(value, this.metadata.category))
+        filter(value => value && value.length > 2),
+        switchMap(value => {
+          console.log('Searching with value:', value);
+          return this.lookupService.search(value, this.category).pipe(
+            catchError(err => {
+              console.error('Error in search:', err);
+              return of([]); // Return an empty array on error
+            })
+          );
+        }),
+        catchError(err => {
+          console.error('Error in filteredOptions pipeline:', err);
+          return of([]); // Return an empty array on error
+        })
       );
+
+      this.valueChangesSubscription = this.filteredOptions.subscribe();
     }
   }
 
@@ -101,5 +167,13 @@ export class TermAutocompleteComponent implements OnInit, ControlValueAccessor {
 
   compareFn(o1: any, o2: any): boolean {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
+  ngOnDestroy(): void {
+    if (this.valueChangesSubscription) {
+      this.valueChangesSubscription.unsubscribe();
+    }
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
   }
 }

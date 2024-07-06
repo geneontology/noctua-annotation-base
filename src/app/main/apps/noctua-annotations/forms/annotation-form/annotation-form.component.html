@@ -43,7 +43,7 @@
           </mat-form-field>
         </div>
         <noc-term-autocomplete fxFlex="35" class="" formControlName="goterm" [metadata]="annotationActivity?.goterm"
-          solrField="goterm"></noc-term-autocomplete>
+          [category]="annotationActivity?.goterm.category" solrField="goterm"></noc-term-autocomplete>
       </div>
 
       <div class="noc-section-body p-0" fxLayout="row" fxLayoutAlign="start center">
@@ -76,7 +76,7 @@
               <mat-label>Extension Relation</mat-label>
               <mat-select panelClass="noc-term-autocomplete" placeholder="" formControlName="extensionEdge"
                 [compareWith]="compareFn">
-                @for (item of annotationActivity?.extensions[i].extensionEdges; track item) {
+                @for (item of annotationActivity?.extensions[i]?.extensionEdges; track item) {
                 <mat-option [value]="item">
                   <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                     <div class="noc-term-label">
@@ -102,7 +102,8 @@
             </mat-form-field>
           </div>
           <noc-term-autocomplete fxFlex="50" class="" formControlName="extensionTerm"
-            [metadata]="annotationActivity?.extensions[i].extensionTerm"
+            [metadata]="annotationActivity?.extensions[i]?.extensionTerm"
+            [category]="annotationActivity?.extensions[i]?.extensionTerm?.category"
             solrField="extensionTerm"></noc-term-autocomplete>
           <button mat-icon-button (click)="deleteExtension(i)" class="text-warn">
             <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>

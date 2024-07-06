@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subscription, Subject } from 'rxjs';
@@ -61,6 +61,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotationFormService: NoctuaAnnotationFormService,
+    private cdr: ChangeDetectorRef,
     private fb: FormBuilder
   ) {
     this._unsubscribeAll = new Subject();
@@ -107,9 +108,11 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         if (!activity) {
           return;
         }
-        this.activity = activity;
-        this.annotationActivity = this.noctuaAnnotationFormService.annotationActivity;
         this.dynamicForm.updateValueAndValidity();
+        this.activity = activity;
+        this.annotationActivity = { ...this.noctuaAnnotationFormService.annotationActivity } as AnnotationActivity;
+
+        this.cdr.markForCheck()
       });
   }
 
@@ -154,13 +157,15 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   save() {
     const self = this;
 
-    self.noctuaAnnotationFormService.saveAnnotation(this.dynamicForm).subscribe(() => {
-      self.noctuaAnnotationsDialogService.openInfoToast('Annotation successfully created.', 'OK');
-      self.noctuaAnnotationFormService.clearForm();
-      if (this.closeDialog) {
-        this.closeDialog();
-      }
-    });
+    self.noctuaAnnotationFormService.saveAnnotation(this.dynamicForm)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(() => {
+        self.noctuaAnnotationsDialogService.openInfoToast('Annotation successfully created.', 'OK');
+        self.noctuaAnnotationFormService.clearForm();
+        if (this.closeDialog) {
+          this.closeDialog();
+        }
+      });
   }
 
 
