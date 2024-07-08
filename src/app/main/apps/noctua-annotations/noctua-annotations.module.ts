@@ -29,8 +29,6 @@ import { NoctuaAnnotationsComponent } from './noctua-annotations.component';
 import { NoctuaSearchBaseModule } from '@noctua.search';
 import { NoctuaFormModule } from '../noctua-form/noctua-form.module';
 import { AnnotationFormComponent } from './forms/annotation-form/annotation-form.component';
-import { AnnotationEntityFormComponent } from './forms/annotation-form/entity-form/entity-form.component';
-import { AnnotationEvidenceFormComponent } from './forms/annotation-form/evidence-form/evidence-form.component';
 import { AnnotationTableComponent } from './table/annotation-table.component';
 import { AnnotationNodeComponent } from './table/annotation-node/annotation-node.component';
 import { TermAutocompleteComponent } from './forms/term-autocomplete/term-autocomplete.component';
@@ -83,8 +81,6 @@ const routes = [
   ],
   declarations: [
     NoctuaAnnotationsComponent,
-    AnnotationEntityFormComponent,
-    AnnotationEvidenceFormComponent,
     AnnotationFormComponent,
     AnnotationTableComponent,
     AnnotationNodeComponent,
