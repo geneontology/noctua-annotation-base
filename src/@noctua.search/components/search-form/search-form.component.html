@@ -2,7 +2,7 @@
   class="noc-drawer h-100-p">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-drawer-header-title">
-    Search</span>
+      Search</span>
     <span fxFlex></span>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
       aria-label="Close dialog">
@@ -11,25 +11,24 @@
   </div>
   <div class="noc-drawer-body noc-filter-form">
     <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
-      <div class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-body pt-1" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="noc-activity-group-row" fxLayout="column">
           <mat-form-field appearance="outline" class="noc-sm">
             <mat-label>Term</mat-label>
             <textarea type="text" matInput formControlName="term" [matAutocomplete]="termAuto" rows="2"></textarea>
             <mat-autocomplete #termAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
               @for (item of searchFormData['term']?.searchResults; track item) {
-                <mat-option class="noc-term-autocomplete"
-                  [value]="item">
-                  <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                    <div class="noc-term-label">
-                      {{ item.label }}
-                    </div>
-                    <span fxFlex></span>
-                    <div class="noc-term-id">
-                      {{ item.id }}
-                    </div>
+              <mat-option class="noc-term-autocomplete" [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.label }}
                   </div>
-                </mat-option>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    {{ item.id }}
+                  </div>
+                </div>
+              </mat-option>
               }
             </mat-autocomplete>
           </mat-form-field>
@@ -38,18 +37,17 @@
             <textarea type="text" matInput formControlName="gp" [matAutocomplete]="gpAuto" rows="2"></textarea>
             <mat-autocomplete #gpAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
               @for (item of searchFormData['gp']?.searchResults; track item) {
-                <mat-option class="noc-term-autocomplete"
-                  [value]="item">
-                  <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                    <div class="noc-term-label">
-                      {{ item.label }}
-                    </div>
-                    <span fxFlex></span>
-                    <div class="noc-term-id">
-                      {{ item.id }}
-                    </div>
+              <mat-option class="noc-term-autocomplete" [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.label }}
                   </div>
-                </mat-option>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    {{ item.id }}
+                  </div>
+                </div>
+              </mat-option>
               }
             </mat-autocomplete>
           </mat-form-field>
@@ -67,7 +65,7 @@
         </div>
         <span fxFlex></span>
       </div>
-      <div class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-body pt-1" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="ph-15 noc-activity-group-row" fxLayout="column">
           <mat-form-field appearance="outline" class="noc-sm">
             <input type="text" matInput formControlName="title" placeholder="Title" />
@@ -82,58 +80,57 @@
         </div>
         <span fxFlex></span>
       </div>
-      <div class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-body pt-1" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="ph-15 noc-activity-group-row" fxLayout="column">
           <mat-form-field appearance="outline" class="noc-sm">
             <input type="text" matInput formControlName="contributor" placeholder="Contributor"
               [matAutocomplete]="contributorAuto" />
-              <mat-autocomplete #contributorAuto="matAutocomplete" [displayWith]="contributorDisplayFn"
-                class="noc-term-autocomplete">
-                @for (item of filteredContributors | async; track item) {
-                  <mat-option class="noc-term-autocomplete"
-                    [value]="item">
-                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                      <div class="noc-term-label">
-                        {{ item.name }}
-                      </div>
-                      <span fxFlex></span>
-                      <div class="noc-term-id">
-                        {{ item.orcid }}
-                      </div>
-                    </div>
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="noc-sm">
-              <input type="text" matInput formControlName="group" placeholder="Group" [matAutocomplete]="groupAuto" />
-              <mat-autocomplete #groupAuto="matAutocomplete" class="noc-term-autocomplete" [displayWith]="groupDisplayFn">
-                @for (item of filteredGroups | async; track item) {
-                  <mat-option [value]="item">
-                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-                      <div class="noc-term-label">
-                        {{ item.name }}
-                      </div>
-                      <span fxFlex></span>
-                      <div class="noc-term-id">
-                        {{ item.url }}
-                      </div>
-                    </div>
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
+            <mat-autocomplete #contributorAuto="matAutocomplete" [displayWith]="contributorDisplayFn"
+              class="noc-term-autocomplete">
+              @for (item of filteredContributors | async; track item) {
+              <mat-option class="noc-term-autocomplete" [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.name }}
+                  </div>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    {{ item.orcid }}
+                  </div>
+                </div>
+              </mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="noc-sm">
+            <input type="text" matInput formControlName="group" placeholder="Group" [matAutocomplete]="groupAuto" />
+            <mat-autocomplete #groupAuto="matAutocomplete" class="noc-term-autocomplete" [displayWith]="groupDisplayFn">
+              @for (item of filteredGroups | async; track item) {
+              <mat-option [value]="item">
+                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                  <div class="noc-term-label">
+                    {{ item.name }}
+                  </div>
+                  <span fxFlex></span>
+                  <div class="noc-term-id">
+                    {{ item.url }}
+                  </div>
+                </div>
+              </mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
       </div>
-      <!--   <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
+    </div>
+    <!--   <div class="noc-table-form noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
       <div class="noc-section-header" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
           Species
         </div>
         <span fxFlex></span>
       </div>
-      <div class="noc-section-body pt-8" fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="noc-section-body pt-1" fxLayout="column" fxLayoutAlign="start stretch">
         <div class="ph-15 noc-activity-group-row" fxLayout="column">
           <mat-form-field appearance="outline" class="noc-sm">
             <mat-label>Organisms</mat-label>
@@ -159,9 +156,9 @@
   </div>
   <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
     @if (false) {
-      <button (click)='cancel()' type="button" mat-raised-button color="" class="mr-8">
-        Why is the "Search" button disabled?
-      </button>
+    <button (click)='cancel()' type="button" mat-raised-button color="" class="mr-8">
+      Why is the "Search" button disabled?
+    </button>
     }
     <span fxFlex></span>
     <button (click)='clear()' type="button" mat-raised-button color="" class="mr-8">Clear</button>

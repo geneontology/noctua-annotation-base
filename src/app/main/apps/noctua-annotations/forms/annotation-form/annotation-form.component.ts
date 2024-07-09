@@ -109,7 +109,6 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         if (!activity) {
           return;
         }
-        // this.dynamicForm.updateValueAndValidity();
         this.activity = activity;
         this.annotationActivity = { ...this.noctuaAnnotationFormService.annotationActivity } as AnnotationActivity;
 
@@ -117,16 +116,13 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       });
   }
 
-
   addMFRootTerm() {
     this._addRootTerm(noctuaFormConfig.rootNode.mf);
 
     console.log(this.annotationFormGroup)
   }
 
-
   private _addRootTerm(rootTerm) {
-    const self = this;
 
     if (rootTerm) {
       this.noctuaAnnotationFormService.annotationActivity.goterm.term = new Entity(rootTerm.id, rootTerm.label);
@@ -182,20 +178,18 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 
-
   get annotationExtensions() {
     return this.dynamicForm.get('annotationExtensions') as FormArray;
   }
 
   addExtension() {
+    const annotationExtension = new AnnotationExtension();
+    this.annotationActivity.extensions.push(annotationExtension);
     this.annotationExtensions.push(this.fb.group({
       extensionEdge: [''],
       extensionTerm: ['']
     }));
-    const annotationExtension = new AnnotationExtension();
-    this.annotationActivity.extensions.push(annotationExtension);
 
-    this.dynamicForm.updateValueAndValidity();
   }
 
   deleteExtension(index: number): void {

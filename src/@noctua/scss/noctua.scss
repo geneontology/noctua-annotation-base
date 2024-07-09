@@ -197,8 +197,17 @@ textarea {
   resize: none !important;
   overflow: hidden;
 }
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: $noc-primary-color !important;
+}
 
+// mat-label focused style
+.mat-form-field.mat-focused .mat-form-field-label {
+  color: $noc-primary-color !important;
+}
 .mat-form-field {
+  //mat-input focused color
+
   .mat-form-field-wrapper {
     padding-bottom: 0;
   }
@@ -210,6 +219,11 @@ textarea {
   &.noc-sm {
     .mat-form-field-wrapper {
       font-size: 12px;
+    }
+
+    .mat-select {
+      height: 26px;
+      line-height: 26px;
     }
 
     textarea {
