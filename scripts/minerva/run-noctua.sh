@@ -32,13 +32,19 @@ GITHUB_API="api.github.com"
 GITHUB_ORG="geneontology"
 GITHUB_REPO="noctua-models"
 
-# Convert arrays to strings
-WORKBENCH_DIRS_STR=$(IFS=, ; echo "${WORKBENCH_DIRS[*]}")
-COLLAPSIBLE_RELATIONS_STR=$(IFS=, ; echo "${COLLAPSIBLE_RELATIONS[*]}")
-COLLAPSIBLE_REVERSE_RELATIONS_STR=$(IFS=, ; echo "${COLLAPSIBLE_REVERSE_RELATIONS[*]}")
+# Convert workbench directories to a single string
+WORKBENCH_DIRS_STR=$(printf " %s" "${WORKBENCH_DIRS[@]}")
+WORKBENCH_DIRS_STR=${WORKBENCH_DIRS_STR:1}  # Remove leading space
 
-cd ../tmp-models
+# Convert collapsible relations to a single string
+COLLAPSIBLE_RELATIONS_STR=$(printf " %s" "${COLLAPSIBLE_RELATIONS[@]}")
+COLLAPSIBLE_RELATIONS_STR=${COLLAPSIBLE_RELATIONS_STR:1}  # Remove leading space
 
+# Convert collapsible reverse relations to a single string
+COLLAPSIBLE_REVERSE_RELATIONS_STR=$(printf " %s" "${COLLAPSIBLE_REVERSE_RELATIONS[@]}")
+COLLAPSIBLE_REVERSE_RELATIONS_STR=${COLLAPSIBLE_REVERSE_RELATIONS_STR:1}  # Remove leading space
+
+cd ../noctua
 # Build the command
 CMD=(
   "node noctua.js"
@@ -52,18 +58,22 @@ CMD=(
   "--workbenches \"${WORKBENCH_DIRS_STR}\""
 )
 
+# Add collapsible relations
 if [ -n "${COLLAPSIBLE_RELATIONS_STR}" ]; then
   CMD+=("--collapsible-relations \"${COLLAPSIBLE_RELATIONS_STR}\"")
 fi
 
+# Add collapsible reverse relations
 if [ -n "${COLLAPSIBLE_REVERSE_RELATIONS_STR}" ]; then
   CMD+=("--collapsible-reverse-relations \"${COLLAPSIBLE_REVERSE_RELATIONS_STR}\"")
 fi
 
+# Add external browser location
 if [ -n "${EXTERNAL_BROWSER_LOCATION}" ]; then
   CMD+=("--external-browser-location \"${EXTERNAL_BROWSER_LOCATION}\"")
 fi
 
+# Add GitHub settings if enabled
 if [ "${USE_GITHUB}" = true ]; then
   CMD+=("--github-api ${GITHUB_API}")
   CMD+=("--github-org ${GITHUB_ORG}")
