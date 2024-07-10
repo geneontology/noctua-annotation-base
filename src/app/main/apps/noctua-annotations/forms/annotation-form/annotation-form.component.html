@@ -116,7 +116,7 @@
         </div>
       </div>
 
-      <button mat-stroked-button (click)="addExtension()" type="submit" class="noc-xs noc-rounded-button"
+      <button mat-stroked-button (click)="addExtension()" type="submit" class="noc-xs w-[150px] noc-rounded-button"
         color="primary">
         Add @if(annotationActivity?.extensions.length>1) {<span>Another</span>}Extension
       </button>
@@ -128,7 +128,7 @@
         }
         <span fxFlex></span>
         <button (click)='clear()' type="button" mat-stroked-button color="" class="mr-8">Clear</button>
-        <button [disabled]="hasErrors()" (click)="save()" type="submit" class="" mat-stroked-button color="primary"
+        <button [disabled]="hasErrors()" (click)="save()" type="submit" class="mr-2" mat-stroked-button color="primary"
           [attr.data-cy]="'save-annotation-button'">Save</button>
       </div>
     </div>

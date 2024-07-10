@@ -140,7 +140,6 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
 
       });
 
-
   }
 
   ngOnDestroy(): void {

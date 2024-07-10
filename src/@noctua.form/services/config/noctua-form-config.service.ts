@@ -400,20 +400,22 @@ export class NoctuaFormConfigService {
 
   private _getAnnotationExtensions(activity: Activity, annotationActivity: AnnotationActivity) {
 
-    const edges = activity.getEdges(annotationActivity.goterm.id)
+    const triples = activity.getEdges(annotationActivity.goterm.id)
 
-    edges.forEach((edge) => {
+    console.log('triples', triples)
 
-      const allowedPredicate = this.getTermRelations(edge.subject.rootTypes, edge.object.rootTypes)
+    triples.forEach((triple) => {
+
+      const allowedPredicate = this.getTermRelations(triple.subject.rootTypes, triple.object.rootTypes)
 
       const isAllowedPredicate = allowedPredicate.some((predicate) => {
-        return predicate.id === edge.predicate.edge.id
+        return predicate.id === triple.predicate.edge.id
       });
 
       if (isAllowedPredicate) {
         const annotationExtension = new AnnotationExtension();
-        annotationExtension.extensionEdge = edge.predicate.edge;
-        annotationExtension.extensionTerm = edge.object;
+        annotationExtension.extensionEdge = triple.predicate.edge;
+        annotationExtension.extensionTerm = triple.object;
         annotationActivity.extensions.push(annotationExtension);
       }
     });

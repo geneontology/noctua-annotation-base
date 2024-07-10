@@ -82,6 +82,8 @@ export class AnnotationActivity {
     this.goterm = activity.getNode('goterm');
     this.evidence = new AnnotationEvidence();
 
+    console.log('activity', activity);
+
 
     const extensionTriples: Triple<ActivityNode>[] = activity.getEdges(this.goterm.id);
     this.extensions = extensionTriples.map(triple => {

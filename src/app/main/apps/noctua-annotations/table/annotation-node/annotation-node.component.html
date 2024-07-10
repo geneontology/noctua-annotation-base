@@ -80,43 +80,43 @@
         [entity]="annotationActivity.gp">
       </noc-evidence-table>
     </div>
-    <div class="noc-annotation-extension-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch"
-      fxFlex="">
+    <div class="noc-annotation-extension-cell noc-entity-cell" fxFlex="">
+      <ul class="w-full" fxLayout="column" fxLayoutAlign="start stretch">
 
-      @for(extension of annotationActivity.extensions; track extension) {
-
-      <div class="w-full" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
-        [attr.id]="extension.extensionTerm?.term?.displayId"
-        [ngClass]="{'noc-highlight-match': extension.extensionTerm?.term?.highlight,
+        @for(extension of annotationActivity.extensions; track extension) {
+        <li class="w-full border-b-2" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
+          [attr.id]="extension.extensionTerm?.term?.displayId"
+          [ngClass]="{'noc-highlight-match': extension.extensionTerm?.term?.highlight,
         'noc-highlight-modified': extension.extensionTerm?.term?.modified,
         'noc-highlight-match-current': camService.currentMatch?.uuid && extension.extensionTerm?.term?.uuid===camService.currentMatch?.uuid}">
-        <!--   <button mat-icon-button *ngIf="annotationActivity.extension.canDelete" (click)="deleteEntity(entity)" class="noc-delete-button">
+          <!--   <button mat-icon-button *ngIf="annotationActivity.extension.canDelete" (click)="deleteEntity(entity)" class="noc-delete-button">
     <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
   </button> -->
-        <span>{{extension.extensionEdge?.label}}</span>
-        @if (extension.extensionTerm?.term?.modified && extension.extensionTerm?.term?.termHistory?.length>0)
-        {
-        <span class="noc-old-term">
-          {{extension.extensionTerm?.term?.termHistory[0]?.label}}
-          <a (click)="$event.stopPropagation()" href="{{extension.extensionTerm?.term?.termHistory[0]?.url}}"
-            target="_blank">
-            {{ extension.extensionTerm?.term?.termHistory[0]?.id }}
-          </a>
-        </span>
+          <span class="italic font">{{extension.extensionEdge?.label}}</span>
+          @if (extension.extensionTerm?.term?.modified && extension.extensionTerm?.term?.termHistory?.length>0)
+          {
+          <span class="noc-old-term">
+            {{extension.extensionTerm?.term?.termHistory[0]?.label}}
+            <a (click)="$event.stopPropagation()" href="{{extension.extensionTerm?.term?.termHistory[0]?.url}}"
+              target="_blank">
+              {{ extension.extensionTerm?.term?.termHistory[0]?.id }}
+            </a>
+          </span>
+          }
+          <span class="">
+            {{extension.extensionTerm?.term?.label}}
+            <a (click)="$event.stopPropagation()" href="{{extension.extensionTerm?.term?.url}}" target="_blank">
+              {{ extension.extensionTerm?.term?.id }}
+            </a>
+          </span>
+          @if (noctuaUserService.user && extension.term && options.editableTerms) {
+          <noctua-inline-editor [cam]="cam" [activity]='activity' [entity]="entity" [category]="EditorCategory.term"
+            class="noc-edit-button">
+          </noctua-inline-editor>
+          }
+        </li>
         }
-        <span class="">
-          {{extension.extensionTerm?.term?.label}} <br>
-          <a (click)="$event.stopPropagation()" href="{{extension.extensionTerm?.term?.url}}" target="_blank">
-            {{ extension.extensionTerm?.term?.id }}
-          </a>
-        </span>
-        @if (noctuaUserService.user && extension.term && options.editableTerms) {
-        <noctua-inline-editor [cam]="cam" [activity]='activity' [entity]="entity" [category]="EditorCategory.term"
-          class="noc-edit-button">
-        </noctua-inline-editor>
-        }
-      </div>
-      }
+      </ul>
     </div>
     <div class="noc-comments-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch">
       @if (annotationActivity.goterm.showEvidence && annotationActivity.goterm.predicate.comments.length>0) {

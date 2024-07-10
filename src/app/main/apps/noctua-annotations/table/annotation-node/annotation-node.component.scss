@@ -9,6 +9,10 @@ $accent: map-get($theme, accent);
   padding: 0px;
   width: 100%;
 
+  ul {
+    list-style-type: disc !important;
+  }
+
   mat-chip {
     &.default {
       border: $noc-mf solid 2px;
