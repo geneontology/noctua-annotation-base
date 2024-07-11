@@ -132,16 +132,17 @@
         </button>
       </div>
 
-      <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
+      <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer py-6 px-4">
         @if (hasErrors()) {
         <button (click)='checkErrors()' mat-button color="warn" class="noc-rounded-button noc-sm">
           Why is the "Save" button disabled?
         </button>
         }
         <span fxFlex></span>
-        <button (click)='clearForm()' type="button" mat-stroked-button color="" class="mr-8">Clear</button>
-        <button [disabled]="hasErrors()" (click)="save()" type="submit" class="mr-2" mat-stroked-button color="primary"
-          [attr.data-cy]="'save-annotation-button'">Save</button>
+        <button (click)='clearForm()' type="button" mat-raised-button color=""
+          class="mr-[8px!important] noc-rounded-button">Clear</button>
+        <button [disabled]="hasErrors()" (click)="save()" type="submit" class="noc-rounded-button" mat-raised-button
+          color="primary" [attr.data-cy]="'save-annotation-button'">Save</button>
       </div>
     </div>
   </div>

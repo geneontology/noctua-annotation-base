@@ -86,7 +86,7 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   writeValue(value: any): void {
     this.control.setValue(value);
 
-    if (this.onChange) {
+    if (!value) {
       this.filteredOptions = [];
     }
   }
@@ -106,6 +106,7 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
 
   selectTerm(term: any) {
     console.log('term', term);
+    this.filteredOptions = [];
   }
 
   updateReferenceList() {
