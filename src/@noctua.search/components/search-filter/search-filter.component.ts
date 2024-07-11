@@ -1,11 +1,11 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit, OnDestroy, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { Observable, Subject } from 'rxjs';
 import { startWith, map, distinctUntilChanged, debounceTime, takeUntil } from 'rxjs/operators';
-import { NoctuaFormConfigService, NoctuaUserService, Group, Contributor, Organism, EntityDefinition, ActivityNode, EntityLookup } from '@geneontology/noctua-form-base';
+import { NoctuaFormConfigService, NoctuaUserService, Group, Contributor, Organism, EntityDefinition, ShapeUtils, ActivityNode, EntityLookup } from '@geneontology/noctua-form-base';
 import { NoctuaLookupService, NoctuaFormUtils } from '@geneontology/noctua-form-base';
 import { NoctuaSearchService } from './../../services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
@@ -83,8 +83,8 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
     private noctuaLookupService: NoctuaLookupService,
     public noctuaSearchService: NoctuaSearchService) {
 
-    this.gpNode = EntityDefinition.generateBaseTerm([EntityDefinition.GoMolecularEntity]);
-    this.termNode = EntityDefinition.generateBaseTerm([
+    this.gpNode = ShapeUtils.generateBaseTerm([EntityDefinition.GoMolecularEntity]);
+    this.termNode = ShapeUtils.generateBaseTerm([
       EntityDefinition.GoMolecularFunction,
       EntityDefinition.GoBiologicalProcess,
       EntityDefinition.GoAllCellularComponent,
@@ -93,7 +93,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       EntityDefinition.GoCellTypeEntity,
       EntityDefinition.UberonStage,
     ]);
-    this.obsoleteTermNode = EntityDefinition.generateBaseTerm([EntityDefinition.ObsoleteTerm]);
+    this.obsoleteTermNode = ShapeUtils.generateBaseTerm([EntityDefinition.ObsoleteTerm]);
 
     this._unsubscribeAll = new Subject();
     this.filterForm = this.createAnswerForm();

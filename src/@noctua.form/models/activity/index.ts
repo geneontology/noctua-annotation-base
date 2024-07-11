@@ -2,6 +2,7 @@ export {
     ActivityNode,
     ActivityNodeType,
     ActivityNodeDisplay,
+    GoCategory,
     compareNodeWeight
 } from './activity-node';
 export {

@@ -8,7 +8,7 @@
       <mat-icon>close</mat-icon> Close
     </button>
   </div>
-  <div class="noc-dialog-body pt-20">
+  <div class="noc-dialog-body pt-3">
     <div fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
       <ng-container [formGroup]="evidenceFormGroup">
         <div class="noc-edit-field p-4" fxFlex="250px">
@@ -18,7 +18,8 @@
               (focus)="updateEvidenceList()"></textarea>
             <mat-autocomplete #evidenceAuto="matAutocomplete" [displayWith]="evidenceDisplayFn"
               class="noc-term-autocomplete">
-              <mat-option *ngFor="let item of entity?.predicate?.evidenceLookup.results" [value]="item">
+              @for (item of entity?.predicate?.evidenceLookup.results; track item) {
+              <mat-option [value]="item">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.label }}
@@ -30,15 +31,20 @@
                     </strong>
                   </div>
                   <div class="noc-term-id">
-                    <a *ngIf="item.link" (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
+                    @if (item.link) {
+                    <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">
                       {{ item.id }}
                     </a>
-                    <span *ngIf="!item.link">
+                    }
+                    @if (!item.link) {
+                    <span>
                       {{ item.id }}
                     </span>
+                    }
                   </div>
                 </div>
               </mat-option>
+              }
             </mat-autocomplete>
           </mat-form-field>
         </div>
@@ -52,13 +58,15 @@
               <mat-icon>playlist_add</mat-icon>
             </button>
             <mat-autocomplete #referenceAuto="matAutocomplete" class="noc-term-autocomplete">
-              <mat-option *ngFor="let item of entity?.predicate?.referenceLookup.results" [value]="item">
+              @for (item of entity?.predicate?.referenceLookup.results; track item) {
+              <mat-option [value]="item">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item }}
                   </div>
                 </div>
               </mat-option>
+              }
             </mat-autocomplete>
           </mat-form-field>
         </div>
@@ -68,13 +76,15 @@
             <textarea matInput formControlName="with" [matAutocomplete]="withAuto" rows="2" (focus)="updateWithList()"
               autocomplete="off"></textarea>
             <mat-autocomplete #withAuto="matAutocomplete" class="noc-term-autocomplete">
-              <mat-option *ngFor="let item of entity?.predicate?.withLookup.results" [value]="item">
+              @for (item of entity?.predicate?.withLookup.results; track item) {
+              <mat-option [value]="item">
                 <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item }}
                   </div>
                 </div>
               </mat-option>
+              }
             </mat-autocomplete>
           </mat-form-field>
         </div>

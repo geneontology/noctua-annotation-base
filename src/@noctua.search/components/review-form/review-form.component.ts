@@ -16,9 +16,10 @@ import {
   EntityLookup,
   NoctuaLookupService,
   EntityDefinition,
+  ShapeUtils,
   Entity,
   Evidence,
-  NoctuaGraphService,
+  BbopGraphService,
   CamLoadingIndicator,
   CamService
 } from '@geneontology/noctua-form-base';
@@ -63,7 +64,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private zone: NgZone,
-    private noctuaGraphService: NoctuaGraphService,
+    private bbopGraphService: BbopGraphService,
     private camService: CamService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
@@ -84,11 +85,11 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
         this.cams = cams;
       });
 
-    this.gpNode = EntityDefinition.generateBaseTerm([
+    this.gpNode = ShapeUtils.generateBaseTerm([
       EntityDefinition.GoMolecularEntity,
       // EntityDefinition.GoChemicalEntity
     ]);
-    this.termNode = EntityDefinition.generateBaseTerm([
+    this.termNode = ShapeUtils.generateBaseTerm([
       EntityDefinition.GoMolecularFunction,
       EntityDefinition.GoBiologicalProcess,
       EntityDefinition.GoCellularComponent,
@@ -148,7 +149,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   }
 
   resetTermNode() {
-    this.termNode = EntityDefinition.generateBaseTerm([
+    this.termNode = ShapeUtils.generateBaseTerm([
       EntityDefinition.GoMolecularFunction,
       EntityDefinition.GoBiologicalProcess,
       EntityDefinition.GoCellularComponent,
@@ -267,7 +268,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     this.findNode!.termLookup.results = []
 
     if (closures) {
-      this.replaceNode = EntityDefinition.generateBaseTerm(closures);
+      this.replaceNode = ShapeUtils.generateBaseTerm(closures);
     }
 
     const findWhat = this.searchForm.value.findWhat;

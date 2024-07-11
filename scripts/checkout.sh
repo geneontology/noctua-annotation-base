@@ -1,9 +1,14 @@
 #!/bin/bash
 
 set -e
-cd ../noctua-form
-git checkout -b sprint-6
-cd ../noctua-landing-page
-git checkout -b sprint-6
-cd ../noctua-visual-pathway-editor
-git checkout -b sprint-6
+
+noctua_repos=("../noctua-form"
+"../noctua-landing-page"
+"../noctua-visual-pathway-editor"
+"../noctua-alliance-pathway-preview")
+
+for str in ${noctua_repos[@]}; do
+  cd $str
+  git checkout dev
+  git pull origin dev
+done

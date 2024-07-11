@@ -23,7 +23,7 @@ import {
 
 import { EditorCategory } from '@noctua.editor/models/editor-category';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { FlatTreeControl } from '@angular/cdk/tree';
 
 @Component({
@@ -69,7 +69,7 @@ export class ActivityTreeTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.gpNode = this.activity.getGPNode();
+    this.gpNode = this.activity.gpNode
 
     this.dataSource.data = this.activity.nodes.sort(compareNodeWeight);
   }

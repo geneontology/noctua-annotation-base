@@ -1,7 +1,6 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import * as ModelDefinition from './../data/config/model-definition';
 import * as EntityDefinition from './../data/config/entity-definition';
@@ -11,10 +10,10 @@ import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
 import { NoctuaUserService } from './../services/user.service';
 import { Activity, ActivityType, compareActivity } from './../models/activity/activity';
-import { find, each, differenceWith, cloneDeep, uniqWith, chain, filter, uniq } from 'lodash';
+import { find, each, differenceWith, chain, uniq } from 'lodash';
 import { CardinalityViolation, RelationViolation } from './../models/activity/error/violation-error';
 import { CurieService } from './../../@noctua.curie/services/curie.service';
-import { ActivityNode, ActivityNodeType, compareTerm } from './../models/activity/activity-node';
+import { ActivityNode, ActivityNodeType, compareTerm, GoCategory } from './../models/activity/activity-node';
 import { Cam, CamLoadingIndicator, CamOperation } from './../models/activity/cam';
 import { Entity } from './../models/activity/entity';
 import { compareEvidence, compareEvidenceDate, compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence } from './../models/activity/evidence';
@@ -24,13 +23,12 @@ import { TermsSummary } from './../models/activity/summary';
 import { Article } from './../models/article';
 import { Contributor, equalContributor } from '../models/contributor';
 import * as moment from 'moment';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { graph as bbopGraph } from 'bbop-graph-noctua';
 
 declare const require: any;
 
 //const model = require('bbop-graph-noctua');
-const barista_client = require('bbop-client-barista');
 const amigo = require('amigo2');
 const barista_response = require('bbop-response-barista');
 const minerva_requests = require('minerva-requests');
@@ -41,7 +39,7 @@ const minerva_manager = require('bbop-manager-minerva');
 @Injectable({
   providedIn: 'root'
 })
-export class NoctuaGraphService {
+export class BbopGraphService {
   baristaLocation = environment.globalBaristaLocation;
   minervaDefinitionName = environment.globalMinervaDefinitionName;
   linker = new amigo.linker();
@@ -116,37 +114,11 @@ export class NoctuaGraphService {
     return manager;
   }
 
-  registerBaristaClient(cam: Cam) {
-    const self = this;
-    const barclient = new barista_client(environment.globalBaristaLocation, this.noctuaUserService.baristaToken);
-    //barclient.register('connect', resFunc);
-    //barclient.register('initialization', resFunc);
-    // barclient.register('message', resFunc);
-    //barclient.register('broadcast', resFunc);
-    //barclient.register('clairvoyance', resFunc);
-    //barclient.register('telekinesis', resFunc);
-    barclient.register('merge', function (response) {
-      console.log('barista/merge response');
-      self.onCamMergeSignal(cam, response)
-    });
-    // _on_model_update);
-    barclient.register('rebuild', function (response) {
-      console.log('barista/rebuild response');
-      self.onCamRebuildSignal(cam, response)
-
-    });
-
-    barclient.connect(cam.id);
-
-    return barclient;
-  }
-
   getGraphInfo(cam: Cam, modelId) {
     const self = this;
 
     cam.loading = new CamLoadingIndicator(true, 'Loading Model Activities ...');
     cam.id = modelId;
-    //cam.baristaClient = this.registerBaristaClient(cam);
     cam.manager = this.registerManager();
     cam.copyModelManager = this.registerManager();
     cam.artManager = this.registerManager();
@@ -325,15 +297,17 @@ export class NoctuaGraphService {
       }
 
       cam.activities = activities;
+      cam.updateProperties()
       cam.causalRelations = self.getCausalRelations(cam);
       self.getActivityLocations(cam)
     } else {
       cam.activities = activities;
+      cam.updateProperties()
     }
 
     cam.applyFilter();
     cam.updateActivityDisplayNumber();
-    cam.updateProperties()
+
     cam.operation = CamOperation.NONE;
 
     if (publish) {
@@ -433,6 +407,16 @@ export class NoctuaGraphService {
     return result;
   }
 
+  getNodeCategoryInfo(rootTypes: Entity[]): GoCategory[] {
+    const result = rootTypes.map((rootType) => {
+      const category = new GoCategory()
+      category.category = rootType.id
+      return category
+    });
+
+    return result;
+  }
+
   getNodeDate(node) {
 
     const date = node.get_annotations_by_key('date');
@@ -485,17 +469,31 @@ export class NoctuaGraphService {
       return null;
     }
     const nodeInfo = self.getNodeInfo(node);
+    const rootTypes = self.getNodeRootInfo(node);
     const result = {
+      id: objectId,
       uuid: objectId,
       date: self.getNodeDate(node),
       term: new Entity(nodeInfo.id, nodeInfo.label, self.linker.url(nodeInfo.id), objectId),
-      rootTypes: self.getNodeRootInfo(node),
+      rootTypes: rootTypes,
+      category: self.getNodeCategoryInfo(rootTypes),
       classExpression: nodeInfo.classExpression,
       location: self.getNodeLocation(node),
       isComplement: self.getNodeIsComplement(node),
     };
 
     return new ActivityNode(result);
+  }
+
+
+  edgeComments(edge): string[] {
+
+    const commentAnnotations = edge.get_annotations_by_key('comment');
+
+    return commentAnnotations.map(c => {
+      return c.value();
+    })
+
   }
 
   edgeToEvidence(graph, edge): Evidence[] {
@@ -558,21 +556,11 @@ export class NoctuaGraphService {
   }
 
 
-  isaClosurePostParse(a: string, b: any[], node: ActivityNode) {
-    const self = this;
-    const closure = self.noctuaLookupService.categoryToClosure(b);
-
-    return self.noctuaLookupService.isaClosure(a, closure).pipe(
-      map(result => {
-        node.isCatalyticActivity = result;
-        return result;
-      }));
-  }
-
   isStartEdge(subjectNode, predicateId) {
     return predicateId === noctuaFormConfig.edge.enabledBy.id ||
       ((predicateId === noctuaFormConfig.edge.partOf.id ||
         predicateId === noctuaFormConfig.edge.locatedIn.id ||
+        predicateId === noctuaFormConfig.edge.contributesTo.id ||
         predicateId === noctuaFormConfig.edge.isActiveIn.id) &&
 
         subjectNode.hasRootType(EntityDefinition.GoMolecularEntity))
@@ -766,13 +754,14 @@ export class NoctuaGraphService {
 
     if ((predicateId === noctuaFormConfig.edge.partOf.id ||
       predicateId === noctuaFormConfig.edge.locatedIn.id ||
+      predicateId === noctuaFormConfig.edge.contributesTo.id ||
       predicateId === noctuaFormConfig.edge.isActiveIn.id) &&
       subjectNode.hasRootType(EntityDefinition.GoMolecularEntity)) {
 
       activityType = ActivityType.ccOnly;
     } else if (subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
       each(bbopSubjectEdges, function (subjectEdge) {
-        if (find(noctuaFormConfig.causalEdges, { id: subjectEdge.predicate_id() })) {
+        if (find(noctuaFormConfig.bpOnlyCausalEdges, { id: subjectEdge.predicate_id() })) {
           activityType = ActivityType.bpOnly;
         }
       });
@@ -780,7 +769,7 @@ export class NoctuaGraphService {
       activityType = ActivityType.proteinComplex;
     }
 
-    return self.noctuaFormConfigService.createActivityBaseModel(activityType);
+    return self.noctuaFormConfigService.createActivityBaseModel(activityType, subjectNode as ActivityNode);
   }
 
 
@@ -802,6 +791,8 @@ export class NoctuaGraphService {
 
         subjectActivityNode.term = subjectNode.term;
         subjectActivityNode.date = subjectNode.date;
+        subjectActivityNode.category = subjectNode.category;
+        subjectActivityNode.rootTypes = subjectNode.rootTypes;
         subjectActivityNode.classExpression = subjectNode.classExpression;
         subjectActivityNode.setIsComplement(subjectNode.isComplement);
         subjectActivityNode.uuid = bbopSubjectId;
@@ -810,16 +801,55 @@ export class NoctuaGraphService {
 
         activity.postRunUpdateCompliment();
 
-        // if (environment.isGraph) {
         activity.postRunUpdate();
-        // }
 
         activities.push(activity);
       }
     });
 
     return activities;
+
   }
+
+  /* 
+     graphToAnnotations(camGraph): AnnotationActivity[] {
+      const self = this;
+      const activities: AnnotationActivity[] = [];
+  
+      each(camGraph.all_edges(), (bbopEdge) => {
+        const bbopSubjectId = bbopEdge.subject_id();
+        const bbopObjectId = bbopEdge.object_id();
+        const subjectNode = self.nodeToActivityNode(camGraph, bbopSubjectId);
+        const objectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
+  
+  
+        if(bbopEdge.predicate_id() === noctuaFormConfig.edge.enabledBy.id) {
+  
+          const subjectEdges = camGraph.get_edges_by_subject(bbopSubjectId);
+          const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.simpleAnnoton, subjectNode as ActivityNode);
+          const subjectActivityNode = activity.rootNode;
+  
+          subjectActivityNode.term = subjectNode.term;
+          subjectActivityNode.date = subjectNode.date;
+          subjectActivityNode.category = subjectNode.category;
+          subjectActivityNode.rootTypes = subjectNode.rootTypes;
+          subjectActivityNode.classExpression = subjectNode.classExpression;
+          subjectActivityNode.setIsComplement(subjectNode.isComplement);
+          subjectActivityNode.uuid = bbopSubjectId;
+          self._graphToActivityDFS(camGraph, activity, subjectEdges, subjectActivityNode);
+          activity.id = bbopSubjectId;
+  
+          activity.postRunUpdateCompliment();
+  
+          activity.postRunUpdate();
+  
+          activities.push(activity);
+        }
+      });
+  
+      return activities;
+  
+    }  */
 
   graphToMolecules(camGraph): Activity[] {
     const self = this;
@@ -837,7 +867,7 @@ export class NoctuaGraphService {
         })
 
         if (!hasEnabledBy) {
-          const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule);
+          const activity: Activity = self.noctuaFormConfigService.createActivityBaseModel(ActivityType.molecule, subjectNode as ActivityNode);
           const subjectActivityNode = activity.rootNode;
 
           subjectActivityNode.term = subjectNode.term;
@@ -990,6 +1020,33 @@ export class NoctuaGraphService {
     annotations.comments.forEach(comment => {
       reqs.add_annotation_to_model('comment', comment);
     });
+
+    reqs.store_model(cam.id);
+    cam.manager.request_with(reqs);
+  }
+
+
+  savePredicateComments(cam: Cam, predicate: Predicate, comments) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    const edge = cam.graph.get_edge(predicate.subjectId, predicate.objectId, predicate.edge.id)
+
+    const commentAnnotations = edge.get_annotations_by_key('comment');
+
+    if (edge) {
+      commentAnnotations.forEach(annotation => {
+        reqs.remove_annotation_from_fact('comment', annotation.value(), null,
+          [predicate.subjectId,
+          predicate.objectId,
+          predicate.edge.id]);
+      });
+    }
+
+    reqs.add_annotation_to_fact('comment', comments, null,
+      [predicate.subjectId,
+      predicate.objectId,
+      predicate.edge.id]);
 
     reqs.store_model(cam.id);
     cam.manager.request_with(reqs);
@@ -1191,7 +1248,7 @@ export class NoctuaGraphService {
   addFact(reqs, triples: Triple<ActivityNode>[]) {
     const self = this;
 
-    each(triples, function (triple: Triple<ActivityNode>) {
+    triples.forEach((triple: Triple<ActivityNode>) => {
       const subject = self.addIndividual(reqs, triple.subject);
       const object = self.addIndividual(reqs, triple.object);
 
@@ -1379,53 +1436,62 @@ export class NoctuaGraphService {
   private _graphToActivityDFS(camGraph, activity: Activity, bbopEdges, subjectNode: ActivityNode) {
     const self = this;
 
-    each(bbopEdges, (bbopEdge) => {
+    for (const bbopEdge of bbopEdges) {
+
       const bbopPredicateId = bbopEdge.predicate_id();
+
+      const allowedPredicate = this.noctuaFormConfigService.shapePredicates.find((predicate) => {
+        return predicate === bbopPredicateId;
+      });
+
+      const predExpr = this.noctuaFormConfigService.termLookupTable[bbopPredicateId];
+
+      if (!allowedPredicate || !predExpr) continue
+
+
+      const causalEdgeIds = noctuaFormConfig.causalEdges.map(edge => edge.id);
+
+      let result = this.noctuaFormConfigService.shapePredicates.filter(
+        item => !causalEdgeIds.includes(item));
+
+      if (activity.activityType === ActivityType.bpOnly && subjectNode.term.id === noctuaFormConfig.rootNode.mf.id) {
+        result = [...result, ...noctuaFormConfig.bpOnlyCausalEdges.map(edge => edge.id)]
+      }
+
+      if (!result.includes(bbopPredicateId)) continue;
+
+
+
       const bbopObjectId = bbopEdge.object_id();
       const evidence = self.edgeToEvidence(camGraph, bbopEdge);
+      const comments = self.edgeComments(bbopEdge);
       const partialObjectNode = self.nodeToActivityNode(camGraph, bbopObjectId);
-      const objectNode = this._insertNode(activity, bbopPredicateId, subjectNode, partialObjectNode);
-
-      activity.updateEntityInsertMenu();
+      //const objectNode = this._insertNode(activity, bbopPredicateId, subjectNode, partialObjectNode);
+      const objectNode = this.noctuaFormConfigService.addActivityNodeShex(activity, subjectNode, predExpr, partialObjectNode);
+      activity.updateShapeMenuShex();
 
       if (objectNode) {
         const triple: Triple<ActivityNode> = activity.getEdge(subjectNode.id, objectNode.id);
         if (triple) {
+          triple.object.id = partialObjectNode.id;
           triple.object.uuid = partialObjectNode.uuid;
           triple.object.term = partialObjectNode.term;
           triple.object.date = partialObjectNode.date;
+          triple.object.category = partialObjectNode.category;
+          triple.object.rootTypes = partialObjectNode.rootTypes;
           triple.object.classExpression = partialObjectNode.classExpression;
           triple.object.setIsComplement(partialObjectNode.isComplement);
           triple.predicate.isComplement = triple.object.isComplement;
           triple.predicate.evidence = evidence;
+          triple.predicate.comments = comments;
           triple.predicate.uuid = bbopEdge.id();
           self._graphToActivityDFS(camGraph, activity, camGraph.get_edges_by_subject(bbopObjectId), triple.object);
         }
       }
-    });
+    }
 
     return activity;
   }
-
-  private _insertNode(activity: Activity, bbopPredicateId: string, subjectNode: ActivityNode,
-    partialObjectNode: Partial<ActivityNode>): ActivityNode {
-    const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
-    let objectNode;
-
-    each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
-      if (bbopPredicateId === nodeDescription.predicate.id) {
-        if (partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
-          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
-          return false;
-        }
-      }
-    });
-
-    return objectNode;
-  }
-
-
-
 
   private _compareSources(a: any, b: any) {
     return (a.value() > b.value()) ? -1 : 1;

@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { getColor } from '@noctua.common/data/noc-colors';
-import { ActivityNode, ActivityNodeType, CamStatsService, NoctuaGraphService, NoctuaLookupService, TermsSummary } from '@geneontology/noctua-form-base';
+import { ActivityNode, ActivityNodeType, CamStatsService, BbopGraphService, NoctuaLookupService, TermsSummary } from '@geneontology/noctua-form-base';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -64,22 +64,5 @@ export class GPStatsComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
-  getCustomColors(nodes) {
-    const customColors = nodes.map((node: ActivityNode) => {
-      let color = "#AAAAAA"
-      if (node.type = ActivityNodeType.GoMolecularEntity) {
-        color = getColor('blue', 500)
-      } else if (node.type = ActivityNodeType.GoMolecularFunction) {
-        color = getColor('brown', 500)
-      } else if (node.type = ActivityNodeType.GoBiologicalProcess) {
-        color = getColor('purple', 500)
-      } else if (node.type = ActivityNodeType.GoCellularComponent) {
-        color = getColor('green', 500)
-      }
-      return { name: node.term.label, value: color }
-    });
-
-    return customColors;
-  }
 
 }

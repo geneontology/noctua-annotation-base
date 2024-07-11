@@ -1,18 +1,21 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { find, filter, each, uniqWith, difference } from 'lodash';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { Article } from './../models/article';
 import { compareEvidenceEvidence, compareEvidenceReference, compareEvidenceWith, Evidence, EvidenceExt } from './../models/activity/evidence';
-import { Group } from './../models/group';
-import { ActivityNode, ActivityNodeType } from './../models/activity/activity-node';
+import { ActivityNode, ActivityNodeType, GoCategory } from './../models/activity/activity-node';
 import { Entity } from './../models/activity/entity';
 import { Predicate } from './../models/activity/predicate';
 import { NoctuaUserService } from './user.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { NoctuaUtils } from '@noctua/utils/noctua-utils';
+import * as EntityDefinition from './../data/config/entity-definition';
+import * as ShapeUtils from './../data/config/shape-utils';
+import { GOlrResponse } from './../models/golr';
 
 declare const require: any;
 
@@ -21,11 +24,9 @@ const golr_conf = require('golr-conf');
 const gconf = new golr_conf.conf(amigo.data.golr);
 const gserv = environment.globalGolrServer; // "http://golr.berkeleybop.org/";
 const impl_engine = require('bbop-rest-manager').jquery;
-const golr_manager = require('bbop-manager-golr');
 const golr_response = require('bbop-response-golr');
 const engine = new impl_engine(golr_response);
 engine.use_jsonp(true)
-
 
 @Injectable({
   providedIn: 'root'
@@ -67,23 +68,29 @@ export class NoctuaLookupService {
     return str.replace(pattern, "\\$1");
   }
 
-  buildQ(str) {
-    const manager = new golr_manager(gserv, gconf, engine, 'async');
+  search(searchText: string, categories: GoCategory[]): Observable<GOlrResponse[]> {
 
-    manager.set_comfy_query(str);
-    return manager.get_query(str);
+    const reqs = ShapeUtils.getTermLookup(categories);
+    return this.termLookup(searchText, reqs.requestParams);
   }
 
   termLookup(searchText, requestParams) {
     const self = this;
-    requestParams.q = self.buildQ(searchText);
+    requestParams.q = NoctuaUtils.formatSolrQueryString(searchText);
     const params = new HttpParams({
       fromObject: requestParams
     });
     const url = this.golrURLBase + params.toString();
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
-      map(response => self._lookupMap(response))
+      map(response => {
+        const result = this._lookupMap(response);
+        return result;
+      }),
+      catchError(err => {
+        console.error('Term Lookup Error:', err);
+        return of([]);
+      })
     );
   }
 
@@ -283,7 +290,7 @@ export class NoctuaLookupService {
     const self = this;
 
     const requestParams = {
-      q: self.buildQ(a),
+      q: NoctuaUtils.formatSolrQueryString(a),
       defType: 'edismax',
       indent: 'on',
       qt: 'standard',
@@ -336,7 +343,7 @@ export class NoctuaLookupService {
     const self = this;
 
     const requestParams = {
-      q: self.buildQ(a),
+      q: NoctuaUtils.formatSolrQueryString(a),
       defType: 'edismax',
       indent: 'on',
       qt: 'standard',
@@ -462,10 +469,10 @@ export class NoctuaLookupService {
     return article;
   }
 
-  private _lookupMap(response) {
+  private _lookupMap(response): GOlrResponse[] {
     const self = this;
     const data = response.response.docs;
-    const result = data.map((item) => {
+    const result: GOlrResponse[] = data.map((item) => {
       let xref;
       if (item.database_xref && item.database_xref.length > 0) {
         const xrefDB = item.database_xref[0].split(':');
@@ -480,11 +487,11 @@ export class NoctuaLookupService {
         isObsolete: item.is_obsolete,
         replacedBy: item.replaced_by,
         rootTypes: self._makeEntitiesArray(item.isa_closure, item.isa_closure_label),
-        xref: xref
-      };
+        xref: xref,
+        notAnnotatable: !item.subset?.includes('gocheck_do_not_annotate')
+      } as GOlrResponse;
     });
 
-    console.log(result?.rootTypes)
     return result;
   }
 

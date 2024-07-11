@@ -60,10 +60,12 @@
   <mat-drawer-container class="h-100-p" fxFlex="" fxLayout="row" fxLayoutAlign="start start" [hasBackdrop]="false"
     autosize>
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>
-      <div [ngSwitch]="noctuaSearchMenuService.selectedLeftPanel" class="h-100-p">
+      <div class="h-100-p">
+        @switch (noctuaSearchMenuService.selectedLeftPanel) {
+        }
       </div>
     </mat-drawer>
-    <mat-drawer-content #scrollbarRef class="noc-section-body w-100-p" [perfectScrollbar]="scrollbarConfig">
+    <mat-drawer-content #scrollbarRef class="noc-section-body w-100-p">
 
       <div class="header accent p-8 w-100-p" fxLayout="column" fxLayoutAlign="center center">
         <h1 [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
@@ -80,8 +82,9 @@
       </div>
     </mat-drawer-content>
     <mat-drawer #rightDrawer class="noc-right-drawer" mode="over" position="end">
-      <div [ngSwitch]="noctuaSearchMenuService.selectedRightPanel" class="h-100-p">
-
+      <div class="h-100-p">
+        @switch (noctuaSearchMenuService.selectedRightPanel) {
+        }
       </div>
     </mat-drawer>
   </mat-drawer-container>

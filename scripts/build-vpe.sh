@@ -17,5 +17,5 @@ for str in ${ignoreFiles[@]}; do
    git checkout $str
 done
 
-rm -rf workbenches/noctua-visual-pathway-editor/public
-npm run build
+#rm -rf workbenches/noctua-visual-pathway-editor/public
+#npm run build

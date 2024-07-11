@@ -58,14 +58,13 @@ export function compareRange(a, b) {
     return a.id === b.id;
 }
 
-export const getShexJson = (subjectIds: string[]) => {
+export const getShexJson = (subjectIds: string[], excludeFromExtensions = true) => {
     const pred = []
     const lookupTable = DataUtils.genTermLookupTable();
     const shapes = shexJson.goshapes as ShexShapeAssociation[];
     subjectIds.forEach((subjectId: string) => {
-        const subjectShapes = DataUtils.getSubjectShapes(shapes, subjectId);
+        const subjectShapes = DataUtils.getSubjectShapes(shapes, subjectId, excludeFromExtensions);
         if (subjectShapes) {
-            const predicates = DataUtils.getPredicates(shapes);
             const entities = DataUtils.getRangeLabels(subjectShapes, lookupTable)
 
             pred.push(...entities)

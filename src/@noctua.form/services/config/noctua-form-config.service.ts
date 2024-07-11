@@ -1,20 +1,24 @@
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import * as ModelDefinition from './../../data/config/model-definition';
 import * as ShapeDescription from './../../data/config/shape-definition';
 
 import { Activity, ActivityType } from './../../models/activity/activity';
 import { find, filter, each } from 'lodash';
-import { HttpParams } from '@angular/common/http';
-import * as EntityDefinition from './../../data/config/entity-definition';
+
+import * as ShapeUtils from './../../data/config/shape-utils';
 import { NoctuaUserService } from '../user.service';
 import { BehaviorSubject } from 'rxjs';
-import { ActivityNode } from './../../models/activity/activity-node';
-import { ConnectorActivity } from './../../models/activity/connector-activity';
-import { Entity } from './../../models/activity/entity';
+import { ActivityNode, GoCategory } from './../../models/activity/activity-node';
+import { Entity, RootTypes } from './../../models/activity/entity';
 import { Evidence } from './../../models/activity/evidence';
 import { Predicate } from './../../models/activity/predicate';
+import { DataUtils } from '../../data/config/data-utils';
+import shexJson from './../../data/shapes.json';
+import gpToTermJson from './../../data/gp-to-term.json';
+import { AnnotationActivity, AnnotationEdgeConfig, AnnotationExtension } from './../../models/standard-annotation/annotation-activity';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +31,13 @@ export class NoctuaFormConfigService {
   noctuaUrl: string;
   homeUrl: string;
   onSetupReady: BehaviorSubject<any>;
+  termLookupTable
+  shapePredicates: string[];
 
   constructor(private noctuaUserService: NoctuaUserService) {
     this.onSetupReady = new BehaviorSubject(null);
+    this.termLookupTable = DataUtils.genTermLookupTable();
+    this.shapePredicates = DataUtils.getPredicates(shexJson.goshapes, null, null, false);
   }
 
   get edges() {
@@ -55,7 +63,7 @@ export class NoctuaFormConfigService {
   get graphLayoutDetail() {
     const options = [
       noctuaFormConfig.graphLayoutDetail.options.detailed,
-      noctuaFormConfig.graphLayoutDetail.options.activity,
+      noctuaFormConfig.graphLayoutDetail.options.simple,
       noctuaFormConfig.graphLayoutDetail.options.preview
     ];
 
@@ -102,10 +110,7 @@ export class NoctuaFormConfigService {
   get activitySortField() {
     const options = [
       noctuaFormConfig.activitySortField.options.gp,
-      noctuaFormConfig.activitySortField.options.date,
-      noctuaFormConfig.activitySortField.options.mf,
-      noctuaFormConfig.activitySortField.options.bp,
-      noctuaFormConfig.activitySortField.options.cc,
+      noctuaFormConfig.activitySortField.options.date
     ];
 
     return {
@@ -328,29 +333,113 @@ export class NoctuaFormConfigService {
     return modelInfo;
   }
 
+  activityToAnnotation(activity: Activity): AnnotationActivity {
+    const annotationActivity = new AnnotationActivity();
+
+    const criteria = {} as AnnotationEdgeConfig
+
+    if (activity.activityType === ActivityType.ccOnly || activity.activityType === ActivityType.molecule) {
+      annotationActivity.gp = activity.gpNode;
+
+      activity.getEdges(activity.gpNode.id).forEach((edge) => {
+
+        if (noctuaFormConfig.ccOnlyEdges.includes(edge.predicate.edge.id)) {
+          criteria.gpToTermPredicate = edge.predicate.edge.id;
+          annotationActivity.goterm = edge.object;
+          annotationActivity.gp.predicate = edge.predicate;
+        }
+
+      });
+    } else {
+
+      criteria.gpToTermPredicate = noctuaFormConfig.edge.enabledBy.id;
+      annotationActivity.gp = activity.gpNode;
+      annotationActivity.goterm = activity.mfNode;
+
+      if (activity.mfNode?.term.id === noctuaFormConfig.rootNode.mf.id) {
+        criteria.mfNodeRequired = true;
+        activity.getEdges(activity.mfNode.id).forEach((edge) => {
+          if (noctuaFormConfig.mfToTermEdges.includes(edge.predicate.edge.id)) {
+
+            annotationActivity.gpToTermEdge = edge.predicate.edge
+            criteria.mfToTermPredicate = edge.predicate.edge.id;
+
+            annotationActivity.goterm = edge.object;
+
+            activity.getEdges(edge.object.id).forEach((extensionEdge) => {
+              const annotationExtension = new AnnotationExtension();
+              annotationExtension.extensionEdge = extensionEdge.predicate.edge;
+              annotationExtension.extensionTerm = extensionEdge.object;
+              annotationActivity.extensions.push(annotationExtension);
+            });
+          }
+        });
+      }
+    }
+
+    const edgeId = this.findEdge(criteria.gpToTermPredicate);
+    const inverseEdgeId = annotationActivity.findEdgeByCriteria(criteria);
+    const inverseEdge = this.findEdge(inverseEdgeId);
+
+    if (edgeId && inverseEdge) {
+      annotationActivity.gpToTermEdge = Entity.createEntity(edgeId);
+      annotationActivity.gpToTermEdge.inverseEntity = inverseEdge
+    }
+
+    annotationActivity.gpToTermEdges = this.getTermRelations(
+      annotationActivity.gp.rootTypes,
+      annotationActivity.goterm.rootTypes,
+      true
+    );
+
+    this._getAnnotationExtensions(activity, annotationActivity)
+
+
+    return annotationActivity
+  }
+
+  private _getAnnotationExtensions(activity: Activity, annotationActivity: AnnotationActivity) {
+
+    const triples = activity.getEdges(annotationActivity.goterm.id)
+
+    console.log('triples', triples)
+
+    triples.forEach((triple) => {
+
+      const allowedPredicate = this.getTermRelations(triple.subject.rootTypes, triple.object.rootTypes)
+
+      const isAllowedPredicate = allowedPredicate.some((predicate) => {
+        return predicate.id === triple.predicate.edge.id
+      });
+
+      if (isAllowedPredicate) {
+        const annotationExtension = new AnnotationExtension();
+        annotationExtension.extensionEdge = triple.predicate.edge;
+        annotationExtension.extensionTerm = triple.object;
+        annotationActivity.extensions.push(annotationExtension);
+      }
+    });
+  }
+
+
 
   createPredicate(edge: Entity, evidence?: Evidence[]): Predicate {
     const predicate = new Predicate(edge, evidence);
 
-    EntityDefinition.setEvidenceLookup(predicate);
+    ShapeUtils.setEvidenceLookup(predicate);
 
     return predicate;
   }
 
   //For reading the table
-  createActivityBaseModel(modelType: ActivityType): Activity {
-    switch (modelType) {
-      case ActivityType.default:
-        return ModelDefinition.createActivity(ModelDefinition.activityUnitBaseDescription);
-      case ActivityType.bpOnly:
-        return ModelDefinition.createActivity(ModelDefinition.bpOnlyAnnotationBaseDescription);
-      case ActivityType.ccOnly:
-        return ModelDefinition.createActivity(ModelDefinition.ccOnlyAnnotationBaseDescription);
-      case ActivityType.molecule:
-        return ModelDefinition.createActivity(ModelDefinition.moleculeBaseDescription);
-      case ActivityType.proteinComplex:
-        return ModelDefinition.createActivity(ModelDefinition.proteinComplexBaseDescription);
-    }
+  createActivityBaseModel(modelType: ActivityType, rootNode: ActivityNode): Activity {
+
+    const baseNode = ModelDefinition.rootNodes[modelType];
+
+    if (!baseNode) return;
+    const node = { ...baseNode, ...rootNode }
+
+    return ModelDefinition.createBaseActivity(modelType, node as ActivityNode);
   }
 
   // For the form
@@ -366,37 +455,87 @@ export class NoctuaFormConfigService {
         return ModelDefinition.createActivityShex(ModelDefinition.moleculeDescription);
       case ActivityType.proteinComplex:
         return ModelDefinition.createActivityShex(ModelDefinition.proteinComplexDescription);
+      case ActivityType.simpleAnnoton:
+        return ModelDefinition.createActivityShex(ModelDefinition.simpleAnnotonDescription);
     }
   }
 
-  insertActivityNode(activity: Activity,
+  getTermRelations(subjectRootTypes: Entity[], objectRootTypes: Entity[], gpToTerm = false) {
+    if (!subjectRootTypes || !objectRootTypes) return [];
+
+    const subjectIds = subjectRootTypes.map((rootType) => {
+      return rootType.id
+    });
+
+    const objectIds = objectRootTypes.map((rootType) => {
+      return rootType.id
+    });
+
+    const predicates = DataUtils.getPredicates(
+      gpToTerm ? gpToTermJson.goshapes : shexJson.goshapes, subjectIds, objectIds);
+
+    return predicates.map((predicate) => {
+      return this.findEdge(predicate);
+    });
+  }
+
+  setTermLookup(activityNode: ActivityNode, goCategories: GoCategory[]) {
+    ShapeUtils.setTermLookup(activityNode, goCategories);
+  }
+
+  getObjectsRelations(subjectRootTypes: Entity[], gpToTerm = false) {
+    if (!subjectRootTypes) return [];
+
+    const subjectIds = subjectRootTypes.map((rootType) => {
+      return rootType.id
+    });
+
+    const objectIds = DataUtils.getObjects(gpToTerm ? gpToTermJson.goshapes : shexJson.goshapes, subjectIds);
+
+    return objectIds.reduce((acc, term) => {
+      const node = this.termLookupTable[term];
+      if (node) {
+        const category = new GoCategory();
+        category.category = node.id;
+        acc.push(category);
+      }
+      return acc;
+    }, []);
+
+  }
+
+  addActivityNodeShex(activity: Activity,
     subjectNode: ActivityNode,
-    nodeDescription: ShapeDescription.ShapeDescription): ActivityNode {
-    return ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
+    predExpr: ShapeDescription.PredicateExpression,
+    objectNode: Partial<ActivityNode>): ActivityNode {
+    return ModelDefinition.addNodeShex(activity, subjectNode, predExpr, objectNode);
   }
 
   insertActivityNodeShex(activity: Activity,
     subjectNode: ActivityNode,
-    predExpr: ShapeDescription.PredicateExpression): ActivityNode {
-    return ModelDefinition.insertNodeShex(activity, subjectNode, predExpr);
+    predExpr: ShapeDescription.PredicateExpression,
+    objectId: string = null): ActivityNode {
+    return ModelDefinition.insertNodeShex(activity, subjectNode, predExpr, objectId);
   }
 
   insertActivityNodeByPredicate(activity: Activity, subjectNode: ActivityNode, bbopPredicateId: string,
     partialObjectNode?: Partial<ActivityNode>): ActivityNode {
-    const nodeDescriptions: ModelDefinition.InsertNodeDescription[] = subjectNode.canInsertNodes;
+    const predExprs: ShapeDescription.PredicateExpression[] = subjectNode.canInsertNodes;
+
+
     let objectNode;
 
-    each(nodeDescriptions, (nodeDescription: ModelDefinition.InsertNodeDescription) => {
-      if (bbopPredicateId === nodeDescription.predicate.id) {
-        if (partialObjectNode && partialObjectNode.hasRootTypes(nodeDescription.node.category)) {
-          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
-          return false;
-        } else if (!partialObjectNode) {
-          objectNode = ModelDefinition.insertNode(activity, subjectNode, nodeDescription);
-          return false;
-        }
-      }
-    });
+    /*  each(predExprs, (predExpr: ShapeDescription.PredicateExpression) => {
+       if (bbopPredicateId === predExpr.id) {
+         if (partialObjectNode && partialObjectNode.hasRootTypes(predExpr.node.category)) {
+           objectNode = ModelDefinition.insertNodeShex(activity, subjectNode, predExpr);
+           return false;
+         } else if (!partialObjectNode) {
+           objectNode = ModelDefinition.insertNodeShex(activity, subjectNode, predExpr);
+           return false;
+         }
+       }
+     }); */
 
     return objectNode;
   }
