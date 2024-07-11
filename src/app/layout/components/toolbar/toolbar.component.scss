@@ -234,7 +234,13 @@ $accent: map-get($theme, accent);
     color: #ffffff;
   }
 
-  .noc-create-button {
-    background-color: rgba(map-get($primary, default), 0.7) !important;
+  .noc-beta-toolbar {
+    &.noc-dev {
+      background-color: #ffe9c0;
+    }
+
+    &.noc-beta {
+      background-color: #fdcbbc;
+    }
   }
 }

@@ -45,14 +45,18 @@ $accent: map-get($theme, accent);
 
   .noc-activity-form-container {
     padding: 20px 10px;
-    background-color: #a2c4fa;
+    background: linear-gradient(
+      to right,
+      lighten(map-get($primary, default), 20%),
+      lighten(map-get($primary, default), 2%)
+    );
   }
 
   .noc-activity-form {
     @include deep-width(800px);
     position: relative;
     padding: 5px;
-    background: linear-gradient(to right, #5b8cff, #a6e9fe);
+    background: linear-gradient(to right, #5b8cff, #a6e9fe, #f6c8fa);
     border-radius: 12px;
     &:before {
       content: "";
@@ -61,7 +65,7 @@ $accent: map-get($theme, accent);
       left: 5px;
       right: 5px;
       bottom: 5px;
-      background-color: #ffffffcd;
+      background-color: #ffffff;
       z-index: -1;
       border-radius: 12px;
     }

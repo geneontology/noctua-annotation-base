@@ -139,10 +139,10 @@
         </button>
         }
         <span fxFlex></span>
-        <button (click)='clearForm()' type="button" mat-raised-button color=""
+        <button mat-stroked-button (click)='clearForm()' color="primary"
           class="mr-[8px!important] noc-rounded-button">Clear</button>
-        <button [disabled]="hasErrors()" (click)="save()" type="submit" class="noc-rounded-button noc-primary"
-          mat-raised-button [attr.data-cy]="'save-annotation-button'">Save</button>
+        <button mat-stroked-button [disabled]="hasErrors()" (click)="save()" type="submit"
+          class="noc-rounded-button noc-primary" color="accent" [attr.data-cy]="'save-annotation-button'">Save</button>
       </div>
     </div>
   </div>

@@ -96,6 +96,10 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
         this.cdr.markForCheck()
       });
+
+    //this.dynamicForm.markAsDirty();
+    // this.dynamicForm.markAsTouched();
+    // this.dynamicForm.updateValueAndValidity();
   }
 
   private getInitialFormStructure() {
@@ -190,6 +194,8 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       extensionEdge: '',
       extensionTerm: ''
     }));
+
+    this.dynamicForm.updateValueAndValidity();
   }
 
   deleteExtension(index: number): void {
