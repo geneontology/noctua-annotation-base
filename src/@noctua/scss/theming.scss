@@ -16,13 +16,13 @@ $mat-black: (
   ),
 );
 
-$mat-noctuadark: (
+$noctua-primary: (
   50: #e7ebf3,
   100: #c4cde0,
   200: #9daccc,
   300: #768bb7,
   400: #5872a7,
-  500: #3b5998,
+  500: #5b8cff,
   600: #355190,
   700: #2d4885,
   800: #263e7b,
@@ -49,7 +49,7 @@ $mat-noctuadark: (
   ),
 );
 
-$mat-noctuadarker: (
+$noctua-accent: (
   50: #e9eeef,
   100: #c9d5d8,
   200: #a5b9be,
@@ -83,8 +83,8 @@ $mat-noctuadarker: (
 );
 
 // Define the Material palettes
-$primary: mat.define-palette($mat-noctuadarker);
-$accent: mat.define-palette(mat.$orange-palette, 600, 400, 700);
+$primary: mat.define-palette($noctua-primary);
+$accent: mat.define-palette($noctua-accent);
 $warn: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object

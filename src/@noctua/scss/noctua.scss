@@ -19,6 +19,8 @@ $noc-mf: #7cd488;
 $noc-bp: #f4c89c;
 $noc-cc: #d3b5f5;
 
+$primary: map-get($theme, primary);
+
 .ps__rail-x {
   top: 3px;
   top: initial !important;
@@ -172,6 +174,20 @@ mat-chip {
 
   @include media-breakpoint("sm") {
     @include deep-width(100%);
+  }
+}
+
+.noc-evidence-db-trigger {
+  @include deep-height(20px);
+  @include deep-width(20px);
+
+  @include noc-icon-size(12px);
+}
+
+.mat-mdc-raised-button {
+  &.noc-primary {
+    color: #eee;
+    background-color: map-get($primary, default);
   }
 }
 
