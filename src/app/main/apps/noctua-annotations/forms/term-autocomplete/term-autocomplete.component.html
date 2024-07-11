@@ -12,18 +12,20 @@
     (optionSelected)="selectTerm($event.option.value)" class="noc-term-autocomplete" fxLayout="row"
     fxLayoutAlign="start start">
     <div class="" fxFlex="400px">
-      @for ( item of (filteredOptions | async); track item) {
+      @for ( item of filteredOptions; track item) {
       <mat-option [disabled]="!item.notAnnotatable" [value]="item">
         <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-term-label">
             {{ item.label }}
           </div>
           <span fxFlex></span>
+          @if (autocompleteType === AutocompleteType.EVIDENCE_CODE) {
           <div class="noc-term-id mr-8">
             <strong>
               {{ item.xref }}
             </strong>
           </div>
+          }
           <div class="noc-term-id">
             @if (item.link) {
             <a (click)="$event.stopPropagation()" href="{{item.link}}" target="_blank">

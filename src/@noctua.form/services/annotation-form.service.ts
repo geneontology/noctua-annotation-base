@@ -52,7 +52,6 @@ export class NoctuaAnnotationFormService {
 
     this.activity = this.noctuaFormConfigService.createActivityModel(ActivityType.simpleAnnoton);
 
-
     this.errors = [];
 
     this.currentActivity = null;

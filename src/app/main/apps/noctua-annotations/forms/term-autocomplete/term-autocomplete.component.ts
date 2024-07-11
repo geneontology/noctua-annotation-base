@@ -2,28 +2,12 @@ import { Component, Input, OnDestroy, OnInit, SimpleChanges, forwardRef } from '
 import { NG_VALUE_ACCESSOR, FormControl, FormsModule, ReactiveFormsModule, ControlValueAccessor, FormGroup } from '@angular/forms';
 import { ActivityNode, AutocompleteType, GOlrResponse, GoCategory, NoctuaFormUtils, NoctuaLookupService } from '@geneontology/noctua-form-base';
 import { Observable, Subject, Subscription, catchError, debounceTime, filter, of, startWith, switchMap, takeUntil } from 'rxjs';
-/* import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon'; */
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
-
 
 @Component({
   selector: 'noc-term-autocomplete',
-  //standalone: true,
-  /*   imports: [CommonModule,
-      MatAutocompleteModule,
-      MatInputModule,
-      MatButtonModule,
-      FormsModule,
-      MatIconModule,
-      ReactiveFormsModule,
-  
-    ], */
   templateUrl: './term-autocomplete.component.html',
-  styleUrl: './term-autocomplete.component.scss',
+  styleUrls: ['./term-autocomplete.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -42,16 +26,15 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
 
   control = new FormControl();
   options: string[] = [];
+  filteredOptions: GOlrResponse[] = [];
   private valueChangesSubscription: Subscription;
   private _unsubscribeAll: Subject<any>;
-  filteredOptions: Observable<GOlrResponse[]>;
 
   private onChange: (value: any) => void;
   private onTouched: () => void;
 
   constructor(private lookupService: NoctuaLookupService,
     private inlineReferenceService: InlineReferenceService,
-
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -61,6 +44,7 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.filteredOptions = [];
     if (changes['category'] && !changes['category'].firstChange) {
       const previousCategory = changes['category'].previousValue;
       const currentCategory = changes['category'].currentValue;
@@ -77,39 +61,34 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
 
     if (this.valueChangesSubscription) {
       this.valueChangesSubscription.unsubscribe();
+      this.filteredOptions = [];
     }
 
     if (this.category && this.category.length > 0) {
-
-      this.filteredOptions = this.control.valueChanges.pipe(
+      this.valueChangesSubscription = this.control.valueChanges.pipe(
         takeUntil(this._unsubscribeAll),
         debounceTime(300),
         startWith(''),
-        filter(value => {
-          console.log('Filter value:', value);
-          return value && value.length > 2;
-        }),
-        switchMap(value => {
-          console.log('SwitchMap value:', value);
-          return this.lookupService.search(value, this.category).pipe(
-            catchError(err => {
-              console.error('Error in search:', err);
-              return of([]);
-            })
-          );
-        })
-      );
-
-      this.valueChangesSubscription = this.filteredOptions.subscribe(data => {
+        filter(value => value && value.length > 2),
+        switchMap(value => this.lookupService.search(value, this.category).pipe(
+          catchError(err => {
+            console.error('Error in search:', err);
+            return of([]);
+          })
+        ))
+      ).subscribe(data => {
+        this.filteredOptions = data;
         console.log('Filtered options:', data);
       });
     }
   }
 
-
-
   writeValue(value: any): void {
     this.control.setValue(value);
+
+    if (this.onChange) {
+      this.filteredOptions = [];
+    }
   }
 
   registerOnChange(fn: any): void {
@@ -140,9 +119,14 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
     this.inlineReferenceService.open(event.target, { data });
   }
 
-
   termDisplayFn(term): string | undefined {
-    return term ? term.label : undefined;
+    console.log('termDisplayFn:', term);
+    if (typeof term === 'string') {
+      return term;
+    } else if (term && term.id && term.label) {
+      return term.label;
+    }
+    return undefined;
   }
 
   compareFn(o1: any, o2: any): boolean {

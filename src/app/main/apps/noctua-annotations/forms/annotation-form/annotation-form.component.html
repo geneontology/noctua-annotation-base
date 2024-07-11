@@ -1,5 +1,5 @@
-<form name="dynamicForm" [formGroup]="dynamicForm" (ngSubmit)="onSubmit()" fxLayout="column"
-  fxLayoutAlign="start center" class="noc-activity-form-container">
+<form name="dynamicForm" [formGroup]="dynamicForm" fxLayout="column" fxLayoutAlign="start center"
+  class="noc-activity-form-container">
   <div class="noc-activity-form">
     @if (!noctuaUserService.user) {
     <div class="noc-draw-body-disabled" fxLayoutAlign="center center">
@@ -45,6 +45,15 @@
         <noc-term-autocomplete fxFlex="35" class="mt-[24px] p-1" formControlName="goterm"
           [label]="annotationActivity?.goterm.label" [category]="annotationActivity?.goterm.category"
           solrField="goterm"></noc-term-autocomplete>
+
+        <button mat-icon-button class="noc-action-button" fxFlex="40px" [matMenuTriggerFor]="entityMenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
+          <button mat-menu-item class="" (click)="addMFRootTerm()">
+            Add MF Root
+          </button>
+        </mat-menu>
       </div>
 
       <div class="noc-section-header pr-8" fxLayout="row" fxLayoutAlign="start center">
@@ -55,7 +64,7 @@
       </div>
       <div formGroupName="evidence" class="p-0 px-3" fxLayout="row" fxLayoutAlign="start center">
         <noc-term-autocomplete fxFlex="35" class="p-1" formControlName="evidenceCode"
-          [label]="annotationActivity?.evidence?.evidenceCode.label"
+          [autocompleteType]="AutocompleteType.EVIDENCE_CODE" [label]="annotationActivity?.evidence?.evidenceCode.label"
           [category]="annotationActivity?.evidence?.evidenceCode.category"
           solrField="evidenceCode"></noc-term-autocomplete>
         <noc-term-autocomplete fxFlex="30" class="p-1" formControlName="reference"
@@ -63,6 +72,7 @@
           solrField="reference"></noc-term-autocomplete>
         <noc-term-autocomplete fxFlex="35" class="p-1" formControlName="withFrom"
           [label]="annotationActivity?.evidence?.with.label" solrField="withFrom"></noc-term-autocomplete>
+        <div fxFlex="40px"></div>
       </div>
       <div class="noc-section-header pr-4" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
@@ -115,11 +125,13 @@
           </button>
         </div>
       </div>
+      <div class="pl-4 py-4">
+        <button mat-stroked-button (click)="addExtension()" class="noc-xs w-[150px] noc-rounded-button "
+          color="primary">
+          Add @if(annotationActivity?.extensions.length>1) {<span>Another</span>} Extension
+        </button>
+      </div>
 
-      <button mat-stroked-button (click)="addExtension()" type="submit" class="noc-xs w-[150px] noc-rounded-button"
-        color="primary">
-        Add @if(annotationActivity?.extensions.length>1) {<span>Another</span>}Extension
-      </button>
       <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
         @if (hasErrors()) {
         <button (click)='checkErrors()' mat-button color="warn" class="noc-rounded-button noc-sm">
@@ -127,7 +139,7 @@
         </button>
         }
         <span fxFlex></span>
-        <button (click)='clear()' type="button" mat-stroked-button color="" class="mr-8">Clear</button>
+        <button (click)='clearForm()' type="button" mat-stroked-button color="" class="mr-8">Clear</button>
         <button [disabled]="hasErrors()" (click)="save()" type="submit" class="mr-2" mat-stroked-button color="primary"
           [attr.data-cy]="'save-annotation-button'">Save</button>
       </div>

@@ -84,7 +84,7 @@
       <ul class="w-full" fxLayout="column" fxLayoutAlign="start stretch">
 
         @for(extension of annotationActivity.extensions; track extension) {
-        <li class="w-full border-b-2" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
+        <li class="w-full py-2 border-b-2" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
           [attr.id]="extension.extensionTerm?.term?.displayId"
           [ngClass]="{'noc-highlight-match': extension.extensionTerm?.term?.highlight,
         'noc-highlight-modified': extension.extensionTerm?.term?.modified,
@@ -92,7 +92,7 @@
           <!--   <button mat-icon-button *ngIf="annotationActivity.extension.canDelete" (click)="deleteEntity(entity)" class="noc-delete-button">
     <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
   </button> -->
-          <span class="italic font">{{extension.extensionEdge?.label}}</span>
+          <span class="italic text-[10px] text-gray-700">{{extension.extensionEdge?.label}}</span>
           @if (extension.extensionTerm?.term?.modified && extension.extensionTerm?.term?.termHistory?.length>0)
           {
           <span class="noc-old-term">
