@@ -1,3 +1,3 @@
-export { AnnotationActivity, AnnotationExtension, AnnotationEvidence } from './annotation-activity';
+export { AnnotationActivity, AnnotationExtension } from './annotation-activity';
 
-export { StandardAnnotationForm, AnnotationEvidenceForm, AnnotationExtensionForm } from './form';
+export { StandardAnnotationForm, AnnotationExtensionForm } from './form';

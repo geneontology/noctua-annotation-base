@@ -1,5 +1,5 @@
 <form fxLayout="column" fxLayoutAlign="start stretch" name="searchForm" [formGroup]="searchForm"
-  class="noc-drawer h-100-p">
+  class="noc-drawer h-full">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-drawer-header-title">
       Search Relations</span>
@@ -21,7 +21,7 @@
               class="noc-term-autocomplete">
               @for (item of searchFormData['subject']?.searchResults; track item) {
               <mat-option class="noc-term-autocomplete" [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.label }}
                   </div>
@@ -44,7 +44,7 @@
               class="noc-term-autocomplete">
               @for (item of searchFormData['predicate']?.searchResults; track item) {
               <mat-option class="noc-term-autocomplete" [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.label }}
                   </div>
@@ -66,7 +66,7 @@
             <mat-autocomplete #objectAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
               @for (item of searchFormData['object']?.searchResults; track item) {
               <mat-option class="noc-term-autocomplete" [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.label }}
                   </div>

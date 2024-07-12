@@ -109,16 +109,22 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       gpToTermEdge: '',
       goterm: '',
       annotationExtensions: this.fb.array([]),
-      evidence: this.fb.group({
-        evidenceCode: '',
-        reference: '',
-        withFrom: ''
-      })
+      evidenceCode: '',
+      reference: '',
+      withFrom: '',
     };
   }
 
   addMFRootTerm() {
     this._addRootTerm(noctuaFormConfig.rootNode.mf);
+  }
+
+  addBPRootTerm() {
+    this._addRootTerm(noctuaFormConfig.rootNode.bp);
+  }
+
+  addCCRootTerm() {
+    this._addRootTerm(noctuaFormConfig.rootNode.cc);
   }
 
   private _addRootTerm(rootTerm) {
@@ -173,6 +179,8 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
   clearForm(): void {
     this.dynamicForm.reset(this.getInitialFormStructure());
+    this.annotationActivity.extensions = [];
+    this.annotationExtensions.clear();
     this.noctuaAnnotationFormService.clearForm();
 
     this.cdr.markForCheck();

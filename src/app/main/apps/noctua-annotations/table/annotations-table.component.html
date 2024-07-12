@@ -1,4 +1,4 @@
-<div class="w-100-p noc-annotations-table">
+<div class="w-full noc-annotations-table px-10">
   @if (cam.loading?.status) {
   <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-cam-progress-message">
@@ -7,9 +7,9 @@
   </div>
   }
   @if (!cam.loading?.status) {
-  <div class="noc-summary-bar-container w-full flex items-center">
+  <div class="noc-summary-bar-container w-full flex items-center px-2">
     <span class='mr-12 text-3xl'>
-      Standard Annotations <small>{{cam.activities.length}}</small>
+      Standard Annotations <small class="text-gray-600">( {{cam.activities.length}} )</small>
     </span>
     <span fxFlex></span>
     <div class="" fxLayout="row" fxLayoutAlign="start center">
@@ -44,7 +44,7 @@
   </div>
   }
 
-  <div class="noc-table-header w-100-p px-4" fxLayout="row" fxLayoutAlign="start center">
+  <div class="noc-table-header w-full" fxLayout="row" fxLayoutAlign="start center">
     <div class="noc-cell noc-annotation-gp-cell" fxFlex="">
       Gene Product
     </div>
@@ -54,16 +54,14 @@
     <div class="noc-cell noc-term-cell" fxFlex="">
       Term
     </div>
-    <div class="noc-evidence-cell" fxLayout="row" fxLayoutAlign="start center">
-      <div class="noc-cell noc-evidence-code-cell" fxFlex="">
-        Evidence
-      </div>
-      <div class="noc-cell noc-reference-cell">
-        Reference
-      </div>
-      <div class="noc-cell noc-with-cell">
-        With
-      </div>
+    <div class="noc-cell noc-evidence-code-cell" fxFlex="">
+      Evidence
+    </div>
+    <div class="noc-cell noc-reference-cell">
+      Reference
+    </div>
+    <div class="noc-cell noc-with-cell">
+      With
     </div>
     <div class="noc-cell noc-annotation-extension-cell" fxFlex="">
       Extension
@@ -73,10 +71,10 @@
     </div>
     <div class="noc-cell noc-action-cell"> </div>
   </div>
-  <div class="noc-table-body w-100-p px-4">
+  <div class="noc-table-body w-full">
     @for (annotationActivity of cam.annotationActivities; track annotationActivity) {
-    <div [attr.id]="annotationActivity.activity.displayId" class="w-100-p">
-      <noc-annotation-node [options]="options" [cam]="cam" [annotationActivity]="annotationActivity" class="w-100-p">
+    <div [attr.id]="annotationActivity.activity.displayId" class="w-full">
+      <noc-annotation-node [options]="options" [cam]="cam" [annotationActivity]="annotationActivity" class="w-full">
       </noc-annotation-node>
     </div>
     }

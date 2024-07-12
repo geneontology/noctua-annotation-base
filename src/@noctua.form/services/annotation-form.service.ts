@@ -142,21 +142,21 @@ export class NoctuaAnnotationFormService {
       errors.push(error);
     }
 
-    if (!annotationData.evidence.evidenceCode?.id) {
+    if (!annotationData.evidenceCode?.id) {
 
       const error = new ActivityError(ErrorLevel.error, ErrorType.general, `Evidence is required`);
       errors.push(error);
     }
 
-    if (!annotationData.evidence.reference) {
+    if (!annotationData.reference) {
       const error = new ActivityError(ErrorLevel.error, ErrorType.general,
         'Reference is required');
       errors.push(error);
     }
 
-    if (annotationData.evidence.reference) {
+    if (annotationData.reference) {
 
-      if (!annotationData.evidence.reference.includes(':')) {
+      if (!annotationData.reference.includes(':')) {
         const error = new ActivityError(ErrorLevel.error, ErrorType.general,
           `Use DB:accession format for reference`);
         errors.push(error);

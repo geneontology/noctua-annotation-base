@@ -81,8 +81,6 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
     this.evidenceSettings.showGroup = false;
     this.evidenceSettings.showContributor = false;
 
-    console.log('annotationActivity', this.annotationActivity);
-
   }
 
   editEntity(entity: ActivityNode) {

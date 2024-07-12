@@ -11,6 +11,7 @@
   }
 
   .noc-drawer-container {
+    background-color: lighten(map-get($primary, default), 20%);
   }
 
   .noc-not-loggedin {

@@ -9,10 +9,10 @@
     </button>
   </div>
   <div class="noc-dialog-body pt-3">
-    <div fxLayout="row" fxLayoutAlign="start center" class="w-100-p">
+    <div fxLayout="row" fxLayoutAlign="start center" class="w-full">
       <ng-container [formGroup]="evidenceFormGroup">
         <div class="noc-edit-field p-4" fxFlex="250px">
-          <mat-form-field appearance="outline" class="noc-sm w-100-p">
+          <mat-form-field appearance="outline" class="noc-sm w-full">
             <mat-label>Evidence</mat-label>
             <textarea type="text" matInput formControlName="evidence" [matAutocomplete]="evidenceAuto" rows="2"
               (focus)="updateEvidenceList()"></textarea>
@@ -20,7 +20,7 @@
               class="noc-term-autocomplete">
               @for (item of entity?.predicate?.evidenceLookup.results; track item) {
               <mat-option [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.label }}
                   </div>
@@ -49,7 +49,7 @@
           </mat-form-field>
         </div>
         <div class="noc-edit-field p-4" fxFlex="150px">
-          <mat-form-field appearance="outline" class="noc-sm w-100-p">
+          <mat-form-field appearance="outline" class="noc-sm w-full">
             <mat-label>Reference</mat-label>
             <textarea matInput formControlName="reference" [matAutocomplete]="referenceAuto" rows="2" autocomplete="off"
               (focus)="updateReferenceList()"></textarea>
@@ -60,7 +60,7 @@
             <mat-autocomplete #referenceAuto="matAutocomplete" class="noc-term-autocomplete">
               @for (item of entity?.predicate?.referenceLookup.results; track item) {
               <mat-option [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item }}
                   </div>
@@ -71,14 +71,14 @@
           </mat-form-field>
         </div>
         <div class="noc-edit-field p-4" fxFlex fxFlex="150px">
-          <mat-form-field appearance="outline" class="noc-sm w-100-p">
+          <mat-form-field appearance="outline" class="noc-sm w-full">
             <mat-label>With</mat-label>
             <textarea matInput formControlName="with" [matAutocomplete]="withAuto" rows="2" (focus)="updateWithList()"
               autocomplete="off"></textarea>
             <mat-autocomplete #withAuto="matAutocomplete" class="noc-term-autocomplete">
               @for (item of entity?.predicate?.withLookup.results; track item) {
               <mat-option [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item }}
                   </div>

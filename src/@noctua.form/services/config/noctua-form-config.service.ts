@@ -338,6 +338,8 @@ export class NoctuaFormConfigService {
 
     const criteria = {} as AnnotationEdgeConfig
 
+    let evidence: Evidence = null;
+
     if (activity.activityType === ActivityType.ccOnly || activity.activityType === ActivityType.molecule) {
       annotationActivity.gp = activity.gpNode;
 
@@ -347,6 +349,7 @@ export class NoctuaFormConfigService {
           criteria.gpToTermPredicate = edge.predicate.edge.id;
           annotationActivity.goterm = edge.object;
           annotationActivity.gp.predicate = edge.predicate;
+          evidence = edge.predicate.evidence?.[0] ?? null;
         }
 
       });
@@ -355,6 +358,7 @@ export class NoctuaFormConfigService {
       criteria.gpToTermPredicate = noctuaFormConfig.edge.enabledBy.id;
       annotationActivity.gp = activity.gpNode;
       annotationActivity.goterm = activity.mfNode;
+      evidence = activity.mfNode.predicate.evidence?.[0] ?? null;;
 
       if (activity.mfNode?.term.id === noctuaFormConfig.rootNode.mf.id) {
         criteria.mfNodeRequired = true;
@@ -363,15 +367,7 @@ export class NoctuaFormConfigService {
 
             annotationActivity.gpToTermEdge = edge.predicate.edge
             criteria.mfToTermPredicate = edge.predicate.edge.id;
-
             annotationActivity.goterm = edge.object;
-
-            activity.getEdges(edge.object.id).forEach((extensionEdge) => {
-              const annotationExtension = new AnnotationExtension();
-              annotationExtension.extensionEdge = extensionEdge.predicate.edge;
-              annotationExtension.extensionTerm = extensionEdge.object;
-              annotationActivity.extensions.push(annotationExtension);
-            });
           }
         });
       }
@@ -392,17 +388,21 @@ export class NoctuaFormConfigService {
       true
     );
 
-    this._getAnnotationExtensions(activity, annotationActivity)
+    annotationActivity.extensions = this._getAnnotationExtensions(activity, annotationActivity.goterm.id)
 
+    annotationActivity.evidenceCode.term = evidence?.evidence;
+    annotationActivity.reference.term = new Entity(evidence?.reference, evidence?.reference);
+    annotationActivity.with.term = evidence?.withEntity;
 
     return annotationActivity
   }
 
-  private _getAnnotationExtensions(activity: Activity, annotationActivity: AnnotationActivity) {
 
-    const triples = activity.getEdges(annotationActivity.goterm.id)
 
-    console.log('triples', triples)
+  private _getAnnotationExtensions(activity: Activity, id: string): AnnotationExtension[] {
+
+    const extension: AnnotationExtension[] = []
+    const triples = activity.getEdges(id)
 
     triples.forEach((triple) => {
 
@@ -416,9 +416,11 @@ export class NoctuaFormConfigService {
         const annotationExtension = new AnnotationExtension();
         annotationExtension.extensionEdge = triple.predicate.edge;
         annotationExtension.extensionTerm = triple.object;
-        annotationActivity.extensions.push(annotationExtension);
+        extension.push(annotationExtension);
       }
     });
+
+    return extension;
   }
 
 

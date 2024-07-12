@@ -93,28 +93,30 @@ mat-chip {
     }
   }
 }
-.noc-table-header {
-  padding: 0 10px;
-  position: relative;
-  margin-bottom: 1px;
-  @include deep-width(100%);
-  @include deep-height(30px);
-  //min-height: 35px;
-  //background-color: #fff;
-  font-size: 14px;
-  border-top: map-get($accent, default) solid 3px;
-  border-bottom: map-get($accent, default) solid 1px;
-}
-
-.noc-table-body {
-  padding: 0 10px;
-}
 
 .noc-annotations-table {
   position: relative;
-  background-color: lighten(map-get($primary, default), 30%);
-  //  flex: 1 1 auto;
-  //    border-bottom: 1px solid rgba(0, 0, 0, .12);
+  overflow: hidden;
+  border-radius: 12px;
+
+  .noc-table-header {
+    padding: 0;
+    background-color: lighten(map-get($primary, default), 30%);
+    position: relative;
+    margin-bottom: 1px;
+    @include deep-width(100%);
+    @include deep-height(30px);
+    //min-height: 35px;
+    //background-color: #fff;
+    font-size: 14px;
+    border-top: map-get($accent, default) solid 3px;
+    border-bottom: map-get($accent, default) solid 1px;
+  }
+
+  .noc-table-body {
+    padding: 0;
+    background-color: lighten(map-get($primary, default), 35%);
+  }
 
   noc-activity-tree-node {
     padding-left: 40px;
@@ -161,7 +163,7 @@ mat-chip {
   }
 
   .mat-header-cell {
-    padding: 0 10px;
+    padding: 0 12px;
     font-size: 10px !important;
     //color: #0F0; // map-get($primary, default);
     font-weight: bold;
@@ -191,7 +193,7 @@ mat-chip {
     align-items: center;
 
     //display: inline-block !important;
-    padding: 0 5px;
+    padding: 0 12px;
     font-size: 12px !important;
     color: #000;
     border-right: #aaa solid 1px;
