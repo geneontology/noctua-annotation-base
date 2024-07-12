@@ -237,6 +237,7 @@ $accent: map-get($theme, accent);
   .noc-beta-toolbar {
     &.noc-dev {
       background-color: #ffe9c0;
+      border-bottom: solid 1px #f6c73c;
     }
 
     &.noc-beta {

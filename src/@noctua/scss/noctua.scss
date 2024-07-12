@@ -239,7 +239,14 @@ textarea {
 
     .mat-select {
       height: 26px;
-      line-height: 26px;
+      line-height: 14px;
+
+      .mat-select-value-text {
+        white-space: normal;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     textarea {

@@ -18,11 +18,9 @@ import {
   Cam,
   Activity,
   ActivityNode,
-  ShapeDefinition
 } from '@geneontology/noctua-form-base';
 
 import { EditorCategory } from '@noctua.editor/models/editor-category';
-import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { noctuaAnimations } from '@noctua/animations';
@@ -30,13 +28,13 @@ import { NoctuaFormDialogService } from '../../noctua-form/services/dialog.servi
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
 @Component({
-  selector: 'noc-annotation-table',
-  templateUrl: './annotation-table.component.html',
-  styleUrls: ['./annotation-table.component.scss'],
+  selector: 'noc-annotations-table',
+  templateUrl: './annotations-table.component.html',
+  styleUrls: ['./annotations-table.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: noctuaAnimations
 })
-export class AnnotationTableComponent implements OnInit, OnDestroy {
+export class AnnotationsTableComponent implements OnInit, OnDestroy {
   EditorCategory = EditorCategory;
   ActivityType = ActivityType;
   activityTypeOptions = noctuaFormConfig.activityType.options;
