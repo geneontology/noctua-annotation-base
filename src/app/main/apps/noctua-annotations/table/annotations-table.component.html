@@ -1,4 +1,4 @@
-<div class="w-full noc-annotations-table px-10">
+<div class="w-full noc-annotations-table px-10 max-w-[1200px] mx-auto">
   @if (cam.loading?.status) {
   <div class="noc-summary-bar" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-cam-progress-message">
@@ -6,7 +6,8 @@
     </span>
   </div>
   }
-  @if (!cam.loading?.status) {
+
+  @if (cam.activities.length > 0) {
   <div class="noc-summary-bar-container w-full flex items-center px-2">
     <span class='mr-12 text-3xl'>
       Standard Annotations <small class="text-gray-600">( {{cam.activities.length}} )</small>
@@ -40,12 +41,10 @@
       </mat-menu>
       <span fxFlex></span>
     </div>
-
   </div>
-  }
 
   <div class="noc-table-header w-full" fxLayout="row" fxLayoutAlign="start center">
-    <div class="noc-cell noc-annotation-gp-cell" fxFlex="">
+    <div class="noc-cell noc-gp-cell" fxFlex="">
       Gene Product
     </div>
     <div class="noc-cell noc-relation-cell">
@@ -63,11 +62,11 @@
     <div class="noc-cell noc-with-cell">
       With
     </div>
-    <div class="noc-cell noc-annotation-extension-cell" fxFlex="">
+    <div class="noc-cell noc-extensions-cell" fxFlex="">
       Extension
     </div>
     <div class="noc-cell noc-comments-cell">
-
+      <fa-icon [icon]="['fas', 'comment']"></fa-icon>
     </div>
     <div class="noc-cell noc-action-cell"> </div>
   </div>
@@ -78,5 +77,11 @@
       </noc-annotation-node>
     </div>
     }
+
   </div>
+  } @else {
+  <div class="noc-no-info" fxLayout="row" fxLayoutAlign="center center">
+    No annotations available to display
+  </div>
+  }
 </div>

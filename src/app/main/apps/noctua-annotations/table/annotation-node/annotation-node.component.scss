@@ -10,7 +10,9 @@ $accent: map-get($theme, accent);
   width: 100%;
 
   ul {
-    list-style: disc !important;
+    li:not(:first-child) {
+      border-top: 1px solid #ccc; /* Apply border to the top of all items except the first one */
+    }
   }
 
   mat-chip {
@@ -139,16 +141,9 @@ $accent: map-get($theme, accent);
         }
       }
 
-      &.noc-term-cell {
-        font-size: 12px;
-      }
-
-      &.noc-relation-cell {
-        font-size: 12px;
-      }
-
-      &.noc-extension-cell {
-        font-size: 12px;
+      &.noc-extensions-cell {
+        padding-top: 0;
+        padding-bottom: 0;
       }
 
       .noc-edit-button {

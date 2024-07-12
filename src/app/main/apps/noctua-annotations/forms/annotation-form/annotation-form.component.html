@@ -7,10 +7,9 @@
     </div>
     }
     <div class="noc-form-section" fxLayout="column" fxLayoutAlign="start stretch">
-      <div class="p-0 px-3 pt-1" fxLayout="row" fxLayoutAlign="start center">
-        <noc-term-autocomplete fxFlex="35" class="mt-[24px] p-1" formControlName="gp"
-          [label]="annotationActivity?.gp.label" [category]="annotationActivity?.gp.category"
-          solrField="gp"></noc-term-autocomplete>
+      <div class="p-0 px-3 pt-1" fxLayout="row" fxLayoutAlign="start end">
+        <noc-term-autocomplete fxFlex="35" class="p-1" formControlName="gp" [label]="annotationActivity?.gp.label"
+          [category]="annotationActivity?.gp.category" solrField="gp"></noc-term-autocomplete>
         <div class="p-1 " fxFlex="30" fxLayout="column" fxLayoutAlign="start stretch">
           <mat-checkbox class="noc-qualifier-cbx" formControlName="isComplement">NOT</mat-checkbox>
           <mat-form-field appearance="fill" class="noc-sm w-full" [attr.data-cy]="'form-input-gpterm-relation'">
@@ -42,7 +41,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <noc-term-autocomplete fxFlex="35" class="mt-[24px] p-1" formControlName="goterm"
+        <noc-term-autocomplete fxFlex="35" class="p-1" formControlName="goterm"
           [label]="annotationActivity?.goterm.label" [category]="annotationActivity?.goterm.category"
           solrField="goterm"></noc-term-autocomplete>
 

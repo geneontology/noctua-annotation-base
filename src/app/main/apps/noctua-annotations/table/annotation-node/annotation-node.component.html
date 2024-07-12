@@ -3,7 +3,7 @@
   <div class="noc-activity-node w-full"
     [ngClass]="{'noc-selected': annotationActivity.activity.displayId===camService.currentMatch?.activityDisplayId}"
     fxLayout="row" fxLayoutAlign="start stretch">
-    <div class="noc-annotation-gp-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
+    <div class="noc-gp-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
       [attr.id]="annotationActivity.gp.term?.displayId"
       [ngClass]="{'noc-highlight-match': annotationActivity.gp.term?.highlight,
           'noc-highlight-modified': annotationActivity.gp.term?.modified,
@@ -71,7 +71,7 @@
       }
     </div>
 
-    <div class="noc-evidence-code-cell noc-entity-cell" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch"
+    <div class="noc-evidence-code-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch"
       [ngClass]="{'noc-highlight-modified': annotationActivity.evidenceCode.term?.modified}">
       @if (annotationActivity.evidenceCode.term?.modified &&
       annotationActivity.evidenceCode.term?.termHistory?.length>0) {
@@ -136,11 +136,11 @@
 
     </div>
 
-    <div class="noc-annotation-extension-cell noc-entity-cell" fxFlex="">
+    <div class="noc-extensions-cell noc-entity-cell" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
       <ul class="w-full" fxLayout="column" fxLayoutAlign="start stretch">
 
         @for(extension of annotationActivity.extensions; track extension) {
-        <li class="w-full py-2 border-b-2" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
+        <li class="w-full py-2" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
           [attr.id]="extension.extensionTerm?.term?.displayId"
           [ngClass]="{'noc-highlight-match': extension.extensionTerm?.term?.highlight,
         'noc-highlight-modified': extension.extensionTerm?.term?.modified,
