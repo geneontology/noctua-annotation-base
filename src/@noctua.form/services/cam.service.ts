@@ -226,9 +226,9 @@ export class CamService {
     return self._bbopGraphService.deleteActivity(self.cam, deleteData.uuids, deleteData.triples);
   }
 
-  updateTermList(formActivity: Activity, entity: ActivityNode) {
+  updateTermList(formActivity: Activity) {
     this.noctuaLookupService.termList = this.getUniqueTerms(formActivity);
-    entity.termLookup.results = this.noctuaLookupService.termPreLookup(entity.type);
+    //entity.termLookup.results = //this.noctuaLookupService.termPreLookup(entity.type);
   }
 
   updateEvidenceList(formActivity: Activity, entity: ActivityNode) {

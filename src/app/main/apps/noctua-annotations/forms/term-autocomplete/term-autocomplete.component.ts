@@ -86,9 +86,13 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   writeValue(value: any): void {
     this.control.setValue(value);
 
+    console.log('writeValue:', value);
+
     if (!value) {
       this.filteredOptions = [];
     }
+
+    console.log('Filtered options:', this.filteredOptions);
   }
 
   registerOnChange(fn: any): void {
@@ -109,8 +113,13 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
     this.filteredOptions = [];
   }
 
-  updateReferenceList() {
+  onFocus(): void {
+    if (!this.control.value) {
+      this.filteredOptions = this.lookupService.termPreLookup(this.category);
+      console.log('Pre-defined options:', this.filteredOptions);
+    }
   }
+
 
   openAddReference(event) {
     event.stopPropagation();
@@ -121,7 +130,6 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   }
 
   termDisplayFn(term): string | undefined {
-    console.log('termDisplayFn:', term);
     if (typeof term === 'string') {
       return term;
     } else if (term && term.id && term.label) {

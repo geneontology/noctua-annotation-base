@@ -18,6 +18,7 @@ import {
   AnnotationExtension,
   AutocompleteType,
   ActivityError,
+  CamService,
 } from '@geneontology/noctua-form-base';
 import { NoctuaAnnotationsDialogService } from '../../services/dialog.service';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
@@ -56,6 +57,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotationFormService: NoctuaAnnotationFormService,
+    private camService: CamService,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder
   ) {
@@ -93,6 +95,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         }
         this.activity = activity;
         this.annotationActivity = { ...this.noctuaAnnotationFormService.annotationActivity } as AnnotationActivity;
+        this.camService.updateTermList(this.activity);
 
         this.cdr.markForCheck()
       });
@@ -129,7 +132,8 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
   private _addRootTerm(rootTerm) {
     const goterm = this.dynamicForm.get('goterm')
-    const evidenceFormGroup = this.dynamicForm.get('evidence') as FormGroup;
+    const evidenceCode = this.dynamicForm.get('evidenceCode')
+    const reference = this.dynamicForm.get('reference')
 
     const term = {
       "id": rootTerm.id,
@@ -143,13 +147,12 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
     goterm.patchValue(term);
 
-    evidenceFormGroup.patchValue({
-      evidenceCode: {
-        id: noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
-        label: noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label
-      },
-      reference: noctuaFormConfig.evidenceAutoPopulate.nd.reference
+    evidenceCode.patchValue({
+      id: noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
+      label: noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label
     });
+
+    reference.patchValue(noctuaFormConfig.evidenceAutoPopulate.nd.reference);
   }
 
 
@@ -184,7 +187,6 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     this.noctuaAnnotationFormService.clearForm();
 
     this.cdr.markForCheck();
-    console.log(this.dynamicForm)
   }
 
   compareFn(o1: any, o2: any): boolean {

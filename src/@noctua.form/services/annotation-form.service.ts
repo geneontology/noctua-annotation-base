@@ -124,7 +124,7 @@ export class NoctuaAnnotationFormService {
 
     this.errors = this.getActivityFormErrors(annotationData);
     this.onFormErrorsChanged.next(this.errors);
-
+    this.camService.updateTermList(this.activity);
     this.onActivityChanged.next(this.activity);
   }
 

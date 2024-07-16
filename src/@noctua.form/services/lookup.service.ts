@@ -94,21 +94,31 @@ export class NoctuaLookupService {
     );
   }
 
-  termPreLookup(type: ActivityNodeType): Entity[] {
-    const self = this;
+  termPreLookup(categories: GoCategory[]): GOlrResponse[] {
 
-    const filtered = filter(self.termList, (activityNode: ActivityNode) => {
-      return activityNode.type === type;
-    });
+    if (!categories || categories.length === 0) {
+      return [];
+    }
 
-    return filtered.map((activityNode: ActivityNode) => {
-      return activityNode.term;
-    });
+    const results: GOlrResponse[] = this.termList.map((node) => {
+      return {
+        id: node.term.id,
+        label: node.term.label,
+        rootTypes: node.rootTypes,
+        notAnnotatable: true,
+      } as GOlrResponse;
+
+    }).filter((result) =>
+      result.rootTypes.some((rootType) =>
+        categories.some((category) => category.category === rootType.id)
+      )
+    );;
+
+    return results;
+
   }
 
   evidencePreLookup(): Entity[] {
-    const self = this;
-
     const filtered = uniqWith(this.evidenceList, compareEvidenceEvidence);
     return filtered.map((evidence: Evidence) => {
       return evidence.evidence;
