@@ -187,13 +187,13 @@ export class NoctuaAnnotationFormService {
     this.initializeForm();
   }
 
-  saveAnnotation(annotationForm: FormGroup) {
-    const self = this;
+  saveAnnotation(annotationFormValue: StandardAnnotationForm) {
+    console.log('saveAnnotation:', annotationFormValue);
     //self.activityFormToActivity();
 
     //self.annotationActivity.activityToAnnotation(self.activity);
-    const saveData = self.annotationActivity.createSave(annotationForm.value as StandardAnnotationForm);
-    return forkJoin(self.bbopGraphService.addActivity(self.cam, saveData.nodes, saveData.triples, saveData.title));
+    const saveData = this.annotationActivity.createSave(annotationFormValue as StandardAnnotationForm);
+    return forkJoin(this.bbopGraphService.addActivity(this.cam, saveData.nodes, saveData.triples, saveData.title));
   }
 
   clearForm() {

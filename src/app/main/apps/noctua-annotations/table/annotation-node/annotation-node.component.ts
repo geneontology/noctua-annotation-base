@@ -252,7 +252,7 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
         this.bbopGraphService.savePredicateComments(self.cam, entity.predicate, comments);
       }
     };
-    self.noctuaFormDialogService.openCommentsDialog(entity.predicate, success)
+    self.noctuaFormDialogService.openCommentsDialog(entity.predicate.comments, success)
   }
 
   updateCurrentMenuEvent(event) {

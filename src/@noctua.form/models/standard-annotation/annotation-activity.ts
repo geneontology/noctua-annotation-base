@@ -44,6 +44,7 @@ export class AnnotationActivity {
   evidenceCode = ShapeUtils.generateBaseTerm([]);
   reference = ShapeUtils.generateBaseTerm([]);
   with = ShapeUtils.generateBaseTerm([]);
+  comments: string[] = [];
 
   extensions: AnnotationExtension[] = [];
   gpToTermEdges: Entity[] = [];
@@ -113,6 +114,8 @@ export class AnnotationActivity {
     this.evidenceCode.term.id = annotationForm.evidenceCode.id;
     this.reference.term.id = annotationForm.reference;
     this.with.term.id = annotationForm.withFrom;
+
+    this.comments = annotationForm.comments;
 
     annotationForm.annotationExtensions.forEach((ext, index) => {
       this.extensions[index].extensionEdge = ext.extensionEdge;
@@ -190,6 +193,7 @@ export class AnnotationActivity {
 
     const predicateEntity = Entity.createEntity(edgeConfig);
     const predicate = new Predicate(predicateEntity, [evidence]);
+    predicate.comments = this.comments;
 
     return reverse
       ? new Triple(objectNode, subjectNode, predicate)

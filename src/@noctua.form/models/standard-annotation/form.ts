@@ -15,4 +15,5 @@ export interface StandardAnnotationForm {
   evidenceCode: GOlrResponse;
   reference: string;
   withFrom: string;
+  comments?: string[];
 }

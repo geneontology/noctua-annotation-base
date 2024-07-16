@@ -12,6 +12,7 @@
     fxLayoutAlign="start start">
     <div class="" fxFlex="400px">
       @for ( item of filteredOptions; track item) {
+      @if (autocompleteType === AutocompleteType.TERM || autocompleteType === AutocompleteType.EVIDENCE_CODE) {
       <mat-option [disabled]="!item.notAnnotatable" [value]="item">
         <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-term-label">
@@ -43,6 +44,16 @@
           </button>
         </div>
       </mat-option>
+      } @else {
+      <mat-option [value]="item">
+        <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-term-label">
+            {{ item }}
+          </div>
+          <span fxFlex></span>
+        </div>
+      </mat-option>
+      }
       }
     </div>
     <!-- <div fxFlex="" class="scard-more-info">

@@ -40,6 +40,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   annotationFormGroup: FormGroup;
   searchCriteria: any = {};
   extensionFormArray: FormArray;
+  comments: string[] = [];
   activity: Activity;
   errors: ActivityError[] = [];
 
@@ -95,7 +96,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         }
         this.activity = activity;
         this.annotationActivity = { ...this.noctuaAnnotationFormService.annotationActivity } as AnnotationActivity;
-        this.camService.updateTermList(this.activity);
+
 
         this.cdr.markForCheck()
       });
@@ -155,6 +156,18 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     reference.patchValue(noctuaFormConfig.evidenceAutoPopulate.nd.reference);
   }
 
+  openCommentsForm() {
+    const self = this;
+
+    const success = (comments) => {
+      if (comments) {
+        console.log('Comments:', comments);
+        this.comments = comments;
+      }
+    };
+    self.noctuaFormDialogService.openCommentsDialog(this.comments, success)
+  }
+
 
   checkErrors() {
     this.noctuaFormDialogService.openActivityErrorsDialog(this.errors);
@@ -168,7 +181,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   save() {
     const self = this;
 
-    self.noctuaAnnotationFormService.saveAnnotation(this.dynamicForm)
+    self.noctuaAnnotationFormService.saveAnnotation({ ...this.dynamicForm.value, ...{ comments: this.comments } })
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(() => {
         self.noctuaAnnotationsDialogService.openInfoToast('Annotation successfully created.', 'OK');

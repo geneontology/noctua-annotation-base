@@ -21,12 +21,11 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   AutocompleteType = AutocompleteType;
   @Input() label: string;
   @Input() category: GoCategory[] = [];
-  @Input() solrField: string;
-  @Input() autocompleteType: string = AutocompleteType.TERM;
+  @Input() autocompleteType: AutocompleteType = AutocompleteType.TERM;
 
   control = new FormControl();
   options: string[] = [];
-  filteredOptions: GOlrResponse[] = [];
+  filteredOptions: GOlrResponse[] | string[] = [];
   private valueChangesSubscription: Subscription;
   private _unsubscribeAll: Subject<any>;
 
@@ -115,8 +114,8 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
 
   onFocus(): void {
     if (!this.control.value) {
-      this.filteredOptions = this.lookupService.termPreLookup(this.category);
-      console.log('Pre-defined options:', this.filteredOptions);
+      this.filteredOptions = this.lookupService.preLookup(this.autocompleteType, this.category);
+      console.log('Pre-defined options:', this.autocompleteType, this.filteredOptions);
     }
   }
 
