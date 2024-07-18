@@ -95,6 +95,7 @@
               <mat-label>Extension Relation</mat-label>
               <mat-select class="" panelClass="noc-term-autocomplete" placeholder="" formControlName="extensionEdge"
                 [compareWith]="compareFn">
+                <mat-option [value]="null">None</mat-option>
                 @for (item of annotationActivity?.extensions[i]?.extensionEdges; track item) {
                 <mat-option [value]="item">
                   <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
