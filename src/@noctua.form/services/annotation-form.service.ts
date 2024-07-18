@@ -18,7 +18,6 @@ import { ActivityError, ErrorLevel, ErrorType } from './../models/activity/parse
 })
 export class NoctuaAnnotationFormService {
   public errors = [];
-  public currentActivity: Activity;
   public activity: Activity;
   public annotationActivity: AnnotationActivity;
   public onActivityCreated: BehaviorSubject<Activity>
@@ -26,9 +25,8 @@ export class NoctuaAnnotationFormService {
   public onFormErrorsChanged: BehaviorSubject<ActivityError[]>
   public cam: Cam;
 
-
   // for setting edge when goterm is changed
-  private previousGotermRelation: string = null
+  // private previousGotermRelation: string = null
 
   constructor(private _fb: FormBuilder, public noctuaFormConfigService: NoctuaFormConfigService,
     private camService: CamService,
@@ -54,33 +52,36 @@ export class NoctuaAnnotationFormService {
 
     this.errors = [];
 
-    this.currentActivity = null;
-
-    //this.annotationFormGroup.next(this._fb.group(this.annotationForm));
     this.activity.enableSubmit();
     this.annotationActivity = new AnnotationActivity(this.activity);
-    //this._onActivityFormChanges();
     this.onActivityChanged.next(this.activity);
   }
 
   processAnnotationFormGroup(dynamicForm: FormGroup, annotationData: StandardAnnotationForm): void {
     console.log('Annotation form group processed:', annotationData);
-    let edges
 
     const gpRootTypes = annotationData.gp?.rootTypes ?? [];
     const gotermRootTypes = annotationData.goterm?.rootTypes ?? [];
-
-    edges = this.noctuaFormConfigService.getTermRelations(
+    const gpToTermRelations = this.noctuaFormConfigService.getTermRelations(
       gpRootTypes,
       gotermRootTypes,
       true
     );
 
-    this.annotationActivity.gpToTermEdges = edges;
+    const gotTermCategories = this.noctuaFormConfigService.getObjectRange(
+      gpRootTypes,
+      annotationData.gpToTermEdge?.id,
+      true
+    );
 
-    const extensionObjects = this.noctuaFormConfigService.getObjectsRelations(
+    console.log('gotTermCategories:', gotTermCategories);
+
+    const extensionObjects = this.noctuaFormConfigService.getObjectRange(
       gotermRootTypes,
     );
+
+    this.annotationActivity.gpToTermEdges = gpToTermRelations;
+    this.annotationActivity.goterm.category = gotTermCategories;
 
     if (this.annotationActivity.extensions.length === annotationData.annotationExtensions.length) {
 
@@ -97,27 +98,23 @@ export class NoctuaAnnotationFormService {
 
         if (extensionObjects.length > 0) {
           this.annotationActivity.extensions[index].extensionTerm.category = extensionObjects;
-
-          // this.annotationActivity.extensions[index].extensionTerm.category = extensionObjects;
-          //this.noctuaFormConfigService.setTermLookup(ext.extension, extensionObjects);
         }
       });
     }
 
-    if (edges?.length > 0 && annotationData.gp?.id && annotationData.goterm?.id) {
+    if (gpToTermRelations?.length > 0 && annotationData.gp?.id && annotationData.goterm?.id) {
 
-      const exists = edges.some(e => e.id === annotationData.gpToTermEdge?.id);
+      const exists = gpToTermRelations.some(e => e.id === annotationData.gpToTermEdge?.id);
       if (!exists) {
-        dynamicForm.get('gpToTermEdge').patchValue(edges[0]);
+        dynamicForm.get('gpToTermEdge').patchValue(gpToTermRelations[0]);
         const isProteinComplex = annotationData.goterm.rootTypes.find((rootType: Entity) => {
           return rootType.id === EntityDefinition.GoProteinContainingComplex.category;
         });
 
         if (isProteinComplex) {
-          const partOfEdge = edges.find(e => e.id === noctuaFormConfig.edge.partOf.id);
+          const partOfEdge = gpToTermRelations.find(e => e.id === noctuaFormConfig.edge.partOf.id);
           dynamicForm.get('gpToTermEdge').patchValue(partOfEdge);
         }
-        this.previousGotermRelation = this.annotationActivity.gpToTermEdge?.id;
       }
 
     }
@@ -163,6 +160,13 @@ export class NoctuaAnnotationFormService {
       }
     }
 
+    annotationData.annotationExtensions.forEach((extension, index) => {
+      if ((extension.extensionEdge?.id && !extension.extensionTerm?.id) || (!extension.extensionEdge?.id && extension.extensionTerm?.id)) {
+        const error = new ActivityError(ErrorLevel.error, ErrorType.general, `Both Extension relation and Extension Term must be filled (${index + 1})`);
+        errors.push(error);
+      }
+    });
+
     return errors
   }
 
@@ -199,6 +203,4 @@ export class NoctuaAnnotationFormService {
   clearForm() {
     this.initializeForm();
   }
-
-
 }

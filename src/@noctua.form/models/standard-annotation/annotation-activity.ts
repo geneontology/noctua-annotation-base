@@ -49,7 +49,6 @@ export class AnnotationActivity {
   extensions: AnnotationExtension[] = [];
   gpToTermEdges: Entity[] = [];
   activity: Activity;
-  submitErrors = [];
 
 
   constructor(activity?: Activity) {
@@ -115,7 +114,7 @@ export class AnnotationActivity {
     this.reference.term.id = annotationForm.reference;
     this.with.term.id = annotationForm.withFrom;
 
-    this.comments = annotationForm.comments;
+    this.comments = annotationForm.annotationComments.map(comment => comment.comment);
 
     annotationForm.annotationExtensions.forEach((ext, index) => {
       this.extensions[index].extensionEdge = ext.extensionEdge;

@@ -16,6 +16,7 @@
             <mat-label>GP to Term Relation</mat-label>
             <mat-select class="" panelClass="noc-term-autocomplete" placeholder="" formControlName="gpToTermEdge"
               [compareWith]="compareFn">
+              <mat-option [value]="null">None</mat-option>
               @for (item of annotationActivity?.gpToTermEdges; track item) {
               <mat-option [value]="item">
                 <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
@@ -135,8 +136,34 @@
         </button>
       </div>
 
+
+
+
+      <div class="noc-section-header pr-4" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-section-heading">
+          Comments
+        </div>
+        <span fxFlex></span>
+      </div>
+      <div formArrayName="annotationComments" class="px-3 pt-1" fxLayout="column" fxLayoutAlign="start center">
+        <div *ngFor="let item of annotationComments.controls; let i=index" [formGroupName]="i" class="w-full">
+          <div class="p-1" fxFlex="60" fxLayout="column" fxLayoutAlign="start stretch">
+            <mat-form-field appearance="fill" class="noc-sm w-full">
+              <mat-label>Comment</mat-label>
+              <textarea type="text" matInput formControlName="comment" rows="2"></textarea>
+            </mat-form-field>
+          </div>
+          <button mat-icon-button (click)="deleteExtension(i)" class="text-warn">
+            <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+          </button>
+        </div>
+      </div>
+
+
+
+
       <div class="pl-4 py-4">
-        <button mat-stroked-button (click)="openCommentsForm() " class="noc-xs px-2 w-[170px] noc-rounded-button "
+        <button mat-stroked-button (click)="addComment() " class="noc-xs px-2 w-[170px] noc-rounded-button "
           color="primary">
           Add Comment(s)
         </button>

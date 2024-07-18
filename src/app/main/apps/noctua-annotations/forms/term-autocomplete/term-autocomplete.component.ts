@@ -56,7 +56,7 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   }
 
   subscribeToValueChanges(): void {
-    console.log('Subscribing to value changes with category:', this.category);
+    // console.log('Subscribing to value changes with category:', this.category);
 
     if (this.valueChangesSubscription) {
       this.valueChangesSubscription.unsubscribe();
@@ -77,7 +77,7 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
         ))
       ).subscribe(data => {
         this.filteredOptions = data;
-        console.log('Filtered options:', data);
+        // console.log('Filtered options:', data);
       });
     }
   }
@@ -85,13 +85,9 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   writeValue(value: any): void {
     this.control.setValue(value);
 
-    console.log('writeValue:', value);
-
     if (!value) {
       this.filteredOptions = [];
     }
-
-    console.log('Filtered options:', this.filteredOptions);
   }
 
   registerOnChange(fn: any): void {
@@ -108,14 +104,12 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   }
 
   selectTerm(term: any) {
-    console.log('term', term);
     this.filteredOptions = [];
   }
 
   onFocus(): void {
     if (!this.control.value) {
       this.filteredOptions = this.lookupService.preLookup(this.autocompleteType, this.category);
-      console.log('Pre-defined options:', this.autocompleteType, this.filteredOptions);
     }
   }
 
