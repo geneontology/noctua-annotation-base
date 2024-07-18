@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, SimpleChanges, forwardRef } from '@angular/core';
-import { NG_VALUE_ACCESSOR, FormControl, FormsModule, ReactiveFormsModule, ControlValueAccessor, FormGroup } from '@angular/forms';
-import { ActivityNode, AutocompleteType, GOlrResponse, GoCategory, NoctuaFormUtils, NoctuaLookupService } from '@geneontology/noctua-form-base';
-import { Observable, Subject, Subscription, catchError, debounceTime, filter, of, startWith, switchMap, takeUntil } from 'rxjs';
+import { NG_VALUE_ACCESSOR, FormControl, ControlValueAccessor } from '@angular/forms';
+import { AutocompleteType, GOlrResponse, GoCategory, NoctuaFormUtils, NoctuaLookupService } from '@geneontology/noctua-form-base';
+import { Subject, Subscription, catchError, debounceTime, filter, of, startWith, switchMap, takeUntil } from 'rxjs';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 
 @Component({

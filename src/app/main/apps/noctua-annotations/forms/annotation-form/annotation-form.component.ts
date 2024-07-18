@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
-import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import {
@@ -13,12 +12,9 @@ import {
   NoctuaUserService,
   AnnotationActivity,
   noctuaFormConfig,
-  Evidence,
-  Entity,
   AnnotationExtension,
   AutocompleteType,
   ActivityError,
-  CamService,
 } from '@geneontology/noctua-form-base';
 import { NoctuaAnnotationsDialogService } from '../../services/dialog.service';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
@@ -59,7 +55,6 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaAnnotationFormService: NoctuaAnnotationFormService,
-    private camService: CamService,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder
   ) {

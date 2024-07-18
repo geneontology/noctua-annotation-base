@@ -126,8 +126,6 @@ export class NoctuaAnnotationFormService {
     this.onActivityChanged.next(this.activity);
   }
 
-
-
   getActivityFormErrors(annotationData: StandardAnnotationForm) {
 
     const errors = [];
