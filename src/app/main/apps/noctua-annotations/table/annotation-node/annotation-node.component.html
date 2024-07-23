@@ -85,6 +85,12 @@
           {{ annotationActivity.evidenceCode.term?.id }}
         </a>
       </span>
+
+      @if (noctuaUserService.user ) {
+      <noctua-inline-editor [cam]="cam" [annotationActivity]='annotationActivity'
+        [category]="EditorCategory.EVIDENCE_CODE" [editorType]="EditorType.STANDARD" class="noc-edit-button">
+      </noctua-inline-editor>
+      }
     </div>
     <div class="noc-reference-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch"
       [ngClass]="{'noc-highlight-match': annotationActivity.reference.term?.highlight,
@@ -108,6 +114,11 @@
         </a>
       </span>
       }
+      @if (noctuaUserService.user ) {
+      <noctua-inline-editor [cam]="cam" [annotationActivity]='annotationActivity' [category]="EditorCategory.REFERENCE"
+        [editorType]="EditorType.STANDARD" class="noc-edit-button">
+      </noctua-inline-editor>
+      }
 
     </div>
     <div class="noc-with-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch"
@@ -129,6 +140,12 @@
           {{annotationActivity.with.term?.label}}
         </a>
       </span>
+      }
+
+      @if (noctuaUserService.user ) {
+      <noctua-inline-editor [cam]="cam" [annotationActivity]='annotationActivity' [category]="EditorCategory.WITH"
+        [editorType]="EditorType.STANDARD" class="noc-edit-button">
+      </noctua-inline-editor>
       }
 
     </div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { Activity, ActivityType } from './../models/activity/activity';
@@ -12,6 +12,8 @@ import * as EntityDefinition from './../data/config/entity-definition';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { AnnotationExtensionForm, StandardAnnotationForm } from './../models/standard-annotation/form';
 import { ActivityError, ErrorLevel, ErrorType } from './../models/activity/parser/activity-error';
+import { EditorCategory } from '@noctua.editor/models/editor-category';
+
 
 @Injectable({
   providedIn: 'root'
@@ -193,12 +195,43 @@ export class NoctuaAnnotationFormService {
   }
 
   saveAnnotation(annotationFormValue: StandardAnnotationForm) {
-    console.log('saveAnnotation:', annotationFormValue);
-    //self.activityFormToActivity();
-
-    //self.annotationActivity.activityToAnnotation(self.activity);
     const saveData = this.annotationActivity.createSave(annotationFormValue as StandardAnnotationForm);
     return forkJoin(this.bbopGraphService.addActivity(this.cam, saveData.nodes, saveData.triples, saveData.title));
+  }
+
+
+  editAnnotation(editorCategory: EditorCategory, cam: Cam, annotationActivity: AnnotationActivity, newAnnotation: string): Observable<any> {
+    const evidence = annotationActivity.getEvidenceNodes();
+
+    const oldAnnotations = evidence.map((evidence) => {
+      let id;
+      switch (editorCategory) {
+        case EditorCategory.EVIDENCE_CODE:
+          id = evidence.evidence.id;
+          break;
+        case EditorCategory.WITH:
+          id = evidence.with;
+          break;
+        case EditorCategory.REFERENCE:
+          id = evidence.reference;
+          break;
+      }
+      return {
+        id: id,
+        uuid: evidence.uuid,
+      } as Entity;
+    });
+
+    console.log('Edit evidence:', oldAnnotations, newAnnotation);
+
+    switch (editorCategory) {
+      case EditorCategory.EVIDENCE_CODE:
+        return this.bbopGraphService.editEvidenceCode(cam, oldAnnotations, newAnnotation);
+      case EditorCategory.WITH:
+        return this.bbopGraphService.editWith(cam, oldAnnotations, newAnnotation);
+      case EditorCategory.REFERENCE:
+        return this.bbopGraphService.editReference(cam, oldAnnotations, newAnnotation);
+    }
   }
 
   clearForm() {

@@ -123,8 +123,7 @@
           </div>
           <noc-term-autocomplete fxFlex="" class="p-1" formControlName="extensionTerm"
             [label]="annotationActivity?.extensions[i]?.extensionTerm.label"
-            [category]="annotationActivity?.extensions[i]?.extensionTerm?.category"
-            solrField="extensionTerm"></noc-term-autocomplete>
+            [category]="annotationActivity?.extensions[i]?.extensionTerm?.category"></noc-term-autocomplete>
           <button mat-icon-button (click)="deleteExtension(i)" class="text-warn">
             <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
           </button>

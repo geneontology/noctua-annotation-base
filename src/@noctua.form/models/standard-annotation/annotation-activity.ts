@@ -120,8 +120,17 @@ export class AnnotationActivity {
       this.extensions[index].extensionEdge = ext.extensionEdge;
       this.extensions[index].extensionTerm.term.id = ext.extensionTerm.id;
     });
+  }
 
+  getEvidenceNodes(): Evidence[] {
+    const evidenceNodes: Evidence[] = [];
+    this.activity.edges.forEach(triple => {
+      return triple.predicate.evidence.map(evidence => {
+        evidenceNodes.push(evidence);
+      });
+    });
 
+    return evidenceNodes;
   }
 
   createSave(annotationForm: StandardAnnotationForm) {

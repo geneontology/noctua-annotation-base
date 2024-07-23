@@ -24,7 +24,7 @@ import {
   ShapeDefinition
 } from '@geneontology/noctua-form-base';
 
-import { EditorCategory } from '@noctua.editor/models/editor-category';
+import { EditorCategory, EditorType } from '@noctua.editor/models/editor-category';
 import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
@@ -41,6 +41,7 @@ import { SettingsOptions } from '@noctua.common/models/graph-settings';
 })
 export class AnnotationNodeComponent implements OnInit, OnDestroy {
   EditorCategory = EditorCategory;
+  EditorType = EditorType;
   ActivityType = ActivityType;
   activityTypeOptions = noctuaFormConfig.activityType.options;
 
