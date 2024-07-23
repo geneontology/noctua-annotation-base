@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, forkJoin, from, Observable, of, throwError } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { Activity, ActivityType } from './../models/activity/activity';
@@ -13,6 +13,7 @@ import { noctuaFormConfig } from './../noctua-form-config';
 import { AnnotationExtensionForm, StandardAnnotationForm } from './../models/standard-annotation/form';
 import { ActivityError, ErrorLevel, ErrorType } from './../models/activity/parser/activity-error';
 import { EditorCategory } from '@noctua.editor/models/editor-category';
+import { Evidence } from 'public-api';
 
 
 @Injectable({
@@ -200,38 +201,67 @@ export class NoctuaAnnotationFormService {
   }
 
 
-  editAnnotation(editorCategory: EditorCategory, cam: Cam, annotationActivity: AnnotationActivity, newAnnotation: string): Observable<any> {
-    const evidence = annotationActivity.getEvidenceNodes();
+  private getOldAnnotations(editorCategory: EditorCategory, evidence: Evidence[]): Entity[] {
+    return evidence.map((ev) => {
+      const id = (() => {
+        switch (editorCategory) {
+          case EditorCategory.EVIDENCE_CODE: return ev.evidence.id;
+          case EditorCategory.WITH: return ev.with;
+          case EditorCategory.REFERENCE: return ev.reference;
+          default: return null;
+        }
+      })();
 
-    const oldAnnotations = evidence.map((evidence) => {
-      let id;
-      switch (editorCategory) {
-        case EditorCategory.EVIDENCE_CODE:
-          id = evidence.evidence.id;
-          break;
-        case EditorCategory.WITH:
-          id = evidence.with;
-          break;
-        case EditorCategory.REFERENCE:
-          id = evidence.reference;
-          break;
-      }
-      return {
-        id: id,
-        uuid: evidence.uuid,
-      } as Entity;
+      return { id, uuid: ev.uuid } as Entity;
     });
+  }
 
-    console.log('Edit evidence:', oldAnnotations, newAnnotation);
+  private performEditAction(
+    editorCategory: EditorCategory,
+    cam: Cam,
+    oldAnnotations: Entity[],
+    newAnnotation: string
+  ): Observable<any> {
+    let actionPromise: Promise<any>;
 
     switch (editorCategory) {
       case EditorCategory.EVIDENCE_CODE:
-        return this.bbopGraphService.editEvidenceCode(cam, oldAnnotations, newAnnotation);
+        actionPromise = this.bbopGraphService.editEvidenceCode(cam, oldAnnotations, newAnnotation);
+        break;
       case EditorCategory.WITH:
-        return this.bbopGraphService.editWith(cam, oldAnnotations, newAnnotation);
+        actionPromise = this.bbopGraphService.editWith(cam, oldAnnotations, newAnnotation);
+        break;
       case EditorCategory.REFERENCE:
-        return this.bbopGraphService.editReference(cam, oldAnnotations, newAnnotation);
+        actionPromise = this.bbopGraphService.editReference(cam, oldAnnotations, newAnnotation);
+        break;
+      default:
+        return throwError(() => new Error('Invalid editor category')); // Emit an error for invalid editorCategory
     }
+
+    return from(actionPromise);
+  }
+
+  editAnnotation(
+    editorCategory: EditorCategory,
+    cam: Cam,
+    annotationActivity: AnnotationActivity,
+    newAnnotation: string
+  ): Observable<any> {
+    const evidence = annotationActivity.getEvidenceNodes();
+    const oldAnnotations = this.getOldAnnotations(editorCategory, evidence);
+
+    console.log('Edit evidence:', oldAnnotations, newAnnotation);
+
+    return this.performEditAction(editorCategory, cam, oldAnnotations, newAnnotation).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
+        this.cam.reviewCamChanges();
+      }),
+      catchError((error) => {
+        console.error('Error editing annotation:', error);
+        return of(null);
+      })
+    )
   }
 
   clearForm() {

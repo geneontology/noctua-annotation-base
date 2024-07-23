@@ -125,8 +125,17 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
       case EditorCategory.EVIDENCE_CODE:
       case EditorCategory.WITH:
       case EditorCategory.REFERENCE:
-        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, this.dynamicForm.value[this.category]);
-        this.close();
+        let value = this.dynamicForm.value[this.category]?.id ?? this.dynamicForm.value[this.category];
+        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, value)
+          .pipe(takeUntil(this._unsubscribeAll))
+          .subscribe(() => {
+            this.zone.run(() => {
+              this.noctuaFormDialogService.openInfoToast(`${this.label} successfully updated.`, 'OK');
+              this.camService.getCam(this.cam.id);
+            });
+            this.close();
+          });
+
         break
 
       case EditorCategory.RELATIONSHIP:
@@ -169,7 +178,7 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         this.formControlName = this.category;
         this.autocompleteType = AutocompleteType.EVIDENCE_CODE
         this.dynamicForm.get(this.formControlName).setValue(this.annotationActivity.evidenceCode.term.id);
-        this.autocompleteCategory = null;
+        this.autocompleteCategory = this.annotationActivity?.evidenceCode.category;
         break;
       case EditorCategory.REFERENCE:
         this.displaySection.term = true;
