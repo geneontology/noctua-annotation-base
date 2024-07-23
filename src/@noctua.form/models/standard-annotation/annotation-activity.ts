@@ -128,7 +128,7 @@ export class AnnotationActivity {
 
     this._populateAnnotationActivity(annotationForm);
     const saveData = {
-      title: 'enabled by ' + this.gp?.term.label,
+      title: 'enabled by ' + annotationForm.gp?.label,
       triples: [],
       nodes: [this.gp, this.goterm],
       graph: null

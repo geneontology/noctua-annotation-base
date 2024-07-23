@@ -137,9 +137,6 @@
         </button>
       </div>
 
-
-
-
       <div class="noc-section-header pr-4" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">
           Comments
@@ -166,7 +163,7 @@
       <div class="pl-4 py-4">
         <button mat-stroked-button (click)="addComment() " class="noc-xs px-2 w-[170px] noc-rounded-button "
           color="primary">
-          Add Comment(s)
+          Add @if(annotationComments?.controls.length>1) {<span>Another</span>} Comment
         </button>
       </div>
 

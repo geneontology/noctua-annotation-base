@@ -1267,7 +1267,7 @@ export class BbopGraphService {
         }
 
         each(triple.predicate.evidence, function (evidence: Evidence) {
-          const evidenceReference = evidence.reference;
+          const evidenceReference = Evidence.formatReference(evidence.reference);
           const evidenceWith = evidence.with;
 
           reqs.add_evidence(evidence.evidence.id, evidenceReference, evidenceWith, triple.predicate.uuid);

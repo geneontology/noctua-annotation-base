@@ -3,7 +3,7 @@
 set -e 
 
 cd ../tmp-models
-java -Xmx10G -cp ../minerva/minerva-cli/bin/minerva-cli.jar org.geneontology.minerva.server.StartUpTool \
+java -Xmx8G -cp ../minerva/minerva-cli/bin/minerva-cli.jar org.geneontology.minerva.server.StartUpTool \
   --use-golr-url-logging \
   --use-request-logging \
   --arachne \

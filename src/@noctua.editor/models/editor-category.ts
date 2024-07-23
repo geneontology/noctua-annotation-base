@@ -1,9 +1,9 @@
 export enum EditorCategory {
-  relationship = 'relationship',
-  term = 'term',
-  evidence = 'evidence',
-  reference = 'reference',
-  with = 'with',
-  evidenceAll = 'evidenceAll',
-  all = 'all'
+  RELATIONSHIP = 'RELATIONSHIP',
+  TERM = 'TERM',
+  EVIDENCE = 'EVIDENCE',
+  REFERENCE = 'REFERENCE',
+  WITH = 'WITH',
+  EVIDENCE_ALL = 'EVIDENCE_ALL',
+  ALL = 'ALL'
 }

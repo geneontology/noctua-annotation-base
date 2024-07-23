@@ -25,7 +25,7 @@
       </span>
       @if (noctuaUserService.user && annotationActivity.gp.term && options.editableTerms) {
       <noctua-inline-editor [cam]="cam" [activity]='annotationActivity.activity' [entity]="annotationActivity.gp"
-        [category]="EditorCategory.term" class="noc-edit-button">
+        [category]="EditorCategory.TERM" class="noc-edit-button">
       </noctua-inline-editor>
       }
     </div>
@@ -37,7 +37,7 @@
         <span>{{annotationActivity.gpToTermEdge.inverseEntity?.label}}</span>
       </span>
       <noctua-inline-editor [cam]="cam" [activity]='annotationActivity.activity' [entity]="annotationActivity.gp"
-        [category]="EditorCategory.relationship" [relationshipChoices]="annotationActivity.gpToTermEdges"
+        [category]="EditorCategory.RELATIONSHIP" [relationshipChoices]="annotationActivity.gpToTermEdges"
         class="noc-edit-button">
       </noctua-inline-editor>
     </div>
@@ -64,12 +64,11 @@
       </span>
       @if (noctuaUserService.user && annotationActivity.goterm.term && options.editableTerms) {
       <noctua-inline-editor [cam]="cam" [activity]='annotationActivity.activity' [entity]="annotationActivity.goterm"
-        [category]="EditorCategory.term" class="noc-edit-button">
+        [category]="EditorCategory.TERM" class="noc-edit-button">
       </noctua-inline-editor>
       }
     </div>
-
-    <div class="noc-evidence-code-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch"
+    <div class="noc-evidence-code-cell noc-entity-cell" fxFlex fxLayout="column" fxLayoutAlign="start stretch"
       [ngClass]="{'noc-highlight-modified': annotationActivity.evidenceCode.term?.modified}">
       @if (annotationActivity.evidenceCode.term?.modified &&
       annotationActivity.evidenceCode.term?.termHistory?.length>0) {
@@ -161,7 +160,7 @@
             </a>
           </span>
           @if (noctuaUserService.user && extension.term && options.editableTerms) {
-          <noctua-inline-editor [cam]="cam" [activity]='activity' [entity]="entity" [category]="EditorCategory.term"
+          <noctua-inline-editor [cam]="cam" [activity]='activity' [entity]="entity" [category]="EditorCategory.TERM"
             class="noc-edit-button">
           </noctua-inline-editor>
           }
@@ -171,7 +170,7 @@
     </div>
     <div class="noc-comments-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch">
       @if (annotationActivity.goterm.showEvidence && annotationActivity.goterm.predicate.comments.length>0) {
-      <button mat-icon-button class="noc-toolbar-button noc-rounded-button" (click)="openCommentsForm(entity)"
+      <button mat-icon-button class="noc-toolbar-button noc-rounded-button " (click)="openCommentsForm(entity)"
         matTooltip="{{annotationActivity.goterm.predicate?.comments}}" [matTooltipPosition]="'after'"
         [matTooltipShowDelay]="1000">
         <fa-icon [icon]="['fas', 'comment']"></fa-icon>
@@ -192,35 +191,20 @@
         <!--   <button mat-menu-item *ngIf="annotationActivity.goterm.aspect" class="" (click)="editEntity(entity)">
     Edit
   </button> -->
-        @if (annotationActivity.goterm.treeLevel===0) {
+        <!--   @if (annotationActivity.goterm.treeLevel===0) {
         <button mat-menu-item class="" (click)="toggleIsComplement(entity)">
           NOT Qualifier
         </button>
         }
-        <!-- <button mat-menu-item *ngIf="annotationActivity.goterm.insertMenuNodes"
+       <button mat-menu-item *ngIf="annotationActivity.goterm.insertMenuNodes"
 [matMenuTriggerFor]="addMenu">Add</button>
-<button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button> -->
+<button mat-menu-item [matMenuTriggerFor]="evidenceMenu">Evidence</button>
         <button mat-menu-item (click)="openCommentsForm(annotationActivity.goterm)" class="">
           Add Comment
-        </button>
+        </button> -->
         <button mat-menu-item (click)="deleteAnnotation()" class="noc-delete-button">
           <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Annotation
         </button>
-      </mat-menu>
-      <mat-menu #addMenu="matMenu">
-        @for (insertMenuItem of annotationActivity.goterm.insertMenuNodes; track insertMenuItem) {
-        <button mat-menu-item class="" (click)="insertEntity(entity, insertMenuItem)">
-          {{insertMenuItem.label}}
-        </button>
-        }
-      </mat-menu>
-      <mat-menu #evidenceMenu="matMenu">
-        <button mat-menu-item (click)="addEvidence(annotationActivity.goterm)" class="">
-          Add Evidence
-        </button>
-        <!--   <button (click)="removeEvidence(entity,i)" mat-menu-item>
-  Remove Evidence
-</button> -->
       </mat-menu>
     </div>
   </div>
