@@ -45,11 +45,13 @@ $accent: map-get($theme, accent);
 
   .noc-activity-form-container {
     padding: 30px 10px;
-    background: linear-gradient(
-      to right,
-      lighten(map-get($primary, default), 25%),
-      lighten(map-get($primary, default), 2%)
-    );
+    background-image: linear-gradient(
+        to right,
+        lighten(map-get($primary, default), 20%),
+        lighten(map-get($accent, default), 10%),
+        darken(map-get($primary, default), 1%)
+      ),
+      url("~assets/images/gene.jpeg");
   }
 
   @keyframes gradientAnimation {

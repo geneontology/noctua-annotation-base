@@ -177,7 +177,7 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         this.label = 'Evidence';
         this.formControlName = this.category;
         this.autocompleteType = AutocompleteType.EVIDENCE_CODE
-        this.dynamicForm.get(this.formControlName).setValue(this.annotationActivity.evidenceCode.term.id);
+        this.dynamicForm.get(this.formControlName).setValue(this.annotationActivity.evidenceCode.term.label);
         this.autocompleteCategory = this.annotationActivity?.evidenceCode.category;
         break;
       case EditorCategory.REFERENCE:
