@@ -335,16 +335,13 @@ export class NoctuaFormConfigService {
 
   activityToAnnotation(activity: Activity): AnnotationActivity {
     const annotationActivity = new AnnotationActivity();
-
     const criteria = {} as AnnotationEdgeConfig
-
     let evidence: Evidence = null;
 
     if (activity.activityType === ActivityType.ccOnly || activity.activityType === ActivityType.molecule) {
       annotationActivity.gp = activity.gpNode;
 
       activity.getEdges(activity.gpNode.id).forEach((edge) => {
-
         if (noctuaFormConfig.ccOnlyEdges.includes(edge.predicate.edge.id)) {
           criteria.gpToTermPredicate = edge.predicate.edge.id;
           annotationActivity.goterm = edge.object;

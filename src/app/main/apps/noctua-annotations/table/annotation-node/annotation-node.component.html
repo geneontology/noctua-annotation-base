@@ -36,10 +36,11 @@
         }
         <span>{{annotationActivity.gpToTermEdge.inverseEntity?.label}}</span>
       </span>
-      <noctua-inline-editor [cam]="cam" [activity]='annotationActivity.activity' [entity]="annotationActivity.gp"
-        [category]="EditorCategory.RELATIONSHIP" [relationshipChoices]="annotationActivity.gpToTermEdges"
-        class="noc-edit-button">
+      @if (noctuaUserService.user && annotationActivity?.gpToTermEdges.length > 0) {
+      <noctua-inline-editor [cam]="cam" [annotationActivity]='annotationActivity'
+        [category]="EditorCategory.GP_TO_TERM_EDGE" [editorType]="EditorType.STANDARD" class="noc-edit-button">
       </noctua-inline-editor>
+      }
     </div>
     <div class="noc-term-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
       [attr.id]="annotationActivity.goterm.term?.displayId"
@@ -205,6 +206,9 @@
       </button>
       }
       <mat-menu #entityMenu="matMenu" class="noc-dropdown-menu">
+        <button mat-menu-item (click)="addExtension()" class="">
+          Add Extension
+        </button>
         <!--   <button mat-menu-item *ngIf="annotationActivity.goterm.aspect" class="" (click)="editEntity(entity)">
     Edit
   </button> -->

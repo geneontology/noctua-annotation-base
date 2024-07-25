@@ -74,13 +74,12 @@ export class NoctuaAnnotationFormService {
     this._updateFormState(annotationData);
   }
 
-  private _setExtensionObjects(gotermRootTypes: Entity[]): void {
-    const extensionObjects = this.noctuaFormConfigService.getObjectRange(gotermRootTypes);
-    if (extensionObjects.length > 0) {
-      this.annotationActivity.extensions.forEach(extension => {
-        extension.extensionTerm.category = extensionObjects;
-      });
-    }
+  getEdgesRange(subjectRootTypes: Entity[], extRootTypes: Entity[] = [], predicateId: string = null) {
+    const edges = this.noctuaFormConfigService.getTermRelations(subjectRootTypes, extRootTypes);
+    const range = this.noctuaFormConfigService.getObjectRange(subjectRootTypes, predicateId);
+
+    return { edges, range };
+
   }
 
   private _updateExtensions(annotationExtensions: AnnotationExtensionForm[], gotermRootTypes: Entity[]): void {
@@ -201,6 +200,59 @@ export class NoctuaAnnotationFormService {
   }
 
 
+
+  editAnnotation(
+    editorCategory: EditorCategory,
+    cam: Cam,
+    annotationActivity: AnnotationActivity,
+    newAnnotation: string
+  ): Observable<any> {
+    const evidence = annotationActivity.getEvidenceNodes();
+    const oldAnnotations = this.getOldAnnotations(editorCategory, evidence);
+
+    console.log('Edit evidence:', oldAnnotations, newAnnotation);
+
+    return this.performEditAction(editorCategory, cam, oldAnnotations, newAnnotation).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
+        this.cam.reviewCamChanges();
+      }),
+      catchError((error) => {
+        console.error('Error editing annotation:', error);
+        return of(null);
+      })
+    )
+  }
+
+  editRelation(
+    editorCategory: EditorCategory,
+    cam: Cam,
+    annotationActivity: AnnotationActivity,
+    newAnnotation: string
+  ): Observable<any> {
+
+    const { a: oldTriple, b: newTriple } = annotationActivity.getTriplePair(annotationActivity.gpToTermEdge.id, annotationActivity.goterm);
+
+    console.log('Edit relation:', oldTriple, newTriple);
+
+    return throwError(() => new Error('Invalid editor category'));
+
+    return from(this.bbopGraphService.editConnection(cam, [oldTriple], [newTriple])).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
+        this.cam.reviewCamChanges();
+      }),
+      catchError((error) => {
+        console.error('Error editing annotation:', error);
+        return of(null);
+      })
+    )
+  }
+
+  clearForm() {
+    this.initializeForm();
+  }
+
   private getOldAnnotations(editorCategory: EditorCategory, evidence: Evidence[]): Entity[] {
     return evidence.map((ev) => {
       const id = (() => {
@@ -239,32 +291,5 @@ export class NoctuaAnnotationFormService {
     }
 
     return from(actionPromise);
-  }
-
-  editAnnotation(
-    editorCategory: EditorCategory,
-    cam: Cam,
-    annotationActivity: AnnotationActivity,
-    newAnnotation: string
-  ): Observable<any> {
-    const evidence = annotationActivity.getEvidenceNodes();
-    const oldAnnotations = this.getOldAnnotations(editorCategory, evidence);
-
-    console.log('Edit evidence:', oldAnnotations, newAnnotation);
-
-    return this.performEditAction(editorCategory, cam, oldAnnotations, newAnnotation).pipe(
-      finalize(() => {
-        this.cam.loading.status = false;
-        this.cam.reviewCamChanges();
-      }),
-      catchError((error) => {
-        console.error('Error editing annotation:', error);
-        return of(null);
-      })
-    )
-  }
-
-  clearForm() {
-    this.initializeForm();
   }
 }

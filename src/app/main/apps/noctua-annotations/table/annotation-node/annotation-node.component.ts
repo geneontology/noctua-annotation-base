@@ -24,7 +24,7 @@ import {
   ShapeDefinition
 } from '@geneontology/noctua-form-base';
 
-import { EditorCategory, EditorType } from '@noctua.editor/models/editor-category';
+import { EditorCategory, EditorConfig, EditorType } from '@noctua.editor/models/editor-category';
 import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
@@ -126,6 +126,16 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
     }
   }
 
+  addExtension() {
+    const data: EditorConfig = {
+      cam: this.cam,
+      annotationActivity: this.annotationActivity,
+      category: EditorCategory.ADD_EXTENSION,
+      editorType: EditorType.STANDARD
+    };
+
+    this.inlineEditorService.open(this.currentMenuEvent.target, { data });
+  }
 
   openSelectEvidenceDialog(entity: ActivityNode) {
     const self = this;

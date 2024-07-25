@@ -155,7 +155,8 @@ $accent: map-get($theme, accent);
       }
 
       .noc-edit-button {
-        //: hidden;
+        display: none;
+        visibility: hidden;
         position: absolute;
         bottom: 0;
         right: 0;
@@ -188,6 +189,7 @@ $accent: map-get($theme, accent);
 
         .noc-edit-button,
         .noc-delete-button {
+          display: initial;
           visibility: visible;
         }
       }

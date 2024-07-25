@@ -2,7 +2,7 @@ import { ActivityNode } from './../activity/activity-node';
 import { Entity, RootTypes } from './../activity/entity';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { Activity } from './../activity/activity';
-import { Triple } from './../activity/triple';
+import { Triple, TriplePair } from './../activity/triple';
 import { Predicate } from './../activity/predicate';
 import * as ShapeUtils from './../../data/config/shape-utils';
 import * as EntityDefinition from './../../data/config/entity-definition';
@@ -131,6 +131,20 @@ export class AnnotationActivity {
     });
 
     return evidenceNodes;
+  }
+
+  getTriplePair(predicateId: string, goterm: ActivityNode): TriplePair<ActivityNode> {
+    const oldTriple = this.activity.edges.find(edge => edge.object.id === goterm.id && edge.predicate.edge.id === predicateId);
+
+    let newTriple: Triple<ActivityNode> | undefined;
+    if (oldTriple) {
+      newTriple = oldTriple
+      newTriple.predicate.edge = new Entity(predicateId, '');
+    } else {
+      newTriple = undefined;
+    }
+
+    return { a: oldTriple, b: newTriple };
   }
 
   createSave(annotationForm: StandardAnnotationForm) {
