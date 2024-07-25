@@ -114,7 +114,7 @@ export class AnnotationActivity {
     this.reference.term.id = annotationForm.reference;
     this.with.term.id = annotationForm.withFrom;
 
-    this.comments = annotationForm.annotationComments.map(comment => comment.comment);
+    this.comments = Array.from(new Set(annotationForm.annotationComments.map(comment => comment.comment)));
 
     annotationForm.annotationExtensions.forEach((ext, index) => {
       this.extensions[index].extensionEdge = ext.extensionEdge;
@@ -125,12 +125,18 @@ export class AnnotationActivity {
   getEvidenceNodes(): Evidence[] {
     const evidenceNodes: Evidence[] = [];
     this.activity.edges.forEach(triple => {
-      return triple.predicate.evidence.map(evidence => {
+      triple.predicate.evidence.forEach(evidence => {
         evidenceNodes.push(evidence);
       });
     });
 
     return evidenceNodes;
+  }
+
+  getPredicates(): Predicate[] {
+    return this.activity.edges.map(triple => {
+      return triple.predicate;
+    });
   }
 
   getTriplePair(predicateId: string, goterm: ActivityNode): TriplePair<ActivityNode> {

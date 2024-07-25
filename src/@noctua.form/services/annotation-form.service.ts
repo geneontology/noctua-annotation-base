@@ -270,6 +270,31 @@ export class NoctuaAnnotationFormService {
     )
   }
 
+  updateComment(
+    editorCategory: EditorCategory,
+    cam: Cam,
+    annotationActivity: AnnotationActivity,
+    newAnnotation: string
+  ): Observable<any> {
+    const predicates = annotationActivity.getPredicates();
+
+
+
+    const newAnnotations = Array.from(new Set([...annotationActivity.comments, newAnnotation]));
+
+    console.log('Edit evidence:', newAnnotations);
+
+    return from(this.bbopGraphService.updateAnnotationComments(cam, predicates, newAnnotations)).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
+      }),
+      catchError((error) => {
+        console.error('Error editing annotation:', error);
+        return of(null);
+      })
+    )
+  }
+
   clearForm() {
     this.initializeForm();
   }

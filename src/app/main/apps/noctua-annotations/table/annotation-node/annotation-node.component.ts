@@ -137,6 +137,17 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
     this.inlineEditorService.open(this.currentMenuEvent.target, { data });
   }
 
+  addComment() {
+    const data: EditorConfig = {
+      cam: this.cam,
+      annotationActivity: this.annotationActivity,
+      category: EditorCategory.ADD_COMMENT,
+      editorType: EditorType.STANDARD
+    };
+
+    this.inlineEditorService.open(this.currentMenuEvent.target, { data });
+  }
+
   openSelectEvidenceDialog(entity: ActivityNode) {
     const self = this;
     const evidences: Evidence[] = this.camService.getUniqueEvidence(self.noctuaActivityFormService.activity);

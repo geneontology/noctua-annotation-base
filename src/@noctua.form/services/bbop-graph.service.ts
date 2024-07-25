@@ -1482,6 +1482,36 @@ export class BbopGraphService {
     return this._editEvidenceAnnotation(cam, oldWiths, newWith, 'with');
   }
 
+  updateAnnotationComments(cam: Cam, predicates: Predicate[], comments: string[]) {
+    const self = this;
+    const reqs = new minerva_requests.request_set(self.noctuaUserService.baristaToken, cam.id);
+
+    predicates.forEach((predicate: Predicate) => {
+
+      const edge = cam.graph.get_edge(predicate.subjectId, predicate.objectId, predicate.edge.id)
+
+      const commentAnnotations = edge.get_annotations_by_key('comment');
+
+      if (edge) {
+        commentAnnotations.forEach(annotation => {
+          reqs.remove_annotation_from_fact('comment', annotation.value(), null,
+            [predicate.subjectId,
+            predicate.objectId,
+            predicate.edge.id]);
+        });
+      }
+
+      reqs.add_annotation_to_fact('comment', comments, null,
+        [predicate.subjectId,
+        predicate.objectId,
+        predicate.edge.id]);
+
+    });
+
+    reqs.store_model(cam.id);
+    return cam.manager.request_with(reqs);
+  }
+
   private _editEvidenceAnnotation(cam: Cam, oldEntities: Entity[], newAnnotation: string, annotationType: 'source' | 'with') {
     const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
 

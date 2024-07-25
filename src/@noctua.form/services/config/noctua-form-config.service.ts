@@ -338,6 +338,12 @@ export class NoctuaFormConfigService {
     const criteria = {} as AnnotationEdgeConfig
     let evidence: Evidence = null;
 
+    const comments = new Set<string>();
+    activity.edges.forEach(edge => {
+      edge.predicate.comments.forEach(comment => comments.add(comment));
+    });
+    annotationActivity.comments = Array.from(comments);
+
     if (activity.activityType === ActivityType.ccOnly || activity.activityType === ActivityType.molecule) {
       annotationActivity.gp = activity.gpNode;
 
@@ -355,7 +361,7 @@ export class NoctuaFormConfigService {
       criteria.gpToTermPredicate = noctuaFormConfig.edge.enabledBy.id;
       annotationActivity.gp = activity.gpNode;
       annotationActivity.goterm = activity.mfNode;
-      evidence = activity.mfNode.predicate.evidence?.[0] ?? null;;
+      evidence = activity.mfNode.predicate.evidence?.[0] ?? null;
 
       if (activity.mfNode?.term.id === noctuaFormConfig.rootNode.mf.id) {
         criteria.mfNodeRequired = true;

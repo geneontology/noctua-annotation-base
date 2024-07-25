@@ -11,7 +11,8 @@ export enum EditorCategory {
   EVIDENCE_ALL = 'EVIDENCE_ALL',
   ALL = 'ALL',
   GP_TO_TERM_EDGE = 'gpToTermEdge',
-  ADD_EXTENSION = 'add_extension'
+  ADD_EXTENSION = 'add_extension',
+  ADD_COMMENT = 'add_comment'
 }
 
 export enum EditorType {

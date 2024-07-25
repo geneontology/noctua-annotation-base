@@ -112,9 +112,13 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
 
   }
 
+  // Will refactor later
+
   save() {
     let termId: string = this.dynamicForm.value[FormStructureKeys.TERM]?.id;
     let relationId: string = this.dynamicForm.value[FormStructureKeys.RELATION]?.id;
+    let comment = this.dynamicForm.value[FormStructureKeys.TERM];
+
     switch (this.category) {
       case EditorCategory.TERM:
       case EditorCategory.EVIDENCE_CODE:
@@ -157,9 +161,19 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
             });
             this.close();
           });
+        break;
+      case EditorCategory.ADD_COMMENT:
+
+        this.annotationFormService.updateComment(this.category, this.cam, this.annotationActivity, comment)
+          .pipe(takeUntil(this._unsubscribeAll))
+          .subscribe(() => {
+            this.zone.run(() => {
+              this.noctuaFormDialogService.openInfoToast(`${this.label} successfully updated.`, 'OK');
+              this.camService.getCam(this.cam.id);
+            });
+            this.close();
+          });
         break
-
-
     }
   }
 
@@ -196,6 +210,12 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         this.autocompleteCategory = null;
         break;
 
+      case EditorCategory.ADD_COMMENT:
+        this.displaySection.term = true;
+        this.label = 'Comment';
+        this.autocompleteType = AutocompleteType.COMMENT
+        this.autocompleteCategory = null;
+        break;
       case EditorCategory.ADD_EXTENSION:
         const { edges, range } = this.annotationFormService.getEdgesRange(this.annotationActivity.goterm.rootTypes,
         );
@@ -207,13 +227,13 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         this.relationshipChoices = edges;
         this.autocompleteCategory = range;
 
-        this.registerExtensionFormChange()
+        this._registerExtensionFormChange()
         break;
 
     }
   }
 
-  registerExtensionFormChange() {
+  private _registerExtensionFormChange() {
     this.dynamicForm.valueChanges
       .pipe(takeUntil(this._unsubscribeAll),
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
