@@ -15,7 +15,7 @@ import {
 import { Cam } from '@geneontology/noctua-form-base';
 import { ActivityNode } from '@geneontology/noctua-form-base';
 import { EditorCategory } from './../../models/editor-category';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { InlineReferenceService } from './../../inline-reference/inline-reference.service';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
 import { EditorDropdownOverlayRef } from '../editor-dropdown/editor-dropdown-ref';
@@ -113,13 +113,14 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
   }
 
   save() {
-    let value = this.dynamicForm.value[this.category]?.id ?? this.dynamicForm.value[this.category];
+    let termId: string = this.dynamicForm.value[FormStructureKeys.TERM]?.id;
+    let relationId: string = this.dynamicForm.value[FormStructureKeys.RELATION]?.id;
     switch (this.category) {
       case EditorCategory.TERM:
       case EditorCategory.EVIDENCE_CODE:
       case EditorCategory.WITH:
       case EditorCategory.REFERENCE:
-        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, value)
+        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, termId)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(() => {
             this.zone.run(() => {
@@ -129,8 +130,9 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
             this.close();
           });
         break;
+
       case EditorCategory.GP_TO_TERM_EDGE:
-        this.annotationFormService.editRelation(this.category, this.cam, this.annotationActivity, value)
+        this.annotationFormService.editRelation(this.category, this.cam, this.annotationActivity, relationId)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(() => {
             this.zone.run(() => {
@@ -140,6 +142,24 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
             this.close();
           });
         break
+      case EditorCategory.ADD_EXTENSION:
+
+        const extensionValue = {
+          relationId,
+          termId
+        };
+        this.annotationFormService.addExtension(this.category, this.cam, this.annotationActivity, extensionValue)
+          .pipe(takeUntil(this._unsubscribeAll))
+          .subscribe(() => {
+            this.zone.run(() => {
+              this.noctuaFormDialogService.openInfoToast(`${this.label} successfully updated.`, 'OK');
+              this.camService.getCam(this.cam.id);
+            });
+            this.close();
+          });
+        break
+
+
     }
   }
 
@@ -186,9 +206,31 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         this.autocompleteType = AutocompleteType.TERM
         this.relationshipChoices = edges;
         this.autocompleteCategory = range;
+
+        this.registerExtensionFormChange()
         break;
 
     }
+  }
+
+  registerExtensionFormChange() {
+    this.dynamicForm.valueChanges
+      .pipe(takeUntil(this._unsubscribeAll),
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
+      .subscribe({
+        next: (value) => {
+          console.log('Annotation form group processed:', value);
+          const objectRootTypes = value.term?.rootTypes ?? [];
+
+          const { edges, range } = this.annotationFormService.getEdgesRange(this.annotationActivity.goterm.rootTypes,
+            objectRootTypes, value.relation?.id);
+          this.relationshipChoices = edges;
+          this.autocompleteCategory = range;
+        },
+        error: (err) => {
+          console.error('Error observing dynamicForm changes:', err);
+        }
+      });
   }
 
   compareFn(o1: any, o2: any): boolean {

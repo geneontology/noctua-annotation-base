@@ -1441,6 +1441,16 @@ export class BbopGraphService {
   }
 
   // Noctua Standard Annotations
+  addExtension(cam: Cam, triple: Triple<ActivityNode>) {
+    const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
+
+    this.addFact(reqs, [triple]);
+
+    reqs.store_model(cam.id);
+    return cam.replaceManager.request_with(reqs);
+  }
+
+
   editEvidenceCode(cam: Cam, oldEvidenceCodes: Entity[], newEvidenceCode: string) {
     const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
 

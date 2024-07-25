@@ -147,6 +147,18 @@ export class AnnotationActivity {
     return { a: oldTriple, b: newTriple };
   }
 
+  genExtensionTriple(relationId: string, extensionId: string) {
+    const edge = new Entity(relationId, '');
+    const extension = new ActivityNode();
+    const evidence = this._createEvidence();
+    const predicate = new Predicate(edge, [evidence]);
+
+    extension.term = new Entity(extensionId, '');
+    predicate.comments = this.comments;
+
+    return new Triple(this.goterm, extension, predicate);
+  }
+
   createSave(annotationForm: StandardAnnotationForm) {
 
     this._populateAnnotationActivity(annotationForm);

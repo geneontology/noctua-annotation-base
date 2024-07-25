@@ -5,6 +5,7 @@
       <mat-label>{{relationLabel}}</mat-label>
       <mat-select class="" panelClass="noc-term-autocomplete" placeholder="" formControlName="relation"
         [compareWith]="compareFn">
+        <mat-option [value]="null">Clear</mat-option>
         @for (relationshipChoice of relationshipChoices; track relationshipChoice) {
         <mat-option [value]="relationshipChoice">
           <div class="w-full" fxLayout="row" fxLayoutAlign="start center">

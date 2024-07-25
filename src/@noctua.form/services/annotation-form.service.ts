@@ -215,7 +215,6 @@ export class NoctuaAnnotationFormService {
     return this.performEditAction(editorCategory, cam, oldAnnotations, newAnnotation).pipe(
       finalize(() => {
         this.cam.loading.status = false;
-        this.cam.reviewCamChanges();
       }),
       catchError((error) => {
         console.error('Error editing annotation:', error);
@@ -241,6 +240,28 @@ export class NoctuaAnnotationFormService {
       finalize(() => {
         this.cam.loading.status = false;
         this.cam.reviewCamChanges();
+      }),
+      catchError((error) => {
+        console.error('Error editing annotation:', error);
+        return of(null);
+      })
+    )
+  }
+
+  addExtension(
+    editorCategory: EditorCategory,
+    cam: Cam,
+    annotationActivity: AnnotationActivity,
+    newAnnotation: { relationId: string, termId: string }
+  ): Observable<any> {
+
+    const triple = annotationActivity.genExtensionTriple(newAnnotation.relationId, newAnnotation.termId);
+
+    console.log('Edit relation:', triple);
+
+    return from(this.bbopGraphService.addExtension(cam, triple)).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
       }),
       catchError((error) => {
         console.error('Error editing annotation:', error);
