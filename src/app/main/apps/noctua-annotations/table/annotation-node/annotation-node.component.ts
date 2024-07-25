@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 
 import {
@@ -14,7 +14,9 @@ import {
   ActivityType,
   Predicate,
   BbopGraphService,
-  AnnotationActivity
+  AnnotationActivity,
+  AnnotationExtension,
+  NoctuaAnnotationFormService
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -61,11 +63,12 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
 
   evidenceSettings: SettingsOptions = new SettingsOptions();
 
-  private unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
   constructor(
     public camService: CamService,
     private bbopGraphService: BbopGraphService,
+    public annotationFormService: NoctuaAnnotationFormService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -73,7 +76,7 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
     public noctuaActivityEntityService: NoctuaActivityEntityService,
     public noctuaActivityFormService: NoctuaActivityFormService,
     private inlineEditorService: InlineEditorService) {
-    this.unsubscribeAll = new Subject();
+    this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
@@ -199,9 +202,27 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteExtension(extension: AnnotationExtension) {
+    const self = this;
+
+    console.log('deleteExtension', extension);
+    const success = () => {
+      this.annotationFormService.deleteExtension(self.annotationActivity, extension)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(() => {
+          this.noctuaFormDialogService.openInfoToast('Annotation Extension successfully deleted.', 'OK');
+          this.camService.getCam(this.cam.id);
+        });
+    };
+    this.confirmDialogService.openConfirmDialog('Confirm Delete?',
+      'You are about to delete an extension.',
+      success);
+
+  }
+
   ngOnDestroy(): void {
-    this.unsubscribeAll.next(null);
-    this.unsubscribeAll.complete();
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
   }
 
   cleanId(dirtyId: string) {

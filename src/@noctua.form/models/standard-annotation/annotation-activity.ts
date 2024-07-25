@@ -139,13 +139,27 @@ export class AnnotationActivity {
     });
   }
 
-  getTriplePair(predicateId: string, goterm: ActivityNode): TriplePair<ActivityNode> {
-    const oldTriple = this.activity.edges.find(edge => edge.object.id === goterm.id && edge.predicate.edge.id === predicateId);
+  getExtensionTriple(predicateId: string, extension: ActivityNode): Triple<ActivityNode> {
+    const triple = this.activity.edges.find(edge => edge.object.uuid === extension.uuid && edge.predicate.edge.id === predicateId);
+
+    return triple
+
+  }
+
+  getTriplePair(predicateId: string, goterm: ActivityNode, newPredicateId: string): TriplePair<ActivityNode> {
+    const oldTriple = this.activity.edges.find(edge => edge.object.uuid === goterm.uuid && edge.predicate.edge.id === predicateId);
 
     let newTriple: Triple<ActivityNode> | undefined;
     if (oldTriple) {
       newTriple = oldTriple
-      newTriple.predicate.edge = new Entity(predicateId, '');
+
+      const edgeType = newPredicateId
+      const config = noctuaFormConfig.simpleAnnotationEdgeConfig[edgeType]
+
+      if (!config) {
+        newTriple = undefined;
+      }
+      newTriple.predicate.edge = new Entity(config.mfToTermPredicate, '');
     } else {
       newTriple = undefined;
     }

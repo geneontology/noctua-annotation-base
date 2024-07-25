@@ -7,7 +7,7 @@ import { BbopGraphService } from './bbop-graph.service';
 import { CamService } from './cam.service';
 import { Entity } from '../models/activity/entity';
 import { Cam } from '../models/activity/cam';
-import { AnnotationActivity } from '../models/standard-annotation/annotation-activity';
+import { AnnotationActivity, AnnotationExtension } from '../models/standard-annotation/annotation-activity';
 import * as EntityDefinition from './../data/config/entity-definition';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { AnnotationExtensionForm, StandardAnnotationForm } from './../models/standard-annotation/form';
@@ -20,6 +20,7 @@ import { Evidence } from 'public-api';
   providedIn: 'root'
 })
 export class NoctuaAnnotationFormService {
+
   public errors = [];
   public activity: Activity;
   public annotationActivity: AnnotationActivity;
@@ -230,11 +231,15 @@ export class NoctuaAnnotationFormService {
     newAnnotation: string
   ): Observable<any> {
 
-    const { a: oldTriple, b: newTriple } = annotationActivity.getTriplePair(annotationActivity.gpToTermEdge.id, annotationActivity.goterm);
+    const { a: oldTriple, b: newTriple } = annotationActivity.getTriplePair(annotationActivity.gpToTermEdge.id, annotationActivity.goterm, newAnnotation);
 
     console.log('Edit relation:', oldTriple, newTriple);
 
-    return throwError(() => new Error('Invalid editor category'));
+    console.log('Edit relation:', newTriple.subject.term.label, newTriple.object.term.label, newTriple.predicate.edge.id);
+
+    if (!oldTriple || !newTriple) {
+      return throwError(() => new Error('Invalid editor category'));
+    }
 
     return from(this.bbopGraphService.editConnection(cam, [oldTriple], [newTriple])).pipe(
       finalize(() => {
@@ -278,8 +283,6 @@ export class NoctuaAnnotationFormService {
   ): Observable<any> {
     const predicates = annotationActivity.getPredicates();
 
-
-
     const newAnnotations = Array.from(new Set([...annotationActivity.comments, newAnnotation]));
 
     console.log('Edit evidence:', newAnnotations);
@@ -290,6 +293,26 @@ export class NoctuaAnnotationFormService {
       }),
       catchError((error) => {
         console.error('Error editing annotation:', error);
+        return of(null);
+      })
+    )
+  }
+
+  deleteExtension(annotationActivity: AnnotationActivity, extension: AnnotationExtension): Observable<any> {
+    const cam = this.cam;
+    const triple = annotationActivity.getExtensionTriple(extension.extensionEdge.id, extension.extensionTerm);
+    const uuids = [extension.extensionTerm.uuid];
+    if (!triple) {
+      return throwError(() => new Error('Invalid extension'));
+    }
+    console.log('Delete extension:', triple);
+
+    return from(this.bbopGraphService.deleteActivity(cam, uuids, [triple])).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
+      }),
+      catchError((error) => {
+        console.error('Error deleting extension:', error);
         return of(null);
       })
     )

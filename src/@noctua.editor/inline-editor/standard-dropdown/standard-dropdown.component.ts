@@ -124,7 +124,7 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
       case EditorCategory.EVIDENCE_CODE:
       case EditorCategory.WITH:
       case EditorCategory.REFERENCE:
-        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, termId)
+        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, comment)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(() => {
             this.zone.run(() => {
