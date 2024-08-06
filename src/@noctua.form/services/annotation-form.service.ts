@@ -235,7 +235,7 @@ export class NoctuaAnnotationFormService {
 
     console.log('Edit relation:', oldTriple, newTriple);
 
-    console.log('Edit relation:', newTriple.subject.term.label, newTriple.object.term.label, newTriple.predicate.edge.id);
+    console.log('Edit relation:', newTriple.subject.term.label, newTriple.predicate.edge.id, newTriple.object.term.label);
 
     if (!oldTriple || !newTriple) {
       return throwError(() => new Error('Invalid editor category'));

@@ -8,6 +8,7 @@ import * as ShapeUtils from './../../data/config/shape-utils';
 import * as EntityDefinition from './../../data/config/entity-definition';
 import { Evidence } from './../activity/evidence';
 import { StandardAnnotationForm } from './form';
+import { cloneDeep } from 'lodash';
 
 
 export interface AnnotationEdgeConfig {
@@ -147,32 +148,41 @@ export class AnnotationActivity {
   }
 
   getTriplePair(predicateId: string, goterm: ActivityNode, newPredicateId: string): TriplePair<ActivityNode> {
-
-    const oldTriple: Triple<ActivityNode> | undefined = this.activity.edges.find(edge =>
+    const oldTriple = this.activity.edges.find(edge =>
       (predicateId === noctuaFormConfig.edge.enabledBy.id ? edge.subject.uuid : edge.object.uuid) === goterm.uuid &&
       edge.predicate.edge.id === predicateId
     );
 
-    console.log(predicateId)
-    this.activity.edges.forEach(edge => {
-      console.log(edge.subject.term.label, edge.predicate.edge.label, edge.predicate.edge.id, edge.object.term.label);
-    });
 
-
-    let newTriple: Triple<ActivityNode> | undefined;
-    if (oldTriple) {
-      newTriple = oldTriple
-
-      const edgeType = newPredicateId
-      const config = noctuaFormConfig.simpleAnnotationEdgeConfig[edgeType]
-
-      if (!config) {
-        newTriple = undefined;
-      }
-      newTriple.predicate.edge = new Entity(config.mfToTermPredicate, '');
-    } else {
-      newTriple = undefined;
+    if (!oldTriple) {
+      return { a: undefined, b: undefined };
     }
+
+    const config = noctuaFormConfig.simpleAnnotationEdgeConfig[newPredicateId];
+    if (!config) {
+      return { a: oldTriple, b: undefined };
+    }
+
+    const newTriple = cloneDeep(oldTriple);
+
+    const shouldSwapSubjectAndObject =
+      predicateId === noctuaFormConfig.edge.enabledBy.id ||
+      predicateId === noctuaFormConfig.inverseEdge.enables.id ||
+      newPredicateId === noctuaFormConfig.edge.enabledBy.id ||
+      newPredicateId === noctuaFormConfig.inverseEdge.enables.id;
+
+    if (shouldSwapSubjectAndObject) {
+      [newTriple.subject, newTriple.object] = [newTriple.object, newTriple.subject];
+    }
+
+    newTriple.predicate.edge = new Entity(
+      config.mfNodeRequired ? config.mfToTermPredicate : config.gpToTermPredicate,
+      ''
+    );
+
+
+
+    console.log('newTriple.predicate.edge', newTriple.predicate.edge);
 
     return { a: oldTriple, b: newTriple };
   }
