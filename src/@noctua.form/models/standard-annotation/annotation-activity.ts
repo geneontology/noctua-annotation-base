@@ -9,6 +9,7 @@ import * as EntityDefinition from './../../data/config/entity-definition';
 import { Evidence } from './../activity/evidence';
 import { StandardAnnotationForm } from './form';
 import { cloneDeep } from 'lodash';
+import { Contributor } from '../contributor';
 
 
 export interface AnnotationEdgeConfig {
@@ -46,6 +47,8 @@ export class AnnotationActivity {
   reference = ShapeUtils.generateBaseTerm([]);
   with = ShapeUtils.generateBaseTerm([]);
   comments: string[] = [];
+  evidenceDate: string;
+  evidenceContributors: Contributor[] = [];
 
   extensions: AnnotationExtension[] = [];
   gpToTermEdges: Entity[] = [];

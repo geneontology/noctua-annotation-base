@@ -188,7 +188,7 @@
     </div>
     <div class="noc-comments-cell noc-entity-cell" fxLayout="column" fxLayoutAlign="start stretch">
       @if (annotationActivity.comments.length>0) {
-      <button mat-icon-button class="noc-toolbar-button noc-rounded-button " (click)="openCommentsForm(entity)"
+      <button mat-icon-button class="noc-toolbar-button noc-rounded-button " (click)="openComments(annotationActivity)"
         matTooltip="{{annotationActivity.comments}}" [matTooltipPosition]="'after'" [matTooltipShowDelay]="1000">
         <fa-icon [icon]="['fas', 'comment']"></fa-icon>
         <div class="noc-comments-badge">

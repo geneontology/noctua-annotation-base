@@ -24,6 +24,7 @@ export enum MiddlePanel {
 };
 
 export enum RightPanel {
+    COMMENTS = 'COMMENTS',
     ACTIVITY_FORM = 'ACTIVITY_FORM',
     ACTIVITY_PREVIEW = 'ACTIVITY_PREVIEW',
     CAM_FORM = 'CAM_FORM',

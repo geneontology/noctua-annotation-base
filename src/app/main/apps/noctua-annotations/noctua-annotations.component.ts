@@ -17,12 +17,10 @@ import {
   noctuaFormConfig,
   MiddlePanel,
   LeftPanel,
-  Activity,
   BbopGraphService,
   ActivityDisplayType,
   CamLoadingIndicator,
   ReloadType,
-  RightPanel,
   AnnotationActivity
 } from '@geneontology/noctua-form-base';
 
@@ -33,6 +31,7 @@ import { NoctuaSearchDialogService } from '@noctua.search/services/dialog.servic
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { CamToolbarOptions } from '@noctua.common/models/cam-toolbar-options';
+import { RightPanel } from '@noctua.common/models/menu-panels';
 
 @Component({
   selector: 'app-noctua-annotations',
@@ -182,10 +181,18 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
   }
 
 
+
+
   openCopyModel() {
     this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.copyModel);
     this.noctuaCommonMenuService.closeRightDrawer();
     this.noctuaCommonMenuService.openLeftDrawer();
+  }
+
+  openComments() {
+    this.noctuaCommonMenuService.selectRightPanel(RightPanel.COMMENTS);
+    this.noctuaCommonMenuService.openRightDrawer();
+    this.noctuaCommonMenuService.closeLeftDrawer();
   }
 
   resetCam(cam: Cam) {

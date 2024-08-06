@@ -34,6 +34,8 @@ import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/co
 import { noctuaAnimations } from '@noctua/animations';
 import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
+import { RightPanel } from '@noctua.common/models/menu-panels';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 
 @Component({
   selector: 'noc-annotation-node',
@@ -76,6 +78,7 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaActivityEntityService: NoctuaActivityEntityService,
     public noctuaActivityFormService: NoctuaActivityFormService,
+    public noctuaCommonMenuService: NoctuaCommonMenuService,
     private inlineEditorService: InlineEditorService) {
     this._unsubscribeAll = new Subject();
   }
@@ -220,6 +223,12 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
       'You are about to delete an extension.',
       success);
 
+  }
+
+  openComments(annotationActivity: AnnotationActivity) {
+    this.noctuaCommonMenuService.selectRightPanel(RightPanel.COMMENTS);
+    this.noctuaCommonMenuService.openRightDrawer();
+    this.noctuaCommonMenuService.closeLeftDrawer();
   }
 
   ngOnDestroy(): void {

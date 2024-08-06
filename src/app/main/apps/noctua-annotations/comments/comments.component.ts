@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, Inject, Input } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { Cam, NoctuaFormConfigService, Predicate } from '@geneontology/noctua-form-base';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatDrawer } from '@angular/material/sidenav';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class CommentsSidenavComponent implements OnInit, OnDestroy {
   comments: string[] = [];
 
   @Input('cam') cam: Cam
-  @Input('sidenav') sidenav: MatSidenav;
+  @Input('panelDrawer') panelDrawer: MatDrawer;
 
 
   constructor(
@@ -28,6 +28,7 @@ export class CommentsSidenavComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.log(this.cam)
   }
 
   ngOnDestroy(): void {
@@ -36,6 +37,6 @@ export class CommentsSidenavComponent implements OnInit, OnDestroy {
   }
 
   close() {
-    this.sidenav.close();
+    this.panelDrawer.close();
   }
 }

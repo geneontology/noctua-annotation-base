@@ -399,6 +399,8 @@ export class NoctuaFormConfigService {
     annotationActivity.evidenceCode.term = evidence?.evidence;
     annotationActivity.reference.term = new Entity(evidence?.reference, evidence?.reference);
     annotationActivity.with.term = evidence?.withEntity;
+    annotationActivity.evidenceDate = evidence?.date;
+    annotationActivity.evidenceContributors = evidence?.contributors;
 
     return annotationActivity
   }
