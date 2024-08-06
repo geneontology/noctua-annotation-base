@@ -155,7 +155,7 @@
       <div class="w-full" fxLayout="column" fxLayoutAlign="start stretch">
 
         @for(extension of annotationActivity.extensions; track extension) {
-        <div class="w-full py-2 relative" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
+        <div class="w-full py-2 relative noc-extension-entity" fxLayout="column" fxLayoutAlign="start stretch" fxFlex=""
           [attr.id]="extension.extensionTerm?.term?.displayId"
           [ngClass]="{'noc-highlight-match': extension.extensionTerm?.term?.highlight,
         'noc-highlight-modified': extension.extensionTerm?.term?.modified,

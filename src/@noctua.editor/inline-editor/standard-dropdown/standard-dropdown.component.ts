@@ -117,63 +117,52 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
   save() {
     let termId: string = this.dynamicForm.value[FormStructureKeys.TERM]?.id;
     let relationId: string = this.dynamicForm.value[FormStructureKeys.RELATION]?.id;
-    let comment = this.dynamicForm.value[FormStructureKeys.TERM];
+    let termString = this.dynamicForm.value[FormStructureKeys.TERM];
+
+    const handleResponse = () => {
+      this.zone.run(() => {
+        this.noctuaFormDialogService.openInfoToast(`${this.label} successfully updated.`, 'OK');
+        this.camService.getCam(this.cam.id);
+      });
+      this.close();
+    };
 
     switch (this.category) {
       case EditorCategory.TERM:
       case EditorCategory.EVIDENCE_CODE:
+        if (termId) {
+          this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, termId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(handleResponse);
+        } else {
+          this.noctuaFormDialogService.openInfoToast(`Please select term from autocomplete.`, 'OK');
+        }
+        break;
       case EditorCategory.WITH:
       case EditorCategory.REFERENCE:
-        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, comment)
+        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, termString)
           .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(() => {
-            this.zone.run(() => {
-              this.noctuaFormDialogService.openInfoToast(`${this.label} successfully updated.`, 'OK');
-              this.camService.getCam(this.cam.id);
-            });
-            this.close();
-          });
+          .subscribe(handleResponse);
         break;
 
       case EditorCategory.GP_TO_TERM_EDGE:
         this.annotationFormService.editRelation(this.category, this.cam, this.annotationActivity, relationId)
           .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(() => {
-            this.zone.run(() => {
-              this.noctuaFormDialogService.openInfoToast(`${this.label} successfully updated.`, 'OK');
-              this.camService.getCam(this.cam.id);
-            });
-            this.close();
-          });
-        break
-      case EditorCategory.ADD_EXTENSION:
+          .subscribe(handleResponse);
+        break;
 
-        const extensionValue = {
-          relationId,
-          termId
-        };
+      case EditorCategory.ADD_EXTENSION:
+        const extensionValue = { relationId, termId };
         this.annotationFormService.addExtension(this.category, this.cam, this.annotationActivity, extensionValue)
           .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(() => {
-            this.zone.run(() => {
-              this.noctuaFormDialogService.openInfoToast(`${this.label} successfully updated.`, 'OK');
-              this.camService.getCam(this.cam.id);
-            });
-            this.close();
-          });
+          .subscribe(handleResponse);
         break;
-      case EditorCategory.ADD_COMMENT:
 
-        this.annotationFormService.updateComment(this.category, this.cam, this.annotationActivity, comment)
+      case EditorCategory.ADD_COMMENT:
+        this.annotationFormService.updateComment(this.category, this.cam, this.annotationActivity, termString)
           .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(() => {
-            this.zone.run(() => {
-              this.noctuaFormDialogService.openInfoToast(`${this.label} successfully updated.`, 'OK');
-              this.camService.getCam(this.cam.id);
-            });
-            this.close();
-          });
-        break
+          .subscribe(handleResponse);
+        break;
     }
   }
 

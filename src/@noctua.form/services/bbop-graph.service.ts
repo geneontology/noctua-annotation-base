@@ -1451,6 +1451,28 @@ export class BbopGraphService {
   }
 
 
+  deleteAnnotation(cam: Cam, uuids: string[], triples: Triple<ActivityNode>[]) {
+
+    const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
+
+    each(triples, function (triple: Triple<ActivityNode>) {
+      reqs.remove_fact([
+        triple.subject.uuid,
+        triple.object.uuid,
+        triple.predicate.edge.id
+      ]);
+    });
+
+    each(uuids, function (uuid: string) {
+      reqs.remove_individual(uuid);
+    });
+
+    reqs.store_model(cam.id);
+    return cam.replaceManager.request_with(reqs);
+
+  }
+
+
   editEvidenceCode(cam: Cam, oldEvidenceCodes: Entity[], newEvidenceCode: string) {
     const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
 

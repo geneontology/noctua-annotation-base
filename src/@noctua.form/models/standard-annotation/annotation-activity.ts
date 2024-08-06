@@ -147,7 +147,17 @@ export class AnnotationActivity {
   }
 
   getTriplePair(predicateId: string, goterm: ActivityNode, newPredicateId: string): TriplePair<ActivityNode> {
-    const oldTriple = this.activity.edges.find(edge => edge.object.uuid === goterm.uuid && edge.predicate.edge.id === predicateId);
+
+    const oldTriple: Triple<ActivityNode> | undefined = this.activity.edges.find(edge =>
+      (predicateId === noctuaFormConfig.edge.enabledBy.id ? edge.subject.uuid : edge.object.uuid) === goterm.uuid &&
+      edge.predicate.edge.id === predicateId
+    );
+
+    console.log(predicateId)
+    this.activity.edges.forEach(edge => {
+      console.log(edge.subject.term.label, edge.predicate.edge.label, edge.predicate.edge.id, edge.object.term.label);
+    });
+
 
     let newTriple: Triple<ActivityNode> | undefined;
     if (oldTriple) {

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 
@@ -66,6 +66,7 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(
+    private zone: NgZone,
     public camService: CamService,
     private bbopGraphService: BbopGraphService,
     public annotationFormService: NoctuaAnnotationFormService,
@@ -205,13 +206,14 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
   deleteExtension(extension: AnnotationExtension) {
     const self = this;
 
-    console.log('deleteExtension', extension);
     const success = () => {
       this.annotationFormService.deleteExtension(self.annotationActivity, extension)
-        .pipe(takeUntil(this._unsubscribeAll))
+        .pipe(takeUntil(self._unsubscribeAll))
         .subscribe(() => {
-          this.noctuaFormDialogService.openInfoToast('Annotation Extension successfully deleted.', 'OK');
-          this.camService.getCam(this.cam.id);
+          self.zone.run(() => {
+            self.noctuaFormDialogService.openInfoToast('Annotation Extension successfully deleted.', 'OK');
+            self.camService.getCam(this.cam.id);
+          });
         });
     };
     this.confirmDialogService.openConfirmDialog('Confirm Delete?',

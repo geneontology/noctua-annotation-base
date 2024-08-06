@@ -163,7 +163,7 @@ $accent: map-get($theme, accent);
       }
 
       .noc-delete-button {
-        //visibility: hidden;
+        visibility: hidden;
         @include deep-height(20px);
         @include deep-width(20px);
         position: absolute;
@@ -175,8 +175,18 @@ $accent: map-get($theme, accent);
         border-radius: 0;
 
         &:hover {
-          background-color: #ee7979;
-          color: #fff;
+          color: #e85454;
+        }
+      }
+
+      .noc-extension-entity {
+        &:hover {
+          .noc-delete-button {
+            visibility: visible;
+          }
+        }
+        &:nth-child(n + 2) {
+          border-top: 1px solid #ccc; // Adjust the color and width as needed
         }
       }
 
@@ -187,8 +197,7 @@ $accent: map-get($theme, accent);
           color: map-get($primary, default);
         }
 
-        .noc-edit-button,
-        .noc-delete-button {
+        .noc-edit-button {
           display: initial;
           visibility: visible;
         }

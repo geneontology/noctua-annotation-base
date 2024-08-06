@@ -307,7 +307,7 @@ export class NoctuaAnnotationFormService {
     }
     console.log('Delete extension:', triple);
 
-    return from(this.bbopGraphService.deleteActivity(cam, uuids, [triple])).pipe(
+    return from(this.bbopGraphService.deleteAnnotation(cam, uuids, [triple])).pipe(
       finalize(() => {
         this.cam.loading.status = false;
       }),
