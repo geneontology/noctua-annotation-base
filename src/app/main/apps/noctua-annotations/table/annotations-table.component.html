@@ -73,7 +73,7 @@
   <div class="noc-table-body w-full">
     @for (annotationActivity of cam.annotationActivities; track annotationActivity) {
     <div [attr.id]="annotationActivity.activity.displayId" class="w-full">
-      <noc-annotation-node [options]="options" [cam]="cam" [annotationActivity]="annotationActivity" class="w-full">
+      <noc-annotation-node [cam]="cam" [annotationActivity]="annotationActivity" class="w-full">
       </noc-annotation-node>
     </div>
     }

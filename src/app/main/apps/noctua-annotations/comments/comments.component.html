@@ -1,0 +1,22 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" class="noc-drawer h-full">
+  <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
+    <span class="noc-drawer-header-title">
+      Comments</span>
+    <span fxFlex></span>
+    <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
+      aria-label="Close dialog">
+      Close
+    </button>
+  </div>
+  <div class="noc-drawer-body">
+    @for (annotationActivity of cam.annotationActivities; track annotationActivity) {
+    @for(comment of annotationActivity.comments; track comment) {
+    <div> {{comment}}</div>
+    }
+    }
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center" class="noc-drawer-footer noc-submit-row">
+    <span fxFlex=""></span>
+    <button (click)="close()" type="button" mat-raised-button>Close</button>
+  </div>
+</div>

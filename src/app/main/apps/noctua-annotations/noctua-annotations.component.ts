@@ -119,7 +119,7 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const self = this;
-    this.noctuaCommonMenuService.selectedMiddlePanel = MiddlePanel.camTable;
+    this.noctuaCommonMenuService.selectedMiddlePanel = MiddlePanel.CAM_TABLE;
     self.noctuaCommonMenuService.setLeftDrawer(self.leftDrawer);
     self.noctuaCommonMenuService.setRightDrawer(self.rightDrawer);
 

@@ -23,7 +23,7 @@
           {{ annotationActivity.gp.term?.id }}
         </a>
       </span>
-      @if (noctuaUserService.user && annotationActivity.gp.term && options.editableTerms) {
+      @if (noctuaUserService.user && annotationActivity.gp.term) {
       <noctua-inline-editor [cam]="cam" [activity]='annotationActivity.activity' [entity]="annotationActivity.gp"
         [category]="EditorCategory.TERM" class="noc-edit-button">
       </noctua-inline-editor>
@@ -63,7 +63,7 @@
           {{ annotationActivity.goterm.term?.id }}
         </a>
       </span>
-      @if (noctuaUserService.user && annotationActivity.goterm.term && options.editableTerms) {
+      @if (noctuaUserService.user && annotationActivity.goterm.term) {
       <noctua-inline-editor [cam]="cam" [activity]='annotationActivity.activity' [entity]="annotationActivity.goterm"
         [category]="EditorCategory.TERM" class="noc-edit-button">
       </noctua-inline-editor>
