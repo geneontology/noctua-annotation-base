@@ -340,6 +340,8 @@ export class NoctuaFormConfigService {
     const comments = new Set<string>();
     let gpToTermEdgeId;
 
+    annotationActivity.id = activity.id;
+
     activity.edges.forEach(edge => {
       edge.predicate.comments.forEach(comment => comments.add(comment));
     });

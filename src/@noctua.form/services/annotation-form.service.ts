@@ -23,9 +23,10 @@ export class NoctuaAnnotationFormService {
 
   public errors = [];
   public activity: Activity;
-  public annotationActivity: AnnotationActivity;
-  public onActivityCreated: BehaviorSubject<Activity>
+  public onAnnotationActivityChanged: AnnotationActivity;
   public onActivityChanged: BehaviorSubject<Activity>
+  public onCommentIdChanged: BehaviorSubject<string>
+  public onFormAnnotationActivityChanged: BehaviorSubject<AnnotationActivity>
   public onFormErrorsChanged: BehaviorSubject<ActivityError[]>
   public cam: Cam;
 
@@ -44,9 +45,11 @@ export class NoctuaAnnotationFormService {
       this.cam = cam;
     });
 
-    this.onActivityCreated = new BehaviorSubject(null);
     this.onActivityChanged = new BehaviorSubject(null);
+    this.onFormAnnotationActivityChanged = new BehaviorSubject(null);
     this.onFormErrorsChanged = new BehaviorSubject([]);
+    this.onAnnotationActivityChanged = new AnnotationActivity(null);
+    this.onCommentIdChanged = new BehaviorSubject(null);
 
   }
 
@@ -54,8 +57,14 @@ export class NoctuaAnnotationFormService {
     this.activity = this.noctuaFormConfigService.createActivityModel(ActivityType.simpleAnnoton);
     this.errors = [];
     this.activity.enableSubmit();
-    this.annotationActivity = new AnnotationActivity(this.activity);
+    this.onAnnotationActivityChanged = new AnnotationActivity(this.activity);
     this.onActivityChanged.next(this.activity);
+  }
+
+  initializeFormFromActivity(annotationActivity: AnnotationActivity) {
+    this.activity = annotationActivity.activity;
+    this.onAnnotationActivityChanged = annotationActivity;
+    this.onFormAnnotationActivityChanged.next(annotationActivity);
   }
 
   processAnnotationFormGroup(dynamicForm: FormGroup, annotationData: StandardAnnotationForm): void {
@@ -65,8 +74,8 @@ export class NoctuaAnnotationFormService {
     const goTermRootTypes = annotationData.goterm?.rootTypes ?? [];
 
 
-    this.annotationActivity.gpToTermEdges = this.noctuaFormConfigService.getTermRelations(gpRootTypes, goTermRootTypes, true);
-    this.annotationActivity.goterm.category = this.noctuaFormConfigService.getObjectRange(gpRootTypes, annotationData.gpToTermEdge?.id, true);
+    this.onAnnotationActivityChanged.gpToTermEdges = this.noctuaFormConfigService.getTermRelations(gpRootTypes, goTermRootTypes, true);
+    this.onAnnotationActivityChanged.goterm.category = this.noctuaFormConfigService.getObjectRange(gpRootTypes, annotationData.gpToTermEdge?.id, true);
 
     //this._setExtensionObjects(goTermRootTypes);
     this._updateExtensions(annotationData.annotationExtensions, goTermRootTypes);
@@ -84,14 +93,14 @@ export class NoctuaAnnotationFormService {
   }
 
   private _updateExtensions(annotationExtensions: AnnotationExtensionForm[], gotermRootTypes: Entity[]): void {
-    if (this.annotationActivity.extensions.length === annotationExtensions.length) {
+    if (this.onAnnotationActivityChanged.extensions.length === annotationExtensions.length) {
       annotationExtensions.forEach((ext, index) => {
         const extRootTypes = ext.extensionTerm?.rootTypes ?? [];
         const extensionEdges = this.noctuaFormConfigService.getTermRelations(gotermRootTypes, extRootTypes);
         const extensionObjects = this.noctuaFormConfigService.getObjectRange(gotermRootTypes, ext.extensionEdge?.id);
 
-        this.annotationActivity.extensions[index].extensionEdges = extensionEdges;
-        this.annotationActivity.extensions[index].extensionTerm.category = extensionObjects;
+        this.onAnnotationActivityChanged.extensions[index].extensionEdges = extensionEdges;
+        this.onAnnotationActivityChanged.extensions[index].extensionTerm.category = extensionObjects;
 
         console.log('Extension updated:', extRootTypes, extensionEdges, extensionObjects);
       });
@@ -196,7 +205,7 @@ export class NoctuaAnnotationFormService {
   }
 
   saveAnnotation(annotationFormValue: StandardAnnotationForm) {
-    const saveData = this.annotationActivity.createSave(annotationFormValue as StandardAnnotationForm);
+    const saveData = this.onAnnotationActivityChanged.createSave(annotationFormValue as StandardAnnotationForm);
     return forkJoin(this.bbopGraphService.addActivity(this.cam, saveData.nodes, saveData.triples, saveData.title));
   }
 

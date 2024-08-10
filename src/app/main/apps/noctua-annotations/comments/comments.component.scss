@@ -6,6 +6,10 @@ $accent: map-get($theme, accent);
 
 :host {
   .noc-drawer {
-    @include deep-width(300px);
+    //@include deep-width(300px);
+  }
+
+  .noc-selected {
+    border-left: #548260 solid 5px;
   }
 }

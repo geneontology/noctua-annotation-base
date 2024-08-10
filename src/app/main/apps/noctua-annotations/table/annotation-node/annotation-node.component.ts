@@ -79,6 +79,7 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
     public noctuaActivityEntityService: NoctuaActivityEntityService,
     public noctuaActivityFormService: NoctuaActivityFormService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
+
     private inlineEditorService: InlineEditorService) {
     this._unsubscribeAll = new Subject();
   }
@@ -225,7 +226,12 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
 
   }
 
+  copyToForm() {
+    this.annotationFormService.onFormAnnotationActivityChanged.next(this.annotationActivity);
+  }
+
   openComments(annotationActivity: AnnotationActivity) {
+    this.annotationFormService.onCommentIdChanged.next(annotationActivity.id);
     this.noctuaCommonMenuService.selectRightPanel(RightPanel.COMMENTS);
     this.noctuaCommonMenuService.openRightDrawer();
     this.noctuaCommonMenuService.closeLeftDrawer();

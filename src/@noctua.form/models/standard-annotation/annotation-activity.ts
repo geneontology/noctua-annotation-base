@@ -38,6 +38,7 @@ export class AnnotationExtension {
 
 
 export class AnnotationActivity {
+  id: string;
   gp: ActivityNode;
   goterm: ActivityNode;
   gpToTermEdge: Entity;

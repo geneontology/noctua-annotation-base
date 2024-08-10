@@ -1,8 +1,8 @@
 
 import { Component, OnInit, OnDestroy, Inject, Input } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { Cam, NoctuaFormConfigService, Predicate } from '@geneontology/noctua-form-base';
+import { Subject, takeUntil } from 'rxjs';
+import { Activity, Cam, NoctuaAnnotationFormService, NoctuaFormConfigService, Predicate } from '@geneontology/noctua-form-base';
 import { MatDrawer } from '@angular/material/sidenav';
 
 
@@ -13,22 +13,34 @@ import { MatDrawer } from '@angular/material/sidenav';
 })
 export class CommentsSidenavComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
-  commentsFormGroup: FormGroup;
-  commentsFormArray: FormArray
-  comments: string[] = [];
+
 
   @Input('cam') cam: Cam
   @Input('panelDrawer') panelDrawer: MatDrawer;
 
-
+  selectedActivityId: string;
   constructor(
-    public noctuaFormConfigService: NoctuaFormConfigService
+    public noctuaFormConfigService: NoctuaFormConfigService,
+    private annotationFormService: NoctuaAnnotationFormService,
   ) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit() {
-    console.log(this.cam)
+    this.annotationFormService.onCommentIdChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((id: string) => {
+
+        if (!id) {
+          return;
+        }
+
+        this.selectedActivityId = id;
+
+        console.log('comment id:', id);
+
+
+      });
   }
 
   ngOnDestroy(): void {

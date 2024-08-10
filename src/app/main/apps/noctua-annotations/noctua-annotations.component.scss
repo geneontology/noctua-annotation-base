@@ -10,7 +10,11 @@
     width: 100%;
   }
 
-  noc-sidenav-comments .noc-drawer-container {
+  noc-sidenav-comments {
+    @include deep-width(300px);
+  }
+
+  .noc-drawer-container {
     background-color: lighten(map-get($primary, default), 20%);
   }
 
