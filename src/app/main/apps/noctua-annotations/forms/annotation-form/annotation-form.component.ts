@@ -93,7 +93,6 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         this.activity = activity;
         this.annotationActivity = { ...this.annotationFormService.onAnnotationActivityChanged } as AnnotationActivity;
 
-
         this.cdr.markForCheck()
       });
 

@@ -175,7 +175,7 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         break;
 
       case EditorCategory.ADD_COMMENT:
-        this.annotationFormService.updateComment(this.category, this.cam, this.annotationActivity, termString)
+        this.annotationFormService.updateComment(this.cam, this.annotationActivity, termString)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(handleResponse);
         break;

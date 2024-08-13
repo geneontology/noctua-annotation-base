@@ -90,9 +90,8 @@
     </mat-chip-list>
   </div>
   <div fxFlex="115px" fxLayout="row" fxLayoutAlign="start center">
-    <button mat-stroked-button [matMenuTriggerFor]="exportMenu" class="noc-edit-button noc-rounded-button noc-sm"
-      color="primary">
-      EXPORT AS
+    <button mat-button [matMenuTriggerFor]="exportMenu" class="noc-toolbar-button noc-rounded-button" color="">
+      <fa-icon [icon]="['fas', 'download']"></fa-icon>
     </button>
     <mat-menu #exportMenu="matMenu">
       <a [href]='cam?.model?.modelInfo?.gpadUrl' target="_blank" mat-menu-item>

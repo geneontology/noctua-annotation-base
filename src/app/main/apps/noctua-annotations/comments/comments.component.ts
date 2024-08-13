@@ -1,9 +1,11 @@
 
-import { Component, OnInit, OnDestroy, Inject, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, Input, NgZone } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { Activity, Cam, NoctuaAnnotationFormService, NoctuaFormConfigService, Predicate } from '@geneontology/noctua-form-base';
+import { Activity, AnnotationActivity, Cam, CamService, NoctuaAnnotationFormService, NoctuaFormConfigService, NoctuaUserService, Predicate } from '@geneontology/noctua-form-base';
 import { MatDrawer } from '@angular/material/sidenav';
+import { EditorCategory, EditorType } from '@noctua.editor/models/editor-category';
+import { NoctuaFormDialogService } from '../../noctua-form/services/dialog.service';
 
 
 @Component({
@@ -14,12 +16,18 @@ import { MatDrawer } from '@angular/material/sidenav';
 export class CommentsSidenavComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
+  EditorCategory = EditorCategory;
+  EditorType = EditorType;
 
   @Input('cam') cam: Cam
   @Input('panelDrawer') panelDrawer: MatDrawer;
 
   selectedActivityId: string;
   constructor(
+    private zone: NgZone,
+    private camService: CamService,
+    private noctuaFormDialogService: NoctuaFormDialogService,
+    public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private annotationFormService: NoctuaAnnotationFormService,
   ) {
@@ -37,15 +45,31 @@ export class CommentsSidenavComponent implements OnInit, OnDestroy {
 
         this.selectedActivityId = id;
 
-        console.log('comment id:', id);
-
-
       });
   }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
+  }
+
+  openCommentsDialog(annotationActivity: AnnotationActivity) {
+    const self = this;
+
+    const success = (comments) => {
+      if (comments) {
+        this.annotationFormService.replaceComments(this.cam, annotationActivity, comments)
+          .pipe(takeUntil(this._unsubscribeAll))
+          .subscribe((data: any) => {
+            console.log('data', data);
+            this.zone.run(() => {
+              this.noctuaFormDialogService.openInfoToast(`Comment(s) successfully updated.`, 'OK');
+              this.camService.getCam(this.cam.id);
+            });
+          });
+      }
+    };
+    self.noctuaFormDialogService.openCommentsDialog(annotationActivity.comments, success)
   }
 
   close() {

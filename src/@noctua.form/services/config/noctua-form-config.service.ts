@@ -384,7 +384,6 @@ export class NoctuaFormConfigService {
     const inverseEdgeId = annotationActivity.findEdgeByCriteria(criteria);
     const inverseEdge = this.findEdge(inverseEdgeId);
 
-    console.log('inverseEdge', edgeId)
     if (edgeId && inverseEdge) {
       annotationActivity.gpToTermEdge = Entity.createEntity(edgeId);
       annotationActivity.gpToTermEdge.inverseEntity = inverseEdge
@@ -401,7 +400,7 @@ export class NoctuaFormConfigService {
     annotationActivity.evidenceCode.term = evidence?.evidence;
     annotationActivity.reference.term = new Entity(evidence?.reference, evidence?.reference);
     annotationActivity.with.term = evidence?.withEntity;
-    annotationActivity.evidenceDate = evidence?.date;
+    annotationActivity.evidenceDate = evidence?.formattedDate;
     annotationActivity.evidenceContributors = evidence?.contributors;
 
     return annotationActivity

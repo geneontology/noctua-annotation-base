@@ -156,30 +156,6 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
     this.inlineEditorService.open(this.currentMenuEvent.target, { data });
   }
 
-  openSelectEvidenceDialog(entity: ActivityNode) {
-    const self = this;
-    const evidences: Evidence[] = this.camService.getUniqueEvidence(self.noctuaActivityFormService.activity);
-    const success = (selected) => {
-      if (selected.evidences && selected.evidences.length > 0) {
-        entity.predicate.setEvidence(selected.evidences);
-        self.noctuaActivityFormService.initializeForm();
-      }
-    };
-
-    self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
-  }
-
-  openCommentsForm(entity: ActivityNode) {
-    const self = this;
-
-    const success = (comments) => {
-      if (comments) {
-        this.bbopGraphService.savePredicateComments(self.cam, entity.predicate, comments);
-      }
-    };
-    self.noctuaFormDialogService.openCommentsDialog(entity.predicate?.comments, success)
-  }
-
   updateCurrentMenuEvent(event) {
     this.currentMenuEvent = event;
   }

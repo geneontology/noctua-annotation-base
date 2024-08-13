@@ -285,7 +285,6 @@ export class NoctuaAnnotationFormService {
   }
 
   updateComment(
-    editorCategory: EditorCategory,
     cam: Cam,
     annotationActivity: AnnotationActivity,
     newAnnotation: string
@@ -294,9 +293,27 @@ export class NoctuaAnnotationFormService {
 
     const newAnnotations = Array.from(new Set([...annotationActivity.comments, newAnnotation]));
 
-    console.log('Edit evidence:', newAnnotations);
-
     return from(this.bbopGraphService.updateAnnotationComments(cam, predicates, newAnnotations)).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
+      }),
+      catchError((error) => {
+        console.error('Error editing annotation:', error);
+        return of(null);
+      })
+    )
+  }
+
+  replaceComments(
+    cam: Cam,
+    annotationActivity: AnnotationActivity,
+    newAnnotations: string[]
+  ): Observable<any> {
+    const predicates = annotationActivity.getPredicates();
+
+    const uniqAnnotations = Array.from(new Set(newAnnotations));
+
+    return from(this.bbopGraphService.updateAnnotationComments(cam, predicates, uniqAnnotations)).pipe(
       finalize(() => {
         this.cam.loading.status = false;
       }),
