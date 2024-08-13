@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
 import { Subject } from 'rxjs';
 import { NoctuaFormDialogService } from './../../../../services/dialog.service';
 import {
@@ -65,7 +65,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
     this.entity = this.noctuaActivityFormService.activity.getNode(this.entityFormGroup.get('id').value);
     this.friendNodes = this.camService.getNodesByType(this.entity.type);
     if (this.noctuaActivityFormService.activity.activityType === ActivityType.ccOnly
-      && this.entity.type === ActivityNodeType.GoMolecularEntity) {
+      && this.entity.treeLevel === 1) {
       this.displayAddButton = true;
     }
 
@@ -137,7 +137,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.gpNode
 
     if (gpNode && gpNode.hasValue()) {
       const data = {
@@ -161,11 +161,11 @@ export class EntityFormComponent implements OnInit, OnDestroy {
             selected.evidences.forEach((evidence: Evidence) => {
 
               evidence.evidenceExts.forEach((evidenceExt) => {
-                evidenceExt.relations.forEach((relation) => {
-                  const node = self.noctuaFormConfigService.insertActivityNodeByPredicate(self.noctuaActivityFormService.activity, self.entity, relation.id);
-                  node.term = new Entity(evidenceExt.term.id, evidenceExt.term.id);
-                  node.predicate.setEvidence([evidence]);
-                });
+                /*      evidenceExt.relations.forEach((relation) => {
+                       const node = self.noctuaFormConfigService.insertActivityNodeByPredicate(self.noctuaActivityFormService.activity, self.entity, relation.id);
+                       node.term = new Entity(evidenceExt.term.id, evidenceExt.term.id);
+                       node.predicate.setEvidence([evidence]);
+                     }); */
               });
 
             });
@@ -187,7 +187,7 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchEvidenceDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.gpNode
 
     if (gpNode) {
       const data = {
@@ -245,21 +245,21 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
   openSearchModels() {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.gpNode;
     // const searchCriteria = new SearchCriteria();
 
     //searchCriteria.goterms.push(this.entity.term);
 
     // const url = this.noctuaFormConfigService.getUniversalWorkbenchUrl('noctua-search', searchCriteria.buildEncoded());
 
-    // console.log(url);
 
     // window.open(url, '_blank');
 
   }
 
-  insertEntity(nodeDescription: ShapeDefinition.ShapeDescription) {
-    this.noctuaFormConfigService.insertActivityNode(this.noctuaActivityFormService.activity, this.entity, nodeDescription);
+
+  insertEntityShex(predExpr: ShapeDefinition.PredicateExpression) {
+    this.noctuaFormConfigService.insertActivityNodeShex(this.noctuaActivityFormService.activity, this.entity, predExpr);
     this.noctuaActivityFormService.initializeForm();
   }
 
@@ -310,10 +310,13 @@ export class EntityFormComponent implements OnInit, OnDestroy {
 
     self.noctuaFormDialogService.openSelectEvidenceDialog(evidences, success);
   }
+  updateMenu(entity) {
+    this.noctuaActivityFormService.initializeForm(entity.rootTypes);
+  }
 
   updateTermList() {
     const self = this;
-    this.camService.updateTermList(self.noctuaActivityFormService.activity, this.entity);
+    this.camService.updateTermList(self.noctuaActivityFormService.activity);
   }
 
   updateEvidenceList() {

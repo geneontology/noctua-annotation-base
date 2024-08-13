@@ -13,8 +13,6 @@ import {
   Entity,
   noctuaFormConfig,
   NoctuaUserService,
-  NoctuaFormMenuService,
-
   ActivityType,
   ActivityError,
   ErrorLevel,
@@ -29,10 +27,9 @@ import {
 } from '@geneontology/noctua-form-base';
 
 import { EditorCategory } from '@noctua.editor/models/editor-category';
-import { cloneDeep, find } from 'lodash';
+import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
-import { MatTableDataSource } from '@angular/material/table';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 
@@ -66,6 +63,8 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
 
   optionsDisplay: any = {}
 
+  termEditable = true
+
   editableTerms = false;
   currentMenuEvent: any = {};
 
@@ -73,8 +72,6 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
 
   constructor(
     public camService: CamService,
-
-    public noctuaFormMenuService: NoctuaFormMenuService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -86,6 +83,8 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    // this.termEditable = (this.activity.activityType !== ActivityType.bpOnly) && this.entity.term.id !== noctuaFormConfig.rootNode.mf.id
 
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
@@ -119,7 +118,7 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
       cam: this.cam,
       activity: this.activity,
       entity: entity,
-      category: EditorCategory.evidenceAll,
+      category: EditorCategory.EVIDENCE_ALL,
       evidenceIndex: entity.predicate.evidence.length - 1
     };
 
@@ -161,7 +160,7 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.activity.getGPNode();
+    const gpNode = this.activity.gpNode;
 
     if (gpNode && gpNode.hasValue()) {
       const data = {
@@ -200,15 +199,14 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
   }
 
 
-  insertEntity(entity: ActivityNode, nodeDescription: ShapeDefinition.ShapeDescription) {
-    const insertedNode = this.noctuaFormConfigService.insertActivityNode(this.activity, entity, nodeDescription);
-    //  this.noctuaActivityFormService.initializeForm();
+  insertEntity(entity: ActivityNode, predExpr: ShapeDefinition.PredicateExpression) {
+    const insertedNode = this.noctuaFormConfigService.insertActivityNodeShex(this.activity, entity, predExpr);
 
     const data = {
       cam: this.cam,
       activity: this.activity,
       entity: insertedNode,
-      category: EditorCategory.all,
+      category: EditorCategory.ALL,
       evidenceIndex: 0,
       insertEntity: true
     };
@@ -225,7 +223,7 @@ export class ActivityFormTableNodeComponent implements OnInit, OnDestroy {
       cam: this.cam,
       activity: this.activity,
       entity: entity,
-      category: EditorCategory.all,
+      category: EditorCategory.ALL,
       evidenceIndex: 0,
       insertEntity: true
     };

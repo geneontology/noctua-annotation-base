@@ -9,38 +9,30 @@ import {
   NoctuaActivityFormService,
   NoctuaActivityEntityService,
   CamService,
-  Evidence,
-  Entity,
   noctuaFormConfig,
   NoctuaUserService,
-  NoctuaFormMenuService,
-
   ActivityType,
   ActivityTreeNode,
-  ActivityNodeType,
   ActivityDisplayType,
-  NoctuaGraphService,
-  compareNodeWeight
+  BbopGraphService
 } from '@geneontology/noctua-form-base';
 
 import {
   Cam,
   Activity,
-  ActivityNode,
-  ShapeDefinition
+  ActivityNode
 } from '@geneontology/noctua-form-base';
 
 import { EditorCategory } from '@noctua.editor/models/editor-category';
-import { cloneDeep, find } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { takeUntil } from 'rxjs/operators';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
 import { TableOptions } from '@noctua.common/models/table-options';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 
 @Component({
   selector: 'noc-activity-form-table',
@@ -102,10 +94,8 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
 
   constructor(
     public camService: CamService,
-    private _noctuaGraphService: NoctuaGraphService,
+    private _bbopGraphService: BbopGraphService,
     private noctuaCommonMenuService: NoctuaCommonMenuService,
-    private confirmDialogService: NoctuaConfirmDialogService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaFormDialogService: NoctuaFormDialogService,
@@ -153,7 +143,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
       this.editableTerms = this.options.editableTerms
     }
 
-    this._noctuaGraphService.onCamGraphChanged
+    this._bbopGraphService.onCamGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cam: Cam) => {
         if (!cam || cam.id !== this.cam.id) {
@@ -186,7 +176,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
 
   loadTree() {
     if (!this.activity) return;
-    this.gpNode = this.activity.getGPNode();
+    this.gpNode = this.activity.gpNode;
     this.optionsDisplay = { ...this.options, hideHeader: true };
     this.treeNodes = this.activity.buildTrees();
     this.gpTreeNodes = this.activity.buildGPTrees();
@@ -231,7 +221,7 @@ export class ActivityFormTableComponent implements OnInit, OnDestroy, OnChanges,
       cam: this.cam,
       activity: this.activity,
       entity: entity,
-      category: EditorCategory.evidenceAll,
+      category: EditorCategory.EVIDENCE_ALL,
       evidenceIndex: entity.predicate.evidence.length - 1
     };
 

@@ -1,35 +1,21 @@
 import {
-    ActivityNode,
     ActivityNodeType,
-    ActivityNodeDisplay,
-    GoCategory,
-    categoryToClosure
+    GoCategory
 } from './../../models/activity/activity-node';
-import { EntityLookup } from './../..//models/activity/entity-lookup';
-import { Predicate } from './../../models/activity/predicate';
 
-const baseRequestParams = {
-    defType: 'edismax',
-    indent: 'on',
-    qt: 'standard',
-    wt: 'json',
-    rows: '50',
-    start: '0',
-    packet: '1',
-    callback_type: 'search',
-    //fl: ['annotation_class'],
-    qf: [
-        'annotation_class^3',
-        'annotation_class_label_searchable^5.5',
-        'description_searchable^1',
-        'comment_searchable^0.5',
-        'synonym_searchable^1',
-        'alternate_id^1',
-        'isa_closure^1',
-        'isa_closure_label_searchable^1'
-    ],
-    _: Date.now()
-};
+
+export const ObsoleteTerm = {
+    id: null,
+    category: 'true',
+    categoryType: 'is_obsolete',
+} as GoCategory;
+
+export const GPProteinContainingComplex = {
+    id: ActivityNodeType.GoProteinContainingComplex,
+    category: 'GO:0032991',
+    categoryType: 'isa_closure',
+    suffix: `OR NOT idspace:"GO"`,
+} as GoCategory;
 
 export const GoProteinContainingComplex = {
     id: ActivityNodeType.GoProteinContainingComplex,
@@ -42,6 +28,12 @@ export const GoCellularComponent = {
     category: 'GO:0005575',
     categoryType: 'isa_closure',
     suffix: `OR NOT ${GoProteinContainingComplex.categoryType}:"${GoProteinContainingComplex.category}"`,
+} as GoCategory;
+
+export const GoRootCellularComponent = {
+    id: ActivityNodeType.GoCellularComponent,
+    category: 'GO:0005575',
+    categoryType: 'isa_closure',
 } as GoCategory;
 
 export const GoAllCellularComponent = {
@@ -121,48 +113,3 @@ export const UberonStage = {
     category: 'UBERON:0000105',
     categoryType: 'isa_closure',
 } as GoCategory;
-
-export const generateBaseTerm = (goCategories: GoCategory[], override: Partial<ActivityNodeDisplay> = {}): ActivityNode => {
-    const activityNode = new ActivityNode();
-    const predicate = new Predicate(null);
-    const fqTermCategory = categoryToClosure(goCategories);
-    const fqEvidenceCategory = categoryToClosure([GoEvidence]);
-
-    predicate.setEvidenceMeta('eco', Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-        fq: [
-            'document_category:"ontology_class"',
-            fqEvidenceCategory
-        ],
-    }));
-
-    activityNode.predicate = predicate;
-
-    if (goCategories && goCategories.length > 0) {
-        activityNode.termLookup = new EntityLookup(null,
-            Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-                fq: [
-                    'document_category:"ontology_class"',
-                    fqTermCategory
-                ],
-            })
-        );
-    }
-
-    activityNode.overrideValues(override);
-
-    return activityNode;
-};
-
-
-
-export const setEvidenceLookup = (predicate: Predicate): void => {
-    const fqEvidenceCategory = categoryToClosure([GoEvidence]);
-
-    predicate.setEvidenceMeta('eco', Object.assign({}, JSON.parse(JSON.stringify(baseRequestParams)), {
-        fq: [
-            'document_category:"ontology_class"',
-            fqEvidenceCategory
-        ],
-    }));
-};
-

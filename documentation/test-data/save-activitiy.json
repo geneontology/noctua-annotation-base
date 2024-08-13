@@ -1,0 +1,227 @@
+[
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "GO:0003674"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016",
+      "assign-to-variable": "6cca708d-bea8-454b-bda9-e184b272f511"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "CL:0000000"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016",
+      "assign-to-variable": "d80e80cc-20e3-43b2-9370-7b3f1d26acf0"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "GO:0034204"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016",
+      "assign-to-variable": "cd552514-057e-4608-aacf-0a392b08f687"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "CL:0000000"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016",
+      "assign-to-variable": "6d75834a-848e-4870-9971-f535551713af"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add",
+    "arguments": {
+      "subject": "6cca708d-bea8-454b-bda9-e184b272f511",
+      "object": "d80e80cc-20e3-43b2-9370-7b3f1d26acf0",
+      "predicate": "RO:0002333",
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "ECO:0006301"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016",
+      "assign-to-variable": "9ad9856a-8928-438d-bc6f-2ee51504a16f"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add-annotation",
+    "arguments": {
+      "individual": "9ad9856a-8928-438d-bc6f-2ee51504a16f",
+      "values": [
+        {
+          "key": "source",
+          "value": "PMID:123"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add-annotation",
+    "arguments": {
+      "subject": "6cca708d-bea8-454b-bda9-e184b272f511",
+      "object": "d80e80cc-20e3-43b2-9370-7b3f1d26acf0",
+      "predicate": "RO:0002333",
+      "values": [
+        {
+          "key": "evidence",
+          "value": "9ad9856a-8928-438d-bc6f-2ee51504a16f"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add",
+    "arguments": {
+      "subject": "6cca708d-bea8-454b-bda9-e184b272f511",
+      "object": "cd552514-057e-4608-aacf-0a392b08f687",
+      "predicate": "BFO:0000050",
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "ECO:0006301"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016",
+      "assign-to-variable": "4813f1c6-a886-4027-89db-ca03d48aeff9"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add-annotation",
+    "arguments": {
+      "individual": "4813f1c6-a886-4027-89db-ca03d48aeff9",
+      "values": [
+        {
+          "key": "source",
+          "value": "PMID:123"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add-annotation",
+    "arguments": {
+      "subject": "6cca708d-bea8-454b-bda9-e184b272f511",
+      "object": "cd552514-057e-4608-aacf-0a392b08f687",
+      "predicate": "BFO:0000050",
+      "values": [
+        {
+          "key": "evidence",
+          "value": "4813f1c6-a886-4027-89db-ca03d48aeff9"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add",
+    "arguments": {
+      "subject": "cd552514-057e-4608-aacf-0a392b08f687",
+      "object": "6d75834a-848e-4870-9971-f535551713af",
+      "predicate": "BFO:0000066",
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add",
+    "arguments": {
+      "expressions": [
+        {
+          "type": "class",
+          "id": "ECO:0001272"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016",
+      "assign-to-variable": "583610b9-fb80-4a9c-b30d-8f412bef6df2"
+    }
+  },
+  {
+    "entity": "individual",
+    "operation": "add-annotation",
+    "arguments": {
+      "individual": "583610b9-fb80-4a9c-b30d-8f412bef6df2",
+      "values": [
+        {
+          "key": "source",
+          "value": "PMID:347"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  },
+  {
+    "entity": "edge",
+    "operation": "add-annotation",
+    "arguments": {
+      "subject": "cd552514-057e-4608-aacf-0a392b08f687",
+      "object": "6d75834a-848e-4870-9971-f535551713af",
+      "predicate": "BFO:0000066",
+      "values": [
+        {
+          "key": "evidence",
+          "value": "583610b9-fb80-4a9c-b30d-8f412bef6df2"
+        }
+      ],
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  },
+  {
+    "entity": "model",
+    "operation": "store",
+    "arguments": {
+      "model-id": "gomodel:64b72b8900000016"
+    }
+  }
+]

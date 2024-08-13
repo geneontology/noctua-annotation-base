@@ -3,18 +3,16 @@ import { Subject } from 'rxjs';
 import {
   NoctuaUserService,
   NoctuaFormConfigService,
-  NoctuaFormMenuService,
   NoctuaActivityFormService,
 
   CamStats
 } from '@geneontology/noctua-form-base';
-import { takeUntil } from 'rxjs/operators';
 import { noctuaAnimations } from '@noctua/animations';
 import { NoctuaReviewSearchService } from './../../../services/noctua-review-search.service';
 import { ReviewMode } from './../../../models/review-mode';
 import { NoctuaSearchMenuService } from './../../../services/search-menu.service';
 import { MiddlePanel, LeftPanel, RightPanel } from './../../../models/menu-panels';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 
 @Component({
   selector: 'noc-cams-review-changes-dialog',
@@ -53,8 +51,7 @@ export class CamsReviewChangesDialogComponent implements OnInit, OnDestroy {
     public noctuaSearchMenuService: NoctuaSearchMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaActivityFormService: NoctuaActivityFormService,
-    public noctuaFormMenuService: NoctuaFormMenuService) {
+    public noctuaActivityFormService: NoctuaActivityFormService) {
 
     this._unsubscribeAll = new Subject();
 

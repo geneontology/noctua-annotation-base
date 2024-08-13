@@ -6,32 +6,23 @@ import {
   NoctuaActivityFormService,
   NoctuaActivityEntityService,
   CamService,
-  Evidence,
-  Entity,
   noctuaFormConfig,
   NoctuaUserService,
-  NoctuaFormMenuService,
-
   ActivityType
 } from '@geneontology/noctua-form-base';
 
 import {
   Cam,
   Activity,
-  ActivityNode,
-  ShapeDefinition
+  ActivityNode
 } from '@geneontology/noctua-form-base';
 
 import { EditorCategory } from '@noctua.editor/models/editor-category';
-import { find } from 'lodash';
-import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
-import { NoctuaUtils } from '@noctua/utils/noctua-utils';
-import { MatTableDataSource } from '@angular/material/table';
 import { takeUntil } from 'rxjs/operators';
 import { MatDrawer } from '@angular/material/sidenav';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
-import { NoctuaFormDialogService } from '../../noctua-form';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { NoctuaFormDialogService } from '../../noctua-form/services/dialog.service';
 
 @Component({
   selector: 'noc-graph-activity-table',
@@ -60,7 +51,6 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private changeDetectorRef: ChangeDetectorRef,
     public camService: CamService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,

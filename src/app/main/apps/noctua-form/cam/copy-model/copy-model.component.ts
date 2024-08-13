@@ -8,11 +8,11 @@ import {
   NoctuaUserService,
   NoctuaFormConfigService,
   CamService,
-  NoctuaFormMenuService,
   LeftPanel
 } from '@geneontology/noctua-form-base';
 import { NoctuaSearchMenuService } from '@noctua.search/services/search-menu.service';
 import { NoctuaFormDialogService } from '../../services/dialog.service';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
 
 
 @Component({
@@ -27,7 +27,7 @@ export class CopyModelComponent implements OnInit, OnDestroy {
   @Input('panelSide') panelSide: string
   cam: Cam;
   loading = false;
-  camForm: FormGroup;
+  includeEvidence = false;
 
   duplicatedCam;
 
@@ -39,7 +39,7 @@ export class CopyModelComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaSearchMenuService: NoctuaSearchMenuService,
-    public noctuaFormMenuService: NoctuaFormMenuService
+    public noctuaCommonMenuService: NoctuaCommonMenuService
   ) {
     this._unsubscribeAll = new Subject();
     // this.activity = self.noctuaCamFormService.activity;
@@ -47,7 +47,6 @@ export class CopyModelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.camForm = this.createCamForm();
     this.camService.onCamChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cam) => {
@@ -75,12 +74,6 @@ export class CopyModelComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
-  createCamForm() {
-    return new FormGroup({
-      title: new FormControl(),
-    });
-  }
-
   copyModel() {
 
     const self = this;
@@ -88,7 +81,7 @@ export class CopyModelComponent implements OnInit, OnDestroy {
     const success = (value) => {
       if (value) {
         this.loading = true;
-        this.camService.copyModel(this.cam, value?.title);
+        this.camService.copyModel(this.cam, value?.title, this.includeEvidence);
       } else {
         this.loading = false;
       };
@@ -100,7 +93,7 @@ export class CopyModelComponent implements OnInit, OnDestroy {
   close() {
 
     if (this.panelSide === 'left') {
-      this.noctuaFormMenuService.selectLeftPanel(LeftPanel.camForm);
+      this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.camForm);
     } else if (this.panelSide === 'right') {
       this.noctuaSearchMenuService.selectRightPanel(null);
     }

@@ -1,8 +1,6 @@
 
 
-import { Component, OnDestroy, OnInit, Input, NgZone } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { MatDrawer } from '@angular/material/sidenav';
+import { Component, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { EMPTY, Subject } from 'rxjs';
 
 
@@ -11,7 +9,6 @@ import {
   ActivityType,
   NoctuaUserService,
   NoctuaFormConfigService,
-  NoctuaFormMenuService,
   NoctuaActivityFormService,
   noctuaFormConfig,
 
@@ -19,9 +16,10 @@ import {
   EntityLookup,
   NoctuaLookupService,
   EntityDefinition,
+  ShapeUtils,
   Entity,
   Evidence,
-  NoctuaGraphService,
+  BbopGraphService,
   CamLoadingIndicator,
   CamService
 } from '@geneontology/noctua-form-base';
@@ -30,7 +28,7 @@ import { takeUntil, distinctUntilChanged, debounceTime, take, concatMap, finaliz
 import { noctuaAnimations } from '@noctua/animations';
 import { FormGroup, FormControl } from '@angular/forms';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
-import { cloneDeep, each, groupBy } from 'lodash';
+import { cloneDeep, groupBy } from 'lodash';
 import { ArtReplaceCategory } from '@noctua.search/models/review-mode';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
@@ -66,7 +64,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private zone: NgZone,
-    private noctuaGraphService: NoctuaGraphService,
+    private bbopGraphService: BbopGraphService,
     private camService: CamService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
@@ -74,7 +72,6 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     private noctuaLookupService: NoctuaLookupService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaActivityFormService: NoctuaActivityFormService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
     private inlineReferenceService: InlineReferenceService,) {
 
     this._unsubscribeAll = new Subject();
@@ -88,11 +85,11 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
         this.cams = cams;
       });
 
-    this.gpNode = EntityDefinition.generateBaseTerm([
+    this.gpNode = ShapeUtils.generateBaseTerm([
       EntityDefinition.GoMolecularEntity,
       // EntityDefinition.GoChemicalEntity
     ]);
-    this.termNode = EntityDefinition.generateBaseTerm([
+    this.termNode = ShapeUtils.generateBaseTerm([
       EntityDefinition.GoMolecularFunction,
       EntityDefinition.GoBiologicalProcess,
       EntityDefinition.GoCellularComponent,
@@ -152,7 +149,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   }
 
   resetTermNode() {
-    this.termNode = EntityDefinition.generateBaseTerm([
+    this.termNode = ShapeUtils.generateBaseTerm([
       EntityDefinition.GoMolecularFunction,
       EntityDefinition.GoBiologicalProcess,
       EntityDefinition.GoCellularComponent,
@@ -271,7 +268,7 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
     this.findNode!.termLookup.results = []
 
     if (closures) {
-      this.replaceNode = EntityDefinition.generateBaseTerm(closures);
+      this.replaceNode = ShapeUtils.generateBaseTerm(closures);
     }
 
     const findWhat = this.searchForm.value.findWhat;

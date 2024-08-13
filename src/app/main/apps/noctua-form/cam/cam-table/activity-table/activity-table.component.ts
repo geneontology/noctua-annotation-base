@@ -13,8 +13,6 @@ import {
   Entity,
   noctuaFormConfig,
   NoctuaUserService,
-  NoctuaFormMenuService,
-
   ActivityType
 } from '@geneontology/noctua-form-base';
 
@@ -29,7 +27,6 @@ import { EditorCategory } from '@noctua.editor/models/editor-category';
 import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
-import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'noc-activity-table',
@@ -62,7 +59,6 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
 
   constructor(
     public camService: CamService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaFormDialogService: NoctuaFormDialogService,
@@ -79,7 +75,7 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }
-    this.gpNode = this.activity.getGPNode();
+    this.gpNode = this.activity.gpNode;
 
     this.optionsDisplay = { ...this.options, hideHeader: true };
     this.nodes = this.activity.nodes.filter((node) => {
@@ -111,7 +107,7 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
       cam: this.cam,
       activity: this.activity,
       entity: entity,
-      category: EditorCategory.evidenceAll,
+      category: EditorCategory.EVIDENCE_ALL,
       evidenceIndex: entity.predicate.evidence.length - 1
     };
 
@@ -136,7 +132,7 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.bpNode;
 
     if (gpNode) {
       const data = {
@@ -170,15 +166,14 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
   }
 
 
-  insertEntity(entity: ActivityNode, nodeDescription: ShapeDefinition.ShapeDescription) {
-    const insertedNode = this.noctuaFormConfigService.insertActivityNode(this.activity, entity, nodeDescription);
-    //  this.noctuaActivityFormService.initializeForm();
+  insertEntity(entity: ActivityNode, predExpr: ShapeDefinition.PredicateExpression) {
+    const insertedNode = this.noctuaFormConfigService.insertActivityNodeShex(this.activity, entity, predExpr);
 
     const data = {
       cam: this.cam,
       activity: this.activity,
       entity: insertedNode,
-      category: EditorCategory.all,
+      category: EditorCategory.ALL,
       evidenceIndex: 0,
       insertEntity: true
     };

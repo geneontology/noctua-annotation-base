@@ -9,14 +9,9 @@ import {
   NoctuaActivityFormService,
   NoctuaActivityEntityService,
   CamService,
-  Evidence,
-  Entity,
   noctuaFormConfig,
   NoctuaUserService,
-  NoctuaFormMenuService,
-
-  ActivityType,
-  ActivityTreeNode
+  ActivityType
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -28,7 +23,7 @@ import {
 
 import { EditorCategory } from '@noctua.editor/models/editor-category';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { FlatTreeControl } from '@angular/cdk/tree';
 
 @Component({
@@ -62,7 +57,6 @@ export class ActivityTreeTableComponent implements OnInit, OnDestroy {
 
   constructor(
     public camService: CamService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaFormDialogService: NoctuaFormDialogService,
@@ -75,7 +69,7 @@ export class ActivityTreeTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.gpNode = this.activity.getGPNode();
+    this.gpNode = this.activity.gpNode
 
     this.dataSource.data = this.activity.nodes.sort(compareNodeWeight);
   }

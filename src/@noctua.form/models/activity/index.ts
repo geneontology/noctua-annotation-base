@@ -2,6 +2,7 @@ export {
     ActivityNode,
     ActivityNodeType,
     ActivityNodeDisplay,
+    GoCategory,
     compareNodeWeight
 } from './activity-node';
 export {
@@ -39,9 +40,8 @@ export {
     _compareEntityWeight
 } from './entity';
 export { Predicate } from './predicate';
-export { Triple } from './triple';
-export { Rule } from './rules/rule';
-export { ConnectorRule } from './rules/connector-rule';
+export { Triple, TriplePair } from './triple';
+export { ConnectorRule } from './connector-rule';
 export { PendingChange } from './pending-change';
 export { CamSummary, TermsSummary } from './summary';
 

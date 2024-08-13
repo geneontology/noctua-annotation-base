@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
@@ -9,7 +9,6 @@ import {
   NoctuaUserService,
   NoctuaFormConfigService,
   CamService,
-  Activity,
   ActivityDisplayType,
   ActivityType,
   NoctuaActivityFormService
@@ -24,12 +23,11 @@ import { ReviewMode } from '@noctua.search/models/review-mode';
 import { LeftPanel, MiddlePanel, RightPanel } from '@noctua.common/models/menu-panels';
 import { ArtBasket } from '@noctua.search/models/art-basket';
 import { NoctuaReviewSearchService } from '@noctua.search/services/noctua-review-search.service';
-import { NoctuaPerfectScrollbarDirective } from '@noctua/directives/noctua-perfect-scrollbar/noctua-perfect-scrollbar.directive';
 import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { TableOptions } from '@noctua.common/models/table-options';
-import { NoctuaGraphDialogService } from './services/dialog.service';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
 import { WorkbenchId } from '@noctua.common/models/workench-id';
+import { CamToolbarOptions } from '@noctua.common/models/cam-toolbar-options';
 
 @Component({
   selector: 'noc-noctua-graph',
@@ -77,6 +75,10 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
 
   cams: any[] = [];
 
+  camToolbarOptions: CamToolbarOptions = {
+    showCreateButton: false
+  }
+
   tableOptions: TableOptions = {
     displayType: ActivityDisplayType.SLIM_TREE,
     slimViewer: true,
@@ -106,8 +108,6 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private camService: CamService,
-
-    private graphDialogService: NoctuaGraphDialogService,
     public noctuaActivityFormService: NoctuaActivityFormService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -117,7 +117,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this._unsubscribeAll = new Subject();
 
-    this.noctuaCommonMenuService.selectedMiddlePanel = MiddlePanel.camGraph;
+
 
     this.route
       .queryParams
@@ -139,6 +139,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.noctuaCommonMenuService.selectedMiddlePanel = MiddlePanel.CAM_GRAPH;
     this.noctuaCommonMenuService.setLeftDrawer(this.leftDrawer);
     this.noctuaCommonMenuService.setRightDrawer(this.rightDrawer);
 
@@ -164,17 +165,17 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   openGraph() {
     this.noctuaCommonMenuService.closeLeftDrawer();
     this.noctuaCommonMenuService.closeRightDrawer();
-    this.noctuaCommonMenuService.selectMiddlePanel(MiddlePanel.camGraph)
+    this.noctuaCommonMenuService.selectMiddlePanel(MiddlePanel.CAM_GRAPH)
   }
 
   openTable() {
     //this.noctuaCommonMenuService.closeLeftDrawer();
     this.noctuaCommonMenuService.closeRightDrawer();
-    this.noctuaCommonMenuService.selectMiddlePanel(MiddlePanel.camTable)
+    this.noctuaCommonMenuService.selectMiddlePanel(MiddlePanel.CAM_TABLE)
   }
 
   openPreview() {
-    this.noctuaCommonMenuService.selectMiddlePanel(MiddlePanel.camPreview)
+    this.noctuaCommonMenuService.selectMiddlePanel(MiddlePanel.CAM_PREVIEW)
   }
 
   openLeftDrawer(panel) {
@@ -202,7 +203,7 @@ export class NoctuaGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openSettings() {
-    this.openRightDrawer(RightPanel.graphSettings)
+    this.openRightDrawer(RightPanel.GRAPH_SETTINGS)
   }
 
   getTableWidth(settings: SettingsOptions) {

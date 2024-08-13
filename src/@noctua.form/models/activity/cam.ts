@@ -10,6 +10,7 @@ import { each, find, orderBy } from 'lodash';
 import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
+import { AnnotationActivity } from '../standard-annotation/annotation-activity';
 
 export enum ReloadType {
   RESET = 'reset',
@@ -118,6 +119,7 @@ export class CamRebuildRule {
 
 export class Cam {
   title: string;
+  comments: string[] = [];
   state: any;
   groups: Group[] = [];
   contributors: Contributor[] = [];
@@ -181,6 +183,8 @@ export class Cam {
   manualLayout = false;
   layoutChanged = false;
 
+
+  annotationActivities: AnnotationActivity[] = [];
   private _filteredActivities: Activity[] = [];
   private _activities: Activity[] = [];
   private _storedActivities: Activity[] = [];
@@ -580,7 +584,7 @@ export class Cam {
   updateProperties() {
     const self = this;
 
-    each(self.activities, (activity: Activity, key) => {
+    each(self._activities, (activity: Activity, key) => {
       activity.updateProperties()
     });
 

@@ -1,11 +1,9 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ElementRef, ViewChild, Input } from '@angular/core';
-import { Overlay, OverlayConfig, OriginConnectionPosition, OverlayConnectionPosition } from '@angular/cdk/overlay';
+import { Component, OnDestroy, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
 
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 
-import { InlineEditorService, EditorDropdownDialogConfig } from './inline-editor.service';
+import { InlineEditorService } from './inline-editor.service';
 
 import {
     CamService,
@@ -13,9 +11,10 @@ import {
     ActivityNode,
     Activity,
     Cam,
-    NoctuaActivityFormService
+    Entity,
+    AnnotationActivity
 } from '@geneontology/noctua-form-base';
-import { EditorCategory } from './../models/editor-category';
+import { EditorCategory, EditorConfig, EditorType } from './../models/editor-category';
 
 @Component({
     selector: 'noctua-inline-editor',
@@ -28,9 +27,12 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
 
     @Input() cam: Cam;
     @Input() activity: Activity;
+    @Input() annotationActivity: AnnotationActivity;
     @Input() entity: ActivityNode;
     @Input() category: EditorCategory;
     @Input() evidenceIndex = 0;
+    @Input() relationshipChoices: Entity[] = [];
+    @Input() editorType: EditorType = EditorType.DEFAULT;
 
     @ViewChild('editorDropdownTrigger', { read: ElementRef })
     private editorDropdownTrigger: ElementRef;
@@ -38,7 +40,6 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
 
     constructor(private inlineEditorService: InlineEditorService,
         private camService: CamService,
-        public noctuaActivityFormService: NoctuaActivityFormService,
         private noctuaActivityEntityService: NoctuaActivityEntityService) {
         this._unsubscribeAll = new Subject();
     }
@@ -48,17 +49,29 @@ export class NoctuaInlineEditorComponent implements OnInit, OnDestroy {
     }
 
     openEditorDropdown(event) {
+
         const displayEntity = cloneDeep(this.entity);
-        const data = {
+        const data: EditorConfig = {
             cam: this.cam,
             activity: this.activity,
             entity: displayEntity,
             category: this.category,
-            evidenceIndex: this.evidenceIndex
+            evidenceIndex: this.evidenceIndex,
+            relationshipChoices: this.relationshipChoices,
+
+            //for Standard Editor
+            editorType: this.editorType,
+            annotationActivity: this.annotationActivity,
         };
-        this.camService.onCamChanged.next(this.cam);
-        this.camService.activity = this.activity;
-        this.noctuaActivityEntityService.initializeForm(this.activity, displayEntity);
+
+        console.log('data', data);
+
+        if (this.editorType === EditorType.DEFAULT) {
+            this.camService.onCamChanged.next(this.cam);
+            this.camService.activity = this.activity;
+            this.noctuaActivityEntityService.initializeForm(this.activity, displayEntity);
+        }
+
         this.inlineEditorService.open(event.target, { data });
     }
 

@@ -7,13 +7,11 @@ import { NoctuaFormDialogService } from './../../../services/dialog.service';
 import {
   Cam,
   Activity,
-  CamService,
   NoctuaActivityFormService,
   NoctuaFormConfigService,
   ActivityState,
   ActivityType,
   NoctuaUserService,
-  NoctuaFormMenuService,
 } from '@geneontology/noctua-form-base';
 import { ResizeEvent } from 'angular-resizable-element';
 
@@ -51,12 +49,12 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private camService: CamService,
+  constructor(
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaActivityFormService: NoctuaActivityFormService,
-    public noctuaFormMenuService: NoctuaFormMenuService) {
+    public noctuaActivityFormService: NoctuaActivityFormService
+  ) {
     this._unsubscribeAll = new Subject();
 
     // this.activity = self.noctuaActivityFormService.activity;
@@ -101,11 +99,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  /**
-   * Finilizes resize positions
-   * (used for drawer/sidenav width)
-   * @param event 
-   */
   onResizeEnd(event: ResizeEvent): void {
     this.resizeStyle = {
       // enable/disable these per your needs

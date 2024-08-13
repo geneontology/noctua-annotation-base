@@ -11,9 +11,7 @@ import {
   NoctuaActivityConnectorService,
   NoctuaActivityFormService,
   NoctuaFormConfigService,
-  CamService,
   NoctuaUserService,
-  NoctuaFormMenuService,
   ConnectorType
 } from '@geneontology/noctua-form-base';
 import { NoctuaFormDialogService } from '../../../services/dialog.service';
@@ -41,6 +39,7 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
   connectorFormSub: Subscription;
   searchCriteria: any = {};
   evidenceFormArray: FormArray;
+  relationshipOptions;
 
   private _unsubscribeAll: Subject<any>;
 
@@ -51,7 +50,6 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaActivityFormService: NoctuaActivityFormService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -65,6 +63,8 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
         }
         this.connectorFormGroup = connectorFormGroup;
         this.connectorActivity = this.noctuaActivityConnectorService.connectorActivity;
+        this.relationshipOptions = this.noctuaFormConfigService[this.connectorActivity.connectorType + 'Relationship']['options']
+
       });
 
   }

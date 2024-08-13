@@ -1,16 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  BbopGraphService,
   Cam,
   CamService,
   Contributor,
-  NoctuaActivityFormService,
   NoctuaFormConfigService,
-  NoctuaFormMenuService,
-  NoctuaGraphService,
   NoctuaUserService
-} from '@geneontology/noctua-form-base';
-import { NoctuaSearchDialogService } from '@noctua.search/services/dialog.service';
+} from '@geneontology/noctua-form-base'
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -26,12 +23,9 @@ export class NoctuaPathwayComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private camService: CamService,
-    private _noctuaGraphService: NoctuaGraphService,
-    public noctuaSearchDialogService: NoctuaSearchDialogService,
+    private _bbopGraphService: BbopGraphService,
     public noctuaUserService: NoctuaUserService,
-    public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaActivityFormService: NoctuaActivityFormService,
-    public noctuaFormMenuService: NoctuaFormMenuService) {
+    public noctuaFormConfigService: NoctuaFormConfigService) {
 
     this._unsubscribeAll = new Subject();
 
@@ -59,20 +53,13 @@ export class NoctuaPathwayComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const self = this;
-    this._noctuaGraphService.onCamGraphChanged
+    this._bbopGraphService.onCamGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cam: Cam) => {
         if (!cam || cam.id !== self.cam.id) {
           return;
         }
         this.cam = cam;
-
-        if (cam.activities.length > 0) {
-          this.camService.addCamEdit(this.cam)
-          this.camService.cams = [cam]
-        }
-        //this.noctuaReviewSearchService.addCamsToReview([this.cam], this.camService.cams);
-
       });
   }
 

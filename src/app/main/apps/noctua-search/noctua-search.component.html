@@ -1,4 +1,4 @@
-<div class="w-100-p h-100-p" fxLayout="row" fxLayoutAlign="start start">
+<div class="w-full h-full" fxLayout="row" fxLayoutAlign="start start">
 
   <div class="noc-sidemenu" fxLayout="column" fxLayoutAlign="start center">
     <button mat-icon-button color="" class="noc-rounded-button"
@@ -43,10 +43,10 @@
       <fa-icon [icon]="['fas', 'shopping-basket']"></fa-icon>
     </button>
   </div>
-  <mat-drawer-container class="h-100-p" fxFlex="" fxLayout="row" fxLayoutAlign="start start" [hasBackdrop]="false"
+  <mat-drawer-container class="h-full" fxFlex="" fxLayout="row" fxLayoutAlign="start start" [hasBackdrop]="false"
     autosize>
     <mat-drawer #leftDrawer class="noc-left-drawer" mode="side" position="start" opened>
-      <div [ngSwitch]="noctuaSearchMenuService.selectedLeftPanel" class="h-100-p">
+      <div [ngSwitch]="noctuaSearchMenuService.selectedLeftPanel" class="h-full">
         <noc-search-filter *ngSwitchCase="LeftPanel.filter"></noc-search-filter>
         <noc-search-relation *ngSwitchCase="LeftPanel.relation"></noc-search-relation>
         <noc-search-groups *ngSwitchCase="LeftPanel.group"></noc-search-groups>
@@ -57,9 +57,9 @@
         <noc-art-basket [hidden]="noctuaSearchMenuService.selectedLeftPanel !== LeftPanel.artBasket"></noc-art-basket>
       </div>
     </mat-drawer>
-    <mat-drawer-content #scrollbarRef class="noc-section-body w-100-p" [perfectScrollbar]="scrollbarConfig">
+    <mat-drawer-content #scrollbarRef class="noc-section-body w-full">
 
-      <div class="header accent p-8 w-100-p" fxLayout="column" fxLayoutAlign="center center">
+      <div class="header accent p-8 w-full" fxLayout="column" fxLayoutAlign="center center">
         <h1 [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
           WELCOME TO NOCTUA
         </h1>
@@ -77,30 +77,44 @@
           to create or edit models. Models may be viewed without login.
         </h4>
         <div *ngIf="noctuaUserService.user" class="noc-create" fxLayout="row" fxLayoutAlign="start center">
-          <button mat-raised-button (click)="createModel(WorkbenchId.VISUAL_PATHWAY_EDITOR)" color=""
-            class="noc-rounded-button mr-4 noc-half-button noc-r">
-            Create Model In <br> <strong>
-              PATHWAY EDITOR
-            </strong>
-            <div class="noc-badge" fxLayout="row" fxLayoutAlign="center center">
-              new
+          <div fxLayout="column" fxLayoutAlign="start center" fxFlex="75" class="noc-create-section">
+            <div class="noc-heading">
+              Create
             </div>
-          </button>
-          <button mat-raised-button (click)="createModel(WorkbenchId.FORM)" color=""
-            class="noc-rounded-button mr-4 noc-half-button noc-m">
-            Create Model In <br><strong>FORM EDITOR</strong>
-          </button>
-          <button mat-raised-button (click)="createModel(WorkbenchId.GRAPH_EDITOR)" color=""
-            class="noc-rounded-button mr-4 noc-half-button noc-m">
-            Create Model In <br> <strong>
-              GRAPH EDITOR
-            </strong>
-          </button>
-          <button mat-raised-button (click)="toggleReviewMode()" color=""
-            class="noc-rounded-button noc-half-button noc-l noc-review-mode-button"
-            [ngClass]="{'noc-selected': noctuaSearchMenuService.reviewMode !== ReviewMode.off}">
-            ANNOTATION REVIEW
-          </button>
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <button mat-raised-button (click)="createModel(WorkbenchId.STANDARD_ANNOTATIONS)" color=""
+                class="noc-rounded-button mr-4 noc-half-button noc-r">
+                STANDARD ANNOTATIONS <br> EDITOR
+                <div class="noc-badge" fxLayout="row" fxLayoutAlign="center center">
+                  beta
+                </div>
+              </button>
+              <button mat-raised-button (click)="createModel(WorkbenchId.VISUAL_PATHWAY_EDITOR)" color=""
+                class="noc-rounded-button mr-4 noc-half-button noc-m">
+                PATHWAY <br> EDITOR
+              </button>
+              <button mat-raised-button (click)="createModel(WorkbenchId.FORM)" color=""
+                class="noc-rounded-button mr-4 noc-half-button noc-m">
+                FORM <br>EDITOR
+              </button>
+              <button mat-raised-button (click)="createModel(WorkbenchId.GRAPH_EDITOR)" color=""
+                class="noc-rounded-button mr-4 noc-half-button noc-l">
+                GRAPH <br> EDITOR
+              </button>
+            </div>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="start center" fxFlex="25" class="noc-create-section">
+            <div class="noc-heading">
+              <span>Review</span>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <button mat-raised-button (click)="toggleReviewMode()" color=""
+                class="noc-rounded-button noc-half-button noc-review-mode-button"
+                [ngClass]="{'noc-selected': noctuaSearchMenuService.reviewMode !== ReviewMode.off}">
+                ANNOTATION REVIEW <br> TOOL
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <div *ngIf="noctuaSearchMenuService.reviewMode !== ReviewMode.off" class="noc-art-info" fxLayout="row"
@@ -134,8 +148,8 @@
           </div>
         </div>
       </div>
-      <div class="noc-middle-panel w-100-p">
-        <noc-cams-table class="w-100-p" [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.cams"
+      <div class="noc-middle-panel w-full">
+        <noc-cams-table class="w-full" [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.cams"
           [isReviewMode]="noctuaSearchMenuService.isReviewMode">
         </noc-cams-table>
         <noc-cams-review [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.camsReview">
@@ -143,15 +157,15 @@
         <noc-cams-review-changes [hidden]="noctuaSearchMenuService.selectedMiddlePanel !== MiddlePanel.reviewChanges">
         </noc-cams-review-changes>
       </div>
-      <div class="w-100-p">
+      <div class="w-full">
         <app-footer></app-footer>
       </div>
     </mat-drawer-content>
     <mat-drawer #rightDrawer class="noc-right-drawer" mode="over" position="end">
-      <div [ngSwitch]="noctuaSearchMenuService.selectedRightPanel" class="h-100-p">
-        <noc-cam-form [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.camForm">
+      <div [ngSwitch]="noctuaSearchMenuService.selectedRightPanel" class="h-full">
+        <noc-cam-form [panelDrawer]="rightDrawer" *ngSwitchCase="RightPanel.CAM_FORM">
         </noc-cam-form>
-        <noc-copy-model [panelDrawer]="rightDrawer" [panelSide]="'right'" *ngSwitchCase="RightPanel.copyModel">
+        <noc-copy-model [panelDrawer]="rightDrawer" [panelSide]="'right'" *ngSwitchCase="RightPanel.COPY_MODEL">
         </noc-copy-model>
       </div>
     </mat-drawer>

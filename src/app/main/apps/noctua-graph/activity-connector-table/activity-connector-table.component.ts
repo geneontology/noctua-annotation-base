@@ -9,26 +9,19 @@ import {
   ConnectorActivity,
   ConnectorState,
   ActivityNode,
-  Evidence,
   NoctuaActivityConnectorService,
   NoctuaActivityFormService,
   NoctuaFormConfigService,
-  CamService,
-  noctuaFormConfig,
-  Entity,
   NoctuaUserService,
-  NoctuaFormMenuService,
   ConnectorType,
-  NoctuaActivityEntityService,
-  NoctuaGraphService
+  NoctuaActivityEntityService
 } from '@geneontology/noctua-form-base';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { takeUntil } from 'rxjs/operators';
 import { TableOptions } from '@noctua.common/models/table-options';
-import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
-import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
+import { NoctuaFormDialogService } from '../../noctua-form/services/dialog.service';
 
 @Component({
   selector: 'noc-activity-connector-table',
@@ -67,6 +60,7 @@ export class ActivityConnectorTableComponent implements OnInit, OnDestroy {
   evidenceFormArray: FormArray;
 
   private _unsubscribeAll: Subject<any>;
+  relationshipOptions: any;
 
   constructor(
     private confirmDialogService: NoctuaConfirmDialogService,
@@ -75,7 +69,6 @@ export class ActivityConnectorTableComponent implements OnInit, OnDestroy {
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     public noctuaActivityFormService: NoctuaActivityFormService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
     private noctuaCommonMenuService: NoctuaCommonMenuService,
     public noctuaActivityEntityService: NoctuaActivityEntityService,
   ) {
@@ -91,7 +84,10 @@ export class ActivityConnectorTableComponent implements OnInit, OnDestroy {
           return;
         }
         this.connectorFormGroup = connectorFormGroup;
+        this.currentConnectorActivity = this.noctuaActivityConnectorService.currentConnectorActivity;
         this.connectorActivity = this.noctuaActivityConnectorService.connectorActivity;
+        this.relationshipOptions = this.noctuaFormConfigService[this.connectorActivity.connectorType + 'Relationship']['options']
+
       });
 
     this.noctuaCommonMenuService.onCamSettingsChanged
@@ -138,7 +134,7 @@ export class ActivityConnectorTableComponent implements OnInit, OnDestroy {
   deleteConnectorEdge() {
     const self = this;
     const success = () => {
-      self.noctuaActivityConnectorService.deleteConnectorEdge(this.connectorActivity).then(() => {
+      self.noctuaActivityConnectorService.deleteConnectorEdge(this.currentConnectorActivity).then(() => {
         self.noctuaFormDialogService.openInfoToast('Causal relation successfully deleted.', 'OK');
       });
     };

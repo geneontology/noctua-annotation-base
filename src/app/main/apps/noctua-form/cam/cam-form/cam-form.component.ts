@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -8,10 +8,9 @@ import {
   Cam,
   NoctuaUserService,
   NoctuaFormConfigService,
-  NoctuaGraphService,
+  BbopGraphService,
   CamService,
   Entity,
-  NoctuaFormMenuService
 } from '@geneontology/noctua-form-base';
 import { SparqlService } from '@noctua.sparql/services/sparql/sparql.service';
 
@@ -28,15 +27,15 @@ export class CamFormComponent implements OnInit, OnDestroy {
   cam: Cam;
   camFormGroup: FormGroup;
   camFormSub: Subscription;
+  commentFormArray: FormArray
 
   private _unsubscribeAll: Subject<any>;
 
   constructor(public noctuaUserService: NoctuaUserService,
     private sparqlService: SparqlService,
     private camService: CamService,
-    private noctuaGraphService: NoctuaGraphService,
-    public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaFormMenuService: NoctuaFormMenuService
+    private bbopGraphService: BbopGraphService,
+    public noctuaFormConfigService: NoctuaFormConfigService
   ) {
     this._unsubscribeAll = new Subject();
     // this.activity = self.noctuaCamFormService.activity;
@@ -51,6 +50,7 @@ export class CamFormComponent implements OnInit, OnDestroy {
           return;
         }
         this.camFormGroup = camFormGroup;
+        this.commentFormArray = camFormGroup.get('commentFormArray') as FormArray
       });
 
     this.camService.onCamChanged
@@ -64,17 +64,28 @@ export class CamFormComponent implements OnInit, OnDestroy {
       });
   }
 
+  addComment() {
+    this.commentFormArray.push(new FormControl())
+  }
+
+  deleteComment(index) {
+    this.commentFormArray.removeAt(index)
+    this.save()
+  }
+
   save() {
 
     const value = this.camFormGroup.value;
 
     const annotations = {
       title: value.title,
-      state: value.state.name
+      state: value.state.name,
+      comments: value.commentFormArray,
     };
 
-    this.noctuaGraphService.saveModelGroup(this.cam, value.group.id);
-    this.noctuaGraphService.saveCamAnnotations(this.cam, annotations);
+
+    this.bbopGraphService.saveModelGroup(this.cam, value.group.id);
+    this.bbopGraphService.saveCamAnnotations(this.cam, annotations);
   }
 
   termDisplayFn(term): string | undefined {

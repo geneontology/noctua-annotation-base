@@ -13,12 +13,9 @@ import {
   Entity,
   noctuaFormConfig,
   NoctuaUserService,
-  NoctuaFormMenuService,
-
   ActivityType,
   ActivityTreeNode,
-  ActivityNodeType,
-  FormType
+  ActivityNodeType
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -33,7 +30,6 @@ import { find } from 'lodash';
 import { InlineEditorService } from '@noctua.editor/inline-editor/inline-editor.service';
 import { NoctuaUtils } from '@noctua/utils/noctua-utils';
 import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'noc-activity-tree',
@@ -82,7 +78,6 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
   constructor(
     public camService: CamService,
     private confirmDialogService: NoctuaConfirmDialogService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
     private noctuaFormDialogService: NoctuaFormDialogService,
@@ -98,7 +93,7 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
     if (this.options?.editableTerms) {
       this.editableTerms = this.options.editableTerms
     }
-    this.gpNode = this.activity.getGPNode();
+    this.gpNode = this.activity.gpNode;
 
     this.optionsDisplay = { ...this.options, hideHeader: true };
 
@@ -145,7 +140,7 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
       cam: this.cam,
       activity: this.activity,
       entity: entity,
-      category: EditorCategory.evidenceAll,
+      category: EditorCategory.EVIDENCE_ALL,
       evidenceIndex: entity.predicate.evidence.length - 1
     };
 
@@ -170,7 +165,7 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.noctuaActivityFormService.activity.getGPNode();
+    const gpNode = this.noctuaActivityFormService.activity.gpNode;
 
     if (gpNode) {
       const data = {
@@ -204,15 +199,16 @@ export class ActivityTreeComponent implements OnInit, OnDestroy {
   }
 
 
-  insertEntity(entity: ActivityNode, nodeDescription: ShapeDefinition.ShapeDescription) {
-    const insertedNode = this.noctuaFormConfigService.insertActivityNode(this.activity, entity, nodeDescription);
+  insertEntity(entity: ActivityNode, predExpr: ShapeDefinition.PredicateExpression) {
+    const insertedNode = this.noctuaFormConfigService.insertActivityNodeShex(this.activity, entity, predExpr);
+
     //  this.noctuaActivityFormService.initializeForm();
 
     const data = {
       cam: this.cam,
       activity: this.activity,
       entity: insertedNode,
-      category: EditorCategory.all,
+      category: EditorCategory.ALL,
       evidenceIndex: 0,
       insertEntity: true
     };

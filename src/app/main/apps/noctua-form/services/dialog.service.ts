@@ -1,8 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 import { ActivityErrorsDialogComponent } from './../dialogs/activity-errors/activity-errors.component';
 import { BeforeSaveDialogComponent } from './../dialogs/before-save/before-save.component';
@@ -23,6 +23,7 @@ import { CamErrorsDialogComponent } from '../dialogs/cam-errors/cam-errors.compo
 import { CreateActivityDialogComponent } from '../dialogs/create-activity/create-activity.component';
 import { AddEvidenceDialogComponent } from '../dialogs/add-evidence/add-evidence.component';
 import { ConfirmCopyModelDialogComponent } from '../dialogs/confirm-copy-model/confirm-copy-model.component';
+import { CommentsDialogComponent } from '../dialogs/comments/comments.component';
 
 
 @Injectable({
@@ -137,6 +138,22 @@ export class NoctuaFormDialogService {
             panelClass: 'noc-confirm-copy-model-dialog',
             data: {
                 cam: cam
+            },
+            width: '600px',
+        });
+        this.dialogRef.afterClosed()
+            .subscribe(response => {
+                if (response) {
+                    success(response);
+                }
+            });
+    }
+
+    openCommentsDialog(comments: string[], success): void {
+        this.dialogRef = this._matDialog.open(CommentsDialogComponent, {
+            panelClass: 'noc-comments-dialog',
+            data: {
+                comments
             },
             width: '600px',
         });

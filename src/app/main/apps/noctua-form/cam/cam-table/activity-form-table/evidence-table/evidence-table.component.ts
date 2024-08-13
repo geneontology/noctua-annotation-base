@@ -1,5 +1,5 @@
 
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { noctuaAnimations } from './../../../../../../../../@noctua/animations';
@@ -9,8 +9,6 @@ import {
   NoctuaFormConfigService,
   NoctuaActivityEntityService,
   CamService,
-  NoctuaFormMenuService,
-  Predicate,
   NoctuaUserService,
   NoctuaActivityFormService,
   Evidence,
@@ -58,11 +56,9 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
   constructor(
     public camService: CamService,
     public noctuaUserService: NoctuaUserService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
     private confirmDialogService: NoctuaConfirmDialogService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    //  public noctuaFormMenuService: NoctuaFormMenuService,
     public noctuaActivityFormService: NoctuaActivityFormService,
     private inlineEditorService: InlineEditorService,
     public noctuaActivityEntityService: NoctuaActivityEntityService) {
@@ -86,7 +82,7 @@ export class EvidenceFormTableComponent implements OnInit, OnDestroy {
       cam: this.cam,
       activity: this.activity,
       entity: entity,
-      category: EditorCategory.evidenceAll,
+      category: EditorCategory.EVIDENCE_ALL,
       evidenceIndex: entity.predicate.evidence.length - 1
     };
 

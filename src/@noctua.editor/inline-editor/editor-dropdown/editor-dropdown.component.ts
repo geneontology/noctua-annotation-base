@@ -20,11 +20,11 @@ import { Evidence } from '@geneontology/noctua-form-base';
 
 import { editorDropdownData } from './editor-dropdown.tokens';
 import { EditorDropdownOverlayRef } from './editor-dropdown-ref';
-import { NoctuaFormDialogService } from 'app/main/apps/noctua-form';
 import { EditorCategory } from './../../models/editor-category';
 import { concatMap, finalize, take, takeUntil } from 'rxjs/operators';
 import { find } from 'lodash';
 import { InlineReferenceService } from './../../inline-reference/inline-reference.service';
+import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dialog.service';
 
 @Component({
   selector: 'noc-editor-dropdown',
@@ -39,6 +39,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   insertEntity = false;
   entity: ActivityNode;
   category: EditorCategory;
+  relationshipChoices: Entity[] = [];
   evidenceIndex: number;
   entityFormGroup: FormGroup;
   evidenceFormGroup: FormGroup;
@@ -74,6 +75,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
     this.category = data.category;
     this.evidenceIndex = data.evidenceIndex;
     this.insertEntity = data.insertEntity;
+    this.relationshipChoices = data.relationshipChoices;
   }
 
   ngOnInit(): void {
@@ -102,11 +104,11 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
   save() {
     const self = this;
     switch (self.category) {
-      case EditorCategory.term:
-      case EditorCategory.evidence:
-      case EditorCategory.reference:
-      case EditorCategory.with:
-      case EditorCategory.relationship:
+      case EditorCategory.TERM:
+      case EditorCategory.EVIDENCE:
+      case EditorCategory.REFERENCE:
+      case EditorCategory.WITH:
+      case EditorCategory.RELATIONSHIP:
         this.close();
         self.noctuaActivityEntityService.saveActivityReplace(self.cam).pipe(
           take(1),
@@ -129,13 +131,13 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
           });
         break;
-      case EditorCategory.evidenceAll:
+      case EditorCategory.EVIDENCE_ALL:
         self.noctuaActivityEntityService.addEvidence().then(() => {
           this.close();
           self.noctuaFormDialogService.openInfoToast('Evidence successfully updated.', 'OK');
         });
         break;
-      case EditorCategory.all:
+      case EditorCategory.ALL:
         self.noctuaActivityEntityService.addIndividual().then(() => {
           this.close();
           self.noctuaFormDialogService.openInfoToast('Activity successfully updated.', 'OK');
@@ -146,7 +148,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   openSearchDatabaseDialog(entity: ActivityNode) {
     const self = this;
-    const gpNode = this.activity.getGPNode();
+    const gpNode = this.activity.gpNode;
 
     if (gpNode && gpNode.hasValue()) {
       const data = {
@@ -167,16 +169,6 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
           if (selected.evidences && selected.evidences.length > 0) {
             self.noctuaActivityEntityService.reinitializeForm(term, selected.evidences);
 
-            /*  selected.evidences.forEach((evidence: Evidence) => {
-               evidence.evidenceExts.forEach((evidenceExt) => {
-                 evidenceExt.relations.forEach((relation) => {
-                   const node = self.noctuaFormConfigService.insertActivityNodeByPredicate(self.noctuaActivityFormService.activity, self.entity, relation.id);
-                   node.term = new Entity(evidenceExt.term.id, evidenceExt.term.id);
-                   node.predicate.setEvidence([evidence]);
-                 });
-               });
- 
-             }); */
           }
         }
       };
@@ -217,7 +209,7 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   updateTermList() {
     const self = this;
-    this.camService.updateTermList(self.noctuaActivityFormService.activity, this.entity);
+    this.camService.updateTermList(self.noctuaActivityFormService.activity);
   }
 
   updateEvidenceList() {
@@ -250,27 +242,27 @@ export class NoctuaEditorDropdownComponent implements OnInit, OnDestroy {
 
   private _displaySection(category: EditorCategory) {
     switch (category) {
-      case EditorCategory.relationship:
+      case EditorCategory.RELATIONSHIP:
         this.displaySection.relationship = true;
         break;
-      case EditorCategory.term:
+      case EditorCategory.TERM:
         this.displaySection.term = true;
         break;
-      case EditorCategory.evidence:
+      case EditorCategory.EVIDENCE:
         this.displaySection.evidence = true;
         break;
-      case EditorCategory.reference:
+      case EditorCategory.REFERENCE:
         this.displaySection.reference = true;
         break;
-      case EditorCategory.with:
+      case EditorCategory.WITH:
         this.displaySection.with = true;
         break;
-      case EditorCategory.evidenceAll:
+      case EditorCategory.EVIDENCE_ALL:
         this.displaySection.evidence = true;
         this.displaySection.reference = true;
         this.displaySection.with = true;
         break;
-      case EditorCategory.all:
+      case EditorCategory.ALL:
         this.displaySection.term = true;
         this.displaySection.evidence = true;
         this.displaySection.reference = true;

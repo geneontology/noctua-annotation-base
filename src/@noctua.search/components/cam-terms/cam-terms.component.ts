@@ -1,16 +1,30 @@
-import { Component, OnInit, OnDestroy, NgZone, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ActivityNode, Article, Cam, CamLoadingIndicator, CamService, CamStats, CamSummary, EntityType, Evidence, LeftPanel, NoctuaFormConfigService, NoctuaFormMenuService, NoctuaGraphService, NoctuaLookupService, NoctuaUserService, RightPanel, TermsSummary } from '@geneontology/noctua-form-base';
+import {
+  ActivityNode,
+  Article,
+  Cam,
+  CamService,
+  EntityType,
+  Evidence,
+  LeftPanel,
+  NoctuaFormConfigService,
+  BbopGraphService,
+  NoctuaLookupService,
+  NoctuaUserService,
+  TermsSummary
+} from '@geneontology/noctua-form-base';
 import { NoctuaSearchService } from './../..//services/noctua-search.service';
 import { NoctuaSearchMenuService } from '../../services/search-menu.service';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { NoctuaReviewSearchService } from './../../services/noctua-review-search.service';
-import { NoctuaConfirmDialogService } from '@noctua/components/confirm-dialog/confirm-dialog.service';
 import { MiddlePanel } from './../../models/menu-panels';
 import { NoctuaSearchDialogService } from './../../services/dialog.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { SearchCriteria } from '@noctua.search/models/search-criteria';
 import { environment } from 'environments/environment';
+import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { RightPanel } from '@noctua.common/models/menu-panels';
 
 @Component({
   selector: 'noc-cam-terms',
@@ -42,12 +56,10 @@ export class CamTermsComponent implements OnInit, OnDestroy {
   treeNodes
 
   constructor(
-    private zone: NgZone,
     private noctuaLookupService: NoctuaLookupService,
-    private _noctuaGraphService: NoctuaGraphService,
-    public noctuaFormMenuService: NoctuaFormMenuService,
+    private _bbopGraphService: BbopGraphService,
+    public noctuaCommonMenuService: NoctuaCommonMenuService,
     public camService: CamService,
-    private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaSearchDialogService: NoctuaSearchDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaReviewSearchService: NoctuaReviewSearchService,
@@ -58,14 +70,14 @@ export class CamTermsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._noctuaGraphService.onCamGraphChanged
+    this._bbopGraphService.onCamGraphChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cam: Cam) => {
         if (!cam) {
           return;
         }
         this.cam = cam;
-        this.termsSummary = this._noctuaGraphService.getTerms(this.cam.graph)
+        this.termsSummary = this._bbopGraphService.getTerms(this.cam.graph)
         this.treeNodes = this.camService.buildTermsTree(this.termsSummary)
         const pmids = this.termsSummary.papers.nodes.map((article: Article) => {
           return Evidence.getReferenceNumber(article.id)
@@ -104,7 +116,8 @@ export class CamTermsComponent implements OnInit, OnDestroy {
       .subscribe((term) => {
         if (!term) return;
         this.noctuaReviewSearchService.onCamTermSearch.next(term)
-        this.noctuaFormMenuService.openLeftDrawer(LeftPanel.findReplace);
+        this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.findReplace);
+        this.noctuaCommonMenuService.openLeftDrawer();
       })
   }
 
@@ -130,7 +143,8 @@ export class CamTermsComponent implements OnInit, OnDestroy {
 
   openTermDetail(term) {
     this.noctuaSearchService.onDetailTermChanged.next(term)
-    this.noctuaFormMenuService.openRightDrawer(RightPanel.termDetail);
+    this.noctuaCommonMenuService.selectRightPanel(RightPanel.TERM_DETAIL);
+    this.noctuaCommonMenuService.openRightDrawer();
   }
 
 
