@@ -2,12 +2,14 @@ import { ActivityNode } from './../activity/activity-node';
 import { Entity, RootTypes } from './../activity/entity';
 import { noctuaFormConfig } from './../../noctua-form-config';
 import { Activity } from './../activity/activity';
-import { Triple } from './../activity/triple';
+import { Triple, TriplePair } from './../activity/triple';
 import { Predicate } from './../activity/predicate';
 import * as ShapeUtils from './../../data/config/shape-utils';
 import * as EntityDefinition from './../../data/config/entity-definition';
 import { Evidence } from './../activity/evidence';
 import { StandardAnnotationForm } from './form';
+import { cloneDeep } from 'lodash';
+import { Contributor } from '../contributor';
 
 
 export interface AnnotationEdgeConfig {
@@ -34,39 +36,24 @@ export class AnnotationExtension {
   }
 }
 
-export class AnnotationEvidence {
-  evidenceCode: ActivityNode;
-  reference: ActivityNode;
-  with: ActivityNode;
-
-  constructor(evidence?: Evidence) {
-
-    this.evidenceCode = ShapeUtils.generateBaseTerm([]);
-    this.reference = ShapeUtils.generateBaseTerm([]);
-    this.with = ShapeUtils.generateBaseTerm([]);
-
-    this.evidenceCode.category = [EntityDefinition.GoEvidence];
-    this.evidenceCode.label = 'Evidence'
-    this.reference.label = 'Reference'
-    this.with.label = 'With/From'
-
-    if (evidence) {
-    }
-  }
-}
-
 
 export class AnnotationActivity {
+  id: string;
   gp: ActivityNode;
   goterm: ActivityNode;
   gpToTermEdge: Entity;
   gotermAspect: string;
-  evidence: AnnotationEvidence;
-  extensions: AnnotationExtension[] = [];
 
+  evidenceCode = ShapeUtils.generateBaseTerm([]);
+  reference = ShapeUtils.generateBaseTerm([]);
+  with = ShapeUtils.generateBaseTerm([]);
+  comments: string[] = [];
+  evidenceDate: string;
+  evidenceContributors: Contributor[] = [];
+
+  extensions: AnnotationExtension[] = [];
   gpToTermEdges: Entity[] = [];
   activity: Activity;
-  submitErrors = [];
 
 
   constructor(activity?: Activity) {
@@ -74,16 +61,17 @@ export class AnnotationActivity {
     if (activity) {
       this.activityToAnnotation(activity);
     }
+
+    this.evidenceCode.category = [EntityDefinition.GoEvidence];
+    this.evidenceCode.label = 'Evidence'
+    this.reference.label = 'Reference'
+    this.with.label = 'With/From'
   }
 
 
   activityToAnnotation(activity: Activity) {
     this.gp = activity.getNode('gp');
     this.goterm = activity.getNode('goterm');
-    this.evidence = new AnnotationEvidence();
-
-    console.log('activity', activity);
-
 
     const extensionTriples: Triple<ActivityNode>[] = activity.getEdges(this.goterm.id);
     this.extensions = extensionTriples.map(triple => {
@@ -125,21 +113,101 @@ export class AnnotationActivity {
     this.goterm.term.id = annotationForm.goterm.id;
     this.gpToTermEdge = annotationForm.gpToTermEdge;
 
+    this.goterm.isComplement = annotationForm.isComplement;
+
+    this.evidenceCode.term.id = annotationForm.evidenceCode.id;
+    this.reference.term.id = annotationForm.reference;
+    this.with.term.id = annotationForm.withFrom;
+
+    this.comments = Array.from(new Set(annotationForm.annotationComments.map(comment => comment.comment)));
+
     annotationForm.annotationExtensions.forEach((ext, index) => {
       this.extensions[index].extensionEdge = ext.extensionEdge;
       this.extensions[index].extensionTerm.term.id = ext.extensionTerm.id;
     });
+  }
 
-    this.evidence.evidenceCode.term.id = annotationForm.evidence.evidenceCode.id;
-    this.evidence.reference.term.id = annotationForm.evidence.reference;
-    this.evidence.with.term.id = annotationForm.evidence.withFrom;
+  getEvidenceNodes(): Evidence[] {
+    const evidenceNodes: Evidence[] = [];
+    this.activity.edges.forEach(triple => {
+      triple.predicate.evidence.forEach(evidence => {
+        evidenceNodes.push(evidence);
+      });
+    });
+
+    return evidenceNodes;
+  }
+
+  getPredicates(): Predicate[] {
+    return this.activity.edges.map(triple => {
+      return triple.predicate;
+    });
+  }
+
+  getExtensionTriple(predicateId: string, extension: ActivityNode): Triple<ActivityNode> {
+    const triple = this.activity.edges.find(edge => edge.object.uuid === extension.uuid && edge.predicate.edge.id === predicateId);
+
+    return triple
+
+  }
+
+  getTriplePair(predicateId: string, goterm: ActivityNode, newPredicateId: string): TriplePair<ActivityNode> {
+    const oldTriple = this.activity.edges.find(edge =>
+      (predicateId === noctuaFormConfig.edge.enabledBy.id ? edge.subject.uuid : edge.object.uuid) === goterm.uuid &&
+      edge.predicate.edge.id === predicateId
+    );
+
+
+    if (!oldTriple) {
+      return { a: undefined, b: undefined };
+    }
+
+    const config = noctuaFormConfig.simpleAnnotationEdgeConfig[newPredicateId];
+    if (!config) {
+      return { a: oldTriple, b: undefined };
+    }
+
+    const newTriple = cloneDeep(oldTriple);
+
+    const shouldSwapSubjectAndObject =
+      predicateId === noctuaFormConfig.edge.enabledBy.id ||
+      predicateId === noctuaFormConfig.inverseEdge.enables.id ||
+      newPredicateId === noctuaFormConfig.edge.enabledBy.id ||
+      newPredicateId === noctuaFormConfig.inverseEdge.enables.id;
+
+    if (shouldSwapSubjectAndObject) {
+      [newTriple.subject, newTriple.object] = [newTriple.object, newTriple.subject];
+    }
+
+    newTriple.predicate.edge = new Entity(
+      config.mfNodeRequired ? config.mfToTermPredicate : config.gpToTermPredicate,
+      ''
+    );
+
+
+
+    console.log('newTriple.predicate.edge', newTriple.predicate.edge);
+
+    return { a: oldTriple, b: newTriple };
+  }
+
+  genExtensionTriple(relationId: string, extensionId: string) {
+    const edge = new Entity(relationId, '');
+    const extension = new ActivityNode();
+    const evidence = this._createEvidence();
+    const predicate = new Predicate(edge, [evidence]);
+
+    extension.term = new Entity(extensionId, '');
+    predicate.comments = this.comments;
+
+    return new Triple(this.goterm, extension, predicate);
   }
 
   createSave(annotationForm: StandardAnnotationForm) {
 
     this._populateAnnotationActivity(annotationForm);
     const saveData = {
-      title: 'enabled by ' + this.gp?.term.label,
+      title: 'enabled by ' + annotationForm.gp?.label,
       triples: [],
       nodes: [this.gp, this.goterm],
       graph: null
@@ -147,6 +215,7 @@ export class AnnotationActivity {
 
     const edgeType = this.gpToTermEdge.id
     const config = noctuaFormConfig.simpleAnnotationEdgeConfig[edgeType]
+    const evidence = this._createEvidence();
 
     if (!config) {
       console.warn('No configuration defined for edge:', edgeType);
@@ -159,25 +228,23 @@ export class AnnotationActivity {
       const rootMF = noctuaFormConfig.rootNode.mf;
       mfNode.term = new Entity(rootMF.id, rootMF.label);
 
-      const triple = this._createTriple(mfNode, this.gp, config.gpToTermPredicate, this.evidence, config.gpToTermReverse)
+      const triple = this._createTriple(mfNode, this.gp, config.gpToTermPredicate, evidence, config.gpToTermReverse)
       saveData.triples.push(triple);
 
       if (config.mfToTermPredicate) {
-        const mfTriple = this._createTriple(mfNode, this.goterm, config.mfToTermPredicate, this.evidence)
+        const mfTriple = this._createTriple(mfNode, this.goterm, config.mfToTermPredicate, evidence)
         saveData.triples.push(mfTriple);
       }
 
     } else {
-      const triple = this._createTriple(this.gp, this.goterm, config.gpToTermPredicate, this.evidence, config.gpToTermReverse)
+      const triple = this._createTriple(this.gp, this.goterm, config.gpToTermPredicate, evidence, config.gpToTermReverse)
       saveData.triples.push(triple);
     }
 
     this.extensions.forEach(ext => {
 
-
       if (ext.extensionTerm?.hasValue()) {
-        const extensionTriple = new Triple(this.goterm, ext.extensionTerm,
-          new Predicate(ext.extensionEdge, this.goterm.predicate.evidence));
+        const extensionTriple = this._createTriple(this.goterm, ext.extensionTerm, ext.extensionEdge.id, evidence);
 
         saveData.nodes.push(ext.extensionTerm);
         saveData.triples.push(extensionTriple);
@@ -187,22 +254,27 @@ export class AnnotationActivity {
     return saveData;
   }
 
+  private _createEvidence() {
+    const evidence = new Evidence();
 
-  private _createTriple(subjectNode: ActivityNode, objectNode: ActivityNode, predicateId: string, annotationEvidence: AnnotationEvidence, reverse = false) {
+    evidence.evidence = new Entity(this.evidenceCode?.term.id, "");
+    evidence.reference = this.reference?.term.id;
+    evidence.with = this.with?.term.id;
+
+    return evidence;
+  }
+
+
+  private _createTriple(subjectNode: ActivityNode, objectNode: ActivityNode, predicateId: string, evidence: Evidence, reverse = false) {
     const edgeConfig = noctuaFormConfig.allEdges.find(edge => edge.id === predicateId);
 
     if (!edgeConfig) {
       throw new Error(`Edge configuration not found for predicate ID: ${predicateId}`);
     }
 
-    const evidence = new Evidence();
-
-    evidence.evidence = new Entity(annotationEvidence.evidenceCode?.term.id, "");
-    evidence.reference = annotationEvidence.reference?.term.id;
-    evidence.with = annotationEvidence.with?.term.id;
-
     const predicateEntity = Entity.createEntity(edgeConfig);
     const predicate = new Predicate(predicateEntity, [evidence]);
+    predicate.comments = this.comments;
 
     return reverse
       ? new Triple(objectNode, subjectNode, predicate)

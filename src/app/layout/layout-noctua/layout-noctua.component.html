@@ -1,14 +1,14 @@
 <div id="noctua-main">
   <mat-sidenav-container>
-    <mat-sidenav #leftSidenav class="h-100-p">
+    <mat-sidenav #leftSidenav class="h-full">
       @switch (noctuaCommonMenuService.selectedLeftSidenav) {
-        @case (LeftPanel.announcement) {
-          <noc-announcement-panel [sidenav]="leftSidenav">
-          </noc-announcement-panel>
-        }
-        @case (LeftPanel.apps) {
-          <noc-noctua-apps [sidenav]="leftSidenav"></noc-noctua-apps>
-        }
+      @case (LeftPanel.announcement) {
+      <noc-announcement-panel [sidenav]="leftSidenav">
+      </noc-announcement-panel>
+      }
+      @case (LeftPanel.apps) {
+      <noc-noctua-apps [sidenav]="leftSidenav"></noc-noctua-apps>
+      }
       }
     </mat-sidenav>
     <div id="noctua-main-content">
@@ -23,10 +23,10 @@
     </div>
   </mat-sidenav-container>
   @if (false) {
-    <app-footer id="footer"></app-footer>
+  <app-footer id="footer"></app-footer>
   }
   @if (false) {
-    <quick-panel></quick-panel>
+  <quick-panel></quick-panel>
   }
 </div>
 

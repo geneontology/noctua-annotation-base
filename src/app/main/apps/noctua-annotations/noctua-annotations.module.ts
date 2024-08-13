@@ -29,9 +29,10 @@ import { NoctuaAnnotationsComponent } from './noctua-annotations.component';
 import { NoctuaSearchBaseModule } from '@noctua.search';
 import { NoctuaFormModule } from '../noctua-form/noctua-form.module';
 import { AnnotationFormComponent } from './forms/annotation-form/annotation-form.component';
-import { AnnotationTableComponent } from './table/annotation-table.component';
+import { AnnotationsTableComponent } from './table/annotations-table.component';
 import { AnnotationNodeComponent } from './table/annotation-node/annotation-node.component';
-import { TermAutocompleteComponent } from './forms/term-autocomplete/term-autocomplete.component';
+import { NoctuaAutocompleteModule } from '@noctua.autocomplete/noctua-autocomplete.module';
+import { CommentsSidenavComponent } from './comments/comments.component';
 
 const routes = [
   {
@@ -72,6 +73,7 @@ const routes = [
     MatTableModule,
     MatTooltipModule,
     NoctuaFormModule,
+    NoctuaAutocompleteModule,
   ],
   exports: [
     NoctuaAnnotationsComponent
@@ -82,9 +84,9 @@ const routes = [
   declarations: [
     NoctuaAnnotationsComponent,
     AnnotationFormComponent,
-    AnnotationTableComponent,
+    AnnotationsTableComponent,
     AnnotationNodeComponent,
-    TermAutocompleteComponent
+    CommentsSidenavComponent
   ],
 })
 

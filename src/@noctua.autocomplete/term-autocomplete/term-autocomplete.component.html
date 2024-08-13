@@ -1,7 +1,6 @@
-<mat-form-field class="noc-sm w-full" appearance="fill" [attr.data-cy]="'form-input-' + control">
+<mat-form-field class="noc-sm w-full" [appearance]="appearance" [attr.data-cy]="'form-input-' + control">
   <mat-label>{{label}}</mat-label>
-  <textarea type="text" matInput [formControl]="control" [matAutocomplete]="termAuto" row="2"
-    (focus)="updateReferenceList()">
+  <textarea type="text" matInput [formControl]="control" [matAutocomplete]="termAuto" row="2" (focus)="onFocus()">
   </textarea>
   @if (autocompleteType === AutocompleteType.REFERENCE) {
   <button mat-icon-button matSuffix (click)="openAddReference($event)" class="noc-evidence-db-trigger">
@@ -13,6 +12,7 @@
     fxLayoutAlign="start start">
     <div class="" fxFlex="400px">
       @for ( item of filteredOptions; track item) {
+      @if (autocompleteType === AutocompleteType.TERM || autocompleteType === AutocompleteType.EVIDENCE_CODE) {
       <mat-option [disabled]="!item.notAnnotatable" [value]="item">
         <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
           <div class="noc-term-label">
@@ -44,6 +44,16 @@
           </button>
         </div>
       </mat-option>
+      } @else {
+      <mat-option [value]="item">
+        <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
+          <div class="noc-term-label">
+            {{ item }}
+          </div>
+          <span fxFlex></span>
+        </div>
+      </mat-option>
+      }
       }
     </div>
     <!-- <div fxFlex="" class="scard-more-info">

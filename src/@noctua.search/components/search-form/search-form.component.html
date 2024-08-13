@@ -1,12 +1,12 @@
 <form fxLayout="column" fxLayoutAlign="start stretch" name="searchForm" [formGroup]="searchForm"
-  class="noc-drawer h-100-p">
+  class="noc-drawer h-full">
   <div class="noc-drawer-header" fxLayout="row" fxLayoutAlign="start center">
     <span class="noc-drawer-header-title">
       Search</span>
     <span fxFlex></span>
     <button mat-stroked-button (click)="close()" class="noc-rounded-button noc-sm" color="primary"
       aria-label="Close dialog">
-      <mat-icon>close</mat-icon> CLOSE
+      Close
     </button>
   </div>
   <div class="noc-drawer-body noc-filter-form">
@@ -19,7 +19,7 @@
             <mat-autocomplete #termAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
               @for (item of searchFormData['term']?.searchResults; track item) {
               <mat-option class="noc-term-autocomplete" [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.label }}
                   </div>
@@ -38,7 +38,7 @@
             <mat-autocomplete #gpAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
               @for (item of searchFormData['gp']?.searchResults; track item) {
               <mat-option class="noc-term-autocomplete" [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.label }}
                   </div>
@@ -89,7 +89,7 @@
               class="noc-term-autocomplete">
               @for (item of filteredContributors | async; track item) {
               <mat-option class="noc-term-autocomplete" [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.name }}
                   </div>
@@ -107,7 +107,7 @@
             <mat-autocomplete #groupAuto="matAutocomplete" class="noc-term-autocomplete" [displayWith]="groupDisplayFn">
               @for (item of filteredGroups | async; track item) {
               <mat-option [value]="item">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{ item.name }}
                   </div>
@@ -138,7 +138,7 @@
             <mat-autocomplete #organismAuto="matAutocomplete" [displayWith]="organismDisplayFn"
               class="noc-term-autocomplete">
               <mat-option *ngFor="let organism of filteredOrganisms | async" [value]="organism">
-                <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+                <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
                   <div class="noc-term-label">
                     {{organism.taxonName}}
                   </div>

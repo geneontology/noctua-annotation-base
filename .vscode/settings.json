@@ -5,5 +5,9 @@
     "**/.settings": true,
     "**/.factorypath": true
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "html.hover.references": false,
+  "css.hover.references": false,
+  "less.hover.references": false,
+  "scss.hover.references": false
 }

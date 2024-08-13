@@ -6,10 +6,8 @@ export interface AnnotationExtensionForm {
   extensionTerm: GOlrResponse;
 }
 
-export interface AnnotationEvidenceForm {
-  evidenceCode: GOlrResponse;
-  reference: string;
-  withFrom: string;
+export interface AnnotationCommentForm {
+  comment: string;
 }
 
 export interface StandardAnnotationForm {
@@ -18,5 +16,8 @@ export interface StandardAnnotationForm {
   gpToTermEdge: Entity;
   goterm: GOlrResponse;
   annotationExtensions: AnnotationExtensionForm[];
-  evidence: AnnotationEvidenceForm;
+  annotationComments: AnnotationCommentForm[];
+  evidenceCode: GOlrResponse;
+  reference: string;
+  withFrom: string;
 }

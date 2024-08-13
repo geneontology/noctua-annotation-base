@@ -335,49 +335,52 @@ export class NoctuaFormConfigService {
 
   activityToAnnotation(activity: Activity): AnnotationActivity {
     const annotationActivity = new AnnotationActivity();
-
     const criteria = {} as AnnotationEdgeConfig
+    let evidence: Evidence = null;
+    const comments = new Set<string>();
+    let gpToTermEdgeId;
+
+    annotationActivity.id = activity.id;
+
+    activity.edges.forEach(edge => {
+      edge.predicate.comments.forEach(comment => comments.add(comment));
+    });
+    annotationActivity.comments = Array.from(comments);
 
     if (activity.activityType === ActivityType.ccOnly || activity.activityType === ActivityType.molecule) {
       annotationActivity.gp = activity.gpNode;
 
       activity.getEdges(activity.gpNode.id).forEach((edge) => {
-
         if (noctuaFormConfig.ccOnlyEdges.includes(edge.predicate.edge.id)) {
+          gpToTermEdgeId = edge.predicate.edge.id;
           criteria.gpToTermPredicate = edge.predicate.edge.id;
           annotationActivity.goterm = edge.object;
           annotationActivity.gp.predicate = edge.predicate;
+          evidence = edge.predicate.evidence?.[0] ?? null;
         }
 
       });
     } else {
-
+      gpToTermEdgeId = noctuaFormConfig.edge.enabledBy.id;
       criteria.gpToTermPredicate = noctuaFormConfig.edge.enabledBy.id;
       annotationActivity.gp = activity.gpNode;
       annotationActivity.goterm = activity.mfNode;
+      evidence = activity.mfNode.predicate.evidence?.[0] ?? null;
 
       if (activity.mfNode?.term.id === noctuaFormConfig.rootNode.mf.id) {
         criteria.mfNodeRequired = true;
         activity.getEdges(activity.mfNode.id).forEach((edge) => {
           if (noctuaFormConfig.mfToTermEdges.includes(edge.predicate.edge.id)) {
-
-            annotationActivity.gpToTermEdge = edge.predicate.edge
+            gpToTermEdgeId = edge.predicate.edge.id;
             criteria.mfToTermPredicate = edge.predicate.edge.id;
-
+            annotationActivity.gpToTermEdge = edge.predicate.edge
             annotationActivity.goterm = edge.object;
-
-            activity.getEdges(edge.object.id).forEach((extensionEdge) => {
-              const annotationExtension = new AnnotationExtension();
-              annotationExtension.extensionEdge = extensionEdge.predicate.edge;
-              annotationExtension.extensionTerm = extensionEdge.object;
-              annotationActivity.extensions.push(annotationExtension);
-            });
           }
         });
       }
     }
 
-    const edgeId = this.findEdge(criteria.gpToTermPredicate);
+    const edgeId = this.findEdge(gpToTermEdgeId);
     const inverseEdgeId = annotationActivity.findEdgeByCriteria(criteria);
     const inverseEdge = this.findEdge(inverseEdgeId);
 
@@ -392,17 +395,23 @@ export class NoctuaFormConfigService {
       true
     );
 
-    this._getAnnotationExtensions(activity, annotationActivity)
+    annotationActivity.extensions = this._getAnnotationExtensions(activity, annotationActivity.goterm.id)
 
+    annotationActivity.evidenceCode.term = evidence?.evidence;
+    annotationActivity.reference.term = new Entity(evidence?.reference, evidence?.reference);
+    annotationActivity.with.term = evidence?.withEntity;
+    annotationActivity.evidenceDate = evidence?.formattedDate;
+    annotationActivity.evidenceContributors = evidence?.contributors;
 
     return annotationActivity
   }
 
-  private _getAnnotationExtensions(activity: Activity, annotationActivity: AnnotationActivity) {
 
-    const triples = activity.getEdges(annotationActivity.goterm.id)
 
-    console.log('triples', triples)
+  private _getAnnotationExtensions(activity: Activity, id: string): AnnotationExtension[] {
+
+    const extension: AnnotationExtension[] = []
+    const triples = activity.getEdges(id)
 
     triples.forEach((triple) => {
 
@@ -416,9 +425,11 @@ export class NoctuaFormConfigService {
         const annotationExtension = new AnnotationExtension();
         annotationExtension.extensionEdge = triple.predicate.edge;
         annotationExtension.extensionTerm = triple.object;
-        annotationActivity.extensions.push(annotationExtension);
+        extension.push(annotationExtension);
       }
     });
+
+    return extension;
   }
 
 
@@ -483,14 +494,15 @@ export class NoctuaFormConfigService {
     ShapeUtils.setTermLookup(activityNode, goCategories);
   }
 
-  getObjectsRelations(subjectRootTypes: Entity[], gpToTerm = false) {
+
+  getObjectRange(subjectRootTypes: Entity[], predicateId?: string, gpToTerm = false) {
     if (!subjectRootTypes) return [];
 
     const subjectIds = subjectRootTypes.map((rootType) => {
       return rootType.id
     });
 
-    const objectIds = DataUtils.getObjects(gpToTerm ? gpToTermJson.goshapes : shexJson.goshapes, subjectIds);
+    const objectIds = DataUtils.getObjects(gpToTerm ? gpToTermJson.goshapes : shexJson.goshapes, subjectIds, predicateId);
 
     return objectIds.reduce((acc, term) => {
       const node = this.termLookupTable[term];
@@ -503,6 +515,7 @@ export class NoctuaFormConfigService {
     }, []);
 
   }
+
 
   addActivityNodeShex(activity: Activity,
     subjectNode: ActivityNode,

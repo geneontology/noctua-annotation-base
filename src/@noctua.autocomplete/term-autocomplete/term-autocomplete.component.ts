@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, SimpleChanges, forwardRef } from '@angular/core';
-import { NG_VALUE_ACCESSOR, FormControl, FormsModule, ReactiveFormsModule, ControlValueAccessor, FormGroup } from '@angular/forms';
-import { ActivityNode, AutocompleteType, GOlrResponse, GoCategory, NoctuaFormUtils, NoctuaLookupService } from '@geneontology/noctua-form-base';
-import { Observable, Subject, Subscription, catchError, debounceTime, filter, of, startWith, switchMap, takeUntil } from 'rxjs';
+import { NG_VALUE_ACCESSOR, FormControl, ControlValueAccessor } from '@angular/forms';
+import { AutocompleteType, GOlrResponse, GoCategory, NoctuaFormUtils, NoctuaLookupService } from '@geneontology/noctua-form-base';
+import { Subject, Subscription, catchError, debounceTime, filter, of, startWith, switchMap, takeUntil } from 'rxjs';
 import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-reference.service';
 
 @Component({
@@ -21,12 +21,12 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   AutocompleteType = AutocompleteType;
   @Input() label: string;
   @Input() category: GoCategory[] = [];
-  @Input() solrField: string;
-  @Input() autocompleteType: string = AutocompleteType.TERM;
+  @Input() autocompleteType: AutocompleteType = AutocompleteType.TERM;
+  @Input() appearance: 'legacy' | 'standard' | 'fill' | 'outline' = 'fill';
 
   control = new FormControl();
   options: string[] = [];
-  filteredOptions: GOlrResponse[] = [];
+  filteredOptions: GOlrResponse[] | string[] = [];
   private valueChangesSubscription: Subscription;
   private _unsubscribeAll: Subject<any>;
 
@@ -57,8 +57,6 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   }
 
   subscribeToValueChanges(): void {
-    console.log('Subscribing to value changes with category:', this.category);
-
     if (this.valueChangesSubscription) {
       this.valueChangesSubscription.unsubscribe();
       this.filteredOptions = [];
@@ -78,7 +76,7 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
         ))
       ).subscribe(data => {
         this.filteredOptions = data;
-        console.log('Filtered options:', data);
+        // console.log('Filtered options:', data);
       });
     }
   }
@@ -105,12 +103,15 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   }
 
   selectTerm(term: any) {
-    console.log('term', term);
     this.filteredOptions = [];
   }
 
-  updateReferenceList() {
+  onFocus(): void {
+    if (!this.control.value) {
+      this.filteredOptions = this.lookupService.preLookup(this.autocompleteType, this.category);
+    }
   }
+
 
   openAddReference(event) {
     event.stopPropagation();
@@ -121,7 +122,6 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
   }
 
   termDisplayFn(term): string | undefined {
-    console.log('termDisplayFn:', term);
     if (typeof term === 'string') {
       return term;
     } else if (term && term.id && term.label) {

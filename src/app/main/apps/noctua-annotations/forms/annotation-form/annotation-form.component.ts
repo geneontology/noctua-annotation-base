@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
-import { MatDrawer } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import {
@@ -13,8 +12,6 @@ import {
   NoctuaUserService,
   AnnotationActivity,
   noctuaFormConfig,
-  Evidence,
-  Entity,
   AnnotationExtension,
   AutocompleteType,
   ActivityError,
@@ -39,6 +36,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   annotationFormGroup: FormGroup;
   searchCriteria: any = {};
   extensionFormArray: FormArray;
+  commentFormArray: FormArray;
   activity: Activity;
   errors: ActivityError[] = [];
 
@@ -49,13 +47,14 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   annotationActivity: AnnotationActivity;
 
   dynamicForm: FormGroup;
+  comments: string[] = [];
 
   constructor(
     private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
     private noctuaFormDialogService: NoctuaFormDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
-    public noctuaAnnotationFormService: NoctuaAnnotationFormService,
+    private annotationFormService: NoctuaAnnotationFormService,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder
   ) {
@@ -63,7 +62,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.noctuaAnnotationFormService.initializeForm();
+    this.annotationFormService.initializeForm();
     this.dynamicForm = this.fb.group(this.getInitialFormStructure());
 
     this.dynamicForm.valueChanges
@@ -71,20 +70,20 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
       .subscribe({
         next: (value) => {
-          this.noctuaAnnotationFormService.processAnnotationFormGroup(this.dynamicForm, value);
+          this.annotationFormService.processAnnotationFormGroup(this.dynamicForm, value);
         },
         error: (err) => {
           console.error('Error observing dynamicForm changes:', err);
         }
       });
 
-    this.noctuaAnnotationFormService.onFormErrorsChanged
+    this.annotationFormService.onFormErrorsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((error: ActivityError[]) => {
         this.errors = error;
       });
 
-    this.noctuaAnnotationFormService.onActivityChanged
+    this.annotationFormService.onActivityChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((activity: Activity) => {
 
@@ -92,10 +91,55 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
           return;
         }
         this.activity = activity;
-        this.annotationActivity = { ...this.noctuaAnnotationFormService.annotationActivity } as AnnotationActivity;
+        this.annotationActivity = { ...this.annotationFormService.onAnnotationActivityChanged } as AnnotationActivity;
 
         this.cdr.markForCheck()
       });
+
+    this.annotationFormService.onFormAnnotationActivityChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((annotationActivity: AnnotationActivity) => {
+        if (!annotationActivity) {
+          return;
+        }
+
+        this.dynamicForm.patchValue({
+          gp: annotationActivity.gp.term,
+          isComplement: false,
+          gpToTermEdge: annotationActivity.gpToTermEdge,
+          goterm: annotationActivity.goterm.term,
+          evidenceCode: annotationActivity.evidenceCode.term,
+          reference: annotationActivity.reference.term.id,
+          withFrom: annotationActivity.with.term.id,
+        });
+
+        // Clear existing arrays
+        this.dynamicForm.setControl('annotationExtensions', this.fb.array([]));
+        this.dynamicForm.setControl('annotationComments', this.fb.array([]));
+
+        // Add extensions
+        annotationActivity.extensions.forEach(extension => {
+          const extensionFormGroup = this.fb.group({
+            extensionEdge: extension.extensionEdge?.inverseEntity,
+            extensionTerm: extension.extensionTerm?.term
+          });
+          (this.dynamicForm.get('annotationExtensions') as FormArray).push(extensionFormGroup);
+        });
+
+        // Add comments
+        annotationActivity.comments.forEach(comment => {
+          const commentFormGroup = this.fb.group({
+            comment: comment
+          });
+          (this.dynamicForm.get('annotationComments') as FormArray).push(commentFormGroup);
+        });
+
+        this.dynamicForm.updateValueAndValidity();
+      });
+
+    //this.dynamicForm.markAsDirty();
+    // this.dynamicForm.markAsTouched();
+    // this.dynamicForm.updateValueAndValidity();
   }
 
   private getInitialFormStructure() {
@@ -105,11 +149,10 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       gpToTermEdge: '',
       goterm: '',
       annotationExtensions: this.fb.array([]),
-      evidence: this.fb.group({
-        evidenceCode: '',
-        reference: '',
-        withFrom: ''
-      })
+      annotationComments: this.fb.array([]),
+      evidenceCode: '',
+      reference: '',
+      withFrom: '',
     };
   }
 
@@ -117,9 +160,18 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     this._addRootTerm(noctuaFormConfig.rootNode.mf);
   }
 
+  addBPRootTerm() {
+    this._addRootTerm(noctuaFormConfig.rootNode.bp);
+  }
+
+  addCCRootTerm() {
+    this._addRootTerm(noctuaFormConfig.rootNode.cc);
+  }
+
   private _addRootTerm(rootTerm) {
     const goterm = this.dynamicForm.get('goterm')
-    const evidenceFormGroup = this.dynamicForm.get('evidence') as FormGroup;
+    const evidenceCode = this.dynamicForm.get('evidenceCode')
+    const reference = this.dynamicForm.get('reference')
 
     const term = {
       "id": rootTerm.id,
@@ -133,13 +185,24 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
     goterm.patchValue(term);
 
-    evidenceFormGroup.patchValue({
-      evidenceCode: {
-        id: noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
-        label: noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label
-      },
-      reference: noctuaFormConfig.evidenceAutoPopulate.nd.reference
+    evidenceCode.patchValue({
+      id: noctuaFormConfig.evidenceAutoPopulate.nd.evidence.id,
+      label: noctuaFormConfig.evidenceAutoPopulate.nd.evidence.label
     });
+
+    reference.patchValue(noctuaFormConfig.evidenceAutoPopulate.nd.reference);
+  }
+
+  openCommentsForm() {
+    const self = this;
+
+    const success = (comments) => {
+      if (comments) {
+        console.log('Comments:', comments);
+        this.comments = comments;
+      }
+    };
+    self.noctuaFormDialogService.openCommentsDialog(this.comments, success)
   }
 
 
@@ -155,7 +218,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   save() {
     const self = this;
 
-    self.noctuaAnnotationFormService.saveAnnotation(this.dynamicForm)
+    self.annotationFormService.saveAnnotation(this.dynamicForm.value)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(() => {
         self.noctuaAnnotationsDialogService.openInfoToast('Annotation successfully created.', 'OK');
@@ -169,10 +232,12 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
   clearForm(): void {
     this.dynamicForm.reset(this.getInitialFormStructure());
-    this.noctuaAnnotationFormService.clearForm();
+    this.annotationActivity.extensions = [];
+    this.annotationExtensions.clear();
+    this.annotationComments.clear();
+    this.annotationFormService.clearForm();
 
     this.cdr.markForCheck();
-    console.log(this.dynamicForm)
   }
 
   compareFn(o1: any, o2: any): boolean {
@@ -183,6 +248,10 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     return this.dynamicForm.get('annotationExtensions') as FormArray;
   }
 
+  get annotationComments() {
+    return this.dynamicForm.get('annotationComments') as FormArray;
+  }
+
   addExtension() {
     const annotationExtension = new AnnotationExtension();
     this.annotationActivity.extensions.push(annotationExtension);
@@ -190,11 +259,25 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       extensionEdge: '',
       extensionTerm: ''
     }));
+
+    this.dynamicForm.updateValueAndValidity();
   }
 
   deleteExtension(index: number): void {
     this.annotationExtensions.removeAt(index);
     this.annotationActivity.extensions.splice(index, 1);
+    this.dynamicForm.updateValueAndValidity();
+  }
+
+  addComment() {
+    this.annotationComments.push(this.fb.group({
+      comment: ''
+    }));
+    this.dynamicForm.updateValueAndValidity();
+  }
+
+  deleteComment(index: number): void {
+    this.annotationComments.removeAt(index);
     this.dynamicForm.updateValueAndValidity();
   }
 

@@ -1,6 +1,6 @@
-<div class="noc-search-form  w-100-p">
+<div class="noc-search-form  w-full">
   @if (searchForm) {
-  <form class="noc-section-body pt-1 w-100-p" fxLayout="column" fxLayoutAlign="start stretch" name="searchForm"
+  <form class="noc-section-body pt-1 w-full" fxLayout="column" fxLayoutAlign="start stretch" name="searchForm"
     [formGroup]="searchForm">
     <mat-form-field appearance="outline" class="noc-sm mb-4 noc-review-input">
       <mat-label>Category</mat-label>
@@ -12,7 +12,7 @@
         }
       </mat-select>
     </mat-form-field>
-    <div class="noc-activity-group-row mb-4 w-100-p" fxLayout="column" fxLayoutAlign="start stretch">
+    <div class="noc-activity-group-row mb-4 w-full" fxLayout="column" fxLayoutAlign="start stretch">
       <button class="noc-text-clear" mat-icon-button aria-label="Clear" (click)="$event.stopPropagation(); clearFind()">
         <fa-icon [icon]="['far', 'times-circle']"></fa-icon>
       </button>
@@ -41,7 +41,7 @@
       }
     </div>
     <div [ngClass]="{'noc-disabled':noctuaReviewSearchService.matchedCount===0 || !displayReplaceForm.replaceSection}"
-      class="noc-activity-group-row w-100-p" fxLayout="column" fxLayoutAlign="start stretch">
+      class="noc-activity-group-row w-full" fxLayout="column" fxLayoutAlign="start stretch">
       <button class="noc-text-clear" mat-icon-button aria-label="Clear"
         (click)="$event.stopPropagation(); clearReplace()">
         <fa-icon [icon]="['far', 'times-circle']"></fa-icon>
@@ -69,7 +69,7 @@
       </mat-form-field>
       }
     </div>
-    <div class="noc-activity-group-row mt-8 w-100-p"
+    <div class="noc-activity-group-row mt-8 w-full"
       [ngClass]="{'noc-disabled':noctuaReviewSearchService.matchedCount===0}" fxLayout="row"
       fxLayoutAlign="start center">
       <div class="noc-review-actions" fxLayout="row" fxLayoutAlign="start center" fxFlex="">
@@ -119,7 +119,7 @@
   [displayWith]="termDisplayFn" class="noc-term-autocomplete">
   @for (item of findNode?.termLookup.results; track item) {
   <mat-option class="noc-term-autocomplete" [value]="item">
-    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+    <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-term-label">
         {{ item.label }}
       </div>
@@ -135,7 +135,7 @@
 <mat-autocomplete #replaceAuto="matAutocomplete" [displayWith]="termDisplayFn" class="noc-term-autocomplete">
   @for (item of replaceNode?.termLookup.results; track item) {
   <mat-option class="noc-term-autocomplete" [value]="item">
-    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
+    <div class="w-full" fxLayout="row" fxLayoutAlign="start center">
       <div class="noc-term-label">
         {{ item.label }}
       </div>
