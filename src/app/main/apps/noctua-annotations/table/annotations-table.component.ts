@@ -111,7 +111,7 @@ export class AnnotationsTableComponent implements OnInit, OnDestroy {
 
   sortBy(sortCriteria: { id, label }) {
     console.log('sortCriteria', sortCriteria);
-    this.cam.updateSortBy(sortCriteria.id, sortCriteria.label);
+    this.cam.updateAnnotationActivitySortBy(sortCriteria.id, sortCriteria.label);
   }
 
   toggleSortDirection() {

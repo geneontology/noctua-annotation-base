@@ -61,7 +61,6 @@ export class CommentsSidenavComponent implements OnInit, OnDestroy {
         this.annotationFormService.replaceComments(this.cam, annotationActivity, comments)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe((data: any) => {
-            console.log('data', data);
             this.zone.run(() => {
               this.noctuaFormDialogService.openInfoToast(`Comment(s) successfully updated.`, 'OK');
               this.camService.getCam(this.cam.id);

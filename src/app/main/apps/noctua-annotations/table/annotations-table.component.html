@@ -32,7 +32,7 @@
         }
       </button>
       <mat-menu #sortByOptionMenu="matMenu" class="noc-dropdown-menu">
-        @for (sortByOption of noctuaFormConfigService.activitySortField.options; track sortByOption) {
+        @for (sortByOption of noctuaFormConfigService.annotationActivitySortField.options; track sortByOption) {
         <button mat-menu-item class="" (click)="sortBy(sortByOption)">
           {{sortByOption.label}}
         </button>

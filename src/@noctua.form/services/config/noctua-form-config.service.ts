@@ -119,6 +119,24 @@ export class NoctuaFormConfigService {
     };
   }
 
+  get annotationActivitySortField() {
+    const options = [
+      noctuaFormConfig.annotationActivitySortField.options.gp,
+      noctuaFormConfig.annotationActivitySortField.options.goterm,
+      noctuaFormConfig.annotationActivitySortField.options.gpToTermEdge,
+      noctuaFormConfig.annotationActivitySortField.options.gotermAspect,
+      noctuaFormConfig.annotationActivitySortField.options.evidenceCode,
+      noctuaFormConfig.annotationActivitySortField.options.reference,
+      noctuaFormConfig.annotationActivitySortField.options.with,
+      noctuaFormConfig.annotationActivitySortField.options.evidenceDate
+    ];
+
+    return {
+      options: options,
+      selected: options[0]
+    };
+  }
+
   get bpOnlyEdges() {
     const options = [
       noctuaFormConfig.edge.causallyUpstreamOfOrWithin,

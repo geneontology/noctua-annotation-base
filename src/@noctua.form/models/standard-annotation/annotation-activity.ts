@@ -10,6 +10,7 @@ import { Evidence } from './../activity/evidence';
 import { StandardAnnotationForm } from './form';
 import { cloneDeep } from 'lodash';
 import { Contributor } from '../contributor';
+import { AnnotationActivitySortBy, AnnotationActivitySortField } from './annotation-activity-sortby';
 
 
 export interface AnnotationEdgeConfig {
@@ -184,10 +185,6 @@ export class AnnotationActivity {
       ''
     );
 
-
-
-    console.log('newTriple.predicate.edge', newTriple.predicate.edge);
-
     return { a: oldTriple, b: newTriple };
   }
 
@@ -221,8 +218,6 @@ export class AnnotationActivity {
       console.warn('No configuration defined for edge:', edgeType);
       return;
     }
-
-    console.log('config', config);
 
     if (config.mfNodeRequired) {
       const mfNode = ShapeUtils.generateBaseTerm([]);
@@ -297,6 +292,56 @@ export class AnnotationActivity {
     }
 
     return aspect;
+  }
+
+  public static getSortByKey(annotationActivity: AnnotationActivity) {
+    return annotationActivity.gp?.term.label;
+  }
+
+  private static getSafeLabel(obj: any): string {
+    return obj?.term?.label ?? '';
+  }
+
+  public static sortBy(activities: AnnotationActivity[], sortBy: AnnotationActivitySortBy): AnnotationActivity[] {
+    return activities.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy.field) {
+        case AnnotationActivitySortField.GP:
+          comparison = this.getSafeLabel(a.gp).localeCompare(this.getSafeLabel(b.gp));
+          break;
+        case AnnotationActivitySortField.GOTERM:
+          comparison = this.getSafeLabel(a.goterm).localeCompare(this.getSafeLabel(b.goterm));
+          break;
+        case AnnotationActivitySortField.GP_TO_TERM_EDGE:
+          comparison = (a.gpToTermEdge?.label ?? '').localeCompare(b.gpToTermEdge?.label ?? '');
+          break;
+        case AnnotationActivitySortField.GO_TERM_ASPECT:
+          comparison = (a.gotermAspect ?? '').localeCompare(b.gotermAspect ?? '');
+          break;
+        case AnnotationActivitySortField.EVIDENCE_CODE:
+          comparison = this.getSafeLabel(a.evidenceCode).localeCompare(this.getSafeLabel(b.evidenceCode));
+          break;
+        case AnnotationActivitySortField.REFERENCE:
+          comparison = this.getSafeLabel(a.reference).localeCompare(this.getSafeLabel(b.reference));
+          break;
+        case AnnotationActivitySortField.WITH:
+          comparison = this.getSafeLabel(a.with).localeCompare(this.getSafeLabel(b.with));
+          break;
+        case AnnotationActivitySortField.EVIDENCE_DATE:
+          comparison = (a.evidenceDate ?? '').localeCompare(b.evidenceDate ?? '');
+          break;
+        default:
+          comparison = this.getSafeLabel(a.gp).localeCompare(this.getSafeLabel(b.gp));
+      }
+
+      // If the primary sort yields equality, sort by id as secondary criterion
+      if (comparison === 0) {
+        comparison = (a.id ?? '').localeCompare(b.id ?? '');
+      }
+
+      return sortBy.ascending ? comparison : -comparison;
+    });
   }
 
 }

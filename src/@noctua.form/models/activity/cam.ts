@@ -11,6 +11,7 @@ import { NoctuaFormUtils } from './../../utils/noctua-form-utils';
 import { Violation } from './error/violation-error';
 import { PendingChange } from './pending-change';
 import { AnnotationActivity } from '../standard-annotation/annotation-activity';
+import { AnnotationActivitySortBy, AnnotationActivitySortField } from '../standard-annotation/annotation-activity-sortby';
 
 export enum ReloadType {
   RESET = 'reset',
@@ -129,6 +130,7 @@ export class Cam {
   //connectorActivities: ConnectorActivity[] = [];
   causalRelations: Triple<Activity>[] = [];
   sortBy: CamSortBy = new CamSortBy();
+  annotationActivitySortBy: AnnotationActivitySortBy = new AnnotationActivitySortBy();
   error = false;
   date: string;
   modified = false;
@@ -184,18 +186,18 @@ export class Cam {
   layoutChanged = false;
 
 
-  annotationActivities: AnnotationActivity[] = [];
+  private _annotationActivities: AnnotationActivity[] = [];
   private _filteredActivities: Activity[] = [];
   private _activities: Activity[] = [];
   private _storedActivities: Activity[] = [];
   private _id: string;
 
   constructor() {
-    const sortByData = localStorage.getItem('camSortBy');
+    const sortByData = localStorage.getItem('annotationActivitySortBy');
     if (sortByData) {
       const parsedData = JSON.parse(sortByData);
       if (parsedData.field && parsedData.label && typeof parsedData.ascending === 'boolean') {
-        this.sortBy = {
+        this.annotationActivitySortBy = {
           field: parsedData.field,
           label: parsedData.label,
           ascending: parsedData.ascending
@@ -211,6 +213,14 @@ export class Cam {
   set id(id: string) {
     this._id = id;
     this.displayId = NoctuaFormUtils.cleanID(id);
+  }
+
+  get annotationActivities(): AnnotationActivity[] {
+    return AnnotationActivity.sortBy(this._annotationActivities, this.annotationActivitySortBy);
+  }
+
+  set annotationActivities(srcActivities: AnnotationActivity[]) {
+    this._annotationActivities = srcActivities;
   }
 
   get activities() {
@@ -260,9 +270,17 @@ export class Cam {
   updateSortBy(field: ActivitySortField, label: string) {
     this.sortBy.field = field
     this.sortBy.label = label
+  }
 
-    const data = { field, label, ascending: this.sortBy.ascending };
-    localStorage.setItem('camSortBy', JSON.stringify(data));
+  updateAnnotationActivitySortBy(field: AnnotationActivitySortField, label: string, ascending?: boolean) {
+    this.annotationActivitySortBy.field = field
+    this.annotationActivitySortBy.label = label
+    if (ascending !== undefined) {
+      this.annotationActivitySortBy.ascending = ascending
+    }
+
+    const data = { field, label, ascending: this.annotationActivitySortBy.ascending };
+    localStorage.setItem('annotationActivitySortBy', JSON.stringify(data));
   }
 
   toggleExpand() {

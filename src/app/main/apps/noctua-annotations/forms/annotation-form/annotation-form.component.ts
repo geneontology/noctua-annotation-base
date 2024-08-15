@@ -198,7 +198,6 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
 
     const success = (comments) => {
       if (comments) {
-        console.log('Comments:', comments);
         this.comments = comments;
       }
     };
