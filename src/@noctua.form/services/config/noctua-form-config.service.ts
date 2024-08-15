@@ -358,7 +358,6 @@ export class NoctuaFormConfigService {
           annotationActivity.gp.predicate = edge.predicate;
           evidence = edge.predicate.evidence?.[0] ?? null;
         }
-
       });
     } else {
       gpToTermEdgeId = noctuaFormConfig.edge.enabledBy.id;
@@ -368,9 +367,9 @@ export class NoctuaFormConfigService {
       evidence = activity.mfNode.predicate.evidence?.[0] ?? null;
 
       if (activity.mfNode?.term.id === noctuaFormConfig.rootNode.mf.id) {
-        criteria.mfNodeRequired = true;
         activity.getEdges(activity.mfNode.id).forEach((edge) => {
           if (noctuaFormConfig.mfToTermEdges.includes(edge.predicate.edge.id)) {
+            criteria.mfNodeRequired = true;
             gpToTermEdgeId = edge.predicate.edge.id;
             criteria.mfToTermPredicate = edge.predicate.edge.id;
             annotationActivity.gpToTermEdge = edge.predicate.edge

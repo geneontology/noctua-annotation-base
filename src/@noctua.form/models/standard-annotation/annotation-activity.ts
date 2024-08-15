@@ -222,6 +222,8 @@ export class AnnotationActivity {
       return;
     }
 
+    console.log('config', config);
+
     if (config.mfNodeRequired) {
       const mfNode = ShapeUtils.generateBaseTerm([]);
 

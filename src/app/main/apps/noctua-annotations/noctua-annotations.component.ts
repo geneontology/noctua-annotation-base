@@ -140,10 +140,7 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
 
           this.camService.cams = [cam]
         }
-        //this.noctuaReviewSearchService.addCamsToReview([this.cam], this.camService.cams);
-
       });
-
   }
 
   ngOnDestroy(): void {
@@ -179,9 +176,6 @@ export class NoctuaAnnotationsComponent implements OnInit, OnDestroy {
     this.noctuaCommonMenuService.closeRightDrawer();
     this.noctuaCommonMenuService.openLeftDrawer();
   }
-
-
-
 
   openCopyModel() {
     this.noctuaCommonMenuService.selectLeftPanel(LeftPanel.copyModel);

@@ -191,6 +191,17 @@ export class Cam {
   private _id: string;
 
   constructor() {
+    const sortByData = localStorage.getItem('camSortBy');
+    if (sortByData) {
+      const parsedData = JSON.parse(sortByData);
+      if (parsedData.field && parsedData.label && typeof parsedData.ascending === 'boolean') {
+        this.sortBy = {
+          field: parsedData.field,
+          label: parsedData.label,
+          ascending: parsedData.ascending
+        };
+      }
+    }
   }
 
   get id() {
@@ -249,6 +260,9 @@ export class Cam {
   updateSortBy(field: ActivitySortField, label: string) {
     this.sortBy.field = field
     this.sortBy.label = label
+
+    const data = { field, label, ascending: this.sortBy.ascending };
+    localStorage.setItem('camSortBy', JSON.stringify(data));
   }
 
   toggleExpand() {

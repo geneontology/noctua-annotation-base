@@ -21,13 +21,13 @@
           </div>
         </div>
         <div class="bg-white rounded-lg p-3 mb-2 shadow-sm">
-          <p class="text-gray-800">{{ comment }}</p>
-          @if (noctuaUserService.user ) {
-          <button mat-stroked-button (click)="openCommentsDialog(annotationActivity)" color=""
-            class="noc-rounded-button noc-xs">
-            <fa-icon class="" [icon]="['fas', 'pen']"></fa-icon>
-          </button>
-          }
+          <p class="text-gray-800">{{ comment }}
+            @if (noctuaUserService.user ) {
+            <span (click)="openCommentsDialog(annotationActivity)" color="" class="ml-4 noc-xs">
+              <fa-icon class="" [icon]="['fas', 'pen']"></fa-icon>
+            </span>
+            }
+          </p>
         </div>
       </div> }
     </div>
