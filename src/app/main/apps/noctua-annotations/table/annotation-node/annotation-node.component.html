@@ -186,6 +186,16 @@
         }
       </div>
     </div>
+    <div class="noc-entity-cell noc-date-cell" fxLayout="column" fxLayoutAlign="start center">
+      <mat-chip class="noc-date-chip" fxLayout="row" fxLayoutAlign="start center">
+        <div class="noc-icon">
+          <fa-icon [icon]="['fas', 'calendar-day']"></fa-icon>
+        </div>
+        <div fxFlex="" class="noc-chip-label">
+          {{annotationActivity.formattedDate }}
+        </div>
+      </mat-chip>
+    </div>
     <div class="noc-comments-cell noc-entity-cell "
       [ngClass]="{'noc-selected': annotationActivity.id === annotationFormService.selectedCommentActivityId}"
       fxLayout="column" fxLayoutAlign="start stretch">
