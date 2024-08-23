@@ -152,6 +152,9 @@ $accent: map-get($theme, accent);
           top: 5px;
           right: 8px;
         }
+        &.noc-selected {
+          color: map-get($accent, default);
+        }
       }
 
       .noc-edit-button {

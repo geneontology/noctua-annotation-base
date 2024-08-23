@@ -128,7 +128,7 @@ export class NoctuaFormConfigService {
       noctuaFormConfig.annotationActivitySortField.options.evidenceCode,
       noctuaFormConfig.annotationActivitySortField.options.reference,
       noctuaFormConfig.annotationActivitySortField.options.with,
-      noctuaFormConfig.annotationActivitySortField.options.evidenceDate
+      noctuaFormConfig.annotationActivitySortField.options.date
     ];
 
     return {
@@ -359,6 +359,7 @@ export class NoctuaFormConfigService {
     let gpToTermEdgeId;
 
     annotationActivity.id = activity.id;
+    annotationActivity.date = activity.date.toString();
 
     activity.edges.forEach(edge => {
       edge.predicate.comments.forEach(comment => comments.add(comment));

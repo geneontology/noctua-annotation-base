@@ -123,7 +123,7 @@ $accent: map-get($theme, accent);
     }
 
     .noc-form-section {
-      background-color: lighten(map-get($primary, default), 35%);
+      background-color: lighten(map-get($primary, default), 25%);
       border-radius: 12px;
 
       .noc-section-header {

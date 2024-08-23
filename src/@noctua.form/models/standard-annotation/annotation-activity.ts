@@ -55,6 +55,7 @@ export class AnnotationActivity {
   extensions: AnnotationExtension[] = [];
   gpToTermEdges: Entity[] = [];
   activity: Activity;
+  date: string;
 
 
   constructor(activity?: Activity) {
@@ -328,8 +329,8 @@ export class AnnotationActivity {
         case AnnotationActivitySortField.WITH:
           comparison = this.getSafeLabel(a.with).localeCompare(this.getSafeLabel(b.with));
           break;
-        case AnnotationActivitySortField.EVIDENCE_DATE:
-          comparison = (a.evidenceDate ?? '').localeCompare(b.evidenceDate ?? '');
+        case AnnotationActivitySortField.DATE:
+          comparison = (a.date ?? '').localeCompare(b.date ?? '');
           break;
         default:
           comparison = this.getSafeLabel(a.gp).localeCompare(this.getSafeLabel(b.gp));

@@ -6,7 +6,7 @@ export enum AnnotationActivitySortField {
   EVIDENCE_CODE = 'evidenceCode',
   REFERENCE = 'reference',
   WITH = 'with',
-  EVIDENCE_DATE = 'evidenceDate'
+  DATE = 'date'
 }
 
 export class AnnotationActivitySortBy {

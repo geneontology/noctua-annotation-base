@@ -132,6 +132,10 @@ $noc-breakpoints: (
 
   .noc-comments-cell {
     @include deep-width(50px);
+    //border: transparent solid 2px;
+    &.noc-selected {
+      // border: rgba(map-get($primary, default), 0.6) solid 2px;
+    }
   }
 
   .noc-evidence-code-cell {

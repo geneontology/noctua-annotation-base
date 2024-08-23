@@ -328,9 +328,9 @@ export const noctuaFormConfig = {
         id: AnnotationActivitySortField.WITH,
         label: 'With'
       },
-      [AnnotationActivitySortField.EVIDENCE_DATE]: {
-        id: AnnotationActivitySortField.EVIDENCE_DATE,
-        label: 'Evidence Date'
+      [AnnotationActivitySortField.DATE]: {
+        id: AnnotationActivitySortField.DATE,
+        label: 'Date'
       }
     }
   },
