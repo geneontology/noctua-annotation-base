@@ -36,7 +36,7 @@ import { CommentsSidenavComponent } from './comments/comments.component';
 
 const routes = [
   {
-    path: '',
+    path: 'a',
     component: NoctuaAnnotationsComponent
   }
 ];

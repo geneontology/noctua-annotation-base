@@ -19,6 +19,7 @@ import { HttpClient } from '@angular/common/http';
 import { finalize, map, mergeMap } from 'rxjs/operators';
 import { noctuaFormConfig } from './../noctua-form-config';
 import { DataGeneratorUtils } from './../data/data-generator-utils';
+import { DataUtils } from '@noctua.form/data/config/data-utils';
 
 declare const require: any;
 
@@ -561,6 +562,24 @@ export class CamService {
       cam.updateActivityDisplayNumber();
     });
 
+  }
+
+
+
+  updateMFProperties(cam: Cam) {
+    cam.activities.forEach((activity: Activity) => {
+      if (activity.mfNode?.term.id) {
+        this.noctuaLookupService.getTermDetail(activity.mfNode.term.id)
+          .subscribe((res) => {
+            if (!Array.isArray(res) && res.neighborhoodGraphJson) {
+              const parsed = JSON.parse(res.neighborhoodGraphJson);
+              const objs = DataUtils.processHasParticipants(parsed);
+              activity.mfNode.chemicalParticipants = objs;
+              console.log(objs);
+            }
+          });
+      }
+    });
   }
 
   private _compareDateReviewAdded(a: Cam, b: Cam): number {

@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
 import { NoctuaLookupService } from './lookup.service';
@@ -16,6 +16,8 @@ import { Entity } from '../models/activity/entity';
 import { noctuaFormConfig } from '../noctua-form-config';
 import { Triple } from '../models/activity/triple';
 import { cloneDeep } from 'lodash';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -112,6 +114,18 @@ export class NoctuaActivityConnectorService {
     connectorForm.createEntityForms(self.connectorActivity.predicate);
 
     return connectorForm;
+  }
+
+  saveChemicalParticipants(chemicals: any[]) {
+    const nodes = chemicals.map((chemical) => {
+      const nodes = new ActivityNode()
+      nodes.term.id = chemical.id
+
+      return nodes
+    });
+
+    return forkJoin(this.bbopGraphService.addActivity(this.cam, nodes, [], this.cam.title));
+
   }
 
   saveActivity() {

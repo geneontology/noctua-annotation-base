@@ -47,7 +47,7 @@ export const environment = {
   production: true,
   isDev: true,
   isBeta: false,
-  isGraph: false,
+  isGraph: true,
   spaqrlApiUrl: 'http://rdf-internal.berkeleybop.io/blazegraph/sparql',
   globalGolrNeoServer: golrNeoServer,
   globalGolrServer: golrServer,
