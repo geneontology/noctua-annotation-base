@@ -134,9 +134,17 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
 
     switch (this.category) {
       case EditorCategory.TERM:
+        if (termId) {
+          this.annotationFormService.editAnnotationNode(this.cam, this.annotationActivity.goterm, termId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(handleResponse);
+        } else {
+          this.noctuaFormDialogService.openInfoToast(`Please select term from autocomplete.`, 'OK');
+        }
+        break
       case EditorCategory.EVIDENCE_CODE:
         if (termId) {
-          this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, termId)
+          this.annotationFormService.editEvidence(this.category, this.cam, this.annotationActivity, termId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(handleResponse);
         } else {
@@ -145,7 +153,7 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         break;
       case EditorCategory.WITH:
       case EditorCategory.REFERENCE:
-        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, termString)
+        this.annotationFormService.editEvidence(this.category, this.cam, this.annotationActivity, termString)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(handleResponse);
         break;

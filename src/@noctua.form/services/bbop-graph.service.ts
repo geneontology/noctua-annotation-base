@@ -1306,22 +1306,6 @@ export class BbopGraphService {
     return null;
   }
 
-  editIndividual(reqs, cam: Cam, srcNode, destNode) {
-    if (srcNode.hasValue() && destNode.hasValue()) {
-      reqs.remove_type_from_individual(
-        srcNode.classExpression,
-        srcNode.uuid,
-        cam.id,
-      );
-
-      reqs.add_type_to_individual(
-        class_expression.cls(destNode.getTerm().id),
-        srcNode.uuid,
-        cam.id,
-      );
-    }
-  }
-
   bulkEditIndividual(reqs, camId: string, node: ActivityNode) {
     if (node.hasValue() && node.pendingEntityChanges) {
       reqs.remove_type_from_individual(
@@ -1470,6 +1454,25 @@ export class BbopGraphService {
     reqs.store_model(cam.id);
     return cam.replaceManager.request_with(reqs);
 
+  }
+
+  editNode(cam: Cam, oldNode: ActivityNode, newNodeId: string) {
+    const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
+
+    reqs.remove_type_from_individual(
+      oldNode.classExpression,
+      oldNode.uuid,
+      cam.id,
+    );
+
+    reqs.add_type_to_individual(
+      class_expression.cls(newNodeId),
+      oldNode.uuid,
+      cam.id,
+    );
+
+    reqs.store_model(cam.id);
+    return cam.replaceManager.request_with(reqs);
   }
 
 
