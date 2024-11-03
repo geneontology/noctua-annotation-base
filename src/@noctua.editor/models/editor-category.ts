@@ -37,6 +37,7 @@ export interface EditorConfig extends EditorDropdownDialogConfig {
   annotationActivity?: AnnotationActivity;
   entity?: ActivityNode;
   category: EditorCategory;
+  autocompleteCategory?: any;
   evidenceIndex?: any;
   relationshipChoices?: any;
 }

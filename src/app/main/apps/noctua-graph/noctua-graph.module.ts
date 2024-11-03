@@ -18,7 +18,7 @@ import { NoctuaFormModule } from '../noctua-form/noctua-form.module';
 
 const routes = [
   {
-    path: '',
+    path: 'g',
     component: NoctuaGraphComponent
   }
 ];

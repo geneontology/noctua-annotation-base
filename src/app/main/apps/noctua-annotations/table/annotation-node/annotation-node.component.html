@@ -64,8 +64,8 @@
         </a>
       </span>
       @if (noctuaUserService.user && annotationActivity.goterm.term) {
-      <noctua-inline-editor [cam]="cam" [activity]='annotationActivity.activity' [entity]="annotationActivity.goterm"
-        [category]="EditorCategory.TERM" class="noc-edit-button">
+      <noctua-inline-editor [cam]="cam" [annotationActivity]='annotationActivity' [category]="EditorCategory.TERM"
+        [editorType]="EditorType.STANDARD" class="noc-edit-button">
       </noctua-inline-editor>
       }
     </div>

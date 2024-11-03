@@ -16,6 +16,7 @@ import { Entity } from '../models/activity/entity';
 import { noctuaFormConfig } from '../noctua-form-config';
 import { Triple } from '../models/activity/triple';
 import { cloneDeep } from 'lodash';
+import { Predicate } from '@noctua.form/models/activity/predicate';
 
 
 
@@ -116,7 +117,7 @@ export class NoctuaActivityConnectorService {
     return connectorForm;
   }
 
-  saveChemicalParticipants(chemicals: any[]) {
+  saveChemicalParticipants(subjectNode: ActivityNode, objectNode: ActivityNode, chemicals: any[]) {
     const nodes = chemicals.map((chemical) => {
       const nodes = new ActivityNode()
       nodes.term.id = chemical.id
@@ -124,7 +125,27 @@ export class NoctuaActivityConnectorService {
       return nodes
     });
 
-    return forkJoin(this.bbopGraphService.addActivity(this.cam, nodes, [], this.cam.title));
+    const triples = nodes.map((node) => {
+      const edge = new Entity(noctuaFormConfig.edge.hasInput.id, '')
+      const predicate = new Predicate(edge);
+      const triple = new Triple<ActivityNode>(
+        subjectNode, node, predicate)
+      return triple
+    });
+
+    const triples2 = nodes.map((node) => {
+      const edge = new Entity(noctuaFormConfig.edge.hasOutput.id, '')
+      const predicate = new Predicate(edge);
+      const triple = new Triple<ActivityNode>(
+        objectNode, node, predicate)
+      return triple
+    });
+
+
+
+
+
+    return forkJoin(this.bbopGraphService.addActivity(this.cam, nodes, [...triples, ...triples2], this.cam.title));
 
   }
 

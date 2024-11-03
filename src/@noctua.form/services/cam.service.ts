@@ -573,6 +573,7 @@ export class CamService {
           .subscribe((res) => {
             if (!Array.isArray(res) && res.neighborhoodGraphJson) {
               const parsed = JSON.parse(res.neighborhoodGraphJson);
+              console.log(parsed);
               const objs = DataUtils.processHasParticipants(parsed);
               activity.mfNode.chemicalParticipants = objs;
               console.log(objs);

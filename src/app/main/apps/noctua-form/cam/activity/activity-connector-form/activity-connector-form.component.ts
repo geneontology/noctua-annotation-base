@@ -99,7 +99,7 @@ export class ActivityConnectorFormComponent implements OnInit, OnDestroy {
   }
 
   saveParticipants() {
-    this.noctuaActivityConnectorService.saveChemicalParticipants(this.getSelectedItems())
+    this.noctuaActivityConnectorService.saveChemicalParticipants(this.connectorActivity.subjectNode, this.connectorActivity.objectNode, this.getSelectedItems())
       .subscribe(() => {
         this.noctuaFormDialogService.openInfoToast('Chemical Reactions created.', 'OK');
 

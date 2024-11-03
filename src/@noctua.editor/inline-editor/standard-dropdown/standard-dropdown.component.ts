@@ -89,6 +89,7 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
     this.cam = data.cam;
     this.annotationActivity = data.annotationActivity;
     this.entity = data.entity;
+    this.autocompleteCategory = data.autocompleteCategory;
     this.category = data.category;
     this.insertEntity = data.insertEntity;
     this.relationshipChoices = data.relationshipChoices;
@@ -118,7 +119,6 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
   }
 
   // Will refactor later
-
   save() {
     let termId: string = this.dynamicForm.value[FormStructureKeys.TERM]?.id;
     let relationId: string = this.dynamicForm.value[FormStructureKeys.RELATION]?.id;
@@ -191,6 +191,9 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         break;
       case EditorCategory.TERM:
         this.displaySection.term = true;
+        this.autocompleteType = AutocompleteType.TERM
+        this.dynamicForm.get(FormStructureKeys.TERM).setValue(this.annotationActivity.goterm.term.label);
+        this.autocompleteCategory = this.annotationActivity?.goterm.category;
         break;
       case EditorCategory.EVIDENCE_CODE:
         this.displaySection.term = true;
