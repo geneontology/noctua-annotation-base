@@ -133,6 +133,15 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
     };
 
     switch (this.category) {
+      case EditorCategory.GP:
+        if (termId) {
+          this.annotationFormService.editAnnotationNode(this.cam, this.annotationActivity.gp, termId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(handleResponse);
+        } else {
+          this.noctuaFormDialogService.openInfoToast(`Please select term from autocomplete.`, 'OK');
+        }
+        break
       case EditorCategory.TERM:
         if (termId) {
           this.annotationFormService.editAnnotationNode(this.cam, this.annotationActivity.goterm, termId)
@@ -196,6 +205,12 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         this.relationLabel = 'GP To Term Relation';
         this.dynamicForm.get(FormStructureKeys.RELATION).setValue(this.annotationActivity.gpToTermEdge.inverseEntity);
         this.relationshipChoices = this.annotationActivity.gpToTermEdges;
+        break;
+      case EditorCategory.GP:
+        this.displaySection.term = true;
+        this.autocompleteType = AutocompleteType.TERM
+        this.dynamicForm.get(FormStructureKeys.TERM).setValue(this.annotationActivity.gp.term.label);
+        this.autocompleteCategory = this.annotationActivity?.gp.category;
         break;
       case EditorCategory.TERM:
         this.displaySection.term = true;
