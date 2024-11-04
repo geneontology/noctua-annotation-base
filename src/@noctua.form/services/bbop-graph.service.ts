@@ -391,7 +391,7 @@ export class BbopGraphService {
 
       result.id = type.class_id();
       result.label = type.class_label();
-      result.classExpression = type;
+      result.classExpression = srcType;
     });
 
     return result;
@@ -1459,14 +1459,25 @@ export class BbopGraphService {
   editNode(cam: Cam, oldNode: ActivityNode, newNodeId: string) {
     const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
 
+    console.log("old", oldNode.classExpression)
+
     reqs.remove_type_from_individual(
       oldNode.classExpression,
       oldNode.uuid,
       cam.id,
     );
 
+    let ce
+
+    if (oldNode.isComplement) {
+      ce = new class_expression();
+      ce.as_complement(newNodeId);
+    } else {
+      ce = class_expression.cls(newNodeId)
+    }
+
     reqs.add_type_to_individual(
-      class_expression.cls(newNodeId),
+      ce,
       oldNode.uuid,
       cam.id,
     );
