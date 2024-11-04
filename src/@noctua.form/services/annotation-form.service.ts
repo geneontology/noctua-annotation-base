@@ -296,6 +296,20 @@ export class NoctuaAnnotationFormService {
     )
   }
 
+  toggleIsComplement(annotationActivity: AnnotationActivity): Observable<any> {
+    const cam = this.cam;
+
+    return from(this.bbopGraphService.toggleIsComplement(cam, annotationActivity.goterm)).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
+      }),
+      catchError((error) => {
+        console.error('Error updating NOT Qualifier:', error);
+        return of(null);
+      })
+    )
+  }
+
   updateComment(
     cam: Cam,
     annotationActivity: AnnotationActivity,

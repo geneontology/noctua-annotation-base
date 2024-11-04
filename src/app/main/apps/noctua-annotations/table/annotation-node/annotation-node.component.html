@@ -164,6 +164,14 @@
         <button mat-menu-item (click)="addExtension()" class="">
           Add Extension
         </button>
+        <button mat-menu-item (click)="toggleIsComplement()" class="">
+          @if (annotationActivity.goterm.isComplement) {
+          <span>Remove </span>
+          } @else {
+          <span>Add </span>
+          }
+          <strong>NOT</strong> Qualifier
+        </button>
         <button mat-menu-item (click)="addComment()" class="">
           Add Comment
         </button>

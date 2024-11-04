@@ -1459,8 +1459,6 @@ export class BbopGraphService {
   editNode(cam: Cam, oldNode: ActivityNode, newNodeId: string) {
     const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
 
-    console.log("old", oldNode.classExpression)
-
     reqs.remove_type_from_individual(
       oldNode.classExpression,
       oldNode.uuid,
@@ -1474,6 +1472,35 @@ export class BbopGraphService {
       ce.as_complement(newNodeId);
     } else {
       ce = class_expression.cls(newNodeId)
+    }
+
+    reqs.add_type_to_individual(
+      ce,
+      oldNode.uuid,
+      cam.id,
+    );
+
+    reqs.store_model(cam.id);
+    return cam.replaceManager.request_with(reqs);
+  }
+
+  toggleIsComplement(cam: Cam, oldNode: ActivityNode) {
+    const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
+    const newNodeId = oldNode.term.id;
+
+    reqs.remove_type_from_individual(
+      oldNode.classExpression,
+      oldNode.uuid,
+      cam.id,
+    );
+
+    let ce
+
+    if (oldNode.isComplement) {
+      ce = class_expression.cls(newNodeId)
+    } else {
+      ce = new class_expression();
+      ce.as_complement(newNodeId);
     }
 
     reqs.add_type_to_individual(
