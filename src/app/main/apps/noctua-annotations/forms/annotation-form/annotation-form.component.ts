@@ -39,7 +39,6 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   commentFormArray: FormArray;
   activity: Activity;
   errors: ActivityError[] = [];
-
   descriptionSectionTitle = 'Function Description';
   annotatedSectionTitle = 'Gene Product';
 
@@ -150,9 +149,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       goterm: '',
       annotationExtensions: this.fb.array([]),
       annotationComments: this.fb.array([]),
-      evidenceCode: '',
-      reference: '',
-      withFrom: '',
+      evidences: this.fb.array([])
     };
   }
 
@@ -243,12 +240,33 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 
+  get evidences() {
+    return this.dynamicForm.get('evidences') as FormArray;
+  }
+
   get annotationExtensions() {
     return this.dynamicForm.get('annotationExtensions') as FormArray;
   }
 
   get annotationComments() {
     return this.dynamicForm.get('annotationComments') as FormArray;
+  }
+
+  addEvidence() {
+    this.evidences.push(this.fb.group({
+      evidenceCode: '',
+      reference: '',
+      withFrom: '',
+    }));
+
+    this.dynamicForm.updateValueAndValidity();
+  }
+
+  deleteEvidence(index: number): void {
+    if (this.evidences.length > 1) {
+      this.evidences.removeAt(index);
+      this.dynamicForm.updateValueAndValidity();
+    }
   }
 
   addExtension() {
