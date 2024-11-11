@@ -192,12 +192,18 @@ export class CamService {
 
   addCamAnnotationActivities(cam: Cam) {
 
-    cam.annotationActivities = cam.activities.map((activity: Activity) => {
+    const annotationActivities = [];
+
+    for (const activity of cam.activities) {
       const annotationActivity = this.noctuaFormConfigService.activityToAnnotation(activity);
 
-      annotationActivity.activity = activity;
-      return annotationActivity
-    });
+      if (annotationActivity) {
+        annotationActivity.activity = activity;
+        annotationActivities.push(annotationActivity);
+      }
+    }
+
+    cam.annotationActivities = annotationActivities;
 
     // For data generation purposes e2e testing
 
