@@ -79,17 +79,17 @@
           <noc-term-autocomplete fxFlex="35" class="p-1" formControlName="withFrom"
             [label]="annotationActivity?.with.label" [autocompleteType]="AutocompleteType.WITH"></noc-term-autocomplete>
           <div fxFlex="40px"></div>
+          @if(evidences.length>1) {
           <button mat-icon-button (click)="deleteEvidence(i)" class="text-warn">
             <fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
           </button>
+          }
         </div>
       </div>
       <div class="pl-4 py-4">
-        @if(evidences.length>1) {
         <a (click)="addEvidence()" class="cursor-pointer" color="primary">
           Add Another Evidence
         </a>
-        }
       </div>
       <div class="noc-section-header pr-4" fxLayout="row" fxLayoutAlign="start center">
         <div class="noc-section-heading">

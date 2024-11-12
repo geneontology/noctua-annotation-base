@@ -63,6 +63,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.annotationFormService.initializeForm();
     this.dynamicForm = this.fb.group(this.getInitialFormStructure());
+    this.addEvidence();
 
     this.dynamicForm.valueChanges
       .pipe(takeUntil(this._unsubscribeAll),
@@ -90,7 +91,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
           return;
         }
         this.activity = activity;
-        this.annotationActivity = { ...this.annotationFormService.onAnnotationActivityChanged } as AnnotationActivity;
+        this.annotationActivity = { ...this.annotationFormService.annotationActivity } as AnnotationActivity;
 
         this.cdr.markForCheck()
       });
@@ -151,6 +152,7 @@ export class AnnotationFormComponent implements OnInit, OnDestroy {
       annotationComments: this.fb.array([]),
       evidences: this.fb.array([])
     };
+
   }
 
   addMFRootTerm() {
