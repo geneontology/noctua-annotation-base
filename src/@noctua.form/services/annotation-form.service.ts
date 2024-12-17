@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, forkJoin, from, Observable, of, throwError } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NoctuaFormConfigService } from './config/noctua-form-config.service';
+import { ActivityNode } from './../models/activity/activity-node';
 import { Activity, ActivityType } from './../models/activity/activity';
 import { BbopGraphService } from './bbop-graph.service';
 import { CamService } from './cam.service';
@@ -23,12 +24,14 @@ export class NoctuaAnnotationFormService {
 
   public errors = [];
   public activity: Activity;
-  public onAnnotationActivityChanged: AnnotationActivity;
+  public annotationActivity: AnnotationActivity;
+
   public onActivityChanged: BehaviorSubject<Activity>
   public onCommentIdChanged: BehaviorSubject<string>
   public onFormAnnotationActivityChanged: BehaviorSubject<AnnotationActivity>
   public onFormErrorsChanged: BehaviorSubject<ActivityError[]>
   public cam: Cam;
+  public selectedCommentActivityId: string;
 
   // for setting edge when goterm is changed
   // private previousGotermRelation: string = null
@@ -45,10 +48,12 @@ export class NoctuaAnnotationFormService {
       this.cam = cam;
     });
 
+    this.annotationActivity = new AnnotationActivity(null);
+
     this.onActivityChanged = new BehaviorSubject(null);
     this.onFormAnnotationActivityChanged = new BehaviorSubject(null);
     this.onFormErrorsChanged = new BehaviorSubject([]);
-    this.onAnnotationActivityChanged = new AnnotationActivity(null);
+
     this.onCommentIdChanged = new BehaviorSubject(null);
 
   }
@@ -57,25 +62,23 @@ export class NoctuaAnnotationFormService {
     this.activity = this.noctuaFormConfigService.createActivityModel(ActivityType.simpleAnnoton);
     this.errors = [];
     this.activity.enableSubmit();
-    this.onAnnotationActivityChanged = new AnnotationActivity(this.activity);
+    this.annotationActivity = new AnnotationActivity(this.activity);
     this.onActivityChanged.next(this.activity);
   }
 
   initializeFormFromActivity(annotationActivity: AnnotationActivity) {
     this.activity = annotationActivity.activity;
-    this.onAnnotationActivityChanged = annotationActivity;
+    this.annotationActivity = annotationActivity;
     this.onFormAnnotationActivityChanged.next(annotationActivity);
   }
 
   processAnnotationFormGroup(dynamicForm: FormGroup, annotationData: StandardAnnotationForm): void {
-    console.log('Annotation form group processed:', annotationData);
 
     const gpRootTypes = annotationData.gp?.rootTypes ?? [];
     const goTermRootTypes = annotationData.goterm?.rootTypes ?? [];
 
-
-    this.onAnnotationActivityChanged.gpToTermEdges = this.noctuaFormConfigService.getTermRelations(gpRootTypes, goTermRootTypes, true);
-    this.onAnnotationActivityChanged.goterm.category = this.noctuaFormConfigService.getObjectRange(gpRootTypes, annotationData.gpToTermEdge?.id, true);
+    this.annotationActivity.gpToTermEdges = this.noctuaFormConfigService.getTermRelations(gpRootTypes, goTermRootTypes, true);
+    this.annotationActivity.goterm.category = this.noctuaFormConfigService.getObjectRange(gpRootTypes, annotationData.gpToTermEdge?.id, true);
 
     //this._setExtensionObjects(goTermRootTypes);
     this._updateExtensions(annotationData.annotationExtensions, goTermRootTypes);
@@ -91,18 +94,21 @@ export class NoctuaAnnotationFormService {
     return { edges, range };
 
   }
+  selectCommentActivityId(annotationActivityId: string) {
+    this.selectedCommentActivityId = annotationActivityId;
+    this.onCommentIdChanged.next(annotationActivityId);
+  }
 
   private _updateExtensions(annotationExtensions: AnnotationExtensionForm[], gotermRootTypes: Entity[]): void {
-    if (this.onAnnotationActivityChanged.extensions.length === annotationExtensions.length) {
+    if (this.annotationActivity.extensions.length === annotationExtensions.length) {
       annotationExtensions.forEach((ext, index) => {
         const extRootTypes = ext.extensionTerm?.rootTypes ?? [];
         const extensionEdges = this.noctuaFormConfigService.getTermRelations(gotermRootTypes, extRootTypes);
         const extensionObjects = this.noctuaFormConfigService.getObjectRange(gotermRootTypes, ext.extensionEdge?.id);
 
-        this.onAnnotationActivityChanged.extensions[index].extensionEdges = extensionEdges;
-        this.onAnnotationActivityChanged.extensions[index].extensionTerm.category = extensionObjects;
+        this.annotationActivity.extensions[index].extensionEdges = extensionEdges;
+        this.annotationActivity.extensions[index].extensionTerm.category = extensionObjects;
 
-        console.log('Extension updated:', extRootTypes, extensionEdges, extensionObjects);
       });
     } else {
       console.error('Annotation extensions length mismatch, unlikely');
@@ -152,26 +158,29 @@ export class NoctuaAnnotationFormService {
       errors.push(error);
     }
 
-    if (!annotationData.evidenceCode?.id) {
+    annotationData.evidences.forEach((evidence, index) => {
 
-      const error = new ActivityError(ErrorLevel.error, ErrorType.general, `Evidence is required`);
-      errors.push(error);
-    }
+      if (!evidence.evidenceCode?.id) {
 
-    if (!annotationData.reference) {
-      const error = new ActivityError(ErrorLevel.error, ErrorType.general,
-        'Reference is required');
-      errors.push(error);
-    }
-
-    if (annotationData.reference) {
-
-      if (!annotationData.reference.includes(':')) {
-        const error = new ActivityError(ErrorLevel.error, ErrorType.general,
-          `Use DB:accession format for reference`);
+        const error = new ActivityError(ErrorLevel.error, ErrorType.general, `Evidence is required @ ${index + 1}`);
         errors.push(error);
       }
-    }
+
+      if (!evidence.reference) {
+        const error = new ActivityError(ErrorLevel.error, ErrorType.general,
+          `Reference is required @ ${index + 1}`);
+        errors.push(error);
+      }
+
+      if (evidence.reference) {
+
+        if (!evidence.reference.includes(':')) {
+          const error = new ActivityError(ErrorLevel.error, ErrorType.general,
+            `Use DB:accession format for reference @ ${index + 1}`);
+          errors.push(error);
+        }
+      }
+    });
 
     annotationData.annotationExtensions.forEach((extension, index) => {
       if ((extension.extensionEdge?.id && !extension.extensionTerm?.id) || (!extension.extensionEdge?.id && extension.extensionTerm?.id)) {
@@ -205,13 +214,30 @@ export class NoctuaAnnotationFormService {
   }
 
   saveAnnotation(annotationFormValue: StandardAnnotationForm) {
-    const saveData = this.onAnnotationActivityChanged.createSave(annotationFormValue as StandardAnnotationForm);
+    const saveData = AnnotationActivity.createSave(annotationFormValue as StandardAnnotationForm);
     return forkJoin(this.bbopGraphService.addActivity(this.cam, saveData.nodes, saveData.triples, saveData.title));
   }
 
+  editAnnotationNode(
+    cam: Cam,
+    oldNode: ActivityNode,
+    newNodeId: string
+  ): Observable<any> {
 
+    const actionPromise = this.bbopGraphService.editNode(cam, oldNode, newNodeId);
 
-  editAnnotation(
+    return from(actionPromise).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
+      }),
+      catchError((error) => {
+        console.error('Error editing annotation:', error);
+        return of(null);
+      })
+    )
+  }
+
+  editEvidence(
     editorCategory: EditorCategory,
     cam: Cam,
     annotationActivity: AnnotationActivity,
@@ -219,8 +245,6 @@ export class NoctuaAnnotationFormService {
   ): Observable<any> {
     const evidence = annotationActivity.getEvidenceNodes();
     const oldAnnotations = this.getOldAnnotations(editorCategory, evidence);
-
-    console.log('Edit evidence:', oldAnnotations, newAnnotation);
 
     return this.performEditAction(editorCategory, cam, oldAnnotations, newAnnotation).pipe(
       finalize(() => {
@@ -241,10 +265,6 @@ export class NoctuaAnnotationFormService {
   ): Observable<any> {
 
     const { a: oldTriple, b: newTriple } = annotationActivity.getTriplePair(annotationActivity.gpToTermEdge.id, annotationActivity.goterm, newAnnotation);
-
-    console.log('Edit relation:', oldTriple, newTriple);
-
-    console.log('Edit relation:', newTriple.subject.term.label, newTriple.predicate.edge.id, newTriple.object.term.label);
 
     if (!oldTriple || !newTriple) {
       return throwError(() => new Error('Invalid editor category'));
@@ -271,14 +291,26 @@ export class NoctuaAnnotationFormService {
 
     const triple = annotationActivity.genExtensionTriple(newAnnotation.relationId, newAnnotation.termId);
 
-    console.log('Edit relation:', triple);
-
     return from(this.bbopGraphService.addExtension(cam, triple)).pipe(
       finalize(() => {
         this.cam.loading.status = false;
       }),
       catchError((error) => {
         console.error('Error editing annotation:', error);
+        return of(null);
+      })
+    )
+  }
+
+  toggleIsComplement(annotationActivity: AnnotationActivity): Observable<any> {
+    const cam = this.cam;
+
+    return from(this.bbopGraphService.toggleIsComplement(cam, annotationActivity.goterm)).pipe(
+      finalize(() => {
+        this.cam.loading.status = false;
+      }),
+      catchError((error) => {
+        console.error('Error updating NOT Qualifier:', error);
         return of(null);
       })
     )
@@ -331,7 +363,6 @@ export class NoctuaAnnotationFormService {
     if (!triple) {
       return throwError(() => new Error('Invalid extension'));
     }
-    console.log('Delete extension:', triple);
 
     return from(this.bbopGraphService.deleteAnnotation(cam, uuids, [triple])).pipe(
       finalize(() => {

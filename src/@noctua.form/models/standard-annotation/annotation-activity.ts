@@ -7,9 +7,10 @@ import { Predicate } from './../activity/predicate';
 import * as ShapeUtils from './../../data/config/shape-utils';
 import * as EntityDefinition from './../../data/config/entity-definition';
 import { Evidence } from './../activity/evidence';
-import { StandardAnnotationForm } from './form';
+import { AnnotationEvidenceForm, StandardAnnotationForm } from './form';
 import { cloneDeep } from 'lodash';
 import { Contributor } from '../contributor';
+import { AnnotationActivitySortBy, AnnotationActivitySortField } from './annotation-activity-sortby';
 
 
 export interface AnnotationEdgeConfig {
@@ -54,6 +55,8 @@ export class AnnotationActivity {
   extensions: AnnotationExtension[] = [];
   gpToTermEdges: Entity[] = [];
   activity: Activity;
+  date: string;
+  formattedDate: string;
 
 
   constructor(activity?: Activity) {
@@ -107,25 +110,6 @@ export class AnnotationActivity {
     return null;
   }
 
-  private _populateAnnotationActivity(annotationForm: StandardAnnotationForm) {
-
-    this.gp.term.id = annotationForm.gp.id;
-    this.goterm.term.id = annotationForm.goterm.id;
-    this.gpToTermEdge = annotationForm.gpToTermEdge;
-
-    this.goterm.isComplement = annotationForm.isComplement;
-
-    this.evidenceCode.term.id = annotationForm.evidenceCode.id;
-    this.reference.term.id = annotationForm.reference;
-    this.with.term.id = annotationForm.withFrom;
-
-    this.comments = Array.from(new Set(annotationForm.annotationComments.map(comment => comment.comment)));
-
-    annotationForm.annotationExtensions.forEach((ext, index) => {
-      this.extensions[index].extensionEdge = ext.extensionEdge;
-      this.extensions[index].extensionTerm.term.id = ext.extensionTerm.id;
-    });
-  }
 
   getEvidenceNodes(): Evidence[] {
     const evidenceNodes: Evidence[] = [];
@@ -184,10 +168,6 @@ export class AnnotationActivity {
       ''
     );
 
-
-
-    console.log('newTriple.predicate.edge', newTriple.predicate.edge);
-
     return { a: oldTriple, b: newTriple };
   }
 
@@ -203,52 +183,84 @@ export class AnnotationActivity {
     return new Triple(this.goterm, extension, predicate);
   }
 
-  createSave(annotationForm: StandardAnnotationForm) {
 
-    this._populateAnnotationActivity(annotationForm);
+  private static _populateAnnotationActivity(annotationForm: StandardAnnotationForm, evidenceForm: AnnotationEvidenceForm) {
+
+    const annotationActivity = new AnnotationActivity();
+    annotationActivity.gp = ShapeUtils.generateBaseTerm([]);
+    annotationActivity.goterm = ShapeUtils.generateBaseTerm([]);
+
+    annotationActivity.gp.term.id = annotationForm.gp.id;
+    annotationActivity.goterm.term.id = annotationForm.goterm.id;
+    annotationActivity.gpToTermEdge = annotationForm.gpToTermEdge;
+    annotationActivity.goterm.isComplement = annotationForm.isComplement;
+
+    // Evidence
+    annotationActivity.evidenceCode.term.id = evidenceForm.evidenceCode.id;
+    annotationActivity.reference.term.id = evidenceForm.reference;
+    annotationActivity.with.term.id = evidenceForm.withFrom;
+
+    annotationActivity.comments = Array.from(new Set(annotationForm.annotationComments.map(comment => comment.comment)));
+
+    annotationForm.annotationExtensions.forEach((ext, index) => {
+      annotationActivity.extensions[index].extensionEdge = ext.extensionEdge;
+      annotationActivity.extensions[index].extensionTerm.term.id = ext.extensionTerm.id;
+    });
+
+    return annotationActivity;
+  }
+
+  public static createSave(annotationForm: StandardAnnotationForm) {
+
     const saveData = {
       title: 'enabled by ' + annotationForm.gp?.label,
       triples: [],
-      nodes: [this.gp, this.goterm],
+      nodes: [],
       graph: null
     };
 
-    const edgeType = this.gpToTermEdge.id
-    const config = noctuaFormConfig.simpleAnnotationEdgeConfig[edgeType]
-    const evidence = this._createEvidence();
+    annotationForm.evidences.forEach(evidenceForm => {
+      const annotationActivity = this._populateAnnotationActivity(annotationForm, evidenceForm);
 
-    if (!config) {
-      console.warn('No configuration defined for edge:', edgeType);
-      return;
-    }
+      saveData.nodes.push(annotationActivity.gp, annotationActivity.goterm);
 
-    if (config.mfNodeRequired) {
-      const mfNode = ShapeUtils.generateBaseTerm([]);
+      const edgeType = annotationActivity.gpToTermEdge.id
+      const config = noctuaFormConfig.simpleAnnotationEdgeConfig[edgeType]
+      const evidence = annotationActivity._createEvidence();
 
-      const rootMF = noctuaFormConfig.rootNode.mf;
-      mfNode.term = new Entity(rootMF.id, rootMF.label);
-
-      const triple = this._createTriple(mfNode, this.gp, config.gpToTermPredicate, evidence, config.gpToTermReverse)
-      saveData.triples.push(triple);
-
-      if (config.mfToTermPredicate) {
-        const mfTriple = this._createTriple(mfNode, this.goterm, config.mfToTermPredicate, evidence)
-        saveData.triples.push(mfTriple);
+      if (!config) {
+        console.warn('No configuration defined for edge:', edgeType);
+        return;
       }
 
-    } else {
-      const triple = this._createTriple(this.gp, this.goterm, config.gpToTermPredicate, evidence, config.gpToTermReverse)
-      saveData.triples.push(triple);
-    }
+      if (config.mfNodeRequired) {
+        const mfNode = ShapeUtils.generateBaseTerm([]);
 
-    this.extensions.forEach(ext => {
+        const rootMF = noctuaFormConfig.rootNode.mf;
+        mfNode.term = new Entity(rootMF.id, rootMF.label);
 
-      if (ext.extensionTerm?.hasValue()) {
-        const extensionTriple = this._createTriple(this.goterm, ext.extensionTerm, ext.extensionEdge.id, evidence);
+        const triple = annotationActivity._createTriple(mfNode, annotationActivity.gp, config.gpToTermPredicate, evidence, config.gpToTermReverse)
+        saveData.triples.push(triple);
 
-        saveData.nodes.push(ext.extensionTerm);
-        saveData.triples.push(extensionTriple);
+        if (config.mfToTermPredicate) {
+          const mfTriple = annotationActivity._createTriple(mfNode, annotationActivity.goterm, config.mfToTermPredicate, evidence)
+          saveData.triples.push(mfTriple);
+        }
+
+      } else {
+        const triple = annotationActivity._createTriple(annotationActivity.gp, annotationActivity.goterm, config.gpToTermPredicate, evidence, config.gpToTermReverse)
+        saveData.triples.push(triple);
       }
+
+      annotationActivity.extensions.forEach(ext => {
+
+        if (ext.extensionTerm?.hasValue()) {
+          const extensionTriple = annotationActivity._createTriple(annotationActivity.goterm, ext.extensionTerm, ext.extensionEdge.id, evidence);
+
+          saveData.nodes.push(ext.extensionTerm);
+          saveData.triples.push(extensionTriple);
+        }
+      });
     });
 
     return saveData;
@@ -295,6 +307,58 @@ export class AnnotationActivity {
     }
 
     return aspect;
+  }
+
+  public static getSortByKey(annotationActivity: AnnotationActivity) {
+    return annotationActivity.gp?.term.label;
+  }
+
+  private static getSafeLabel(obj: any): string {
+    return obj?.term?.label ?? '';
+  }
+
+  public static sortBy(activities: AnnotationActivity[], sortBy: AnnotationActivitySortBy): AnnotationActivity[] {
+    return activities.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy.field) {
+        case AnnotationActivitySortField.GP:
+          comparison = this.getSafeLabel(a.gp).localeCompare(this.getSafeLabel(b.gp));
+          break;
+        case AnnotationActivitySortField.GOTERM:
+          comparison = this.getSafeLabel(a.goterm).localeCompare(this.getSafeLabel(b.goterm));
+          break;
+        case AnnotationActivitySortField.GP_TO_TERM_EDGE:
+          comparison = (a.gpToTermEdge?.label ?? '').localeCompare(b.gpToTermEdge?.label ?? '');
+          break;
+        case AnnotationActivitySortField.GO_TERM_ASPECT:
+          comparison = (a.gotermAspect ?? '').localeCompare(b.gotermAspect ?? '');
+          break;
+        case AnnotationActivitySortField.EVIDENCE_CODE:
+          comparison = this.getSafeLabel(a.evidenceCode).localeCompare(this.getSafeLabel(b.evidenceCode));
+          break;
+        case AnnotationActivitySortField.REFERENCE:
+          comparison = this.getSafeLabel(a.reference).localeCompare(this.getSafeLabel(b.reference));
+          break;
+        case AnnotationActivitySortField.WITH:
+          comparison = this.getSafeLabel(a.with).localeCompare(this.getSafeLabel(b.with));
+          break;
+        case AnnotationActivitySortField.DATE:
+          const dateA = a.date ? new Date(a.date) : new Date(0); // Use epoch date if a.date is null or undefined
+          const dateB = b.date ? new Date(b.date) : new Date(0); // Use epoch date if b.date is null or undefined
+          comparison = dateA.getTime() - dateB.getTime();
+          break;
+        default:
+          comparison = this.getSafeLabel(a.gp).localeCompare(this.getSafeLabel(b.gp));
+      }
+
+      // If the primary sort yields equality, sort by id as secondary criterion
+      if (comparison === 0) {
+        comparison = (a.id ?? '').localeCompare(b.id ?? '');
+      }
+
+      return sortBy.ascending ? comparison : -comparison;
+    });
   }
 
 }

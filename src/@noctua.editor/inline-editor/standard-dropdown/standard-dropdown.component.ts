@@ -28,7 +28,6 @@ enum FormStructureKeys {
   TERM = 'term'
 }
 
-
 const RELATION_NOT_EDITABLE = [
   noctuaFormConfig.edge.isActiveIn.id,
   noctuaFormConfig.edge.locatedIn.id,
@@ -90,6 +89,7 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
     this.cam = data.cam;
     this.annotationActivity = data.annotationActivity;
     this.entity = data.entity;
+    this.autocompleteCategory = data.autocompleteCategory;
     this.category = data.category;
     this.insertEntity = data.insertEntity;
     this.relationshipChoices = data.relationshipChoices;
@@ -119,7 +119,6 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
   }
 
   // Will refactor later
-
   save() {
     let termId: string = this.dynamicForm.value[FormStructureKeys.TERM]?.id;
     let relationId: string = this.dynamicForm.value[FormStructureKeys.RELATION]?.id;
@@ -134,10 +133,27 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
     };
 
     switch (this.category) {
+      case EditorCategory.GP:
+        if (termId) {
+          this.annotationFormService.editAnnotationNode(this.cam, this.annotationActivity.gp, termId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(handleResponse);
+        } else {
+          this.noctuaFormDialogService.openInfoToast(`Please select term from autocomplete.`, 'OK');
+        }
+        break
       case EditorCategory.TERM:
+        if (termId) {
+          this.annotationFormService.editAnnotationNode(this.cam, this.annotationActivity.goterm, termId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(handleResponse);
+        } else {
+          this.noctuaFormDialogService.openInfoToast(`Please select term from autocomplete.`, 'OK');
+        }
+        break
       case EditorCategory.EVIDENCE_CODE:
         if (termId) {
-          this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, termId)
+          this.annotationFormService.editEvidence(this.category, this.cam, this.annotationActivity, termId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(handleResponse);
         } else {
@@ -146,7 +162,7 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         break;
       case EditorCategory.WITH:
       case EditorCategory.REFERENCE:
-        this.annotationFormService.editAnnotation(this.category, this.cam, this.annotationActivity, termString)
+        this.annotationFormService.editEvidence(this.category, this.cam, this.annotationActivity, termString)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(handleResponse);
         break;
@@ -190,8 +206,19 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         this.dynamicForm.get(FormStructureKeys.RELATION).setValue(this.annotationActivity.gpToTermEdge.inverseEntity);
         this.relationshipChoices = this.annotationActivity.gpToTermEdges;
         break;
-      case EditorCategory.TERM:
+      case EditorCategory.GP:
+        this.label = 'Gene Product';
         this.displaySection.term = true;
+        this.autocompleteType = AutocompleteType.TERM
+        this.dynamicForm.get(FormStructureKeys.TERM).setValue(this.annotationActivity.gp.term.label);
+        this.autocompleteCategory = this.annotationActivity?.gp.category;
+        break;
+      case EditorCategory.TERM:
+        this.label = 'GO Term';
+        this.displaySection.term = true;
+        this.autocompleteType = AutocompleteType.TERM
+        this.dynamicForm.get(FormStructureKeys.TERM).setValue(this.annotationActivity.goterm.term.label);
+        this.autocompleteCategory = this.annotationActivity?.goterm.category;
         break;
       case EditorCategory.EVIDENCE_CODE:
         this.displaySection.term = true;

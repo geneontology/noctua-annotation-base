@@ -19,6 +19,7 @@ import { InlineReferenceService } from '@noctua.editor/inline-reference/inline-r
 export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   AutocompleteType = AutocompleteType;
+  @Input() formControlName: string;
   @Input() label: string;
   @Input() category: GoCategory[] = [];
   @Input() autocompleteType: AutocompleteType = AutocompleteType.TERM;
@@ -41,6 +42,7 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
 
   ngOnInit(): void {
     this.subscribeToValueChanges();
+    console.log(this.control)
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -50,7 +52,6 @@ export class TermAutocompleteComponent implements OnInit, OnDestroy, ControlValu
       const currentCategory = changes['category'].currentValue;
 
       if (!NoctuaFormUtils.areArraysEqualByKey(previousCategory, currentCategory, 'id')) {
-        console.log(`Category changed from ${previousCategory} to ${currentCategory}`);
         this.subscribeToValueChanges();
       }
     }

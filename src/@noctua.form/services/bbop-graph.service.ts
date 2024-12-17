@@ -391,7 +391,7 @@ export class BbopGraphService {
 
       result.id = type.class_id();
       result.label = type.class_label();
-      result.classExpression = type;
+      result.classExpression = srcType;
     });
 
     return result;
@@ -1268,7 +1268,7 @@ export class BbopGraphService {
 
         each(triple.predicate.evidence, function (evidence: Evidence) {
           const evidenceReference = Evidence.formatReference(evidence.reference);
-          const evidenceWith = evidence.with;
+          const evidenceWith = Evidence.formatWithFrom(evidence.with);
 
           reqs.add_evidence(evidence.evidence.id, evidenceReference, evidenceWith, triple.predicate.uuid);
         });
@@ -1304,22 +1304,6 @@ export class BbopGraphService {
     }
 
     return null;
-  }
-
-  editIndividual(reqs, cam: Cam, srcNode, destNode) {
-    if (srcNode.hasValue() && destNode.hasValue()) {
-      reqs.remove_type_from_individual(
-        srcNode.classExpression,
-        srcNode.uuid,
-        cam.id,
-      );
-
-      reqs.add_type_to_individual(
-        class_expression.cls(destNode.getTerm().id),
-        srcNode.uuid,
-        cam.id,
-      );
-    }
   }
 
   bulkEditIndividual(reqs, camId: string, node: ActivityNode) {
@@ -1472,6 +1456,63 @@ export class BbopGraphService {
 
   }
 
+  editNode(cam: Cam, oldNode: ActivityNode, newNodeId: string) {
+    const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
+
+    reqs.remove_type_from_individual(
+      oldNode.classExpression,
+      oldNode.uuid,
+      cam.id,
+    );
+
+    let ce
+
+    if (oldNode.isComplement) {
+      ce = new class_expression();
+      ce.as_complement(newNodeId);
+    } else {
+      ce = class_expression.cls(newNodeId)
+    }
+
+    reqs.add_type_to_individual(
+      ce,
+      oldNode.uuid,
+      cam.id,
+    );
+
+    reqs.store_model(cam.id);
+    return cam.replaceManager.request_with(reqs);
+  }
+
+  toggleIsComplement(cam: Cam, oldNode: ActivityNode) {
+    const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
+    const newNodeId = oldNode.term.id;
+
+    reqs.remove_type_from_individual(
+      oldNode.classExpression,
+      oldNode.uuid,
+      cam.id,
+    );
+
+    let ce
+
+    if (oldNode.isComplement) {
+      ce = class_expression.cls(newNodeId)
+    } else {
+      ce = new class_expression();
+      ce.as_complement(newNodeId);
+    }
+
+    reqs.add_type_to_individual(
+      ce,
+      oldNode.uuid,
+      cam.id,
+    );
+
+    reqs.store_model(cam.id);
+    return cam.replaceManager.request_with(reqs);
+  }
+
 
   editEvidenceCode(cam: Cam, oldEvidenceCodes: Entity[], newEvidenceCode: string) {
     const reqs = new minerva_requests.request_set(this.noctuaUserService.baristaToken, cam.id);
@@ -1497,11 +1538,14 @@ export class BbopGraphService {
   }
 
   editReference(cam: Cam, oldReferences: Entity[], newReference: string) {
-    return this._editEvidenceAnnotation(cam, oldReferences, newReference, 'source');
+    const formattedReference = Evidence.formatReference(newReference);
+    return this._editEvidenceAnnotation(cam, oldReferences, formattedReference, 'source');
   }
 
   editWith(cam: Cam, oldWiths: Entity[], newWith: string) {
-    return this._editEvidenceAnnotation(cam, oldWiths, newWith, 'with');
+    const formattedWith = Evidence.formatWithFrom(newWith);
+
+    return this._editEvidenceAnnotation(cam, oldWiths, formattedWith, 'with');
   }
 
   updateAnnotationComments(cam: Cam, predicates: Predicate[], comments: string[]) {
