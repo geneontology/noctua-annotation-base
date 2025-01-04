@@ -154,34 +154,11 @@ export class NoctuaLookupService {
   }
 
   withPreLookup(): string[] {
-
     const filtered = uniqWith(this.evidenceList, compareEvidenceWith);
     return filtered.map((evidence: Evidence) => {
       return evidence.with
     });
   }
-
-  /*  evidenceLookup(searchText: string, category: 'reference' | 'with'): string[] {
- 
-     const filterValue = searchText.toLowerCase();
-     let filteredResults: string[] = [];
- 
-     switch (category) {
-       case 'reference':
-         filteredResults = this.referencePreLookup().filter(
-           option => option ? option.toLowerCase().includes(filterValue) : false
-         );
-         break;
-       case 'with':
-         filteredResults = this.withPreLookup().filter(
-           option => option ? option.toLowerCase().includes(filterValue) : false
-         );
-         break;
-     }
- 
-     return filteredResults;
-   } */
-
 
   companionLookup(gp, aspect, extraParams) {
     const self = this;
@@ -418,6 +395,62 @@ export class NoctuaLookupService {
     );
   }
 
+  getGenesDetails(ids: string[]) {
+    const self = this;
+
+    // Create query for exact ID matches using annotation_class field
+    const queryString = ids.map(id => `annotation_class:"${id}"`).join(' OR ');
+
+    const requestParams = {
+      q: queryString,
+      defType: 'edismax',
+      indent: 'on',
+      qt: 'standard',
+      wt: 'json',
+      rows: ids.length.toString(),
+      start: '0',
+      fl: 'annotation_class,annotation_class_label,score',
+      'facet': 'true',
+      'facet.mincount': '1',
+      'facet.sort': 'count',
+      'facet.limit': '25',
+      'json.nl': 'arrarr',
+      packet: '1',
+      callback_type: 'search',
+      'facet.field': [
+        'source',
+        'subset',
+        'idspace',
+        'is_obsolete'
+      ],
+      fq: [
+        'document_category:"ontology_class"',
+      ],
+      // Remove qf since we're doing exact matches
+      // qf: [
+      //   'annotation_class^3',
+      //   'isa_closure^1',
+      // ]
+    };
+
+    const params = new HttpParams({
+      fromObject: requestParams
+    });
+
+    const url = this.golrURLBase + params.toString();
+
+    return this.httpClient.jsonp(url, 'json.wrf').pipe(
+      map(response => self._lookupMap(response)),
+      // Add validation to ensure we only get exact matches
+      map(response => {
+        // Filter to ensure only exact matches are returned
+        const exactMatches = response.filter(result =>
+          ids.includes(result.id)
+        );
+        return exactMatches;
+      })
+    );
+  }
 
   getTermURL(id: string) {
     const self = this;

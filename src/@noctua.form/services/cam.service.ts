@@ -567,10 +567,7 @@ export class CamService {
       cam.displayNumber = (key + 1).toString();
       cam.updateActivityDisplayNumber();
     });
-
   }
-
-
 
   updateMFProperties(cam: Cam) {
     cam.activities.forEach((activity: Activity) => {
@@ -589,6 +586,11 @@ export class CamService {
     });
   }
 
+  getGenesDetails(ids: string[]) {
+
+    return this.noctuaLookupService.getGenesDetails(ids)
+  }
+
   private _compareDateReviewAdded(a: Cam, b: Cam): number {
     if (a.dateReviewAdded < b.dateReviewAdded) {
       return 1;
@@ -596,6 +598,4 @@ export class CamService {
       return -1;
     }
   }
-
-
 }

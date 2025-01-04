@@ -14,9 +14,12 @@
       fxLayoutAlign="start stretch">
       <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
         <mat-form-field fxFlex="40" appearance="outline">
-          <mat-label>File Name</mat-label>
-          <input matInput formControlName="description" placeholder="File Name" />
+          <mat-label>Gene Ids</mat-label>
+          <textarea matInput formControlName="geneIds" placeholder="Gene Ids" rows="5"></textarea>
         </mat-form-field>
+        <button (click)="loadGenes()" type="button" mat-raised-button color="primary">
+          Load
+        </button>
       </div>
       <div class="tabs-buttons">
         <button mat-button class="noc-sm" [class.active]="activeTab === 'matched'" (click)="setActiveTab('matched')">
@@ -36,9 +39,9 @@
         <ng-container *ngIf="activeTab === 'matched'">
           <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
             <div *cdkVirtualFor="let gene of genes" class="gene-row">
-              <div class="gene-column">{{ gene.gene }}</div>
+              <div class="gene-column">{{ gene.id }}</div>
               <div class="gene-column">{{ gene.geneSymbol }}</div>
-              <div class="gene-column">{{ gene.geneName }}</div>
+              <div class="gene-column">{{ gene.label }}</div>
             </div>
           </cdk-virtual-scroll-viewport>
         </ng-container>
@@ -47,9 +50,9 @@
         <ng-container *ngIf="activeTab === 'unmatched'">
           <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
             <div *cdkVirtualFor="let gene of nonMatchingGenes" class="gene-row">
-              <div class="gene-column">{{ gene.gene }}</div>
+              <div class="gene-column">{{ gene.id }}</div>
               <div class="gene-column">{{ gene.geneSymbol }}</div>
-              <div class="gene-column">{{ gene.geneName }}</div>
+              <div class="gene-column">{{ gene.label }}</div>
             </div>
           </cdk-virtual-scroll-viewport>
         </ng-container>
@@ -64,12 +67,6 @@
         </ng-container>
       </div>
     </div>
-
-    <!--    <div *ngIf="!dataSource" class="w-100-p h-100-p" fxFlex="" fxLayout="column" fxLayoutAlign="start stretch">
-      <div class="noc-no-info">
-        No Results
-      </div>
-    </div> -->
   </div>
   <div class="m-0 p-16 noc-dialog-footer" fxLayout="row" fxLayoutAlign="space-between center">
     <button (click)='close()' type="button" mat-raised-button color="" class="mr-8">

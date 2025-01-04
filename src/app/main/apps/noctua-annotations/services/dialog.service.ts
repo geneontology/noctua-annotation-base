@@ -28,6 +28,7 @@ export class NoctuaAnnotationsDialogService {
 
     }
 
+
     openUploadGenesDialog(data, success: Function): void {
         this.dialogRef = this._matDialog.open(AddGenesDialogComponent, {
             panelClass: 'noc-upload-genes-dialog',

@@ -1,8 +1,11 @@
 
+
+
+
 import { Component, OnInit, OnDestroy, Inject, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Gene, GeneList } from '@geneontology/noctua-form-base';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { CamService, Gene, GeneList, GOlrResponse } from '@geneontology/noctua-form-base';
 import { Subject } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
@@ -23,13 +26,10 @@ export class AddGenesDialogComponent implements OnInit, AfterViewInit, OnDestroy
 
   constructor(
     private _matDialogRef: MatDialogRef<AddGenesDialogComponent>,
+    private _camService: CamService,
     @Inject(MAT_DIALOG_DATA) private _data: any,
   ) {
     this._unsubscribeAll = new Subject();
-
-    this.genes = _data.genes
-    this.nonMatchingGenes = _data.nonMatchingGenes
-    this.identifiersNotMatched = _data.identifiersNotMatched
   }
 
   ngOnInit() {
@@ -51,8 +51,29 @@ export class AddGenesDialogComponent implements OnInit, AfterViewInit, OnDestroy
 
   createGeneForm() {
     return new FormGroup({
-      description: new FormControl(this._data.description),
+      geneIds: new FormControl(),
     })
+  }
+
+  loadGenes() {
+    const geneIds = this.geneFormGroup.value['geneIds']?.split('\n').map((gene: string) => {
+      return gene.trim();
+    });
+    console.log('genes:', geneIds)
+    this._camService.getGenesDetails(geneIds)
+      .subscribe((res: GOlrResponse[]) => {
+        if (!res) {
+          this.genes = [];
+        } else {
+
+          this.genes = res.map((res: GOlrResponse) => {
+            return {
+              id: res.id,
+              label: res.label
+            }
+          });
+        }
+      });
   }
 
   save() {

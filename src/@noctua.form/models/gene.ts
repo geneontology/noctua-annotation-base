@@ -1,7 +1,7 @@
 export class Gene {
-  gene: string
-  geneSymbol: string
-  geneName: string
+  id: string
+  geneSymbol?: string
+  label?: string
 }
 
 export class GeneList {

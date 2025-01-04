@@ -34,10 +34,11 @@ import { AnnotationNodeComponent } from './table/annotation-node/annotation-node
 import { NoctuaAutocompleteModule } from '@noctua.autocomplete/noctua-autocomplete.module';
 import { CommentsSidenavComponent } from './comments/comments.component';
 import { AddGenesDialogComponent } from './dialogs/add-genes/add-genes.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const routes = [
   {
-    path: 'a',
+    path: '',
     component: NoctuaAnnotationsComponent
   }
 ];
@@ -75,6 +76,7 @@ const routes = [
     MatTooltipModule,
     NoctuaFormModule,
     NoctuaAutocompleteModule,
+    ScrollingModule
   ],
   exports: [
     NoctuaAnnotationsComponent

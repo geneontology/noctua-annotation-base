@@ -36,6 +36,7 @@ import { NoctuaFormDialogService } from 'app/main/apps/noctua-form/services/dial
 import { SettingsOptions } from '@noctua.common/models/graph-settings';
 import { RightPanel } from '@noctua.common/models/menu-panels';
 import { NoctuaCommonMenuService } from '@noctua.common/services/noctua-common-menu.service';
+import { NoctuaAnnotationsDialogService } from '../../services/dialog.service';
 
 @Component({
   selector: 'noc-annotation-node',
@@ -72,6 +73,7 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
     public camService: CamService,
     private bbopGraphService: BbopGraphService,
     public annotationFormService: NoctuaAnnotationFormService,
+    private noctuaAnnotationsDialogService: NoctuaAnnotationsDialogService,
     private confirmDialogService: NoctuaConfirmDialogService,
     public noctuaUserService: NoctuaUserService,
     public noctuaFormConfigService: NoctuaFormConfigService,
@@ -176,6 +178,23 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
 
   updateCurrentMenuEvent(event) {
     this.currentMenuEvent = event;
+  }
+
+  addGenes() {
+    const self = this;
+
+    const success = () => {
+      this.camService.deleteActivity(this.annotationActivity.activity).then(() => {
+        self.noctuaFormDialogService.openInfoToast('Annotation successfully deleted.', 'OK');
+        this.camService.onSelectedActivityChanged.next(null);
+        this.camService.getCam(this.cam.id);
+
+      });
+    };
+
+    const data = { annotationActivity: this.annotationActivity };
+    this.noctuaAnnotationsDialogService.openUploadGenesDialog(data, success);
+
   }
 
   deleteAnnotation() {
