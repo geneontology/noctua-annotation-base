@@ -358,6 +358,7 @@ export class AnnotationActivity {
 
     annotationActivity.extensions.forEach((extension: AnnotationExtension) => {
       extension.extensionEdge.uuid = undefined;
+      extension.extensionTerm.uuid = undefined;
       extension.extensionTerm.term.uuid = undefined;
     });
 
