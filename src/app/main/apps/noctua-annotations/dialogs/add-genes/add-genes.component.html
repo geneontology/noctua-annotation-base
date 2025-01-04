@@ -1,4 +1,4 @@
-<div class=" noc-dialog" fxLayout="column" fxLayoutAlign="start stretch">
+<div class="noc-dialog" fxLayout="column" fxLayoutAlign="start stretch">
   <mat-toolbar class="noc-dialog-header mat-primary m-0">
     <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="start center">
       <span class="title dialog-title">
@@ -10,65 +10,94 @@
     </mat-toolbar-row>
   </mat-toolbar>
   <div class="noc-dialog-content">
-    <div class="h-100-p" name="geneFormGroup" [formGroup]="geneFormGroup" fxLayout="column"
-      fxLayoutAlign="start stretch">
-      <div class="w-100-p" fxLayout="row" fxLayoutAlign="start center">
-        <mat-form-field fxFlex="40" appearance="outline">
-          <mat-label>Gene Ids</mat-label>
-          <textarea matInput formControlName="geneIds" placeholder="Gene Ids" rows="5"></textarea>
-        </mat-form-field>
-        <button (click)="loadGenes()" type="button" mat-raised-button color="primary">
-          Load
-        </button>
-      </div>
-      <div class="tabs-buttons">
-        <button mat-button class="noc-sm" [class.active]="activeTab === 'matched'" (click)="setActiveTab('matched')">
-          Matched Genes (<small>{{genes.length}}</small>)
-        </button>
-        <button mat-button class="noc-sm" [class.active]="activeTab === 'unmatched'"
-          (click)="setActiveTab('unmatched')">
-          Unmatched Genes (<small>{{nonMatchingGenes.length}}</small>)
-        </button>
-        <button mat-button class="noc-sm" [class.active]="activeTab === 'unmatchedList'"
-          (click)="setActiveTab('unmatchedList')">Identifiers Not Found
-          (<small>{{identifiersNotMatched.length}}</small>)</button>
-      </div>
+    <div class="flex-grow p-4" [formGroup]="geneFormGroup">
+      <div class="flex gap-8 h-full">
+        <!-- Left Panel - Gene Input -->
+        <div class="w-1/3 flex flex-col">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Gene Ids</mat-label>
+            <textarea matInput formControlName="geneIds" placeholder="Enter Gene IDs" rows="10"
+              class="w-full"></textarea>
+          </mat-form-field>
 
-      <div class="tab-content h-100-p">
-        <!-- Matched Genes -->
-        <ng-container *ngIf="activeTab === 'matched'">
-          <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
-            <div *cdkVirtualFor="let gene of genes" class="gene-row">
-              <div class="gene-column">{{ gene.id }}</div>
-              <div class="gene-column">{{ gene.geneSymbol }}</div>
-              <div class="gene-column">{{ gene.label }}</div>
-            </div>
-          </cdk-virtual-scroll-viewport>
-        </ng-container>
+          <button (click)="loadGenes()" mat-raised-button color="primary"
+            class="mt-4 flex items-center justify-center gap-2">
+            <mat-icon>arrow_forward</mat-icon>
+            Load Genes
+          </button>
+        </div>
 
-        <!-- Unmatched Genes -->
-        <ng-container *ngIf="activeTab === 'unmatched'">
-          <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
-            <div *cdkVirtualFor="let gene of nonMatchingGenes" class="gene-row">
-              <div class="gene-column">{{ gene.id }}</div>
-              <div class="gene-column">{{ gene.geneSymbol }}</div>
-              <div class="gene-column">{{ gene.label }}</div>
-            </div>
-          </cdk-virtual-scroll-viewport>
-        </ng-container>
+        <!-- Right Panel - Results -->
+        <div class="w-2/3 flex flex-col">
+          <!-- Tabs -->
+          <div class="flex gap-2 mb-4">
+            <button mat-button [ngClass]="{'bg-primary text-white': activeTab === 'matched',
+                         'bg-gray-100': activeTab !== 'matched'}" class="rounded-t-lg px-4 py-2"
+              (click)="setActiveTab('matched')">
+              Matched ({{genes.length}})
+            </button>
+            <button mat-button [ngClass]="{'bg-primary text-white': activeTab === 'unmatched',
+                         'bg-gray-100': activeTab !== 'unmatched'}" class="rounded-t-lg px-4 py-2"
+              (click)="setActiveTab('unmatched')">
+              Unmatched ({{nonMatchingGenes.length}})
+            </button>
+            <button mat-button [ngClass]="{'bg-primary text-white': activeTab === 'unmatchedList',
+                         'bg-gray-100': activeTab !== 'unmatchedList'}" class="rounded-t-lg px-4 py-2"
+              (click)="setActiveTab('unmatchedList')">
+              Not Found ({{identifiersNotMatched.length}})
+            </button>
+          </div>
 
-        <!-- Unmatched Gene List -->
-        <ng-container *ngIf="activeTab === 'unmatchedList'">
-          <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
-            <div *cdkVirtualFor="let geneIdentifier of identifiersNotMatched" class="gene-row">
-              <div class="gene-column">{{ geneIdentifier }}</div>
-            </div>
-          </cdk-virtual-scroll-viewport>
-        </ng-container>
+          <!-- Results Content -->
+          <div class="flex-grow border rounded-lg">
+            <!-- Matched Genes -->
+            <ng-container *ngIf="activeTab === 'matched'">
+              <cdk-virtual-scroll-viewport itemSize="50" class="h-full">
+                <div class="grid grid-cols-3 gap-4 p-4 bg-gray-100 font-semibold">
+                  <div>ID</div>
+                  <div>Symbol</div>
+                  <div>Label</div>
+                </div>
+                <div *cdkVirtualFor="let gene of genes" class="grid grid-cols-3 gap-4 p-4 hover:bg-gray-50 border-b">
+                  <div>{{gene.id}}</div>
+                  <div>{{gene.geneSymbol}}</div>
+                  <div>{{gene.label}}</div>
+                </div>
+              </cdk-virtual-scroll-viewport>
+            </ng-container>
+
+            <!-- Unmatched Genes -->
+            <ng-container *ngIf="activeTab === 'unmatched'">
+              <cdk-virtual-scroll-viewport itemSize="50" class="h-full">
+                <div class="grid grid-cols-3 gap-4 p-4 bg-gray-100 font-semibold">
+                  <div>ID</div>
+                  <div>Symbol</div>
+                  <div>Label</div>
+                </div>
+                <div *cdkVirtualFor="let gene of nonMatchingGenes"
+                  class="grid grid-cols-3 gap-4 p-4 hover:bg-gray-50 border-b">
+                  <div>{{gene.id}}</div>
+                  <div>{{gene.geneSymbol}}</div>
+                  <div>{{gene.label}}</div>
+                </div>
+              </cdk-virtual-scroll-viewport>
+            </ng-container>
+
+            <!-- Not Found -->
+            <ng-container *ngIf="activeTab === 'unmatchedList'">
+              <cdk-virtual-scroll-viewport itemSize="50" class="h-full">
+                <div class="p-4 bg-gray-100 font-semibold">Identifier</div>
+                <div *cdkVirtualFor="let id of identifiersNotMatched" class="p-4 hover:bg-gray-50 border-b">
+                  {{id}}
+                </div>
+              </cdk-virtual-scroll-viewport>
+            </ng-container>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="m-0 p-16 noc-dialog-footer" fxLayout="row" fxLayoutAlign="space-between center">
+  <div class="m-0 p-16 noc-dialog-footer flex justify-end gap-4">
     <button (click)='close()' type="button" mat-raised-button color="" class="mr-8">
       Cancel</button>
     <button (click)="save()" type="button" mat-raised-button color="primary">

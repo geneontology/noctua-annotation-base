@@ -22,6 +22,7 @@ export class AddGenesDialogComponent implements OnInit, AfterViewInit, OnDestroy
   genes: Gene[] = [];
   nonMatchingGenes: Gene[] = [];
   identifiersNotMatched: string[] = [];
+  totalCount: number = 0;
   activeTab: string = 'matched';
 
   constructor(
@@ -59,20 +60,13 @@ export class AddGenesDialogComponent implements OnInit, AfterViewInit, OnDestroy
     const geneIds = this.geneFormGroup.value['geneIds']?.split('\n').map((gene: string) => {
       return gene.trim();
     });
-    console.log('genes:', geneIds)
-    this._camService.getGenesDetails(geneIds)
-      .subscribe((res: GOlrResponse[]) => {
-        if (!res) {
-          this.genes = [];
-        } else {
 
-          this.genes = res.map((res: GOlrResponse) => {
-            return {
-              id: res.id,
-              label: res.label
-            }
-          });
-        }
+    this._camService.getGenesDetails(geneIds)
+      .subscribe((result: GeneList) => {
+        this.genes = result.genes;
+        this.nonMatchingGenes = result.nonMatchingGenes;
+        this.identifiersNotMatched = result.identifiersNotMatched;
+        this.totalCount = result.count || 0;
       });
   }
 

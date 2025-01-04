@@ -396,9 +396,7 @@ export class NoctuaLookupService {
   }
 
   getGenesDetails(ids: string[]) {
-    const self = this;
 
-    // Create query for exact ID matches using annotation_class field
     const queryString = ids.map(id => `annotation_class:"${id}"`).join(' OR ');
 
     const requestParams = {
@@ -426,11 +424,6 @@ export class NoctuaLookupService {
       fq: [
         'document_category:"ontology_class"',
       ],
-      // Remove qf since we're doing exact matches
-      // qf: [
-      //   'annotation_class^3',
-      //   'isa_closure^1',
-      // ]
     };
 
     const params = new HttpParams({
@@ -440,10 +433,8 @@ export class NoctuaLookupService {
     const url = this.golrURLBase + params.toString();
 
     return this.httpClient.jsonp(url, 'json.wrf').pipe(
-      map(response => self._lookupMap(response)),
-      // Add validation to ensure we only get exact matches
+      map(response => this._lookupMap(response)),
       map(response => {
-        // Filter to ensure only exact matches are returned
         const exactMatches = response.filter(result =>
           ids.includes(result.id)
         );
