@@ -364,35 +364,6 @@ export class AnnotationActivity {
     return annotationActivity;
   }
 
-  private static _populateBulkAnnotationActivity2(srcAnnotationActivity: AnnotationActivity, gpId: string) {
-
-    const annotationActivity = new AnnotationActivity();
-    annotationActivity.gp = ShapeUtils.generateBaseTerm([]);
-    annotationActivity.goterm = ShapeUtils.generateBaseTerm([]);
-
-    annotationActivity.gp.term.id = gpId;
-    annotationActivity.goterm.term.id = srcAnnotationActivity.goterm.term.id;
-    annotationActivity.gpToTermEdge = new Entity(srcAnnotationActivity.gpToTermEdge.id, "");
-    annotationActivity.goterm.isComplement = srcAnnotationActivity.goterm.isComplement;
-
-    // Evidence
-    annotationActivity.evidenceCode.term.id = srcAnnotationActivity.evidenceCode.term.id;
-    annotationActivity.reference.term.id = srcAnnotationActivity.reference.term.id;
-    annotationActivity.with.term.id = srcAnnotationActivity.with.term.id;
-
-    annotationActivity.comments = [...srcAnnotationActivity.comments];
-
-    annotationActivity.extensions = srcAnnotationActivity.extensions.map((srcExtension: AnnotationExtension) => {
-      const extension = new AnnotationExtension();
-      extension.extensionTerm = ShapeUtils.generateBaseTerm([]);
-      extension.extensionEdge = new Entity(srcExtension.extensionEdge.id, "");
-      extension.extensionTerm.term.id = srcExtension.extensionTerm.term.id;
-      return extension;
-    });
-
-    return annotationActivity;
-  }
-
   private static _populateAnnotationActivity(annotationForm: StandardAnnotationForm, evidenceForm: AnnotationEvidenceForm) {
 
     const annotationActivity = new AnnotationActivity();
@@ -411,9 +382,15 @@ export class AnnotationActivity {
 
     annotationActivity.comments = Array.from(new Set(annotationForm.annotationComments.map(comment => comment.comment)));
 
-    annotationForm.annotationExtensions.forEach((ext, index) => {
-      annotationActivity.extensions[index].extensionEdge = ext.extensionEdge;
-      annotationActivity.extensions[index].extensionTerm.term.id = ext.extensionTerm.id;
+    annotationForm.annotationExtensions.forEach((ext) => {
+      const extension = new AnnotationExtension();
+
+      extension.extensionTerm = ShapeUtils.generateBaseTerm([]);
+      extension.extensionEdge = ext.extensionEdge;
+      extension.extensionTerm.term.id = ext.extensionTerm.id;
+
+      annotationActivity.extensions.push(extension);
+
     });
 
     return annotationActivity;
