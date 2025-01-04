@@ -16,7 +16,8 @@ import {
   BbopGraphService,
   AnnotationActivity,
   AnnotationExtension,
-  NoctuaAnnotationFormService
+  NoctuaAnnotationFormService,
+  Gene
 } from '@geneontology/noctua-form-base';
 
 import {
@@ -181,15 +182,15 @@ export class AnnotationNodeComponent implements OnInit, OnDestroy {
   }
 
   addGenes() {
-    const self = this;
 
-    const success = () => {
-      this.camService.deleteActivity(this.annotationActivity.activity).then(() => {
-        self.noctuaFormDialogService.openInfoToast('Annotation successfully deleted.', 'OK');
-        this.camService.onSelectedActivityChanged.next(null);
-        this.camService.getCam(this.cam.id);
+    const success = (genes: Gene[]) => {
+      const geneIds = genes.map(gene => gene.id);
 
-      });
+      this.annotationFormService.saveGPsAnnotation(this.annotationActivity, geneIds)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(() => {
+          this.noctuaAnnotationsDialogService.openInfoToast(`${geneIds.length} Annotation(s) successfully created.`, 'OK');
+        });
     };
 
     const data = { annotationActivity: this.annotationActivity };
