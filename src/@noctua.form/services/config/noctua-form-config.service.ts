@@ -427,8 +427,6 @@ export class NoctuaFormConfigService {
     return annotationActivity
   }
 
-
-
   private _getAnnotationExtensions(activity: Activity, id: string): AnnotationExtension[] {
 
     const extension: AnnotationExtension[] = []

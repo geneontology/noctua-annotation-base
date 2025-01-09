@@ -269,6 +269,43 @@ textarea {
   }
 }
 
+.noc-genes-textarea {
+  &.mat-form-field {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .mat-form-field {
+      height: 100%;
+    }
+
+    .mat-form-field-wrapper {
+      height: 100%;
+    }
+
+    .mat-text-field-wrapper {
+      height: 100%;
+    }
+
+    .mat-form-field-flex {
+      height: 100%;
+    }
+
+    .mat-form-field-infix {
+      height: 100%;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    textarea.mat-input-element {
+      height: 100% !important;
+      resize: none;
+      box-sizing: border-box;
+    }
+  }
+}
+
 .noc-dropdown-menu {
   .noc-menu-heading {
     margin: 0;
