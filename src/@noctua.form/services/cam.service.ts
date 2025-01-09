@@ -301,6 +301,20 @@ export class CamService {
     return self._bbopGraphService.resetModel(cam);
   }
 
+  undoModel(cam: Cam) {
+    const self = this;
+
+    return self._bbopGraphService.undoModel(cam);
+  }
+
+  redoModel(cam: Cam) {
+    const self = this;
+
+    return self._bbopGraphService.redoModel(cam);
+  }
+
+
+
   reviewChangesCam(cam: Cam, stats: CamStats): boolean {
     return cam.reviewCamChanges(stats);
   }

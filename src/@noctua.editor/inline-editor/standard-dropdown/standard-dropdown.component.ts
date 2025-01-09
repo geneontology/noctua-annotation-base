@@ -271,7 +271,6 @@ export class NoctuaEditorStandardDropdownComponent implements OnInit, OnDestroy 
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
       .subscribe({
         next: (value) => {
-          console.log('Annotation form group processed:', value);
           const objectRootTypes = value.term?.rootTypes ?? [];
 
           const { edges, range } = this.annotationFormService.getEdgesRange(this.annotationActivity.goterm.rootTypes,
