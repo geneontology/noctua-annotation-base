@@ -26,7 +26,7 @@ import { NoctuaFormModule } from '../noctua-form/noctua-form.module';
 
 const routes = [
   {
-    path: 'p',
+    path: '',
     component: NoctuaPathwayComponent
   }
 ];
