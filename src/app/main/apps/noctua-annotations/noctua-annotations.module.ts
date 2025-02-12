@@ -38,7 +38,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const routes = [
   {
-    path: 'a',
+    path: '',
     component: NoctuaAnnotationsComponent
   }
 ];
